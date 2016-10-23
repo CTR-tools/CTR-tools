@@ -74,7 +74,7 @@ namespace big_splitter
 
                 if (p.size == 0) knownext = ".null";
 
-                //
+                //--------------
 
                 br.BaseStream.Position = p.offset * 2048;
 
