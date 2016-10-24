@@ -1,0 +1,59 @@
+------------------
+BIGFILE.BIG format
+------------------
+
+dword - null
+dword - number of entries
+entries *
+{
+  dword - offset (sector number, mult by 2048 for absolute offset)
+  dword - size in bytes
+}
+x bytes - data
+
+
+----------------
+CTR model format
+----------------
+
+dword - rel offset to some array
+dword - some number
+dword - rel offset to vertices???
+dword - rel offset to uv???
+dword - number of named objects
+dword - offset to modelheader array, abs offset - 4 to named objects
+
+
+modelheader
+{
+  16 bytes - model name
+  dword - offset to mesh
+
+  short x3 - scale?
+
+  short - 0?
+  dword - 0? << maybe short x3 as well?
+
+  dword - unknown?
+  3xdword - 0?
+
+  short x3 - position
+  short x3 - angles
+
+  dword - event type?
+}
+
+
+
+
+event types:
+------------
+ -1 - do nothing
+  2 - award single fruit
+  7 - award fruit crate
+  8 - award weapon
+ 36 - rotate kart (like green vial)
+147 - award letter C
+148 - award letter T
+149 - award letter R
+166 - finish lap?
