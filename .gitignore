@@ -50,6 +50,11 @@ ipch/
 # Windows shortcuts
 *.lnk
 
+*.htm
+*.lev
+*.dae
+*.obj
+
 # =========================
 # Operating System Files
 # =========================

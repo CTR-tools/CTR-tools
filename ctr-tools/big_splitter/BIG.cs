@@ -9,8 +9,10 @@ namespace big_splitter
         public uint offset;
     }
 
+
     class BIG
     {
+
         public string path;
 
         BinaryReader br;
@@ -20,8 +22,21 @@ namespace big_splitter
 
         public List<Pair> pairs = new List<Pair>();
 
+        Dictionary<int, string> names = new Dictionary<int, string>();
+
+
         public BIG(string s)
         {
+
+            string[] buf = File.ReadAllLines(System.AppDomain.CurrentDomain.BaseDirectory+"filenames.txt");
+
+            foreach (string b in buf)
+            {
+                string[] bb = b.Split('=');
+                names.Add(int.Parse(bb[0]), bb[1]);
+            }
+
+
             path = s;
 
             ms = new MemoryStream(File.ReadAllBytes(s));
@@ -78,7 +93,23 @@ namespace big_splitter
 
                 br.BaseStream.Position = p.offset * 2048;
 
-                string fname = Path.GetDirectoryName(path) + "\\BIGFILE\\" + i.ToString("00000000") + knownext;
+                string knownname = "";
+
+                try
+                {
+                    knownname = names[i];
+                }
+                catch
+                {
+                    //we don't have a name for this file
+                }
+
+                string fname = 
+                    Path.GetDirectoryName(path) + 
+                    "\\BIGFILE\\" + 
+                    i.ToString("0000") + 
+                    (knownname !="" ? ("_" + knownname) : "") + 
+                    knownext;
                 File.WriteAllBytes(fname, br.ReadBytes((int)p.size));
 
                 i++;

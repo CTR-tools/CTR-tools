@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace big_splitter
+namespace model_reader2
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("CTR Model Reader");
+            Console.WriteLine("test");
 
             if (args.Length > 0)
             {

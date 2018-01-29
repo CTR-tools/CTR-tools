@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "big_splitter", "big_splitter\big_splitter.csproj", "{F1E2BF2C-F0AF-4704-90FC-5CAC44FF5B2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lng2txt", "lng2txt\lng2txt.csproj", "{244D645A-172A-4CB5-9E64-9C4BA68EF08C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "model_reader", "model_reader\model_reader.csproj", "{7E49CD09-1EB8-47D6-94C1-49ED3A03A00F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1E2BF2C-F0AF-4704-90FC-5CAC44FF5B2C}.Debug|x86.ActiveCfg = Debug|x86
+		{F1E2BF2C-F0AF-4704-90FC-5CAC44FF5B2C}.Debug|x86.Build.0 = Debug|x86
+		{F1E2BF2C-F0AF-4704-90FC-5CAC44FF5B2C}.Release|x86.ActiveCfg = Release|x86
+		{F1E2BF2C-F0AF-4704-90FC-5CAC44FF5B2C}.Release|x86.Build.0 = Release|x86
+		{244D645A-172A-4CB5-9E64-9C4BA68EF08C}.Debug|x86.ActiveCfg = Debug|x86
+		{244D645A-172A-4CB5-9E64-9C4BA68EF08C}.Debug|x86.Build.0 = Debug|x86
+		{244D645A-172A-4CB5-9E64-9C4BA68EF08C}.Release|x86.ActiveCfg = Release|x86
+		{244D645A-172A-4CB5-9E64-9C4BA68EF08C}.Release|x86.Build.0 = Release|x86
+		{7E49CD09-1EB8-47D6-94C1-49ED3A03A00F}.Debug|x86.ActiveCfg = Debug|x86
+		{7E49CD09-1EB8-47D6-94C1-49ED3A03A00F}.Debug|x86.Build.0 = Debug|x86
+		{7E49CD09-1EB8-47D6-94C1-49ED3A03A00F}.Release|x86.ActiveCfg = Release|x86
+		{7E49CD09-1EB8-47D6-94C1-49ED3A03A00F}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
