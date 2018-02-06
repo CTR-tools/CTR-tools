@@ -5,7 +5,7 @@ Various tools to operate Crash Team Racing game files.
 
 
 ## big_splitter
-Splits BIGFILE.BIG. Will rename some files (like levels). Keep in mind it's for NTSC .BIG.
+Splits BIGFILE.BIG. Will rename some files (like levels). May not match all versions.
 
 
 Usage: big_splitter.exe C:\example\bigfile.big
@@ -20,16 +20,14 @@ Usage: lng2txt.exe C:\example\somefile.lng
 
 
 ## model_reader
-Potentially will be able to export models in a widespread 3D format like obj.
-
-Currently only exports colored point cloud. Import tested in MeshLab and 3ds Max.
+At this point exports vertex colored non-textured mesh of the level (\*.lev files). Import tested in MeshLab, Blender and 3ds Max.
 
 In 3ds Max you'll have to import as single mesh, convert to editable mesh and then pick vertex selection.
 
-https://i.imgur.com/yQPvHgu.jpg
+https://i.imgur.com/RqWH93V.png
 
 
-Usage: model_reader.exe C:\example\somefile.lev
+Usage: model_reader.exe C:\example\somefile.lev \[ply]
 
 
 2016-2018, DCxDemo*.
