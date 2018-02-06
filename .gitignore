@@ -84,3 +84,6 @@ ipch/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Python compiled modules
+*.pyc
