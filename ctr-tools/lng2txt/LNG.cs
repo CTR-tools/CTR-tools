@@ -27,10 +27,8 @@ namespace lng2txt
             ms = new MemoryStream(File.ReadAllBytes(s));
             br = new BinaryReader(ms);
 
-
             numStrings = br.ReadInt32();
             offset = br.ReadInt32();
-
 
             for (int i = 0; i < numStrings; i++)
             {
@@ -43,11 +41,11 @@ namespace lng2txt
                 do
                 {
                     c = br.ReadChar();
-                    x += c;
+                    if (c != 0) x += c;
                 }
                 while (c != 0);
 
-                sb.Append(x + "\r\n");
+                sb.Append(x.Replace((char)0x0D, '|') + "\r\n");
             }
 
         }

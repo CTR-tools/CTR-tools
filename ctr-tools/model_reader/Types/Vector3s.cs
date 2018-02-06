@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace model_reader2
+namespace model_reader
 {
     class Vector3s
     {

@@ -4,171 +4,177 @@ using System.IO;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace model_reader2
+namespace model_reader
 {
-
     class CTRModel
     {
-
-
-        struct Header
-        {
-            public uint ptrInfo;
-            //???
-            //???
-            public int numPickupHeaders;
-            public uint ptrPickupHeaders;
-            public int numPickupModels;
-            public uint ptrPickupModelsPtrArray;
-            //???
-            //???
-            public uint ptrPickupHeadersPtrArray;
-            public int null1;
-            public int null2;
-
-        }
-
-
         public string path;
+        StringBuilder sb = new StringBuilder();
 
         BinaryReader br;
         MemoryStream ms;
 
+        CTRHeader header;
+        List<CTRVertex> vertex = new List<CTRVertex>();
+        List<CTRNgon> ngon = new List<CTRNgon>();
         List<PickupHeader> pickups = new List<PickupHeader>();
         List<PosAng> startGrid = new List<PosAng>();
 
-        public CTRModel(string s)
+
+        public CTRModel(string s, string fmt)
         {
+            sb.Clear();
             path = s;
 
             ms = new MemoryStream(File.ReadAllBytes(s));
             br = new BinaryReader(ms);
-
+            
             int size = br.ReadInt32();
 
-            ms = new MemoryStream(br.ReadBytes(size));
+            ms = new MemoryStream(br.ReadBytes((int)br.BaseStream.Length-4));
             br = new BinaryReader(ms);
+            
 
-            StringBuilder sb = new StringBuilder();
-
-            Header header = new Header();
-            header.ptrInfo = br.ReadUInt32();
-
-            br.BaseStream.Position += 8;
-
-            header.numPickupHeaders = br.ReadInt32();
-            header.ptrPickupHeaders = br.ReadUInt32();
-            header.numPickupModels = br.ReadInt32();
-            header.ptrPickupModelsPtrArray = br.ReadUInt32();
-
-            br.BaseStream.Position += 8;
-
-            header.ptrPickupHeadersPtrArray = br.ReadUInt32();
-            br.BaseStream.Position += 4;
-            header.null1 = br.ReadInt32();
-            header.null2 = br.ReadInt32();
-
-            if (header.null1 != 0 || header.null2 != 0)
-            {
-                Console.WriteLine("WARNING header.null1 = " + header.null1 + "; header.null2 = " + header.null2);
-            }
-
-
+            header = new CTRHeader(br);
 
             for (int i = 0; i < header.numPickupHeaders; i++)
             {
                 br.BaseStream.Position = header.ptrPickupHeadersPtrArray + 4 * i;
                 br.BaseStream.Position = br.ReadUInt32();
 
-                pickups.Add(new PickupHeader(br.ReadBytes(0x40)));
+                pickups.Add(new PickupHeader(br));
             }
 
 
 
             br.BaseStream.Position = header.ptrInfo;
-            br.ReadInt32();
-            int vertexnum = br.ReadInt32();
-            br.BaseStream.Position += 8;
-            uint ptrvertarray = br.ReadUInt32();
-            br.ReadInt32();
-            uint ptrfacearray = br.ReadUInt32();
-            int facenum = br.ReadInt32();
-           // while (can)
 
+            int facesnum = br.ReadInt32();
+            int vertexnum = br.ReadInt32();
+            br.ReadInt32();  //???
+            int ptrNgonArray = br.ReadInt32();
+            uint ptrvertarray = br.ReadUInt32();
+            br.ReadInt32();  //null?
+            uint ptrfacearray = br.ReadUInt32();    //something else
+            int facenum = br.ReadInt32();           //something else
+
+
+            if (fmt == "ply")
+            {
+                sb.Append("ply\r\n");
+                sb.Append("format ascii 1.0\r\n");
+                sb.Append("comment CTR-Tools by DCxDemo*\r\n");
+                sb.Append("comment source file: " + path +"\r\n");
+                sb.Append("element vertex " + vertexnum + "\r\n");
+                sb.Append("property float x\r\n");
+                sb.Append("property float y\r\n");
+                sb.Append("property float z\r\n");
+                sb.Append("property uchar red\r\n");
+                sb.Append("property uchar green\r\n");
+                sb.Append("property uchar blue\r\n");
+                sb.Append("element face " + facesnum * 8 + "\r\n");
+                sb.Append("property list uchar int vertex_indices\r\n");
+                sb.Append("end_header\r\n");
+            }
+
+
+            //read vertices
             br.BaseStream.Position = ptrvertarray;
 
             for (int i = 0; i < vertexnum; i++)
             {
-                int x = br.ReadInt16();
-                int y = br.ReadInt16();
-                int z = br.ReadInt16();
-                br.BaseStream.Position += 2;
+                CTRVertex vert = new CTRVertex(br);
+                vertex.Add(vert);
 
-                int r = br.ReadByte();
-                int g = br.ReadByte();
-                int b = br.ReadByte();
-                br.BaseStream.Position += 5;
+                if (fmt == "obj")  sb.Append("v ");
 
-                sb.Append("v " + x + " " + y + " " + z + " " + r + " " +  g + " " + b + "\r\n");
-                sb.Append("v " + x + " " + y + " " + z + " " + r + " " + g + " " + b + "\r\n");
-                sb.Append("v " + x + " " + y + " " + z + " " + r + " " + g + " " + b + "\r\n");
-               // sb.Append("v " + (x + 10) + " " + y + " " + z + " " + r + " " + g + " " + b + "\r\n");
-               // sb.Append("v " + x + " " + (y + 1) + " " + z + " " + r + " " + g + " " + b + "\r\n");
-
-
-                sb.Append("f " + (i * 3 + 1).ToString() + " " + (i * 3 + 2).ToString() + " " + (i * 3 + 3).ToString() + "\r\n");
-
-                /*
-                if (i % 3 == 0 && i > 0) 
-                    sb.Append("f " + (i * 2 + 1).ToString() + " " + (i * 2 + 2).ToString() + " " + (i * 2 + 3).ToString() + "\r\n");
-                 * */
+                sb.Append(vert.coord.ToString() + " ");
+                sb.Append(vert.color2.ToString() + "\r\n");
             }
 
 
-            br.BaseStream.Position = ptrvertarray;
             /*
-            for (int i = 0; i < facenum; i++)
-            {
-                br.BaseStream.Position += 4;
-
-                br.BaseStream.Position += 12;
-
-                int f1 = br.ReadInt16();
-                int f2 = br.ReadInt16();
-                int f3 = br.ReadInt16();
-                //sb.Append("v " + f1 + " " + f2 + " " + f3 + "\r\n");
-
-                br.BaseStream.Position += 12 * 2;
-            }
-
-            */
-
-            //this one read riders' starting positions
-
+            //starting positions
             br.BaseStream.Position = 0x6C;
 
             for (int i = 0; i < 8; i++)
             {
-                PosAng pa = new PosAng(new Vector3s(br.ReadBytes(6)), new Vector3s(br.ReadBytes(6)));
-                startGrid.Add(pa);
+                 PosAng pa = new PosAng(new Vector3s(br.ReadBytes(6)), new Vector3s(br.ReadBytes(6)));
+                    startGrid.Add(pa);
             }
 
             foreach (PosAng pa in startGrid)
+            sb.Append(pa.Position.ToObjVertex() + "\r\n");
+            */
+
+
+            //read faces
+            br.BaseStream.Position = ptrNgonArray;
+
+            for (int i = 0; i < facesnum; i++)
             {
-                sb.Append(pa.Position.ToObjVertex() + "\r\n");
+
+                CTRNgon g = new CTRNgon(br);
+                ngon.Add(g);
+
+                short[] ind = g.ind;
+
+                if (fmt == "obj")
+                    for (int j = 0; j < 9; j++) 
+                        ind[j]++; 
+
+                if (fmt == "ply")
+                {
+                    sb.Append("3 " + ind[6] + " " + ind[4] + " " + ind[0] + "\r\n");
+                    sb.Append("3 " + ind[5] + " " + ind[6] + " " + ind[0] + "\r\n");
+
+                    sb.Append("3 " + ind[7] + " " + ind[1] + " " + ind[4] + "\r\n");
+                    sb.Append("3 " + ind[6] + " " + ind[7] + " " + ind[4] + "\r\n");
+
+                    sb.Append("3 " + ind[8] + " " + ind[6] + " " + ind[5] + "\r\n");
+                    sb.Append("3 " + ind[2] + " " + ind[8] + " " + ind[5] + "\r\n");
+
+                    sb.Append("3 " + ind[3] + " " + ind[7] + " " + ind[6] + "\r\n");
+                    sb.Append("3 " + ind[8] + " " + ind[3] + " " + ind[6] + "\r\n");
+                }
+                else
+                {
+                    sb.Append("o piece_" + i.ToString("0000") + "\r\n");
+                    sb.Append("g piece_" + i.ToString("0000") + "\r\n");
+
+                    sb.Append("f " + ind[6] + " " + ind[4] + " " + ind[0] + "\r\n");
+                    sb.Append("f " + ind[5] + " " + ind[6] + " " + ind[0] + "\r\n");
+
+                    sb.Append("f " + ind[7] + " " + ind[1] + " " + ind[4] + "\r\n");
+                    sb.Append("f " + ind[6] + " " + ind[7] + " " + ind[4] + "\r\n");
+
+                    sb.Append("f " + ind[8] + " " + ind[6] + " " + ind[5] + "\r\n");
+                    sb.Append("f " + ind[2] + " " + ind[8] + " " + ind[5] + "\r\n");
+
+                    sb.Append("f " + ind[3] + " " + ind[7] + " " + ind[6] + "\r\n");
+                    sb.Append("f " + ind[8] + " " + ind[3] + " " + ind[6] + "\r\n\r\n");
+                }
+
+
+
             }
 
-            string fname = Path.GetFileNameWithoutExtension(path) + ".obj";
+            string fname = Path.GetFileNameWithoutExtension(path) + "." + fmt;
             File.WriteAllText(fname, sb.ToString());
         }
 
         ~CTRModel()
         {
+            vertex = null;
+            ngon = null;
+
             br.Close();
             ms.Close();
 
             ms = null;
             br = null;
+
+            GC.Collect();
         }
 
         public void Export()

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace model_reader2
+namespace model_reader
 {
     public class PickupHeader
     {
@@ -34,16 +34,8 @@ namespace model_reader2
         //event type?
         public int unk2;
 
-        public PickupHeader(byte[] x)
+        public PickupHeader(BinaryReader br)
         {
-            if (x.Length != 0x40)
-            {
-                Console.WriteLine("Wrong PickupHeader input array!");
-                return;
-            }
-
-            MemoryStream ms = new MemoryStream(x);
-            BinaryReader br = new BinaryReader(ms);
 
             name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16));
             offsModel = br.ReadUInt32();

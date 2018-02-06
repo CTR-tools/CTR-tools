@@ -43,12 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CTRHeader.cs" />
     <Compile Include="CTRModel.cs" />
+    <Compile Include="CTRNgon.cs" />
+    <Compile Include="CTRVertex.cs" />
     <Compile Include="PickupHeader.cs" />
-    <Compile Include="PosAng.cs" />
+    <Compile Include="Types\PosAng.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Vector3s.cs" />
+    <Compile Include="Types\Vector3s.cs" />
+    <Compile Include="Types\Vector4s.cs" />
+    <Compile Include="Types\Vector4b.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
