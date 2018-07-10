@@ -21,11 +21,7 @@ Usage: lng2txt.exe C:\example\somefile.lng
 
 ## model_reader
 At this point exports vertex colored non-textured mesh of the level (\*.lev files). Import tested in MeshLab, Blender and 3ds Max.
-
-In 3ds Max you'll have to import as single mesh, convert to editable mesh and then pick vertex selection.
-
 https://i.imgur.com/RqWH93V.png
-
 
 Usage: model_reader.exe C:\example\somefile.lev \[ply]
 
