@@ -4,17 +4,20 @@
 Various tools to operate Crash Team Racing game files.
 
 
-## big_splitter
-Splits BIGFILE.BIG. Will rename some files (like levels). May not match all versions.
+## bigtool
+Extracts/builds BIGFILE.BIG. Some files will be renamed based on the filelist.txt contents. Identified file additions are welcome.
 
+Usage: you can basically drag'n'drop big and txt files on the tool's icon or you can use command line.
 
-Usage: big_splitter.exe C:\example\bigfile.big
+Extracting: bigtool.exe C:\example\bigfile.big
+* This will create a BIGFILE folder with all contents and BIGFILE.TXT which is a list of all files.
 
-This will generate additional BIGFILE folder, you will find the extracted files there.
+Building: bigtool.exe C:\example\bigfile.txt
+* Given the file list it will generate BIGFILE.BIG. It will overwrite existing file.
 
 
 ## lng2txt
-Converts lng files into text files.
+Converts lng files into text files and back (warning, not tested propery as of r4).
 
 Usage: lng2txt.exe C:\example\somefile.lng
 
