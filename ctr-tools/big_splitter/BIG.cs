@@ -5,12 +5,18 @@ using System.Text;
 using System.Collections;
 using System.Security.Cryptography;
 
-namespace big_splitter
+namespace bigtool
 {
     public struct Pair
     {
         public uint size;
         public uint offset;
+
+        public Pair(uint o, uint s)
+        {
+            offset = o;
+            size = s;
+        }
     }
 
     class BIG
@@ -26,6 +32,7 @@ namespace big_splitter
 
         Dictionary<int, string> names = new Dictionary<int, string>();
 
+        List<CTRFile> ctrfiles = new List<CTRFile>();
 
 
         static string CalculateMD5(string filename)
@@ -78,6 +85,74 @@ namespace big_splitter
         }
 
 
+        public BIG()
+        {
+        }
+
+
+        public uint TotalSize()
+        {
+            //let's hardcode it as you can't add files anyway.
+            //ideally you should calculate the amount of sectors used for size/offset array
+            uint to_alloc = 2048 * 3;
+
+            foreach (CTRFile c in ctrfiles)
+                to_alloc += c.padded_size;
+
+            return to_alloc;
+        }
+
+        public void Build(string txt)
+        {
+            string path = Path.GetFileNameWithoutExtension(txt);
+            string[] files = File.ReadAllLines(txt);
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                files[i] = ".\\" + path + "\\" + files[i];
+                ctrfiles.Add(new CTRFile(files[i]));
+            }
+
+            Console.WriteLine("we'll need " + TotalSize() + " Bytes for " + ctrfiles.Count + " files:");
+
+            byte[] final_big = new byte[TotalSize()];
+            MemoryStream ms = new MemoryStream(final_big);
+            BinaryWriter bw = new BinaryWriter(ms);
+
+            bw.BaseStream.Position = 4;
+            bw.Write(ctrfiles.Count);
+
+            bw.BaseStream.Position = 3 * 2048;
+
+            foreach (CTRFile c in ctrfiles)
+            {
+                Console.Write(".");
+
+                uint pos = (uint)bw.BaseStream.Position;
+                c.offset = pos / 2048;
+
+                bw.Write(c.data);
+
+                bw.BaseStream.Position = pos + c.padded_size;
+            }
+
+            Console.WriteLine();
+
+            bw.BaseStream.Position = 8;
+
+            foreach (CTRFile c in ctrfiles)
+            {
+                bw.Write(c.offset);
+                bw.Write(c.size);
+            }
+
+            Console.WriteLine("Dumping to disk...");
+
+            File.WriteAllBytes(path + ".BIG", final_big);
+
+            Console.WriteLine("BIG file created.");
+
+        }
 
         public BIG(string s)
         {
@@ -115,20 +190,22 @@ namespace big_splitter
             totalFiles = br.ReadUInt32();
 
             for (int i = 0; i < totalFiles; i++)
-            {
-                Pair x;
-                x.offset = br.ReadUInt32();
-                x.size = br.ReadUInt32();
-                pairs.Add(x);
-            }
+                pairs.Add(new Pair(br.ReadUInt32(), br.ReadUInt32()));
         }
 
         ~BIG()
         {
-            br.Close();
-            ms.Close();
-            ms = null;
-            br = null;
+            if (br != null)
+            {
+                br.Close();
+                br = null;
+            }
+
+            if (ms != null)
+            {
+                ms.Close();
+                ms = null;
+            }
         }
 
         StringBuilder filelist = new StringBuilder();

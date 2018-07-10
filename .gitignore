@@ -1,3 +1,5 @@
+
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -55,6 +57,9 @@ ipch/
 *.dae
 *.ply
 *.obj
+*.db
+bigfile
+crash.txt
 
 # =========================
 # Operating System Files

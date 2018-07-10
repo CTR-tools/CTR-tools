@@ -14,8 +14,6 @@ namespace lng2txt
                 if (args.Length > 0)
                 {
                     LNG lng = new LNG(args[0]);
-                    lng.Export();
-
                     Console.WriteLine("Done!");
                 }
                 else

@@ -1,27 +1,44 @@
 ﻿using System;
+using System.IO;
 
-namespace big_splitter
+namespace bigtool
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("CTR-Tools - Crash Team Racing BIGFILE Extractor by DCxDemo*\r\n");
+            Console.WriteLine("CTR-Tools\r\nCrash Team Racing BIGFILE Tool\r\n\r\n2018, DCxDemo*\r\n");
 
             if (args.Length > 0)
             {
-                BIG big = new BIG(args[0]);
-                big.Export();
+                if (Path.GetExtension(args[0]).ToLower() == ".big")
+                {
+                    BIG big = new BIG(args[0]);
+                    big.Export();
 
-                Console.WriteLine("Done!");
+                    Console.WriteLine("Done!");
+                }
+                else
+                    if (Path.GetExtension(args[0]).ToLower() == ".txt")
+                    {
+                        BIG big = new BIG();
+                        big.Build(args[0]);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Sorry, this doesn't look like a supported file.");
+                    }
+
             }
             else
             {
-                Console.WriteLine("Usage:\r\n\tSplit: big_splitter <path to bigfile.big>\r\n\tMerge: (to be implemented yet)\r\n");
+                Console.WriteLine("Usage:\r\n\tSplit example: bigtool C:\\BIGFILE.BIG\r\n\tMerge example: bigtool C:\\BIGFILE.TXT\r\n");
                 Console.WriteLine("Press any key to quit...");
+
+                Console.ReadKey();
             }
 
-            Console.ReadKey();
+
         }
     }
 }
