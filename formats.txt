@@ -37,7 +37,7 @@ struct subunk
 
 
 
-
+old assumed face order, causes incorrect vertex coloring
 
 0--4--1
 |\ |\ |
@@ -48,8 +48,26 @@ struct subunk
 2--8--3
 
 
+new face order
 
+0--4--1
+| /| /|
+|/ |/ |
+5--6--7
+| /| /|
+|/ |/ |
+2--8--3
 
+read 8 faces as follows
+
+540
+456
+614
+167
+265
+628
+876
+783
 
 
 struct levhead

@@ -108,6 +108,7 @@ namespace model_reader
             */
 
 
+
             //read faces
             br.BaseStream.Position = ptrNgonArray;
 
@@ -125,42 +126,36 @@ namespace model_reader
 
                 if (fmt == "ply")
                 {
-                    sb.Append("3 " + ind[6] + " " + ind[4] + " " + ind[0] + "\r\n");
-                    sb.Append("3 " + ind[5] + " " + ind[6] + " " + ind[0] + "\r\n");
-
-                    sb.Append("3 " + ind[7] + " " + ind[1] + " " + ind[4] + "\r\n");
-                    sb.Append("3 " + ind[6] + " " + ind[7] + " " + ind[4] + "\r\n");
-
-                    sb.Append("3 " + ind[8] + " " + ind[6] + " " + ind[5] + "\r\n");
-                    sb.Append("3 " + ind[2] + " " + ind[8] + " " + ind[5] + "\r\n");
-
-                    sb.Append("3 " + ind[3] + " " + ind[7] + " " + ind[6] + "\r\n");
-                    sb.Append("3 " + ind[8] + " " + ind[3] + " " + ind[6] + "\r\n");
+                    sb.Append(ASCIIFace("3", ind, 5, 4, 0));
+                    sb.Append(ASCIIFace("3", ind, 4, 5, 6));
+                    sb.Append(ASCIIFace("3", ind, 6, 1, 4));
+                    sb.Append(ASCIIFace("3", ind, 1, 6, 7));
+                    sb.Append(ASCIIFace("3", ind, 2, 6, 5));
+                    sb.Append(ASCIIFace("3", ind, 6, 2, 8));
+                    sb.Append(ASCIIFace("3", ind, 8, 7, 6));
+                    sb.Append(ASCIIFace("3", ind, 7, 8, 3));
                 }
                 else
                 {
                     sb.Append("o piece_" + i.ToString("0000") + "\r\n");
                     sb.Append("g piece_" + i.ToString("0000") + "\r\n");
 
-                    sb.Append("f " + ind[6] + " " + ind[4] + " " + ind[0] + "\r\n");
-                    sb.Append("f " + ind[5] + " " + ind[6] + " " + ind[0] + "\r\n");
-
-                    sb.Append("f " + ind[7] + " " + ind[1] + " " + ind[4] + "\r\n");
-                    sb.Append("f " + ind[6] + " " + ind[7] + " " + ind[4] + "\r\n");
-
-                    sb.Append("f " + ind[8] + " " + ind[6] + " " + ind[5] + "\r\n");
-                    sb.Append("f " + ind[2] + " " + ind[8] + " " + ind[5] + "\r\n");
-
-                    sb.Append("f " + ind[3] + " " + ind[7] + " " + ind[6] + "\r\n");
-                    sb.Append("f " + ind[8] + " " + ind[3] + " " + ind[6] + "\r\n\r\n");
+                    sb.Append(ASCIIFace("f", ind, 5, 4, 0));
+                    sb.Append(ASCIIFace("f", ind, 4, 5, 6));
+                    sb.Append(ASCIIFace("f", ind, 6, 1, 4));
+                    sb.Append(ASCIIFace("f", ind, 1, 6, 7));
+                    sb.Append(ASCIIFace("f", ind, 2, 6, 5));
+                    sb.Append(ASCIIFace("f", ind, 6, 2, 8));
+                    sb.Append(ASCIIFace("f", ind, 8, 7, 6));
+                    sb.Append(ASCIIFace("f", ind, 7, 8, 3));
                 }
-
-
 
             }
 
-            string fname = Path.GetFileNameWithoutExtension(path) + "." + fmt;
+            string fname = Path.ChangeExtension(path, fmt);
             File.WriteAllText(fname, sb.ToString());
+
+            Console.WriteLine(fname);
         }
 
         ~CTRModel()
@@ -184,5 +179,12 @@ namespace model_reader
             //string fname = Path.GetFileNameWithoutExtension(path) + ".txt";
             //File.WriteAllText(fname, sb.ToString());
         }
+
+
+        public string ASCIIFace(string label, short[] inds, int x, int y, int z)
+        {
+            return label + " " + inds[x] + " " + inds[y] + " " + inds[z] + "\r\n";
+        }
+
     }
 }
