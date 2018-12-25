@@ -2,7 +2,7 @@
 
 ## Description
 Various tools to operate Crash Team Racing game files.
-
+CTR Tools Discord channel: https://discord.gg/56xm9Aj
 
 ## bigtool
 Extracts/builds BIGFILE.BIG. Some files will be renamed based on the filelist.txt contents. Identified file additions are welcome.
