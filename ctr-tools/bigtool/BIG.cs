@@ -55,7 +55,8 @@ namespace bigtool
             EUR, 
             JAP, 
             Review,
-            Demo
+            USDemo,
+            EuroDemo
         }
 
         public string NameBig(BIGType big)
@@ -66,7 +67,8 @@ namespace bigtool
                 case BIGType.EUR: return "EUR PAL detected!";
                 case BIGType.JAP: return "JAP NTSC-J detected!";
                 case BIGType.Review: return "Review copy detected!";
-                case BIGType.Demo: return "Demo detected!";
+                case BIGType.USDemo: return "US Demo detected!";
+                case BIGType.EuroDemo: return "Euro Demo detected!"; 
                 default: return "Unknown BIGFILE.BIG";
             }
         }
@@ -79,7 +81,8 @@ namespace bigtool
                 case "03a005e2abc6022fd1e1e7405300ad77": return BIGType.EUR;
                 case "b22c894eff31539de853c83cf52a9025": return BIGType.JAP; ;
                 case "e73f0f3cade06dc5fc2719fe186cbe26": return BIGType.Review;
-                case "eb0b4551f3a4a374080c085dea1a8609": return BIGType.Demo; ;
+                case "eb0b4551f3a4a374080c085dea1a8609": return BIGType.USDemo;
+                case "870780bddb386d04882d57526a03c966": return BIGType.EuroDemo;
                 default: return BIGType.Unknown; ;
             }
         }

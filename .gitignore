@@ -59,7 +59,6 @@ ipch/
 *.obj
 *.db
 bigfile
-crash.txt
 
 # =========================
 # Operating System Files

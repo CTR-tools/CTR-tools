@@ -213,6 +213,8 @@
 212=adv_citadel_city.vram
 213=adv_citadel_city.lev
 214=adv_citadel_city.off
+215=menu_models.vram
+216=menu_models.lev
 217=adv_player_select.vram
 218=adv_player_select.lev
 234=ja.lng

@@ -1,0 +1,49 @@
+header {
+  dword - total filesize 
+  byte  - long samples count
+  byte  - short samples count
+  word  - sequence count (multiple sequences in a single file)
+}
+
+long samples count * {
+  byte - always 1??
+  byte - velocity
+  word - always 0??
+  word - base pitch
+  word - sample ID
+  word - unknown (always 0xFF80?)
+  byte - reverb level
+  byte - unknown
+}
+
+short samples count * {
+  byte - always 1??
+  byte - velocity
+  word - base pitch
+  word - sample ID
+  word - always 0??
+}
+
+sequence count * {
+  word - offset to sequence
+}
+
+3 bytes - unknown
+
+sequence count * {
+
+  byte - tracks count
+  word - BPM
+  word - TPQN
+
+  tracks count * {
+    word - offset to track data
+  }
+
+  <maybe something here, doesnt align properly>
+
+  tracks count * {
+    data - track events
+  }
+
+}

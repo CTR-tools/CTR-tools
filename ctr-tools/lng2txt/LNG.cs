@@ -21,9 +21,8 @@ namespace lng2txt
             {
                 case ".lng": ConvertLNG(s); break;
                 case ".txt": ConvertTXT(s); break;
-                default: Console.WriteLine("Not supported file."); break;
+                default: Console.WriteLine("Not a supported file."); break;
             }
-
         }
 
 
@@ -60,11 +59,38 @@ namespace lng2txt
         }
 
 
-        public void ConvertTXT(string s)
+        public void ConvertTXT(string f)
         {
-            Console.WriteLine("ConsoleTXTDummy " + s);
+            string path = f;
 
+            string[] s = File.ReadAllLines(f);
 
+            List<int> offsets = new List<int>();
+
+            using (BinaryWriter writer = new BinaryWriter(File.Open(Path.ChangeExtension(path, ".lng"), FileMode.Create)))
+            {
+                writer.Write((int)s.Count());
+                writer.Write((int)0); //get back here to know the offset
+
+                foreach (string str in s)
+                {
+                    offsets.Add((int)writer.BaseStream.Position);
+
+                    writer.Write(System.Text.Encoding.ASCII.GetBytes(str.Replace("|", ""+(char)0xD)));
+                    writer.Write((byte)0);
+                }
+
+                int lastoff = (int)writer.BaseStream.Position;
+
+                foreach (int i in offsets)
+                    writer.Write(i);
+
+                writer.Write(System.Text.Encoding.ASCII.GetBytes("MISSING MSG"));
+                writer.Write((byte)0);
+
+                writer.BaseStream.Position = 4;
+                writer.Write(lastoff);
+            }
 
         }
     }
