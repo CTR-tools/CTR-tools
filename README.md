@@ -39,7 +39,7 @@ Usage: howl.exe C:\example\kart.hwl
 
 
 ## cseq
-Reads CSEQ files and plays separate tracks. At this point MIDI/SEQ export is not available. Unlike the rest it's temporary WinForms application.
+Reads CSEQ files and plays separate tracks. At this point MIDI/SEQ export is not available. Unlike the rest it's temporary WinForms application. Warning! This tool uses NAudio: https://github.com/naudio/NAudio Make sure to download NAudio.dll before using/compiling the app.
 
 Usage: use File menu or drag-drop CSEQ file on the application window.
 * Single CSEQ file may contain multiple sequences.
