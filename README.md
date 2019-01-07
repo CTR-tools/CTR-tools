@@ -19,7 +19,7 @@ Building: bigtool.exe C:\example\bigfile.txt
 
 
 ## lng2txt
-Converts lng files into text files and back (warning, not tested propery as of r4).
+Converts lng files into text files and back.
 
 Usage: lng2txt.exe C:\example\somefile.lng
 
