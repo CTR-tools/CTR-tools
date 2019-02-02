@@ -1,0 +1,16 @@
+ctr textures are stored in texture pages, mostly indexed 16 colors (4 bits) using custom defined palettes.
+
+dword - 0x20000000
+mempage x2 {
+  dword - texture page size
+  tim {
+    dword - 0x10000000
+    dword - 0x02000000
+    dword - tim size
+    word - memoryX
+    word - memoryY
+    word - width (it uses native 2 byte 16 bit color)
+    word - height
+    width * height * 2 bytes - vram data
+  }
+}

@@ -113,8 +113,25 @@ namespace howl
 
         public void ExportCSEQ(BinaryReader br)
         {
-            string dir = String.Format("{0}_data\\", name);
-            Directory.CreateDirectory(dir);
+            string seqdir = String.Format("{0}_cseq\\", name);
+            Directory.CreateDirectory(seqdir);
+
+            string bankdir = String.Format("{0}_bank\\", name);
+            Directory.CreateDirectory(bankdir);
+
+            for (int i = 0; i<offbanks.Count-1; i++)
+            {
+                br.BaseStream.Position = offbanks[i];
+
+                string fn = String.Format("{0}.bnk", i.ToString("00"));
+                Console.WriteLine("Extracting " + fn);
+
+                fn = bankdir + fn;
+
+                File.WriteAllBytes(fn, br.ReadBytes(offbanks[i+1]-offbanks[i]));
+            }
+
+            Console.WriteLine("---");
 
             int j = 0;
 
@@ -128,7 +145,7 @@ namespace howl
 
                 Console.WriteLine("Extracting " + fn);
 
-                fn = dir + fn;
+                fn = seqdir + fn;
 
                 br.BaseStream.Position = i;
                 int size = br.ReadInt32();

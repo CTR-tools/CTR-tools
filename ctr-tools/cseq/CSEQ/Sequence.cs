@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using NAudio.Midi;
 using System.IO;
 
@@ -18,68 +15,52 @@ namespace cseq
             tracks = new List<CTrack>();
         }
 
-
         public void Read(BinaryReaderEx br, System.Windows.Forms.TextBox textBox1)
         {
             header.Read(br);
 
-            //textBox1.Text += header.ToString();
-
-            List<short> offsets = new List<short>();
+            List<short> seqOffsets = new List<short>();
 
             for (int i = 0; i < header.trackNum; i++)
-                offsets.Add(br.ReadInt16());
+                seqOffsets.Add(br.ReadInt16());
 
-            br.ReadInt16();
-            br.ReadInt16();
+            //i dont have any intelligent explanation for this
+            if (header.trackNum % 2 == 0) br.ReadInt16();
 
             int trackData = (int)br.BaseStream.Position;
 
-            //System.Windows.Forms.MessageBox.Show(csh.trackNum + "");
-
             for (int i = 0; i < header.trackNum; i++)
             {
-
-                // textBox1.AppendText("\r\nTrack " + i + "\r\n");
-
-                br.BaseStream.Position = trackData + offsets[i];
+                br.BaseStream.Position = trackData + seqOffsets[i];
 
                 CTrack t = new CTrack();
                 t.Read(br);
+                t.name = "Track_" + i.ToString("00") + (t.isDrumTrack ? "_drum" : "");
 
                 tracks.Add(t);
-
             }
         }
-
-
-        public byte[] Reverse(ushort x)
-        {
-            byte[] data = BitConverter.GetBytes(x).Reverse().ToArray();
-            return data;
-        }
-
 
         public void ExportMIDI(string fn)
         {
-            using (BinaryWriter bw = new BinaryWriter(File.Create(fn)))
-            {
-                if (tracks.Count > 16)
-                {
-                    System.Windows.Forms.MessageBox.Show(tracks.Count + " tracks!!!");
-                    return;
-                }
+            string cr = "(C) 1999, Mutato Muzika: Mark Mothersbaugh, Josh Mancell.\r\n\r\nConverted to MIDI using CTR-Tools by DCxDemo*.";
 
-                bw.Write(System.Text.Encoding.ASCII.GetBytes("MThd"));
-                bw.Write(Reverse(6));
-                bw.Write(Reverse(1));
-                bw.Write(Reverse(96));
+            MidiEventCollection mc = new MidiEventCollection(1, header.TPQN);
 
-                for (int i = 0; i < tracks.Count; i++)
-                    tracks[i].ExportMIDI(bw, i + 1);
-            }
+            //this is a lazy fix for guitarpro5 bug, 1st track does not import there
+            List<MidiEvent> dummy = new List<MidiEvent>();
+            dummy.Add(new TextEvent(Path.GetFileNameWithoutExtension(fn), MetaEventType.SequenceTrackName, 0));
+            dummy.Add(new TextEvent(cr, MetaEventType.Copyright, 0));
+            dummy.Add(new TempoEvent(header.MPQN, 0));
+
+            mc.AddTrack(dummy);
+
+            for (int i = 0; i < tracks.Count; i++)
+                mc.AddTrack(tracks[i].ToMidiEventList(header, tracks[i].isDrumTrack ? 10 : i + 1));
+
+            mc.PrepareForExport();
+
+            MidiFile.Export(fn, mc);
         }
-
-
     }
 }

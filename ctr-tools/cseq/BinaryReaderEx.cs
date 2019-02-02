@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 
 namespace cseq
 {
@@ -34,6 +30,26 @@ namespace cseq
         public string HexPos()
         {
             return "0x" + this.BaseStream.Position.ToString("x8");
+        }
+
+        public int ReadTimeDelta()
+        {
+            int time = 0;
+            byte next = 0;
+            int ttltime = 0;
+
+            do
+            {
+                byte x = ReadByte();
+
+                time = (byte)(x & 0x7F);
+                next = (byte)(x & 0x80);
+
+                ttltime = (ttltime << 7) | time;
+            }
+            while (next != 0);
+
+            return ttltime;
         }
 
     }

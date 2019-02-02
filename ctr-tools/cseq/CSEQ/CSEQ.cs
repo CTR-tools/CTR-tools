@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.IO;
-using NAudio.Midi;
-using NAudio;
-using System.Diagnostics;
-using System.Threading;
 
 namespace cseq
 {
     public class CSEQ
     {
+        public static bool usdemo = false;
+
         public CHeader header;
         public List<Sample> longSamples;
         public List<Sample> shortSamples;
@@ -28,80 +23,41 @@ namespace cseq
 
         public bool Read(string s, System.Windows.Forms.TextBox textBox1)
         {
-            
-            if (Form1.midiOut == null)
-                Form1.midiOut = new MidiOut(0);
-
-            Form1.midiOut.Send(MidiMessage.ChangePatch(34, 1).RawData);
-
-
-
             BinaryReaderEx br = BinaryReaderEx.FromFile(s);
 
             if (!header.Read(br)) return false;
 
-            for (int i = 0; i < header.chunk12cnt; i++)
+            for (int i = 0; i < header.longCnt; i++)
+                longSamples.Add(Sample.Get(br, InstType.Long));
+
+            for (int i = 0; i < header.shortCnt; i++)
+                shortSamples.Add(Sample.Get(br, InstType.Short));
+
+
+            List<short> seqPtrs = new List<short>();
+
+            for (int i = 0; i < header.seqCnt; i++)
+                seqPtrs.Add(br.ReadInt16());
+
+            int p = 3;
+            if (usdemo) p = 1;
+
+            for (int i = 0; i < p; i++)
+                if (br.ReadByte() != 0) 
+                    Log.WriteLine("unknown 3 bytes block - not null at " + br.HexPos());
+
+            int seqStart = (int)br.BaseStream.Position;
+
+            for (int i = 0; i < header.seqCnt; i++)
             {
-                Sample ls = new Sample();
-                ls.Read(br, InstType.Long);
-                longSamples.Add(ls);
-            }
-
-            for (int i = 0; i < header.chunk8cnt; i++)
-            {
-                Sample ss = new Sample();
-                ss.Read(br, InstType.Short);
-                longSamples.Add(ss);
-            }
-
-            // MessageBox.Show("extrainfo at 0x" + br.BaseStream.Position.ToString("X8") );
-
-            //probably this is either multiple tracks, or multiple containers 
-
-            List<short> extraoffsets = new List<short>();
-
-            for (int i = 0; i < header.extrainfo; i++)
-                extraoffsets.Add(br.ReadInt16());
-
-            /*
-            for (int i = 0; i < header.extrainfo; i++)
-                textBox1.AppendText(String.Format("extra for trackchunk {0}: {1}\r\n", i, br.ReadByte()));
-            */
-
-            br.ReadInt16();
-            br.ReadByte();
-
-            //for (int i = 0; i < ch.extrainfo; i++)br.ReadByte();
-
-            int sequencedata = (int)br.BaseStream.Position;
-
-            for (int i = 0; i < header.extrainfo; i++)
-            {
-                br.BaseStream.Position = sequencedata + extraoffsets[i];
+                br.BaseStream.Position = seqStart + seqPtrs[i];
 
                 Sequence seq = new Sequence();
-
                 seq.Read(br, textBox1);
                 sequences.Add(seq);
-
-                //Thread th = new Thread(new ThreadStart(() => seq.Read(br, textBox1)));
-                //th.Start();
             }
 
             return true;
-        }
-
-        public string ListSamples()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (Sample ls in longSamples)
-                sb.Append(ls.ToString() + "\r\n");
-
-            foreach (Sample ss in shortSamples)
-                sb.Append(ss.ToString() + "\r\n");
-
-            return sb.ToString();
         }
     }
 }

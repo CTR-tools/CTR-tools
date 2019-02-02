@@ -1,3 +1,10 @@
+CSEQ is a custom sequence format used in Crash Team racing.
+It contains both event sequences and instrument definitions.
+
+--------------
+File structure
+--------------
+
 header {
   dword - total filesize 
   byte  - long samples count
@@ -11,9 +18,9 @@ long samples count * {
   word - always 0??
   word - base pitch
   word - sample ID
-  word - unknown (always 0xFF80?)
+  word - unknown (mostly 0x80FF, varies in japanese tracks)
   byte - reverb level
-  byte - unknown
+  byte - unknown (maybe reverb too?)
 }
 
 short samples count * {
@@ -28,7 +35,7 @@ sequence count * {
   word - offset to sequence
 }
 
-3 bytes - unknown
+3 bytes - unknown, always 0
 
 sequence count * {
 
@@ -40,10 +47,36 @@ sequence count * {
     word - offset to track data
   }
 
-  <maybe something here, doesnt align properly>
+  optional word - only read if tracksCount % 2 == 0
 
   tracks count * {
-    data - track events
+    word - denotes sample set to use. if 0 - uses long samples array, if 1 - uses short samples array
+    event[] {
+      byte[] - delta time variable
+      byte - opcode
+      event data {
+        byte - optional value 1
+        byte - optional value 2 depending on opcode
+      }
   }
 
 }
+
+
+--------------------
+opcodes:
+0x01 - Note Off
+0x02 - unknown. used once in skyway. maybe just pause?
+0x03 - End Track
+0x04 - unknown. used once in canyon, start of track_03
+0x05 - Note On
+0x06 - assumed velocity (volume)
+0x07 - assumed pan
+0x08 - unknown. used in japanese tracks
+0x09 - patch change
+0x0A - assumed bend (pitch shift)
+
+data length:
+Note On - 2 bytes
+End Track - 0 bytes
+others - 1 bytes

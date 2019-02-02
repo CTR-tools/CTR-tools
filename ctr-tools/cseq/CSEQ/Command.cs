@@ -1,78 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using NAudio.Midi;
 
 namespace cseq
 {
     public enum CSEQEvent
     {
-        Unknown0 = 0x00,
         NoteOff = 0x01,
-        Unknown2 = 0x02,
-        EndOfTrack = 0x03,
+        EndTrack2 = 0x02,
+        EndTrack = 0x03,
         Unknown4 = 0x04,
         NoteOn = 0x05,
-        Unknown6 = 0x06,
-        Unknown7 = 0x07,
+        VelAssume = 0x06,
+        PanAssume = 0x07,
         Unknown8 = 0x08,
-        Unknown9 = 0x09,
-        UnknownA = 0x0A,
-        EndOfKek = 666
+        ChangePatch = 0x09,
+        BendAssume = 0x0A,
+        Error = 0x666
     }
 
 
     public class Command
     {
         public CSEQEvent evt;
-
         public byte pitch;
         public byte velocity;
         public int wait;
 
-        private int ReadTimeDelta(BinaryReader br)
-        {
-
-            int time = 0;
-            byte next = 0;
-
-            byte cnt = 0;
-
-            int ttltime = 0;
-
-            do
-            {
-                byte x = br.ReadByte();
-
-                time = (byte)(x & 0x7F);
-                next = (byte)(x & 0x80);
-
-                ttltime = (ttltime << (cnt * 7) ) | time;
-
-                /*
-                if (cnt > 0)
-                System.Windows.Forms.MessageBox.Show(String.Format(
-                    "initial value: {0}\r\n" +
-                    "time this byte: {1}\r\n" + 
-                    "next: {2}\r\n" +
-                    "ttltime: {3}",
-                    x, time, next, ttltime
-
-                    ));
-            */
-                cnt++;
-            }
-            while (next != 0);
-
-            return ttltime;
-
-        }
-
         public void Read(BinaryReaderEx br)
         {
-            wait = ReadTimeDelta(br);
+            wait = br.ReadTimeDelta();
 
             byte op = br.ReadByte();
 
@@ -80,17 +36,19 @@ namespace cseq
 
             switch (evt)
             {
-                case CSEQEvent.Unknown0:
-                case CSEQEvent.Unknown2:
+                case CSEQEvent.Unknown4:
+                case CSEQEvent.Unknown8:
                     {
+                        pitch = br.ReadByte();
+                        Log.Write(op.ToString("X2") + " found at " + br.HexPos() + "\r\n");
                         break;
                     }
-                case CSEQEvent.Unknown4:
-                case CSEQEvent.Unknown6:
-                case CSEQEvent.Unknown7:
-                case CSEQEvent.Unknown8:
-                case CSEQEvent.Unknown9:
-                case CSEQEvent.UnknownA:
+
+                case CSEQEvent.EndTrack2:
+                case CSEQEvent.ChangePatch:
+                case CSEQEvent.BendAssume:
+                case CSEQEvent.VelAssume:
+                case CSEQEvent.PanAssume:
                 case CSEQEvent.NoteOff:
                     {
                         pitch = br.ReadByte();
@@ -102,14 +60,15 @@ namespace cseq
                         velocity = br.ReadByte();
                         break;
                     }
-                case CSEQEvent.EndOfTrack:
+
+                case CSEQEvent.EndTrack:
                     {
                         break;
                     }
 
                 default:
                     {
-                        evt = CSEQEvent.EndOfKek;
+                        evt = CSEQEvent.Error;
                         Log.Write(op.ToString("X2") + " not recognized at " + br.HexPos() + "\r\n");
                         break;
                         //throw new System.NotImplementedException(String.Format("Not implemented opcode: {0} at 0x{1}", op, br.BaseStream.Position.ToString("X8") ));
@@ -117,29 +76,26 @@ namespace cseq
             }
         }
 
-
-        public MidiMessage GetMIDIMessage(int tracknum)
+        public MidiEvent ToMidiEvent(int absTime, int channel)
         {
+            TrackPatch tp = new TrackPatch();
+
+            //we can't go beyond 16 with midi
+            channel = (channel <= 16) ? channel : 16;
+
             switch (evt)
             {
-                case CSEQEvent.NoteOn: return MidiMessage.StartNote(pitch, velocity, tracknum);
-                case CSEQEvent.NoteOff: return MidiMessage.StopNote(pitch, 127, tracknum);
+                case CSEQEvent.NoteOn:      return new NoteEvent(absTime + wait, channel, MidiCommandCode.NoteOn, channel != 10 ? pitch : tp.SwapDrum(pitch), velocity);
+                case CSEQEvent.NoteOff:     return new NoteEvent(absTime + wait, channel, MidiCommandCode.NoteOff, channel != 10 ? pitch : tp.SwapDrum(pitch), velocity);
+                case CSEQEvent.ChangePatch: return new PatchChangeEvent(absTime + wait, channel, channel == 10 ? pitch : tp.SwapPatch(pitch));
+                case CSEQEvent.EndTrack2:
+                case CSEQEvent.EndTrack:    return new MetaEvent(MetaEventType.EndTrack, 0, absTime);
+                case CSEQEvent.BendAssume:  return new PitchWheelChangeEvent(absTime + wait, channel, pitch * 64);
+                case CSEQEvent.PanAssume:   return new ControlChangeEvent(absTime + wait, channel, MidiController.Pan, pitch / 2);
+                case CSEQEvent.VelAssume:   return new ControlChangeEvent(absTime + wait, channel, MidiController.MainVolume, pitch / 2);
                 default: return null;
             }
         }
-
-
-        
-        public void PitchShift(int i)
-        {
-            int newPitch = pitch + i;
-
-            if (newPitch >= 0 && newPitch <= 127)
-            {
-                pitch = (byte)newPitch;
-            }
-        }
-
 
         public override string ToString()
         {

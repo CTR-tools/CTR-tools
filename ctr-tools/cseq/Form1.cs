@@ -1,65 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using System.Data;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
-using NAudio;
-using NAudio.Midi;
-using System.Threading;
 
 namespace cseq
 {
-
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        public static MidiOut midiOut;
+        public static bool finalLap = false;
         public CSEQ seq;
 
-        public Form1()
+        string loadedfile = "";
+
+        public MainForm()
         {
             InitializeComponent();
+            this.DoubleBuffered = true;
         }
-
-        public void SkipToSong(BinaryReader br, int n)
-        {
-            for (int i = 0; i < n; i++)
-            {
-                int x = br.ReadInt32();
-                x += x % 0x800 - 4;
-            }
-        }
-
-
 
         private void ReadCSEQ(string fn)
         {
             Log.Clear();
-
             sequenceBox.Items.Clear();
             trackBox.Items.Clear();
-
 
             seq = new CSEQ();
 
             if (seq.Read(fn, textBox1))
             {
-                textBox2.Text = seq.header.ToString();
-
-                int i = 0;
-                sequenceBox.Items.Clear();
-
-                foreach (Sequence s in seq.sequences)
-                {
-                    sequenceBox.Items.Add("Sequence_" + i.ToString("X2"));
-                    i++;
-                }
-
-                textBox1.Text = Log.Read();
-
+                FillUI(fn);
             }
             else
             {
@@ -67,7 +38,48 @@ namespace cseq
             }
         }
 
+        private void FillUI(string fn)
+        {
+            loadedfile = Path.GetFileName(fn);
+            this.Text = "CTR CSEQ - " + loadedfile;
 
+            textBox2.Text = seq.header.ToString();
+
+            int i = 0;
+            sequenceBox.Items.Clear();
+
+            foreach (Sequence s in seq.sequences)
+            {
+                sequenceBox.Items.Add("Sequence_" + i.ToString("X2"));
+                i++;
+            }
+
+            textBox1.Text = Log.Read();
+
+            DataSet ds = new DataSet();
+            DataTable samples = new DataTable("samples");
+
+            samples.Columns.Add("insttype", typeof(string));
+            samples.Columns.Add("magic1", typeof(byte));
+            samples.Columns.Add("velocity", typeof(byte));
+            samples.Columns.Add("always0", typeof(short));
+            samples.Columns.Add("basepitch", typeof(short));
+            samples.Columns.Add("sampleID", typeof(short));
+            samples.Columns.Add("unknown_80FF", typeof(string));
+            samples.Columns.Add("reverb", typeof(byte));
+            samples.Columns.Add("always0_2", typeof(byte));
+
+            foreach (Sample s in seq.longSamples)
+                s.ToDataRow(samples);
+
+            foreach (Sample s in seq.shortSamples)
+                s.ToDataRow(samples);
+
+            ds.Tables.Add(samples);
+
+            dataGridView1.DataSource = ds.Tables["samples"];
+
+        }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -75,9 +87,7 @@ namespace cseq
             ofd.Filter = "Crash Team Racing CSEQ (*.cseq)|*.cseq";
 
             if (ofd.ShowDialog() == DialogResult.OK)
-            {
                 ReadCSEQ(ofd.FileName);
-            }
         }
 
         private void sequenceBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -88,15 +98,12 @@ namespace cseq
 
             foreach (CTrack c in seq.sequences[sequenceBox.SelectedIndex].tracks)
             {
-                trackBox.Items.Add("Track_" + i.ToString("X2"));
+                trackBox.Items.Add(c.name);
                 i++;
             }
 
-            textBox1.Text = seq.ListSamples();
-
+            tabControl1.SelectedIndex = 1;
         }
-
-        Thread player;
 
         private void trackBox_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -104,35 +111,11 @@ namespace cseq
             int y = trackBox.SelectedIndex;
 
             if (x != -1 && y != -1)
-            {
-
-                if (player != null)
-                    if (player.IsAlive)
-                        player.Abort();
-
                 this.textBox1.Text = seq.sequences[x].tracks[y].ToString();
 
-                player = new Thread(new ThreadStart(() => seq.sequences[x].tracks[y].Play(seq.sequences[x].header)));
-                player.Start();
-            }
+            tabControl1.SelectedIndex = 0;
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (player != null)
-                if (player.IsAlive)
-                {
-                    player.Interrupt();
-                    player.Abort();
-                    player = null;
-                }
-
-            if (Form1.midiOut != null)
-            {
-                Form1.midiOut.Send(MidiMessage.ChangeControl(123, 0, 1).RawData);
-                Form1.midiOut = null;
-            }
-        }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -143,6 +126,7 @@ namespace cseq
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "MIDI File (*.mid)|*.mid";
+            sfd.FileName = Path.ChangeExtension(loadedfile, ".mid");
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -156,14 +140,18 @@ namespace cseq
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
             if (files.Length > 0)
-            {
                 ReadCSEQ(files[0]);
-            }
         }
 
         private void Form1_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
         }
+
+        private void skipBytesForUSDemoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CSEQ.usdemo = skipBytesForUSDemoToolStripMenuItem.Checked;
+        }
+
     }
 }

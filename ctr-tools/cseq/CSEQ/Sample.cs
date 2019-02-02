@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Data;
 
 namespace cseq
 {
@@ -27,6 +25,13 @@ namespace cseq
 
         public Sample()
         {
+        }
+
+        public static Sample Get(BinaryReaderEx br, InstType it)
+        {
+            Sample s = new Sample();
+            if (s.Read(br, it)) return s;
+            return null;
         }
 
         public bool Read(BinaryReaderEx br, InstType it)
@@ -79,8 +84,29 @@ namespace cseq
                         instType.ToString(), magic1, velocity, basepitch, sampleID.ToString("X4"), always0
                         );
 
-                default: return "unknown insrument type";
+                default: return "unknown instrument type";
             }
+        }
+
+        public void ToDataRow(DataTable dt)
+        {
+            DataRow dr = dt.NewRow();
+
+            dr["instType"] = instType.ToString();
+            dr["magic1"] = magic1;
+            dr["velocity"] = velocity;
+            dr["basepitch"] = basepitch;
+            dr["sampleID"] = sampleID;
+            dr["always0"] = always0;
+
+            if (instType == InstType.Long)
+            {
+                dr["unknown_80FF"] = unknownFF80.ToString("X4");
+                dr["reverb"] = reverb;
+                dr["always0_2"] = always0_2;
+            }
+
+            dt.Rows.Add(dr);
         }
 
     }

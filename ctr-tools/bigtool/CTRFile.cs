@@ -17,15 +17,22 @@ namespace bigtool
         public CTRFile(string path)
         {
             name = Path.GetFileName(path);
-            data = File.ReadAllBytes(path);
-            size = (uint)data.Length;
+            data = new byte[0];
+            size = 0;
+
+            if (File.Exists(path))
+            {
+                data = File.ReadAllBytes(path);
+                size = (uint)data.Length;
+            }
+
             CalcPadding();
         }
 
         public void CalcPadding()
         {
-            padded_size = (size / 2048) * 2048;
-            if (padded_size % 2048 == 0) padded_size += 2048;     
+            padded_size = size;
+            while (padded_size % 2048 != 0) padded_size++;
         }
 
         public override string ToString()

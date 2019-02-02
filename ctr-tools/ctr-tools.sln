@@ -11,6 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "howl", "howl\howl.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cseq", "cseq\cseq.csproj", "{69BCF237-3D55-4A30-B3C8-8716C8EBF212}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bank", "bank\bank.csproj", "{4F49A7E9-889E-48E6-9761-D41E77FE31A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "levTool", "levTool\levTool.csproj", "{36BC2F61-99A4-43E3-9246-28A1BE39D714}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ctrvram", "ctrvram\ctrvram.csproj", "{26FB92F1-4D71-4DC7-8E38-20F2C2CCCD2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -37,6 +43,18 @@ Global
 		{69BCF237-3D55-4A30-B3C8-8716C8EBF212}.Debug|x86.Build.0 = Debug|x86
 		{69BCF237-3D55-4A30-B3C8-8716C8EBF212}.Release|x86.ActiveCfg = Release|x86
 		{69BCF237-3D55-4A30-B3C8-8716C8EBF212}.Release|x86.Build.0 = Release|x86
+		{4F49A7E9-889E-48E6-9761-D41E77FE31A2}.Debug|x86.ActiveCfg = Debug|x86
+		{4F49A7E9-889E-48E6-9761-D41E77FE31A2}.Debug|x86.Build.0 = Debug|x86
+		{4F49A7E9-889E-48E6-9761-D41E77FE31A2}.Release|x86.ActiveCfg = Release|x86
+		{4F49A7E9-889E-48E6-9761-D41E77FE31A2}.Release|x86.Build.0 = Release|x86
+		{36BC2F61-99A4-43E3-9246-28A1BE39D714}.Debug|x86.ActiveCfg = Debug|x86
+		{36BC2F61-99A4-43E3-9246-28A1BE39D714}.Debug|x86.Build.0 = Debug|x86
+		{36BC2F61-99A4-43E3-9246-28A1BE39D714}.Release|x86.ActiveCfg = Release|x86
+		{36BC2F61-99A4-43E3-9246-28A1BE39D714}.Release|x86.Build.0 = Release|x86
+		{26FB92F1-4D71-4DC7-8E38-20F2C2CCCD2A}.Debug|x86.ActiveCfg = Debug|x86
+		{26FB92F1-4D71-4DC7-8E38-20F2C2CCCD2A}.Debug|x86.Build.0 = Debug|x86
+		{26FB92F1-4D71-4DC7-8E38-20F2C2CCCD2A}.Release|x86.ActiveCfg = Release|x86
+		{26FB92F1-4D71-4DC7-8E38-20F2C2CCCD2A}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

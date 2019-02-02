@@ -3,8 +3,6 @@
 ## Description
 Various tools to operate Crash Team Racing game files.
 
-Join the CTR Tools Discord channel: https://discord.gg/56xm9Aj
-
 
 ## bigtool
 Extracts/builds BIGFILE.BIG. Some files will be renamed based on the filelist.txt contents. Identified file additions are welcome.
@@ -19,7 +17,7 @@ Building: bigtool.exe C:\example\bigfile.txt
 
 
 ## lng2txt
-Converts lng files into text files and back.
+Converts lng files into text files and back (warning, not tested propery as of r4).
 
 Usage: lng2txt.exe C:\example\somefile.lng
 
@@ -29,22 +27,6 @@ At this point exports vertex colored non-textured mesh of the level (\*.lev file
 https://i.imgur.com/RqWH93V.png
 
 Usage: model_reader.exe C:\example\somefile.lev \[ply]
-
-
-## howl
-Extracts CSEQ files from KART.HWL.
-
-Usage: howl.exe C:\example\kart.hwl
-* This will create kart.hwl_data folder with all the sequences.
-
-
-## cseq
-Reads CSEQ files and plays separate tracks. At this point MIDI/SEQ export is not available. Unlike the rest it's temporary WinForms application. Warning! This tool uses NAudio: https://github.com/naudio/NAudio Make sure to download NAudio.dll before using/compiling the app.
-
-Usage: use File menu or drag-drop CSEQ file on the application window.
-* Single CSEQ file may contain multiple sequences.
-* Click sequence on the list to show it's tracks.
-* Click on the track to play it.
 
 
 2016-2018, DCxDemo*.
