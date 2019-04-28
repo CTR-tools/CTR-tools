@@ -1,18 +1,3 @@
-------------------
-BIGFILE.BIG format
-------------------
-
-dword - null
-dword - number of entries
-entries *
-{
-  dword - offset (sector number, mult by 2048 for absolute offset)
-  dword - size in bytes
-}
-x bytes - data
-
-
-
 most files are into some container as follows
 
 dword - offset to end array

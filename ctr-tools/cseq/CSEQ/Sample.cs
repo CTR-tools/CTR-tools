@@ -27,12 +27,23 @@ namespace cseq
         {
         }
 
-        public static Sample Get(BinaryReaderEx br, InstType it)
+        static Sample Get(BinaryReaderEx br, InstType it)
         {
             Sample s = new Sample();
             if (s.Read(br, it)) return s;
             return null;
         }
+
+        public static Sample GetLong(BinaryReaderEx br)
+        {
+            return Get(br, InstType.Long);
+        }
+
+        public static Sample GetShort(BinaryReaderEx br)
+        {
+            return Get(br, InstType.Short);
+        }
+
 
         public bool Read(BinaryReaderEx br, InstType it)
         {

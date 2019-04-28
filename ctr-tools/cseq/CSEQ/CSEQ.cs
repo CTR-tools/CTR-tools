@@ -20,7 +20,6 @@ namespace cseq
             sequences = new List<Sequence>();
         }
 
-
         public bool Read(string s, System.Windows.Forms.TextBox textBox1)
         {
             BinaryReaderEx br = BinaryReaderEx.FromFile(s);
@@ -28,10 +27,10 @@ namespace cseq
             if (!header.Read(br)) return false;
 
             for (int i = 0; i < header.longCnt; i++)
-                longSamples.Add(Sample.Get(br, InstType.Long));
+                longSamples.Add(Sample.GetLong(br));
 
             for (int i = 0; i < header.shortCnt; i++)
-                shortSamples.Add(Sample.Get(br, InstType.Short));
+                shortSamples.Add(Sample.GetShort(br));
 
 
             List<short> seqPtrs = new List<short>();

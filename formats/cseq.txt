@@ -13,18 +13,18 @@ header {
 }
 
 long samples count * {
-  byte - always 1??
+  byte - always 1?? assumed magic
   byte - velocity
   word - always 0??
-  word - base pitch
+  word - base pitch, format unknown
   word - sample ID
   word - unknown (mostly 0x80FF, varies in japanese tracks)
   byte - reverb level
-  byte - unknown (maybe reverb too?)
+  byte - unknown (maybe reverb too? lower byte?)
 }
 
 short samples count * {
-  byte - always 1??
+  byte - always 1?? assumed magic
   byte - velocity
   word - base pitch
   word - sample ID
@@ -36,6 +36,7 @@ sequence count * {
 }
 
 3 bytes - unknown, always 0
+//for NTSC-U demo it's 1 byte
 
 sequence count * {
 
@@ -66,7 +67,7 @@ sequence count * {
 --------------------
 opcodes:
 0x01 - Note Off
-0x02 - unknown. used once in skyway. maybe just pause?
+0x02 - unknown. used once in skyway. assumed end track.
 0x03 - End Track
 0x04 - unknown. used once in canyon, start of track_03
 0x05 - Note On
@@ -79,4 +80,4 @@ opcodes:
 data length:
 Note On - 2 bytes
 End Track - 0 bytes
-others - 1 bytes
+others - 1 byte

@@ -1,0 +1,18 @@
+----------
+LNG format
+----------
+
+dword - string entries count
+dword - pointer to array of string offsets
+
+entries *
+{
+  null terminated string
+}
+
+entries *
+{
+  dword - string offset 
+}
+
+null terminated string - MISSING MSG/0
