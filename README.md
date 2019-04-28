@@ -11,7 +11,7 @@ Extracts/builds BIGFILE.BIG.
 Usage: you can basically drag'n'drop big and txt files on the tool's icon or you can use command line.
 
 Extracting example: bigtool.exe C:\example\bigfile.big
-* This will create a text filem containing a list of all files and a folder with actual extracted contents. 
+* This will create a text file containing a list of all files and a folder with actual extracted contents. 
 * Some files will be named based on the filelist.txt entries. Current list only fits NTSC-U and NTSC-J versions of the game.
 * Zero bytes files are not exported.
 
@@ -42,7 +42,7 @@ Reads CSEQ files and exports to MIDI.
 
 Usage: use File menu or drag-drop CSEQ file on the application window.
 * Single CSEQ file may contain multiple sequences.
-* Click sequence on the list to show it's tracks/instruments.
+* Click sequence on the list to show its tracks/instruments.
 * Double-clicking the track will bring MIDI file save dialog.
 
 2016-2019, DCxDemo*.
