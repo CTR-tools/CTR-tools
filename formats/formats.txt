@@ -103,17 +103,17 @@ dword - number of entries?
 
 ****
 
-modelheader
+pickup_header
 {
   16 bytes - model name
   dword - offset to mesh
 
-  short x3 - scale?
+  short x3 - initial scale? only applies on restart.
 
   short - 0?
-  dword - 0? << maybe short x3 as well?
+  dword - 0? << maybe short x3 as well? these certainly contain either vcolors or render flags
 
-  dword - unknown?
+  dword - some unknown offset
   3xdword - 0?
 
   short x3 - position
@@ -145,44 +145,108 @@ model info struct
 
 event types (change dec to hex)
 ------------
- -1 - do nothing
-  2 - single fruit
-  6 - crate nitro
-  7 - crate fruit
-  8 - weapon
- 27 - crate tnt
- 36 - rotate kart (like green vial)
- 57 - pipe
- 59 - vent
- 60 - crystal
-147 - letter C
-148 - letter T
-149 - letter R
-166 - finish lap?
+-1: nothing
+2: single_fruit
+6: crate_nitro
+7: crate_fruit
+8: crate_weapon
+18: state_burned
+19: state_eaten
+33: state_squished
+34: state_squished_ball
+36: state_rotated_armadillo
+37: state_killed_blades
+39: crate_tnt
+76: pass_seal
+78: state_squished_barrel
+81: state_turle_jump
+82: state_rotated_spider
+84: state_burned_in_air
+85: labs_drum
+87: pipe
+89: vent
+91: state_castle_sign
+92: crate_relic1
+96: crystal
+100: crate_relic2
+101: crate_relic3
+108: warp_pad
+112: teeth
+114: save_screen
+115: garage_pin
+116: garage_papu
+117: garage_roo
+118: garage_joe
+119: garage_oxide
+122: door_unknown
+139: penguin_lose
+147: letter_c
+148: letter_t
+149: letter_r
+150: crashsleep
+151: intro_coco
+152: intro_cortex
+153: intro_tiny
+154: intro_polar
+155: intro_dingo
+157: xx_intro_beam_glow
+158: intro_tiny_kart
+159: intro_dingo_kart
+160: xx_intro_1
+161: xx_intro_2
+165: introoxidebody
+166: finish_lap
+204: intro_flash
+206: crash_select
+207: cortex_select
+208: tiny_select
+209: coco_select
+210: ngin_select
+211: dingo_select
+212: polar_select
+213: pura_select
+223: oxide_speaker
+224: intro_sparks
+225: hub_door
 
-0x5C - relic crate 1
-0x64 - relic crate 2
-0x65 - relic crate 3
 
 
 
 
-
-
-
-model
+model (.ctr)
 {
   16 bytes - model name
   short - 0xFFFF (constant?)
   short - number of lods
   dword - current offset (literally)
   
-  lodheader * number of lods
+  lodheader * number of lods (lodheader - 64 bytes)
   {
-    
-  }
+    16 bytes - model name
+    dword - 0?
+    dword - ??? some number
 
+    4*short - unknown
+
+    dword - offset to vertex decls
+    dword - 0?
+    dword - offset to offsets?
+    dword - offset to palette
+    dword - 0
+    dword - number of anims
+    dword - offset to offset 
+    dword - 0?
+  }
+  
+  //maybe this repeats for every lod?
+  dword[number of anims] - offsets to anims 
+  dword - number of colors?????
+
+  
 }
+
+
+lodheader
 
 
 

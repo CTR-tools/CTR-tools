@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using NAudio.Midi;
 
 namespace cseq
@@ -15,7 +16,7 @@ namespace cseq
         Unknown8 = 0x08,
         ChangePatch = 0x09,
         BendAssume = 0x0A,
-        Error = 0x666
+        Error = 0xFF
     }
 
 
@@ -60,12 +61,11 @@ namespace cseq
                         velocity = br.ReadByte();
                         break;
                     }
-
                 case CSEQEvent.EndTrack:
                     {
                         break;
                     }
-
+                    
                 default:
                     {
                         evt = CSEQEvent.Error;
@@ -100,6 +100,87 @@ namespace cseq
         public override string ToString()
         {
             return String.Format("{0}t - {1}[p:{2}, v:{3}]\r\n", wait, evt.ToString(), pitch, velocity);
+        }
+
+
+        public void WriteBytes(BinaryWriter bw)
+        {
+            //bw.Write((byte)0); //time delta here!
+
+            /*
+            int time = 0;
+            int ttltime = wait;
+
+            do
+            {
+                time = (byte)(ttltime & 0x7F);
+                ttltime = ttltime >> 7;
+
+                if (ttltime > 0)
+                {
+                    time = time & 0x80;
+                }
+
+                bw.Write((byte)time);
+
+            }
+            while (ttltime > 0);
+            */
+
+            int value = wait;
+
+            int buffer = value & 0x7F;
+
+            while ( value != (value >> 7) )
+               {
+                   value = value >> 7;
+                 buffer <<= 8;
+                 buffer |= ((value & 0x7F) | 0x80);
+               }
+
+   while (true)
+   {
+       bw.Write((byte)buffer);
+        if ((buffer & 0x80) > 0)
+        {
+          buffer >>= 8;
+        }
+         else
+        {
+          break;
+        }
+   }
+
+
+            bw.Write((byte)evt);
+
+            switch (evt)
+            {
+                case CSEQEvent.Unknown4:
+                case CSEQEvent.Unknown8:
+                case CSEQEvent.EndTrack2:
+                case CSEQEvent.ChangePatch:
+                case CSEQEvent.BendAssume:
+                case CSEQEvent.VelAssume:
+                case CSEQEvent.PanAssume:
+                case CSEQEvent.NoteOff:
+                    {
+                        bw.Write((byte)pitch);
+                        break;
+                    }
+
+                case CSEQEvent.NoteOn:
+                    {
+                        bw.Write((byte)pitch);
+                        bw.Write((byte)velocity);
+                        break;
+                    }
+                    
+                case CSEQEvent.EndTrack:
+                    {
+                        break;
+                    }
+            }
         }
     }
 }

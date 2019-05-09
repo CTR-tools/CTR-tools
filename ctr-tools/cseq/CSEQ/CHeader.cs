@@ -28,5 +28,13 @@ namespace cseq
         {
             return String.Format("size: {0}\r\nlongCnt: {1}\r\nshortCnt: {2}\r\nseqCnt: {3}\r\n", size, longCnt, shortCnt, seqCnt);
         }
+
+        public void WriteBytes(BinaryWriter bw)
+        {
+            bw.Write((int)size);
+            bw.Write((byte)longCnt);
+            bw.Write((byte)shortCnt);
+            bw.Write((short)seqCnt);
+        }
     }
 }

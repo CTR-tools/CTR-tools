@@ -24,5 +24,12 @@ namespace cseq
         {
             return String.Format("trackNum: {0}\r\nBPM: {1}\r\nTPQN: {2}\r\n", trackNum, BPM, TPQN);
         }
+
+        public void WriteBytes(BinaryWriter bw)
+        {
+            bw.Write((byte)trackNum);
+            bw.Write((short)BPM);
+            bw.Write((short)TPQN);
+        }
     }
 }

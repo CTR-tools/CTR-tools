@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace model_reader
 {
@@ -6,7 +7,7 @@ namespace model_reader
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("test");
+            Console.WriteLine("model_reader, CTR-Tools");
 
             if (args.Length > 0)
             {
@@ -25,9 +26,23 @@ namespace model_reader
                     //wow
                 }
 
-                CTRModel ctrm = new CTRModel(args[0], format);
-                ctrm.Export();
+                string ext = Path.GetExtension(args[0]);
 
+                switch (ext)
+                {
+                    case ".lev":
+                        {
+                            CTRModel ctrm = new CTRModel(args[0], format);
+                            ctrm.Export();
+                            break;
+                        }
+                    case ".ctr":
+                        {
+                            LODModel ctrm = new LODModel(args[0]);
+                            break;
+                        }
+
+                }
                 Console.WriteLine("Done!");
             }
             else

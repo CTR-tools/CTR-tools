@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NAudio.Midi;
 using System.IO;
 
@@ -60,7 +61,50 @@ namespace cseq
 
             mc.PrepareForExport();
 
-            MidiFile.Export(fn, mc);
+            try
+            {
+                MidiFile.Export(fn, mc);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
+            }
         }
+
+
+        public void WriteBytes(BinaryWriter bw)
+        {
+            header.WriteBytes(bw);
+
+            long offsetsarraypos = bw.BaseStream.Position;
+
+            foreach (CTrack ct in tracks)
+            {
+                bw.Write((short)0);
+            }
+
+            if (tracks.Count % 2 == 0)
+                bw.Write((short)0);
+
+            List<long> offsets = new List<long>();
+            long offsetstart = bw.BaseStream.Position;
+
+            foreach (CTrack ct in tracks)
+            {
+                offsets.Add(bw.BaseStream.Position - offsetstart);
+                ct.WriteBytes(bw);
+            }
+
+            long comeback = bw.BaseStream.Position;
+
+            bw.BaseStream.Position = offsetsarraypos;
+
+            foreach (long off in offsets)
+                bw.Write((short)off);
+
+            bw.BaseStream.Position = comeback;
+
+        }
+
     }
 }

@@ -83,7 +83,7 @@ namespace bigtool
                 case "e73f0f3cade06dc5fc2719fe186cbe26": return BIGType.Review;
                 case "eb0b4551f3a4a374080c085dea1a8609": return BIGType.USDemo;
                 case "870780bddb386d04882d57526a03c966": return BIGType.EuroDemo;
-                //case "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": return BIGType.JapDemo;
+                case "aa71f0adf8a40a77e767c40b73600e46": return BIGType.JapDemo;
                 default: return BIGType.Unknown;
             }
         }
@@ -92,7 +92,6 @@ namespace bigtool
         public BIG()
         {
         }
-
 
 
         public string path;
@@ -106,11 +105,22 @@ namespace bigtool
         {
             path = fn;
             basepath = System.AppDomain.CurrentDomain.BaseDirectory;
-            filelist = basepath + "filenames.txt";
+            filelist = Path.Combine(basepath, "filenames.txt");
             bigname = Path.GetFileNameWithoutExtension(fn);
             bigpath = Path.GetDirectoryName(fn);
-            if (bigpath == null) bigpath = basepath;
-            extpath = bigpath + "\\" + bigname + "\\";
+            if (bigpath == null || bigpath == "") bigpath = basepath;
+            extpath = Path.Combine(bigpath, bigname) + "\\";
+
+            
+            //uncomment if something goes wrong
+            /*
+            Console.WriteLine(path);
+            Console.WriteLine(basepath);
+            Console.WriteLine(filelist);
+            Console.WriteLine(bigname);
+            Console.WriteLine(bigpath);
+            Console.WriteLine(extpath);
+            */
         }
 
 
@@ -183,27 +193,39 @@ namespace bigtool
                 if (names.ContainsKey(i))
                     knownname = names[i];
 
+                
                 string fname = 
                     extpath +
                     i.ToString("0000") + 
                     (knownname !="" ? ("_" + knownname) : "") + 
                     knownext;
 
+                /*
                 biglist.Append(i.ToString("0000") +
                     (knownname != "" ? ("_" + knownname) : "") +
                     knownext + "\r\n");
+                */
 
-                if (p.size > 0) File.WriteAllBytes(fname, br.ReadBytes((int)p.size));
+
+                if (knownname == "") knownname = i.ToString("0000") + knownext;
+
+                if (!knownname.Contains("\\")) knownname = i.ToString("0000") + "_" + knownname;
+
+                biglist.Append(knownname + "\r\n");
+
+                fname = Path.Combine(extpath, knownname);
+
+
+                if (p.size > 0)
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(fname));
+                    File.WriteAllBytes(fname, br.ReadBytes((int)p.size));
+                }
 
                 Console.Write(".");
 
                 i++;
 
-
-                if (p.offset == 0xFE47)
-                {
-                    Console.WriteLine(fname);
-                }
                 //Console.WriteLine(fname);
             }
 
@@ -294,18 +316,21 @@ namespace bigtool
 
                     foreach (string b in buf)
                     {
-                        string[] bb = b.Replace(" ", "").Split('=');
-
-                        int x = -1;
-                        Int32.TryParse(bb[0], out x);
-
-                        if (x == -1)
+                        if (b.Trim() != "")
                         {
-                            Console.WriteLine("List parsing error at: {0}", bb);
-                            continue;
-                        }
+                            string[] bb = b.Replace(" ", "").Split('=');
 
-                        names.Add(x, bb[1]);
+                            int x = -1;
+                            Int32.TryParse(bb[0], out x);
+
+                            if (x == -1)
+                            {
+                                Console.WriteLine("List parsing error at: {0}", bb);
+                                continue;
+                            }
+
+                            names.Add(x, bb[1]);
+                        }
                     }
 
                     return true;

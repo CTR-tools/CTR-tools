@@ -42,7 +42,13 @@ namespace cseq
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportSEQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadBankToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.skipBytesForUSDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tutorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.trackBox = new System.Windows.Forms.ListBox();
             this.sequenceBox = new System.Windows.Forms.ListBox();
@@ -51,8 +57,6 @@ namespace cseq
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.skipBytesForUSDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView1 = new cseq.CustomDataGridView();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -66,10 +70,11 @@ namespace cseq
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.optionsToolStripMenuItem});
+            this.optionsToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(923, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(856, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -77,6 +82,7 @@ namespace cseq
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
+            this.exportSEQToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -85,16 +91,62 @@ namespace cseq
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // exportSEQToolStripMenuItem
+            // 
+            this.exportSEQToolStripMenuItem.Name = "exportSEQToolStripMenuItem";
+            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.exportSEQToolStripMenuItem.Text = "Export CSEQ";
+            this.exportSEQToolStripMenuItem.Click += new System.EventHandler(this.exportSEQToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadBankToolStripMenuItem,
+            this.skipBytesForUSDemoToolStripMenuItem});
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.optionsToolStripMenuItem.Text = "Options";
+            // 
+            // loadBankToolStripMenuItem
+            // 
+            this.loadBankToolStripMenuItem.Name = "loadBankToolStripMenuItem";
+            this.loadBankToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.loadBankToolStripMenuItem.Text = "Load bank";
+            this.loadBankToolStripMenuItem.Click += new System.EventHandler(this.loadBankToolStripMenuItem_Click);
+            // 
+            // skipBytesForUSDemoToolStripMenuItem
+            // 
+            this.skipBytesForUSDemoToolStripMenuItem.CheckOnClick = true;
+            this.skipBytesForUSDemoToolStripMenuItem.Name = "skipBytesForUSDemoToolStripMenuItem";
+            this.skipBytesForUSDemoToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.skipBytesForUSDemoToolStripMenuItem.Text = "Skip bytes for US Demo";
+            this.skipBytesForUSDemoToolStripMenuItem.Click += new System.EventHandler(this.skipBytesForUSDemoToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tutorialToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // tutorialToolStripMenuItem
+            // 
+            this.tutorialToolStripMenuItem.Name = "tutorialToolStripMenuItem";
+            this.tutorialToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.tutorialToolStripMenuItem.Text = "Tutorial";
+            this.tutorialToolStripMenuItem.Click += new System.EventHandler(this.tutorialToolStripMenuItem_Click);
             // 
             // groupBox1
             // 
@@ -133,8 +185,7 @@ namespace cseq
             // 
             // textBox2
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox2.Location = new System.Drawing.Point(6, 19);
             this.textBox2.Multiline = true;
@@ -152,7 +203,7 @@ namespace cseq
             this.tabControl1.Location = new System.Drawing.Point(151, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(760, 417);
+            this.tabControl1.Size = new System.Drawing.Size(693, 417);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
@@ -161,7 +212,7 @@ namespace cseq
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(752, 391);
+            this.tabPage1.Size = new System.Drawing.Size(685, 391);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Track Info";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -169,11 +220,12 @@ namespace cseq
             // textBox1
             // 
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBox1.Location = new System.Drawing.Point(3, 3);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(746, 385);
+            this.textBox1.Size = new System.Drawing.Size(679, 385);
             this.textBox1.TabIndex = 5;
             // 
             // tabPage2
@@ -182,26 +234,10 @@ namespace cseq
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(752, 391);
+            this.tabPage2.Size = new System.Drawing.Size(685, 391);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Instruments / Samples";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // optionsToolStripMenuItem
-            // 
-            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.skipBytesForUSDemoToolStripMenuItem});
-            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.optionsToolStripMenuItem.Text = "Options";
-            // 
-            // skipBytesForUSDemoToolStripMenuItem
-            // 
-            this.skipBytesForUSDemoToolStripMenuItem.CheckOnClick = true;
-            this.skipBytesForUSDemoToolStripMenuItem.Name = "skipBytesForUSDemoToolStripMenuItem";
-            this.skipBytesForUSDemoToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.skipBytesForUSDemoToolStripMenuItem.Text = "Skip bytes for US Demo";
-            this.skipBytesForUSDemoToolStripMenuItem.Click += new System.EventHandler(this.skipBytesForUSDemoToolStripMenuItem_Click);
             // 
             // dataGridView1
             // 
@@ -210,7 +246,7 @@ namespace cseq
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(746, 385);
+            this.dataGridView1.Size = new System.Drawing.Size(679, 385);
             this.dataGridView1.TabIndex = 0;
             // 
             // MainForm
@@ -218,7 +254,7 @@ namespace cseq
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(923, 456);
+            this.ClientSize = new System.Drawing.Size(856, 456);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
@@ -258,6 +294,10 @@ namespace cseq
         private CustomDataGridView dataGridView1;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem skipBytesForUSDemoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportSEQToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadBankToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tutorialToolStripMenuItem;
     }
 }
 

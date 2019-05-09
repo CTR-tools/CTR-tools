@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NAudio.Midi;
 using System.Diagnostics;
+using System.IO;
 
 namespace cseq
 {
@@ -94,6 +95,17 @@ namespace cseq
             }
 
             return me;
+        }
+
+
+        public void WriteBytes(BinaryWriter bw)
+        {
+            bw.Write(isDrumTrack ? (short)1 : (short)0);
+
+            foreach (Command c in cmd)
+            {
+                c.WriteBytes(bw);
+            }
         }
     }
 }

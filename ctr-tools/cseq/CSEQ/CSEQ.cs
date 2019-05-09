@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace cseq
 {
@@ -54,6 +55,72 @@ namespace cseq
                 Sequence seq = new Sequence();
                 seq.Read(br, textBox1);
                 sequences.Add(seq);
+            }
+
+            return true;
+        }
+
+
+        public void Export(string s)
+        {
+            using (BinaryWriter bw = new BinaryWriter(File.Create(s)))
+            {
+                header.WriteBytes(bw);
+
+                foreach (Sample ls in longSamples)
+                    ls.WriteBytes(bw);
+
+                foreach (Sample ss in shortSamples)
+                    ss.WriteBytes(bw);
+
+
+                long offsetsarraypos = bw.BaseStream.Position;
+
+                foreach (Sequence seq in sequences)
+                    bw.Write((short)0);
+
+                int p = 3;
+                if (usdemo) p = 1;
+
+                for (int i = 0; i < p; i++)
+                {
+                    bw.Write((byte)0);
+                }
+
+                List<long> offsets = new List<long>();
+                long offsetstart = bw.BaseStream.Position;
+
+                foreach (Sequence seq in sequences)
+                {
+                    offsets.Add(bw.BaseStream.Position - offsetstart);
+                    seq.WriteBytes(bw);
+                }
+
+                bw.BaseStream.Position = offsetsarraypos;
+
+                foreach (long off in offsets)
+                    bw.Write((short)off);
+
+                bw.BaseStream.Position = 0;
+                bw.Write((int)bw.BaseStream.Length);
+
+                bw.Close();
+
+            }
+
+            System.Windows.Forms.MessageBox.Show("done");
+        }
+
+        public bool CheckBankForSamples(Bank bnk)
+        {
+            foreach (Sample x in longSamples)
+            {
+                if (!bnk.hasID(x.sampleID)) return false;
+            }
+
+            foreach (Sample x in shortSamples)
+            {
+                if (!bnk.hasID(x.sampleID)) return false;
             }
 
             return true;

@@ -64,10 +64,10 @@ namespace cseq
             samples.Columns.Add("velocity", typeof(byte));
             samples.Columns.Add("always0", typeof(short));
             samples.Columns.Add("basepitch", typeof(short));
-            samples.Columns.Add("sampleID", typeof(short));
+            samples.Columns.Add("sampleID", typeof(string));
             samples.Columns.Add("unknown_80FF", typeof(string));
             samples.Columns.Add("reverb", typeof(byte));
-            samples.Columns.Add("always0_2", typeof(byte));
+            samples.Columns.Add("reverb2", typeof(byte));
 
             foreach (Sample s in seq.longSamples)
                 s.ToDataRow(samples);
@@ -153,5 +153,43 @@ namespace cseq
             CSEQ.usdemo = skipBytesForUSDemoToolStripMenuItem.Checked;
         }
 
+        private void exportSEQToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (seq != null)
+                seq.Export("test.cseq");
+        }
+
+
+        Bank bnk = new Bank();
+
+        private void loadBankToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "CTR Bank (*.bnk)|*.bnk";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                bnk = new Bank(ofd.FileName);
+                textBox1.Text = bnk.ListIDs();
+
+                if (seq != null)
+                    MessageBox.Show(seq.CheckBankForSamples(bnk) ? "samples OK!" : "samples missing.");
+            }
+        }
+
+        private void tutorialToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBox1.Text =
+                "CSEQ Tool\r\n2018-2019, DCxDemo*.\r\n\r\n" +
+                "This tool reads CSEQ files - custom Crash Team Racing music files.\r\n" +
+                "CSEQ files are contained in KART.HWL file, use howl tool to extract bank/sequence files.\r\n" +
+                "Use File -> Open to locate your CSEQ file.\r\n" +
+                "For NTSC-U Demo make sure to tick Options -> Skip bytes for US demo.\r\n" +
+                "Double click sequence on the list to export it to MIDI.\r\n" +
+                "Use Instruments / Samples tab to check instrument values (mostly for research).\r\n" +
+                "Click track on the list to output all commands on that track.\r\n" +
+                "Use Options -> Load bank to find the correct bank file for the sequence loaded. Correct file will end up in Samples OK message (canyon starts with 01).\r\n\r\n" +
+                "Special thanks:\r\nlnge - initial CSEQ specification\r\nCREEEE - testing and suggestions";
+        }
     }
 }

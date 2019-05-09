@@ -4,23 +4,41 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace bank
+namespace cseq
 {
-    class Bank
+    public class Bank
     {
         short sampCnt;
         List<short> id = new List<short>();
         List<int> offs = new List<int>();
 
-
-        public bool frameIsEmpty(byte[] buf)
+        public Bank()
         {
-            foreach (byte b in buf)
-                if (b != 0) return false;
-            
-            return true;
         }
 
+        public Bank(string s)
+        {
+            byte[] data = File.ReadAllBytes(s);
+            MemoryStream ms = new MemoryStream(data);
+            BinaryReader br = new BinaryReader(ms);
+
+            Read(br);
+
+            br = null;
+            ms = null;
+            data = null;
+        }
+
+        public bool hasID(int myid)
+        {
+            foreach (int i in id)
+            {
+                if (i == myid)
+                    return true;
+            }
+
+            return false;
+        }
 
         public void Read(BinaryReader br)
         {
@@ -30,6 +48,8 @@ namespace bank
             {
                 id.Add(br.ReadInt16());
             }
+
+            /*
 
             byte[] buf;
 
@@ -73,6 +93,39 @@ namespace bank
             {
                 
             }
+             * 
+           
+             * * */
         }
+
+
+
+        public bool frameIsEmpty(byte[] buf)
+        {
+            foreach (byte b in buf)
+                if (b != 0) return false;
+
+            return true;
+        }
+
+
+        public string ListIDs()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(id.Count + " samples total\r\n");
+
+            int cnt = 0;
+
+            foreach (int i in id)
+            {
+                sb.Append(cnt.ToString("0000")+ " -> " + i.ToString("X4") + "\r\n");
+                cnt++;
+            }
+
+            return sb.ToString();
+        }
+
+
     }
 }

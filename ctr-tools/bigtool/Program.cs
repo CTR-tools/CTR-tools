@@ -27,12 +27,12 @@ namespace bigtool
                     default: Console.WriteLine("{0}: {1}", p.file_not_supported, ext); break;
                 }
 
-                Console.ReadKey();
+                //Console.ReadKey();
                 return;
             }
             
             Info();
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
 
