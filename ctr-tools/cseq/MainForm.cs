@@ -165,15 +165,31 @@ namespace cseq
         private void loadBankToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CTR Bank (*.bnk)|*.bnk";
+            ofd.Filter = "CTR Sound Bank (*.bnk)|*.bnk";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 bnk = new Bank(ofd.FileName);
-                textBox1.Text = bnk.ListIDs();
+                textBox1.Text = bnk.ToString();
 
                 if (seq != null)
+                {
                     MessageBox.Show(seq.CheckBankForSamples(bnk) ? "samples OK!" : "samples missing.");
+
+                    foreach (VABSample v in bnk.vs)
+                    {
+                        v.frequency = seq.GetFrequencyBySampleID(v.id);
+                    }
+
+                    foreach (int i in seq.GetAllIDs())
+                    {
+                        bnk.Export(i);
+                    }
+                }
+                else
+                {
+                    bnk.ExportAll();
+                }
             }
         }
 
@@ -190,6 +206,26 @@ namespace cseq
                 "Click track on the list to output all commands on that track.\r\n" +
                 "Use Options -> Load bank to find the correct bank file for the sequence loaded. Correct file will end up in Samples OK message (canyon starts with 01).\r\n\r\n" +
                 "Special thanks:\r\nlnge - initial CSEQ specification\r\nCREEEE - testing and suggestions";
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            VABSample.defaultrate = 11025;
+        }
+
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            VABSample.defaultrate = 22050;
+        }
+
+        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        {
+            VABSample.defaultrate = 33075;
+        }
+
+        private void toolStripMenuItem5_Click(object sender, EventArgs e)
+        {
+            VABSample.defaultrate = 44100;
         }
     }
 }

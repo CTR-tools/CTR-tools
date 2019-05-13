@@ -4,6 +4,7 @@ namespace cseq
 {
     class Log
     {
+        
         static StringBuilder sb = new StringBuilder();
 
         public static void Write(string s)

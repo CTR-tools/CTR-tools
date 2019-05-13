@@ -88,7 +88,7 @@ namespace CTRtools
             foreach (CTRVertex v in vertex)
             {
                 sb.Append("v ");
-                sb.Append(v.coord.ToString(0.02f) + " ");
+               // sb.Append(v.coord.ToString(0.02f) + " ");
                 sb.Append(v.color2.ToString(1) + "\r\n");
             }
 

@@ -4,8 +4,7 @@ namespace cseq
 {
     public class BinaryReaderEx : BinaryReader
     {
-        public BinaryReaderEx(MemoryStream ms)
-            : base(ms)
+        public BinaryReaderEx(MemoryStream ms) : base(ms)
         {
         }
 

@@ -8,9 +8,7 @@ namespace cseq
 {
     public class Bank
     {
-        short sampCnt;
-        List<short> id = new List<short>();
-        List<int> offs = new List<int>();
+        public List<VABSample> vs = new List<VABSample>();
 
         public Bank()
         {
@@ -29,37 +27,26 @@ namespace cseq
             data = null;
         }
 
-        public bool hasID(int myid)
-        {
-            foreach (int i in id)
-            {
-                if (i == myid)
-                    return true;
-            }
-
-            return false;
-        }
 
         public void Read(BinaryReader br)
         {
-            sampCnt = br.ReadInt16();
+            List<int> offs = new List<int>();
+            List<int> sizes = new List<int>();
+
+            int sampCnt = br.ReadInt16();
 
             for (int i = 0; i < sampCnt; i++)
             {
-                id.Add(br.ReadInt16());
+                VABSample vab = new VABSample();
+                vab.id = br.ReadInt16();
+
+                vs.Add(vab);
             }
-
-            /*
-
-            byte[] buf;
 
             br.BaseStream.Position = 0x800;
 
+            byte[] buf;
             int curr = 0;
-
-            string currFile = id[0].ToString("X4") + ".vag";
-
-            BinaryWriter bw = new BinaryWriter(File.Create(currFile));
 
             do
             {
@@ -67,40 +54,27 @@ namespace cseq
 
                 if (frameIsEmpty(buf))
                 {
+                    offs.Add((int)br.BaseStream.Position-16);
                     curr++;
-                    offs.Add((int)br.BaseStream.Position - 16);
-
-                    currFile = id[curr].ToString("X4") + ".vag";
-
-                    bw.Close();
-                    bw = new BinaryWriter(File.Create(currFile));
                 }
-
-                bw.Write(buf);
             }
-            while (curr < sampCnt-1);
-
-            bw.Close();
-
-
-            foreach (int i in offs)
-            {
-                Console.WriteLine(i.ToString("X8"));
-            }
-
+            while (curr <= sampCnt);
 
             for (int i = 0; i < sampCnt; i++)
             {
-                
+                sizes.Add(offs[i + 1] - offs[i]);
             }
-             * 
-           
-             * * */
+
+            for (int i = 0; i < sampCnt; i++)
+            {
+                br.BaseStream.Position = offs[i];
+                vs[i].data = br.ReadBytes(sizes[i]);
+            }
+
         }
 
 
-
-        public bool frameIsEmpty(byte[] buf)
+        private bool frameIsEmpty(byte[] buf)
         {
             foreach (byte b in buf)
                 if (b != 0) return false;
@@ -109,23 +83,47 @@ namespace cseq
         }
 
 
-        public string ListIDs()
+        public bool Contains(int value)
+        {
+            foreach (VABSample v in vs)
+            {
+                if (v.id == value)
+                    return true;
+            }
+
+            return false;
+        }
+
+
+        public void Export(int id)
+        {
+            foreach (VABSample v in vs)
+                if (v.id == id)
+                    v.Write();
+        }
+
+        public void ExportAll()
+        {
+            foreach (VABSample v in vs)
+                v.Write();
+        }
+
+
+        public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(id.Count + " samples total\r\n");
+            sb.Append(vs.Count + " samples total\r\n");
 
             int cnt = 0;
 
-            foreach (int i in id)
+            foreach (VABSample v in vs)
             {
-                sb.Append(cnt.ToString("0000")+ " -> " + i.ToString("X4") + "\r\n");
+                sb.Append(v.ToString()+"\r\n");
                 cnt++;
             }
 
             return sb.ToString();
         }
-
-
     }
 }

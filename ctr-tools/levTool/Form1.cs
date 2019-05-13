@@ -14,7 +14,10 @@ namespace CTRtools
 {
     public partial class Form1 : Form
     {
-        string[] files;
+        string path;
+        int numPickupHeaders;
+        int ptrPickupHeaders;
+        List<PickupHeader> headers = new List<PickupHeader>();
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -23,28 +26,8 @@ namespace CTRtools
 
         public Form1()
         {
-
-            AllocConsole();
-
+            //AllocConsole();
             InitializeComponent();
-
-            files = Directory.GetFiles(textBox2.Text, "*.lev");
-
-            foreach (string s in files)
-            {
-                comboBox2.Items.Add(Path.GetFileName(s));
-            }
-
-            comboBox2.SelectedIndex = 0;
-
-            using (BinaryReader br = new BinaryReader(File.Open(textBox2.Text + "\\" + comboBox2.Items[comboBox2.SelectedIndex].ToString(), FileMode.Open)))
-            {
-                CTRModel c = new CTRModel(br);
-                textBox1.Text = c.ToNgonList();
-                //textBox1.Text = c.ToOBJ();
-            }
-
-           //c.ToTreeView(treeView1);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -52,26 +35,74 @@ namespace CTRtools
             Application.Exit();
         }
 
+
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadLEV();
+
+            propertyGrid1.SelectedObject = headers[0];
+            trackBar1.Maximum = headers.Count - 1;
+        }
+
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            if (headers.Count > 0)
+                propertyGrid1.SelectedObject = headers[trackBar1.Value];
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveLEV();
+        }
+
+
+        private void LoadLEV()
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CTR level file (*.lev)|*.lev";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                CTRnew cm = new CTRnew(ofd.FileName, "obj", textBox1);
-                cm.ToTreeView(treeView1);
+                path = ofd.FileName;
+
+                using (BinaryReader br = new BinaryReader(File.OpenRead(path)))
+                {
+
+                    br.BaseStream.Position = 0x10;
+
+                    numPickupHeaders = br.ReadInt32();
+                    ptrPickupHeaders = br.ReadInt32() + 4;
+
+                    br.BaseStream.Position = ptrPickupHeaders;
+
+                    for (int i = 0; i < numPickupHeaders; i++)
+                    {
+                        PickupHeader h = new PickupHeader(br);
+                        Console.WriteLine(h.Name);
+                        headers.Add(h);
+                    }
+                }
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void SaveLEV()
         {
+            using (BinaryWriter bw = new BinaryWriter(File.OpenWrite(path)))
+            {
+                bw.BaseStream.Position = ptrPickupHeaders;
 
+                foreach (PickupHeader ph in headers)
+                    ph.Write(bw);
+            }
         }
 
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void moveAllUp10ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CTRnew c = new CTRnew(textBox2.Text + "\\" + comboBox2.Items[comboBox2.SelectedIndex].ToString(), "obj", textBox1);
+            foreach (PickupHeader ph in headers)
+            {
+                ph.Position.Y -= 100;
+            }
         }
     }
 }

@@ -1,47 +1,67 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.ComponentModel;
 
 namespace CTRtools
 {
     public class Vector3s
-    {
-        public short X;
-        public short Y;
-        public short Z;
+    {   
+        private short x;
+        private short y;
+        private short z;
 
-        public Vector3s(byte[] x)
+        [CategoryAttribute("Values"), DescriptionAttribute("Position of the model.")]
+        public short X
         {
-            if (x.Length != 6)
-            {
-                Console.WriteLine("WARNING Vector3s length is not 6");
-            }
+            get { return x; }
+            set { x = value; }
+        }
 
-            MemoryStream ms = new MemoryStream(x);
-            BinaryReader br = new BinaryReader(ms);
+        [CategoryAttribute("Values"), DescriptionAttribute("Position of the model.")]
+        public short Y
+        {
+            get { return y; }
+            set { y = value; }
+        }
 
-            X = br.ReadInt16();
-            Y = br.ReadInt16();
-            Z = br.ReadInt16();
+        [CategoryAttribute("Values"), DescriptionAttribute("Position of the model.")]
+        public short Z
+        {
+            get { return z; }
+            set { z = value; }
+        }
+
+        public Vector3s(short xx, short yy, short zz)
+        {
+            x = xx;
+            y = yy;
+            z = zz;
         }
 
         public Vector3s(BinaryReader br)
         {
-            X = br.ReadInt16();
-            Y = br.ReadInt16();
-            Z = br.ReadInt16();
+            x = br.ReadInt16();
+            y = br.ReadInt16();
+            z = br.ReadInt16();
         }
 
+        /*
         public string ToObjVertex()
         {
             return "v " + X + " " + Y + " " + Z;
         }
+        */
 
         public override string ToString()
         {
-            return "vec(" + X + "; " + Y + "; " + Z + ");";
+            return String.Format("{0}; {1}; {2}", X, Y, Z);
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(X);
+            bw.Write(Y);
+            bw.Write(Z);
         }
     }
 }

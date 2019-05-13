@@ -115,15 +115,41 @@ namespace cseq
         {
             foreach (Sample x in longSamples)
             {
-                if (!bnk.hasID(x.sampleID)) return false;
+                if (!bnk.Contains(x.sampleID)) return false;
             }
 
             foreach (Sample x in shortSamples)
             {
-                if (!bnk.hasID(x.sampleID)) return false;
+                if (!bnk.Contains(x.sampleID)) return false;
             }
 
             return true;
+        }
+
+        public List<int> GetAllIDs()
+        {
+            List<int> ids = new List<int>();
+
+            foreach (Sample s in longSamples)
+                ids.Add(s.sampleID);
+
+            foreach (Sample s in shortSamples)
+                ids.Add(s.sampleID);
+
+            return ids;
+        }
+
+        public int GetFrequencyBySampleID(int id)
+        {
+            foreach (Sample s in longSamples)
+                if (s.sampleID == id) 
+                    return s.basepitch * 44100 / 4096;
+
+            foreach (Sample s in shortSamples)
+                if (s.sampleID == id)
+                    return s.basepitch * 44100 / 4096;
+
+            return 44100;
         }
     }
 }

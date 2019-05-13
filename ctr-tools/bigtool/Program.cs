@@ -54,7 +54,12 @@ namespace bigtool
 
         static void Greet()
         {
-            Console.WriteLine("{0}\r\n{1}\r\n\r\n{2}\r\n", p.project_name, p.app_desc, p.copyright, "\r\n\r\n\r\n2018, DCxDemo*\r\n");
+            Console.WriteLine(
+                "{0}\r\n{1}\r\n\r\n{2}\r\n", 
+                p.project_name, 
+                p.app_desc, 
+                p.copyright, 
+                "\r\n\r\n\r\n2018, DCxDemo*\r\n");
         }
 
 
