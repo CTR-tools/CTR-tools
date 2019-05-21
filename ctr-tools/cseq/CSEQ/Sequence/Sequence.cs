@@ -16,7 +16,7 @@ namespace cseq
             tracks = new List<CTrack>();
         }
 
-        public void Read(BinaryReaderEx br, System.Windows.Forms.TextBox textBox1)
+        public void Read(BinaryReaderEx br, System.Windows.Forms.TextBox textBox1, CSEQ cs)
         {
             header.Read(br);
 
@@ -38,8 +38,12 @@ namespace cseq
                 t.Read(br);
                 t.name = "Track_" + i.ToString("00") + (t.isDrumTrack ? "_drum" : "");
 
+                if (!t.isDrumTrack)
+                    t.name += "_" + cs.GetLongSampleIDByTrack(t).ToString("X4");
+
                 tracks.Add(t);
             }
+
         }
 
         public void ExportMIDI(string fn)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.IO;
+using System.Text;
 
 namespace cseq
 {
@@ -98,6 +99,35 @@ namespace cseq
 
                 default: return "unknown instrument type";
             }
+        }
+
+        public string ToSFZ(string cseqname)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            string samplepath = cseqname + "/" + "sample_" + sampleID.ToString("X4") +".wav";
+
+            sb.Append("<group>\r\n"); 
+            sb.Append("//" + instType + "\r\n");
+            sb.Append("\tvolume=" + (velocity / 255.0).ToString("0.0##").Replace(",", ".") + "\r\n");
+
+            sb.Append("<region>\r\n");
+	        sb.Append("\tsample=" + samplepath + "\r\n");
+            sb.Append("\ttrigger=attack\r\n");
+
+            if (instType == InstType.Short)
+            {
+                sb.Append("\tkey=" + 0 + "\r\n");
+            }
+            else
+            {
+                sb.Append("\tlokey=0\r\n");
+                sb.Append("\thikey=120\r\n");
+            }
+
+            sb.Append("\r\n");
+
+            return sb.ToString();
         }
 
         public void ToDataRow(DataTable dt)

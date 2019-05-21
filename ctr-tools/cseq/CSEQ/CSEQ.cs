@@ -8,6 +8,8 @@ namespace cseq
     {
         public static bool usdemo = false;
 
+        public string name;
+
         public CHeader header;
         public List<Sample> longSamples;
         public List<Sample> shortSamples;
@@ -21,8 +23,16 @@ namespace cseq
             sequences = new List<Sequence>();
         }
 
+
+        public int GetLongSampleIDByTrack(CTrack ct)
+        {
+            return longSamples[ct.instrument].sampleID;
+        }
+
+
         public bool Read(string s, System.Windows.Forms.TextBox textBox1)
         {
+            name = Path.GetFileNameWithoutExtension(s);
             BinaryReaderEx br = BinaryReaderEx.FromFile(s);
 
             if (!header.Read(br)) return false;
@@ -32,7 +42,6 @@ namespace cseq
 
             for (int i = 0; i < header.shortCnt; i++)
                 shortSamples.Add(Sample.GetShort(br));
-
 
             List<short> seqPtrs = new List<short>();
 
@@ -53,12 +62,27 @@ namespace cseq
                 br.BaseStream.Position = seqStart + seqPtrs[i];
 
                 Sequence seq = new Sequence();
-                seq.Read(br, textBox1);
+                seq.Read(br, textBox1, this);
                 sequences.Add(seq);
             }
 
             return true;
         }
+
+        public void ToSFZ(string fn)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (Sample ss in longSamples)
+                sb.Append(ss.ToSFZ(name));
+
+            foreach (Sample ss in shortSamples)
+                sb.Append(ss.ToSFZ(name));
+
+            File.WriteAllText(fn, sb.ToString());
+        }
+
+
 
 
         public void Export(string s)

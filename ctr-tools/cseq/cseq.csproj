@@ -87,10 +87,10 @@
     <Compile Include="BinaryReaderEx.cs" />
     <Compile Include="BinaryWriterEx.cs" />
     <Compile Include="CSEQ\CHeader.cs" />
-    <Compile Include="CSEQ\Command.cs" />
+    <Compile Include="CSEQ\Sequence\Command.cs" />
     <Compile Include="CSEQ\CSEQ.cs" />
-    <Compile Include="CSEQ\CSeqHeader.cs" />
-    <Compile Include="CSEQ\CTrack.cs" />
+    <Compile Include="CSEQ\Sequence\CSeqHeader.cs" />
+    <Compile Include="CSEQ\Sequence\CTrack.cs" />
     <Compile Include="CSEQ\Sample.cs" />
     <Compile Include="CSEQ\TrackPatch.cs" />
     <Compile Include="MainForm.cs">
@@ -102,7 +102,7 @@
     <Compile Include="Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CSEQ\Sequence.cs" />
+    <Compile Include="CSEQ\Sequence\Sequence.cs" />
     <Compile Include="RAWVABConverter.cs" />
     <Compile Include="VABSample.cs" />
     <EmbeddedResource Include="MainForm.resx">
