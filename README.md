@@ -15,7 +15,7 @@ VRAM - textures in native PS1 TIM format.\
 LNG - localization files, bascially, an ordered list of strings.\
 HWL (kart.hwl) - sfx/music container for the CTR sound engine known as "howl". All the SFX and music is stored in this file.\
 CSEQ - custom music sequences found in HWL files.\
-BNK - sound bank, a labeled set of headerless VAG samples.\
+BNK - sound bank, a labeled set of headerless VAG samples.
 
 ## bigtool
 Extracts/builds BIGFILE.BIG.
