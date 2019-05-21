@@ -8,14 +8,14 @@ Join the CTR Tools Discord channel: https://discord.gg/56xm9Aj
 Tools are developed in Visual Studio 2010, target platform is .NET 4.0.
 
 ## File formats
-BIG (bigfile.big, sampler.big) - main game container for all the data used. Doesn't contain any filenames.
-LEV - scene container. Can contain static level mesh, various dynamic models, scripts, AI paths, etc.
-CTR - models. Can be stored in LEV or as a standalone file.
-VRAM - textures in native PS1 TIM format.
-LNG - localization files, bascially, an ordered list of strings.
-HWL (kart.hwl) - sfx/music container for the CTR sound engine known as "howl". All the SFX and music is stored in this file.
-CSEQ - custom music sequences found in HWL files.
-BNK - sound bank, a labeled set of headerless VAG samples.
+BIG (bigfile.big, sampler.big) - main game container for all the data used. Doesn't contain any filenames.\
+LEV - scene container. Can contain static level mesh, various dynamic models, scripts, AI paths, etc.\
+CTR - models. Can be stored in LEV or as a standalone file.\
+VRAM - textures in native PS1 TIM format.\
+LNG - localization files, bascially, an ordered list of strings.\
+HWL (kart.hwl) - sfx/music container for the CTR sound engine known as "howl". All the SFX and music is stored in this file.\
+CSEQ - custom music sequences found in HWL files.\
+BNK - sound bank, a labeled set of headerless VAG samples.\
 
 ## bigtool
 Extracts/builds BIGFILE.BIG.
