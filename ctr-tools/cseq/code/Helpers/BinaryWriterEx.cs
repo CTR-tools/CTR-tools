@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace cseq
+namespace CTRtools.Helpers
 {
-    class BinaryWriterEx : BinaryWriter
+    public class BinaryWriterEx : BinaryWriter
     {
         public BinaryWriterEx(MemoryStream ms) : base(ms)
         {

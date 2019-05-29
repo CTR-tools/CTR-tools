@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using NAudio.Midi;
+using CTRtools.Helpers;
+using System.Collections.Generic;
 
-namespace cseq
+namespace CTRtools.CSEQ
 {
     public enum CSEQEvent
     {
@@ -65,36 +67,78 @@ namespace cseq
                     {
                         break;
                     }
-                    
+
                 default:
                     {
                         evt = CSEQEvent.Error;
                         Log.Write(op.ToString("X2") + " not recognized at " + br.HexPos() + "\r\n");
                         break;
-                        //throw new System.NotImplementedException(String.Format("Not implemented opcode: {0} at 0x{1}", op, br.BaseStream.Position.ToString("X8") ));
                     }
             }
         }
 
-        public MidiEvent ToMidiEvent(int absTime, int channel)
+        public List<MidiEvent> ToMidiEvent(int absTime, int channel, CSEQ seq, CTrack ct)
         {
-            TrackPatch tp = new TrackPatch();
+            List<MidiEvent> events = new List<MidiEvent>();
+            //TrackPatch tp = new TrackPatch();
+
+            absTime += wait;
 
             //we can't go beyond 16 with midi
             channel = (channel <= 16) ? channel : 16;
 
+            if (CSEQ.PatchMidi)
+            {
+                if (ct.isDrumTrack)
+                {
+                    if (evt == CSEQEvent.NoteOn || evt == CSEQEvent.NoteOff)
+                    {
+                        pitch = (byte)seq.shortSamples[pitch].info.Key;
+                    }
+                }
+                    
+                else
+                {
+                    if (evt == CSEQEvent.ChangePatch)
+                    {
+                        CSEQ.ActiveInstrument = pitch;
+                        pitch = (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Midi;
+                    }
+                    else if (evt == CSEQEvent.NoteOn || evt == CSEQEvent.NoteOff)
+                    {
+                        try
+                        {
+                            pitch += (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Pitch;
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                    }
+
+                }
+
+            }
+
+
             switch (evt)
             {
-                case CSEQEvent.NoteOn:      return new NoteEvent(absTime + wait, channel, MidiCommandCode.NoteOn, channel != 10 ? pitch : tp.SwapDrum(pitch), velocity);
-                case CSEQEvent.NoteOff:     return new NoteEvent(absTime + wait, channel, MidiCommandCode.NoteOff, channel != 10 ? pitch : tp.SwapDrum(pitch), velocity);
-                case CSEQEvent.ChangePatch: return new PatchChangeEvent(absTime + wait, channel, channel == 10 ? pitch : tp.SwapPatch(pitch));
+                case CSEQEvent.NoteOn: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOn, pitch, velocity)); break;
+                case CSEQEvent.NoteOff: events.Add( new NoteEvent(absTime, channel, MidiCommandCode.NoteOff, pitch, velocity)); break;
+
+                case CSEQEvent.ChangePatch:
+                   // events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, seq.longSamples[pitch].velocity / 2));
+                    events.Add(new PatchChangeEvent(absTime, channel, pitch)); 
+                    break;
+
+                case CSEQEvent.BendAssume: events.Add( new PitchWheelChangeEvent(absTime, channel, pitch * 64)); break;
+                case CSEQEvent.PanAssume: events.Add( new ControlChangeEvent(absTime, channel, MidiController.Pan, pitch / 2)); break;
+                case CSEQEvent.VelAssume: events.Add( new ControlChangeEvent(absTime, channel, MidiController.MainVolume, pitch / 2)); break; //not really used
+
                 case CSEQEvent.EndTrack2:
-                case CSEQEvent.EndTrack:    return new MetaEvent(MetaEventType.EndTrack, 0, absTime);
-                case CSEQEvent.BendAssume:  return new PitchWheelChangeEvent(absTime + wait, channel, pitch * 64);
-                case CSEQEvent.PanAssume:   return new ControlChangeEvent(absTime + wait, channel, MidiController.Pan, pitch / 2);
-                case CSEQEvent.VelAssume:   return new ControlChangeEvent(absTime + wait, channel, MidiController.MainVolume, pitch / 2);
-                default: return null;
+                case CSEQEvent.EndTrack: events.Add(new MetaEvent(MetaEventType.EndTrack, 0, absTime)); break;
             }
+
+            return events;
         }
 
         public override string ToString()
@@ -105,51 +149,30 @@ namespace cseq
 
         public void WriteBytes(BinaryWriter bw)
         {
-            //bw.Write((byte)0); //time delta here!
-
-            /*
-            int time = 0;
-            int ttltime = wait;
-
-            do
-            {
-                time = (byte)(ttltime & 0x7F);
-                ttltime = ttltime >> 7;
-
-                if (ttltime > 0)
-                {
-                    time = time & 0x80;
-                }
-
-                bw.Write((byte)time);
-
-            }
-            while (ttltime > 0);
-            */
 
             int value = wait;
 
             int buffer = value & 0x7F;
 
-            while ( value != (value >> 7) )
-               {
-                   value = value >> 7;
-                 buffer <<= 8;
-                 buffer |= ((value & 0x7F) | 0x80);
-               }
+            while (value != (value >> 7))
+            {
+                value = value >> 7;
+                buffer <<= 8;
+                buffer |= ((value & 0x7F) | 0x80);
+            }
 
-   while (true)
-   {
-       bw.Write((byte)buffer);
-        if ((buffer & 0x80) > 0)
-        {
-          buffer >>= 8;
-        }
-         else
-        {
-          break;
-        }
-   }
+            while (true)
+            {
+                bw.Write((byte)buffer);
+                if ((buffer & 0x80) > 0)
+                {
+                    buffer >>= 8;
+                }
+                else
+                {
+                    break;
+                }
+            }
 
 
             bw.Write((byte)evt);
@@ -175,7 +198,7 @@ namespace cseq
                         bw.Write((byte)velocity);
                         break;
                     }
-                    
+
                 case CSEQEvent.EndTrack:
                     {
                         break;

@@ -1,6 +1,6 @@
 ﻿
 
-namespace cseq
+namespace CTRtools.CSEQ
 {
     class CustomDataGridView : System.Windows.Forms.DataGridView
     {
@@ -43,13 +43,24 @@ namespace cseq
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportSEQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadBankToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skipBytesForUSDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.patchMIDIInstrumentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
+            this.loadBankToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportSamplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultSampleRateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.testJsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tutorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.trackBox = new System.Windows.Forms.ListBox();
             this.sequenceBox = new System.Windows.Forms.ListBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -57,12 +68,7 @@ namespace cseq
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.defaultSampleRateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataGridView1 = new cseq.CustomDataGridView();
+            this.dataGridView1 = new CTRtools.CSEQ.CustomDataGridView();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -79,7 +85,7 @@ namespace cseq
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(856, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(925, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -88,6 +94,7 @@ namespace cseq
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.exportSEQToolStripMenuItem,
+            this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -96,48 +103,133 @@ namespace cseq
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
-            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // exportSEQToolStripMenuItem
             // 
             this.exportSEQToolStripMenuItem.Name = "exportSEQToolStripMenuItem";
-            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exportSEQToolStripMenuItem.Text = "Export CSEQ";
             this.exportSEQToolStripMenuItem.Click += new System.EventHandler(this.exportSEQToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadBankToolStripMenuItem,
             this.skipBytesForUSDemoToolStripMenuItem,
-            this.defaultSampleRateToolStripMenuItem});
+            this.patchMIDIInstrumentsToolStripMenuItem,
+            this.toolStripMenuItem6,
+            this.loadBankToolStripMenuItem,
+            this.exportSamplesToolStripMenuItem,
+            this.defaultSampleRateToolStripMenuItem,
+            this.testJsonToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
-            // 
-            // loadBankToolStripMenuItem
-            // 
-            this.loadBankToolStripMenuItem.Name = "loadBankToolStripMenuItem";
-            this.loadBankToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.loadBankToolStripMenuItem.Text = "Load bank";
-            this.loadBankToolStripMenuItem.Click += new System.EventHandler(this.loadBankToolStripMenuItem_Click);
             // 
             // skipBytesForUSDemoToolStripMenuItem
             // 
             this.skipBytesForUSDemoToolStripMenuItem.CheckOnClick = true;
             this.skipBytesForUSDemoToolStripMenuItem.Name = "skipBytesForUSDemoToolStripMenuItem";
-            this.skipBytesForUSDemoToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.skipBytesForUSDemoToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.skipBytesForUSDemoToolStripMenuItem.Text = "Skip bytes for US Demo";
+            this.skipBytesForUSDemoToolStripMenuItem.ToolTipText = "This option is needed to parse correctly CSEQ files from NTSC Demo.";
             this.skipBytesForUSDemoToolStripMenuItem.Click += new System.EventHandler(this.skipBytesForUSDemoToolStripMenuItem_Click);
+            // 
+            // patchMIDIInstrumentsToolStripMenuItem
+            // 
+            this.patchMIDIInstrumentsToolStripMenuItem.CheckOnClick = true;
+            this.patchMIDIInstrumentsToolStripMenuItem.Name = "patchMIDIInstrumentsToolStripMenuItem";
+            this.patchMIDIInstrumentsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.patchMIDIInstrumentsToolStripMenuItem.Text = "Patch MIDI Instruments";
+            this.patchMIDIInstrumentsToolStripMenuItem.ToolTipText = "Only use this option if you\'re not planning to create SF2 out of original samples" +
+                ".";
+            this.patchMIDIInstrumentsToolStripMenuItem.Click += new System.EventHandler(this.patchMIDIInstrumentsToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem6
+            // 
+            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(195, 6);
+            // 
+            // loadBankToolStripMenuItem
+            // 
+            this.loadBankToolStripMenuItem.Name = "loadBankToolStripMenuItem";
+            this.loadBankToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.loadBankToolStripMenuItem.Text = "Load bank";
+            this.loadBankToolStripMenuItem.ToolTipText = "Loads BNK file and checks whether it contains the samples used by CSEQ.";
+            this.loadBankToolStripMenuItem.Click += new System.EventHandler(this.loadBankToolStripMenuItem_Click);
+            // 
+            // exportSamplesToolStripMenuItem
+            // 
+            this.exportSamplesToolStripMenuItem.Enabled = false;
+            this.exportSamplesToolStripMenuItem.Name = "exportSamplesToolStripMenuItem";
+            this.exportSamplesToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.exportSamplesToolStripMenuItem.Text = "Export samples";
+            this.exportSamplesToolStripMenuItem.Click += new System.EventHandler(this.exportSamplesToolStripMenuItem_Click);
+            // 
+            // defaultSampleRateToolStripMenuItem
+            // 
+            this.defaultSampleRateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3,
+            this.toolStripMenuItem4,
+            this.toolStripMenuItem5});
+            this.defaultSampleRateToolStripMenuItem.Name = "defaultSampleRateToolStripMenuItem";
+            this.defaultSampleRateToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.defaultSampleRateToolStripMenuItem.Text = "Default sample rate";
+            this.defaultSampleRateToolStripMenuItem.ToolTipText = "Sets sample rate to use for samples not used by any CSEQ instrument.";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.CheckOnClick = true;
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem2.Text = "11025";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem3.Text = "22050";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem4.Text = "33075";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem5.Text = "44100";
+            this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
+            // 
+            // testJsonToolStripMenuItem
+            // 
+            this.testJsonToolStripMenuItem.Name = "testJsonToolStripMenuItem";
+            this.testJsonToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testJsonToolStripMenuItem.Text = "test json";
+            this.testJsonToolStripMenuItem.Visible = false;
+            this.testJsonToolStripMenuItem.Click += new System.EventHandler(this.testJsonToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -146,6 +238,7 @@ namespace cseq
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Visible = false;
             // 
             // tutorialToolStripMenuItem
             // 
@@ -158,15 +251,27 @@ namespace cseq
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Controls.Add(this.trackBox);
             this.groupBox1.Controls.Add(this.sequenceBox);
             this.groupBox1.Controls.Add(this.textBox2);
             this.groupBox1.Location = new System.Drawing.Point(12, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(133, 417);
+            this.groupBox1.Size = new System.Drawing.Size(133, 420);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "SEQ Info";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(5, 392);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 5;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // trackBox
             // 
@@ -175,7 +280,7 @@ namespace cseq
             this.trackBox.FormattingEnabled = true;
             this.trackBox.Location = new System.Drawing.Point(6, 199);
             this.trackBox.Name = "trackBox";
-            this.trackBox.Size = new System.Drawing.Size(120, 212);
+            this.trackBox.Size = new System.Drawing.Size(120, 186);
             this.trackBox.TabIndex = 4;
             this.trackBox.SelectedIndexChanged += new System.EventHandler(this.trackBox_SelectedIndexChanged);
             // 
@@ -209,7 +314,7 @@ namespace cseq
             this.tabControl1.Location = new System.Drawing.Point(151, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(693, 417);
+            this.tabControl1.Size = new System.Drawing.Size(762, 420);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
@@ -218,7 +323,7 @@ namespace cseq
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(685, 391);
+            this.tabPage1.Size = new System.Drawing.Size(754, 394);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Track Info";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -231,8 +336,9 @@ namespace cseq
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(679, 385);
+            this.textBox1.Size = new System.Drawing.Size(748, 388);
             this.textBox1.TabIndex = 5;
+            this.textBox1.Text = "  ";
             // 
             // tabPage2
             // 
@@ -240,49 +346,10 @@ namespace cseq
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(685, 391);
+            this.tabPage2.Size = new System.Drawing.Size(754, 394);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Instruments / Samples";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // defaultSampleRateToolStripMenuItem
-            // 
-            this.defaultSampleRateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4,
-            this.toolStripMenuItem5});
-            this.defaultSampleRateToolStripMenuItem.Name = "defaultSampleRateToolStripMenuItem";
-            this.defaultSampleRateToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-            this.defaultSampleRateToolStripMenuItem.Text = "Default sample rate";
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItem2.Text = "11025";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItem3.Text = "22050";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItem4.Text = "33075";
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItem5.Text = "44100";
-            this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
             // 
             // dataGridView1
             // 
@@ -291,7 +358,7 @@ namespace cseq
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(679, 385);
+            this.dataGridView1.Size = new System.Drawing.Size(748, 388);
             this.dataGridView1.TabIndex = 0;
             // 
             // MainForm
@@ -299,7 +366,7 @@ namespace cseq
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(856, 456);
+            this.ClientSize = new System.Drawing.Size(925, 459);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
@@ -348,6 +415,12 @@ namespace cseq
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem patchMIDIInstrumentsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem testJsonToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportSamplesToolStripMenuItem;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 

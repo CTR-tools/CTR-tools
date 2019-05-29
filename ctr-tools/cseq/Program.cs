@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace cseq
+namespace CTRtools.CSEQ
 {
     static class Program
     {

@@ -1,10 +1,18 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
 
-namespace cseq
+namespace CTRtools.Helpers
 {
     public class BinaryReaderEx : BinaryReader
     {
         public BinaryReaderEx(MemoryStream ms) : base(ms)
+        {
+        }
+
+        public BinaryReaderEx(FileStream ms) : base(ms)
         {
         }
 
@@ -49,6 +57,23 @@ namespace cseq
             while (next != 0);
 
             return ttltime;
+        }
+
+        public int ReadInt32Big()
+        {
+            byte[] x = BitConverter.GetBytes(ReadInt32());
+            x.Reverse();
+            return BitConverter.ToInt32(x, 0);
+        }
+
+        public short[] ReadInt16Array(int num)
+        {
+            short[] kek = new short[num];
+
+            for (int i = 0; i < num; i++)
+                kek[i] = ReadInt16();
+
+            return kek;
         }
 
     }

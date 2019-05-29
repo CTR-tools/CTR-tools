@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace cseq.Properties {
+namespace CTRtools.CSEQ.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace cseq.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("cseq.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CTRtools.CSEQ.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,33 @@ namespace cseq.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на (C) 1999, Mutato Muzika: Mark Mothersbaugh, Josh Mancell.\r\n\r\nConverted to MIDI using CTR-Tools by DCxDemo*..
+        /// </summary>
+        internal static string copyright {
+            get {
+                return ResourceManager.GetString("copyright", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на CSEQ Tool, part of CTR Tools
+        ///2018-2019, DCxDemo*.
+        ///
+        ///This tool reads CSEQ files - custom Crash Team Racing music files.
+        ///CSEQ files are contained in KART.HWL file, use howl tool to extract bank/sequence files.
+        ///Use File -&gt; Open to locate your CSEQ file.
+        ///For NTSC-U Demo make sure to tick Options -&gt; Skip bytes for US demo.
+        ///Double click sequence on the list to export it to MIDI.
+        ///Use Instruments / Samples tab to check instrument values (mostly for research).
+        ///Click track on the list to output all commands o [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string help {
+            get {
+                return ResourceManager.GetString("help", resourceCulture);
             }
         }
     }

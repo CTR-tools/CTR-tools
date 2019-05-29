@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace cseq
+namespace CTRtools.Helpers
 {
     class Log
     {

@@ -8,10 +8,8 @@ namespace lng2txt
 {
     class LNG
     {
-
         int numStrings;
         int offset;
-
 
         StringBuilder sb = new StringBuilder();
 

@@ -1,43 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using NAudio.Midi;
-using System.Diagnostics;
 using System.IO;
+using CTRtools.Helpers;
 
-namespace cseq
+namespace CTRtools.CSEQ
 {
     public class CTrack
     {
         //meta
         public string name;
         public string address = "";
+        public int trackNum;
 
         public int instrument = 0;
         public bool isDrumTrack = false;
 
         List<Command> cmd;
 
-
         public CTrack()
         {
             cmd = new List<Command>();
         }
 
-        /*
-        public static void NOP(double durationSeconds)
-        {
-            var durationTicks = Math.Round(durationSeconds * Stopwatch.Frequency);
-            var sw = Stopwatch.StartNew();
 
-            while (sw.ElapsedTicks < durationTicks)
-            {
-            }
-        }
-        */
-
-        public void Read(BinaryReaderEx br)
+        public void Read(BinaryReaderEx br, int num)
         {
+            trackNum = num;
             address = br.HexPos();
 
             switch (br.ReadInt16())
@@ -60,6 +49,8 @@ namespace cseq
                 cmd.Add(cx);
             }
             while (cx.evt != CSEQEvent.EndTrack && cx.evt != CSEQEvent.EndTrack2);
+
+            name = "Track_" + trackNum.ToString("00") + (isDrumTrack ? "_drum" : "");
         }
 
 
@@ -76,7 +67,7 @@ namespace cseq
         }
 
 
-        public List<MidiEvent> ToMidiEventList(CSeqHeader header, int channel)
+        public List<MidiEvent> ToMidiEventList(CSeqHeader header, int channel, CSEQ seq)
         {
             List<MidiEvent> me = new List<MidiEvent>();
             MidiEvent x;
@@ -88,9 +79,7 @@ namespace cseq
 
             foreach (Command c in cmd)
             {
-                x = c.ToMidiEvent(absTime, channel);
-                if (x != null) me.Add(x);
-
+                me.AddRange(c.ToMidiEvent(absTime, channel, seq, this));
                 absTime += c.wait;
             }
 

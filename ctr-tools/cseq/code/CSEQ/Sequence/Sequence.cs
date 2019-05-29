@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using NAudio.Midi;
 using System.IO;
+using CTRtools.Helpers;
+using NAudio.Midi;
 
-namespace cseq
+namespace CTRtools.CSEQ
 {
     public class Sequence
     {
         public CSeqHeader header;
         public List<CTrack> tracks;
+
 
         public Sequence()
         {
@@ -16,39 +18,44 @@ namespace cseq
             tracks = new List<CTrack>();
         }
 
-        public void Read(BinaryReaderEx br, System.Windows.Forms.TextBox textBox1, CSEQ cs)
+
+        //reads CSEQ from given binaryreader
+        public bool Read(BinaryReaderEx br, CSEQ cs)
         {
-            header.Read(br);
+            //read header
+            if (!header.Read(br))
+                return false;
 
-            List<short> seqOffsets = new List<short>();
+            //read offsets
+            short[] seqOffsets = br.ReadInt16Array(header.trackNum);
 
-            for (int i = 0; i < header.trackNum; i++)
-                seqOffsets.Add(br.ReadInt16());
+            //padding i guess?
+            if (header.trackNum % 2 == 0) 
+                br.ReadInt16();
 
-            //i dont have any intelligent explanation for this
-            if (header.trackNum % 2 == 0) br.ReadInt16();
-
+            //save current position to read tracks
             int trackData = (int)br.BaseStream.Position;
 
+            //loop through all tracks
             for (int i = 0; i < header.trackNum; i++)
             {
-                br.BaseStream.Position = trackData + seqOffsets[i];
+                //jump to track offset
+                br.Jump(trackData + seqOffsets[i]);
 
+                //read track
                 CTrack t = new CTrack();
-                t.Read(br);
-                t.name = "Track_" + i.ToString("00") + (t.isDrumTrack ? "_drum" : "");
+                t.Read(br, i);
 
-                if (!t.isDrumTrack)
-                    t.name += "_" + cs.GetLongSampleIDByTrack(t).ToString("X4");
-
+                //add track to the list
                 tracks.Add(t);
             }
 
+            return true;
         }
 
-        public void ExportMIDI(string fn)
+        public void ExportMIDI(string fn, CSEQ seq)
         {
-            string cr = "(C) 1999, Mutato Muzika: Mark Mothersbaugh, Josh Mancell.\r\n\r\nConverted to MIDI using CTR-Tools by DCxDemo*.";
+            string cr = Properties.Resources.copyright;
 
             MidiEventCollection mc = new MidiEventCollection(1, header.TPQN);
 
@@ -61,10 +68,11 @@ namespace cseq
             mc.AddTrack(dummy);
 
             for (int i = 0; i < tracks.Count; i++)
-                mc.AddTrack(tracks[i].ToMidiEventList(header, tracks[i].isDrumTrack ? 10 : i + 1));
+                mc.AddTrack(tracks[i].ToMidiEventList(header, tracks[i].isDrumTrack ? 10 : i + 1, seq));
 
             mc.PrepareForExport();
 
+            
             try
             {
                 MidiFile.Export(fn, mc);

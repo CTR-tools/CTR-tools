@@ -1,23 +1,38 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Data;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
+using CTRtools.SFX;
+using CTRtools.Helpers;
+using Newtonsoft.Json.Linq;
 
-namespace cseq
+namespace CTRtools.CSEQ
 {
     public partial class MainForm : Form
     {
-        public static bool finalLap = false;
         public CSEQ seq;
 
+        //??
         string loadedfile = "";
+
 
         public MainForm()
         {
             InitializeComponent();
             this.DoubleBuffered = true;
+
+            if (!CTRJson.Load())
+            {
+                MessageBox.Show("Couldn't load Json!");
+            }
+            else
+            {
+                foreach (KeyValuePair<string, JToken> j in CTRJson.midi)
+                {
+                    comboBox1.Items.Add(j.Key);
+                }
+            }
         }
 
         private void ReadCSEQ(string fn)
@@ -25,6 +40,14 @@ namespace cseq
             Log.Clear();
             sequenceBox.Items.Clear();
             trackBox.Items.Clear();
+
+            string name = Path.GetFileNameWithoutExtension(fn);
+
+            for (int i = 0; i < comboBox1.Items.Count; i++)
+            {
+                if (name.Contains(comboBox1.Items[i].ToString()))
+                  comboBox1.SelectedIndex = i;
+            }
 
             seq = new CSEQ();
 
@@ -69,10 +92,10 @@ namespace cseq
             samples.Columns.Add("reverb", typeof(byte));
             samples.Columns.Add("reverb2", typeof(byte));
 
-            foreach (Sample s in seq.longSamples)
+            foreach (Instrument s in seq.longSamples)
                 s.ToDataRow(samples);
 
-            foreach (Sample s in seq.shortSamples)
+            foreach (Instrument s in seq.shortSamples)
                 s.ToDataRow(samples);
 
             ds.Tables.Add(samples);
@@ -117,10 +140,6 @@ namespace cseq
         }
 
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
 
         private void sequenceBox_DoubleClick(object sender, EventArgs e)
         {
@@ -130,7 +149,7 @@ namespace cseq
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                seq.sequences[sequenceBox.SelectedIndex].ExportMIDI(sfd.FileName);
+                seq.sequences[sequenceBox.SelectedIndex].ExportMIDI(sfd.FileName, seq);
                 seq.ToSFZ(Path.ChangeExtension(sfd.FileName, ".sfz"));
             }
 
@@ -144,15 +163,6 @@ namespace cseq
                 ReadCSEQ(files[0]);
         }
 
-        private void Form1_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.Copy;
-        }
-
-        private void skipBytesForUSDemoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CSEQ.usdemo = skipBytesForUSDemoToolStripMenuItem.Checked;
-        }
 
         private void exportSEQToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -170,22 +180,23 @@ namespace cseq
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                bnk = new Bank(ofd.FileName);
-                textBox1.Text = bnk.ToString();
-
                 if (seq != null)
                 {
-                    MessageBox.Show(seq.CheckBankForSamples(bnk) ? "samples OK!" : "samples missing.");
+                    seq.LoadBank(ofd.FileName);
 
+                    MessageBox.Show(seq.CheckBankForSamples() ? "samples OK!" : "samples missing.");
+
+                    /*
                     foreach (VABSample v in bnk.vs)
                     {
                         v.frequency = seq.GetFrequencyBySampleID(v.id);
                     }
-
+                   
                     foreach (int i in seq.GetAllIDs())
                     {
                         bnk.Export(i);
                     }
+                     */
                 }
                 else
                 {
@@ -194,39 +205,78 @@ namespace cseq
             }
         }
 
+
+
+        #region [Form stuff]
+
+        private void Form1_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
+
+        private void skipBytesForUSDemoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CSEQ.USdemo = skipBytesForUSDemoToolStripMenuItem.Checked;
+        }
+
         private void tutorialToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            textBox1.Text =
-                "CSEQ Tool\r\n2018-2019, DCxDemo*.\r\n\r\n" +
-                "This tool reads CSEQ files - custom Crash Team Racing music files.\r\n" +
-                "CSEQ files are contained in KART.HWL file, use howl tool to extract bank/sequence files.\r\n" +
-                "Use File -> Open to locate your CSEQ file.\r\n" +
-                "For NTSC-U Demo make sure to tick Options -> Skip bytes for US demo.\r\n" +
-                "Double click sequence on the list to export it to MIDI.\r\n" +
-                "Use Instruments / Samples tab to check instrument values (mostly for research).\r\n" +
-                "Click track on the list to output all commands on that track.\r\n" +
-                "Use Options -> Load bank to find the correct bank file for the sequence loaded. Correct file will end up in Samples OK message (canyon starts with 01).\r\n\r\n" +
-                "Special thanks:\r\nlnge - initial CSEQ specification\r\nCREEEE - testing and suggestions";
+            textBox1.Text = Properties.Resources.help;
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            VABSample.defaultrate = 11025;
+            VAG.DefaultSampleRate = 11025;
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            VABSample.defaultrate = 22050;
+            VAG.DefaultSampleRate = 22050;
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            VABSample.defaultrate = 33075;
+            VAG.DefaultSampleRate = 33075;
         }
 
         private void toolStripMenuItem5_Click(object sender, EventArgs e)
         {
-            VABSample.defaultrate = 44100;
+            VAG.DefaultSampleRate = 44100;
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        #endregion
+
+        private void testJsonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string track = "canyon";
+            string instr = "long";
+            int id = 0;
+
+
+            MetaInst info  = CTRJson.GetMetaInst(track, instr, id);
+            textBox1.Text += "" + info.Midi + " " + info.Key + " " + info.Title + " " + info.Pitch;
+        }
+
+        private void patchMIDIInstrumentsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CSEQ.PatchMidi = patchMIDIInstrumentsToolStripMenuItem.Checked;
+        }
+
+        private void exportSamplesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (seq != null)
+                if (seq.bank != null)
+                    seq.bank.ExportAll();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CSEQ.PatchName = comboBox1.Items[comboBox1.SelectedIndex].ToString();
         }
     }
 }

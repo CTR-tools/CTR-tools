@@ -1,6 +1,6 @@
 #release data
 release.*
-
+dependencies
 
 # Windows image file caches
 Thumbs.db

@@ -7,6 +7,10 @@ Join the CTR Tools Discord channel: https://discord.gg/56xm9Aj
 
 Tools are developed in Visual Studio 2010, target platform is .NET 4.0.
 
+Project dependencies (make sure to download latest dlls):
+* NAudio - https://github.com/naudio/NAudio (used to export MIDI files)
+* Json.NET - https://github.com/JamesNK/Newtonsoft.Json (used for json parsing support)
+
 ## File formats
 BIG (bigfile.big, sampler.big) - main game container for all the data used. Doesn't contain any filenames.\
 LEV - scene container. Can contain static level mesh, various dynamic models, scripts, AI paths, etc.\
@@ -50,7 +54,7 @@ Usage: howl.exe C:\example\kart.hwl
 * This will create kart.hwl_data folder with all the sequences and sound banks.
 
 ## cseq
-Reads CSEQ files and exports to MIDI.
+Reads CSEQ files and exports to MIDI. See project dependencies.
 
 Usage: use File menu or drag-drop CSEQ file on the application window.
 * Single CSEQ file may contain multiple sequences.

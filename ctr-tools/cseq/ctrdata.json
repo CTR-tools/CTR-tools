@@ -1,0 +1,152 @@
+{
+	versions:
+	[
+		{
+			"name": "NTSC_Release",
+			"timestamp": "1999-09-07",
+			"big_md5": "c43eba5a20f0b4fc69a00c8d61a8ec10",
+			"hwl_md5": "269df8e697e879cb2254ff091f7aefc7"
+		},
+		{
+			"name": "PAL_Release",
+			"timestamp": "1999-10-11",
+			"big_md5": "03a005e2abc6022fd1e1e7405300ad77",
+			"hwl_md5": "3d5e358c2750f0b318a9f23676d15782"
+		},
+		{
+			"name": "JAP_Release",
+			"timestamp": "1999-09-06",
+			"big_md5": "b22c894eff31539de853c83cf52a9025",
+			"hwl_md5": "aeab71ba44ab09c2da4d45dc5467d719"
+		},
+		{
+			"name": "NTSC_Demo",
+			"timestamp": "1999-07-26",
+			"big_md5": "ceb0b4551f3a4a374080c085dea1a860",
+			"hwl_md5": "702ac23e8ab5940f32cfc5ab1e8fc913"
+		},
+		{
+			"name": "PAL_Demo",
+			"timestamp": "1999-06-19",
+			"big_md5": "870780bddb386d04882d57526a03c966",
+			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9" 
+		},
+		{
+			"name": "JAP_Demo",
+			"timestamp": "1999-06-22",
+			"big_md5": "aa71f0adf8a40a77e767c40b73600e46",
+			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9" 
+		},
+		{
+			"name": "Review_Proto",
+			"timestamp": "1999-08-17",
+			"big_md5": "e73f0f3cade06dc5fc2719fe186cbe26",
+			"hwl_md5": "c5de2d39e42267e74aa4d5e7b47165a5"
+		}
+	],
+	
+	levels: [
+		{ ndiname: "proto8",	name: "canyon", 	title: "Dingo Canyon" },
+		{ ndiname: "proto9",	name: "mines",		title: "Dragon Mines" },
+		{ ndiname: "desert2",	name: "bluff",		title: "Blizzard Bluff" },
+		{ ndiname: "island1",	name: "cove",		title: "Crash Cove" },
+		{ ndiname: "temple1",	name: "temple", 	title: "Tiger Temple" },
+		{ ndiname: "temple2",	name: "pyramid", 	title: "Papu's Pyramid" },
+		{ ndiname: "tube1",		name: "tubes", 		title: "Roo's Tubes" },
+		{ ndiname: "blimp1",	name: "skyway",		title: "Hot Air Skyway" },
+		{ ndiname: "sewer1",	name: "sewer",		title: "Sewer Speedway" },
+		{ ndiname: "cave1",		name: "caves",		title: "Mystery Caves" },
+		{ ndiname: "castle1",	name: "castle",		title: "Cortex Castle" },
+		{ ndiname: "labs1",		name: "labs",		title: "N. Gin Labs" },
+		{ ndiname: "ice1",		name: "pass",		title: "Polar Pass" },
+		{ ndiname: "space",		name: "station",	title: "Oxide Station" },
+		{ ndiname: "coco1",		name: "park",		title: "Coco Park" },
+		{ ndiname: "arena2",	name: "arena",		title: "Tiny Arena" },
+		{ ndiname: "secret1",	name: "coliseum",	title: "Slide Coliseum" },
+		{ ndiname: "secret2",	name: "turbo",		title: "Turbo Track" },
+		{ ndiname: "battle1",	name: "nitro",		title: "Nitro Court" },
+		{ ndiname: "battle2",	name: "rampage",	title: "Rampage Ruins" },
+		{ ndiname: "battle3",	name: "parking",	title: "Parking Lot" },
+		{ ndiname: "battle4",	name: "skull",		title: "Skull Rock" },
+		{ ndiname: "battle5",	name: "bowl",		title: "North Bowl" },
+		{ ndiname: "battle6",	name: "rocky",		title: "Rocky Road" },
+		{ ndiname: "battle7",	name: "basement",	title: "Lab Basement" },
+		{ ndiname: "hub1",		name: "valley",		title: "Gem Valley" },
+		{ ndiname: "hub2",		name: "nsanity",	title: "N. Sanity Beach" },
+		{ ndiname: "hub3",		name: "ruins",		title: "Lost Ruins" },
+		{ ndiname: "hub4",		name: "glacier",	title: "Glacier Park" },
+		{ ndiname: "hub5",		name: "citadel",	title: "Citadel City" }
+		
+	],
+
+	midi: {
+		"canyon": {
+			long: [
+				{ midi: 34, pitch: -12, title: "Electric Bass" },
+				{ midi: 87, pitch: -12, title: "Lead 8" },
+				{ midi: 26, title: "Jazz Guitar" },
+				{ midi:  4, title: "Rhodes Piano" },
+				{ midi: 27, title: "Guitar" },
+			
+				{ midi: 11, title: "Vibraphone" },
+				{ midi: 83, title: "Lead 4" }
+			],
+			short: [
+				{ key: 35, title: "Bass drum" },
+				{ key: 42, title: "Closed Hi-Hat" },
+				{ key: 38, title: "Snare drum" },
+				{ key: 46, title: "Open Hi-Hat" },
+				{ key: 39, title: "Clap" },
+				{ key: 47, title: "Tom 1" },
+				{ key: 45, title: "Tom 2"  },
+				{ key: 43, title: "Tom 3"  },
+				{ key: 41, title: "Tom 4"  }
+			]
+		},
+		"pyramid": {
+			long: [
+				{ midi: 33, pitch: -36, title: "Electric Bass" },
+				{ midi: 12, pitch: 0, 	title: "Marimba" },
+				{ midi:  4, pitch: 12, 	title: "Rhodes Piano" },
+				{ midi: 85, pitch: -12, title: "Lead 6" },
+			
+				{ id: 4, midi: 11, pitch: 0, title: "Vibraphone" },
+				{ id: 5, midi: 83, pitch: 0, title: "Lead 4" }
+			],
+			short: [
+				{ key: 35, title: "Bass drum" },
+				{ key: 40, title: "Snare" },
+				{ key: 28 },
+				{ key: 44, title: "Open Hi-Hat" },
+				{ key: 55, title: "Splash Cymbal" },
+				{ key: 46 },
+				{ key: 63, title: "Conga 1" },
+				{ key: 61, title: "Conga 2" },
+				{ key: 64, title: "Conga 3" }
+			]
+		},
+		
+		"cove": {
+			long: [
+				{ midi: 27, pitch: 0, title: "Guitar" },
+				{ midi: 25, pitch: 0, title: "Guitar" },
+				{ midi: 25, pitch: 0, title: "Guitar" },			
+				{ midi: 114, pitch: 0, title: "Steel Drums" },		
+				{ midi: 34, pitch: -12, title: "Bass" },
+				{ midi: 11, pitch: 0, title: "Vibraphone" }
+			],
+			short: [
+				{ key: 64 },
+				{ key: 60 },
+				{ key: 56 },
+				{ key: 44 },
+				{ key: 55 },
+				{ key: 35 },
+				{ key: 46 },
+				{ key: 40 },
+				{ key: 43 },
+				{ key: 47 }
+			]
+		}
+	}
+}

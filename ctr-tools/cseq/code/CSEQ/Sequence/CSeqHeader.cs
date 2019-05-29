@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace cseq
+namespace CTRtools.CSEQ
 {
     public struct CSeqHeader
     {
@@ -11,13 +11,13 @@ namespace cseq
         public int MPQN { get { return (int)(60000000.0f / (float)BPM); } }
         //public float tickDuration { get { return 60.0f / BPM / TPQN * 1000.0f; } }
 
-        public void Read(BinaryReader br)
+        public bool Read(BinaryReader br)
         {
             trackNum = br.ReadByte();
             BPM = br.ReadInt16();
             TPQN = br.ReadInt16();
 
-            //System.Windows.Forms.MessageBox.Show(ToString());
+            return true;
         }
 
         public override string ToString()

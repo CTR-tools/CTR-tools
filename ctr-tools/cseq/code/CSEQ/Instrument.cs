@@ -2,8 +2,10 @@
 using System.Data;
 using System.IO;
 using System.Text;
+using CTRtools.Helpers;
+using Newtonsoft.Json.Linq;
 
-namespace cseq
+namespace CTRtools.CSEQ
 {
     public enum InstType
     {
@@ -11,73 +13,61 @@ namespace cseq
         Short
     }
 
-    public class Sample
+    public class Instrument
     {
         public InstType instType;
 
         public byte magic1;
         public byte velocity;
         public short always0;
-        public short basepitch;
+        public short basepitch;  //4096 is considered to be 44100
+
+        public int frequency
+        {
+            //cents needed?
+            get { return (int)(basepitch * 44100.0 / 4096.0); }
+        }
+
         public short sampleID;
 
         public short unknownFF80;
         public byte reverb;     //maybe reverb is 2 bytes? mostly 193
         public byte reverb2;    //unknown value, mostly 31
 
-        public Sample()
+        public MetaInst info;
+
+        
+        public Instrument()
         {
         }
 
-        static Sample Get(BinaryReaderEx br, InstType it)
+
+        static Instrument Get(BinaryReaderEx br, InstType it)
         {
-            Sample s = new Sample();
-            if (s.Read(br, it)) return s;
-            return null;
+            Instrument s = new Instrument();
+            s.Read(br, it);
+
+            return s;
         }
 
-        public static Sample GetLong(BinaryReaderEx br)
+        public static Instrument GetLong(BinaryReaderEx br)
         {
             return Get(br, InstType.Long);
         }
 
-        public static Sample GetShort(BinaryReaderEx br)
+        public static Instrument GetShort(BinaryReaderEx br)
         {
             return Get(br, InstType.Short);
         }
 
-
-        public bool Read(BinaryReaderEx br, InstType it)
+        public void Read(BinaryReaderEx br, InstType it)
         {
             instType = it;
 
-            if (it == InstType.Long)
+            switch (it)
             {
-                magic1 = br.ReadByte();
-                velocity = br.ReadByte();
-                always0 = br.ReadInt16();
-                basepitch = br.ReadInt16();
-                sampleID = br.ReadInt16();
-                unknownFF80 = br.ReadInt16();
-                reverb = br.ReadByte();
-                reverb2 = br.ReadByte();
-
-                return true;
-            }
-            else if (it == InstType.Short)
-            {
-                magic1 = br.ReadByte();
-                velocity = br.ReadByte();
-                basepitch = br.ReadInt16();
-                sampleID = br.ReadInt16();
-                always0 = br.ReadInt16();
-
-                return true;
-            }
-            else
-            {
-                Log.WriteLine("unknown instrument type at " + br.HexPos());
-                return false;
+                case InstType.Long: ReadLong(br); break;
+                case InstType.Short: ReadShort(br); break;
             }
         }
 
@@ -130,6 +120,8 @@ namespace cseq
             return sb.ToString();
         }
 
+
+
         public void ToDataRow(DataTable dt)
         {
             DataRow dr = dt.NewRow();
@@ -152,30 +144,60 @@ namespace cseq
         }
 
 
-        public void WriteBytes(BinaryWriter bw)
+        public void Write(BinaryWriterEx bw)
         {
-            if (instType == InstType.Long)
+            switch (instType)
             {
-                bw.Write((byte)magic1);
-                bw.Write((byte)velocity);
-                bw.Write((short)always0);
-                bw.Write((short)basepitch);
-                bw.Write((short)sampleID);
-                bw.Write((short)unknownFF80);
-                bw.Write((byte)reverb);
-                bw.Write((byte)reverb2);
-            }
-            else if (instType == InstType.Short)
-            {
-                bw.Write((byte)magic1);
-                bw.Write((byte)velocity);
-                bw.Write((short)basepitch);
-                bw.Write((short)sampleID);
-                bw.Write((short)always0);
+                case InstType.Long: WriteLong(bw); break;
+                case InstType.Short: WriteShort(bw); break;
             }
         }
 
+        #region [Private functions]
+
+        private void ReadLong(BinaryReaderEx br)
+        {
+            magic1 = br.ReadByte();
+            velocity = br.ReadByte();
+            always0 = br.ReadInt16();
+            basepitch = br.ReadInt16();
+            sampleID = br.ReadInt16();
+            unknownFF80 = br.ReadInt16();
+            reverb = br.ReadByte();
+            reverb2 = br.ReadByte();
+        }
+
+        private void ReadShort(BinaryReaderEx br)
+        {
+            magic1 = br.ReadByte();
+            velocity = br.ReadByte();
+            basepitch = br.ReadInt16();
+            sampleID = br.ReadInt16();
+            always0 = br.ReadInt16();
+        }
+
+        private void WriteLong(BinaryWriterEx bw)
+        {
+            bw.Write((byte)magic1);
+            bw.Write((byte)velocity);
+            bw.Write((short)always0);
+            bw.Write((short)basepitch);
+            bw.Write((short)sampleID);
+            bw.Write((short)unknownFF80);
+            bw.Write((byte)reverb);
+            bw.Write((byte)reverb2);
+        }
+
+        private void WriteShort(BinaryWriterEx bw)
+        {
+            bw.Write((byte)magic1);
+            bw.Write((byte)velocity);
+            bw.Write((short)basepitch);
+            bw.Write((short)sampleID);
+            bw.Write((short)always0);
+        }
+
+        #endregion
+
     }
-
-
 }
