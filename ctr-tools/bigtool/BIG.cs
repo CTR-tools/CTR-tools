@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Security.Cryptography;
 using p = bigtool.Properties.Resources;
+using Newtonsoft.Json.Linq;
 
 namespace bigtool
 {
@@ -45,52 +46,31 @@ namespace bigtool
             }
         }
 
-
-        public enum BIGType
-        {
-            Unknown, 
-            USA, 
-            EUR, 
-            JAP, 
-            Review,
-            USDemo,
-            EuroDemo,
-            JapDemo
-        }
-
-        public string NameBig(BIGType big)
-        {
-            switch (big)
-            {
-                case BIGType.USA: return "USA NTSC-U detected!";
-                case BIGType.EUR: return "EUR PAL detected!";
-                case BIGType.JAP: return "JAP NTSC-J detected!";
-                case BIGType.Review: return "Review copy detected!";
-                case BIGType.USDemo: return "US Demo detected!";
-                case BIGType.EuroDemo: return "Euro Demo detected!";
-                case BIGType.JapDemo: return "Jap Demo detected!";
-                default: return "Unknown BIGFILE.BIG";
-            }
-        }
-
-        public BIGType DetectBig(string md5)
-        {
-            switch (md5)
-            {
-                case "c43eba5a20f0b4fc69a00c8d61a8ec10": return BIGType.USA;
-                case "03a005e2abc6022fd1e1e7405300ad77": return BIGType.EUR;
-                case "b22c894eff31539de853c83cf52a9025": return BIGType.JAP;
-                case "e73f0f3cade06dc5fc2719fe186cbe26": return BIGType.Review;
-                case "eb0b4551f3a4a374080c085dea1a8609": return BIGType.USDemo;
-                case "870780bddb386d04882d57526a03c966": return BIGType.EuroDemo;
-                case "aa71f0adf8a40a77e767c40b73600e46": return BIGType.JapDemo;
-                default: return BIGType.Unknown;
-            }
-        }
-
+        JObject json;
 
         public BIG()
         {
+        }
+
+        public string DetectBig(string md5)
+        {
+            if (File.Exists(verpath))
+            {
+                json = JObject.Parse(File.ReadAllText(verpath));
+
+                for (int i = 0; i < ((JArray)json["versions"]).Count; i++)
+                {
+                    if (md5 == json["versions"][i]["big_md5"].ToString())
+                        return
+                            String.Format(
+                                "{0} ({1})",
+                                json["versions"][i]["name"].ToString(),
+                                json["versions"][i]["timestamp"].ToString()
+                            );
+                }
+            }
+
+            return "Unknown";
         }
 
 
@@ -100,6 +80,7 @@ namespace bigtool
         string bigname;
         string bigpath;
         string extpath;
+        string verpath;
 
         public void InitPaths(string fn)
         {
@@ -110,7 +91,7 @@ namespace bigtool
             bigpath = Path.GetDirectoryName(fn);
             if (bigpath == null || bigpath == "") bigpath = basepath;
             extpath = Path.Combine(bigpath, bigname) + "\\";
-
+            verpath = Path.Combine(basepath, "versions.json");
             
             //uncomment if something goes wrong
             /*
@@ -135,12 +116,12 @@ namespace bigtool
             Console.WriteLine(p.calc_md5);
 
             string md5 = CalculateMD5(fn);
-            BIGType reg = DetectBig(md5);
+            string reg = DetectBig(md5);
 
             Console.WriteLine("MD5 = " + md5);
-            Console.WriteLine(NameBig(reg) + "\r\n");
+            Console.WriteLine(reg + "\r\n");
 
-            if (reg == BIGType.Unknown)
+            if (reg == "Unknown")
                 File.WriteAllText("unknown_md5.txt", md5);
 
             ms = new MemoryStream(File.ReadAllBytes(fn));

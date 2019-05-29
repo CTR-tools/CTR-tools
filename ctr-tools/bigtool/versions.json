@@ -1,0 +1,47 @@
+{
+	"versions":
+	[
+		{
+			"name": "NTSC_Release",
+			"timestamp": "1999-09-07",
+			"big_md5": "c43eba5a20f0b4fc69a00c8d61a8ec10",
+			"hwl_md5": "269df8e697e879cb2254ff091f7aefc7"
+		},
+		{
+			"name": "PAL_Release",
+			"timestamp": "1999-10-11",
+			"big_md5": "03a005e2abc6022fd1e1e7405300ad77",
+			"hwl_md5": "3d5e358c2750f0b318a9f23676d15782"
+		},
+		{
+			"name": "JAP_Release",
+			"timestamp": "1999-09-06",
+			"big_md5": "b22c894eff31539de853c83cf52a9025",
+			"hwl_md5": "aeab71ba44ab09c2da4d45dc5467d719"
+		},
+		{
+			"name": "NTSC_Demo",
+			"timestamp": "1999-07-26",
+			"big_md5": "ceb0b4551f3a4a374080c085dea1a860",
+			"hwl_md5": "702ac23e8ab5940f32cfc5ab1e8fc913"
+		},
+		{
+			"name": "PAL_Demo",
+			"timestamp": "1999-06-19",
+			"big_md5": "870780bddb386d04882d57526a03c966",
+			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9" 
+		},
+		{
+			"name": "JAP_Demo",
+			"timestamp": "1999-06-22",
+			"big_md5": "aa71f0adf8a40a77e767c40b73600e46",
+			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9" 
+		},
+		{
+			"name": "Review_Proto",
+			"timestamp": "1999-08-17",
+			"big_md5": "e73f0f3cade06dc5fc2719fe186cbe26",
+			"hwl_md5": "c5de2d39e42267e74aa4d5e7b47165a5"
+		}
+	]
+}
