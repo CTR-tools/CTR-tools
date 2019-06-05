@@ -13,6 +13,8 @@ namespace CTRtools.CSEQ
 
         public static bool USdemo = false;
         public static bool PatchMidi = false;
+        public static bool IgnoreVolume = false;
+
         public static int ActiveInstrument = 0;
         public static string PatchName = "";
 

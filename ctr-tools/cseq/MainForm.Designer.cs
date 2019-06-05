@@ -68,6 +68,7 @@ namespace CTRtools.CSEQ
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.ignoreOriginalVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView1 = new CTRtools.CSEQ.CustomDataGridView();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -133,6 +134,7 @@ namespace CTRtools.CSEQ
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.skipBytesForUSDemoToolStripMenuItem,
             this.patchMIDIInstrumentsToolStripMenuItem,
+            this.ignoreOriginalVolumeToolStripMenuItem,
             this.toolStripMenuItem6,
             this.loadBankToolStripMenuItem,
             this.exportSamplesToolStripMenuItem,
@@ -351,6 +353,14 @@ namespace CTRtools.CSEQ
             this.tabPage2.Text = "Instruments / Samples";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // ignoreOriginalVolumeToolStripMenuItem
+            // 
+            this.ignoreOriginalVolumeToolStripMenuItem.CheckOnClick = true;
+            this.ignoreOriginalVolumeToolStripMenuItem.Name = "ignoreOriginalVolumeToolStripMenuItem";
+            this.ignoreOriginalVolumeToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.ignoreOriginalVolumeToolStripMenuItem.Text = "Ignore original volume";
+            this.ignoreOriginalVolumeToolStripMenuItem.Click += new System.EventHandler(this.ignoreOriginalVolumeToolStripMenuItem_Click);
+            // 
             // dataGridView1
             // 
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
@@ -421,6 +431,7 @@ namespace CTRtools.CSEQ
         private System.Windows.Forms.ToolStripMenuItem testJsonToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportSamplesToolStripMenuItem;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ToolStripMenuItem ignoreOriginalVolumeToolStripMenuItem;
     }
 }
 

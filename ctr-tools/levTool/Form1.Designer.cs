@@ -34,9 +34,9 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveAllUp10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.moveAllUp10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.SuspendLayout();
@@ -66,28 +66,35 @@
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.loadToolStripMenuItem.Text = "Open...";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.saveToolStripMenuItem.Text = "Save...";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(109, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // moveAllUp10ToolStripMenuItem
+            // 
+            this.moveAllUp10ToolStripMenuItem.Name = "moveAllUp10ToolStripMenuItem";
+            this.moveAllUp10ToolStripMenuItem.Size = new System.Drawing.Size(96, 20);
+            this.moveAllUp10ToolStripMenuItem.Text = "Move all up 10";
+            this.moveAllUp10ToolStripMenuItem.Click += new System.EventHandler(this.moveAllUp10ToolStripMenuItem_Click);
             // 
             // propertyGrid1
             // 
@@ -111,13 +118,6 @@
             this.trackBar1.TabIndex = 7;
             this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
-            // 
-            // moveAllUp10ToolStripMenuItem
-            // 
-            this.moveAllUp10ToolStripMenuItem.Name = "moveAllUp10ToolStripMenuItem";
-            this.moveAllUp10ToolStripMenuItem.Size = new System.Drawing.Size(96, 20);
-            this.moveAllUp10ToolStripMenuItem.Text = "Move all up 10";
-            this.moveAllUp10ToolStripMenuItem.Click += new System.EventHandler(this.moveAllUp10ToolStripMenuItem_Click);
             // 
             // Form1
             // 

@@ -87,6 +87,11 @@ namespace CTRtools.CSEQ
             //we can't go beyond 16 with midi
             channel = (channel <= 16) ? channel : 16;
 
+            if (CSEQ.IgnoreVolume)
+            {
+                velocity = 127;
+            }
+
             if (CSEQ.PatchMidi)
             {
                 if (ct.isDrumTrack)

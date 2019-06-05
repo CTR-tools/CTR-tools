@@ -14,9 +14,9 @@ header {
 
 long samples count * {
   byte - always 1?? assumed magic
-  byte - velocity
+  byte - sample volume
   word - always 0??
-  word - base pitch, format unknown
+  word - base pitch (frequency to be used at middle C (60))
   word - sample ID
   word - unknown (mostly 0x80FF, varies in japanese tracks)
   byte - reverb level
@@ -25,7 +25,7 @@ long samples count * {
 
 short samples count * {
   byte - always 1?? assumed magic
-  byte - velocity
+  byte - sample volume
   word - base pitch
   word - sample ID
   word - always 0??
@@ -71,13 +71,13 @@ opcodes:
 0x03 - End Track
 0x04 - unknown. used once in canyon, start of track_03
 0x05 - Note On
-0x06 - assumed velocity (volume)
+0x06 - assumed velocity (volume) not actually used in most tracks
 0x07 - assumed pan
 0x08 - unknown. used in japanese tracks
 0x09 - patch change
 0x0A - assumed bend (pitch shift)
 
 data length:
-Note On - 2 bytes
+Note On - 2 bytes (note pitch, note 
 End Track - 0 bytes
 others - 1 byte

@@ -278,5 +278,10 @@ namespace CTRtools.CSEQ
         {
             CSEQ.PatchName = comboBox1.Items[comboBox1.SelectedIndex].ToString();
         }
+
+        private void ignoreOriginalVolumeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CSEQ.IgnoreVolume = ignoreOriginalVolumeToolStripMenuItem.Checked;
+        }
     }
 }

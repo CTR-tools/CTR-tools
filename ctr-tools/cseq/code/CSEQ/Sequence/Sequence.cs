@@ -67,8 +67,24 @@ namespace CTRtools.CSEQ
 
             mc.AddTrack(dummy);
 
+            int availablechannel = 1;
+
             for (int i = 0; i < tracks.Count; i++)
-                mc.AddTrack(tracks[i].ToMidiEventList(header, tracks[i].isDrumTrack ? 10 : i + 1, seq));
+            {
+                mc.AddTrack(tracks[i].ToMidiEventList(header, tracks[i].isDrumTrack ? 10 : availablechannel, seq));
+
+                if (!tracks[i].isDrumTrack)
+                {
+                    availablechannel++;
+
+                    //skip drum track
+                    if (availablechannel == 10) availablechannel++;
+
+                    //limit channel if overflow
+                    if (availablechannel > 16) availablechannel = 16;
+
+                }
+            }
 
             mc.PrepareForExport();
 
