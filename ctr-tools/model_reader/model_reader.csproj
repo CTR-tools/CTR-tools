@@ -92,6 +92,7 @@
     <Compile Include="Types\PosAng.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types\SomeData.cs" />
     <Compile Include="Types\Vector3s.cs" />
     <Compile Include="Types\Vector4s.cs" />
     <Compile Include="Types\Vector4b.cs" />

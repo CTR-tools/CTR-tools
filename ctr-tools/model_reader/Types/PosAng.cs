@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace model_reader
 {
-    class PosAng
+    public class PosAng
     {
         public Vector3s Position;
         public Vector3s Angle;
@@ -14,6 +15,12 @@ namespace model_reader
         {
             Position = pos;
             Angle = ang;
+        }
+
+        public PosAng(BinaryReader br)
+        {
+            Position = new Vector3s(br);
+            Angle = new Vector3s(br);
         }
 
         public override string ToString()

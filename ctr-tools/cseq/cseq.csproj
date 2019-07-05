@@ -70,6 +70,12 @@
   <PropertyGroup>
     <StartupObject>CTRtools.CSEQ.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="NAudio">
       <HintPath>NAudio\NAudio.dll</HintPath>

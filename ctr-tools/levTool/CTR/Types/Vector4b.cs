@@ -21,6 +21,14 @@ namespace CTRtools
             W = br.ReadByte();
         }
 
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(X);
+            bw.Write(Y);
+            bw.Write(Z);
+            bw.Write(W);
+        }
+
         public string ToObj() { return "v " + ToString(); }
         public  string ToString(float scale ) { return X * scale + " " + Y * scale + " " + Z * scale; }
     }

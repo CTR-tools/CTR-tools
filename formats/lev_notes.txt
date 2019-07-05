@@ -1,0 +1,64 @@
+hex sample of a single ngon from file
+
+CD 03 CE 03 CF 03 
+D0 03 D1 03 D2 03 
+D3 03 D4 03 D5 03 << vertex indices, 9 of them, 2 bytes each.
+
+00 42 00 E0 80 03 << various flags
+      ^^
+00 00 00 00 << weird stuff here. looks like bytes per quad and only appears is byte[2] != 0?
+
+F1 B0 09 00 
+91 B2 09 00 
+F1 B0 09 00 
+91 B2 09 00 << an offset per quad, might have some relation to textures?
+
+A0 F9 E9 0A 
+7E 27 80 FD 
+A9 0B 8A 29 
+00 00 00 00 << whole block no noticable effect. maybe bounding box? shorts min(xyz) max(xyz). last one is not always 0.
+
+1F 00 << screw that - partially hides triangles based on mask, could be face normal? or 2-sided flag?
+FF 11 << no effect
+
+C8 B6 09 00 << some address
+00 00 00 00 << some another address
+
+44 15 
+35 11 
+49 12 
+0C 14 
+F0 17 
+9D 1B 
+92 22 
+18 17 
+90 15 
+51 1E << ?? if it's an array, why 10. keep in mind their engine supports quad subdivision. there might be something related.
+
+
+Some notes
+
+data[0] flags
+
+00000001 1	- invisible walls in arena
+00000010 2	- never used?
+00000100 4	- reflection? ice1
+00001000 8	- kickers? temple1
+00010000 16	- out of bounds trigger
+00100000 32	- never used?
+01000000 64	- possibly denotes trigger script. turbo pad on tracks, but loading planes in hubs exits.
+10000000 128	- floor in coco park. reverb?
+
+
+lotsa different flags in space station to check
+
+
+
+Bytes 2 and 6 7 8 9 are always same and equal?
+
+
+Not always, but it’s still weird, looks like some pattern there.  Maybe like 2 denotes what mode should be applied and then 6 7 8 9 for each quad separately?
+
+
+data [5] could be transparency indeed.
+Possible values 0 1 2 3 128 129 130 131. So it’s like there is flag at 128 and flags at 1 and 2.

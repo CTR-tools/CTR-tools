@@ -86,10 +86,12 @@ namespace model_reader
                 CTRVertex vert = new CTRVertex(br);
                 vertex.Add(vert);
 
+                /*
                 if (fmt == "obj")  sb.Append("v ");
 
                 sb.Append(vert.coord.ToString() + " ");
                 sb.Append(vert.color2.ToString() + "\r\n");
+                 * */
             }
 
 
@@ -112,18 +114,25 @@ namespace model_reader
             //read faces
             br.BaseStream.Position = ptrNgonArray;
 
+           // Console.WriteLine(br.BaseStream.Position.ToString("X8"));
+           // //Console.ReadKey();
+
+            List<byte> uniflag = new List<byte>();
+
             for (int i = 0; i < facesnum; i++)
             {
 
                 CTRNgon g = new CTRNgon(br);
                 ngon.Add(g);
 
-                short[] ind = g.ind;
+                sb.Append(g.ToObj(vertex, i) + "\r\n\r\n");
 
-                if (fmt == "obj")
-                    for (int j = 0; j < 9; j++) 
-                        ind[j]++; 
 
+                if (!uniflag.Contains(g.unk1[5]))
+                    uniflag.Add(g.unk1[5]);
+                
+
+                /*
                 if (fmt == "ply")
                 {
                     sb.Append(ASCIIFace("3", ind, 5, 4, 0));
@@ -149,27 +158,18 @@ namespace model_reader
                     sb.Append(ASCIIFace("f", ind, 8, 7, 6));
                     sb.Append(ASCIIFace("f", ind, 7, 8, 3));
                 }
-
+                */
             }
+
+            uniflag.Sort();
+
+            foreach (byte b in uniflag) 
+                Console.WriteLine(b);
 
             string fname = Path.ChangeExtension(path, fmt);
             File.WriteAllText(fname, sb.ToString());
 
             Console.WriteLine(fname);
-        }
-
-        ~CTRModel()
-        {
-            vertex = null;
-            ngon = null;
-
-            br.Close();
-            ms.Close();
-
-            ms = null;
-            br = null;
-
-            GC.Collect();
         }
 
         public void Export()

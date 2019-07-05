@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="copyright" xml:space="preserve">
-    <value>(C) 1999, Mutato Muzika: Mark Mothersbaugh, Josh Mancell.\r\n\r\nConverted to MIDI using CTR-Tools by DCxDemo*.</value>
-  </data>
   <data name="help" xml:space="preserve">
     <value>CSEQ Tool, part of CTR Tools
 2018-2019, DCxDemo*.
@@ -136,5 +133,8 @@ Use Options -&gt; Load bank to find the correct bank file for the sequence loade
 Special thanks:
 lnge - initial CSEQ specification
 CREEEE - testing and suggestions</value>
+  </data>
+  <data name="midi_copyright" xml:space="preserve">
+    <value>(C) 1999, Mutato Muzika: Mark Mothersbaugh, Josh Mancell.\r\n\r\nConverted to MIDI using CTR-Tools by DCxDemo*.</value>
   </data>
 </root>

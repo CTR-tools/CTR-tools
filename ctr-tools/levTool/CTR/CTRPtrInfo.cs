@@ -17,6 +17,12 @@ namespace CTRtools
         public uint ptrfacearray;    //something else
         public int facenum;           //something else
 
+        public override string ToString()
+        {
+            return facesnum + "\r\n" + vertexnum + "\r\n" + ptrNgonArray.ToString("X8")
+                + "\r\n" + ptrvertarray.ToString("X8") + "\r\n" + ptrfacearray.ToString("X8") + "\r\n" + facesnum;
+        }
+
         public void Read(BinaryReader br)
         {
             facesnum = br.ReadInt32();

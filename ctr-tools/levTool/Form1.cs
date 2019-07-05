@@ -19,6 +19,10 @@ namespace CTRtools
         int ptrPickupHeaders;
         List<PickupHeader> headers = new List<PickupHeader>();
 
+        List<CTRVertex> verts = new List<CTRVertex>();
+        CTRPtrInfo info;
+
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
@@ -39,9 +43,6 @@ namespace CTRtools
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LoadLEV();
-
-            propertyGrid1.SelectedObject = headers[0];
-            trackBar1.Maximum = headers.Count - 1;
         }
 
 
@@ -69,12 +70,30 @@ namespace CTRtools
                 using (BinaryReader br = new BinaryReader(File.OpenRead(path)))
                 {
 
-                    br.BaseStream.Position = 0x10;
+                    uint size = br.ReadUInt32();
+                    uint ptrInfo = br.ReadUInt32() + 4;
+
+                    br.BaseStream.Position += 8;
 
                     numPickupHeaders = br.ReadInt32();
                     ptrPickupHeaders = br.ReadInt32() + 4;
 
+
+                    br.BaseStream.Position = ptrInfo;
+
+                    info = new CTRPtrInfo();
+                    info.Read(br);
+
+                    br.BaseStream.Position = info.ptrvertarray + 4;
+
+                    for (int i = 0; i < info.vertexnum; i++)
+                    {
+                        verts.Add(new CTRVertex(br));
+                    }
+
+
                     br.BaseStream.Position = ptrPickupHeaders;
+
 
                     for (int i = 0; i < numPickupHeaders; i++)
                     {
@@ -83,6 +102,10 @@ namespace CTRtools
                         headers.Add(h);
                     }
                 }
+
+                propertyGrid1.SelectedObject = headers[0];
+                trackBar1.Maximum = headers.Count - 1;
+
             }
         }
 
@@ -94,14 +117,79 @@ namespace CTRtools
 
                 foreach (PickupHeader ph in headers)
                     ph.Write(bw);
+
+
+                bw.BaseStream.Position = info.ptrvertarray + 4;
+
+                foreach (CTRVertex v in verts)
+                    v.Write(bw);
+
             }
         }
 
-        private void moveAllUp10ToolStripMenuItem_Click(object sender, EventArgs e)
+        Color vertexcolor1 = Color.Gray;
+        Color vertexcolor2 = Color.Gray;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                vertexcolor1 = cd.Color;
+                button1.BackColor = vertexcolor1;
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
         {
             foreach (PickupHeader ph in headers)
             {
-                ph.Position.Y -= 100;
+                ph.Position.Y += (short)numericUpDown1.Value;
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            foreach (PickupHeader ph in headers)
+            {
+                ph.Position.Y -= (short)numericUpDown1.Value;
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (verts.Count == 0)
+                MessageBox.Show("Load LEV first.");
+
+            foreach (CTRVertex v in verts)
+            {
+                v.SetColor1(vertexcolor1);
+                v.SetColor2(vertexcolor2);
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                vertexcolor2 = cd.Color;
+                button5.BackColor = vertexcolor2;
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            foreach (CTRVertex v in verts)
+            {
+                v.color.X = (byte)(v.color.X * 0.12f);
+                v.color.Y = (byte)(v.color.Y * 0.21f);
+                v.color.Z = (byte)(v.color.Z * 0.32f);
+                v.color2.X = (byte)(v.color2.X * 0.12f);
+                v.color2.Y = (byte)(v.color2.Y * 0.21f);
+                v.color2.Z = (byte)(v.color2.Z * 0.32f);
             }
         }
     }

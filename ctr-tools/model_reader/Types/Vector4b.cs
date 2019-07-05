@@ -21,7 +21,19 @@ namespace model_reader
             W = br.ReadByte();
         }
 
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(X);
+            bw.Write(Y);
+            bw.Write(Z);
+            bw.Write(W);
+        }
+
         public string ToObj() { return "v " + ToString(); }
-        public override string ToString() { return X + " " + Y + " " + Z; }
+
+        public string ToString() 
+        { 
+            return String.Format("{0} {1} {2}", X, Y, Z); 
+        }
     }
 }

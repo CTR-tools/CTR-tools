@@ -61,15 +61,6 @@ namespace CTRtools.CSEQ.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на (C) 1999, Mutato Muzika: Mark Mothersbaugh, Josh Mancell.\r\n\r\nConverted to MIDI using CTR-Tools by DCxDemo*..
-        /// </summary>
-        internal static string copyright {
-            get {
-                return ResourceManager.GetString("copyright", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на CSEQ Tool, part of CTR Tools
         ///2018-2019, DCxDemo*.
         ///
@@ -84,6 +75,15 @@ namespace CTRtools.CSEQ.Properties {
         internal static string help {
             get {
                 return ResourceManager.GetString("help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на (C) 1999, Mutato Muzika: Mark Mothersbaugh, Josh Mancell.\r\n\r\nConverted to MIDI using CTR-Tools by DCxDemo*..
+        /// </summary>
+        internal static string midi_copyright {
+            get {
+                return ResourceManager.GetString("midi_copyright", resourceCulture);
             }
         }
     }

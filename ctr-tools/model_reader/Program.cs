@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Diagnostics;
 
 namespace model_reader
 {
@@ -34,6 +35,14 @@ namespace model_reader
                         {
                             CTRModel ctrm = new CTRModel(args[0], format);
                             ctrm.Export();
+
+                            /*
+                            ProcessStartInfo psi = new ProcessStartInfo();
+                            psi.Arguments = 
+
+                            Process.Start(
+                            */
+
                             break;
                         }
                     case ".ctr":
