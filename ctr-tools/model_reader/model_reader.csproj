@@ -79,16 +79,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CTRAnim.cs" />
-    <Compile Include="CTRHeader.cs" />
+    <Compile Include="ctr_code\BoundingBox.cs" />
+    <Compile Include="ctr_code\CTRAnim.cs" />
+    <Compile Include="lev_code\CTRHeader.cs" />
     <Compile Include="CTRModel.cs" />
-    <Compile Include="LODModel.cs" />
-    <Compile Include="CTRNgon.cs" />
-    <Compile Include="CTRVertex.cs" />
-    <Compile Include="LODHeader.cs" />
-    <Compile Include="LODVertex.cs" />
-    <Compile Include="LODVertexDef.cs" />
-    <Compile Include="PickupHeader.cs" />
+    <Compile Include="ctr_code\LODModel.cs" />
+    <Compile Include="lev_code\CTRNgon.cs" />
+    <Compile Include="lev_code\CTRVertex.cs" />
+    <Compile Include="ctr_code\LODHeader.cs" />
+    <Compile Include="ctr_code\LODVertex.cs" />
+    <Compile Include="ctr_code\LODVertexDef.cs" />
+    <Compile Include="lev_code\PickupHeader.cs" />
     <Compile Include="Types\PosAng.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

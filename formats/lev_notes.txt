@@ -6,7 +6,7 @@ D3 03 D4 03 D5 03 << vertex indices, 9 of them, 2 bytes each.
 
 00 42 00 E0 80 03 << various flags
       ^^
-00 00 00 00 << weird stuff here. looks like bytes per quad and only appears is byte[2] != 0?
+00 00 00 00 << weird stuff here. looks like bytes per quad and only appears if byte[2] != 0?
 
 F1 B0 09 00 
 91 B2 09 00 
@@ -36,29 +36,61 @@ F0 17
 51 1E << ?? if it's an array, why 10. keep in mind their engine supports quad subdivision. there might be something related.
 
 
-Some notes
+Ngon format
 
-data[0] flags
-
-00000001 1	- invisible walls in arena
-00000010 2	- never used?
-00000100 4	- reflection? ice1
-00001000 8	- kickers? temple1
-00010000 16	- out of bounds trigger
-00100000 32	- never used?
-01000000 64	- possibly denotes trigger script. turbo pad on tracks, but loading planes in hubs exits.
-10000000 128	- floor in coco park. reverb?
+9 shorts (word, 2 bytes) - 9 indices in vertex array - form 4 quads
 
 
-lotsa different flags in space station to check
+10 bytes - assumed flags block
 
+Data[0] - usually small amount of unique values
+1	01	- invisible walls in arena
+2	02	- never used?
+4	04	- reflection? ice1
+8	08	- kickers? temple1
+16	10	- out of bounds trigger
+32	20	- never used?
+64	40	- possibly denotes trigger script. turbo pad on tracks, but loading planes in hubs exits.
+128	80	- floor in coco park. reverb?
 
+lotsa different combinations in space station to check
+
+Data[1] - lots of possible combinations
+1 	01	- kickers?
+2	02	- ???
+4 	04	- tiki mouth in temple
+8	08	- ground?
+16 	10	- ground?
+32	20	- not track?
+64	40	- outside stuff
+128	80	- invisible triggers?
+
+Data[2] - if it’s not 0, Data[6,7,8,9] will hold some value or 0. Could mean something per quad (since four of them). This value most of the time coincides with value of data[2]. But sometimes it can be different.
 
 Bytes 2 and 6 7 8 9 are always same and equal?
 
-
 Not always, but it’s still weird, looks like some pattern there.  Maybe like 2 denotes what mode should be applied and then 6 7 8 9 for each quad separately?
 
+Data[3] -  to check
+Data[4] - to check
 
 data [5] could be transparency indeed.
 Possible values 0 1 2 3 128 129 130 131. So it’s like there is flag at 128 and flags at 1 and 2.
+
+
+4 uints - offsets to some data. Possibly texture data per quad.
+
+6 shorts - bounding box min(x,y,z), max(x,y,z)
+
+Uint - unknown at this point
+
+2 bytes - unique value for each ngon. Probably a short number.
+2 bytes - assumed more flags.
+
+Uint - pointer to LOD texture data, the lower quality one in the distance. Can be null.
+
+Texture data sample: A8 F0 A2 5E B3 F0 6A 00 A8 FB B3 FB
+
+Uint - points to a pointer to some other data. Can be null.
+
+10 shorts - unknown. Some indices?

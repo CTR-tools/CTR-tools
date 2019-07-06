@@ -8,7 +8,7 @@ namespace model_reader
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("model_reader, CTR-Tools");
+            Console.WriteLine("CTR-Tools: model_reader\r\nDCxDemo*.\r\n");
 
             if (args.Length > 0)
             {
@@ -33,21 +33,27 @@ namespace model_reader
                 {
                     case ".lev":
                         {
-                            CTRModel ctrm = new CTRModel(args[0], format);
-                            ctrm.Export();
+                            CTRModel mod = new CTRModel(args[0], format);
+                            string objfile = mod.Export("obj");
 
-                            /*
-                            ProcessStartInfo psi = new ProcessStartInfo();
-                            psi.Arguments = 
+                            try
+                            {
+                                ProcessStartInfo psi = new ProcessStartInfo();
+                                psi.Arguments = objfile;
+                                psi.FileName = @"C:\Program Files\VCG\MeshLab\MeshLab.exe";
 
-                            Process.Start(
-                            */
-
+                                Process.Start(psi);
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Install MeshLab into default path to view models automatically.");
+                            }
+                            
                             break;
                         }
                     case ".ctr":
                         {
-                            LODModel ctrm = new LODModel(args[0]);
+                            LODModel mod = new LODModel(args[0]);
                             break;
                         }
 
@@ -56,7 +62,7 @@ namespace model_reader
             }
             else
             {
-                Console.WriteLine("No filename!");
+                Console.WriteLine("No filename given!");
             }
 
             var name = Console.ReadLine();
