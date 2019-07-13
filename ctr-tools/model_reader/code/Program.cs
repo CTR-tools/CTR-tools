@@ -67,7 +67,7 @@ namespace model_reader
                             }
 
 
-                            CTRModel mod = new CTRModel(args[0], format, vrm);
+                            CTRModel mod = new CTRModel(args[0], format);
                             string objfile = mod.Export("obj");
 
                             LaunchMeshLab(objfile);

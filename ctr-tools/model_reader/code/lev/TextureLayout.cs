@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.IO;
 
@@ -70,8 +69,8 @@ namespace model_reader
                 sb.AppendLine(
                     String.Format(
                         "vt {0} {1}", 
-                        Math.Round(v.X / 256f, 3).ToString(),  
-                        Math.Round(v.Y / 256f, 3).ToString()
+                        Math.Round(v.X / 255f, 3).ToString(),  
+                        Math.Round((255 - v.Y) / 255f, 3).ToString()
                     )
                 );
 

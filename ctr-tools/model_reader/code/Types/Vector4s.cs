@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace model_reader
 {
-    public class Vector4s
+    public class Vector4s : IRead, IWrite
     {
         private short x;
         private short y;
@@ -49,22 +49,15 @@ namespace model_reader
 
         public Vector4s(BinaryReader br)
         {
+            Read(br);
+        }
+
+        public void Read(BinaryReader br)
+        {
             x = br.ReadInt16();
             y = br.ReadInt16();
             z = br.ReadInt16();
             w = br.ReadInt16();
-        }
-
-        /*
-        public string ToObjVertex()
-        {
-            return "v " + X + " " + Y + " " + Z;
-        }
-        */
-
-        public override string ToString()
-        {
-            return String.Format("{0} {1} {2}", x, y, z);
         }
 
         public void Write(BinaryWriter bw)
@@ -74,5 +67,31 @@ namespace model_reader
             bw.Write(Z);
             bw.Write(W);
         }
+
+        /*
+        public string ToObjVertex()
+        {
+            return "v " + X + " " + Y + " " + Z;
+        }
+        */
+
+        public string ToString(VecFormat format)
+        {
+            string fmt = "{0} {1} {2}";
+
+            switch (format)
+            {
+                case VecFormat.CommaSeparated: fmt = "{0}, {1}, {2}"; break;
+                case VecFormat.Braced: fmt = "({0}, {1}, {2})"; break;
+            }
+
+            return String.Format(fmt, x, y, z);
+        }
+
+        public override string ToString()
+        {
+            return ToString(VecFormat.Braced);
+        }
+
     }
 }

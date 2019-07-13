@@ -13,6 +13,14 @@ namespace model_reader
         public byte Z;
         public byte W;
 
+        public Vector4b(uint a)
+        {
+            X = (byte)(a >> 24 & 0xFF);
+            Y = (byte)(a >> 16 & 0xFF);
+            Z = (byte)(a >> 8 & 0xFF);
+            W = (byte)(a & 0xFF);
+        }
+
         public Vector4b(BinaryReader br)
         {
             X = br.ReadByte();
@@ -29,11 +37,22 @@ namespace model_reader
             bw.Write(W);
         }
 
-        public string ToObj() { return "v " + ToString(); }
+        public string ToString(VecFormat format)
+        {
+            string fmt = "{0} {1} {2} {3}";
 
-        public string ToString() 
-        { 
-            return String.Format("{0} {1} {2}", X, Y, Z); 
+            switch (format)
+            {
+                case VecFormat.CommaSeparated: fmt = "{0}, {1}, {2}, {3}"; break;
+                case VecFormat.Braced: fmt = "({0}, {1}, {2}, {3})"; break;
+            }
+
+            return String.Format(fmt, X, Y, Z, W);
+        }
+
+        public override string ToString()
+        {
+            return ToString(VecFormat.Braced);
         }
     }
 }

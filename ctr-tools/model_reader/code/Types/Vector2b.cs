@@ -22,8 +22,8 @@ namespace model_reader
         [CategoryAttribute("Values"), DescriptionAttribute("Y coordinate.")]
         public byte Y
         {
-            get { return x; }
-            set { x = value; }
+            get { return y; }
+            set { y = value; }
         }
 
         #endregion
@@ -45,29 +45,38 @@ namespace model_reader
 
         #region Interfaces
 
-        /// <inheritdoc/>
         public void Read(BinaryReader br)
         {
             x = br.ReadByte();
             y = br.ReadByte();
         }
 
-        /// <inheritdoc/>
         public void Write(BinaryWriter bw)
         {
             bw.Write(ToByteArray());
         }
 
-        /// <inheritdoc/>
         public byte[] ToByteArray()
         {
             return new byte[] { x, y };
         }
 
+        public string ToString(VecFormat format)
+        {
+            string fmt = "{0} {1} {2}";
+
+            switch (format)
+            {
+                case VecFormat.CommaSeparated: fmt = "{0}, {1}"; break;
+                case VecFormat.Braced: fmt = "({0}, {1})"; break;
+            }
+
+            return String.Format(fmt, x, y);
+        }
 
         public override string ToString()
         {
-            return String.Format("({0}, {1})", x, y);
+            return ToString(VecFormat.Braced);
         }
 
         #endregion

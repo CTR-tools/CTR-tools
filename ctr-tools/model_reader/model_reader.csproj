@@ -82,31 +82,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="code\Enums.cs" />
-    <Compile Include="code\lev\BoundingBox.cs" />
+    <Compile Include="code\lev\MeshInfo.cs" />
+    <Compile Include="code\types\BoundingBox.cs" />
     <Compile Include="code\ctr\CTRAnim.cs" />
-    <Compile Include="code\lev\CTRHeader.cs" />
+    <Compile Include="code\lev\LevHeader.cs" />
     <Compile Include="code\lev\CTRModel.cs" />
     <Compile Include="code\ctr\LODModel.cs" />
     <Compile Include="code\lev\QuadBlock.cs" />
     <Compile Include="code\lev\TextureLayout.cs" />
-    <Compile Include="code\lev\CTRVertex.cs" />
+    <Compile Include="code\lev\Vertex.cs" />
     <Compile Include="code\ctr\LODHeader.cs" />
     <Compile Include="code\ctr\LODVertex.cs" />
     <Compile Include="code\ctr\LODVertexDef.cs" />
     <Compile Include="code\lev\PickupHeader.cs" />
     <Compile Include="code\Interfaces.cs" />
-    <Compile Include="code\Types\PosAng.cs" />
-    <Compile Include="code\Types\Vector2b.cs" />
+    <Compile Include="code\types\PosAng.cs" />
+    <Compile Include="code\types\Vector2b.cs" />
     <Compile Include="code\vrm\FastBitmap.cs" />
     <Compile Include="code\vrm\PsxVram.cs" />
     <Compile Include="code\vrm\Tim.cs" />
     <Compile Include="code\vrm\vram.cs" />
     <Compile Include="code\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="code\Types\SomeData.cs" />
-    <Compile Include="code\Types\Vector3s.cs" />
-    <Compile Include="code\Types\Vector4s.cs" />
-    <Compile Include="code\Types\Vector4b.cs" />
+    <Compile Include="code\types\SomeData.cs" />
+    <Compile Include="code\types\Vector3s.cs" />
+    <Compile Include="code\types\Vector4s.cs" />
+    <Compile Include="code\types\Vector4b.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

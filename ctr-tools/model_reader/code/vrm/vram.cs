@@ -36,15 +36,17 @@ namespace model_reader
 
             Bitmap bmp = pv.ToBitmap();
 
-            int tpw = 64;
+            int tpw = 256;
             int tph = 256;
-
 
             for (int i = 0; i < 16; i++)
                 for (int j = 0; j < 2; j++)
                 {
                     Bitmap x = bmp.Clone(new Rectangle(new Point(i * tpw, j * tph), new Size(tpw, tph)), System.Drawing.Imaging.PixelFormat.Format32bppRgb);
-                    x.Save(String.Format("texpage_{0}_{1}.png", i, j));
+                    x = new Bitmap(x, new Size(256, 256));
+                    
+                    if (i >= 8)
+                        x.Save(String.Format("texpage_{0}_{1}.png", i, j));
                 }
 
             return pv.ToBitmap();
@@ -72,7 +74,7 @@ namespace model_reader
 
         public Bitmap ToBitmap()
         {
-            return tim.ToBitmap();
+            return tim.To4bitBitmap();
         }
     }
 

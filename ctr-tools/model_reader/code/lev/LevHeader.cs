@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace model_reader
 {
-    class CTRHeader
+    class LevHeader
     {
-        public uint ptrInfo;
+        public uint ptrMeshInfo;
         public uint unk1;  //leads to a small aray of vertices?
         public uint unk2;  //leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
 
@@ -32,9 +29,9 @@ namespace model_reader
         public SomeData[] someData;
         public PosAng[] startPos;
 
-        public CTRHeader(BinaryReader br)
+        public LevHeader(BinaryReader br)
         {
-            ptrInfo = br.ReadUInt32();
+            ptrMeshInfo = br.ReadUInt32();
             unk1 = br.ReadUInt32();
             unk2 = br.ReadUInt32();
 

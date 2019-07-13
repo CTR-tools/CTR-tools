@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.IO;
 
@@ -30,8 +29,8 @@ namespace model_reader
         public short id;
         public byte[] midflags = new byte[2];
 
-        public int offset1;                //offset to LOD texture definition
-        public int offset2;
+        public int offset1;                 //offset to LOD texture definition
+        public int offset2;                 //unknown mostly null
 
         public ushort[] unk3 = new ushort[10];  //unknown
 
@@ -43,24 +42,6 @@ namespace model_reader
         {
             Read(br);
         }
-
-        /*
-        public int Max(int x, int y, int z)
-        {
-            int max = x;
-            if (y > max) max = y;
-            if (z > max) max = z;
-            return max;
-        }
-
-        public int Min(int x, int y, int z)
-        {
-            int min = x;
-            if (y < min) min = y;
-            if (z < min) min = z;
-            return min;
-        }
-        */
 
         public void ExportTexture(CTRVRAM vrm)
         {
@@ -136,67 +117,60 @@ namespace model_reader
             lod_tex = new TextureLayout(br);
             //Console.Write(lod_tex.ToString());
 
-            /*
+            
             foreach (uint u in tex)
             {
                 if (u > 0)
                 {
                     Console.WriteLine(u.ToString("X8"));
                     br.BaseStream.Position = (int)u;
-                    ctrtex.Add(new CTRTex(br));
+                    ctrtex.Add(new TextureLayout(br));
                 }
             }
-             * */
+             
 
             br.BaseStream.Position = pos;
 
-            Console.WriteLine(br.BaseStream.Position.ToString("X8"));
-            /*
-            
-            foreach (CTRTex t in ctrtex)
+            foreach (TextureLayout t in ctrtex)
             {
                 Console.WriteLine(t.ToString());
             }
 
-            */
+            
 
             //Console.ReadKey();
         }
 
 
-        public string ToObj(List<CTRVertex> v, Detail detail)
+        public string ToObj(List<Vertex> v, Detail detail)
         {
             StringBuilder sb = new StringBuilder();
 
             bool x = (unk1[1] & (byte)Flags2.InvisibleTriggers) > 0;
             //bool x = false;
 
-            if (!x)
+            //if (!x)
             {
                 sb.Append(String.Format("g piece_{0}\r\n", id.ToString("X4")));
                 sb.Append(String.Format("o piece_{0}\r\n\r\n", id.ToString("X4")));
 
-                if (lod_tex != null)
-                    sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", lod_tex.PageX, lod_tex.PageY));
-
-
                 for (int i = 0; i < ind.Length; i++)
                 {
-                    sb.Append(String.Format("v {0}\r\n", v[ind[i]].ToString(x)));
+                    sb.AppendLine(v[ind[i]].ToString(x));
                 }
 
                 sb.AppendLine();
 
-                if (lod_tex != null)
-                {
-                    sb.AppendLine(lod_tex.ToObj());
-                    sb.AppendLine();
-                }
 
                 switch (detail)
                 {
                     case Detail.Low:
                         {
+                            sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", lod_tex.PageX, lod_tex.PageY));
+
+                            sb.AppendLine(lod_tex.ToObj());
+                            sb.AppendLine();
+
                             sb.Append(ASCIIFace("f", -9 + 2, -9 + 1, -9 + 0, -4 + 2, -4 + 1, -4 + 0));
                             sb.Append(ASCIIFace("f", -9 + 1, -9 + 2, -9 + 3, -4 + 1, -4 + 2, -4 + 3));
                             break;
@@ -204,14 +178,30 @@ namespace model_reader
 
                     case Detail.High:
                         {
-                            sb.Append(ASCIIFace("f", -9 + 5, -9 + 4, -9 + 0));
-                            sb.Append(ASCIIFace("f", -9 + 4, -9 + 5, -9 + 6));
-                            sb.Append(ASCIIFace("f", -9 + 6, -9 + 1, -9 + 4));
-                            sb.Append(ASCIIFace("f", -9 + 1, -9 + 6, -9 + 7));
-                            sb.Append(ASCIIFace("f", -9 + 2, -9 + 6, -9 + 5));
-                            sb.Append(ASCIIFace("f", -9 + 6, -9 + 2, -9 + 8));
-                            sb.Append(ASCIIFace("f", -9 + 8, -9 + 7, -9 + 6));
-                            sb.Append(ASCIIFace("f", -9 + 7, -9 + 8, -9 + 3));
+                            foreach (TextureLayout tl in ctrtex)
+                            {
+                                sb.AppendLine(tl.ToObj());
+
+                            }
+
+                            sb.AppendLine();
+
+                            if(ctrtex.Count == 4) sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", ctrtex[0].PageX, ctrtex[0].PageY));
+                            sb.Append(ASCIIFace("f", -9 + 5, -9 + 4, -9 + 0, -16 + 0, -16+3, -16 + 1));
+                            sb.Append(ASCIIFace("f", -9 + 4, -9 + 5, -9 + 6, -16 + 3, -16+0, -16 + 2));
+                            
+                            if (ctrtex.Count == 4) sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", ctrtex[1].PageX, ctrtex[1].PageY));
+                            sb.Append(ASCIIFace("f", -9 + 6, -9 + 1, -9 + 4, -12 + 0, -12 + 3, -12 + 1));
+                            sb.Append(ASCIIFace("f", -9 + 1, -9 + 6, -9 + 7, -12 + 3, -12 + 0, -12 + 2));
+
+                            if (ctrtex.Count == 4) sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", ctrtex[2].PageX, ctrtex[2].PageY));
+                            sb.Append(ASCIIFace("f", -9 + 2, -9 + 6, -9 + 5, -8 + 0, -8 + 3, -8 + 1));
+                            sb.Append(ASCIIFace("f", -9 + 6, -9 + 2, -9 + 8, -8 + 3, -8 + 0, -8 + 2));
+
+                            if (ctrtex.Count == 4) sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", ctrtex[3].PageX, ctrtex[3].PageY));
+                            sb.Append(ASCIIFace("f", -9 + 8, -9 + 7, -9 + 6, -4 + 0, -4 + 3, -4 + 1));
+                            sb.Append(ASCIIFace("f", -9 + 7, -9 + 8, -9 + 3, -4 + 3, -4 + 0, -4 + 2));
+                            
                             break;
                         }
                 }
@@ -259,7 +249,7 @@ namespace model_reader
         {
             return String.Format(
                 "{0} {1}/{2} {3}/{4} {5}/{6}\r\n",
-                label, x, xuv, y, yuv, z, zuv).Replace(",", ".");
+                label, x, xuv, y, yuv, z, zuv);
         }
 
     }

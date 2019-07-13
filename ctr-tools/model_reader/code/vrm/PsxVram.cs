@@ -60,9 +60,7 @@ namespace model_reader
 
         public Bitmap ToBitmap()
         {
-            Tim final = new Tim(new Rectangle(0,0,1024,512));
-
-            Bitmap bmp = tim.ToBitmap();
+            Bitmap bmp = tim.To4bitBitmap();
 
             Graphics g = Graphics.FromImage(bmp);
 
