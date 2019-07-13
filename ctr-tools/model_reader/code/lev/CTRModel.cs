@@ -16,12 +16,12 @@ namespace model_reader
 
         CTRHeader header;
         List<CTRVertex> vertex = new List<CTRVertex>();
-        List<CTRNgon> ngon = new List<CTRNgon>();
+        List<QuadBlock> quad = new List<QuadBlock>();
         List<PickupHeader> pickups = new List<PickupHeader>();
         List<PosAng> startGrid = new List<PosAng>();
 
 
-        public CTRModel(string s, string fmt)
+        public CTRModel(string s, string fmt, CTRVRAM vrm)
         {
             path = s;
 
@@ -91,26 +91,31 @@ namespace model_reader
 
             for (int i = 0; i < facesnum; i++)
             {
-                CTRNgon g = new CTRNgon(br);
-                ngon.Add(g);
+                QuadBlock qb = new QuadBlock(br);
+                quad.Add(qb);
+
+                if (vrm != null)
+                    qb.ExportTexture(vrm);
 
                 //check unique values here
-                if (!uniflag.Contains(g.unk1[0]))
-                    uniflag.Add(g.unk1[0]);   
+                if (!uniflag.Contains(qb.unk2[3]))
+                    uniflag.Add(qb.unk2[3]); 
                  
             }
 
             uniflag.Sort();
 
-            foreach (byte b in uniflag)
-            {
+            foreach (byte b in uniflag)       
                  Console.WriteLine(b);
-            }
+            
         }
+
+
 
         public string Export(string fmt)
         {
             string fname = Path.ChangeExtension(path, fmt);
+            string mtllib = Path.ChangeExtension(path, ".mtl");
             Console.WriteLine("Exporting  to: " + fname);
 
             StringBuilder sb = new StringBuilder();
@@ -120,10 +125,12 @@ namespace model_reader
                 case "obj":
 
                     sb.Append("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.\r\n");
-                    sb.Append("#(C) 1999, Activision, Naughty Dog.\r\n");
+                    sb.Append("#(C) 1999, Activision, Naughty Dog.\r\n\r\n");
 
-                    foreach (CTRNgon g in ngon)
-                        sb.Append(g.ToObj(vertex, CTRNgon.Detail.High) + "\r\n\r\n");
+                    sb.Append("mtllib " + mtllib + "\r\n\r\n");
+
+                    foreach (QuadBlock g in quad)
+                        sb.Append(g.ToObj(vertex, Detail.Low) + "\r\n");
                     break;
 
                 case "ply":
@@ -155,13 +162,37 @@ namespace model_reader
                     break;
 
             }
-           
 
-            File.WriteAllText(fname, sb.ToString());
+            WriteToFile(fname, sb.ToString());
+
+            sb.Clear();
+
+            for (int i = 0; i < 16; i++)
+                for (int j = 0; j < 2; j++)
+                {
+                    sb.Append(String.Format("newmtl texpage_{0}_{1}\r\n", i, j));
+                    sb.Append(String.Format("map_Ka texpage_{0}_{1}.png\r\n", i, j));
+                    sb.Append(String.Format("map_Kd texpage_{0}_{1}.png\r\n\r\n", i, j));
+                }
+
+            WriteToFile(mtllib, sb.ToString());
 
             Console.WriteLine("Done!");
 
             return fname;
+        }
+
+
+        public void WriteToFile(string fname, string content)
+        {
+            using (FileStream fs = new FileStream(fname, FileMode.OpenOrCreate))
+            {
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    fs.SetLength(content.Length);
+                    sw.Write(content);
+                }
+            }
         }
 
 

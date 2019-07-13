@@ -4,11 +4,8 @@ using System.ComponentModel;
 
 namespace model_reader
 {
-    public class Vector3s
+    public class Vector3s : IRead, IWrite
     {   
-        private short x;
-        private short y;
-        private short z;
 
         [CategoryAttribute("Values"), DescriptionAttribute("Position of the model.")]
         public short X
@@ -31,6 +28,10 @@ namespace model_reader
             set { z = value; }
         }
 
+        private short x = 0;
+        private short y = 0;
+        private short z = 0;
+
         public Vector3s(short xx, short yy, short zz)
         {
             x = xx;
@@ -40,11 +41,15 @@ namespace model_reader
 
         public Vector3s(BinaryReader br)
         {
+            Read(br);
+        }
+
+        public void Read(BinaryReader br)
+        {
             x = br.ReadInt16();
             y = br.ReadInt16();
             z = br.ReadInt16();
         }
-
         /*
         public string ToObjVertex()
         {
@@ -54,7 +59,7 @@ namespace model_reader
 
         public override string ToString()
         {
-            return String.Format("{0}; {1}; {2}", X, Y, Z);
+            return String.Format("({0}, {1}, {2})", X, Y, Z);
         }
 
         public void Write(BinaryWriter bw)

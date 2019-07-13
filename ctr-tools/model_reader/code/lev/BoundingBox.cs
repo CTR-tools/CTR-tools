@@ -6,15 +6,26 @@ using System.IO;
 
 namespace model_reader
 {
-    class BoundingBox
+    class BoundingBox : IRead, IWrite
     {
-        Vector3s min;
-        Vector3s max;
+        public Vector3s min;
+        public Vector3s max;
 
         public BoundingBox(BinaryReader br)
         {
+            Read(br);
+        }
+
+        public void Read(BinaryReader br)
+        {
             min = new Vector3s(br);
             max = new Vector3s(br);
+        }
+
+        public void Write(BinaryWriter bw)
+        {
+            min.Write(bw);
+            max.Write(bw);
         }
 
         public override string ToString()

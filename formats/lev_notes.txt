@@ -94,3 +94,22 @@ Texture data sample: A8 F0 A2 5E B3 F0 6A 00 A8 FB B3 FB
 Uint - points to a pointer to some other data. Can be null.
 
 10 shorts - unknown. Some indices?
+
+
+
+
+
+
+
+unk2[1] - 0 15 30 45 60, but most of tracks have it at 0.
+
+
+30 F0 EB 7E 3B F0 68 00 30 FB 3B FB
+
+Texture data:
+2 Bytes - uv0 xy
+Short - palette xy: 10 bits Y, 6 bits X
+2 Bytes - uv1 xy
+Short - texture page: 12 bits Y, 4 bits X (more likely only 1 byte and the other is 0?)
+2 Bytes - uv2 xy
+2 Bytes - uv3 xy
