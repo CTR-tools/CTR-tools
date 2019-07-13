@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 using System.Resources;
 
 [assembly: AssemblyTitle("bigtool")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Extracts and builds Crash Team Racing (PS1) BIG files")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("bigtool")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("dcxdemo")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
