@@ -6,7 +6,7 @@ using System.IO;
 
 namespace CTRFramework.Shared
 {
-    class SomeData
+    public class SomeData
     {
         short s1;
         short s2;

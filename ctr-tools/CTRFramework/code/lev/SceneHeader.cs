@@ -4,11 +4,11 @@ using CTRFramework.Shared;
 
 namespace CTRFramework
 {
-    class SceneHeader
+    public class SceneHeader
     {
         public uint ptrMeshInfo;
         public uint unk1;  //leads to a small aray of vertices?
-        public uint unk2;  //leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
+        public uint unk2;  //facegroup //leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
 
         public int numPickupHeaders;
         public uint ptrPickupHeaders;
@@ -76,6 +76,7 @@ namespace CTRFramework
             {
                 PosAng pos = new PosAng(br);
                 startPos[i] = pos;
+                Console.WriteLine(startPos[i].ToString());
             }
         }
     }

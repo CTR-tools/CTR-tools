@@ -6,11 +6,10 @@ using CTRFramework.Shared;
 
 namespace CTRFramework
 {
-    class QuadBlock : IRead
+    public class QuadBlock : IRead
     {
         public static int pagex = -1;
         public static int pagey = -1;
-
 
         //raw data
         public short[] ind = new short[9];  //9 indices in vertex array, that form 4 quads.
@@ -135,15 +134,25 @@ namespace CTRFramework
              
 
             br.BaseStream.Position = pos;
+        }
 
-            foreach (TextureLayout t in ctrtex)
+
+
+        public void RecalcBB(List<Vertex> vert)
+        {
+            BoundingBox bb_new = new BoundingBox(); 
+
+            foreach (int i in ind)
             {
-               // Console.WriteLine(t.ToString());
+                if (vert[i].coord.X < bb_new.Min.X) bb_new.Min.X = vert[i].coord.X;
+                if (vert[i].coord.X > bb_new.Max.X) bb_new.Max.X = vert[i].coord.X;
+
+                if (vert[i].coord.Y < bb_new.Min.Y) bb_new.Min.Y = vert[i].coord.Y;
+                if (vert[i].coord.Y > bb_new.Max.Y) bb_new.Max.Y = vert[i].coord.Y;
+                
+                if (vert[i].coord.Z < bb_new.Min.Z) bb_new.Min.Z = vert[i].coord.Z;
+                if (vert[i].coord.Z > bb_new.Max.Z) bb_new.Max.Z = vert[i].coord.Z;
             }
-
-            
-
-            //Console.ReadKey();
         }
 
 
@@ -151,7 +160,7 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            bool x = (unk1[1] & (byte)Flags2.InvisibleTriggers) > 0;
+            bool x = (unk1[2] > 0);// & (byte)Flags2.InvisibleTriggers) > 0;
             //bool x = false;
 
             //if (!x)

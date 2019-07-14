@@ -32,6 +32,14 @@ namespace CTRFramework.Shared
         private short y = 0;
         private short z = 0;
 
+
+        public Vector3s(short xx)
+        {
+            x = xx;
+            y = xx;
+            z = xx;
+        }
+
         public Vector3s(short xx, short yy, short zz)
         {
             x = xx;

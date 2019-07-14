@@ -52,6 +52,22 @@ namespace CTRFramework.Shared
             Read(br);
         }
 
+        public void Scale(float x)
+        {
+            X = (short)(X * x);
+            Y = (short)(Y * x);
+            Z = (short)(Z * x);
+            W = (short)(W * x);
+        } 
+
+        public void Scale(float x, float y, float z, float w)
+        {
+            X = (short)(X * x);
+            Y = (short)(Y * y);
+            Z = (short)(Z * z);
+            W = (short)(W * w);
+        } 
+
         public void Read(BinaryReader br)
         {
             x = br.ReadInt16();

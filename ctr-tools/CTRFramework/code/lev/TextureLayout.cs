@@ -6,7 +6,7 @@ using CTRFramework.Shared;
 
 namespace CTRFramework
 {
-    class TextureLayout : IRead
+    public class TextureLayout : IRead
     {
         public List<Vector2b> uv = new List<Vector2b>();
 

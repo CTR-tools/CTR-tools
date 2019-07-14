@@ -3,7 +3,7 @@ using System.IO;
 
 namespace CTRFramework
 {
-    class MeshInfo : IRead
+    public class MeshInfo : IRead
     {
         public int facesnum;
         public int vertexnum;

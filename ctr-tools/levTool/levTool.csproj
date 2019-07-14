@@ -60,31 +60,12 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CTR\CTRPtrInfo.cs" />
-    <Compile Include="CTR\CTRTex.cs" />
-    <Compile Include="CTR\Types\Array1.cs" />
-    <Compile Include="CTR\CTRHeader.cs" />
-    <Compile Include="CTR\CTRModel.cs" />
-    <Compile Include="CTR\CTRNgon.cs" />
-    <Compile Include="CTR\CTRVertex.cs" />
-    <Compile Include="CTR\FaceGroup.cs" />
-    <Compile Include="CTR\PickupHeader.cs" />
-    <Compile Include="CTR\Types\PosAng.cs" />
-    <Compile Include="CTR\Types\SomeData.cs" />
-    <Compile Include="CTR\Types\Vector3s.cs" />
-    <Compile Include="CTR\Types\Vector4b.cs" />
-    <Compile Include="CTR\Types\Vector4s.cs" />
-    <Compile Include="CTR\CTRnew.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +96,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CTRFramework\CTRFramework.csproj">
+      <Project>{0326F8B5-F788-4529-9F87-C725A5D13BC0}</Project>
+      <Name>CTRFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

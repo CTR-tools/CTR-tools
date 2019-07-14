@@ -4,17 +4,27 @@ using CTRFramework.Shared;
 
 namespace CTRFramework
 {
-    class Vertex : IRead, IWrite
+    public class Vertex : IRead, IWrite
     {
         public Vector4s coord;
         public Vector4b color;
-        public Vector4b color_morph;    //what's this?
+        public Vector4b color_morph;
 
-        public static Vector4b flagColor = new Vector4b(0x0000FF00); //blue for flags
+        static Vector4b flagColor = new Vector4b(0x0000FF00); //blue for flags
 
         public Vertex(BinaryReader br)
         {
             Read(br);
+        }
+
+        public void SetColor(Vcolor mode, Vector4b col)
+        {
+            switch (mode)
+            {
+                case Vcolor.Default: color = col; break;
+                case Vcolor.Morph: color_morph = col; break;
+                case Vcolor.Flag: Vertex.flagColor = col; break;
+            }
         }
 
         public void Read(BinaryReader br)
@@ -35,15 +45,20 @@ namespace CTRFramework
         {
             string fmt = "v {0} {1}";
 
-            return String.Format( fmt,
+            return String.Format(fmt,
                 coord.ToString(VecFormat.Numbers),
                 (flag ? flagColor : color).ToString(VecFormat.Numbers)
             );
         }
 
-        public string ToString(byte b)
+        public string ToString(uint b)
         {
-            return coord.ToString() + " " + b + " " + b + " " + b;
+            string fmt = "v {0} {1}";
+
+            return String.Format(fmt,
+                coord.ToString(VecFormat.Numbers),
+                new Vector4b(b).ToString(VecFormat.Numbers)
+            );
         }
     }
 }

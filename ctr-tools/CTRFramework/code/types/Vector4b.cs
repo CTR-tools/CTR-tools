@@ -3,15 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Drawing;
 
 namespace CTRFramework.Shared
 {
-    class Vector4b
+    public class Vector4b
     {
         public byte X;
         public byte Y;
         public byte Z;
         public byte W;
+
+
+        public void Scale(float x)
+        {
+            X = (byte)(X * x);
+            Y = (byte)(Y * x);
+            Z = (byte)(Z * x);
+            W = (byte)(W * x);
+        } 
+
+        public void Scale(float x, float y, float z, float w)
+        {
+            X = (byte)(X * x);
+            Y = (byte)(Y * y);
+            Z = (byte)(Z * z);
+            W = (byte)(W * w);
+        } 
+  
+
+        public Vector4b(Color c)
+        {
+            X = c.R;
+            Y = c.G;
+            Z = c.B;
+            W = 0;
+        }
 
         public Vector4b(uint a)
         {

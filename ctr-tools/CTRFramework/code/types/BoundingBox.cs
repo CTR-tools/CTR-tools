@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace CTRFramework.Shared
 {
-    class BoundingBox : IRead, IWrite
+    public class BoundingBox : IRead, IWrite
     {
         [CategoryAttribute("Values"), DescriptionAttribute("Mininum.")]
         public Vector3s Min
@@ -23,6 +23,12 @@ namespace CTRFramework.Shared
         private Vector3s min;
         private Vector3s max;
 
+
+        public BoundingBox()
+        {
+            min = new Vector3s(short.MaxValue);
+            max = new Vector3s(short.MinValue);
+        }
 
         public BoundingBox(BinaryReader br)
         {

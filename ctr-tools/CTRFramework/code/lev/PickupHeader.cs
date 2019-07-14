@@ -1,66 +1,121 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.IO;
+using System.ComponentModel;
 using CTRFramework.Shared;
 
 namespace CTRFramework
 {
-    public class PickupHeader : IRead
+    public class PickupHeader
     {
-        public string name;
-        public uint offsModel;
+
+        [CategoryAttribute("General"), DescriptionAttribute("Name of the model.")]
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        [CategoryAttribute("General"), DescriptionAttribute("Mesh offset.")]
+        public uint ModelOffset
+        {
+            get { return modelOffset; }
+            set { modelOffset = value; }
+        }
+
+        [CategoryAttribute("Spacing"), DescriptionAttribute("Scale of the model."), TypeConverter(typeof(ExpandableObjectConverter))]
+        public Vector4s Scale
+        {
+            get { return scale; }
+            set { scale = value; }
+        }
+
+        [CategoryAttribute("Spacing"), DescriptionAttribute("Angles of the model."), TypeConverter(typeof(ExpandableObjectConverter))]
+        public Vector3s Angle
+        {
+            get { return angle; }
+            set { angle = value; }
+        }
+
+        [CategoryAttribute("Spacing"), DescriptionAttribute("Position of the model."), TypeConverter(typeof(ExpandableObjectConverter))]
+        public Vector3s Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+
+        [CategoryAttribute("Settings"), DescriptionAttribute("Assigned event.")]
+        public CTREvent Event
+        {
+            get { return (CTREvent)evt; }
+            set { evt = (int)value; }
+        }
+
+        private string name;
+        private uint modelOffset;
 
         //maybe scale
-        public short px;
-        public short py;
-        public short pz;
-        public short p0;
+        Vector4s scale;
 
         public uint null1;
 
         public uint unk1;
 
-        PosAng posang;
+        private Vector3s position;
+        private Vector3s angle;
 
-        /*
-        //most likely position
-        public short ax;
-        public short ay;
-        public short az;
-
-        //most likely angle
-        public short bx;
-        public short by;
-        public short bz;
-        */
+        //public PosAng posang;
 
         //event type?
-        public int unk2;
+        private int evt;
+
+
+
 
         public PickupHeader(BinaryReader br)
         {
-            Read(br);
-        }
+            name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Replace("\0", "");
+            modelOffset = br.ReadUInt32();
 
-        public void Read(BinaryReader br)
-        {
-            name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16));
-            offsModel = br.ReadUInt32();
-            px = br.ReadInt16();
-            py = br.ReadInt16();
-            pz = br.ReadInt16();
+            scale = new Vector4s(br);
 
-            p0 = br.ReadInt16();
+            if (scale.W != 0) Console.WriteLine("!! scale.W != 0 !! W = " + scale.W);
+
             null1 = br.ReadUInt32();
+
+            if (null1 != 0) Console.WriteLine("!! null != 0 !! null1 = " + null1);
 
             unk1 = br.ReadUInt32();
 
             br.BaseStream.Position += 4 * 3;
 
-            posang = new PosAng(br);
+            position = new Vector3s(br);
+            angle = new Vector3s(br);
 
-            unk2 = br.ReadInt32();
+            evt = br.ReadInt32();
+        }
 
-            Console.WriteLine(posang.ToString());
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write(System.Text.Encoding.ASCII.GetBytes(name));
+            for (int i = 0; i < 16 - name.Length; i++) bw.Write((byte)0);
+            bw.Write(modelOffset);
+
+            scale.Write(bw);
+
+            bw.Write(null1);
+            bw.Write(unk1);
+
+            bw.Write((int)0);
+            bw.Write((int)0);
+            bw.Write((int)0);
+
+            position.Write(bw);
+            angle.Write(bw);
+
+            bw.Write(evt);
         }
 
         public override string ToString()
@@ -70,10 +125,10 @@ namespace CTRFramework
                 // "\t0x"+offsModel.ToString("X8") + 
                 // "\t(" + px + ", " + py +  ", " + pz + ") " +
                 // "\t" + null1 +
-                //"\t" + unk1 +
-                //"\t(" + ax + ", " + ay + ", " + az + ") " +
-                //"\t(" + bx + ", " + by + ", " + bz + ") " +
-                "\t" + unk2
+                "\t" + unk1 +
+                "\t" + position.ToString() +
+                "\t" + angle.ToString() +
+                "\t" + ((CTREvent)evt).ToString()
                 ;
         }
     }

@@ -9,12 +9,12 @@ namespace CTRFramework
     {
         public string path;
 
-        SceneHeader header;
-        MeshInfo meshinfo;
+        public SceneHeader header;
+        public MeshInfo meshinfo;
 
-        List<Vertex> vert = new List<Vertex>();
-        List<QuadBlock> quad = new List<QuadBlock>();
-        List<PickupHeader> pickups = new List<PickupHeader>();
+        public List<Vertex> vert = new List<Vertex>();
+        public List<QuadBlock> quad = new List<QuadBlock>();
+        public List<PickupHeader> pickups = new List<PickupHeader>();
 
 
         public Scene(string s, string fmt)

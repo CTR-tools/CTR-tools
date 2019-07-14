@@ -59,6 +59,7 @@
     <Compile Include="code\ctr\LODVertexDef.cs" />
     <Compile Include="code\Enums.cs" />
     <Compile Include="code\Interfaces.cs" />
+    <Compile Include="code\lev\FaceGroup.cs" />
     <Compile Include="code\lev\Scene.cs" />
     <Compile Include="code\lev\SceneHeader.cs" />
     <Compile Include="code\lev\MeshInfo.cs" />

@@ -2,11 +2,11 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("model_reader")]
+[assembly: AssemblyTitle("modelReader")]
 [assembly: AssemblyDescription("Converts Crash Team Racing models")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("model_reader")]
+[assembly: AssemblyProduct("modelReader")]
 [assembly: AssemblyCopyright("dcxdemo")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

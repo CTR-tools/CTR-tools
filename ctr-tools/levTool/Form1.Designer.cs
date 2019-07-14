@@ -34,6 +34,7 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
             this.button4 = new System.Windows.Forms.Button();
@@ -42,26 +43,32 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabVertex = new System.Windows.Forms.TabPage();
+            this.tabQuads = new System.Windows.Forms.TabPage();
+            this.tabVram = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.tabVram = new System.Windows.Forms.TabPage();
-            this.tabQuads = new System.Windows.Forms.TabPage();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.tabVertex.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.showConsoleToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(958, 24);
@@ -105,6 +112,13 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // showConsoleToolStripMenuItem
+            // 
+            this.showConsoleToolStripMenuItem.Name = "showConsoleToolStripMenuItem";
+            this.showConsoleToolStripMenuItem.Size = new System.Drawing.Size(92, 20);
+            this.showConsoleToolStripMenuItem.Text = "Show console";
+            this.showConsoleToolStripMenuItem.Click += new System.EventHandler(this.showConsoleToolStripMenuItem_Click);
+            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPickups);
@@ -126,8 +140,9 @@
             this.tabPickups.Controls.Add(this.trackBar1);
             this.tabPickups.Controls.Add(this.propertyGrid1);
             this.tabPickups.Location = new System.Drawing.Point(4, 22);
+            this.tabPickups.Margin = new System.Windows.Forms.Padding(5);
             this.tabPickups.Name = "tabPickups";
-            this.tabPickups.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPickups.Padding = new System.Windows.Forms.Padding(5);
             this.tabPickups.Size = new System.Drawing.Size(950, 372);
             this.tabPickups.TabIndex = 0;
             this.tabPickups.Text = "Pickup headers";
@@ -173,11 +188,11 @@
             // trackBar1
             // 
             this.trackBar1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.trackBar1.Location = new System.Drawing.Point(3, 3);
+            this.trackBar1.Location = new System.Drawing.Point(5, 5);
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackBar1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.trackBar1.Size = new System.Drawing.Size(45, 366);
+            this.trackBar1.Size = new System.Drawing.Size(45, 362);
             this.trackBar1.TabIndex = 9;
             this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
@@ -187,19 +202,16 @@
             this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.propertyGrid1.Location = new System.Drawing.Point(149, 3);
+            this.propertyGrid1.Location = new System.Drawing.Point(151, 5);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(798, 366);
+            this.propertyGrid1.Size = new System.Drawing.Size(794, 362);
             this.propertyGrid1.TabIndex = 8;
             // 
             // tabVertex
             // 
-            this.tabVertex.Controls.Add(this.label2);
-            this.tabVertex.Controls.Add(this.label1);
-            this.tabVertex.Controls.Add(this.button6);
-            this.tabVertex.Controls.Add(this.button5);
-            this.tabVertex.Controls.Add(this.button2);
-            this.tabVertex.Controls.Add(this.button1);
+            this.tabVertex.Controls.Add(this.maskedTextBox1);
+            this.tabVertex.Controls.Add(this.button8);
+            this.tabVertex.Controls.Add(this.groupBox1);
             this.tabVertex.Location = new System.Drawing.Point(4, 22);
             this.tabVertex.Name = "tabVertex";
             this.tabVertex.Padding = new System.Windows.Forms.Padding(3);
@@ -208,63 +220,14 @@
             this.tabVertex.Text = "Vertex array";
             this.tabVertex.UseVisualStyleBackColor = true;
             // 
-            // label2
+            // tabQuads
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 6);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(91, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Single color mode";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 56);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(119, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Night mode (click once)";
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(8, 72);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 3;
-            this.button6.Text = "Darken";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(89, 22);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 2;
-            this.button5.Text = "morph color";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(170, 22);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "apply";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(8, 22);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "main color";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.tabQuads.Location = new System.Drawing.Point(4, 22);
+            this.tabQuads.Name = "tabQuads";
+            this.tabQuads.Size = new System.Drawing.Size(950, 372);
+            this.tabQuads.TabIndex = 3;
+            this.tabQuads.Text = "QuadBlocks";
+            this.tabQuads.UseVisualStyleBackColor = true;
             // 
             // tabVram
             // 
@@ -275,14 +238,103 @@
             this.tabVram.Text = "VRAM";
             this.tabVram.UseVisualStyleBackColor = true;
             // 
-            // tabQuads
+            // groupBox1
             // 
-            this.tabQuads.Location = new System.Drawing.Point(4, 22);
-            this.tabQuads.Name = "tabQuads";
-            this.tabQuads.Size = new System.Drawing.Size(950, 372);
-            this.tabQuads.TabIndex = 3;
-            this.tabQuads.Text = "QuadBlocks";
-            this.tabQuads.UseVisualStyleBackColor = true;
+            this.groupBox1.Controls.Add(this.button7);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.button6);
+            this.groupBox1.Controls.Add(this.button5);
+            this.groupBox1.Controls.Add(this.button2);
+            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Location = new System.Drawing.Point(8, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(256, 173);
+            this.groupBox1.TabIndex = 6;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Vertex colors";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 27);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(91, 13);
+            this.label2.TabIndex = 11;
+            this.label2.Text = "Single color mode";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 77);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(119, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Night mode (click once)";
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(6, 93);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 9;
+            this.button6.Text = "Darken";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(87, 43);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 8;
+            this.button5.Text = "morph color";
+            this.button5.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(168, 43);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 7;
+            this.button2.Text = "apply";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(6, 43);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "main color";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(6, 138);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(156, 23);
+            this.button7.TabIndex = 12;
+            this.button7.Text = "morph color = normal color";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click_1);
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(8, 209);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(100, 23);
+            this.button8.TabIndex = 8;
+            this.button8.Text = "Scale";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // maskedTextBox1
+            // 
+            this.maskedTextBox1.Location = new System.Drawing.Point(8, 185);
+            this.maskedTextBox1.Mask = "#.##";
+            this.maskedTextBox1.Name = "maskedTextBox1";
+            this.maskedTextBox1.Size = new System.Drawing.Size(100, 20);
+            this.maskedTextBox1.TabIndex = 9;
             // 
             // Form1
             // 
@@ -303,6 +355,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.tabVertex.ResumeLayout(false);
             this.tabVertex.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -321,17 +375,22 @@
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.TabPage tabVertex;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tabQuads;
         private System.Windows.Forms.TabPage tabVram;
+        private System.Windows.Forms.ToolStripMenuItem showConsoleToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.MaskedTextBox maskedTextBox1;
     }
 }
 
