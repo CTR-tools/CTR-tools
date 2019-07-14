@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0326F8B5-F788-4529-9F87-C725A5D13BC0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CTRFramework</RootNamespace>
+    <AssemblyName>CTRFramework</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="code\ctr\CTRAnim.cs" />
+    <Compile Include="code\ctr\LODHeader.cs" />
+    <Compile Include="code\ctr\LODModel.cs" />
+    <Compile Include="code\ctr\LODVertex.cs" />
+    <Compile Include="code\ctr\LODVertexDef.cs" />
+    <Compile Include="code\Enums.cs" />
+    <Compile Include="code\Interfaces.cs" />
+    <Compile Include="code\lev\CTRScene.cs" />
+    <Compile Include="code\lev\LevHeader.cs" />
+    <Compile Include="code\lev\MeshInfo.cs" />
+    <Compile Include="code\lev\PickupHeader.cs" />
+    <Compile Include="code\lev\QuadBlock.cs" />
+    <Compile Include="code\lev\TextureLayout.cs" />
+    <Compile Include="code\lev\Vertex.cs" />
+    <Compile Include="code\types\BoundingBox.cs" />
+    <Compile Include="code\types\PosAng.cs" />
+    <Compile Include="code\types\SomeData.cs" />
+    <Compile Include="code\types\Vector2b.cs" />
+    <Compile Include="code\types\Vector3s.cs" />
+    <Compile Include="code\types\Vector4b.cs" />
+    <Compile Include="code\types\Vector4s.cs" />
+    <Compile Include="code\vrm\FastBitmap.cs" />
+    <Compile Include="code\vrm\PsxVram.cs" />
+    <Compile Include="code\vrm\Tim.cs" />
+    <Compile Include="code\vrm\vram.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

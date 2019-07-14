@@ -84,8 +84,8 @@
 			long: [
 				{ midi: 34, pitch: -12, title: "Electric Bass" },
 				{ midi: 87, pitch: -12, title: "Lead 8" },
-				{ midi: 26, title: "Jazz Guitar" },
-				{ midi:  4, title: "Rhodes Piano" },
+				{ midi: 26, pitch: -12, title: "Jazz Guitar" },
+				{ midi: 18, pitch: 12, title: "Rock Organ" },
 				{ midi: 27, title: "Guitar" },
 			
 				{ midi: 11, title: "Vibraphone" },
@@ -106,8 +106,8 @@
 		"pyramid": {
 			long: [
 				{ midi: 33, pitch: -36, title: "Electric Bass" },
-				{ midi: 12, pitch: 0, 	title: "Marimba" },
-				{ midi:  4, pitch: 12, 	title: "Rhodes Piano" },
+				{ midi: 12, pitch: 0, title: "Marimba" },
+				{ midi: 18, pitch: 12, title: "Rock Organ" },
 				{ midi: 85, pitch: -12, title: "Lead 6" },
 			
 				{ id: 4, midi: 11, pitch: 0, title: "Vibraphone" },
@@ -145,7 +145,85 @@
 				{ key: 46 },
 				{ key: 40 },
 				{ key: 43 },
-				{ key: 47 }
+				{ key: 47 },
+{ key: 0 },
+{ key: 1 },
+{ key: 2 },
+{ key: 3 },
+{ key: 4 },
+{ key: 5 }
+			]
+		},
+		
+		"bluff": {
+			long: [
+				{ midi: 34, pitch: -12, title: "Bass" },
+				{ midi: 67, pitch: -12, title: "Bass Sax" },
+				{ midi: 45, title: "Pizzicato Strings" },
+				{ midi: 18, pitch: 12, title: "Rock Organ" },
+			],
+			short: [
+				{ key: 36, title: "Bass Drum" },
+				{ key: 44, title: "Closed Hi-Hat" },
+				{ key: 38, title: "Snare" },
+				{ key: 46, title: "Open Hi-Hat" },
+				{ key: 83, title: "Jingle Bell" },
+				{ key: 39, title: "Hand Clap" }
+			]
+		},
+		"temple": {
+			long: [
+				{ midi: 30, pitch: -12, title: "Distortion Guitar" },
+				{ midi: 85, pitch: -12, title: "Lead 6" },
+				{ midi: 116, pitch: -12, title: "Taiko Drum" },
+				{ midi: 12, title: "Marimba" },
+				{ midi: 34, pitch: -24, title: "Bass Guitar" }
+			],
+			short: [
+				{ key: 66, title: "Cowbell?" },
+				{ key: 44, title: "Closed Hi-Hat" },
+				{ key: 35, title: "Snare" },
+				{ key: 28, title: "Open Hi-Hat" },
+				{ key: 46, title: "Jingle Bell" },
+				{ key: 65, title: "Hand Clap" },
+				{ key: 6, title: "Open Hi-Hat" },
+				{ key: 7, title: "Jingle Bell" }
+			]
+		},
+		
+		"pass": {
+			long: [
+				{ midi: 62, pitch: 12, title: "synth brass" },
+				{ midi: 28, pitch: 0, title: "electic guitar muted" },
+				{ midi: 45, pitch: 0, title: "pizzicato" },
+				{ midi: 34, pitch: -12, title: "Bass guitar" },
+				{ midi: 14, pitch: 12, title: "Tubular bells" }
+			],
+			short: [
+				{ key: 42, title: "Cowbell?" },
+				{ key: 46, title: "Closed Hi-Hat" },
+				{ key: 83, title: "Jingle Bell" },
+				{ key: 55, title: "Open Hi-Hat" },
+				{ key: 36, title: "Jingle Bell" },
+				{ key: 38, title: "Hand Clap" }
+			]
+		},
+		"tubes": {
+			long: [
+				{ midi: 108, pitch: 12, title: "Kalimba" },
+				{ midi: 71, pitch: 0, title: "Clarinet" },
+				{ midi: 45, title: "pizzicato strings" },
+				{ midi: 99, title: "atmosphere" }
+			],
+			short: [
+				{ key: 0, title: "Cowbell?" },
+				{ key: 1, title: "Closed Hi-Hat" },
+				{ key: 28, title: "Snare" },
+				{ key: 3, title: "Open Hi-Hat" },
+				{ key: 35, title: "Jingle Bell" },
+				{ key: 5, title: "Hand Clap" },
+				{ key: 6, title: "Open Hi-Hat" },
+				{ key: 7, title: "Jingle Bell" }
 			]
 		}
 	}

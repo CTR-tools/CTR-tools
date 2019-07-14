@@ -21,6 +21,9 @@ HWL (kart.hwl) - sfx/music container for the CTR sound engine known as "howl". A
 CSEQ - custom music sequences found in HWL files.\
 BNK - sound bank, a labeled set of headerless VAG samples.
 
+##CTRFramework
+CTRFramework is a shared DLL you can use in your projects.
+
 ## bigtool
 Extracts/builds BIGFILE.BIG.
 
@@ -36,7 +39,7 @@ Building: bigtool.exe C:\example\bigfile.txt
 * If the file listed doesn't exist, it will be written to BIG as a zero-byte entry (for example useful to remove STR thumbnails).
 
 ## lng2txt
-Converts LNG files into text files and back. LNG files contains all the strings used in the game, thus allows to localize the game in any language based on latin alphabet.
+Converts LNG files into text files and back. LNG files contain all the strings used in the game, thus allows to localize the game in any language based on latin alphabet.
 
 Usage: lng2txt.exe C:\example\somefile.lng
 * Note: | is considered a new line character
@@ -60,5 +63,6 @@ Usage: use File menu or drag-drop CSEQ file on the application window.
 * Single CSEQ file may contain multiple sequences.
 * Click sequence on the list to show its tracks/instruments.
 * Double-clicking the track will bring MIDI file save dialog.
+* Use "patch MIDI instruments" option in case if custom instrument mapping is available. You can also add own mappings, see ctrdata.json for the reference.
 
 2016-2019, DCxDemo*.
