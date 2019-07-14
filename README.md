@@ -21,7 +21,7 @@ HWL (kart.hwl) - sfx/music container for the CTR sound engine known as "howl". A
 CSEQ - custom music sequences found in HWL files.\
 BNK - sound bank, a labeled set of headerless VAG samples.
 
-##CTRFramework
+## CTRFramework
 CTRFramework is a shared DLL you can use in your projects.
 
 ## bigtool
