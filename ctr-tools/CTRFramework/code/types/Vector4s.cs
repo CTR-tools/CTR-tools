@@ -2,7 +2,7 @@
 using System.IO;
 using System.ComponentModel;
 
-namespace CTRFramework
+namespace CTRFramework.Shared
 {
     public class Vector4s : IRead, IWrite
     {

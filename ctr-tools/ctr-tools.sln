@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bigtool", "bigtool\bigtool.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lng2txt", "lng2txt\lng2txt.csproj", "{244D645A-172A-4CB5-9E64-9C4BA68EF08C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "model_reader", "model_reader\model_reader.csproj", "{7E49CD09-1EB8-47D6-94C1-49ED3A03A00F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "modelReader", "model_reader\modelReader.csproj", "{7E49CD09-1EB8-47D6-94C1-49ED3A03A00F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0326F8B5-F788-4529-9F87-C725A5D13BC0} = {0326F8B5-F788-4529-9F87-C725A5D13BC0}
 	EndProjectSection
@@ -15,6 +15,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cseq", "cseq\cseq.csproj", "{69BCF237-3D55-4A30-B3C8-8716C8EBF212}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "levTool", "levTool\levTool.csproj", "{36BC2F61-99A4-43E3-9246-28A1BE39D714}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0326F8B5-F788-4529-9F87-C725A5D13BC0} = {0326F8B5-F788-4529-9F87-C725A5D13BC0}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ctrvram", "ctrvram\ctrvram.csproj", "{26FB92F1-4D71-4DC7-8E38-20F2C2CCCD2A}"
 EndProject
@@ -120,7 +123,8 @@ Global
 		{0326F8B5-F788-4529-9F87-C725A5D13BC0}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{0326F8B5-F788-4529-9F87-C725A5D13BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0326F8B5-F788-4529-9F87-C725A5D13BC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0326F8B5-F788-4529-9F87-C725A5D13BC0}.Release|x64.ActiveCfg = Release|Any CPU
+		{0326F8B5-F788-4529-9F87-C725A5D13BC0}.Release|x64.ActiveCfg = Release|x64
+		{0326F8B5-F788-4529-9F87-C725A5D13BC0}.Release|x64.Build.0 = Release|x64
 		{0326F8B5-F788-4529-9F87-C725A5D13BC0}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution

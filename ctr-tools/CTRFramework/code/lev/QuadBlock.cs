@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using CTRFramework.Shared;
 
 namespace CTRFramework
 {
@@ -126,7 +127,7 @@ namespace CTRFramework
             {
                 if (u > 0)
                 {
-                    Console.WriteLine(u.ToString("X8"));
+                   // Console.WriteLine(u.ToString("X8"));
                     br.BaseStream.Position = (int)u;
                     ctrtex.Add(new TextureLayout(br));
                 }
@@ -137,7 +138,7 @@ namespace CTRFramework
 
             foreach (TextureLayout t in ctrtex)
             {
-                Console.WriteLine(t.ToString());
+               // Console.WriteLine(t.ToString());
             }
 
             

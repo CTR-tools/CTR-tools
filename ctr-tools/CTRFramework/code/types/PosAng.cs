@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace CTRFramework
+namespace CTRFramework.Shared
 {
     public class PosAng
     {

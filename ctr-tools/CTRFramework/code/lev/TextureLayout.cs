@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using CTRFramework.Shared;
 
 namespace CTRFramework
 {
@@ -47,7 +48,7 @@ namespace CTRFramework
             uv.Add(new Vector2b(br));
             uv.Add(new Vector2b(br));
 
-            Console.WriteLine("done texture layout\r\n" + ToString());
+            //Console.WriteLine("done texture layout\r\n" + ToString());
         }
 
         public override string ToString()

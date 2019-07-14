@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using CTRFramework.Shared;
 
 namespace CTRFramework
 {
-    public class PickupHeader
+    public class PickupHeader : IRead
     {
         public string name;
         public uint offsModel;
@@ -17,6 +19,9 @@ namespace CTRFramework
 
         public uint unk1;
 
+        PosAng posang;
+
+        /*
         //most likely position
         public short ax;
         public short ay;
@@ -26,13 +31,18 @@ namespace CTRFramework
         public short bx;
         public short by;
         public short bz;
+        */
 
         //event type?
         public int unk2;
 
         public PickupHeader(BinaryReader br)
         {
+            Read(br);
+        }
 
+        public void Read(BinaryReader br)
+        {
             name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16));
             offsModel = br.ReadUInt32();
             px = br.ReadInt16();
@@ -46,15 +56,11 @@ namespace CTRFramework
 
             br.BaseStream.Position += 4 * 3;
 
-            ax = br.ReadInt16();
-            ay = br.ReadInt16();
-            az = br.ReadInt16();
-
-            bx = br.ReadInt16();
-            by = br.ReadInt16();
-            bz = br.ReadInt16();
+            posang = new PosAng(br);
 
             unk2 = br.ReadInt32();
+
+            Console.WriteLine(posang.ToString());
         }
 
         public override string ToString()
@@ -64,9 +70,9 @@ namespace CTRFramework
                 // "\t0x"+offsModel.ToString("X8") + 
                 // "\t(" + px + ", " + py +  ", " + pz + ") " +
                 // "\t" + null1 +
-                "\t" + unk1 +
-                "\t(" + ax + ", " + ay + ", " + az + ") " +
-                "\t(" + bx + ", " + by + ", " + bz + ") " +
+                //"\t" + unk1 +
+                //"\t(" + ax + ", " + ay + ", " + az + ") " +
+                //"\t(" + bx + ", " + by + ", " + bz + ") " +
                 "\t" + unk2
                 ;
         }

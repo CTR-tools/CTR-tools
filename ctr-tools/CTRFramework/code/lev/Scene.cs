@@ -9,7 +9,7 @@ namespace CTRFramework
     {
         public string path;
 
-        LevHeader header;
+        SceneHeader header;
         MeshInfo meshinfo;
 
         List<Vertex> vert = new List<Vertex>();
@@ -86,7 +86,7 @@ namespace CTRFramework
         public void Read(BinaryReader br)
         {
             //read header
-            header = new LevHeader(br);
+            header = new SceneHeader(br);
 
 
             //read pickups

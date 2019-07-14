@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
+
 namespace howl
 {
-
-
-
     struct intpair
     {
         int A;

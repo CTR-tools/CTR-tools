@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.ComponentModel;
 
-namespace CTRFramework
+namespace CTRFramework.Shared
 {
     class BoundingBox : IRead, IWrite
     {

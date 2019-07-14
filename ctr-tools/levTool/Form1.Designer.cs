@@ -35,25 +35,27 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPickups = new System.Windows.Forms.TabPage();
             this.button4 = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.button3 = new System.Windows.Forms.Button();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabVertex = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.tabVram = new System.Windows.Forms.TabPage();
+            this.tabQuads = new System.Windows.Forms.TabPage();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.tabPickups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            this.tabPage2.SuspendLayout();
+            this.tabVertex.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -105,8 +107,10 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPickups);
+            this.tabControl1.Controls.Add(this.tabVertex);
+            this.tabControl1.Controls.Add(this.tabQuads);
+            this.tabControl1.Controls.Add(this.tabVram);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
@@ -114,20 +118,20 @@
             this.tabControl1.Size = new System.Drawing.Size(958, 398);
             this.tabControl1.TabIndex = 2;
             // 
-            // tabPage1
+            // tabPickups
             // 
-            this.tabPage1.Controls.Add(this.button4);
-            this.tabPage1.Controls.Add(this.numericUpDown1);
-            this.tabPage1.Controls.Add(this.button3);
-            this.tabPage1.Controls.Add(this.trackBar1);
-            this.tabPage1.Controls.Add(this.propertyGrid1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(950, 372);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Pickup headers";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPickups.Controls.Add(this.button4);
+            this.tabPickups.Controls.Add(this.numericUpDown1);
+            this.tabPickups.Controls.Add(this.button3);
+            this.tabPickups.Controls.Add(this.trackBar1);
+            this.tabPickups.Controls.Add(this.propertyGrid1);
+            this.tabPickups.Location = new System.Drawing.Point(4, 22);
+            this.tabPickups.Name = "tabPickups";
+            this.tabPickups.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPickups.Size = new System.Drawing.Size(950, 372);
+            this.tabPickups.TabIndex = 0;
+            this.tabPickups.Text = "Pickup headers";
+            this.tabPickups.UseVisualStyleBackColor = true;
             // 
             // button4
             // 
@@ -188,21 +192,49 @@
             this.propertyGrid1.Size = new System.Drawing.Size(798, 366);
             this.propertyGrid1.TabIndex = 8;
             // 
-            // tabPage2
+            // tabVertex
             // 
-            this.tabPage2.Controls.Add(this.label2);
-            this.tabPage2.Controls.Add(this.label1);
-            this.tabPage2.Controls.Add(this.button6);
-            this.tabPage2.Controls.Add(this.button5);
-            this.tabPage2.Controls.Add(this.button2);
-            this.tabPage2.Controls.Add(this.button1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(950, 372);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Vertex array";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabVertex.Controls.Add(this.label2);
+            this.tabVertex.Controls.Add(this.label1);
+            this.tabVertex.Controls.Add(this.button6);
+            this.tabVertex.Controls.Add(this.button5);
+            this.tabVertex.Controls.Add(this.button2);
+            this.tabVertex.Controls.Add(this.button1);
+            this.tabVertex.Location = new System.Drawing.Point(4, 22);
+            this.tabVertex.Name = "tabVertex";
+            this.tabVertex.Padding = new System.Windows.Forms.Padding(3);
+            this.tabVertex.Size = new System.Drawing.Size(950, 372);
+            this.tabVertex.TabIndex = 1;
+            this.tabVertex.Text = "Vertex array";
+            this.tabVertex.UseVisualStyleBackColor = true;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 6);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(91, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Single color mode";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 56);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(119, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Night mode (click once)";
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(8, 72);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(75, 23);
+            this.button6.TabIndex = 3;
+            this.button6.Text = "Darken";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // button5
             // 
@@ -210,7 +242,7 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 2;
-            this.button5.Text = "vcolor2";
+            this.button5.Text = "morph color";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -230,37 +262,27 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
-            this.button1.Text = "vcolor1";
+            this.button1.Text = "main color";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // button6
+            // tabVram
             // 
-            this.button6.Location = new System.Drawing.Point(8, 72);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 3;
-            this.button6.Text = "Darken";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            this.tabVram.Location = new System.Drawing.Point(4, 22);
+            this.tabVram.Name = "tabVram";
+            this.tabVram.Size = new System.Drawing.Size(950, 372);
+            this.tabVram.TabIndex = 2;
+            this.tabVram.Text = "VRAM";
+            this.tabVram.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // tabQuads
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 56);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(119, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Night mode (click once)";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 6);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(91, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Single color mode";
+            this.tabQuads.Location = new System.Drawing.Point(4, 22);
+            this.tabQuads.Name = "tabQuads";
+            this.tabQuads.Size = new System.Drawing.Size(950, 372);
+            this.tabQuads.TabIndex = 3;
+            this.tabQuads.Text = "QuadBlocks";
+            this.tabQuads.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -275,12 +297,12 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.tabPickups.ResumeLayout(false);
+            this.tabPickups.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.tabVertex.ResumeLayout(false);
+            this.tabVertex.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -295,10 +317,10 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPickups;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabVertex;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button3;
@@ -308,6 +330,8 @@
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TabPage tabQuads;
+        private System.Windows.Forms.TabPage tabVram;
     }
 }
 

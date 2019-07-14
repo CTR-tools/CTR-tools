@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
+using CTRFramework.Shared;
 
 namespace CTRFramework
 {
-    class LevHeader
+    class SceneHeader
     {
         public uint ptrMeshInfo;
         public uint unk1;  //leads to a small aray of vertices?
@@ -29,7 +30,7 @@ namespace CTRFramework
         public SomeData[] someData;
         public PosAng[] startPos;
 
-        public LevHeader(BinaryReader br)
+        public SceneHeader(BinaryReader br)
         {
             ptrMeshInfo = br.ReadUInt32();
             unk1 = br.ReadUInt32();

@@ -6,7 +6,7 @@ using System.Globalization; //for cultureinfo
 using System.Threading;
 using CTRFramework;
 
-namespace model_reader
+namespace modelReader
 {
     class Program
     {

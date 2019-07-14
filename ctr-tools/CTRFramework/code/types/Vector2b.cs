@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.ComponentModel;
 
-namespace CTRFramework
+namespace CTRFramework.Shared
 {
     class Vector2b : IRead, IWrite, IByteArray
     {
