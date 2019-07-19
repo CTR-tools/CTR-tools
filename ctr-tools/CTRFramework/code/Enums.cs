@@ -1,34 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CTRFramework
 {
     //quadblock flags byte 1
+    [Flags]
     public enum Flags1
     {
-        Invisible = 0x01,
-        NeverUsed1 = 0x02,
-        Reflection = 0x04,
-        Kickers = 0x08,
-        OutOfBounds = 0x10,
-        NeverUsed2 = 0x20,
-        TriggerScript = 0x40,
-        Reverb = 0x80
+        Invisible = 1 << 0,
+        NeverUsed1 = 1 << 1,
+        Reflection = 1 << 2,
+        Kickers = 1 << 3,
+        OutOfBounds = 1 << 4,
+        NeverUsed2 = 1 << 5,
+        TriggerScript = 1 << 6,
+        Reverb = 1 << 7
     }
 
     //quadblock flags byte 2
+    [Flags]
     public enum Flags2
     {
-        Kickers = 0x01,
-        Unknown1 = 0x02,
-        TikiMouth = 0x04,
-        Ground1 = 0x08,
-        Ground2 = 0x10,
-        NotTrack = 0x20,
-        OutsideStuff = 0x40,
-        InvisibleTriggers = 0x80
+        Kickers = 1 << 0,
+        Unknown1 = 1 << 1,
+        TikiMouth = 1 << 2,
+        Ground1 = 1 << 3,
+        Ground2 = 1 << 4,
+        NotTrack = 1 << 5,
+        OutsideStuff = 1 << 6,
+        InvisibleTriggers = 1 << 7
     }
 
     //defines mesh quality while exporting to OBJ
@@ -98,4 +97,10 @@ namespace CTRFramework
         Flag
     }
 
+    //defines instrument type in CSEQ
+    public enum InstType
+    {
+        Long,
+        Short
+    }
 }

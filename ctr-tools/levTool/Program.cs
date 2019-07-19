@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using CTRFramework;
 
-namespace CTRtools
+namespace levTool
 {
     static class Program
     {
@@ -16,7 +16,7 @@ namespace CTRtools
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new MainForm());
         }
     }
 }

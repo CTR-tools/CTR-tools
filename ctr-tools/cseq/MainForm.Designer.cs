@@ -48,6 +48,7 @@ namespace CTRtools.CSEQ
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skipBytesForUSDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.patchMIDIInstrumentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ignoreOriginalVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
             this.loadBankToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportSamplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,8 +69,9 @@ namespace CTRtools.CSEQ
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.ignoreOriginalVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView1 = new CTRtools.CSEQ.CustomDataGridView();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -105,27 +107,27 @@ namespace CTRtools.CSEQ
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // exportSEQToolStripMenuItem
             // 
             this.exportSEQToolStripMenuItem.Name = "exportSEQToolStripMenuItem";
-            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exportSEQToolStripMenuItem.Text = "Export CSEQ";
             this.exportSEQToolStripMenuItem.Click += new System.EventHandler(this.exportSEQToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -162,6 +164,14 @@ namespace CTRtools.CSEQ
             this.patchMIDIInstrumentsToolStripMenuItem.ToolTipText = "Only use this option if you\'re not planning to create SF2 out of original samples" +
                 ".";
             this.patchMIDIInstrumentsToolStripMenuItem.Click += new System.EventHandler(this.patchMIDIInstrumentsToolStripMenuItem_Click);
+            // 
+            // ignoreOriginalVolumeToolStripMenuItem
+            // 
+            this.ignoreOriginalVolumeToolStripMenuItem.CheckOnClick = true;
+            this.ignoreOriginalVolumeToolStripMenuItem.Name = "ignoreOriginalVolumeToolStripMenuItem";
+            this.ignoreOriginalVolumeToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.ignoreOriginalVolumeToolStripMenuItem.Text = "Ignore original volume";
+            this.ignoreOriginalVolumeToolStripMenuItem.Click += new System.EventHandler(this.ignoreOriginalVolumeToolStripMenuItem_Click);
             // 
             // toolStripMenuItem6
             // 
@@ -344,6 +354,8 @@ namespace CTRtools.CSEQ
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.treeView1);
+            this.tabPage2.Controls.Add(this.propertyGrid1);
             this.tabPage2.Controls.Add(this.dataGridView1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
@@ -353,23 +365,36 @@ namespace CTRtools.CSEQ
             this.tabPage2.Text = "Instruments / Samples";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // ignoreOriginalVolumeToolStripMenuItem
-            // 
-            this.ignoreOriginalVolumeToolStripMenuItem.CheckOnClick = true;
-            this.ignoreOriginalVolumeToolStripMenuItem.Name = "ignoreOriginalVolumeToolStripMenuItem";
-            this.ignoreOriginalVolumeToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.ignoreOriginalVolumeToolStripMenuItem.Text = "Ignore original volume";
-            this.ignoreOriginalVolumeToolStripMenuItem.Click += new System.EventHandler(this.ignoreOriginalVolumeToolStripMenuItem_Click);
-            // 
             // dataGridView1
             // 
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView1.Location = new System.Drawing.Point(415, 14);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(748, 388);
+            this.dataGridView1.Size = new System.Drawing.Size(336, 374);
             this.dataGridView1.TabIndex = 0;
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.propertyGrid1.Location = new System.Drawing.Point(148, 14);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(261, 374);
+            this.propertyGrid1.TabIndex = 2;
+            // 
+            // treeView1
+            // 
+            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this.treeView1.Location = new System.Drawing.Point(6, 14);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(137, 374);
+            this.treeView1.TabIndex = 3;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // MainForm
             // 
@@ -432,6 +457,8 @@ namespace CTRtools.CSEQ
         private System.Windows.Forms.ToolStripMenuItem exportSamplesToolStripMenuItem;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ToolStripMenuItem ignoreOriginalVolumeToolStripMenuItem;
+        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.TreeView treeView1;
     }
 }
 

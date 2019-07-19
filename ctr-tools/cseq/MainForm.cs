@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Data;
 using System.IO;
+using System.Data;
 using System.Collections.Generic;
 using CTRtools.SFX;
 using CTRtools.Helpers;
@@ -101,6 +101,27 @@ namespace CTRtools.CSEQ
             ds.Tables.Add(samples);
 
             dataGridView1.DataSource = ds.Tables["samples"];
+
+            propertyGrid1.SelectedObject = seq.samplesReverb[0];
+
+            TreeNode tn = new TreeNode("SampleDef");
+
+            foreach (SampleDef sd in seq.samples)
+            {
+                TreeNode tn1 = new TreeNode(sd.SampleID + "");
+                tn.Nodes.Add(tn1);
+            }
+
+            TreeNode tn2 = new TreeNode("SampleDefReverb");
+
+            foreach (SampleDefReverb sd in seq.samplesReverb)
+            {
+                TreeNode tn3 = new TreeNode(sd.SampleID + "");
+                tn2.Nodes.Add(tn3);
+            }
+
+            treeView1.Nodes.Add(tn2);
+            treeView1.Nodes.Add(tn);
 
         }
 
@@ -283,5 +304,26 @@ namespace CTRtools.CSEQ
         {
             CSEQ.IgnoreVolume = ignoreOriginalVolumeToolStripMenuItem.Checked;
         }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (treeView1.SelectedNode.Parent != null)
+            {
+                if (treeView1.SelectedNode.Parent.Index == 1)
+                {
+                    propertyGrid1.SelectedObject = seq.samples[treeView1.SelectedNode.Index];
+                }
+
+                if (treeView1.SelectedNode.Parent.Index == 0)
+                {
+                    propertyGrid1.SelectedObject = seq.samplesReverb[treeView1.SelectedNode.Index];
+                }
+            }
+            else
+            {
+                propertyGrid1.SelectedObject = null;
+            }
+        }
+
     }
 }

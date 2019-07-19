@@ -100,16 +100,16 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="code\CSEQ\SampleDefReverb.cs" />
+    <Compile Include="code\CSEQ\SampleDef.cs" />
     <Compile Include="code\CTRJson.cs" />
     <Compile Include="code\SFX\Bank.cs" />
     <Compile Include="code\Helpers\BinaryReaderEx.cs" />
@@ -183,6 +183,12 @@
       <ProductName>Установщик Windows 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CTRFramework\CTRFramework.csproj">
+      <Project>{0326F8B5-F788-4529-9F87-C725A5D13BC0}</Project>
+      <Name>CTRFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

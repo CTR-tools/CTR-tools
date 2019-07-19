@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
@@ -7,9 +6,9 @@ using System.Runtime.InteropServices;
 using CTRFramework;
 using CTRFramework.Shared;
 
-namespace CTRtools
+namespace levTool
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         string path;
         Scene scn;
@@ -19,7 +18,7 @@ namespace CTRtools
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             cd = new ColorDialog();

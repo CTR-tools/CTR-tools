@@ -4,15 +4,11 @@ using System.IO;
 using System.Text;
 using CTRtools.Helpers;
 using Newtonsoft.Json.Linq;
+using CTRFramework;
+using CTRFramework.Shared;
 
 namespace CTRtools.CSEQ
 {
-    public enum InstType
-    {
-        Long,
-        Short
-    }
-
     public class Instrument
     {
         public InstType instType;

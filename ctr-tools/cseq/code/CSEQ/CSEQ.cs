@@ -9,6 +9,9 @@ namespace CTRtools.CSEQ
     public class CSEQ
     {
 
+        public List<SampleDef> samples = new List<SampleDef>();
+        public List<SampleDefReverb> samplesReverb = new List<SampleDefReverb>();
+
         #region [CSEQ global settings]
 
         public static bool USdemo = false;
@@ -75,6 +78,24 @@ namespace CTRtools.CSEQ
             //read CSEQ header
             if (!header.Read(br))
                 return false;
+
+            long pos = br.BaseStream.Position;
+
+            for (int i = 0; i < header.longCnt; i++)
+            {
+                SampleDefReverb sd = new SampleDefReverb();
+                sd.Read(br);
+                samplesReverb.Add(sd);
+            }
+
+            for (int i = 0; i < header.shortCnt; i++)
+            {
+                SampleDef sd = new SampleDef();
+                sd.Read(br);
+                samples.Add(sd);
+            }
+
+            br.BaseStream.Position = pos;
 
             //read instruments
             for (int i = 0; i < header.longCnt; i++)
