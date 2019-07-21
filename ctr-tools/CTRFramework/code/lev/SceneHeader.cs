@@ -30,6 +30,17 @@ namespace CTRFramework
         public SomeData[] someData;
         public PosAng[] startPos;
 
+        byte[] skip;
+
+        public uint count_unknown_array1;
+        public uint ptr_unknown_array1;
+
+        byte[] skip2;
+
+        public uint ptr_ai_nav;
+
+        byte[] skip3;
+
         public SceneHeader(BinaryReader br)
         {
             ptrMeshInfo = br.ReadUInt32();
@@ -78,6 +89,17 @@ namespace CTRFramework
                 startPos[i] = pos;
                 Console.WriteLine(startPos[i].ToString());
             }
+
+            skip = br.ReadBytes(0x7C);
+
+            count_unknown_array1 = br.ReadUInt32();
+            ptr_unknown_array1 = br.ReadUInt32();
+
+            skip2 = br.ReadBytes(0x38);
+
+            ptr_ai_nav = br.ReadUInt32();
+
+            skip3 = br.ReadBytes(0x24);
         }
     }
 }

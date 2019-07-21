@@ -36,7 +36,7 @@ namespace CTRtools.CSEQ
         private byte reverb2;    //unknown value, mostly 31
 
 
-        public void Read(BinaryReader br)
+        public override void Read(BinaryReader br)
         {
             magic1 = br.ReadByte();
             Volume = br.ReadByte();
@@ -54,7 +54,7 @@ namespace CTRtools.CSEQ
                 throw new Exception(String.Format("SampleDef always0 = {0} ", always0));
         }
 
-        public void Write(BinaryWriter bw)
+        public override void Write(BinaryWriter bw)
         {
             bw.Write((byte)magic1);
             bw.Write((byte)Volume);

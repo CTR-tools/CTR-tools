@@ -6,7 +6,7 @@ using CTRFramework.Shared;
 
 namespace CTRFramework
 {
-    public class QuadBlock : IRead
+    public class QuadBlock : IRead, IWrite
     {
         public static int pagex = -1;
         public static int pagey = -1;
@@ -24,7 +24,9 @@ namespace CTRFramework
          * 2--8--3
          */
 
-        public byte[] unk1 = new byte[10];  //assumed flags
+        public QuadFlags quadFlags;
+
+        public byte[] unk1 = new byte[8];  //assumed flags
         public uint[] tex = new uint[4];    //offsets to texture definition
 
         public BoundingBox bb;              //a box that bounds
@@ -35,6 +37,7 @@ namespace CTRFramework
 
         public int offset1;                 //offset to LOD texture definition
         public int offset2;                 //unknown mostly null
+        //leads to 3 textures array
 
         public ushort[] unk3 = new ushort[10];  //unknown
 
@@ -94,7 +97,9 @@ namespace CTRFramework
             for (int i = 0; i < 9; i++)
                 ind[i] = br.ReadInt16();
 
-            unk1 = br.ReadBytes(10);
+            quadFlags = (QuadFlags)br.ReadUInt16();
+
+            unk1 = br.ReadBytes(8);
 
             for (int i = 0; i < 4; i++)
                 tex[i] = br.ReadUInt32();
@@ -302,5 +307,31 @@ namespace CTRFramework
                 label, x, xuv, y, yuv, z, zuv);
         }
 
+
+        public void Write(BinaryWriter bw)
+        {
+            for (int i = 0; i < 9; i++)
+                bw.Write(ind[i]);
+
+            bw.Write((ushort)quadFlags);
+            bw.Write(unk1);
+
+            for (int i = 0; i < 4; i++)
+                bw.Write(tex[i]);
+
+            bb.Write(bw);
+
+            bw.Write(unk2);
+
+            bw.Write(id);
+
+            bw.Write(midflags);
+
+            bw.Write(offset1);
+            bw.Write(offset2);
+
+            for (int i = 0; i < 10; i++)
+                bw.Write(unk3[i]);
+        }
     }
 }

@@ -42,6 +42,12 @@
 			"timestamp": "1999-08-17",
 			"big_md5": "e73f0f3cade06dc5fc2719fe186cbe26",
 			"hwl_md5": "c5de2d39e42267e74aa4d5e7b47165a5"
-		}
+		},
+		{
+			"name": "NTSC_Spyro2_Demo",
+			"timestamp": "1999-06-01",
+			"big_md5": "72fbd632f2ba68a3392a92204f29b118",
+			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9" 
+		},
 	]
 }

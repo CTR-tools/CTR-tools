@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bigtool", "bigtool\bigtool.csproj", "{F1E2BF2C-F0AF-4704-90FC-5CAC44FF5B2C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lng2txt", "lng2txt\lng2txt.csproj", "{244D645A-172A-4CB5-9E64-9C4BA68EF08C}"

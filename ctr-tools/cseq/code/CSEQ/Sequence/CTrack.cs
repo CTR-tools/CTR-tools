@@ -70,7 +70,7 @@ namespace CTRtools.CSEQ
         public List<MidiEvent> ToMidiEventList(CSeqHeader header, int channel, CSEQ seq)
         {
             List<MidiEvent> me = new List<MidiEvent>();
-            MidiEvent x;
+            //MidiEvent x;
 
             int absTime = 0;
 

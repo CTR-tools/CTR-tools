@@ -4,7 +4,7 @@ namespace CTRFramework
 {
     //quadblock flags byte 1
     [Flags]
-    public enum Flags1
+    public enum QuadFlags
     {
         Invisible = 1 << 0,
         NeverUsed1 = 1 << 1,
@@ -13,21 +13,15 @@ namespace CTRFramework
         OutOfBounds = 1 << 4,
         NeverUsed2 = 1 << 5,
         TriggerScript = 1 << 6,
-        Reverb = 1 << 7
-    }
-
-    //quadblock flags byte 2
-    [Flags]
-    public enum Flags2
-    {
-        Kickers = 1 << 0,
-        Unknown1 = 1 << 1,
-        TikiMouth = 1 << 2,
-        Ground1 = 1 << 3,
-        Ground2 = 1 << 4,
-        NotTrack = 1 << 5,
-        OutsideStuff = 1 << 6,
-        InvisibleTriggers = 1 << 7
+        Reverb = 1 << 7,
+        KickersToo = 1 << 8,
+        KillRacer = 1 << 9, //confirmed, terrain kills racer
+        TikiMouth = 1 << 10,
+        Renderable = 1 << 11, //confirmed, setting this to 1 makes quad visible
+        Collidable = 1 << 12, //confirmed, setting this to 1 makes quad collidable, able to drive
+        NotTrack = 1 << 13,
+        OutsideStuff = 1 << 14,
+        InvisibleTriggers = 1 << 15
     }
 
     //defines mesh quality while exporting to OBJ

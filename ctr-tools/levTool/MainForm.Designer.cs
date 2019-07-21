@@ -43,18 +43,21 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabVertex = new System.Windows.Forms.TabPage();
-            this.tabQuads = new System.Windows.Forms.TabPage();
-            this.tabVram = new System.Windows.Forms.TabPage();
+            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
+            this.button8 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button7 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
+            this.tabQuads = new System.Windows.Forms.TabPage();
+            this.button9 = new System.Windows.Forms.Button();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.tabVram = new System.Windows.Forms.TabPage();
+            this.button10 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
@@ -62,6 +65,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.tabVertex.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabQuads.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -220,23 +224,23 @@
             this.tabVertex.Text = "Vertex array";
             this.tabVertex.UseVisualStyleBackColor = true;
             // 
-            // tabQuads
+            // maskedTextBox1
             // 
-            this.tabQuads.Location = new System.Drawing.Point(4, 22);
-            this.tabQuads.Name = "tabQuads";
-            this.tabQuads.Size = new System.Drawing.Size(950, 372);
-            this.tabQuads.TabIndex = 3;
-            this.tabQuads.Text = "QuadBlocks";
-            this.tabQuads.UseVisualStyleBackColor = true;
+            this.maskedTextBox1.Location = new System.Drawing.Point(8, 185);
+            this.maskedTextBox1.Mask = "#.##";
+            this.maskedTextBox1.Name = "maskedTextBox1";
+            this.maskedTextBox1.Size = new System.Drawing.Size(100, 20);
+            this.maskedTextBox1.TabIndex = 9;
             // 
-            // tabVram
+            // button8
             // 
-            this.tabVram.Location = new System.Drawing.Point(4, 22);
-            this.tabVram.Name = "tabVram";
-            this.tabVram.Size = new System.Drawing.Size(950, 372);
-            this.tabVram.TabIndex = 2;
-            this.tabVram.Text = "VRAM";
-            this.tabVram.UseVisualStyleBackColor = true;
+            this.button8.Location = new System.Drawing.Point(8, 209);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(100, 23);
+            this.button8.TabIndex = 8;
+            this.button8.Text = "Scale";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // groupBox1
             // 
@@ -253,6 +257,16 @@
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Vertex colors";
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(6, 138);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(156, 23);
+            this.button7.TabIndex = 12;
+            this.button7.Text = "morph color = normal color";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click_1);
             // 
             // label2
             // 
@@ -280,6 +294,7 @@
             this.button6.TabIndex = 9;
             this.button6.Text = "Darken";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // button5
             // 
@@ -289,6 +304,7 @@
             this.button5.TabIndex = 8;
             this.button5.Text = "morph color";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button2
             // 
@@ -298,6 +314,7 @@
             this.button2.TabIndex = 7;
             this.button2.Text = "apply";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
@@ -307,36 +324,58 @@
             this.button1.TabIndex = 6;
             this.button1.Text = "main color";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // button7
+            // tabQuads
             // 
-            this.button7.Location = new System.Drawing.Point(6, 138);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(156, 23);
-            this.button7.TabIndex = 12;
-            this.button7.Text = "morph color = normal color";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click_1);
+            this.tabQuads.Controls.Add(this.button10);
+            this.tabQuads.Controls.Add(this.button9);
+            this.tabQuads.Controls.Add(this.checkedListBox1);
+            this.tabQuads.Location = new System.Drawing.Point(4, 22);
+            this.tabQuads.Name = "tabQuads";
+            this.tabQuads.Size = new System.Drawing.Size(950, 372);
+            this.tabQuads.TabIndex = 3;
+            this.tabQuads.Text = "QuadBlocks";
+            this.tabQuads.UseVisualStyleBackColor = true;
             // 
-            // button8
+            // button9
             // 
-            this.button8.Location = new System.Drawing.Point(8, 209);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(100, 23);
-            this.button8.TabIndex = 8;
-            this.button8.Text = "Scale";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
+            this.button9.Location = new System.Drawing.Point(134, 14);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(75, 23);
+            this.button9.TabIndex = 2;
+            this.button9.Text = "Apply";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
-            // maskedTextBox1
+            // checkedListBox1
             // 
-            this.maskedTextBox1.Location = new System.Drawing.Point(8, 185);
-            this.maskedTextBox1.Mask = "#.##";
-            this.maskedTextBox1.Name = "maskedTextBox1";
-            this.maskedTextBox1.Size = new System.Drawing.Size(100, 20);
-            this.maskedTextBox1.TabIndex = 9;
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Location = new System.Drawing.Point(8, 14);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(120, 349);
+            this.checkedListBox1.TabIndex = 0;
             // 
-            // Form1
+            // tabVram
+            // 
+            this.tabVram.Location = new System.Drawing.Point(4, 22);
+            this.tabVram.Name = "tabVram";
+            this.tabVram.Size = new System.Drawing.Size(950, 372);
+            this.tabVram.TabIndex = 2;
+            this.tabVram.Text = "VRAM";
+            this.tabVram.UseVisualStyleBackColor = true;
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(134, 43);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(75, 23);
+            this.button10.TabIndex = 3;
+            this.button10.Text = "remove texture";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -344,7 +383,7 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "levTool";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -357,6 +396,7 @@
             this.tabVertex.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabQuads.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -391,6 +431,9 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.MaskedTextBox maskedTextBox1;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button button10;
     }
 }
 

@@ -22,6 +22,8 @@ namespace levTool
         {
             InitializeComponent();
             cd = new ColorDialog();
+
+            checkedListBox1.Items.AddRange(Enum.GetNames(typeof(QuadFlags)));
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -69,17 +71,24 @@ namespace levTool
         {
             using (BinaryWriter bw = new BinaryWriter(File.OpenWrite(path)))
             {
-                /*
-                bw.BaseStream.Position = ptrPickupHeaders;
 
-                foreach (PickupHeader ph in headers)
+                bw.BaseStream.Position = scn.header.ptrPickupHeaders + 4;
+
+                foreach (PickupHeader ph in scn.pickups)
                     ph.Write(bw);
-                */
+                
 
                 bw.BaseStream.Position = scn.meshinfo.ptrvertarray + 4;
 
                 foreach (Vertex v in scn.vert)
                     v.Write(bw);
+
+
+                bw.BaseStream.Position = scn.meshinfo.ptrNgonArray + 4;
+
+                foreach (QuadBlock qb in scn.quad)
+                    qb.Write(bw);
+                
                
             }
         }
@@ -187,6 +196,42 @@ namespace levTool
                 foreach (Vertex v in scn.vert)
                 {
                     v.coord.Scale(x);
+                }
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+                foreach (QuadBlock qb in scn.quad)
+                {
+                    qb.quadFlags = GetFlags(checkedListBox1);
+                }
+            }
+        }
+
+        private QuadFlags GetFlags(CheckedListBox clb)
+        {
+            ushort final = 0;
+
+            for (int i = 0; i < 16; i++)
+            {
+                ushort x = (ushort)((clb.GetItemChecked(i) ? 1 : 0) << i);
+                final |= x;
+            }
+
+            return (QuadFlags)final;
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+                foreach (QuadBlock qb in scn.quad)
+                {
+                    qb.offset1 = 0;
+                    qb.tex = new uint[] { 0, 0, 0, 0 };
                 }
             }
         }

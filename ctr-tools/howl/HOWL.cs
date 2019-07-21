@@ -29,8 +29,8 @@ namespace howl
         string magic;
 
         int u1;
-        int uz1;
-        int uz2;
+        int reserved1;
+        int reserved2;
 
         int cnt4;
         int cnt81;
@@ -76,10 +76,10 @@ namespace howl
             }
 
             u1 = br.ReadInt32();
-            uz1 = br.ReadInt32();
-            uz2 = br.ReadInt32();
+            reserved1 = br.ReadInt32();
+            reserved2 = br.ReadInt32();
 
-            if (uz1 != 0 || uz2 != 0)
+            if (reserved1 != 0 || reserved2 != 0)
             {
                 Console.WriteLine("uz1 or uz2 is not null. Possible error.");
             }

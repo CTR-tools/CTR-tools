@@ -8,6 +8,33 @@ namespace CTRtools.CSEQ
 {
     public class SampleDef : IRead, IWrite
     {
+        [CategoryAttribute("Meta info"), DescriptionAttribute("Instrument title.")]
+        public string Title
+        {
+            get { return title; }
+            set { title = value; }
+        }
+
+        [CategoryAttribute("Meta info"), DescriptionAttribute("MIDI instrument number.")]
+        public byte MIDI
+        {
+            get { return midi; }
+            set { midi = value; }
+        }
+
+        [CategoryAttribute("Meta info"), DescriptionAttribute("Pitch shift.")]
+        public string PitchShift
+        {
+            get { return pitchshift; }
+            set { pitchshift = value; }
+        }
+
+
+        private string title;
+        private byte midi;
+        private string pitchshift;
+
+
 
         [CategoryAttribute("General"), DescriptionAttribute("Sample volume.")]
         public byte Volume
@@ -44,7 +71,7 @@ namespace CTRtools.CSEQ
         }
 
 
-        public void Read(BinaryReader br)
+        public virtual void Read(BinaryReader br)
         {
             magic1 = br.ReadByte();
             volume = br.ReadByte();
@@ -59,7 +86,7 @@ namespace CTRtools.CSEQ
                 throw new Exception(String.Format("SampleDef always0 = {0} ", always0));
         }
 
-        public void Write(BinaryWriter bw)
+        public virtual void Write(BinaryWriter bw)
         {
             bw.Write((byte)magic1);
             bw.Write((byte)volume);

@@ -24,8 +24,18 @@ namespace CTRFramework
             MemoryStream ms = new MemoryStream(File.ReadAllBytes(s));
             BinaryReader br = new BinaryReader(ms);
 
-            ms = new MemoryStream(br.ReadBytes(br.ReadInt32()));
-            br = new BinaryReader(ms);
+            int size = br.ReadInt32();
+
+            if ((size & 0xFF) == 0)
+            {
+                ms = new MemoryStream(br.ReadBytes(size));
+                br = new BinaryReader(ms);
+            }
+            else
+            {
+                ms = new MemoryStream(br.ReadBytes((int)br.BaseStream.Length-4));
+                br = new BinaryReader(ms);
+            }
 
             Read(br);     
         }
