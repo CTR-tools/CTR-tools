@@ -6,22 +6,22 @@ namespace CTRFramework
     [Flags]
     public enum QuadFlags
     {
-        Invisible = 1 << 0,
-        NeverUsed1 = 1 << 1,
+        Invisible = 1 << 0, //check
+        NeverUsed1 = 1 << 1, //used in space station, probably invisible wall
         Reflection = 1 << 2,
         Kickers = 1 << 3,
-        OutOfBounds = 1 << 4,
+        OutOfBounds = 1 << 4,//check
         NeverUsed2 = 1 << 5,
         TriggerScript = 1 << 6,
-        Reverb = 1 << 7,
+        Reverb = 1 << 7, //confirmed
         KickersToo = 1 << 8,
         KillRacer = 1 << 9, //confirmed, terrain kills racer
         TikiMouth = 1 << 10,
-        Renderable = 1 << 11, //confirmed, setting this to 1 makes quad visible
+        Renderable = 1 << 11, //mostly same as collidable, driveable?
         Collidable = 1 << 12, //confirmed, setting this to 1 makes quad collidable, able to drive
-        NotTrack = 1 << 13,
-        OutsideStuff = 1 << 14,
-        InvisibleTriggers = 1 << 15
+        NotTrack = 1 << 13, //the opposite of collidable?
+        OutsideStuff = 1 << 14, //third state? looks like all quads on the track are either 12, 13 or 14
+        InvisibleTriggers = 1 << 15 //invisible stuff like triggers
     }
 
     //defines mesh quality while exporting to OBJ
