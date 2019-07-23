@@ -1,10 +1,11 @@
 meta:
-  id: lev
+  id: ctr_lev
   application: Crash Team Racing
   file-extension: lev
   endian: le
   
 seq:
+    
   - id: header
     type: scene_header
     
@@ -35,14 +36,38 @@ seq:
     type: vertex
     repeat: expr
     repeat-expr: mesh_info_header.vertexnum
+
+instances:
+  unk_struct:
+    pos: header.ptr_unk_struct
+    size: 1
+    type: unk_struct
   
 types:
+  unk_struct:
+    seq:
+      - id: num_repeats
+        type : u4
+      - id: ptr_data_array
+        type : u4   
+      - id: num8
+        type: u2
+        repeat: expr
+        repeat-expr: 8
+      - id: ptr8
+        type: u4
+        repeat: expr
+        repeat-expr: 8
+      - id: data_array
+        type: posang
+        repeat: expr
+        repeat-expr: num_repeats
 
   scene_header:
     seq:
       - id: ptr_mesh_info
         type: u4
-      - id: unk_ptr1
+      - id: ptr_unk_struct
         type: u4
       - id: unk_ptr2
         type: u4
