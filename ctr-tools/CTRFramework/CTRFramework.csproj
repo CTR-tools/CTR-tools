@@ -95,8 +95,10 @@
     <Compile Include="code\lev\MeshInfo.cs" />
     <Compile Include="code\lev\PickupHeader.cs" />
     <Compile Include="code\lev\QuadBlock.cs" />
+    <Compile Include="code\lev\SkyBox.cs" />
     <Compile Include="code\lev\TextureLayout.cs" />
     <Compile Include="code\lev\Vertex.cs" />
+    <Compile Include="code\lev\ColData.cs" />
     <Compile Include="code\types\BoundingBox.cs" />
     <Compile Include="code\types\PosAng.cs" />
     <Compile Include="code\types\SomeData.cs" />

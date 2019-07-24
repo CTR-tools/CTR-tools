@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using CTRFramework;
 using CTRFramework.Shared;
 
@@ -78,13 +79,13 @@ namespace levTool
                     ph.Write(bw);
                 
 
-                bw.BaseStream.Position = scn.meshinfo.ptrvertarray + 4;
+                bw.BaseStream.Position = scn.meshinfo.ptrVertexArray + 4;
 
                 foreach (Vertex v in scn.vert)
                     v.Write(bw);
 
 
-                bw.BaseStream.Position = scn.meshinfo.ptrNgonArray + 4;
+                bw.BaseStream.Position = scn.meshinfo.ptrQuadBlockArray + 4;
 
                 foreach (QuadBlock qb in scn.quad)
                     qb.Write(bw);
@@ -233,6 +234,20 @@ namespace levTool
                     qb.offset1 = 0;
                     qb.tex = new uint[] { 0, 0, 0, 0 };
                 }
+            }
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (ColData vi in scn.coldata)
+                {
+                    sb.Append(vi.ToString() + "\r\n");
+                }
+
+                textBox1.Text = sb.ToString();
             }
         }
     }

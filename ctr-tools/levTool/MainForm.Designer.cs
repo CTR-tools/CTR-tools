@@ -54,10 +54,12 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.tabQuads = new System.Windows.Forms.TabPage();
+            this.button10 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabVram = new System.Windows.Forms.TabPage();
-            this.button10 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button11 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
@@ -93,26 +95,26 @@
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.loadToolStripMenuItem.Text = "Open...";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveToolStripMenuItem.Text = "Save...";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(109, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -328,6 +330,8 @@
             // 
             // tabQuads
             // 
+            this.tabQuads.Controls.Add(this.button11);
+            this.tabQuads.Controls.Add(this.textBox1);
             this.tabQuads.Controls.Add(this.button10);
             this.tabQuads.Controls.Add(this.button9);
             this.tabQuads.Controls.Add(this.checkedListBox1);
@@ -337,6 +341,16 @@
             this.tabQuads.TabIndex = 3;
             this.tabQuads.Text = "QuadBlocks";
             this.tabQuads.UseVisualStyleBackColor = true;
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(134, 43);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(75, 23);
+            this.button10.TabIndex = 3;
+            this.button10.Text = "remove texture";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // button9
             // 
@@ -365,15 +379,23 @@
             this.tabVram.Text = "VRAM";
             this.tabVram.UseVisualStyleBackColor = true;
             // 
-            // button10
+            // textBox1
             // 
-            this.button10.Location = new System.Drawing.Point(134, 43);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(75, 23);
-            this.button10.TabIndex = 3;
-            this.button10.Text = "remove texture";
-            this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.textBox1.Location = new System.Drawing.Point(215, 17);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(381, 346);
+            this.textBox1.TabIndex = 4;
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(134, 109);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(75, 23);
+            this.button11.TabIndex = 5;
+            this.button11.Text = "button11";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
             // MainForm
             // 
@@ -397,6 +419,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabQuads.ResumeLayout(false);
+            this.tabQuads.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -434,6 +457,8 @@
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

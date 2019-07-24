@@ -25,6 +25,7 @@ namespace CTRFramework
 
         List<CTRAnim> anims = new List<CTRAnim>();
 
+
         public LODModel(string s)
         {
             path = s;
@@ -37,6 +38,16 @@ namespace CTRFramework
             ms = new MemoryStream(br.ReadBytes((int)br.BaseStream.Length-4));
             br = new BinaryReader(ms);
 
+            Read(br);
+        }
+
+        public LODModel(BinaryReader br)
+        {
+            Read(br);
+        }
+
+        public void Read(BinaryReader br)
+        {
             name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Replace("\0", "");
             unk0 = br.ReadInt16();
             lodCount = br.ReadInt16();
@@ -121,7 +132,6 @@ namespace CTRFramework
             }
             */
             //File.WriteAllText("test.obj", sb.ToString());
-
         }
     }
 }

@@ -15,7 +15,9 @@ namespace CTRFramework
         public List<Vertex> vert = new List<Vertex>();
         public List<QuadBlock> quad = new List<QuadBlock>();
         public List<PickupHeader> pickups = new List<PickupHeader>();
-
+        public List<ColData> coldata = new List<ColData>();
+        public List<LODModel> dynamics = new List<LODModel>();
+        public SkyBox skybox;
 
         public Scene(string s, string fmt)
         {
@@ -26,6 +28,7 @@ namespace CTRFramework
 
             int size = br.ReadInt32();
 
+            //this is for files with external offs file
             if ((size & 0xFF) == 0)
             {
                 ms = new MemoryStream(br.ReadBytes(size));
@@ -108,6 +111,24 @@ namespace CTRFramework
                 pickups.Add(new PickupHeader(br));
             }
 
+            //read pickup models
+            //starts out right, but anims ruin it
+            /*
+            int x = (int)br.BaseStream.Position;
+
+            for (int i = 0; i < header.numPickupModels; i++)
+            {
+                br.BaseStream.Position = x + 4 * i;
+                br.BaseStream.Position = br.ReadUInt32();
+
+                dynamics.Add(new LODModel(br));
+            }
+            */
+
+            //read sky
+            br.BaseStream.Position = header.ptrUnkStruct;
+            skybox = new SkyBox(br);
+
 
             //read meshinfo
             br.BaseStream.Position = header.ptrMeshInfo;
@@ -115,9 +136,9 @@ namespace CTRFramework
 
 
             //read vertices
-            br.BaseStream.Position = meshinfo.ptrvertarray;
+            br.BaseStream.Position = meshinfo.ptrVertexArray;
 
-            for (int i = 0; i < meshinfo.vertexnum; i++)
+            for (int i = 0; i < meshinfo.cntVertex; i++)
             {
                 Vertex vt = new Vertex(br);
                 vert.Add(vt);
@@ -125,11 +146,11 @@ namespace CTRFramework
 
 
             //read faces
-            br.BaseStream.Position = meshinfo.ptrNgonArray;
+            br.BaseStream.Position = meshinfo.ptrQuadBlockArray;
 
             List<short> uniflag = new List<short>();
 
-            for (int i = 0; i < meshinfo.facesnum; i++)
+            for (int i = 0; i < meshinfo.cntQuadBlock; i++)
             {
                 QuadBlock qb = new QuadBlock(br);
                 quad.Add(qb);
@@ -144,6 +165,16 @@ namespace CTRFramework
 
             foreach (byte b in uniflag)
                 Console.WriteLine(b);
+
+
+            //read coldata array. assumed collision data. might be something else.
+            br.BaseStream.Position = meshinfo.ptrColDataArray;
+
+            for (int i = 0; i < meshinfo.cntColData; i++)
+            {
+                ColData vi = new ColData(br);
+                coldata.Add(vi);
+            }
         }
 
 

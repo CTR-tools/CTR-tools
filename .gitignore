@@ -1,6 +1,7 @@
 #release data
 release.*
 dependencies
+viewer
 
 # Windows image file caches
 Thumbs.db

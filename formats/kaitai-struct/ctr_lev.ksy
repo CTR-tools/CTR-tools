@@ -19,10 +19,10 @@ seq:
     repeat: expr
     repeat-expr: header.num_pickup_headers
     
-  - id: some_pointers
+  - id: pickup_model_pointers
     type: u4
     repeat: expr
-    repeat-expr: 9
+    repeat-expr: header.num_pickup_models
     
   - id: mesh_info_header
     type: mesh_info
@@ -30,7 +30,7 @@ seq:
   - id: quad_block_array
     type: quad_block
     repeat: expr
-    repeat-expr: mesh_info_header.facesnum
+    repeat-expr: mesh_info_header.cnt_quad_block
 
   - id: vertex_array
     type: vertex
@@ -42,8 +42,27 @@ instances:
     pos: header.ptr_unk_struct
     size: 1
     type: unk_struct
-  
+    
+  col_data_array:
+    pos: mesh_info_header.ptr_face_array
+    type: col_data
+    repeat: expr
+    repeat-expr: mesh_info_header.facenum
+    
+
 types:
+
+  col_data:
+    seq:
+      - id: flag
+        type: u2
+      - id: id
+        type: u2
+      - id: skip_someptrs_somedata
+        size: 24
+      - id: ptr_quad_block
+        type: u4
+      
   unk_struct:
     seq:
       - id: num_repeats
@@ -208,7 +227,7 @@ types:
         
   mesh_info:
     seq:
-      - id: facesnum
+      - id: cnt_quad_block
         type: u4
       - id: vertexnum
         type: u4

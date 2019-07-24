@@ -12,6 +12,10 @@ namespace CTRFramework
 
         static Vector4b flagColor = new Vector4b(0x0000FF00); //blue for flags
 
+        public Vertex()
+        {
+        }
+
         public Vertex(BinaryReader br)
         {
             Read(br);
@@ -25,6 +29,12 @@ namespace CTRFramework
                 case Vcolor.Morph: color_morph = col; break;
                 case Vcolor.Flag: Vertex.flagColor = col; break;
             }
+        }
+
+        public void ReadShort(BinaryReader br)
+        {
+            coord = new Vector4s(br);
+            color = new Vector4b(br);
         }
 
         public void Read(BinaryReader br)

@@ -86,7 +86,7 @@ namespace CTRFramework
 
     public enum Vcolor
     {
-        Default, 
+        Default,
         Morph,
         Flag
     }
