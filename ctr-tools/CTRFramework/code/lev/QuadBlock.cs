@@ -45,6 +45,10 @@ namespace CTRFramework
         TextureLayout lod_tex;
         List<TextureLayout> ctrtex = new List<TextureLayout>();
 
+        public QuadBlock()
+        {
+        }
+
         public QuadBlock(BinaryReader br)
         {
             Read(br);

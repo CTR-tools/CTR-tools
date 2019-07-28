@@ -9,10 +9,10 @@ seq:
   - id: header
     type: scene_header
     
-  - id: array1array
-    type: array1
+  - id: restart_pts
+    type: posang
     repeat: expr
-    repeat-expr: header.count_unknown_array1
+    repeat-expr: header.cnt_restart_pts
         
   - id: pickup_headers
     type: pickup_header
@@ -38,17 +38,23 @@ seq:
     repeat-expr: mesh_info_header.vertexnum
 
 instances:
-  unk_struct:
-    pos: header.ptr_unk_struct
+  skybox:
+    pos: header.ptr_skybox
     size: 1
-    type: unk_struct
+    type: skybox
     
   col_data_array:
-    pos: mesh_info_header.ptr_face_array
+    pos: mesh_info_header.ptr_col_data_array
     type: col_data
     repeat: expr
-    repeat-expr: mesh_info_header.facenum
-    
+    repeat-expr: mesh_info_header.cnt_col_data
+
+  unk_struct1_array:
+    pos: header.unk_ptr2
+    type: unk_struct1
+    repeat: expr
+    repeat-expr: 8
+
 
 types:
 
@@ -63,11 +69,11 @@ types:
       - id: ptr_quad_block
         type: u4
       
-  unk_struct:
+  skybox:
     seq:
-      - id: num_repeats
+      - id: num_vertex
         type : u4
-      - id: ptr_data_array
+      - id: ptr_vertex
         type : u4   
       - id: num8
         type: u2
@@ -77,16 +83,16 @@ types:
         type: u4
         repeat: expr
         repeat-expr: 8
-      - id: data_array
-        type: posang
+      - id: vrtex_array
+        type: skybox_vertex
         repeat: expr
-        repeat-expr: num_repeats
+        repeat-expr: num_vertex
 
   scene_header:
     seq:
       - id: ptr_mesh_info
         type: u4
-      - id: ptr_unk_struct
+      - id: ptr_skybox
         type: u4
       - id: unk_ptr2
         type: u4
@@ -96,7 +102,7 @@ types:
         type: u4
       - id: num_pickup_models
         type: u4
-      - id: ptr_faces_array
+      - id: ptr_pickup_models_ptr
         type: u4     
       - id: unk_ptr3
         type: u4
@@ -131,13 +137,23 @@ types:
         repeat: expr
         repeat-expr: 8
         
+      - id: unkptr1
+        type: u4
+      - id: unkptr2
+        type: u4
+      - id: unkptr3
+        type: u4
+
+      - id: background_color
+        type: color 
+
       - id: skip
-        size: 0x7C
+        size: 0x6C
         
-      - id: count_unknown_array1
+      - id: cnt_restart_pts
         type: u4 
           
-      - id: ptr_unknown_array1
+      - id: ptr_restart_pts
         type: u4 
         
       - id: skip2
@@ -159,14 +175,14 @@ types:
         type: u4
       - id: s4
         type: u4
-        
+
   posang:
     seq:
       - id: position
         type: vector3s
       - id: angle
         type: vector3s
-        
+
   vector3u:
     seq:
       - id: x
@@ -175,7 +191,7 @@ types:
         type: u2
       - id: z
         type: u2
-        
+
   vector3s:
     seq:
       - id: x
@@ -184,22 +200,9 @@ types:
         type: s2
       - id: z
         type: s2
-        
-  array1:
-    seq:
-      - id: unk1
-        type: u2
-      - id: unk2
-        type: u2
-      - id: unk3
-        type: u2
-      - id: unk4
-        type: u2
-      - id: unk5
-        type: u2
-      - id: unk6
-        type: u2
-        
+
+
+      
   pickup_header:
     seq:
       - id: name
@@ -239,9 +242,9 @@ types:
         type: u4
       - id: unk2
         type: u4
-      - id: ptr_face_array
+      - id: ptr_col_data_array
         type: u4
-      - id: facenum
+      - id: cnt_col_data
         type: u4
         
   bounding_box:
@@ -286,7 +289,45 @@ types:
         type: vector3s
       - id: nil
         type: u2
-      - id: color
-        type: u4
+      - id: colorz
+        type: color
       - id: color_morph
+        type: color
+
+  skybox_vertex:
+    seq:
+      - id: position
+        type: vector3s
+      - id: nil
+        type: u2
+      - id: colorz
+        type: color
+        
+  color:
+    seq:
+      - id: r
+        type: u1
+      - id: g
+        type: u1
+      - id: b
+        type: u1
+      - id: a
+        type: u1
+        
+        
+  unk_struct1:
+    seq:
+    
+      - id: some_ptr
         type: u4
+
+      - id: cnt_ptr_entries
+        type: u4
+
+      - id: nil
+        type: u4
+
+      - id: ptr_array
+        type: u4
+        repeat: expr
+        repeat-expr: cnt_ptr_entries

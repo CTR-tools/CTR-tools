@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using CTRFramework.Shared;
 
 namespace CTRFramework
 {
@@ -18,6 +19,8 @@ namespace CTRFramework
         public List<ColData> coldata = new List<ColData>();
         public List<LODModel> dynamics = new List<LODModel>();
         public SkyBox skybox;
+
+        public List<PosAng> restartPts = new List<PosAng>();
 
         public Scene(string s, string fmt)
         {
@@ -76,7 +79,7 @@ namespace CTRFramework
 
             }
 
-            WriteToFile(fname, sb.ToString());
+            CTRFramework.Shared.Helpers.WriteToFile(fname, sb.ToString());
 
             sb.Clear();
 
@@ -88,7 +91,7 @@ namespace CTRFramework
                     sb.Append(String.Format("map_Kd texpage_{0}_{1}.png\r\n\r\n", i, j));
                 }
 
-            WriteToFile(mtllib, sb.ToString());
+            CTRFramework.Shared.Helpers.WriteToFile(mtllib, sb.ToString());
 
             Console.WriteLine("Done!");
 
@@ -98,9 +101,13 @@ namespace CTRFramework
 
         public void Read(BinaryReader br)
         {
-            //read header
-            header = new SceneHeader(br);
-
+            header = Instance<SceneHeader>.ReadFrom(br, 0);   
+            meshinfo = Instance<MeshInfo>.ReadFrom(br, (int)header.ptrMeshInfo);   
+            skybox = Instance<SkyBox>.ReadFrom(br, (int)header.ptrUnkStruct);
+            vert = InstanceList<Vertex>.ReadFrom(br, (int)meshinfo.ptrVertexArray, meshinfo.cntVertex);
+            restartPts = InstanceList<PosAng>.ReadFrom(br, (int)header.ptrUnknownArray1, (int)header.countUnknownArray1);
+            coldata = InstanceList<ColData>.ReadFrom(br, (int)meshinfo.ptrColDataArray, meshinfo.cntColData);
+            quad = InstanceList<QuadBlock>.ReadFrom(br, (int)meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
 
             //read pickups
             for (int i = 0; i < header.numPickupHeaders; i++)
@@ -110,6 +117,7 @@ namespace CTRFramework
 
                 pickups.Add(new PickupHeader(br));
             }
+
 
             //read pickup models
             //starts out right, but anims ruin it
@@ -125,71 +133,37 @@ namespace CTRFramework
             }
             */
 
-            //read sky
-            br.BaseStream.Position = header.ptrUnkStruct;
-            skybox = new SkyBox(br);
 
+            StringBuilder sb = new StringBuilder();
 
-            //read meshinfo
-            br.BaseStream.Position = header.ptrMeshInfo;
-            meshinfo = new MeshInfo(br);
-
-
-            //read vertices
-            br.BaseStream.Position = meshinfo.ptrVertexArray;
-
-            for (int i = 0; i < meshinfo.cntVertex; i++)
+            foreach (PosAng pa in restartPts)
             {
-                Vertex vt = new Vertex(br);
-                vert.Add(vt);
+                sb.AppendFormat("v {0}\r\n", pa.Position.ToString(VecFormat.Numbers));
             }
 
+            for (int i = 1; i <= header.countUnknownArray1; i++)
+            {
+                sb.AppendFormat("l {0} {1}\r\n", i, (i == header.countUnknownArray1 ? 1 : i + 1));
+            }
 
-            //read faces
-            br.BaseStream.Position = meshinfo.ptrQuadBlockArray;
+            File.WriteAllText("array1test.obj", sb.ToString());
+
 
             List<short> uniflag = new List<short>();
-
-            for (int i = 0; i < meshinfo.cntQuadBlock; i++)
+                         
+            foreach (QuadBlock qb in quad)
             {
-                QuadBlock qb = new QuadBlock(br);
-                quad.Add(qb);
-
                 //check unique values here
                 if (!uniflag.Contains(qb.unk2[3]))
                     uniflag.Add(qb.unk2[3]);
-
             }
 
             uniflag.Sort();
 
             foreach (byte b in uniflag)
                 Console.WriteLine(b);
-
-
-            //read coldata array. assumed collision data. might be something else.
-            br.BaseStream.Position = meshinfo.ptrColDataArray;
-
-            for (int i = 0; i < meshinfo.cntColData; i++)
-            {
-                ColData vi = new ColData(br);
-                coldata.Add(vi);
-            }
         }
 
-
-        //avoids excessive fragmentation
-        private void WriteToFile(string fname, string content)
-        {
-            using (FileStream fs = new FileStream(fname, FileMode.OpenOrCreate))
-            {
-                using (StreamWriter sw = new StreamWriter(fs))
-                {
-                    fs.SetLength(content.Length);
-                    sw.Write(content);
-                }
-            }
-        }
 
     }
 }

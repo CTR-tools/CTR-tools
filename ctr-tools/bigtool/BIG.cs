@@ -46,6 +46,15 @@ namespace bigtool
             }
         }
 
+        static string CalculateMD5(byte[] data)
+        {
+            using (var md5 = MD5.Create())
+            {
+                    var hash = md5.ComputeHash(new MemoryStream(data));
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            }
+        }
+
         JObject json;
 
         public BIG()
@@ -192,6 +201,13 @@ namespace bigtool
 
                 if (!knownname.Contains("\\")) knownname = i.ToString("0000") + "_" + knownname;
 
+                byte[] data = br.ReadBytes((int)p.size);
+
+                //string filemd5 = CalculateMD5(data);
+
+                //if (Path.GetExtension(knownname) == ".lev")
+               // biglist.Append(filemd5 + "\t" + "NTSC-J\t" + knownname + "\r\n");
+
                 biglist.Append(knownname + "\r\n");
 
                 fname = Path.Combine(extpath, knownname);
@@ -200,7 +216,7 @@ namespace bigtool
                 if (p.size > 0)
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(fname));
-                    File.WriteAllBytes(fname, br.ReadBytes((int)p.size));
+                    File.WriteAllBytes(fname, data);
                 }
 
                 Console.Write(".");

@@ -66,6 +66,15 @@ namespace CTRFramework.Shared
             bw.Write(Z);
         }
 
+        public Vector3s Move(Vector3s v)
+        {
+            x += v.X;
+            y += v.Y;
+            z += v.Z;
+
+            return this;
+        }
+
         public string ToString(VecFormat format)
         {
             string fmt = "{0} {1} {2}";
@@ -78,6 +87,7 @@ namespace CTRFramework.Shared
 
             return String.Format(fmt, x, y, z);
         }
+
 
         public override string ToString()
         {

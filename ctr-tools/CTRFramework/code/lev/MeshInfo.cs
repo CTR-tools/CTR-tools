@@ -7,14 +7,18 @@ namespace CTRFramework
     {
         public int cntQuadBlock;
         public int cntVertex;
-        public int unk1; //this is some third count
+        public int unk1; //this is probably some third count
 
         public uint ptrQuadBlockArray;
         public uint ptrVertexArray;
         public uint unk2;// and this supposed to be third pointer, but it's null?
 
-        public uint ptrColDataArray;    //something else
-        public int cntColData;           //something else
+        public uint ptrColDataArray; //is it related to collision?
+        public int cntColData;
+
+        public MeshInfo()
+        {
+        }
 
         public MeshInfo(BinaryReader br)
         {

@@ -70,17 +70,16 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HOWL.cs" />
+    <Compile Include="HowlHeader.cs" />
     <Compile Include="Release.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SampleDecl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="howlnames.txt">
@@ -89,6 +88,12 @@
     <Content Include="releases.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CTRFramework\CTRFramework.csproj">
+      <Project>{0326F8B5-F788-4529-9F87-C725A5D13BC0}</Project>
+      <Name>CTRFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

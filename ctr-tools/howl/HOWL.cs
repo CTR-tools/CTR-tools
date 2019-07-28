@@ -3,43 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Security.Cryptography;
+using CTRFramework.Shared;
 
 namespace howl
 {
-    struct intpair
-    {
-        int A;
-        int B;
-
-        public void Read(BinaryReader br)
-        {
-            A = br.ReadInt32();
-            B = br.ReadInt32();
-        }
-    }
-
-
     class HOWL
     {
         Release rel;
-
         string name;
 
-        string magic;
+        HowlHeader header;
 
-        int u1;
-        int reserved1;
-        int reserved2;
-
-        int cnt4;
-        int cnt81;
-        int cnt82;
-
-        public int bankCount;
-        public int seqCount;
-
-        int u2;
+        List<ushort> unk = new List<ushort>();
+        List<SampleDecl> samples1 = new List<SampleDecl>();
+        List<SampleDecl> samples2 = new List<SampleDecl>();
 
         List<int> offbanks = new List<int>();
         List<int> offseqs = new List<int>();
@@ -48,7 +25,7 @@ namespace howl
         {
             name = fn;
 
-            string md5 = CalculateMD5(fn);
+            string md5 = Helpers.CalculateMD5(fn);
 
             Console.WriteLine("Reading " + fn);
             Console.WriteLine("MD5 = " + md5);
@@ -67,45 +44,28 @@ namespace howl
 
         public bool Read(BinaryReader br)
         {
-            string magic = System.Text.Encoding.ASCII.GetString(br.ReadBytes(4));
+            header = new HowlHeader(br);
 
-            if (magic != "HOWL")
+            for (int i = 0; i < header.cnt4; i++)
             {
-                Console.WriteLine("Not a CTR HOWL file.");
-                return false;
+                if (br.ReadUInt16() != 0) Console.WriteLine("now what");
+                unk.Add(br.ReadUInt16());
             }
 
-            u1 = br.ReadInt32();
-            reserved1 = br.ReadInt32();
-            reserved2 = br.ReadInt32();
+            for (int i = 0; i < header.cnt81; i++)
+                samples1.Add(new SampleDecl(br));
 
-            if (reserved1 != 0 || reserved2 != 0)
-            {
-                Console.WriteLine("uz1 or uz2 is not null. Possible error.");
-            }
+            for (int i = 0; i < header.cnt82; i++)
+                samples2.Add(new SampleDecl(br));
 
-            cnt4 = br.ReadInt32();
-            cnt81 = br.ReadInt32();
-            cnt82 = br.ReadInt32();
-
-            bankCount = br.ReadInt32();
-            seqCount = br.ReadInt32();
-
-            u2 = br.ReadInt32();
-
-            br.BaseStream.Position += cnt4 * 4;
-            br.BaseStream.Position += cnt81 * 8;
-            br.BaseStream.Position += cnt82 * 8;
-
-            for (int i = 0; i < bankCount; i++)
+            for (int i = 0; i < header.bankCount; i++)
                 offbanks.Add(br.ReadUInt16() * (int)0x800);
 
-            for (int i = 0; i < seqCount; i++)
+            for (int i = 0; i < header.seqCount; i++)
                 offseqs.Add(br.ReadUInt16() * (int)0x800);
 
             return true;
         }
-
 
 
 
@@ -156,25 +116,12 @@ namespace howl
             }
         }
 
-
-        static string CalculateMD5(string filename)
-        {
-            using (var md5 = MD5.Create())
-            {
-                using (var stream = File.OpenRead(filename))
-                {
-                    var hash = md5.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                }
-            }
-        }
-
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append("banks: " + bankCount + "\r\n");
-            sb.Append("sequences: " + seqCount + "\r\n");
+            sb.Append("banks: " + header.bankCount + "\r\n");
+            sb.Append("sequences: " + header.seqCount + "\r\n");
 
             return sb.ToString();
         }

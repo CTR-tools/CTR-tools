@@ -4,7 +4,7 @@ using CTRFramework.Shared;
 
 namespace CTRFramework
 {
-    public class SceneHeader
+    public class SceneHeader : IRead
     {
         public uint ptrMeshInfo;
         public uint ptrUnkStruct;  //leads to a small aray of vertices?
@@ -13,7 +13,7 @@ namespace CTRFramework
         public int numPickupHeaders;
         public uint ptrPickupHeaders;
         public int numPickupModels;
-        public uint ptrFacesArray;
+        public uint ptrPickupModelsPtr;
 
         public uint unk3;
         public uint unk4;
@@ -31,11 +31,16 @@ namespace CTRFramework
 
         public SomeData[] someData;
         public PosAng[] startPos;
+        
+        public uint somePtr4;
+        public uint somePtr5;
+        public uint somePtr6;
+        public Vector4b backColor;
 
         byte[] skip;
 
-        public uint count_unknown_array1;
-        public uint ptr_unknown_array1;
+        public uint countUnknownArray1;
+        public uint ptrUnknownArray1;
 
         byte[] skip2;
 
@@ -43,7 +48,17 @@ namespace CTRFramework
 
         byte[] skip3;
 
+
+        public SceneHeader()
+        {
+        }
+
         public SceneHeader(BinaryReader br)
+        {
+            Read(br);
+        }
+
+        public void Read(BinaryReader br)
         {
             ptrMeshInfo = br.ReadUInt32();
             ptrUnkStruct = br.ReadUInt32();
@@ -52,7 +67,7 @@ namespace CTRFramework
             numPickupHeaders = br.ReadInt32();
             ptrPickupHeaders = br.ReadUInt32();
             numPickupModels = br.ReadInt32();
-            ptrFacesArray = br.ReadUInt32(); //point to some 9 offsets array in park
+            ptrPickupModelsPtr = br.ReadUInt32(); //point to some 9 offsets array in park
 
             unk3 = br.ReadUInt32();
             unk4 = br.ReadUInt32();
@@ -92,10 +107,15 @@ namespace CTRFramework
                 Console.WriteLine(startPos[i].ToString());
             }
 
-            skip = br.ReadBytes(0x7C);
+            somePtr4 = br.ReadUInt32();
+            somePtr5 = br.ReadUInt32();
+            somePtr6 = br.ReadUInt32();
+            backColor = new Vector4b(br);
 
-            count_unknown_array1 = br.ReadUInt32();
-            ptr_unknown_array1 = br.ReadUInt32();
+            skip = br.ReadBytes(0x6C);
+
+            countUnknownArray1 = br.ReadUInt32();
+            ptrUnknownArray1 = br.ReadUInt32();
 
             skip2 = br.ReadBytes(0x38);
 

@@ -18,6 +18,10 @@ namespace CTRFramework
         public Vector3s v4;
         public uint ptrQuadBlock;
 
+        public ColData()
+        {
+        }
+
         public ColData(BinaryReader br)
         {
             Read(br);

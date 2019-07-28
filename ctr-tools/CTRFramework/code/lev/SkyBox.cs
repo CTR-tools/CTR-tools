@@ -7,7 +7,7 @@ using CTRFramework.Shared;
 
 namespace CTRFramework
 {
-    public class SkyBox
+    public class SkyBox : IRead
     {
         public int cntVertex;
         public uint ptrVertex;
@@ -15,6 +15,10 @@ namespace CTRFramework
         public uint[] offs = new uint[8];
 
         List<Vertex> verts = new List<Vertex>();
+
+        public SkyBox()
+        {
+        }
 
         public SkyBox(BinaryReader br)
         {
@@ -40,7 +44,6 @@ namespace CTRFramework
                 verts.Add(x);
             }
 
-
             StringBuilder sb = new StringBuilder();
 
             //sb.Append(br.BaseStream.Position.ToString("X8"));
@@ -49,6 +52,18 @@ namespace CTRFramework
             {
                 sb.Append(v.ToString(false) + "\r\n");
             }
+
+            int z = 0;
+
+            br.BaseStream.Position = offs[z];
+
+            for (int i = 0; i < sizes[z]; i++)
+            {
+                sb.Append(String.Format("f {0} {1} {2}\r\n", br.ReadInt16(), br.ReadInt16(), br.ReadInt16()));
+                br.ReadInt16();
+            }
+
+
 
             File.WriteAllText("skytest.obj", sb.ToString());
         }
