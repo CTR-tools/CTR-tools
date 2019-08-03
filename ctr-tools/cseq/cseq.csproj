@@ -93,10 +93,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NAudio">
-      <HintPath>NAudio\NAudio.dll</HintPath>
+      <HintPath>..\..\dependencies\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>C:\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\dependencies\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

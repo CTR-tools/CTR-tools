@@ -169,8 +169,8 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            bool x = (unk1[2] > 0);// & (byte)Flags2.InvisibleTriggers) > 0;
-            //bool x = false;
+            //bool x = (offset2 != 0);// & (byte)Flags2.InvisibleTriggers) > 0;
+            bool x = false;
 
             //if (!x)
             {

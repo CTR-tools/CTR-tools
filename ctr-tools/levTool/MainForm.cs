@@ -188,18 +188,6 @@ namespace levTool
             }
         }
 
-        private void button8_Click(object sender, EventArgs e)
-        {
-            if (scn != null)
-            {
-                float x = Single.Parse(maskedTextBox1.Text);
-
-                foreach (Vertex v in scn.vert)
-                {
-                    v.coord.Scale(x);
-                }
-            }
-        }
 
         private void button9_Click(object sender, EventArgs e)
         {

@@ -262,7 +262,7 @@ types:
         repeat-expr: 9
       - id: flags
         size: 10
-      - id: tex
+      - id: tex_mid
         type: u4
         repeat: expr
         repeat-expr: 4

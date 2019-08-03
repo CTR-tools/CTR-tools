@@ -43,8 +43,6 @@
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabVertex = new System.Windows.Forms.TabPage();
-            this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
-            this.button8 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button7 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -54,12 +52,11 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.tabQuads = new System.Windows.Forms.TabPage();
+            this.button11 = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.button10 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.tabVram = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button11 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
@@ -77,7 +74,7 @@
             this.showConsoleToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(958, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(610, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -95,26 +92,26 @@
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.loadToolStripMenuItem.Text = "Open...";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.saveToolStripMenuItem.Text = "Save...";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(109, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -123,6 +120,7 @@
             this.showConsoleToolStripMenuItem.Name = "showConsoleToolStripMenuItem";
             this.showConsoleToolStripMenuItem.Size = new System.Drawing.Size(92, 20);
             this.showConsoleToolStripMenuItem.Text = "Show console";
+            this.showConsoleToolStripMenuItem.Visible = false;
             this.showConsoleToolStripMenuItem.Click += new System.EventHandler(this.showConsoleToolStripMenuItem_Click);
             // 
             // tabControl1
@@ -130,12 +128,11 @@
             this.tabControl1.Controls.Add(this.tabPickups);
             this.tabControl1.Controls.Add(this.tabVertex);
             this.tabControl1.Controls.Add(this.tabQuads);
-            this.tabControl1.Controls.Add(this.tabVram);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(958, 398);
+            this.tabControl1.Size = new System.Drawing.Size(610, 398);
             this.tabControl1.TabIndex = 2;
             // 
             // tabPickups
@@ -149,7 +146,7 @@
             this.tabPickups.Margin = new System.Windows.Forms.Padding(5);
             this.tabPickups.Name = "tabPickups";
             this.tabPickups.Padding = new System.Windows.Forms.Padding(5);
-            this.tabPickups.Size = new System.Drawing.Size(950, 372);
+            this.tabPickups.Size = new System.Drawing.Size(602, 372);
             this.tabPickups.TabIndex = 0;
             this.tabPickups.Text = "Pickup headers";
             this.tabPickups.UseVisualStyleBackColor = true;
@@ -205,44 +202,24 @@
             // 
             // propertyGrid1
             // 
-            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid1.Location = new System.Drawing.Point(151, 5);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(794, 362);
+            this.propertyGrid1.Size = new System.Drawing.Size(446, 362);
             this.propertyGrid1.TabIndex = 8;
             // 
             // tabVertex
             // 
-            this.tabVertex.Controls.Add(this.maskedTextBox1);
-            this.tabVertex.Controls.Add(this.button8);
             this.tabVertex.Controls.Add(this.groupBox1);
             this.tabVertex.Location = new System.Drawing.Point(4, 22);
             this.tabVertex.Name = "tabVertex";
             this.tabVertex.Padding = new System.Windows.Forms.Padding(3);
-            this.tabVertex.Size = new System.Drawing.Size(950, 372);
+            this.tabVertex.Size = new System.Drawing.Size(602, 372);
             this.tabVertex.TabIndex = 1;
             this.tabVertex.Text = "Vertex array";
             this.tabVertex.UseVisualStyleBackColor = true;
-            // 
-            // maskedTextBox1
-            // 
-            this.maskedTextBox1.Location = new System.Drawing.Point(8, 185);
-            this.maskedTextBox1.Mask = "#.##";
-            this.maskedTextBox1.Name = "maskedTextBox1";
-            this.maskedTextBox1.Size = new System.Drawing.Size(100, 20);
-            this.maskedTextBox1.TabIndex = 9;
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(8, 209);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(100, 23);
-            this.button8.TabIndex = 8;
-            this.button8.Text = "Scale";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
             // groupBox1
             // 
@@ -337,16 +314,34 @@
             this.tabQuads.Controls.Add(this.checkedListBox1);
             this.tabQuads.Location = new System.Drawing.Point(4, 22);
             this.tabQuads.Name = "tabQuads";
-            this.tabQuads.Size = new System.Drawing.Size(950, 372);
+            this.tabQuads.Size = new System.Drawing.Size(602, 372);
             this.tabQuads.TabIndex = 3;
             this.tabQuads.Text = "QuadBlocks";
             this.tabQuads.UseVisualStyleBackColor = true;
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(134, 93);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(75, 23);
+            this.button11.TabIndex = 5;
+            this.button11.Text = "list coldata";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(215, 17);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(381, 346);
+            this.textBox1.TabIndex = 4;
             // 
             // button10
             // 
             this.button10.Location = new System.Drawing.Point(134, 43);
             this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(75, 23);
+            this.button10.Size = new System.Drawing.Size(75, 44);
             this.button10.TabIndex = 3;
             this.button10.Text = "remove texture";
             this.button10.UseVisualStyleBackColor = true;
@@ -370,38 +365,11 @@
             this.checkedListBox1.Size = new System.Drawing.Size(120, 349);
             this.checkedListBox1.TabIndex = 0;
             // 
-            // tabVram
-            // 
-            this.tabVram.Location = new System.Drawing.Point(4, 22);
-            this.tabVram.Name = "tabVram";
-            this.tabVram.Size = new System.Drawing.Size(950, 372);
-            this.tabVram.TabIndex = 2;
-            this.tabVram.Text = "VRAM";
-            this.tabVram.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(215, 17);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(381, 346);
-            this.textBox1.TabIndex = 4;
-            // 
-            // button11
-            // 
-            this.button11.Location = new System.Drawing.Point(134, 109);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(75, 23);
-            this.button11.TabIndex = 5;
-            this.button11.Text = "button11";
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.button11_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(958, 422);
+            this.ClientSize = new System.Drawing.Size(610, 422);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -415,7 +383,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.tabVertex.ResumeLayout(false);
-            this.tabVertex.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabQuads.ResumeLayout(false);
@@ -442,7 +409,6 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.TabPage tabQuads;
-        private System.Windows.Forms.TabPage tabVram;
         private System.Windows.Forms.ToolStripMenuItem showConsoleToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button button7;
@@ -452,8 +418,6 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.MaskedTextBox maskedTextBox1;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;

@@ -1,7 +1,6 @@
 #release data
 release.*
 dependencies
-viewer
 
 # Windows image file caches
 Thumbs.db
@@ -18,6 +17,7 @@ $RECYCLE.BIN/
 [Bb]in
 [Dd]ebug
 [Bb]uild/
+.vs
 *.user
 *.suo
 *.exe

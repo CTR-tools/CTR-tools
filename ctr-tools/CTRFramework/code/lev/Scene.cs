@@ -154,8 +154,8 @@ namespace CTRFramework
             foreach (QuadBlock qb in quad)
             {
                 //check unique values here
-                if (!uniflag.Contains(qb.unk2[3]))
-                    uniflag.Add(qb.unk2[3]);
+                if (!uniflag.Contains(qb.midflags[1]))
+                    uniflag.Add(qb.midflags[1]);
             }
 
             uniflag.Sort();
