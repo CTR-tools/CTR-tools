@@ -225,6 +225,29 @@
 				{ key: 6, title: "Open Hi-Hat" },
 				{ key: 7, title: "Jingle Bell" }
 			]
+		},
+		"castle": {
+			long: [
+				{ midi: 61, pitch: 0, title: "Kalimba" },
+				{ midi: 68, pitch: 0, title: "Clarinet" },
+				{ midi: 72, title: "pizzicato strings" },
+				{ midi: 73, title: "atmosphere" },
+				{ midi: 45, pitch: 0, title: "Kalimba" },
+				{ midi: 32, pitch: -12, title: "Clarinet" },
+				{ midi: 61, title: "pizzicato strings" }
+			],
+			short: [
+				{ key: 0, title: "Cowbell?" },
+				{ key: 49, title: "Closed Hi-Hat" },
+				{ key: 44, title: "Snare" },
+				{ key: 46, title: "Open Hi-Hat" },
+				{ key: 36, title: "Jingle Bell" },
+				{ key: 38, title: "Hand Clap" },
+				{ key: 40, title: "Open Hi-Hat" },
+				{ key: 51, title: "Jingle Bell" }
+			]
 		}
+		
+		
 	}
 }

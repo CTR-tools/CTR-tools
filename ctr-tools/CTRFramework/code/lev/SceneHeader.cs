@@ -7,7 +7,7 @@ namespace CTRFramework
     public class SceneHeader : IRead
     {
         public uint ptrMeshInfo;
-        public uint ptrUnkStruct;  //leads to a small aray of vertices?
+        public uint ptrSkybox;  //leads to a small aray of vertices?
         public uint unk2;  //facegroup //leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
 
         public int numPickupHeaders;
@@ -30,7 +30,7 @@ namespace CTRFramework
         public uint ptrArray1;
 
         public SomeData[] someData;
-        public PosAng[] startPos;
+        public PosAng[] startGrid;
         
         public uint somePtr4;
         public uint somePtr5;
@@ -39,12 +39,12 @@ namespace CTRFramework
 
         byte[] skip;
 
-        public uint countUnknownArray1;
-        public uint ptrUnknownArray1;
+        public uint numRestartPts;
+        public uint ptrRestartPts;
 
         byte[] skip2;
 
-        public uint ptr_ai_nav;
+        public uint ptrAiNav;
 
         byte[] skip3;
 
@@ -61,13 +61,13 @@ namespace CTRFramework
         public void Read(BinaryReader br)
         {
             ptrMeshInfo = br.ReadUInt32();
-            ptrUnkStruct = br.ReadUInt32();
+            ptrSkybox = br.ReadUInt32();
             unk2 = br.ReadUInt32();
 
             numPickupHeaders = br.ReadInt32();
             ptrPickupHeaders = br.ReadUInt32();
             numPickupModels = br.ReadInt32();
-            ptrPickupModelsPtr = br.ReadUInt32(); //point to some 9 offsets array in park
+            ptrPickupModelsPtr = br.ReadUInt32();
 
             unk3 = br.ReadUInt32();
             unk4 = br.ReadUInt32();
@@ -98,13 +98,13 @@ namespace CTRFramework
                 someData[i] = sd;
             }
 
-            startPos = new PosAng[8];
+            startGrid = new PosAng[8];
 
             for (int i = 0; i < 8; i++)
             {
                 PosAng pos = new PosAng(br);
-                startPos[i] = pos;
-                Console.WriteLine(startPos[i].ToString());
+                startGrid[i] = pos;
+                Console.WriteLine(startGrid[i].ToString());
             }
 
             somePtr4 = br.ReadUInt32();
@@ -114,12 +114,12 @@ namespace CTRFramework
 
             skip = br.ReadBytes(0x6C);
 
-            countUnknownArray1 = br.ReadUInt32();
-            ptrUnknownArray1 = br.ReadUInt32();
+            numRestartPts = br.ReadUInt32();
+            ptrRestartPts = br.ReadUInt32();
 
             skip2 = br.ReadBytes(0x38);
 
-            ptr_ai_nav = br.ReadUInt32();
+            ptrAiNav = br.ReadUInt32();
 
             skip3 = br.ReadBytes(0x24);
         }

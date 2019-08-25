@@ -37,6 +37,7 @@
             this.showConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
+            this.button8 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.button3 = new System.Windows.Forms.Button();
@@ -52,11 +53,16 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.tabQuads = new System.Windows.Forms.TabPage();
+            this.button13 = new System.Windows.Forms.Button();
+            this.button12 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button10 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.button14 = new System.Windows.Forms.Button();
+            this.button15 = new System.Windows.Forms.Button();
+            this.button16 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
@@ -137,6 +143,7 @@
             // 
             // tabPickups
             // 
+            this.tabPickups.Controls.Add(this.button8);
             this.tabPickups.Controls.Add(this.button4);
             this.tabPickups.Controls.Add(this.numericUpDown1);
             this.tabPickups.Controls.Add(this.button3);
@@ -150,6 +157,16 @@
             this.tabPickups.TabIndex = 0;
             this.tabPickups.Text = "Pickup headers";
             this.tabPickups.UseVisualStyleBackColor = true;
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(56, 171);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(89, 52);
+            this.button8.TabIndex = 13;
+            this.button8.Text = "convert vram";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.Button8_Click);
             // 
             // button4
             // 
@@ -307,6 +324,11 @@
             // 
             // tabQuads
             // 
+            this.tabQuads.Controls.Add(this.button16);
+            this.tabQuads.Controls.Add(this.button15);
+            this.tabQuads.Controls.Add(this.button14);
+            this.tabQuads.Controls.Add(this.button13);
+            this.tabQuads.Controls.Add(this.button12);
             this.tabQuads.Controls.Add(this.button11);
             this.tabQuads.Controls.Add(this.textBox1);
             this.tabQuads.Controls.Add(this.button10);
@@ -318,6 +340,26 @@
             this.tabQuads.TabIndex = 3;
             this.tabQuads.Text = "QuadBlocks";
             this.tabQuads.UseVisualStyleBackColor = true;
+            // 
+            // button13
+            // 
+            this.button13.Location = new System.Drawing.Point(134, 164);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(75, 43);
+            this.button13.TabIndex = 7;
+            this.button13.Text = "randomize terrain";
+            this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.Button13_Click);
+            // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(134, 122);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(75, 36);
+            this.button12.TabIndex = 6;
+            this.button12.Text = "list terrain bytes";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.Button12_Click);
             // 
             // button11
             // 
@@ -353,7 +395,7 @@
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(75, 23);
             this.button9.TabIndex = 2;
-            this.button9.Text = "Apply";
+            this.button9.Text = "Apply flags";
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
@@ -364,6 +406,36 @@
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(120, 349);
             this.checkedListBox1.TabIndex = 0;
+            // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(134, 213);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(75, 48);
+            this.button14.TabIndex = 8;
+            this.button14.Text = "intense weather";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.Button14_Click);
+            // 
+            // button15
+            // 
+            this.button15.Location = new System.Drawing.Point(134, 316);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(75, 47);
+            this.button15.TabIndex = 9;
+            this.button15.Text = "disable weather";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.Button15_Click);
+            // 
+            // button16
+            // 
+            this.button16.Location = new System.Drawing.Point(134, 267);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(75, 43);
+            this.button16.TabIndex = 10;
+            this.button16.Text = "random weather";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.Button16_Click);
             // 
             // MainForm
             // 
@@ -423,6 +495,12 @@
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.Button button16;
     }
 }
 

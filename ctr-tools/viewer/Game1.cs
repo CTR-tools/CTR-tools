@@ -138,9 +138,9 @@ namespace viewer
         {
             if (scn.Count > 0)
                 camera.Position = new Vector3(
-                    scn[0].header.startPos[0].Position.X,
-                    scn[0].header.startPos[0].Position.Y,
-                    scn[0].header.startPos[0].Position.Z
+                    scn[0].header.startGrid[0].Position.X,
+                    scn[0].header.startGrid[0].Position.Y,
+                    scn[0].header.startGrid[0].Position.Z
                     );
         }
 

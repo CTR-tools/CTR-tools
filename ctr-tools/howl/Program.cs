@@ -15,13 +15,14 @@ namespace howl
         {
            Console.WriteLine("Crash Team Racing HOWL Extractor by DCxDemo*.\r\n");
 
-            if (args.Length > 0)
+            if (args.Length == 1)
             {
                 string fn = args[0];
 
+                fn = "kart.hwl";
+
                 if (File.Exists(fn))
                 {
-
                     byte[] data = File.ReadAllBytes(fn);
                     MemoryStream ms = new MemoryStream(data);
                     BinaryReader br = new BinaryReader(ms);

@@ -63,9 +63,7 @@ namespace CTRFramework
                 br.ReadInt16();
             }
 
-
-
-            File.WriteAllText("skytest.obj", sb.ToString());
+            CTRFramework.Shared.Helpers.WriteToFile("skytest.obj", sb.ToString());
         }
     }
 }

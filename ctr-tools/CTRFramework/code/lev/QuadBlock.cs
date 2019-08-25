@@ -26,7 +26,15 @@ namespace CTRFramework
 
         public QuadFlags quadFlags;
 
-        public byte[] unk1 = new byte[8];  //assumed flags
+        //public byte[] unk1 = new byte[8];  //assumed flags
+
+        public byte drawOrderLow;
+        public byte f1;
+        public byte f2;
+        public byte f3;
+        public byte[] drawOrderHigh = new byte[4];
+
+
         public uint[] tex = new uint[4];    //offsets to texture definition
 
         public BoundingBox bb;              //a box that bounds
@@ -103,7 +111,13 @@ namespace CTRFramework
 
             quadFlags = (QuadFlags)br.ReadUInt16();
 
-            unk1 = br.ReadBytes(8);
+            //unk1 = br.ReadBytes(8);
+
+            drawOrderLow = br.ReadByte();
+            f1 = br.ReadByte();
+            f2 = br.ReadByte();
+            f3 = br.ReadByte();
+            drawOrderHigh = br.ReadBytes(4);
 
             for (int i = 0; i < 4; i++)
                 tex[i] = br.ReadUInt32();
@@ -318,7 +332,13 @@ namespace CTRFramework
                 bw.Write(ind[i]);
 
             bw.Write((ushort)quadFlags);
-            bw.Write(unk1);
+            //bw.Write(unk1);
+
+            bw.Write(drawOrderLow);
+            bw.Write(f1);
+            bw.Write(f2);
+            bw.Write(f3);
+            bw.Write(drawOrderHigh);
 
             for (int i = 0; i < 4; i++)
                 bw.Write(tex[i]);

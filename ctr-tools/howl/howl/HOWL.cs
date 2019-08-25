@@ -12,7 +12,7 @@ namespace howl
         Release rel;
         string name;
 
-        HowlHeader header;
+        public HowlHeader header;
 
         List<ushort> unk = new List<ushort>();
         List<SampleDecl> samples1 = new List<SampleDecl>();
@@ -20,6 +20,8 @@ namespace howl
 
         List<int> offbanks = new List<int>();
         List<int> offseqs = new List<int>();
+
+        List<Bank> banks = new List<Bank>();
 
         public HOWL(string fn)
         {
@@ -63,6 +65,40 @@ namespace howl
 
             for (int i = 0; i < header.seqCount; i++)
                 offseqs.Add(br.ReadUInt16() * (int)0x800);
+
+
+            foreach (int i in offbanks)
+            {
+                br.BaseStream.Position = i;
+                Bank x = new Bank();
+                x.Read(br);
+                banks.Add(x);
+            }
+
+            Bank sfx = new Bank();
+
+            foreach (Bank b in banks)
+            {
+                foreach (var x in b.samples)
+                {
+                    int id = x.Key;
+
+                    if (!sfx.samples.ContainsKey(id))
+                    {
+                        sfx.samples.Add(x.Key, x.Value);
+                    }
+                    else
+                    {
+                        string xx = Helpers.CalculateMD5(new MemoryStream(sfx.samples[id]));
+                        string yy = Helpers.CalculateMD5(new MemoryStream(b.samples[id]));
+                        if (xx != yy)
+                        {
+                            Console.WriteLine("MD5 differs for same ID!!! " + id + "\r\n" + xx + "\r\n" + yy);
+                        }
+                    }
+                }
+            }
+        
 
             return true;
         }

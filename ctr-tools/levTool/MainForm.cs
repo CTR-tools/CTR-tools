@@ -2,10 +2,12 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using CTRFramework;
 using CTRFramework.Shared;
+using System.Diagnostics;
 
 namespace levTool
 {
@@ -236,6 +238,121 @@ namespace levTool
                 }
 
                 textBox1.Text = sb.ToString();
+            }
+        }
+
+        private void Button8_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "CTR VRAM file|*.vram";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                using (BinaryReader br = new BinaryReader(File.Open(ofd.FileName, FileMode.Open)))
+                { 
+                    CTRVRAM vrm = new CTRVRAM();
+                    vrm.Read(br);
+
+                    for (int i = 0; i < vrm.pages.Count; i++)
+                        vrm.pages[i].tim.SaveBMP("page" + i + ".bmp");
+
+                    Process.Start("page0.bmp");
+                }
+            }
+        }
+
+        Random r = new Random();
+        private void Button12_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            List<byte> uniq1 = new List<byte>();
+            List<byte> uniq2 = new List<byte>();
+            List<byte> uniq3 = new List<byte>();
+            List<byte> uniq4 = new List<byte>();
+
+            if (scn != null)
+            {
+                foreach (QuadBlock qb in scn.quad)
+                {
+                    if (!uniq1.Contains(qb.unk2[0]))
+                        uniq1.Add(qb.unk2[0]);
+                    if (!uniq2.Contains(qb.unk2[1]))
+                        uniq2.Add(qb.unk2[1]);
+                    if (!uniq3.Contains(qb.unk2[2]))
+                        uniq3.Add(qb.unk2[2]);
+                    if (!uniq4.Contains(qb.unk2[3]))
+                        uniq4.Add(qb.unk2[3]);
+                    // qb.f1 = 17;
+                    //qb.unk2[0] = 8;
+                    //qb.unk2[3] = 0;
+                    /*
+                    qb.ulead = (byte)r.Next(255);
+
+                for (int i = 0; i < 4; i++)
+                    qb.uquad[i] = (byte)r.Next(255);
+                    */
+                }
+
+                uniq1.Sort();
+                uniq2.Sort();
+                uniq3.Sort();
+                uniq4.Sort();
+
+                foreach (byte b in uniq1) sb.Append(b + " ");
+                sb.Append("\r\n");
+                foreach (byte b in uniq2) sb.Append(b + " ");
+                sb.Append("\r\n");
+                foreach (byte b in uniq3) sb.Append(b + " ");
+                sb.Append("\r\n");
+                foreach (byte b in uniq4) sb.Append(b + " ");
+                sb.Append("\r\n");
+
+                textBox1.Text = sb.ToString();
+            }
+        }
+
+        private void Button13_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+                foreach (QuadBlock qb in scn.quad)
+                {
+                    qb.unk2[0] = (byte)r.Next(20);
+                }
+            }
+        }
+
+        private void Button14_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+                foreach (QuadBlock qb in scn.quad)
+                {
+                    qb.unk2[1] = 255;
+                }
+            }
+        }
+
+        private void Button15_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+                foreach (QuadBlock qb in scn.quad)
+                {
+                    qb.unk2[2] = 0;
+                }
+            }
+        }
+
+        private void Button16_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+                foreach (QuadBlock qb in scn.quad)
+                {
+                    qb.unk2[1] = (byte)r.Next(255);
+                }
             }
         }
     }

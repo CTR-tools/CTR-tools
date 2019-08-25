@@ -2,6 +2,16 @@
 
 namespace CTRFramework
 {
+    [Flags]
+
+    public enum AlphaFlags
+    {
+        AlhpaFlag1 = 1 << 0,
+        AlphaFlag2 = 1 << 1,
+        AlphaFlag3 = 1 << 7
+    }
+
+
     //quadblock flags byte 1
     [Flags]
     public enum QuadFlags

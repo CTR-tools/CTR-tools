@@ -51,9 +51,10 @@ namespace viewer
 
             foreach (QuadBlock qb in scn.quad)
             {
-                if (!qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers) | hide_invis)
+                //if (!qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers) | hide_invis)
                 {
-                    if (qb.quadFlags.HasFlag(qf))
+                    //if (qb.quadFlags.HasFlag(qf))
+                    if (qb.f2 > 0)
                     {
                         foreach (short s in indices_pattern)
                             indsf.Add(qb.ind[s]);

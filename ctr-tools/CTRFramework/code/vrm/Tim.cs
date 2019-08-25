@@ -19,8 +19,8 @@ namespace CTRFramework
         public uint flags;
         public uint datasize;
         public Rectangle region;
-        public ushort[] data;
-
+        //public ushort[] data;
+        public byte[] data;
 
         public Tim()
         {
@@ -29,7 +29,8 @@ namespace CTRFramework
         public Tim(Rectangle rect)
         {
             region = rect;
-            data = new ushort[rect.Width * rect.Height];
+            //data = new ushort[rect.Width * rect.Height];
+            data = new byte[rect.Width * rect.Height * 2];
         }
 
         public void Read(BinaryReader br)
@@ -48,9 +49,30 @@ namespace CTRFramework
             region.Width = br.ReadUInt16();
             region.Height = br.ReadUInt16();
 
-            byte[] buf = br.ReadBytes((int)datasize - 4 * 3);
-            data = new ushort[buf.Length / 2];
-            Buffer.BlockCopy(buf, 0, data, 0, buf.Length);
+            data = br.ReadBytes((int)datasize - 4 * 3);
+
+
+            for (int i = 0; i < data.Length; i++)
+                data[i] = (byte)(((data[i] & 0x0F) << 4 ) | ((data[i] & 0xF0) >> 4));
+
+
+            //byte[] buf = br.ReadBytes((int)datasize - 4 * 3);
+            //data = new ushort[buf.Length / 2];
+            //Buffer.BlockCopy(buf, 0, data, 0, buf.Length);
+        }
+
+
+        public void SaveBMP(string s)
+        {
+            BMPHeader bh = new BMPHeader();
+            bh.Update(region.Width * 4, region.Height, 16, 4);
+
+            bh.UpdateData(bh.GrayScalePalette(), data);
+
+            using (BinaryWriter bw = new BinaryWriter(File.Create(s)))
+            {
+                bh.Write(bw);
+            }
         }
 
 

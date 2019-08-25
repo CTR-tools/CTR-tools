@@ -103,9 +103,9 @@ namespace CTRFramework
         {
             header = Instance<SceneHeader>.ReadFrom(br, 0);   
             meshinfo = Instance<MeshInfo>.ReadFrom(br, (int)header.ptrMeshInfo);   
-            skybox = Instance<SkyBox>.ReadFrom(br, (int)header.ptrUnkStruct);
+            skybox = Instance<SkyBox>.ReadFrom(br, (int)header.ptrSkybox);
             vert = InstanceList<Vertex>.ReadFrom(br, (int)meshinfo.ptrVertexArray, meshinfo.cntVertex);
-            restartPts = InstanceList<PosAng>.ReadFrom(br, (int)header.ptrUnknownArray1, (int)header.countUnknownArray1);
+            restartPts = InstanceList<PosAng>.ReadFrom(br, (int)header.ptrRestartPts, (int)header.numRestartPts);
             coldata = InstanceList<ColData>.ReadFrom(br, (int)meshinfo.ptrColDataArray, meshinfo.cntColData);
             quad = InstanceList<QuadBlock>.ReadFrom(br, (int)meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
 
@@ -133,6 +133,7 @@ namespace CTRFramework
             }
             */
 
+            //exports restart points
 
             StringBuilder sb = new StringBuilder();
 
@@ -141,12 +142,13 @@ namespace CTRFramework
                 sb.AppendFormat("v {0}\r\n", pa.Position.ToString(VecFormat.Numbers));
             }
 
-            for (int i = 1; i <= header.countUnknownArray1; i++)
+            for (int i = 1; i <= header.numRestartPts; i++)
             {
-                sb.AppendFormat("l {0} {1}\r\n", i, (i == header.countUnknownArray1 ? 1 : i + 1));
+                sb.AppendFormat("l {0} {1}\r\n", i, (i == header.numRestartPts ? 1 : i + 1));
             }
 
-            File.WriteAllText("array1test.obj", sb.ToString());
+            File.WriteAllText("restart_pts.obj", sb.ToString());
+
 
 
             List<short> uniflag = new List<short>();

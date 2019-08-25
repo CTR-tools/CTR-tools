@@ -1,10 +1,14 @@
 meta:
   id: ctr_lev
   application: Crash Team Racing
+  title: Crash Team Racing (PS1) scene file
   file-extension: lev
   endian: le
-  
+
 seq:
+  - id: ptr_mem_fix
+    type: u4
+    doc: hubs have this point in ps1 format already, so just skip
     
   - id: header
     type: scene_header
@@ -260,25 +264,43 @@ types:
         type: u2
         repeat: expr
         repeat-expr: 9
-      - id: flags
-        size: 10
-      - id: tex_mid
+      - id: quad_flags
+        type: u2
+      - id: draw_order_low
+        type: u1
+      - id: f1
+        type: u1
+      - id: f2
+        type: u1
+      - id: f3
+        type: u1
+      - id: draw_order_high
+        size: 4
+      - id: ptr_texture_mid
         type: u4
         repeat: expr
         repeat-expr: 4
       - id: bbox
         type: bounding_box
-      - id: unk2
-        type: u4
+      - id: terrain_type
+        type: u1
+      - id: weather_intensity
+        type: u1
+      - id: weather_type
+        type: u1
+      - id: terrain_flag_unknown
+        type: u1
       - id: block_id
         type: u2
-      - id: midflags
-        type: u2
-      - id: offset1
+      - id: progress_tracker
+        type: u1
+      - id: midflag_unk
+        type: u1
+      - id: ptr_texture_low
         type: u4
-      - id: offset2
+      - id: ptr_texture_high
         type: u4
-      - id: unkarray
+      - id: unk_col_array
         type: u2
         repeat: expr
         repeat-expr: 10

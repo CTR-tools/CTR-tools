@@ -33,7 +33,7 @@ namespace CTRFramework
             int pX = 0;
             int pY = 0;
 
-            foreach (ushort u in t.data)
+            foreach (byte u in t.data)
             {
                 //holy cow
                 tim.data[tim.region.Width * (t.region.Y + pY) + t.region.X + pX] = u;
@@ -76,7 +76,7 @@ namespace CTRFramework
 
         public void Clear()
         {
-            tim.data = new ushort[1024*512];
+            tim.data = new byte[1024*512];
         }
 
         public static int[,] RotateMatrix(int[,] matrix)
