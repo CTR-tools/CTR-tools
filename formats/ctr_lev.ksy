@@ -5,11 +5,12 @@ meta:
   file-extension: lev
   endian: le
 
+doc: |
+  there is an extra uint in the beginning.
+  it is omitted to simplify pointer usage.
+  remember to remove 1st 4 bytes in hex for this definition.
+
 seq:
-  - id: ptr_mem_fix
-    type: u4
-    doc: hubs have this point in ps1 format already, so just skip
-    
   - id: header
     type: scene_header
     
