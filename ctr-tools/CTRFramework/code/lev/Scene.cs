@@ -22,7 +22,7 @@ namespace CTRFramework
 
         public List<PosAng> restartPts = new List<PosAng>();
 
-        public Scene(string s, string fmt)
+        public Scene(string s, string fmtm, CtrVrm vrm)
         {
             path = s;
 
@@ -43,7 +43,16 @@ namespace CTRFramework
                 br = new BinaryReader(ms);
             }
 
-            Read(br);     
+            Read(br);
+
+            if (vrm != null)
+            {
+                foreach (QuadBlock qb in quad)
+                {
+                    foreach (TextureLayout tl in qb.ctrtex)
+                        vrm.buffer.GetTexturePage(tl);
+                }
+            }
         }
 
 
@@ -83,13 +92,36 @@ namespace CTRFramework
 
             sb.Clear();
 
+
+            List<string> tags = new List<string>();
+
+            foreach(QuadBlock qb in quad)
+            {
+                foreach(TextureLayout tl in qb.ctrtex)
+                {
+                    if (!tags.Contains(tl.Tag()))
+                    {
+                        tags.Add(tl.Tag());
+                    }
+                }
+            }
+
+            foreach (string s in tags)
+            {
+                sb.Append(String.Format("newmtl {0}\r\n", s));
+                sb.Append(String.Format("map_Ka {0}.bmp\r\n", s));
+                sb.Append(String.Format("map_Kd {0}.bmp\r\n\r\n", s));
+            }
+
+            /*
             for (int i = 8; i < 16; i++)
                 for (int j = 0; j < 2; j++)
                 {
                     sb.Append(String.Format("newmtl texpage_{0}_{1}\r\n", i, j));
-                    sb.Append(String.Format("map_Ka texpage_{0}_{1}.png\r\n", i, j));
-                    sb.Append(String.Format("map_Kd texpage_{0}_{1}.png\r\n\r\n", i, j));
+                    sb.Append(String.Format("map_Ka tex\\page_{0}_{1}.bmp\r\n", i, j));
+                    sb.Append(String.Format("map_Kd tex\\page_{0}_{1}.bmp\r\n\r\n", i, j));
                 }
+                */
 
             CTRFramework.Shared.Helpers.WriteToFile(mtllib, sb.ToString());
 

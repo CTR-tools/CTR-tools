@@ -4,16 +4,21 @@ namespace CTRFramework
 {
     [Flags]
 
-    public enum AlphaFlags
+    public enum TerrainFlags
     {
-        AlhpaFlag1 = 1 << 0,
-        AlphaFlag2 = 1 << 1,
-        AlphaFlag3 = 1 << 7
+        flag0 = 1 << 0, //check
+        flag1 = 1 << 1, //used in space station, probably invisible wall
+        flag2 = 1 << 2,
+        flag3 = 1 << 3,
+        flag4 = 1 << 4,//check
+        flag5 = 1 << 5,
+        flag6 = 1 << 6,
+        flag7 = 1 << 7 //confirmed
     }
 
 
-    //quadblock flags byte 1
-    [Flags]
+        //quadblock flags byte 1
+        [Flags]
     public enum QuadFlags
     {
         Invisible = 1 << 0, //check

@@ -25,7 +25,7 @@ namespace viewer
             8, 7, 3
         };
 
-        public MGQuadBlock(Scene scn, int num, QuadFlags qf, bool hide_invis)
+        public MGQuadBlock(Scene scn, int num, TerrainFlags qf, bool hide_invis)
         {
             List<VertexPositionColor> vts = new List<VertexPositionColor>();
 
@@ -53,8 +53,8 @@ namespace viewer
             {
                 //if (!qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers) | hide_invis)
                 {
-                    //if (qb.quadFlags.HasFlag(qf))
-                    if (qb.f2 > 0)
+                    if (qb.terrainFlag.HasFlag(qf))
+                    //if (qb.f2 > 0)
                     {
                         foreach (short s in indices_pattern)
                             indsf.Add(qb.ind[s]);

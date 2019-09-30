@@ -48,15 +48,15 @@ namespace CTRFramework
             ptrBitmap = (uint)(0x36 + palette.Length);
         }
 
-        public byte[] GrayScalePalette()
+        public static byte[] GrayScalePalette(int numColors)
         {
             byte[] x = new byte[numColors * 4];
 
             for (int i = 0; i < numColors; i++)
             {
-                x[i * 4] = (byte)(255 / numColors * i);
-                x[i * 4 + 1] = (byte)(255 / numColors * i);
-                x[i * 4 + 2] = (byte)(255 / numColors * i);
+                x[i * 4] = (byte)(255.0 / numColors * i);
+                x[i * 4 + 1] = (byte)(255.0 / numColors * i);
+                x[i * 4 + 2] = (byte)(255.0 / numColors * i);
                 x[i * 4 + 3] = 255;
             }
 

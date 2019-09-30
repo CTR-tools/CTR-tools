@@ -38,7 +38,14 @@ namespace CTRFramework
         public uint[] tex = new uint[4];    //offsets to texture definition
 
         public BoundingBox bb;              //a box that bounds
-        public byte[] unk2 = new byte[4];   //unknown
+
+        public TerrainFlags terrainFlag;
+        public byte WeatherIntensity;
+        public byte WeatherType;
+        public byte TerrainFlagUnknown;
+
+
+        //public byte[] unk2 = new byte[4];   //unknown
 
         public short id;
         public byte[] midflags = new byte[2];
@@ -51,7 +58,7 @@ namespace CTRFramework
 
         //additional data
         TextureLayout lod_tex;
-        List<TextureLayout> ctrtex = new List<TextureLayout>();
+        public List<TextureLayout> ctrtex = new List<TextureLayout>();
 
         public QuadBlock()
         {
@@ -62,7 +69,7 @@ namespace CTRFramework
             Read(br);
         }
 
-        public void ExportTexture(CTRVRAM vrm)
+        public void ExportTexture(CtrVrm vrm)
         {
 
             /*
@@ -124,7 +131,13 @@ namespace CTRFramework
 
             bb = new BoundingBox(br);
 
-            unk2 = br.ReadBytes(4);
+           // unk2 = br.ReadBytes(4);
+
+
+            terrainFlag = (TerrainFlags)br.ReadByte();
+            WeatherIntensity = br.ReadByte();
+            WeatherType = br.ReadByte();
+            TerrainFlagUnknown = br.ReadByte();
 
             id = br.ReadInt16();
 
@@ -137,14 +150,14 @@ namespace CTRFramework
                 unk3[i] = br.ReadUInt16();
 
 
+            //read texture layouts
             int pos = (int)br.BaseStream.Position;
 
             br.BaseStream.Position = (int)offset1;
-
             lod_tex = new TextureLayout(br);
+
             //Console.Write(lod_tex.ToString());
 
-            
             foreach (uint u in tex)
             {
                 if (u > 0)
@@ -155,7 +168,6 @@ namespace CTRFramework
                 }
             }
              
-
             br.BaseStream.Position = pos;
         }
 
@@ -218,11 +230,9 @@ namespace CTRFramework
                             foreach (TextureLayout tl in ctrtex)
                             {
                                 sb.AppendLine(tl.ToObj());
-
                             }
 
                             sb.AppendLine();
-
 
 
                             if (ctrtex.Count == 4)
@@ -345,7 +355,10 @@ namespace CTRFramework
 
             bb.Write(bw);
 
-            bw.Write(unk2);
+            bw.Write((byte)terrainFlag);
+            bw.Write(WeatherIntensity);
+            bw.Write(WeatherType);
+            bw.Write(TerrainFlagUnknown);
 
             bw.Write(id);
 

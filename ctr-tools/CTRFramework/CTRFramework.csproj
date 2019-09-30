@@ -115,9 +115,8 @@
     <Compile Include="code\shared\Vector4b.cs" />
     <Compile Include="code\shared\Vector4s.cs" />
     <Compile Include="code\vrm\FastBitmap.cs" />
-    <Compile Include="code\vrm\PsxVram.cs" />
     <Compile Include="code\vrm\Tim.cs" />
-    <Compile Include="code\vrm\vram.cs" />
+    <Compile Include="code\vrm\CtrVrm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +126,14 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

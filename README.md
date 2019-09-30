@@ -10,6 +10,7 @@ Tools are developed in Visual Studio 2010, target platform is .NET 4.0.
 Project dependencies (make sure to download latest dlls):
 * NAudio - https://github.com/naudio/NAudio (used to export MIDI files)
 * Json.NET - https://github.com/JamesNK/Newtonsoft.Json (used for json parsing support)
+* MonoGame - https://github.com/MonoGame/MonoGame (used for viewer)
 
 ## File formats
 BIG (bigfile.big, sampler.big) - main game container for all the data used. Doesn't contain any filenames.\

@@ -48,7 +48,13 @@ namespace CTRFramework
             uv.Add(new Vector2b(br));
             uv.Add(new Vector2b(br));
 
-            //Console.WriteLine("done texture layout\r\n" + ToString());
+            Console.WriteLine(Tag());
+        }
+
+        public string Tag()
+        {
+            return PageX.ToString("X2") + PageY.ToString("X2") + "_" + 
+                PalX.ToString("X4") + PalY.ToString("X4");
         }
 
         public override string ToString()

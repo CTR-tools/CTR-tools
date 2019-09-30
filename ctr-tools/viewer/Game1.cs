@@ -34,8 +34,8 @@ namespace viewer
             set
             {
                 flag = value;
-                if (flag > 15) flag = 0;
-                if (flag < 0) flag = 15;
+                if (flag > 7) flag = 0;
+                if (flag < 0) flag = 7;
             }
         }
 
@@ -95,7 +95,7 @@ namespace viewer
             menu = new Menu(font);
                 //graphics.GraphicsDevice.Viewport.Height / 2));
 
-            LoadLevel((QuadFlags) (1 << flag));
+            LoadLevel((TerrainFlags) (1 << flag));
             ResetCamera();
         }
 
@@ -107,7 +107,7 @@ namespace viewer
 
 
 
-        private void LoadLevel(QuadFlags qf)
+        private void LoadLevel(TerrainFlags qf)
         {
 
             scn.Clear();
@@ -119,7 +119,7 @@ namespace viewer
                 files = Directory.GetFiles(@"levels\", "*.lev");
 
             foreach (string s in files)
-                scn.Add(new Scene(s, "obj"));
+                scn.Add(new Scene(s, "obj", null));
 
             int i = 0;
             foreach (Scene s in scn)
@@ -177,14 +177,14 @@ namespace viewer
                 {
                     switch (menu.SelectedItem.Action)
                     {
-                        case "load": LoadLevel((QuadFlags)(1 << flag)); ResetCamera(); inmenu = false;  break;
+                        case "load": LoadLevel((TerrainFlags)(1 << flag)); ResetCamera(); inmenu = false;  break;
                         case "flag":
                             switch (menu.SelectedItem.Param)
                             {
                                 case "next": Flag++; break;
                                 case "prev": Flag--; break;
                             }
-                            LoadLevel((QuadFlags)(1 << flag));
+                            LoadLevel((TerrainFlags)(1 << flag));
                             break;
 
                         case "toggle":
@@ -203,7 +203,7 @@ namespace viewer
                                     graphics.ApplyChanges();
                                     break;*/
 
-                                case "invis": hide_invis = !hide_invis; LoadLevel((QuadFlags)(1 << Flag)); break;
+                                case "invis": hide_invis = !hide_invis; LoadLevel((TerrainFlags)(1 << Flag)); break;
                                 case "mouse": usemouse = !usemouse; break;
                                 case "wire": wire = !wire; break;
                                 case "window":
@@ -285,7 +285,7 @@ namespace viewer
 
             spriteBatch.Begin(depthStencilState: DepthStencilState.Default);
 
-            spriteBatch.DrawString(font, (1 << flag).ToString("X4") + ": " + ((QuadFlags)(1<<flag)).ToString(), new Vector2(20, 20), Color.Yellow);
+            spriteBatch.DrawString(font, (1 << flag).ToString("X4") + ": " + ((TerrainFlags)(1<<flag)).ToString(), new Vector2(20, 20), Color.Yellow);
             if (scn.Count == 0)
                 spriteBatch.DrawString(font, "No levels loaded. Put LEV files in levels folder.".ToString(), new Vector2(20, 60), Color.Yellow);
 

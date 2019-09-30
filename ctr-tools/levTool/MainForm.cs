@@ -60,7 +60,7 @@ namespace levTool
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 path = ofd.FileName;
-                scn = new Scene(path, "obj");
+                scn = new Scene(path, "obj", null);
 
                 Text = String.Format("levTool - {0}", path);
                 propertyGrid1.SelectedObject = scn.pickups[0];
@@ -250,13 +250,9 @@ namespace levTool
             {
                 using (BinaryReader br = new BinaryReader(File.Open(ofd.FileName, FileMode.Open)))
                 { 
-                    CTRVRAM vrm = new CTRVRAM();
+                    CtrVrm vrm = new CtrVrm();
                     vrm.Read(br);
-
-                    for (int i = 0; i < vrm.pages.Count; i++)
-                        vrm.pages[i].tim.SaveBMP("page" + i + ".bmp");
-
-                    Process.Start("page0.bmp");
+                    Process.Start("test.bmp");
                 }
             }
         }
@@ -275,6 +271,7 @@ namespace levTool
             {
                 foreach (QuadBlock qb in scn.quad)
                 {
+                    /*
                     if (!uniq1.Contains(qb.unk2[0]))
                         uniq1.Add(qb.unk2[0]);
                     if (!uniq2.Contains(qb.unk2[1]))
@@ -283,6 +280,7 @@ namespace levTool
                         uniq3.Add(qb.unk2[2]);
                     if (!uniq4.Contains(qb.unk2[3]))
                         uniq4.Add(qb.unk2[3]);
+                        */
                     // qb.f1 = 17;
                     //qb.unk2[0] = 8;
                     //qb.unk2[3] = 0;
@@ -318,7 +316,7 @@ namespace levTool
             {
                 foreach (QuadBlock qb in scn.quad)
                 {
-                    qb.unk2[0] = (byte)r.Next(20);
+                    qb.terrainFlag = (TerrainFlags)r.Next(20);
                 }
             }
         }
@@ -329,7 +327,7 @@ namespace levTool
             {
                 foreach (QuadBlock qb in scn.quad)
                 {
-                    qb.unk2[1] = 255;
+                    qb.WeatherIntensity = 255;
                 }
             }
         }
@@ -340,7 +338,7 @@ namespace levTool
             {
                 foreach (QuadBlock qb in scn.quad)
                 {
-                    qb.unk2[2] = 0;
+                    qb.WeatherIntensity = 0;
                 }
             }
         }
@@ -351,9 +349,24 @@ namespace levTool
             {
                 foreach (QuadBlock qb in scn.quad)
                 {
-                    qb.unk2[1] = (byte)r.Next(255);
+                    qb.WeatherIntensity = (byte)r.Next(255);
                 }
             }
+        }
+
+        private void Button17_Click(object sender, EventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (scn != null)
+            {
+                foreach (QuadBlock qb in scn.quad)
+                {
+                    sb.Append(qb.midflags[0] + " " + qb.midflags[1] + "\r\n");
+                }
+            }
+
+            textBox1.Text = sb.ToString();
         }
     }
 }

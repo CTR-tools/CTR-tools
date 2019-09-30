@@ -43,8 +43,7 @@ namespace modelReader
                 {
                     case ".lev":
                         {
-                            CTRVRAM vrm = null;
-                            Bitmap bmp;
+                            CtrVrm vrm = null;
 
                             string vrmpath = Path.ChangeExtension(args[0], ".vram");
 
@@ -52,15 +51,17 @@ namespace modelReader
                             {
                                 Console.WriteLine("We have VRAM!");
 
-                                vrm = new CTRVRAM();
+                                vrm = new CtrVrm();
 
                                 using (BinaryReader br = new BinaryReader(File.OpenRead(vrmpath)))
                                 {
                                     vrm.Read(br);
                                 }
 
-                                bmp = vrm.ToBitmap();
-                                bmp.Save(Path.ChangeExtension(args[0], ".png"));
+                                //vrm.buffer.ToTexturePages();
+                                vrm.buffer.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
+                                //bmp = vrm.ToBitmap();
+                                //bmp.Save(Path.ChangeExtension(args[0], ".png"));
 
                                // vrm.tim.Write("test.tim");
 
@@ -68,7 +69,7 @@ namespace modelReader
                             }
 
 
-                            Scene scn = new Scene(args[0], format);
+                            Scene scn = new Scene(args[0], format, vrm);
                             string objfile = scn.Export("obj");
 
                             LaunchMeshLab(objfile);

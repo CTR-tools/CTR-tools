@@ -73,6 +73,8 @@ namespace howl
                 Bank x = new Bank();
                 x.Read(br);
                 banks.Add(x);
+
+                x.ExportAll();
             }
 
             Bank sfx = new Bank();

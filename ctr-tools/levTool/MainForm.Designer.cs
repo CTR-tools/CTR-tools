@@ -53,6 +53,9 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.tabQuads = new System.Windows.Forms.TabPage();
+            this.button16 = new System.Windows.Forms.Button();
+            this.button15 = new System.Windows.Forms.Button();
+            this.button14 = new System.Windows.Forms.Button();
             this.button13 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
@@ -60,9 +63,7 @@
             this.button10 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.button14 = new System.Windows.Forms.Button();
-            this.button15 = new System.Windows.Forms.Button();
-            this.button16 = new System.Windows.Forms.Button();
+            this.button17 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
@@ -80,7 +81,7 @@
             this.showConsoleToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(610, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(706, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -138,7 +139,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(610, 398);
+            this.tabControl1.Size = new System.Drawing.Size(706, 398);
             this.tabControl1.TabIndex = 2;
             // 
             // tabPickups
@@ -324,6 +325,7 @@
             // 
             // tabQuads
             // 
+            this.tabQuads.Controls.Add(this.button17);
             this.tabQuads.Controls.Add(this.button16);
             this.tabQuads.Controls.Add(this.button15);
             this.tabQuads.Controls.Add(this.button14);
@@ -336,10 +338,40 @@
             this.tabQuads.Controls.Add(this.checkedListBox1);
             this.tabQuads.Location = new System.Drawing.Point(4, 22);
             this.tabQuads.Name = "tabQuads";
-            this.tabQuads.Size = new System.Drawing.Size(602, 372);
+            this.tabQuads.Size = new System.Drawing.Size(698, 372);
             this.tabQuads.TabIndex = 3;
             this.tabQuads.Text = "QuadBlocks";
             this.tabQuads.UseVisualStyleBackColor = true;
+            // 
+            // button16
+            // 
+            this.button16.Location = new System.Drawing.Point(134, 267);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(75, 43);
+            this.button16.TabIndex = 10;
+            this.button16.Text = "random weather";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.Button16_Click);
+            // 
+            // button15
+            // 
+            this.button15.Location = new System.Drawing.Point(134, 316);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(75, 47);
+            this.button15.TabIndex = 9;
+            this.button15.Text = "disable weather";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.Button15_Click);
+            // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(134, 213);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(75, 48);
+            this.button14.TabIndex = 8;
+            this.button14.Text = "intense weather";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.Button14_Click);
             // 
             // button13
             // 
@@ -373,10 +405,10 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(215, 17);
+            this.textBox1.Location = new System.Drawing.Point(296, 17);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(381, 346);
+            this.textBox1.Size = new System.Drawing.Size(394, 347);
             this.textBox1.TabIndex = 4;
             // 
             // button10
@@ -407,41 +439,21 @@
             this.checkedListBox1.Size = new System.Drawing.Size(120, 349);
             this.checkedListBox1.TabIndex = 0;
             // 
-            // button14
+            // button17
             // 
-            this.button14.Location = new System.Drawing.Point(134, 213);
-            this.button14.Name = "button14";
-            this.button14.Size = new System.Drawing.Size(75, 48);
-            this.button14.TabIndex = 8;
-            this.button14.Text = "intense weather";
-            this.button14.UseVisualStyleBackColor = true;
-            this.button14.Click += new System.EventHandler(this.Button14_Click);
-            // 
-            // button15
-            // 
-            this.button15.Location = new System.Drawing.Point(134, 316);
-            this.button15.Name = "button15";
-            this.button15.Size = new System.Drawing.Size(75, 47);
-            this.button15.TabIndex = 9;
-            this.button15.Text = "disable weather";
-            this.button15.UseVisualStyleBackColor = true;
-            this.button15.Click += new System.EventHandler(this.Button15_Click);
-            // 
-            // button16
-            // 
-            this.button16.Location = new System.Drawing.Point(134, 267);
-            this.button16.Name = "button16";
-            this.button16.Size = new System.Drawing.Size(75, 43);
-            this.button16.TabIndex = 10;
-            this.button16.Text = "random weather";
-            this.button16.UseVisualStyleBackColor = true;
-            this.button16.Click += new System.EventHandler(this.Button16_Click);
+            this.button17.Location = new System.Drawing.Point(215, 14);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(75, 23);
+            this.button17.TabIndex = 11;
+            this.button17.Text = "midflags 2 disable";
+            this.button17.UseVisualStyleBackColor = true;
+            this.button17.Click += new System.EventHandler(this.Button17_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(610, 422);
+            this.ClientSize = new System.Drawing.Size(706, 422);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -501,6 +513,7 @@
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button button15;
         private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.Button button17;
     }
 }
 
