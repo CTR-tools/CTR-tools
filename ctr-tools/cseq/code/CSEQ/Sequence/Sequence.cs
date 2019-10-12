@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using CTRtools.Helpers;
+using CTRFramework.Shared;
 using NAudio.Midi;
 
 namespace CTRtools.CSEQ

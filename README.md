@@ -1,11 +1,11 @@
-# CTR tools
+# CTR-tools
 
 ## Description
 Various tools to operate Crash Team Racing game files.
 
 Join the CTR Tools Discord channel: https://discord.gg/56xm9Aj
 
-Tools are developed in Visual Studio 2010, target platform is .NET 4.0.
+Tools are developed in Visual Studio Community 2019, target platform is .NET 4.5.
 
 Project dependencies (make sure to download latest dlls):
 * NAudio - https://github.com/naudio/NAudio (used to export MIDI files)

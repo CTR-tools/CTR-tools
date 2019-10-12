@@ -26,7 +26,7 @@ namespace howl
 
         public void Read(BinaryReader br)
         {
-            string magic = System.Text.Encoding.ASCII.GetString(br.ReadBytes(4));
+            magic = System.Text.Encoding.ASCII.GetString(br.ReadBytes(4));
 
             if (magic != "HOWL")
             {

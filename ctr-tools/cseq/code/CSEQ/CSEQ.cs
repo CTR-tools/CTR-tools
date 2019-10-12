@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using CTRtools.Helpers;
 using CTRtools.SFX;
+using CTRFramework.Shared;
+using CTRtools.Helpers;
 
 namespace CTRtools.CSEQ
 {

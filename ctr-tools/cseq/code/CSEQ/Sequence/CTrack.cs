@@ -2,6 +2,7 @@
 using System.Text;
 using NAudio.Midi;
 using System.IO;
+using CTRFramework.Shared;
 using CTRtools.Helpers;
 
 namespace CTRtools.CSEQ

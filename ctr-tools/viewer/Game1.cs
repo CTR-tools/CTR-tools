@@ -13,6 +13,8 @@ namespace viewer
         SpriteBatch spriteBatch;
         SpriteFont font;
 
+        List<Texture2D> textures = new List<Texture2D>();
+
         List<Scene> scn = new List<Scene>();
         Menu menu;
 
@@ -46,11 +48,12 @@ namespace viewer
 
             graphics = new GraphicsDeviceManager(this);
 
-            GoFullScreen();
+            GoWindowed();
 
             graphics.PreferMultiSampling = true;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             IsMouseVisible = false;
+           
         }
 
         public void GoFullScreen()
@@ -73,6 +76,7 @@ namespace viewer
 
             effect = new BasicEffect(graphics.GraphicsDevice);
             effect.VertexColorEnabled = true;
+            effect.TextureEnabled = true;
 
             camera = new FirstPersonCamera(this);
 
@@ -86,6 +90,11 @@ namespace viewer
 
         protected override void LoadContent()
         {
+            textures.Add(Content.Load<Texture2D>("test"));
+            effect.Texture = textures[0];
+            effect.TextureEnabled = true;
+            
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("File");
 
@@ -121,9 +130,9 @@ namespace viewer
             foreach (string s in files)
                 scn.Add(new Scene(s, "obj", null));
 
-            int i = 0;
             foreach (Scene s in scn)
-                quads.Add(new MGQuadBlock(s, i++, qf, hide_invis));
+                quads.Add(new MGQuadBlock(s, Detail.Low));
+               // quads.Add(new MGQuadBlock(s, i++, qf, hide_invis));
 
             if (scn.Count > 0)
             {

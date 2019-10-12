@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace CTRFramework.Helpers
+namespace CTRFramework.Shared
 {
     public class BinaryReaderEx : BinaryReader
     {

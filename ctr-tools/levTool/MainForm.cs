@@ -241,21 +241,6 @@ namespace levTool
             }
         }
 
-        private void Button8_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CTR VRAM file|*.vram";
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                using (BinaryReader br = new BinaryReader(File.Open(ofd.FileName, FileMode.Open)))
-                { 
-                    CtrVrm vrm = new CtrVrm();
-                    vrm.Read(br);
-                    Process.Start("test.bmp");
-                }
-            }
-        }
 
         Random r = new Random();
         private void Button12_Click(object sender, EventArgs e)
@@ -367,6 +352,38 @@ namespace levTool
             }
 
             textBox1.Text = sb.ToString();
+        }
+
+        private void Button18_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Button8_Click_1(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "CTR VRAM file|*.vram";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                using (BinaryReader br = new BinaryReader(File.Open(ofd.FileName, FileMode.Open)))
+                {
+                    Tim buf = CtrVrm.FromReader(br);
+                    Process.Start("test.bmp");
+
+                    if (scn != null)
+                    {
+                        Dictionary<string, TextureLayout> tex = scn.GetTexturesList();
+                        MessageBox.Show(tex.Count.ToString());
+
+                        foreach (TextureLayout tl in tex.Values)
+                        {
+                            buf.GetTexturePage(tl);
+                        }
+
+                    }
+                }
+            }
         }
     }
 }

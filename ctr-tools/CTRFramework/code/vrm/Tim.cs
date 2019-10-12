@@ -110,8 +110,8 @@ namespace CTRFramework
 
         public void DrawTim(Tim src)
         {
-            byte[] buf = new byte[] { };
-            Array.Resize(ref buf, src.dataWidth);
+           // byte[] buf = new byte[] { };
+           // Array.Resize(ref buf, src.dataWidth);
 
             for (int i = 0; i < src.region.Height; i++)
             {

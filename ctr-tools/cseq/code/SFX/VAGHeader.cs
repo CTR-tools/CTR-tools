@@ -1,4 +1,4 @@
-﻿using CTRtools.Helpers;
+﻿using CTRFramework.Shared;
 
 namespace CTRtools.SFX
 {

@@ -5,6 +5,8 @@ using System.Text;
 using System.Security.Cryptography;
 using p = bigtool.Properties.Resources;
 using Newtonsoft.Json.Linq;
+using CTRFramework;
+using CTRFramework.Shared;
 
 namespace bigtool
 {
@@ -34,52 +36,8 @@ namespace bigtool
         List<CTRFile> ctrfiles = new List<CTRFile>();
 
 
-        static string CalculateMD5(string filename)
-        {
-            using (var md5 = MD5.Create())
-            {
-                using (var stream = File.OpenRead(filename))
-                {
-                    var hash = md5.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                }
-            }
-        }
-
-        static string CalculateMD5(byte[] data)
-        {
-            using (var md5 = MD5.Create())
-            {
-                    var hash = md5.ComputeHash(new MemoryStream(data));
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-            }
-        }
-
-        JObject json;
-
         public BIG()
         {
-        }
-
-        public string DetectBig(string md5)
-        {
-            if (File.Exists(verpath))
-            {
-                json = JObject.Parse(File.ReadAllText(verpath));
-
-                for (int i = 0; i < ((JArray)json["versions"]).Count; i++)
-                {
-                    if (md5 == json["versions"][i]["big_md5"].ToString())
-                        return
-                            String.Format(
-                                "{0} ({1})",
-                                json["versions"][i]["name"].ToString(),
-                                json["versions"][i]["timestamp"].ToString()
-                            );
-                }
-            }
-
-            return "Unknown";
         }
 
 
@@ -124,14 +82,7 @@ namespace bigtool
 
             Console.WriteLine(p.calc_md5);
 
-            string md5 = CalculateMD5(fn);
-            string reg = DetectBig(md5);
-
-            Console.WriteLine("MD5 = " + md5);
-            Console.WriteLine(reg + "\r\n");
-
-            if (reg == "Unknown")
-                File.WriteAllText("unknown_md5.txt", md5);
+            string reg = Meta.DetectBig(fn);
 
             ms = new MemoryStream(File.ReadAllBytes(fn));
             br = new BinaryReader(ms);

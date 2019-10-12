@@ -22,7 +22,7 @@ namespace CTRFramework
 
         public List<PosAng> restartPts = new List<PosAng>();
 
-        public Scene(string s, string fmtm, CtrVrm vrm)
+        public Scene(string s, string fmtm, Tim vrm)
         {
             path = s;
 
@@ -50,7 +50,7 @@ namespace CTRFramework
                 foreach (QuadBlock qb in quad)
                 {
                     foreach (TextureLayout tl in qb.ctrtex)
-                        vrm.buffer.GetTexturePage(tl);
+                        vrm.GetTexturePage(tl);
                 }
             }
         }
@@ -198,6 +198,24 @@ namespace CTRFramework
                 Console.WriteLine(b);
         }
 
+
+        public Dictionary<string, TextureLayout> GetTexturesList()
+        {
+            Dictionary<string, TextureLayout> tex = new Dictionary<string, TextureLayout>();
+
+            foreach (QuadBlock qb in quad)
+            {
+                if (qb.offset1 != 0)
+                {
+                    if (!tex.ContainsKey(qb.offset1.ToString()))
+                    {
+                        tex.Add(qb.offset1.ToString(), qb.lod_tex);
+                    }
+                }
+            }
+
+            return tex;
+        }
 
     }
 }

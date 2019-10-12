@@ -57,7 +57,7 @@ namespace CTRFramework
         public ushort[] unk3 = new ushort[10];  //unknown
 
         //additional data
-        TextureLayout lod_tex;
+        public TextureLayout lod_tex;
         public List<TextureLayout> ctrtex = new List<TextureLayout>();
 
         public QuadBlock()

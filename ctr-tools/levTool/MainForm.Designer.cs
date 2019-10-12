@@ -37,7 +37,6 @@
             this.showConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
-            this.button8 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.button3 = new System.Windows.Forms.Button();
@@ -53,6 +52,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.tabQuads = new System.Windows.Forms.TabPage();
+            this.button17 = new System.Windows.Forms.Button();
             this.button16 = new System.Windows.Forms.Button();
             this.button15 = new System.Windows.Forms.Button();
             this.button14 = new System.Windows.Forms.Button();
@@ -63,7 +63,8 @@
             this.button10 = new System.Windows.Forms.Button();
             this.button9 = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
-            this.button17 = new System.Windows.Forms.Button();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button8 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
@@ -72,6 +73,7 @@
             this.tabVertex.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabQuads.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -135,6 +137,7 @@
             this.tabControl1.Controls.Add(this.tabPickups);
             this.tabControl1.Controls.Add(this.tabVertex);
             this.tabControl1.Controls.Add(this.tabQuads);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
@@ -144,7 +147,6 @@
             // 
             // tabPickups
             // 
-            this.tabPickups.Controls.Add(this.button8);
             this.tabPickups.Controls.Add(this.button4);
             this.tabPickups.Controls.Add(this.numericUpDown1);
             this.tabPickups.Controls.Add(this.button3);
@@ -154,20 +156,10 @@
             this.tabPickups.Margin = new System.Windows.Forms.Padding(5);
             this.tabPickups.Name = "tabPickups";
             this.tabPickups.Padding = new System.Windows.Forms.Padding(5);
-            this.tabPickups.Size = new System.Drawing.Size(602, 372);
+            this.tabPickups.Size = new System.Drawing.Size(698, 372);
             this.tabPickups.TabIndex = 0;
             this.tabPickups.Text = "Pickup headers";
             this.tabPickups.UseVisualStyleBackColor = true;
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(56, 171);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(89, 52);
-            this.button8.TabIndex = 13;
-            this.button8.Text = "convert vram";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.Button8_Click);
             // 
             // button4
             // 
@@ -234,7 +226,7 @@
             this.tabVertex.Location = new System.Drawing.Point(4, 22);
             this.tabVertex.Name = "tabVertex";
             this.tabVertex.Padding = new System.Windows.Forms.Padding(3);
-            this.tabVertex.Size = new System.Drawing.Size(602, 372);
+            this.tabVertex.Size = new System.Drawing.Size(698, 372);
             this.tabVertex.TabIndex = 1;
             this.tabVertex.Text = "Vertex array";
             this.tabVertex.UseVisualStyleBackColor = true;
@@ -343,6 +335,16 @@
             this.tabQuads.Text = "QuadBlocks";
             this.tabQuads.UseVisualStyleBackColor = true;
             // 
+            // button17
+            // 
+            this.button17.Location = new System.Drawing.Point(215, 14);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(75, 23);
+            this.button17.TabIndex = 11;
+            this.button17.Text = "midflags 2 disable";
+            this.button17.UseVisualStyleBackColor = true;
+            this.button17.Click += new System.EventHandler(this.Button17_Click);
+            // 
             // button16
             // 
             this.button16.Location = new System.Drawing.Point(134, 267);
@@ -439,15 +441,25 @@
             this.checkedListBox1.Size = new System.Drawing.Size(120, 349);
             this.checkedListBox1.TabIndex = 0;
             // 
-            // button17
+            // tabPage1
             // 
-            this.button17.Location = new System.Drawing.Point(215, 14);
-            this.button17.Name = "button17";
-            this.button17.Size = new System.Drawing.Size(75, 23);
-            this.button17.TabIndex = 11;
-            this.button17.Text = "midflags 2 disable";
-            this.button17.UseVisualStyleBackColor = true;
-            this.button17.Click += new System.EventHandler(this.Button17_Click);
+            this.tabPage1.Controls.Add(this.button8);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Size = new System.Drawing.Size(698, 372);
+            this.tabPage1.TabIndex = 4;
+            this.tabPage1.Text = "Vram stuff";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(8, 3);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(89, 52);
+            this.button8.TabIndex = 14;
+            this.button8.Text = "convert vram";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.Button8_Click_1);
             // 
             // MainForm
             // 
@@ -471,6 +483,7 @@
             this.groupBox1.PerformLayout();
             this.tabQuads.ResumeLayout(false);
             this.tabQuads.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -507,13 +520,14 @@
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Button button13;
         private System.Windows.Forms.Button button14;
         private System.Windows.Forms.Button button15;
         private System.Windows.Forms.Button button16;
         private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Button button8;
     }
 }
 

@@ -6,10 +6,9 @@ namespace CTRFramework
 {
     public class CtrVrm
     {
-        public Tim buffer = new Tim(new Rectangle(0, 0, 1024, 512));
-
-        public void Read(BinaryReader br)
+        public static Tim FromReader(BinaryReader br)
         {
+            Tim buffer = new Tim(new Rectangle(0, 0, 1024, 512));
             Tim tim;
 
             if (br.ReadInt32() == 0x20)
@@ -31,6 +30,8 @@ namespace CTRFramework
                 tim.Read(br);
                 buffer.DrawTim(tim);
             }
+
+            return buffer;
         }
     }
 }

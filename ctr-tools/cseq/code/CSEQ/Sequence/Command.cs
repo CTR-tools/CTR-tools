@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using NAudio.Midi;
+using CTRFramework.Shared;
 using CTRtools.Helpers;
 using System.Collections.Generic;
+
 
 namespace CTRtools.CSEQ
 {
@@ -115,7 +117,7 @@ namespace CTRtools.CSEQ
                         {
                             pitch += (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Pitch;
                         }
-                        catch (Exception ex)
+                        catch //(Exception ex)
                         {
                         }
                     }
