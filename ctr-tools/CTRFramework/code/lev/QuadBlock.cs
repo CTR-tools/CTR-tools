@@ -191,7 +191,7 @@ namespace CTRFramework
         }
 
 
-        public string ToObj(List<Vertex> v, Detail detail)
+        public string ToObj(List<Vertex> v, Detail detail, int a, int b)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -215,13 +215,19 @@ namespace CTRFramework
                 {
                     case Detail.Low:
                         {
-                            sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", lod_tex.PageX, lod_tex.PageY));
+                            sb.Append(String.Format("usemtl {0}\r\n", lod_tex.Tag()));
 
                             sb.AppendLine(lod_tex.ToObj());
                             sb.AppendLine();
 
-                            sb.Append(ASCIIFace("f", -9 + 2, -9 + 1, -9 + 0, -4 + 2, -4 + 1, -4 + 0));
-                            sb.Append(ASCIIFace("f", -9 + 1, -9 + 2, -9 + 3, -4 + 1, -4 + 2, -4 + 3));
+                            sb.Append(ASCIIFace("f", a + 1, a + 3, a + 2, b + 1, b + 3, b + 2));
+                            sb.Append(ASCIIFace("f", a + 2, a + 3, a + 4, b + 2, b + 3, b + 4));
+
+                            //sb.Append(ASCIIFace("f", a + 1, a + 2, a + 3, b + 1, b + 2, b + 3));
+                            // sb.Append(ASCIIFace("f", a + 4, a + 3, a + 2, b + 4, b + 3, b + 2));
+
+                            // sb.Append(ASCIIFace("f", a-9 + 2, a-9 + 1, a-9 + 0, b-4 + 2, b-4 + 1, b-4 + 0));
+                            // sb.Append(ASCIIFace("f", a-9 + 1, a-9 + 2, a-9 + 3, b-4 + 1, b-4 + 2, b-4 + 3));
                             break;
                         }
 

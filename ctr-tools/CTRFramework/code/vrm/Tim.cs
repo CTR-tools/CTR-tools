@@ -12,11 +12,12 @@ namespace CTRFramework
         public uint datasize;
         public Rectangle region;
         public byte[] data;
+        public byte[] realdata;
 
         public int dataWidth
         {
             get {
-                return region.Width / 8 * bpp;
+                return region.Width * bpp / 8;
             }
         }
 
@@ -53,6 +54,7 @@ namespace CTRFramework
             region = rect;
             //data = new ushort[rect.Width * rect.Height];
             data = new byte[rect.Width * rect.Height * 2];
+            realdata = new byte[rect.Width * rect.Height * 2];
             magic = 16;
             flags = 2;
             datasize = (uint)(data.Length + 4 * 3);
@@ -75,8 +77,14 @@ namespace CTRFramework
             region.Width = br.ReadUInt16();
             region.Height = br.ReadUInt16();
 
+            long pos = br.BaseStream.Position;
+
             data = br.ReadBytes((int)datasize - 4 * 3);
 
+            br.BaseStream.Position = pos;
+
+            realdata = br.ReadBytes((int)datasize - 4 * 3);
+            //Array.Copy(data, 0, realdata, 0, data.Length);
 
             for (int i = 0; i < data.Length; i++)
                 data[i] = (byte)(((data[i] & 0x0F) << 4) | ((data[i] & 0xF0) >> 4));
@@ -119,6 +127,11 @@ namespace CTRFramework
                     src.data, i * src.dataWidth,
                     this.data, this.dataWidth * (src.region.Y + i) + src.region.X * 2,
                     src.dataWidth);
+
+                Buffer.BlockCopy(
+src.realdata, i * src.dataWidth,
+this.realdata, this.dataWidth * (src.region.Y + i) + src.region.X * 2,
+src.dataWidth);
             }
         }
 
@@ -139,23 +152,21 @@ namespace CTRFramework
 
         public void GetTexturePage(TextureLayout tl)
         {
-            int tw = 128;
-            int th = 256;
 
-            byte[] buf = new byte[tw * th];
+            byte[] buf = new byte[128 * 256];
 
-            for (int i = 0; i < th; i++)
+            for (int i = 0; i < 256; i++)
             {
                 Buffer.BlockCopy(
-                    this.data, this.dataWidth * (tl.PageY * tw * 2 + i) + tl.PageX * tw * 2,
-                    buf, tw * i,
-                    tw);
+                    this.data, 2048 * i + 128 * tl.PageX + tl.PageY * 2048 * 256,//this.dataWidth * (tl.PageY + i) + tl.PageX * 256 * 2,
+                    buf, i * 128, 
+                    128);
             }
 
-            Tim x = new Tim(new Rectangle(0, 0, 64, 256));
+            Tim x = new Tim(new Rectangle(0, 0, 256 / 4, 256));
             x.data = buf;
 
-            x.SaveBMP("tex\\" + tl.Tag() + ".bmp", CtrClutToBmpPalette(GetCtrClut(tl.PalX, tl.PalY)));
+            x.SaveBMP("tex\\" + tl.Tag() + ".bmp", CtrClutToBmpPalette(GetCtrClut(tl)));
 
 
             using (Bitmap oldBmp = new Bitmap("tex\\" + tl.Tag() + ".bmp"))
@@ -172,15 +183,18 @@ namespace CTRFramework
                     new Point(tl.uv[2].X, tl.uv[2].Y)
                 };
 
+
                 g.DrawImage(targetBmp, new Point(0, 0));
-                g.DrawPolygon(Pens.Red, poly);
+
+                /*
+                g.DrawPolygon(Pens.White, poly);
 
                 g.DrawEllipse(Pens.Red, new Rectangle(poly[0].X, poly[0].Y, 3, 3));
                 g.DrawEllipse(Pens.Green, new Rectangle(poly[2].X, poly[2].Y, 3, 3));
                 g.DrawEllipse(Pens.Blue, new Rectangle(poly[1].X, poly[1].Y, 3, 3));
                 g.DrawEllipse(Pens.Purple, new Rectangle(poly[3].X, poly[3].Y, 3, 3));
-
-                targetBmp.Save("tex\\" + "X" + tl.Tag() + ".bmp", System.Drawing.Imaging.ImageFormat.Bmp);
+                */
+                targetBmp.Save("tex\\" + tl.Tag() + ".png", System.Drawing.Imaging.ImageFormat.Png);
 
             }
 
@@ -190,14 +204,22 @@ namespace CTRFramework
 
 
 
-        public byte[] GetCtrClut(int x, int y)
+        public byte[] GetCtrClut(TextureLayout tl)
         {
             byte[] buf = new byte[32];
 
+           // Console.WriteLine(tl.PalX + " " + tl.PalY);
+
             Buffer.BlockCopy(
-                this.data, this.dataWidth * (y) + x * 16 * 2,
+                this.realdata, 2048 * tl.PalY + tl.PalX * 16 * 2,
                 buf, 0,
                 32);
+
+            /* now im sure the palette is correct
+            for (int i = 0; i < 32; i++)
+            {
+                this.data[2048 * tl.PalY + tl.PalX * 16 * 2 + i] = 255;
+            }*/
 
             /*
             Console.Write(x + " " + y);
@@ -211,21 +233,31 @@ namespace CTRFramework
             return buf;
         }
 
+       // int pals = 0;
+
+       // public Bitmap palbmp = new Bitmap(16, 1024);
+
         public byte[] CtrClutToBmpPalette(byte[] clut)
         {
-            byte[] pal = new byte[256 * 4];
+            byte[] pal = new byte[16 * 4];
+
+           // pals++;
 
             using (BinaryReader br = new BinaryReader(new MemoryStream(clut)))
             {
                 for (int i = 0; i < 16; i++)
                 {
                     Color c = Convert16(br.ReadUInt16(), false);
-                    pal[i * 4] = c.R;
+
+                   // palbmp.SetPixel(i, pals, c);
+
+                    pal[i * 4] = c.B;
                     pal[i * 4 + 1] = c.G;
-                    pal[i * 4 + 2] = c.B;
+                    pal[i * 4 + 2] = c.R;
                     pal[i * 4 + 3] = c.A;
                 }
             }
+            
 
             return pal;
         }
@@ -271,6 +303,7 @@ namespace CTRFramework
 
             return Color.FromArgb((useAlpha ? a : 255), r, g, b);
         }
+
 
     }
 

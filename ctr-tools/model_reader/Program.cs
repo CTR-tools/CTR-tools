@@ -56,13 +56,6 @@ namespace modelReader
                                    tim = CtrVrm.FromReader(br);
                                 }
 
-                                //vrm.buffer.ToTexturePages();
-                                tim.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
-                                //bmp = vrm.ToBitmap();
-                                //bmp.Save(Path.ChangeExtension(args[0], ".png"));
-
-                               // vrm.tim.Write("test.tim");
-
                                 Console.WriteLine(tim.ToString());
                             }
 

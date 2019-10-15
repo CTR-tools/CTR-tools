@@ -39,21 +39,38 @@ namespace CTRFramework
             }
             else
             {
-                ms = new MemoryStream(br.ReadBytes((int)br.BaseStream.Length-4));
+                ms = new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 4));
                 br = new BinaryReader(ms);
             }
 
             Read(br);
 
-            if (vrm != null)
+            Console.WriteLine("Export textures:");
+
+            ExportTextures(vrm);
+
+        }
+
+
+        public void ExportTextures(Tim t)
+        {
+            if (t != null)
             {
-                foreach (QuadBlock qb in quad)
+                Directory.CreateDirectory(@".\tex\");
+
+                Dictionary<string, TextureLayout> tex = GetTexturesList();
+
+                foreach (TextureLayout tl in tex.Values)
                 {
-                    foreach (TextureLayout tl in qb.ctrtex)
-                        vrm.GetTexturePage(tl);
+                    t.GetTexturePage(tl);
                 }
             }
+            else
+            {
+                Console.WriteLine("null vram");
+            }
         }
+    
 
 
         public string Export(string fmt)
@@ -71,10 +88,17 @@ namespace CTRFramework
                     sb.Append("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.\r\n");
                     sb.Append("#(C) 1999, Activision, Naughty Dog.\r\n\r\n");
 
-                    sb.Append("mtllib " + mtllib + "\r\n\r\n");
+                    sb.Append("mtllib " + Path.GetFileName(mtllib) + "\r\n\r\n");
+
+                    int a = 0;
+                    int b = 0;
 
                     foreach (QuadBlock g in quad)
-                        sb.AppendLine(g.ToObj(vert, Detail.High));
+                    {
+                        sb.AppendLine(g.ToObj(vert, Detail.Low, a, b));
+                        a += 9;
+                        b += 4;
+                    }
 
                     break;
 
@@ -93,6 +117,7 @@ namespace CTRFramework
             sb.Clear();
 
 
+            /*
             List<string> tags = new List<string>();
 
             foreach(QuadBlock qb in quad)
@@ -105,12 +130,15 @@ namespace CTRFramework
                     }
                 }
             }
+            */
 
-            foreach (string s in tags)
+            Dictionary<string, TextureLayout> tex = GetTexturesList();
+
+            foreach (var s in tex.Values)
             {
-                sb.Append(String.Format("newmtl {0}\r\n", s));
-                sb.Append(String.Format("map_Ka {0}.bmp\r\n", s));
-                sb.Append(String.Format("map_Kd {0}.bmp\r\n\r\n", s));
+                sb.Append(String.Format("newmtl {0}\r\n", s.Tag()));
+                sb.Append(String.Format("map_Ka tex\\{0}.png\r\n", s.Tag()));
+                sb.Append(String.Format("map_Kd tex\\{0}.png\r\n\r\n", s.Tag()));
             }
 
             /*
@@ -121,7 +149,7 @@ namespace CTRFramework
                     sb.Append(String.Format("map_Ka tex\\page_{0}_{1}.bmp\r\n", i, j));
                     sb.Append(String.Format("map_Kd tex\\page_{0}_{1}.bmp\r\n\r\n", i, j));
                 }
-                */
+            */
 
             CTRFramework.Shared.Helpers.WriteToFile(mtllib, sb.ToString());
 
@@ -179,7 +207,7 @@ namespace CTRFramework
                 sb.AppendFormat("l {0} {1}\r\n", i, (i == header.numRestartPts ? 1 : i + 1));
             }
 
-            File.WriteAllText("restart_pts.obj", sb.ToString());
+            //File.WriteAllText("restart_pts.obj", sb.ToString());
 
 
 
@@ -207,11 +235,20 @@ namespace CTRFramework
             {
                 if (qb.offset1 != 0)
                 {
-                    if (!tex.ContainsKey(qb.offset1.ToString()))
+                    if (!tex.ContainsKey(qb.lod_tex.Tag()))
                     {
-                        tex.Add(qb.offset1.ToString(), qb.lod_tex);
+                        tex.Add(qb.lod_tex.Tag(), qb.lod_tex);
                     }
                 }
+                /*
+                for (int i = 0; i < 4; i++)
+                if (qb.tex[i] != 0)
+                {
+                    if (!tex.ContainsKey(qb.ctrtex[i].Tag()))
+                    {
+                        tex.Add(qb.ctrtex[i].Tag(), qb.ctrtex[i]);
+                    }
+                }*/
             }
 
             return tex;

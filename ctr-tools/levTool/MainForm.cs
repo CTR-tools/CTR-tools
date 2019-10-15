@@ -369,7 +369,8 @@ namespace levTool
                 using (BinaryReader br = new BinaryReader(File.Open(ofd.FileName, FileMode.Open)))
                 {
                     Tim buf = CtrVrm.FromReader(br);
-                    Process.Start("test.bmp");
+
+                    MessageBox.Show(buf.data.Length / 256 + "");
 
                     if (scn != null)
                     {
@@ -380,8 +381,12 @@ namespace levTool
                         {
                             buf.GetTexturePage(tl);
                         }
-
                     }
+
+                    buf.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
+                    //buf.palbmp.Save("palletes.png", System.Drawing.Imaging.ImageFormat.Png);
+
+                    //Process.Start("palletes.png");
                 }
             }
         }
