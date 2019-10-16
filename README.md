@@ -46,16 +46,16 @@ Usage: lng2txt.exe C:\example\somefile.lng
 * Note: | is considered a new line character
 
 ## model_reader
-Takes a single CTR scene (\*.lev file) or a folder as an input .\
-Exports low-res textured and vertex colored mesh of the level in modified OBJ format (vcolor support by MeshLab).\
-Import tested in MeshLab, Blender and 3ds Max.\
-MeshLab is recommended as an intermediate converter.\
-Also supports ctr files as an input, but only outputs some info.\
-Ply support is temporarily dropped.
+Takes a single CTR scene (\*.lev file) or a folder as an input and exports low-res textured and vertex colored mesh of the level in modified OBJ format (vcolor support by MeshLab).
 
-Usage:
-model_reader.exe C:\example\somefile.lev
+Usage:\
+model_reader.exe C:\example\somefile.lev\
 model_reader.exe C:\example\
+
+* Import tested in MeshLab, Blender and 3ds Max.\
+* MeshLab is recommended as an intermediate converter.\
+* Also supports ctr files as an input, but only outputs some info.
+* Ply support is temporarily dropped.
 
 Coco park (non-textured): https://i.imgur.com/RqWH93V.png \
 Coco park (textured low-res): https://i.imgur.com/WogrMs6.png
