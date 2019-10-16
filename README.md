@@ -1,4 +1,5 @@
 # CTR-tools
+![CTR-tools](ctr-tools-logo.png)
 
 ## Description
 Various tools to operate Crash Team Racing (PS1) game files.
