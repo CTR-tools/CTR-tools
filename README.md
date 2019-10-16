@@ -1,4 +1,3 @@
-# CTR-tools
 ![CTR-tools](ctr-tools-logo.png)
 
 ## Description
