@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CTRFramework
 {
-    public class Tim
+    public class Tim : IRead
     {
         public uint magic;
         public uint flags;
@@ -20,7 +20,6 @@ namespace CTRFramework
                 return region.Width * bpp / 8;
             }
         }
-
 
         public byte bpp
         {
@@ -45,31 +44,33 @@ namespace CTRFramework
             }
         }
 
+
         public Tim()
         {
         }
 
+
         public Tim(Rectangle rect)
         {
             region = rect;
-            //data = new ushort[rect.Width * rect.Height];
             data = new byte[rect.Width * rect.Height * 2];
-            realdata = new byte[rect.Width * rect.Height * 2];
             magic = 16;
             flags = 2;
             datasize = (uint)(data.Length + 4 * 3);
         }
 
-
+        /// <summary>
+        /// Reads TIM from file using BinaryReader.
+        /// </summary>
+        /// <param name="br">BinaryReader.</param>
         public void Read(BinaryReader br)
         {
             magic = br.ReadUInt32();
             flags = br.ReadUInt32();
             datasize = br.ReadUInt32();
 
-            if (magic != 16 || flags != 2)
-            {
-                throw new Exception("invalid TIM header");
+            if (magic != 16 || flags != 2) {
+                throw new Exception("probably not a CTR vram");
             }
 
             region.X = br.ReadUInt16();
@@ -77,24 +78,13 @@ namespace CTRFramework
             region.Width = br.ReadUInt16();
             region.Height = br.ReadUInt16();
 
-            long pos = br.BaseStream.Position;
-
             data = br.ReadBytes((int)datasize - 4 * 3);
-
-            br.BaseStream.Position = pos;
-
-            realdata = br.ReadBytes((int)datasize - 4 * 3);
-            //Array.Copy(data, 0, realdata, 0, data.Length);
-
-            for (int i = 0; i < data.Length; i++)
-                data[i] = (byte)(((data[i] & 0x0F) << 4) | ((data[i] & 0xF0) >> 4));
-
-
-            //byte[] buf = br.ReadBytes((int)datasize - 4 * 3);
-            //data = new ushort[buf.Length / 2];
-            //Buffer.BlockCopy(buf, 0, data, 0, buf.Length);
         }
 
+        /// <summary>
+        /// Writes current TIM to file.
+        /// </summary>
+        /// <param name="s">Filename.</param>
         public void Write(string s)
         {
             using (BinaryWriter bw = new BinaryWriter(File.OpenWrite(s)))
@@ -116,49 +106,63 @@ namespace CTRFramework
             return region.ToString();
         }
 
+        /// <summary>
+        /// Draws one TIM over another.
+        /// Not a failproof implementation, ensure that target TIM is larger than original.
+        /// In CTR context only used to draw 2 TIM regions in a single TIM.
+        /// </summary>
+        /// <param name="src">Source TIM to draw.</param>
         public void DrawTim(Tim src)
         {
-           // byte[] buf = new byte[] { };
-           // Array.Resize(ref buf, src.dataWidth);
-
             for (int i = 0; i < src.region.Height; i++)
             {
                 Buffer.BlockCopy(
                     src.data, i * src.dataWidth,
                     this.data, this.dataWidth * (src.region.Y + i) + src.region.X * 2,
                     src.dataWidth);
-
-                Buffer.BlockCopy(
-src.realdata, i * src.dataWidth,
-this.realdata, this.dataWidth * (src.region.Y + i) + src.region.X * 2,
-src.dataWidth);
             }
         }
 
+        /// <summary>
+        /// Saves current TIM as 4-bit BMP using BMPHeader.
+        /// </summary>
+        /// <param name="s">Filename.</param>
+        /// <param name="pal">Palette.</param>
         public void SaveBMP(string s, byte[] pal)
         {
-            BMPHeader bh = new BMPHeader();
-            bh.Update(region.Width * 4, region.Height, 16, 4);
-
-            bh.UpdateData(pal, data);
-
             using (BinaryWriter bw = new BinaryWriter(File.Create(s)))
             {
+                BMPHeader bh = new BMPHeader();
+                bh.Update(region.Width * 4, region.Height, 16, 4);
+                bh.UpdateData(pal, FixPixelOrder(data));
                 bh.Write(bw);
             }
         }
 
+        /// <summary>
+        /// This function is necessary to fix pixel order in 4-bit BMPs.
+        /// </summary>
+        /// <param name="data">4-bit pixel array.</param>
+        /// <returns></returns>
+        public byte[] FixPixelOrder(byte[] data)
+        {
+            byte[] x = data;
+
+            for (int i = 0; i < x.Length; i++)
+                data[i] = (byte)(((data[i] & 0x0F) << 4) | ((data[i] & 0xF0) >> 4));
+
+            return x;
+        }
 
 
         public void GetTexturePage(TextureLayout tl)
         {
-
             byte[] buf = new byte[128 * 256];
 
             for (int i = 0; i < 256; i++)
             {
                 Buffer.BlockCopy(
-                    this.data, 2048 * i + 128 * tl.PageX + tl.PageY * 2048 * 256,//this.dataWidth * (tl.PageY + i) + tl.PageX * 256 * 2,
+                    this.data, 2048 * i + 128 * tl.PageX + tl.PageY * 2048 * 256,
                     buf, i * 128, 
                     128);
             }
@@ -167,7 +171,6 @@ src.dataWidth);
             x.data = buf;
 
             x.SaveBMP("tex\\" + tl.Tag() + ".bmp", CtrClutToBmpPalette(GetCtrClut(tl)));
-
 
             using (Bitmap oldBmp = new Bitmap("tex\\" + tl.Tag() + ".bmp"))
             using (Bitmap newBmp = new Bitmap(oldBmp))
@@ -183,60 +186,39 @@ src.dataWidth);
                     new Point(tl.uv[2].X, tl.uv[2].Y)
                 };
 
-
                 g.DrawImage(targetBmp, new Point(0, 0));
-
                 /*
                 g.DrawPolygon(Pens.White, poly);
-
                 g.DrawEllipse(Pens.Red, new Rectangle(poly[0].X, poly[0].Y, 3, 3));
                 g.DrawEllipse(Pens.Green, new Rectangle(poly[2].X, poly[2].Y, 3, 3));
                 g.DrawEllipse(Pens.Blue, new Rectangle(poly[1].X, poly[1].Y, 3, 3));
                 g.DrawEllipse(Pens.Purple, new Rectangle(poly[3].X, poly[3].Y, 3, 3));
                 */
                 targetBmp.Save("tex\\" + tl.Tag() + ".png", System.Drawing.Imaging.ImageFormat.Png);
-
             }
-
-
         }
 
 
-
-
+        /// <summary>
+        /// Returns PS1 palette (CLUT) for corresponding texture layout.
+        /// </summary>
+        /// <param name="tl">Texture layout data.</param>
         public byte[] GetCtrClut(TextureLayout tl)
         {
             byte[] buf = new byte[32];
 
-           // Console.WriteLine(tl.PalX + " " + tl.PalY);
-
             Buffer.BlockCopy(
-                this.realdata, 2048 * tl.PalY + tl.PalX * 16 * 2,
+                this.data, 2048 * tl.PalY + tl.PalX * 16 * 2,
                 buf, 0,
                 32);
-
-            /* now im sure the palette is correct
-            for (int i = 0; i < 32; i++)
-            {
-                this.data[2048 * tl.PalY + tl.PalX * 16 * 2 + i] = 255;
-            }*/
-
-            /*
-            Console.Write(x + " " + y);
-
-            foreach (byte b in buf)
-                Console.Write(b.ToString("X2"));
-
-            Console.WriteLine();
-            */
 
             return buf;
         }
 
-       // int pals = 0;
-
-       // public Bitmap palbmp = new Bitmap(16, 1024);
-
+        /// <summary>
+        /// Converts PS1 palette (CLUT) to 32 bit BMP palette.
+        /// </summary>
+        /// <param name="clut">Array of 32 bytes.</param>
         public byte[] CtrClutToBmpPalette(byte[] clut)
         {
             byte[] pal = new byte[16 * 4];
@@ -258,42 +240,15 @@ src.dataWidth);
                 }
             }
             
-
             return pal;
         }
 
-
-        /*
-        public Bitmap ToTexturePages()
-        {
-            Directory.CreateDirectory(@".\tex\");
-            SaveBMP("test.bmp", BMPHeader.GrayScalePalette(256));
-            Bitmap bmp = (Bitmap)Bitmap.FromFile("test.bmp");
-
-            int tpw = 256;
-            int tph = 256;
-
-            for (int i = 0; i < 16; i++)
-                for (int j = 0; j < 2; j++)
-                {
-                    Bitmap x = bmp.Clone(new Rectangle(new Point(i * tpw, j * tph), new Size(tpw, tph)), System.Drawing.Imaging.PixelFormat.Format32bppRgb);
-                    x = new Bitmap(x, new Size(256, 256));
-
-                    if (i >= 8)
-                        x.Save(String.Format(@".\tex\page_{0}_{1}.bmp", i, j), System.Drawing.Imaging.ImageFormat.Bmp);
-                }
-
-            return bmp;
-        }
-
-    */
-
-        public static Color Convert16(byte[] b, bool useAlpha)
-        {
-            ushort val = BitConverter.ToUInt16(b, 0);
-            return Convert16(val, useAlpha);
-        }
-
+        /// <summary>
+        /// Converts 5-5-5-1 16 bit color to 8-8-8-8 32 bit color.
+        /// </summary>
+        /// <param name="col">16 bit ushort color value.</param>
+        /// <param name="useAlpha">Defines whether alpha value should be preserved.</param>
+        /// <returns></returns>
         public static Color Convert16(ushort col, bool useAlpha)
         {
             byte r = (byte)(((col >> 0) & 0x1F) << 3);
@@ -304,6 +259,12 @@ src.dataWidth);
             return Color.FromArgb((useAlpha ? a : 255), r, g, b);
         }
 
+
+        public static Color Convert16(byte[] b, bool useAlpha)
+        {
+            ushort val = BitConverter.ToUInt16(b, 0);
+            return Convert16(val, useAlpha);
+        }
 
     }
 

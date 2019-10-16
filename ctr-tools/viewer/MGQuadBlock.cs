@@ -43,7 +43,7 @@ namespace viewer
                             {
                                 VertexPositionColorTexture v = new VertexPositionColorTexture();
                                 CTRFramework.Vertex cv = s.vert[s.quad[i].ind[j]];
-                                CTRFramework.TextureLayout tl = s.quad[i].lod_tex;
+                                CTRFramework.TextureLayout tl = s.quad[i].texlow;
 
                                 v.Position.X = cv.coord.X;
                                 v.Position.Y = cv.coord.Y;
@@ -131,7 +131,7 @@ namespace viewer
 
                             try
                             {
-                                buf[qb.ind[s]].TextureCoordinate = new Vector2(qb.lod_tex.uv[i].X, qb.lod_tex.uv[i].Y);
+                                buf[qb.ind[s]].TextureCoordinate = new Vector2(qb.texlow.uv[i].X, qb.texlow.uv[i].Y);
                             }
                             catch 
                             {

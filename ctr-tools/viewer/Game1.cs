@@ -69,9 +69,22 @@ namespace viewer
             graphics.IsFullScreen = false;
         }
 
+        SamplerState ss;
+
         protected override void Initialize()
         {
             graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 4;
+
+            ss = new SamplerState();
+            ss.FilterMode = TextureFilterMode.Default;
+           
+            ss.Filter = TextureFilter.Anisotropic;
+            ss.MaxAnisotropy = 16;
+            ss.MaxMipLevel = 8;
+            ss.MipMapLevelOfDetailBias = -1.5f;
+
+            graphics.GraphicsDevice.SamplerStates[0] = ss;
+
             graphics.ApplyChanges();
 
             effect = new BasicEffect(graphics.GraphicsDevice);
@@ -128,7 +141,7 @@ namespace viewer
                 files = Directory.GetFiles(@"levels\", "*.lev");
 
             foreach (string s in files)
-                scn.Add(new Scene(s, "obj", null));
+                scn.Add(new Scene(s, "obj"));
 
             foreach (Scene s in scn)
                 quads.Add(new MGQuadBlock(s, Detail.Low));

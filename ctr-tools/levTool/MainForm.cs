@@ -60,7 +60,7 @@ namespace levTool
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 path = ofd.FileName;
-                scn = new Scene(path, "obj", null);
+                scn = new Scene(path, "obj");
 
                 Text = String.Format("levTool - {0}", path);
                 propertyGrid1.SelectedObject = scn.pickups[0];
@@ -221,7 +221,7 @@ namespace levTool
             {
                 foreach (QuadBlock qb in scn.quad)
                 {
-                    qb.offset1 = 0;
+                    qb.offset2 = 0;
                     qb.tex = new uint[] { 0, 0, 0, 0 };
                 }
             }

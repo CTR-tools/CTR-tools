@@ -44,9 +44,6 @@ namespace CTRFramework
         public byte WeatherType;
         public byte TerrainFlagUnknown;
 
-
-        //public byte[] unk2 = new byte[4];   //unknown
-
         public short id;
         public byte[] midflags = new byte[2];
 
@@ -57,8 +54,9 @@ namespace CTRFramework
         public ushort[] unk3 = new ushort[10];  //unknown
 
         //additional data
-        public TextureLayout lod_tex;
-        public List<TextureLayout> ctrtex = new List<TextureLayout>();
+        public TextureLayout texlow;
+        public List<TextureLayout> texmid = new List<TextureLayout>();
+        public List<TextureLayout> texhi = new List<TextureLayout>();
 
         public QuadBlock()
         {
@@ -68,47 +66,6 @@ namespace CTRFramework
         {
             Read(br);
         }
-
-        public void ExportTexture(CtrVrm vrm)
-        {
-
-            /*
-            byte[] buf = vrm.tim.GetData(ttx.X0, ttx.Y0,
-                Max(ttx.X0, ttx.X1, ttx.X2) - Min(ttx.X0, ttx.X1, ttx.X2),
-                Max(ttx.Y0, ttx.Y1, ttx.Y2) - Min(ttx.Y0, ttx.Y1, ttx.Y2)
-                );
-            
-            
-            for (int i = 0; i < ttx.Y2 - ttx.Y0; i++)
-            {
-                for (int j = 0; j < ttx.Y2 - ttx.Y0; j++)
-                {
-                    Console.Write(buf[i * ttx.Y2 - ttx.Y0 + j]);
-                }
-                Console.WriteLine();
-            }
-             */
-        }
-        /*
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (uint t in tex)
-            {
-                sb.Append(t.ToString() + "\r\n");
-            }
-
-            foreach (CTRTex c in ctrtex)
-            {
-                sb.Append(c.ToString() + "\r\n");
-            }
-
-
-            return sb.ToString();
-        }
-         * */
-
 
 
         public void Read(BinaryReader br)
@@ -154,9 +111,8 @@ namespace CTRFramework
             int pos = (int)br.BaseStream.Position;
 
             br.BaseStream.Position = (int)offset1;
-            lod_tex = new TextureLayout(br);
+            texlow = new TextureLayout(br);
 
-            //Console.Write(lod_tex.ToString());
 
             foreach (uint u in tex)
             {
@@ -164,10 +120,34 @@ namespace CTRFramework
                 {
                    // Console.WriteLine(u.ToString("X8"));
                     br.BaseStream.Position = (int)u;
-                    ctrtex.Add(new TextureLayout(br));
+                    texmid.Add(new TextureLayout(br));
                 }
             }
-             
+
+            /* //hires attempt
+            if (offset2 > 0)
+            {
+                br.BaseStream.Position = offset2;
+
+                List<uint> offs = new List<uint>();
+
+                for (int i = 0; i < 4; i++)
+                {
+                    offs.Add(br.ReadUInt32());
+                }
+
+                foreach(uint i in offs)
+                {
+                    if (i > 0)
+                    {
+                        br.BaseStream.Position = i;
+                        //Console.WriteLine(i.ToString("X8"));
+                        texhi.Add(new TextureLayout(br));
+                    }
+                }
+
+            }
+             */
             br.BaseStream.Position = pos;
         }
 
@@ -195,136 +175,123 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            //bool x = (offset2 != 0);// & (byte)Flags2.InvisibleTriggers) > 0;
-            bool x = false;
+            sb.Append(String.Format("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible")));
+            sb.Append(String.Format("o piece_{0}\r\n\r\n", id.ToString("X4")));
 
-            //if (!x)
+            for (int i = 0; i < ind.Length; i++)
             {
-                sb.Append(String.Format("g piece_{0}\r\n", id.ToString("X4")));
-                sb.Append(String.Format("o piece_{0}\r\n\r\n", id.ToString("X4")));
-
-                for (int i = 0; i < ind.Length; i++)
-                {
-                    sb.AppendLine(v[ind[i]].ToString(x));
-                }
-
-                sb.AppendLine();
-
-
-                switch (detail)
-                {
-                    case Detail.Low:
-                        {
-                            sb.Append(String.Format("usemtl {0}\r\n", lod_tex.Tag()));
-
-                            sb.AppendLine(lod_tex.ToObj());
-                            sb.AppendLine();
-
-                            sb.Append(ASCIIFace("f", a + 1, a + 3, a + 2, b + 1, b + 3, b + 2));
-                            sb.Append(ASCIIFace("f", a + 2, a + 3, a + 4, b + 2, b + 3, b + 4));
-
-                            //sb.Append(ASCIIFace("f", a + 1, a + 2, a + 3, b + 1, b + 2, b + 3));
-                            // sb.Append(ASCIIFace("f", a + 4, a + 3, a + 2, b + 4, b + 3, b + 2));
-
-                            // sb.Append(ASCIIFace("f", a-9 + 2, a-9 + 1, a-9 + 0, b-4 + 2, b-4 + 1, b-4 + 0));
-                            // sb.Append(ASCIIFace("f", a-9 + 1, a-9 + 2, a-9 + 3, b-4 + 1, b-4 + 2, b-4 + 3));
-                            break;
-                        }
-
-                    case Detail.High:
-                        {
-                            foreach (TextureLayout tl in ctrtex)
-                            {
-                                sb.AppendLine(tl.ToObj());
-                            }
-
-                            sb.AppendLine();
-
-
-                            if (ctrtex.Count == 4)
-                            {
-                                if (pagex != ctrtex[0].PageX || pagey != ctrtex[0].PageY)
-                                {
-                                    sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", ctrtex[0].PageX, ctrtex[0].PageY));
-                                    pagex = ctrtex[0].PageX;
-                                    pagey = ctrtex[0].PageY;
-                                }
-                            }
-
-                            sb.Append(ASCIIFace("f", -9 + 5, -9 + 4, -9 + 0, -16 + 0, -16+3, -16 + 1));
-                            sb.Append(ASCIIFace("f", -9 + 4, -9 + 5, -9 + 6, -16 + 3, -16+0, -16 + 2));
-
-                            if (ctrtex.Count == 4)
-                            {
-                                if (pagex != ctrtex[1].PageX || pagey != ctrtex[1].PageY)
-                                {
-                                    sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", ctrtex[1].PageX, ctrtex[1].PageY));
-                                    pagex = ctrtex[1].PageX;
-                                    pagey = ctrtex[1].PageY;
-                                }
-                            }
-
-                            sb.Append(ASCIIFace("f", -9 + 6, -9 + 1, -9 + 4, -12 + 0, -12 + 3, -12 + 1));
-                            sb.Append(ASCIIFace("f", -9 + 1, -9 + 6, -9 + 7, -12 + 3, -12 + 0, -12 + 2));
-
-                            if (ctrtex.Count == 4)
-                            {
-                                if (pagex != ctrtex[2].PageX || pagey != ctrtex[2].PageY)
-                                {
-                                    sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", ctrtex[2].PageX, ctrtex[2].PageY));
-                                    pagex = ctrtex[2].PageX;
-                                    pagey = ctrtex[2].PageY;
-                                }
-                            }
-                            sb.Append(ASCIIFace("f", -9 + 2, -9 + 6, -9 + 5, -8 + 0, -8 + 3, -8 + 1));
-                            sb.Append(ASCIIFace("f", -9 + 6, -9 + 2, -9 + 8, -8 + 3, -8 + 0, -8 + 2));
-
-                            if (ctrtex.Count == 4)
-                            {
-                                if (pagex != ctrtex[3].PageX || pagey != ctrtex[3].PageY)
-                                {
-                                    sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", ctrtex[0].PageX, ctrtex[0].PageY));
-                                    pagex = ctrtex[3].PageX;
-                                    pagey = ctrtex[3].PageY;
-                                }
-                            }
-                            sb.Append(ASCIIFace("f", -9 + 8, -9 + 7, -9 + 6, -4 + 0, -4 + 3, -4 + 1));
-                            sb.Append(ASCIIFace("f", -9 + 7, -9 + 8, -9 + 3, -4 + 3, -4 + 0, -4 + 2));
-                            
-                            break;
-                        }
-                }
-
-                /*
-                if (fmt == "ply")
-                 * 
-                {
-                    sb.Append(ASCIIFace("3", ind, 5, 4, 0));
-                    sb.Append(ASCIIFace("3", ind, 4, 5, 6));
-                    sb.Append(ASCIIFace("3", ind, 6, 1, 4));
-                    sb.Append(ASCIIFace("3", ind, 1, 6, 7));
-                    sb.Append(ASCIIFace("3", ind, 2, 6, 5));
-                    sb.Append(ASCIIFace("3", ind, 6, 2, 8));
-                    sb.Append(ASCIIFace("3", ind, 8, 7, 6));
-                    sb.Append(ASCIIFace("3", ind, 7, 8, 3));
-                }
-                else
-                {
-                    sb.Append("o piece_" + i.ToString("0000") + "\r\n");
-                    sb.Append("g piece_" + i.ToString("0000") + "\r\n");
-
-                    sb.Append(ASCIIFace("f", ind, 5, 4, 0));
-                    sb.Append(ASCIIFace("f", ind, 4, 5, 6));
-                    sb.Append(ASCIIFace("f", ind, 6, 1, 4));
-                    sb.Append(ASCIIFace("f", ind, 1, 6, 7));
-                    sb.Append(ASCIIFace("f", ind, 2, 6, 5));
-                    sb.Append(ASCIIFace("f", ind, 6, 2, 8));
-                    sb.Append(ASCIIFace("f", ind, 8, 7, 6));
-                    sb.Append(ASCIIFace("f", ind, 7, 8, 3));
-                }
-                */
-
+                sb.AppendLine(v[ind[i]].ToString(false));
             }
+
+            sb.AppendLine();
+
+
+            switch (detail)
+            {
+                case Detail.Low:
+                    {
+                        sb.AppendLine(texlow.ToObj());
+
+                        sb.Append(ASCIIFace("f", a + 1, a + 3, a + 2, b + 1, b + 3, b + 2));
+                        sb.Append(ASCIIFace("f", a + 2, a + 3, a + 4, b + 2, b + 3, b + 4));
+
+                        break;
+                    }
+
+                case Detail.High:
+                    {
+                        foreach (TextureLayout tl in texmid)
+                        {
+                            sb.AppendLine(tl.ToObj());
+                        }
+
+                        sb.AppendLine();
+
+
+                        if (texmid.Count == 4)
+                        {
+                            if (pagex != texmid[0].PageX || pagey != texmid[0].PageY)
+                            {
+                                sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", texmid[0].PageX, texmid[0].PageY));
+                                pagex = texmid[0].PageX;
+                                pagey = texmid[0].PageY;
+                            }
+                        }
+
+                        sb.Append(ASCIIFace("f", -9 + 5, -9 + 4, -9 + 0, -16 + 0, -16 + 3, -16 + 1));
+                        sb.Append(ASCIIFace("f", -9 + 4, -9 + 5, -9 + 6, -16 + 3, -16 + 0, -16 + 2));
+
+                        if (texmid.Count == 4)
+                        {
+                            if (pagex != texmid[1].PageX || pagey != texmid[1].PageY)
+                            {
+                                sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", texmid[1].PageX, texmid[1].PageY));
+                                pagex = texmid[1].PageX;
+                                pagey = texmid[1].PageY;
+                            }
+                        }
+
+                        sb.Append(ASCIIFace("f", -9 + 6, -9 + 1, -9 + 4, -12 + 0, -12 + 3, -12 + 1));
+                        sb.Append(ASCIIFace("f", -9 + 1, -9 + 6, -9 + 7, -12 + 3, -12 + 0, -12 + 2));
+
+                        if (texmid.Count == 4)
+                        {
+                            if (pagex != texmid[2].PageX || pagey != texmid[2].PageY)
+                            {
+                                sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", texmid[2].PageX, texmid[2].PageY));
+                                pagex = texmid[2].PageX;
+                                pagey = texmid[2].PageY;
+                            }
+                        }
+                        sb.Append(ASCIIFace("f", -9 + 2, -9 + 6, -9 + 5, -8 + 0, -8 + 3, -8 + 1));
+                        sb.Append(ASCIIFace("f", -9 + 6, -9 + 2, -9 + 8, -8 + 3, -8 + 0, -8 + 2));
+
+                        if (texmid.Count == 4)
+                        {
+                            if (pagex != texmid[3].PageX || pagey != texmid[3].PageY)
+                            {
+                                sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", texmid[0].PageX, texmid[0].PageY));
+                                pagex = texmid[3].PageX;
+                                pagey = texmid[3].PageY;
+                            }
+                        }
+                        sb.Append(ASCIIFace("f", -9 + 8, -9 + 7, -9 + 6, -4 + 0, -4 + 3, -4 + 1));
+                        sb.Append(ASCIIFace("f", -9 + 7, -9 + 8, -9 + 3, -4 + 3, -4 + 0, -4 + 2));
+
+                        break;
+                    }
+            }
+
+            /*
+            if (fmt == "ply")
+             * 
+            {
+                sb.Append(ASCIIFace("3", ind, 5, 4, 0));
+                sb.Append(ASCIIFace("3", ind, 4, 5, 6));
+                sb.Append(ASCIIFace("3", ind, 6, 1, 4));
+                sb.Append(ASCIIFace("3", ind, 1, 6, 7));
+                sb.Append(ASCIIFace("3", ind, 2, 6, 5));
+                sb.Append(ASCIIFace("3", ind, 6, 2, 8));
+                sb.Append(ASCIIFace("3", ind, 8, 7, 6));
+                sb.Append(ASCIIFace("3", ind, 7, 8, 3));
+            }
+            else
+            {
+                sb.Append("o piece_" + i.ToString("0000") + "\r\n");
+                sb.Append("g piece_" + i.ToString("0000") + "\r\n");
+
+                sb.Append(ASCIIFace("f", ind, 5, 4, 0));
+                sb.Append(ASCIIFace("f", ind, 4, 5, 6));
+                sb.Append(ASCIIFace("f", ind, 6, 1, 4));
+                sb.Append(ASCIIFace("f", ind, 1, 6, 7));
+                sb.Append(ASCIIFace("f", ind, 2, 6, 5));
+                sb.Append(ASCIIFace("f", ind, 6, 2, 8));
+                sb.Append(ASCIIFace("f", ind, 8, 7, 6));
+                sb.Append(ASCIIFace("f", ind, 7, 8, 3));
+            }
+            */
+
+
             return sb.ToString();
         }
 

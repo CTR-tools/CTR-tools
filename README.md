@@ -1,13 +1,13 @@
 # CTR-tools
 
 ## Description
-Various tools to operate Crash Team Racing game files.
+Various tools to operate Crash Team Racing (PS1) game files.
 
-Join the CTR Tools Discord channel: https://discord.gg/56xm9Aj
+Join the CTR-tools Discord channel: https://discord.gg/56xm9Aj
 
 Tools are developed in Visual Studio Community 2019, target platform is .NET 4.5.
 
-Project dependencies (make sure to download latest dlls):
+Project dependencies:
 * NAudio - https://github.com/naudio/NAudio (used to export MIDI files)
 * Json.NET - https://github.com/JamesNK/Newtonsoft.Json (used for json parsing support)
 * MonoGame - https://github.com/MonoGame/MonoGame (used for viewer)
@@ -23,7 +23,7 @@ CSEQ - custom music sequences found in HWL files.\
 BNK - sound bank, a labeled set of headerless VAG samples.
 
 ## CTRFramework
-CTRFramework is a shared DLL you can use in your projects.
+CTRFramework is a shared DLL you can use in your own projects.
 
 ## bigtool
 Extracts/builds BIGFILE.BIG.
@@ -46,10 +46,19 @@ Usage: lng2txt.exe C:\example\somefile.lng
 * Note: | is considered a new line character
 
 ## model_reader
-At this point exports vertex colored non-textured mesh of the level (\*.lev files). Import tested in MeshLab, Blender and 3ds Max. MeshLab is recommended as an intermediate converter as it allows to import vertex color data from custom OBJ. Also supports ctr files as an input, but only outputs some info.
-https://i.imgur.com/RqWH93V.png
+Takes a single CTR scene (\*.lev file) or a folder as an input .\
+Exports low-res textured and vertex colored mesh of the level in modified OBJ format (vcolor support by MeshLab).\
+Import tested in MeshLab, Blender and 3ds Max.\
+MeshLab is recommended as an intermediate converter.\
+Also supports ctr files as an input, but only outputs some info.\
+Ply support is temporarily dropped.
 
-Usage: model_reader.exe C:\example\somefile.lev \[ply]
+Usage:
+model_reader.exe C:\example\somefile.lev
+model_reader.exe C:\example\
+
+Coco park (non-textured): https://i.imgur.com/RqWH93V.png \
+Coco park (textured low-res): https://i.imgur.com/WogrMs6.png
 
 ## howl
 Extracts CSEQ and BNK files from KART.HWL.
@@ -65,5 +74,9 @@ Usage: use File menu or drag-drop CSEQ file on the application window.
 * Click sequence on the list to show its tracks/instruments.
 * Double-clicking the track will bring MIDI file save dialog.
 * Use "patch MIDI instruments" option in case if custom instrument mapping is available. You can also add own mappings, see ctrdata.json for the reference.
+
+## viewer
+Loads CTR scenes. Put lev files in levels folder. All lev files are loaded at once.
+Meant to be used with an XInput controller (XBOX360 Controller or similiar).
 
 2016-2019, DCxDemo*.

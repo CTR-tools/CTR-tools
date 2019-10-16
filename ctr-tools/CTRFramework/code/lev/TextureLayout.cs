@@ -48,7 +48,7 @@ namespace CTRFramework
             uv.Add(new Vector2b(br));
             uv.Add(new Vector2b(br));
 
-            Console.WriteLine(Tag());
+            //Console.WriteLine(Tag());
         }
 
         public string Tag()
@@ -80,6 +80,8 @@ namespace CTRFramework
                         Math.Round((255 - v.Y) / 255f, 3).ToString()
                     )
                 );
+
+            sb.Append(String.Format("\r\nusemtl {0}\r\n", Tag()));
 
             return sb.ToString();
         }

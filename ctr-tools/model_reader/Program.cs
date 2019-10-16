@@ -22,9 +22,19 @@ namespace modelReader
 
             if (args.Length > 0)
             {
-
+                if ((File.GetAttributes(args[0]) & FileAttributes.Directory) == FileAttributes.Directory)
+                {
+                    foreach (string s in Directory.GetFiles(args[0], "*.lev"))
+                        ConvertFile(s);
+                }
+                else
+                {
+                    ConvertFile(args[0]);
+                }
+                
+                /*
                 string format = "obj";
-
+                
                 try
                 {
                     if (args[1] == "ply")
@@ -36,52 +46,40 @@ namespace modelReader
                 {
                     Console.WriteLine("Incorrect input.");
                 }
-
-                string ext = Path.GetExtension(args[0]);
-
-                switch (ext)
-                {
-                    case ".lev":
-                        {
-                            Tim tim = null;
-
-                            string vrmpath = Path.ChangeExtension(args[0], ".vram");
-
-                            if (File.Exists(vrmpath))
-                            {
-                                Console.WriteLine("We have VRAM!");
-
-                                using (BinaryReader br = new BinaryReader(File.OpenRead(vrmpath)))
-                                {
-                                   tim = CtrVrm.FromReader(br);
-                                }
-
-                                Console.WriteLine(tim.ToString());
-                            }
-
-
-                            Scene scn = new Scene(args[0], format, tim);
-                            string objfile = scn.Export("obj");
-
-                            LaunchMeshLab(objfile);
-
-                            break;
-                        }
-                    case ".ctr":
-                        {
-                            LODModel mod = new LODModel(args[0]);
-                            break;
-                        }
-
-                }
-                Console.WriteLine("Done!");
+                */
             }
             else
             {
                 Console.WriteLine("No filename given!");
             }
 
-            Console.ReadKey();
+           // Console.ReadKey();
+        }
+
+
+        static void ConvertFile(string s)
+        {
+            string ext = Path.GetExtension(s);
+
+            switch (ext)
+            {
+                case ".lev":
+                    {
+                        Scene scn = new Scene(s, "obj");
+                        string objfile = scn.Export("obj");
+
+                        //LaunchMeshLab(objfile);
+
+                        break;
+                    }
+                case ".ctr":
+                    {
+                        LODModel mod = new LODModel(s);
+                        break;
+                    }
+
+            }
+            Console.WriteLine("Done!");
         }
 
 

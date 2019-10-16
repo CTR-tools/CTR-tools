@@ -22,7 +22,7 @@ namespace CTRFramework
 
         public List<PosAng> restartPts = new List<PosAng>();
 
-        public Scene(string s, string fmtm, Tim vrm)
+        public Scene(string s, string fmtm)
         {
             path = s;
 
@@ -45,9 +45,46 @@ namespace CTRFramework
 
             Read(br);
 
-            Console.WriteLine("Export textures:");
 
-            ExportTextures(vrm);
+            Tim tim = null;
+
+            string vrmpath = Path.ChangeExtension(s, ".vram");
+
+            if (File.Exists(vrmpath))
+            {
+                Console.WriteLine("VRAM found!");
+
+                using (BinaryReader brr = new BinaryReader(File.OpenRead(vrmpath)))
+                {
+                    tim = CtrVrm.FromReader(brr);
+                }
+
+                Console.WriteLine(tim.ToString());
+                Console.WriteLine("Exporting textures...");
+
+                ExportTextures(tim);
+            }
+
+            /*
+            List<uint> offs = new List<uint>();
+
+            foreach (QuadBlock qb in quad)
+            {
+                foreach (uint u in qb.tex)
+                {
+                    if (u > 0 && !offs.Contains(u)) offs.Add(u);
+                }
+            }
+
+            offs.Sort();
+
+            foreach (uint u in offs)
+            {
+                Console.WriteLine(u.ToString("X8"));
+                Console.Read();
+            }
+
+            */
 
         }
 
@@ -76,7 +113,7 @@ namespace CTRFramework
         public string Export(string fmt)
         {
             string fname = Path.ChangeExtension(path, fmt);
-            string mtllib = Path.ChangeExtension(path, ".mtl");
+            string mtllib = Path.ChangeExtension(path, ".mtl").Replace(" ", "_");
             Console.WriteLine("Exporting to: " + fname);
 
             StringBuilder sb = new StringBuilder();
@@ -235,20 +272,30 @@ namespace CTRFramework
             {
                 if (qb.offset1 != 0)
                 {
-                    if (!tex.ContainsKey(qb.lod_tex.Tag()))
+                    if (!tex.ContainsKey(qb.texlow.Tag()))
                     {
-                        tex.Add(qb.lod_tex.Tag(), qb.lod_tex);
+                        tex.Add(qb.texlow.Tag(), qb.texlow);
                     }
                 }
-                /*
-                for (int i = 0; i < 4; i++)
-                if (qb.tex[i] != 0)
+
+                foreach (TextureLayout tl in qb.texmid)
                 {
-                    if (!tex.ContainsKey(qb.ctrtex[i].Tag()))
+                    if (!tex.ContainsKey(tl.Tag()))
                     {
-                        tex.Add(qb.ctrtex[i].Tag(), qb.ctrtex[i]);
+                        tex.Add(tl.Tag(), tl);
                     }
-                }*/
+                }
+
+                /*
+                foreach (TextureLayout tl in qb.texhi)
+                {
+                    if (!tex.ContainsKey(tl.Tag()))
+                    {
+                        tex.Add(tl.Tag(), tl);
+                    }
+                }
+            */
+
             }
 
             return tex;
