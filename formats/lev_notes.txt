@@ -1,15 +1,48 @@
-Data[2] - if it’s not 0, Data[6,7,8,9] will hold some value or 0. Could mean something per quad (since four of them). This value most of the time coincides with value of data[2]. But sometimes it can be different.
+Quadblock struct:
 
-Bytes 2 and 6 7 8 9 are always same and equal?
+9 shorts	indices in vertex array - form 4 quads
 
-Not always, but it’s still weird, looks like some pattern there.  Maybe like 2 denotes what mode should be applied and then 6 7 8 9 for each quad separately?
+Short	quadflags (check github)
+Byte	drawing order for low poly quad 
+Byte	unknown, assumed rendering mode
+Byte	unknown, assumed rendering mode
+Byte	unknown, not transparency.
+	For some reason only affects 1 quad out of 4.
+	Usually: 0 1 2 3 128 129 130 131.
 
-Data[3] -  to check
-Data[4] - to check
+4 bytes		drawing order for hi poly quads.
 
-data [5] could be transparency indeed.
-Possible values 0 1 2 3 128 129 130 131. So it’s like there is flag at 128 and flags at 1 and 2.
+4 uints		pointers to mid level texture data
+
+6 shorts	bounding box min(x,y,z), max(x,y,z)
+
+Byte	terrain type - spotted 0-20, more flag values in hub areas.
+Byte	weather intensity - 0 15 30 45 60
+Byte	weather particles type - spotted 1 - snow, 3 - ???, 9 - rain
+Byte	unknown - mostly 0, 129 in sewer. 192 in temple1
+
+Short	unique value for each ngon. Probably an index?
+	Interestingly it starts with 001F then goes down to 0000, then 003F down to 0020, and so on.
+ 
+Byte	track progression marker, used to find current player position as well as his direction (wrong way message).
+	Gradually increases from start to finish, everything outside the track is FF.
+
+Byte	unknown. In blizzard bluff: values 13 to 18
+
+Uint	pointer to low level texture data, the one used in the distance. Can be null.
+
+Uint	pointer to 4 pointers group, which assumed to be pointers to high level texture data.
+
+10 shorts	or 20 bytes? unknown. Somehow related to collision.
 
 
+TextureLayout struct:
 
-unk2[1] - 0 15 30 45 60, but most of tracks have it at 0.
+Sample: A8 F0 A2 5E B3 F0 6A 00 A8 FB B3 FB
+
+2 Bytes - uv0 xy
+Short - palette xy: 10 bits Y, 6 bits X
+2 Bytes - uv1 xy
+Short - texture page: 12 bits Y, 4 bits X (more likely only 1 byte and the other is 0?)
+2 Bytes - uv2 xy
+2 Bytes - uv3 xy
