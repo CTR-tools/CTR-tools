@@ -64,6 +64,7 @@
             this.button9 = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button18 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -443,6 +444,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button18);
             this.tabPage1.Controls.Add(this.button8);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -451,11 +453,21 @@
             this.tabPage1.Text = "Vram stuff";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(8, 61);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(117, 39);
+            this.button18.TabIndex = 15;
+            this.button18.Text = "export UI textures (requires ui_map file)";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click_1);
+            // 
             // button8
             // 
             this.button8.Location = new System.Drawing.Point(8, 3);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(89, 52);
+            this.button8.Size = new System.Drawing.Size(117, 52);
             this.button8.TabIndex = 14;
             this.button8.Text = "convert vram";
             this.button8.UseVisualStyleBackColor = true;
@@ -528,6 +540,7 @@
         private System.Windows.Forms.Button button17;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button18;
     }
 }
 

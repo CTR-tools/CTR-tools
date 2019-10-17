@@ -155,7 +155,7 @@ namespace CTRFramework
         }
 
 
-        public void GetTexturePage(TextureLayout tl)
+        public void GetTexturePage(TextureLayout tl, string name = "")
         {
             byte[] buf = new byte[128 * 256];
 
@@ -163,41 +163,58 @@ namespace CTRFramework
             {
                 Buffer.BlockCopy(
                     this.data, 2048 * i + 128 * tl.PageX + tl.PageY * 2048 * 256,
-                    buf, i * 128, 
+                    buf, i * 128,
                     128);
             }
 
             Tim x = new Tim(new Rectangle(0, 0, 256 / 4, 256));
             x.data = buf;
 
-            x.SaveBMP("tex\\" + tl.Tag() + ".bmp", CtrClutToBmpPalette(GetCtrClut(tl)));
+            x.SaveBMP("tex\\" + (name == "" ? tl.Tag() : name) + ".bmp", CtrClutToBmpPalette(GetCtrClut(tl)));
 
-            using (Bitmap oldBmp = new Bitmap("tex\\" + tl.Tag() + ".bmp"))
-            using (Bitmap newBmp = new Bitmap(oldBmp))
-            using (Bitmap targetBmp = newBmp.Clone(new Rectangle(0, 0, newBmp.Width, newBmp.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb))
-            {
-                Graphics g = Graphics.FromImage(targetBmp);
+            if (tl.Tag() != "0000_00000028")
 
-                Point[] poly = new Point[]
+                using (Bitmap oldBmp = new Bitmap("tex\\" + (name == "" ? tl.Tag() : name) + ".bmp"))
+                using (Bitmap newBmp = new Bitmap(oldBmp))
                 {
-                    new Point(tl.uv[0].X, tl.uv[0].Y),
-                    new Point(tl.uv[1].X, tl.uv[1].Y),
-                    new Point(tl.uv[3].X, tl.uv[3].Y),
-                    new Point(tl.uv[2].X, tl.uv[2].Y)
-                };
+                    Point point = new Point(tl.uv[0].X, tl.uv[0].Y);
+                    Size size = new Size((int)(tl.uv[3].X - tl.uv[0].X) + 1, (int)(tl.uv[3].Y - tl.uv[0].Y) + 1);
 
-                g.DrawImage(targetBmp, new Point(0, 0));
-                /*
-                g.DrawPolygon(Pens.White, poly);
-                g.DrawEllipse(Pens.Red, new Rectangle(poly[0].X, poly[0].Y, 3, 3));
-                g.DrawEllipse(Pens.Green, new Rectangle(poly[2].X, poly[2].Y, 3, 3));
-                g.DrawEllipse(Pens.Blue, new Rectangle(poly[1].X, poly[1].Y, 3, 3));
-                g.DrawEllipse(Pens.Purple, new Rectangle(poly[3].X, poly[3].Y, 3, 3));
-                */
-                targetBmp.Save("tex\\" + tl.Tag() + ".png", System.Drawing.Imaging.ImageFormat.Png);
-            }
+                    try
+                    {
+                        Bitmap targetBmp = newBmp.Clone(
+                            new Rectangle(point, size),
+                            System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+
+                        Graphics g = Graphics.FromImage(targetBmp);
+
+                        g.DrawImage(targetBmp, new Point(0, 0));
+
+                        /*
+                        Point[] poly = new Point[]
+                        {
+                            new Point(tl.uv[0].X, tl.uv[0].Y),
+                            new Point(tl.uv[1].X, tl.uv[1].Y),
+                            new Point(tl.uv[3].X, tl.uv[3].Y),
+                            new Point(tl.uv[2].X, tl.uv[2].Y)
+                        };
+
+                        g.DrawPolygon(Pens.White, poly);
+                        g.DrawEllipse(Pens.Red, new Rectangle(poly[0].X, poly[0].Y, 3, 3));
+                        g.DrawEllipse(Pens.Green, new Rectangle(poly[2].X, poly[2].Y, 3, 3));
+                        g.DrawEllipse(Pens.Blue, new Rectangle(poly[1].X, poly[1].Y, 3, 3));
+                        g.DrawEllipse(Pens.Purple, new Rectangle(poly[3].X, poly[3].Y, 3, 3));
+                        */
+
+                        targetBmp.Save("tex\\" + (name == "" ? tl.Tag() : name) + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message + "\r\n\r\n" + ex.ToString());
+                    }
+                }
         }
-
 
         /// <summary>
         /// Returns PS1 palette (CLUT) for corresponding texture layout.
@@ -229,7 +246,7 @@ namespace CTRFramework
             {
                 for (int i = 0; i < 16; i++)
                 {
-                    Color c = Convert16(br.ReadUInt16(), false);
+                    Color c = Convert16(br.ReadUInt16(), true);
 
                    // palbmp.SetPixel(i, pals, c);
 
@@ -255,6 +272,15 @@ namespace CTRFramework
             byte g = (byte)(((col >> 5) & 0x1F) << 3);
             byte b = (byte)(((col >> 10) & 0x1F) << 3);
             byte a = (byte)((col >> 15) * 255);
+
+            /* //investigate
+            if (a != 255)
+            {
+                r = 255;
+                g = 0;
+                b = 255;
+            }
+            */
 
             return Color.FromArgb((useAlpha ? a : 255), r, g, b);
         }

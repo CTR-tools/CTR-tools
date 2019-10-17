@@ -18,7 +18,12 @@ namespace CTRFramework
         public LODVertexDef(int x)
         {
             value = x;
-            Console.WriteLine(x.ToString("X8") + "\t" + texIndex + "\t" + colorIndex + "\t" + stackIndex + "\t" + flags);
+            //Console.WriteLine(ToString());
+        }
+
+        public override string ToString()
+        {
+            return value.ToString("X8") + "\t" + texIndex + "\t" + colorIndex + "\t" + stackIndex + "\t" + flags;
         }
     }
 }

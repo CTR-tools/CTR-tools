@@ -116,10 +116,10 @@ namespace CTRFramework
 
             foreach (uint u in tex)
             {
-                if (u > 0)
+                if (u != 0)
                 {
                    // Console.WriteLine(u.ToString("X8"));
-                    br.BaseStream.Position = (int)u;
+                    br.BaseStream.Position = u;
                     texmid.Add(new TextureLayout(br));
                 }
             }

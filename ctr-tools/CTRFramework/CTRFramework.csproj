@@ -105,6 +105,7 @@
     <Compile Include="code\Interfaces.cs" />
     <Compile Include="code\helpers\Meta.cs" />
     <Compile Include="code\lev\AINavFrame.cs" />
+    <Compile Include="code\mpk\ModelPack.cs" />
     <Compile Include="code\shared\InstanceList.cs" />
     <Compile Include="code\lev\FaceGroup.cs" />
     <Compile Include="code\lev\Scene.cs" />

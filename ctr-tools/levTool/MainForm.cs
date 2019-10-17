@@ -390,5 +390,45 @@ namespace levTool
                 }
             }
         }
+
+        private void button18_Click_1(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "CTR VRAM file|*.vram";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                using (BinaryReader br = new BinaryReader(File.Open(ofd.FileName, FileMode.Open)))
+                {
+                    Tim buf = CtrVrm.FromReader(br);
+
+                    using (BinaryReader br2 = new BinaryReader(File.Open("ui_map", FileMode.Open)))
+                    {
+                        List<TexMap> list = new List<TexMap>();
+
+                        for (int i =0; i < 0xEC; i++)
+                        {
+                            list.Add(new TexMap(br2));
+                        }
+
+                        foreach (TexMap map in list)
+                        {
+                            buf.GetTexturePage(map.tl, map.id.ToString("X2") +"."+ map.name);
+                        }
+                    }
+
+                    /*
+                        Dictionary<string, TextureLayout> tex = scn.GetTexturesList();
+                        MessageBox.Show(tex.Count.ToString());
+                    }
+                    */
+
+                    buf.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
+                    //buf.palbmp.Save("palletes.png", System.Drawing.Imaging.ImageFormat.Png);
+
+                    Process.Start("test.bmp");
+                }
+            }
+        }
     }
 }

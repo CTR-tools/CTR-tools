@@ -54,7 +54,7 @@ namespace CTRFramework
         public string Tag()
         {
             return PageX.ToString("X2") + PageY.ToString("X2") + "_" + 
-                PalX.ToString("X4") + PalY.ToString("X4");
+                PalX.ToString("X4") + PalY.ToString("X4") + "_" + uv[0].X.ToString("X2") + uv[0].Y.ToString("X2");
         }
 
         public override string ToString()

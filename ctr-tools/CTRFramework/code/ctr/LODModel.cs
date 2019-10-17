@@ -56,11 +56,11 @@ namespace CTRFramework
             if (unk1 != 0x18)
             {
                 Console.WriteLine("unk1 == " + unk1);
-                Console.ReadKey();
             }
 
 
             Console.WriteLine("Model: " + name);
+
             //Console.WriteLine(name + "\t" + unk0 + "\t" + lodCount + "\t" + currentoffset);
 
             for (int i = 0; i < lodCount; i++)
@@ -70,6 +70,7 @@ namespace CTRFramework
                 lh.Add(lod);
             }
 
+            /*
             for (int i = 0; i < lodCount; i++)
             {
                 for (int j = 0; j < lh[i].animsCnt; j++)
@@ -103,6 +104,9 @@ namespace CTRFramework
                 }
             }
             while (x != -1);
+
+
+            */
 
 
             /*
