@@ -17,7 +17,8 @@ Project dependencies:
 ## File formats
 BIG (bigfile.big, sampler.big) - main game container for all the data used. Doesn't contain any filenames.\
 LEV - scene container. Can contain static level mesh, various dynamic models, scripts, AI paths, etc.\
-CTR - models. Can be stored in LEV or as a standalone file.\
+CTR - dynamic models. Can be stored in LEV, MPK or as a standalone file.\
+MPK - model packs. Stores kart racers, weapons, etc. Also contains definitions for UI textures.\
 VRAM - textures in native PS1 TIM format.\
 LNG - localization files, bascially, an ordered list of strings.\
 HWL (kart.hwl) - sfx/music container for the CTR sound engine known as "howl". All the SFX and music is stored in this file.\
@@ -41,6 +42,11 @@ Building: bigtool.exe C:\example\bigfile.txt
 * Given the file list, it will generate BIGFILE.BIG. Please note: it will overwrite existing file.
 * If the file listed doesn't exist, it will be written to BIG as a zero-byte entry (for example useful to remove STR thumbnails).
 
+## mpktool
+Planned to be an extractor for mpk files. As of now just prints the list of contained models.
+
+Usage: mpktool.exe C:\example\somefile.mpk
+
 ## lng2txt
 Converts LNG files into text files and back. LNG files contain all the strings used in the game, thus allows to localize the game in any language based on latin alphabet.
 
@@ -53,9 +59,8 @@ Takes a single CTR scene (\*.lev file) or a folder as an input and exports low-r
 Usage:\
 model_reader.exe C:\example\somefile.lev\
 model_reader.exe C:\example\
-
-* Import tested in MeshLab, Blender and 3ds Max.\
-* MeshLab is recommended as an intermediate converter.\
+* Import tested in MeshLab and Blender.
+* MeshLab is recommended as an intermediate converter.
 * Also supports ctr files as an input, but only outputs some info.
 * Ply support is temporarily dropped.
 
