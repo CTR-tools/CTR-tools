@@ -40,7 +40,7 @@ namespace CTRFramework
 
             if (unk2 != 0)
             {
-                Console.WriteLine("unk2 != 0 !!!");
+                Console.WriteLine("MeshInfo unk2 != 0 !!!");
                 Console.ReadKey();
             }
         }

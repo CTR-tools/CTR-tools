@@ -3,6 +3,8 @@
 ## Description
 Various tools to operate Crash Team Racing (PS1) game files.
 
+Download latest release here: https://github.com/DCxDemo/CTR-tools/releases/latest
+
 Join the CTR-tools Discord channel: https://discord.gg/56xm9Aj
 
 Tools are developed in Visual Studio Community 2019, target platform is .NET 4.5.
