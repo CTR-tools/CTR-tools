@@ -11,9 +11,10 @@ namespace CTRFramework
     public class ModelPack : IRead
     {
         string path;
-
         int texOff;
+
         List<uint> modOffs = new List<uint>();
+        UImap map;
 
         public List<LODModel> lodmods = new List<LODModel>();
 
@@ -50,6 +51,12 @@ namespace CTRFramework
             }
             while (x != 0);
 
+
+            br.BaseStream.Position = texOff;
+
+            map = new UImap(br);
+
+
             foreach (uint u in modOffs)
             {
                 br.BaseStream.Position = u;
@@ -57,7 +64,11 @@ namespace CTRFramework
                 LODModel lod = new LODModel(br);
                 lodmods.Add(lod);
             }
+        }
 
+        public void Extract(Tim tim)
+        {
+            map.Extract(tim);
         }
     }
 }

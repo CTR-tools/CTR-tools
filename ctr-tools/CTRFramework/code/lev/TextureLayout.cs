@@ -68,9 +68,12 @@ namespace CTRFramework
                 PageX + ", " + PageY;
         }
 
+
+
         public string ToObj()
         {
             StringBuilder sb = new StringBuilder();
+
 
             foreach (Vector2b v in uv)
                 sb.AppendLine(
@@ -79,7 +82,8 @@ namespace CTRFramework
                         Math.Round(v.X / 255f, 3).ToString(),  
                         Math.Round((255 - v.Y) / 255f, 3).ToString()
                     )
-                );
+            );
+
 
             sb.Append(String.Format("\r\nusemtl {0}\r\n", Tag()));
 

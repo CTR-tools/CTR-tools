@@ -553,30 +553,30 @@
 513=intro_box.vram
 514=intro_box.lev
 
-515=intro_race_today.vram
-516=intro_race_today.lev
-517=intro_race_today.offs
-518=intro_canyon_coco.vram
-519=intro_canyon_coco.lev
-520=intro_canyon_coco.offs
-521=intro_pass_tiny.vram
-522=intro_pass_tiny.lev
-523=intro_pass_tiny.offs
-524=intro_temple_polar.vram
-525=intro_temple_polar.lev
-526=intro_temple_polar.offs
-527=intro_skyway_dingodile.vram
-528=intro_skyway_dingodile.lev
-529=intro_skyway_dingodile.offs
-530=intro_sewer_cortex.vram
-531=intro_sewer_cortex.lev
-532=intro_sewer_cortex.offs
-533=intro_oxide.vram
-534=intro_oxide.lev
-535=intro_oxide.offs
-536=intro_plane.vram
-537=intro_plane.lev
-538=intro_plane.offs
+515=cutscenes\race_today\data.vram
+516=cutscenes\race_today\data.lev
+517=cutscenes\race_today\data.offs
+518=cutscenes\canyon_coco\data.vram
+519=cutscenes\canyon_coco\data.lev
+520=cutscenes\canyon_coco\data.offs
+521=cutscenes\pass_tiny\data.vram
+522=cutscenes\pass_tiny\data.lev
+523=cutscenes\pass_tiny\data.offs
+524=cutscenes\temple_polar\data.vram
+525=cutscenes\temple_polar\data.lev
+526=cutscenes\temple_polar\data.offs
+527=cutscenes\skyway_dingodile\data.vram
+528=cutscenes\skyway_dingodile\data.lev
+529=cutscenes\skyway_dingodile\data.offs
+530=cutscenes\sewer_cortex\data.vram
+531=cutscenes\sewer_cortex\data.lev
+532=cutscenes\sewer_cortex\data.offs
+533=cutscenes\oxide\data.vram
+534=cutscenes\oxide\data.lev
+535=cutscenes\oxide\data.offs
+536=cutscenes\sleeping_crash\data.vram
+537=cutscenes\sleeping_crash\data.lev
+538=cutscenes\sleeping_crash\data.offs
 
 
 

@@ -76,5 +76,14 @@ namespace CTRFramework.Shared
             return kek;
         }
 
+        public List<uint> ReadUInt32(int num)
+        {
+            List<uint> buf = new List<uint>();
+
+            for (int i = 0; i < num; i++)
+                buf.Add(ReadUInt32());
+
+            return buf;
+        }
     }
 }

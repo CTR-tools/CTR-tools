@@ -182,8 +182,10 @@ namespace CTRFramework
 
                     try
                     {
+
                         Bitmap targetBmp = newBmp.Clone(
-                            new Rectangle(point, size),
+                            new Rectangle(0,0, 256,256),
+                            //new Rectangle(point, size),
                             System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
 
@@ -211,7 +213,7 @@ namespace CTRFramework
                     }
                     catch (Exception ex)
                     {
-                        System.Windows.Forms.MessageBox.Show(ex.Message + "\r\n\r\n" + ex.ToString());
+                       // System.Windows.Forms.MessageBox.Show(ex.Message + "\r\n\r\n" + ex.ToString());
                     }
                 }
         }

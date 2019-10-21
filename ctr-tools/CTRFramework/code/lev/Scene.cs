@@ -110,9 +110,9 @@ namespace CTRFramework
     
 
 
-        public string Export(string fmt)
+        public string Export(string fmt, Detail d)
         {
-            string fname = Path.ChangeExtension(path, fmt);
+            string fname = Path.ChangeExtension(path, d.ToString() + "." + fmt);
             string mtllib = Path.ChangeExtension(path, ".mtl").Replace(" ", "_");
             Console.WriteLine("Exporting to: " + fname);
 
@@ -132,9 +132,9 @@ namespace CTRFramework
 
                     foreach (QuadBlock g in quad)
                     {
-                        sb.AppendLine(g.ToObj(vert, Detail.Low, a, b));
-                        a += 9;
-                        b += 4;
+                        sb.AppendLine(g.ToObj(vert, d, ref a, ref b));
+                        //a += 9;
+                        //b += (d == Detail.Low ? 4 : 16); 
                     }
 
                     break;

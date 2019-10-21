@@ -26,14 +26,11 @@ namespace CTRFramework
 
         public QuadFlags quadFlags;
 
-        //public byte[] unk1 = new byte[8];  //assumed flags
-
         public byte drawOrderLow;
         public byte f1;
         public byte f2;
         public byte f3;
         public byte[] drawOrderHigh = new byte[4];
-
 
         public uint[] tex = new uint[4];    //offsets to texture definition
 
@@ -170,15 +167,43 @@ namespace CTRFramework
             }
         }
 
+        //magic array of indices, each line contains 2 quads
+        int[] inds = new int[]
+        {
+            1, 6, 5, 5, 6, 7,
+            5, 7, 2, 2, 7, 8,
+            6, 3, 7, 7, 3, 9,
+            7, 9, 8, 8, 9, 4
+        };
 
-        public string ToObj(List<Vertex> v, Detail detail, int a, int b)
+        /*
+        * 1--5--2
+        * | /| /|
+        * |/ |/ |
+        * 6--7--8
+        * | /| /|
+        * |/ |/ |
+        * 3--9--4 
+        */
+
+
+        public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b)
         {
             StringBuilder sb = new StringBuilder();
 
             sb.Append(String.Format("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible")));
             sb.Append(String.Format("o piece_{0}\r\n\r\n", id.ToString("X4")));
 
-            for (int i = 0; i < ind.Length; i++)
+            int vcnt;
+
+            switch (detail)
+            {
+                case Detail.Low: vcnt = 4; break;
+                case Detail.High: vcnt = 9; break;
+                default: vcnt = 0; break;
+            }
+
+            for (int i = 0; i < vcnt; i++)
             {
                 sb.AppendLine(v[ind[i]].ToString(false));
             }
@@ -195,72 +220,37 @@ namespace CTRFramework
                         sb.Append(ASCIIFace("f", a + 1, a + 3, a + 2, b + 1, b + 3, b + 2));
                         sb.Append(ASCIIFace("f", a + 2, a + 3, a + 4, b + 2, b + 3, b + 4));
 
+                        b += 4;
+
                         break;
                     }
 
                 case Detail.High:
                     {
-                        foreach (TextureLayout tl in texmid)
+                        for (int i = 0; i < 4; i++)
                         {
-                            sb.AppendLine(tl.ToObj());
-                        }
-
-                        sb.AppendLine();
-
-
-                        if (texmid.Count == 4)
-                        {
-                            if (pagex != texmid[0].PageX || pagey != texmid[0].PageY)
+                            if (texmid.Count == 4)
                             {
-                                sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", texmid[0].PageX, texmid[0].PageY));
-                                pagex = texmid[0].PageX;
-                                pagey = texmid[0].PageY;
+                                sb.AppendLine(texmid[i].ToObj());
                             }
-                        }
-
-                        sb.Append(ASCIIFace("f", -9 + 5, -9 + 4, -9 + 0, -16 + 0, -16 + 3, -16 + 1));
-                        sb.Append(ASCIIFace("f", -9 + 4, -9 + 5, -9 + 6, -16 + 3, -16 + 0, -16 + 2));
-
-                        if (texmid.Count == 4)
-                        {
-                            if (pagex != texmid[1].PageX || pagey != texmid[1].PageY)
+                            else
                             {
-                                sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", texmid[1].PageX, texmid[1].PageY));
-                                pagex = texmid[1].PageX;
-                                pagey = texmid[1].PageY;
+                                sb.AppendLine("usemtl default");
                             }
-                        }
 
-                        sb.Append(ASCIIFace("f", -9 + 6, -9 + 1, -9 + 4, -12 + 0, -12 + 3, -12 + 1));
-                        sb.Append(ASCIIFace("f", -9 + 1, -9 + 6, -9 + 7, -12 + 3, -12 + 0, -12 + 2));
+                            sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b+1, b+3, b+2)); // 1 3 2
+                            sb.Append(ASCIIFace("f", a + inds[i * 6 + 3], a + inds[i * 6 + 4], a + inds[i * 6 + 5], b+2, b+3, b+4)); // 2 3 4
 
-                        if (texmid.Count == 4)
-                        {
-                            if (pagex != texmid[2].PageX || pagey != texmid[2].PageY)
-                            {
-                                sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", texmid[2].PageX, texmid[2].PageY));
-                                pagex = texmid[2].PageX;
-                                pagey = texmid[2].PageY;
-                            }
-                        }
-                        sb.Append(ASCIIFace("f", -9 + 2, -9 + 6, -9 + 5, -8 + 0, -8 + 3, -8 + 1));
-                        sb.Append(ASCIIFace("f", -9 + 6, -9 + 2, -9 + 8, -8 + 3, -8 + 0, -8 + 2));
+                            sb.AppendLine();
 
-                        if (texmid.Count == 4)
-                        {
-                            if (pagex != texmid[3].PageX || pagey != texmid[3].PageY)
-                            {
-                                sb.Append(String.Format("usemtl texpage_{0}_{1}\r\n", texmid[0].PageX, texmid[0].PageY));
-                                pagex = texmid[3].PageX;
-                                pagey = texmid[3].PageY;
-                            }
+                            if (texmid.Count == 4) b += 4;
                         }
-                        sb.Append(ASCIIFace("f", -9 + 8, -9 + 7, -9 + 6, -4 + 0, -4 + 3, -4 + 1));
-                        sb.Append(ASCIIFace("f", -9 + 7, -9 + 8, -9 + 3, -4 + 3, -4 + 0, -4 + 2));
 
                         break;
                     }
             }
+
+            a += vcnt;
 
             /*
             if (fmt == "ply")
