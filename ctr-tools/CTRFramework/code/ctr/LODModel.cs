@@ -1,7 +1,6 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace CTRFramework
@@ -10,7 +9,7 @@ namespace CTRFramework
     {
         public string path;
 
-        BinaryReader br;
+        BinaryReaderEx br;
         MemoryStream ms;
 
         public string name;
@@ -31,22 +30,22 @@ namespace CTRFramework
             path = s;
 
             ms = new MemoryStream(File.ReadAllBytes(s));
-            br = new BinaryReader(ms);
-            
+            br = new BinaryReaderEx(ms);
+
             int size = br.ReadInt32();
 
-            ms = new MemoryStream(br.ReadBytes((int)br.BaseStream.Length-4));
-            br = new BinaryReader(ms);
+            ms = new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 4));
+            br = new BinaryReaderEx(ms);
 
             Read(br);
         }
 
-        public LODModel(BinaryReader br)
+        public LODModel(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Replace("\0", "");
             unk0 = br.ReadInt16();

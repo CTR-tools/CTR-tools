@@ -1,10 +1,9 @@
-﻿using System;
-using System.IO; //file handling
+﻿using CTRFramework;
+using System;
 using System.Diagnostics;  //to launch meshlab
-using System.Drawing;    //for bitmap
 using System.Globalization; //for cultureinfo
+using System.IO; //file handling
 using System.Threading;
-using CTRFramework;
 
 namespace modelReader
 {
@@ -31,7 +30,7 @@ namespace modelReader
                 {
                     ConvertFile(args[0]);
                 }
-                
+
                 /*
                 string format = "obj";
                 
@@ -53,7 +52,7 @@ namespace modelReader
                 Console.WriteLine("No filename given!");
             }
 
-           // Console.ReadKey();
+            // Console.ReadKey();
         }
 
 

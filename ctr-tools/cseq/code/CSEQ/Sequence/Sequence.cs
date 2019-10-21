@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using NAudio.Midi;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using CTRFramework.Shared;
-using NAudio.Midi;
 
 namespace CTRtools.CSEQ
 {
@@ -27,10 +27,10 @@ namespace CTRtools.CSEQ
                 return false;
 
             //read offsets
-            short[] seqOffsets = br.ReadInt16Array(header.trackNum);
+            short[] seqOffsets = br.ReadArrayInt16(header.trackNum);
 
             //padding i guess?
-            if (header.trackNum % 2 == 0) 
+            if (header.trackNum % 2 == 0)
                 br.ReadInt16();
 
             //save current position to read tracks
@@ -88,7 +88,7 @@ namespace CTRtools.CSEQ
 
             mc.PrepareForExport();
 
-            
+
             try
             {
                 MidiFile.Export(fn, mc);

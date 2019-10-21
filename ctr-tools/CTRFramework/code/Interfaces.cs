@@ -1,12 +1,13 @@
-﻿using System.IO;
+﻿using CTRFramework.Shared;
+using System.IO;
 
 namespace CTRFramework
 {
     public interface IRead
     {
         /// <summary>Reads data from BinaryReader.</summary>
-        /// <param name="br">BinaryReader to read data from.</param>
-        void Read(BinaryReader br);
+        /// <param name="br">BinaryReaderEx to read data from.</param>
+        void Read(BinaryReaderEx br);
     }
 
     public interface IWrite

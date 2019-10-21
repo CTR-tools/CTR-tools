@@ -1,8 +1,9 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
 
 namespace lng2txt
 {
@@ -30,7 +31,7 @@ namespace lng2txt
 
             byte[] data = File.ReadAllBytes(s);
             MemoryStream ms = new MemoryStream(data);
-            BinaryReader br = new BinaryReader(ms);
+            BinaryReaderEx br = new BinaryReaderEx(ms);
 
             numStrings = br.ReadInt32();
             offset = br.ReadInt32();
@@ -74,7 +75,7 @@ namespace lng2txt
                 {
                     offsets.Add((int)writer.BaseStream.Position);
 
-                    writer.Write(System.Text.Encoding.ASCII.GetBytes(str.Replace("|", ""+(char)0xD)));
+                    writer.Write(System.Text.Encoding.ASCII.GetBytes(str.Replace("|", "" + (char)0xD)));
                     writer.Write((byte)0);
                 }
 

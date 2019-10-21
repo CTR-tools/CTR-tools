@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
-using Newtonsoft.Json.Linq;
 
 namespace CTRFramework.Shared
 {

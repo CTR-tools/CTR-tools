@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using CTRFramework.Shared;
+using System;
 
 namespace CTRFramework
 {
@@ -17,7 +14,7 @@ namespace CTRFramework
         int nil;
         int[] list = new int[10];
 
-        public FaceGroup(BinaryReader br, int control)
+        public FaceGroup(BinaryReaderEx br, int control)
         {
             start = br.ReadInt32();
 
@@ -40,9 +37,9 @@ namespace CTRFramework
 
         public override string ToString()
         {
-            string r =  "FaceGroup: " + start.ToString("x8") + " " + u1 + " " + u2 + " " + nil + "[";
+            string r = "FaceGroup: " + start.ToString("x8") + " " + u1 + " " + u2 + " " + nil + "[";
             foreach (int x in list)
-                r += (x-start) + ", ";
+                r += (x - start) + ", ";
 
             r += "]";
 

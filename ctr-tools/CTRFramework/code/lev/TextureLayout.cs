@@ -1,8 +1,7 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using System.IO;
-using CTRFramework.Shared;
 
 namespace CTRFramework
 {
@@ -17,12 +16,12 @@ namespace CTRFramework
         public ushort PageY;
 
 
-        public TextureLayout(BinaryReader br)
+        public TextureLayout(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             uv.Add(new Vector2b(br));
 
@@ -51,9 +50,10 @@ namespace CTRFramework
             //Console.WriteLine(Tag());
         }
 
+        //meant to be unique
         public string Tag()
         {
-            return PageX.ToString("X2") + PageY.ToString("X2") + "_" + 
+            return PageX.ToString("X2") + PageY.ToString("X2") + "_" +
                 PalX.ToString("X4") + PalY.ToString("X4") + "_" + uv[0].X.ToString("X2") + uv[0].Y.ToString("X2");
         }
 
@@ -74,18 +74,14 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-
             foreach (Vector2b v in uv)
-                sb.AppendLine(
-                    String.Format(
-                        "vt {0} {1}", 
-                        Math.Round(v.X / 255f, 3).ToString(),  
-                        Math.Round((255 - v.Y) / 255f, 3).ToString()
-                    )
-            );
+                sb.AppendFormat(
+                    "vt {0} {1}",
+                    Math.Round(v.X / 255f, 3).ToString(),
+                    Math.Round((255 - v.Y) / 255f, 3).ToString()
+                );
 
-
-            sb.Append(String.Format("\r\nusemtl {0}\r\n", Tag()));
+            sb.AppendFormat("\r\nusemtl {0}\r\n", Tag());
 
             return sb.ToString();
         }

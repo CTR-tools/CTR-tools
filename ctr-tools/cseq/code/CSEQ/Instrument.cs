@@ -1,11 +1,9 @@
-﻿using System;
-using System.Data;
-using System.IO;
-using System.Text;
-using CTRtools.Helpers;
-using Newtonsoft.Json.Linq;
-using CTRFramework;
+﻿using CTRFramework;
 using CTRFramework.Shared;
+using CTRtools.Helpers;
+using System;
+using System.Data;
+using System.Text;
 
 namespace CTRtools.CSEQ
 {
@@ -32,7 +30,7 @@ namespace CTRtools.CSEQ
 
         public MetaInst info;
 
-        
+
         public Instrument()
         {
         }
@@ -71,7 +69,7 @@ namespace CTRtools.CSEQ
         {
             switch (instType)
             {
-                case InstType.Long: 
+                case InstType.Long:
                     return String.Format(
                         "{0}: 0x01 - {1}\tvel - {2}\t0x00 - {3}\tpitch - {4}\tID - {5}\t0xFF80 - {6}\treverb - {7}\t0x00_2 - {8}",
                         instType.ToString(), magic1, velocity, always0, basepitch, sampleID.ToString("X4"), unknownFF80.ToString("X4"), reverb, reverb2
@@ -91,14 +89,14 @@ namespace CTRtools.CSEQ
         {
             StringBuilder sb = new StringBuilder();
 
-            string samplepath = cseqname + "/" + "sample_" + sampleID.ToString("X4") +".wav";
+            string samplepath = cseqname + "/" + "sample_" + sampleID.ToString("X4") + ".wav";
 
-            sb.Append("<group>\r\n"); 
+            sb.Append("<group>\r\n");
             sb.Append("//" + instType + "\r\n");
             sb.Append("\tvolume=" + (velocity / 255.0).ToString("0.0##").Replace(",", ".") + "\r\n");
 
             sb.Append("<region>\r\n");
-	        sb.Append("\tsample=" + samplepath + "\r\n");
+            sb.Append("\tsample=" + samplepath + "\r\n");
             sb.Append("\ttrigger=attack\r\n");
 
             if (instType == InstType.Short)

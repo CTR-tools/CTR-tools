@@ -1,6 +1,5 @@
-﻿using System;
-using System.IO;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
+using System;
 
 namespace CTRFramework
 {
@@ -31,7 +30,7 @@ namespace CTRFramework
 
         public SomeData[] someData;
         public PosAng[] startGrid;
-        
+
         public uint somePtr4;
         public uint somePtr5;
         public uint somePtr6;
@@ -53,12 +52,12 @@ namespace CTRFramework
         {
         }
 
-        public SceneHeader(BinaryReader br)
+        public SceneHeader(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             ptrMeshInfo = br.ReadUInt32();
             ptrSkybox = br.ReadUInt32();

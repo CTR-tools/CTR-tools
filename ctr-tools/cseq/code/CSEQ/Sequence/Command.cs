@@ -1,9 +1,9 @@
-﻿using System;
-using System.IO;
-using NAudio.Midi;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 using CTRtools.Helpers;
+using NAudio.Midi;
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 
 namespace CTRtools.CSEQ
@@ -103,7 +103,7 @@ namespace CTRtools.CSEQ
                         pitch = (byte)seq.shortSamples[pitch].info.Key;
                     }
                 }
-                    
+
                 else
                 {
                     if (evt == CSEQEvent.ChangePatch)
@@ -130,16 +130,16 @@ namespace CTRtools.CSEQ
             switch (evt)
             {
                 case CSEQEvent.NoteOn: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOn, pitch, velocity)); break;
-                case CSEQEvent.NoteOff: events.Add( new NoteEvent(absTime, channel, MidiCommandCode.NoteOff, pitch, velocity)); break;
+                case CSEQEvent.NoteOff: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOff, pitch, velocity)); break;
 
                 case CSEQEvent.ChangePatch:
-                   // events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, seq.longSamples[pitch].velocity / 2));
-                    events.Add(new PatchChangeEvent(absTime, channel, pitch)); 
+                    // events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, seq.longSamples[pitch].velocity / 2));
+                    events.Add(new PatchChangeEvent(absTime, channel, pitch));
                     break;
 
-                case CSEQEvent.BendAssume: events.Add( new PitchWheelChangeEvent(absTime, channel, pitch * 64)); break;
-                case CSEQEvent.PanAssume: events.Add( new ControlChangeEvent(absTime, channel, MidiController.Pan, pitch / 2)); break;
-                case CSEQEvent.VelAssume: events.Add( new ControlChangeEvent(absTime, channel, MidiController.MainVolume, pitch / 2)); break; //not really used
+                case CSEQEvent.BendAssume: events.Add(new PitchWheelChangeEvent(absTime, channel, pitch * 64)); break;
+                case CSEQEvent.PanAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.Pan, pitch / 2)); break;
+                case CSEQEvent.VelAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, pitch / 2)); break; //not really used
 
                 case CSEQEvent.EndTrack2:
                 case CSEQEvent.EndTrack: events.Add(new MetaEvent(MetaEventType.EndTrack, 0, absTime)); break;

@@ -1,12 +1,12 @@
-﻿using System;
-using System.IO;
+﻿using CTRFramework.Shared;
+using System;
 using System.Drawing;
 
 namespace CTRFramework
 {
     public class CtrVrm
     {
-        public static Tim FromReader(BinaryReader br)
+        public static Tim FromReader(BinaryReaderEx br)
         {
             Tim buffer = new Tim(new Rectangle(0, 0, 1024, 512));
             Tim tim;

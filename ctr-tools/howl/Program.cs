@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using CTRFramework.Shared;
+using System;
 using System.IO;
-using System.Security.Cryptography;
-
 
 namespace howl
 {
     class Program
     {
 
-       static void Main(string[] args)
+        static void Main(string[] args)
         {
-           Console.WriteLine("Crash Team Racing HOWL Extractor by DCxDemo*.\r\n");
+            Console.WriteLine("Crash Team Racing HOWL Extractor by DCxDemo*.\r\n");
 
             if (args.Length == 1)
             {
@@ -25,7 +21,7 @@ namespace howl
                 {
                     byte[] data = File.ReadAllBytes(fn);
                     MemoryStream ms = new MemoryStream(data);
-                    BinaryReader br = new BinaryReader(ms);
+                    BinaryReaderEx br = new BinaryReaderEx(ms);
 
                     HOWL hwl = new HOWL(fn);
                     hwl.Read(br);

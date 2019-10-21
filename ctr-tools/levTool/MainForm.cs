@@ -1,13 +1,13 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using System.IO;
+﻿using CTRFramework;
+using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using CTRFramework;
-using CTRFramework.Shared;
-using System.Diagnostics;
+using System.Windows.Forms;
 
 namespace levTool
 {
@@ -79,7 +79,7 @@ namespace levTool
 
                 foreach (PickupHeader ph in scn.pickups)
                     ph.Write(bw);
-                
+
 
                 bw.BaseStream.Position = scn.meshinfo.ptrVertexArray + 4;
 
@@ -91,8 +91,8 @@ namespace levTool
 
                 foreach (QuadBlock qb in scn.quad)
                     qb.Write(bw);
-                
-               
+
+
             }
         }
 
@@ -366,7 +366,7 @@ namespace levTool
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                using (BinaryReader br = new BinaryReader(File.Open(ofd.FileName, FileMode.Open)))
+                using (BinaryReaderEx br = new BinaryReaderEx(File.Open(ofd.FileName, FileMode.Open)))
                 {
                     Tim buf = CtrVrm.FromReader(br);
 
@@ -398,22 +398,22 @@ namespace levTool
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                using (BinaryReader br = new BinaryReader(File.Open(ofd.FileName, FileMode.Open)))
+                using (BinaryReaderEx br = new BinaryReaderEx(File.Open(ofd.FileName, FileMode.Open)))
                 {
                     Tim buf = CtrVrm.FromReader(br);
 
-                    using (BinaryReader br2 = new BinaryReader(File.Open("ui_map", FileMode.Open)))
+                    using (BinaryReaderEx br2 = new BinaryReaderEx(File.Open("ui_map", FileMode.Open)))
                     {
                         List<TexMap> list = new List<TexMap>();
 
-                        for (int i =0; i < 0xEC; i++)
+                        for (int i = 0; i < 0xEC; i++)
                         {
                             list.Add(new TexMap(br2));
                         }
 
                         foreach (TexMap map in list)
                         {
-                            buf.GetTexturePage(map.tl, map.id.ToString("X2") +"."+ map.name);
+                            buf.GetTexturePage(map.tl, map.id.ToString("X2") + "." + map.name);
                         }
                     }
 

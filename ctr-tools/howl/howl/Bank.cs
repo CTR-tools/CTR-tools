@@ -1,7 +1,8 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace howl
 {
@@ -16,7 +17,7 @@ namespace howl
 
         public Bank(string s)
         {
-            using (BinaryReader br = new BinaryReader(File.OpenRead(s)))
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(s)))
             {
                 Read(br);
             }
@@ -24,7 +25,7 @@ namespace howl
 
 
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             List<short> info = new List<short>();
 
@@ -105,7 +106,7 @@ namespace howl
 
             foreach (KeyValuePair<int, byte[]> s in samples)
             {
-                sb.Append(s.ToString()+"\r\n");
+                sb.Append(s.ToString() + "\r\n");
                 cnt++;
             }
 

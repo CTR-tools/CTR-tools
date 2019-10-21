@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CTRFramework;
+using CTRFramework.Shared;
+using System;
 using System.ComponentModel;
 using System.IO;
-using CTRFramework;
-using CTRtools.Helpers;
 
 namespace CTRtools.CSEQ
 {
@@ -71,7 +71,7 @@ namespace CTRtools.CSEQ
         }
 
 
-        public virtual void Read(BinaryReader br)
+        public virtual void Read(BinaryReaderEx br)
         {
             magic1 = br.ReadByte();
             volume = br.ReadByte();

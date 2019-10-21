@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.IO;
 
 namespace CTRtools.CSEQ
@@ -10,7 +11,7 @@ namespace CTRtools.CSEQ
         public int shortCnt;
         public int seqCnt;
 
-        public bool Read(BinaryReader br)
+        public bool Read(BinaryReaderEx br)
         {
             size = br.ReadInt32();
 

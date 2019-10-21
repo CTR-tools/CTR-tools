@@ -1,5 +1,5 @@
-﻿using System.IO;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
+using System.IO;
 
 namespace CTRtools.SFX
 {
@@ -11,11 +11,13 @@ namespace CTRtools.SFX
 
         public byte[] WaveData
         {
-            get { 
+            get
+            {
                 return data;
-            } 
-            set { 
-                data = value; 
+            }
+            set
+            {
+                data = value;
                 header.datasize = value.Length;
             }
         }
@@ -47,7 +49,7 @@ namespace CTRtools.SFX
         {
             using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(s)))
             {
-                if (header != null) 
+                if (header != null)
                     header.Write(bw);
 
                 if (data != null)

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CTRFramework;
+using CTRFramework.Shared;
+using System;
 using System.ComponentModel;
 using System.IO;
-using CTRFramework;
-using CTRtools.Helpers;
 
 namespace CTRtools.CSEQ
 {
@@ -36,7 +36,7 @@ namespace CTRtools.CSEQ
         private byte reverb2;    //unknown value, mostly 31
 
 
-        public override void Read(BinaryReader br)
+        public override void Read(BinaryReaderEx br)
         {
             magic1 = br.ReadByte();
             Volume = br.ReadByte();

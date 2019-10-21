@@ -1,7 +1,7 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Drawing;
 using System.IO;
-using System.Collections.Generic;
 
 namespace CTRFramework
 {
@@ -16,14 +16,16 @@ namespace CTRFramework
 
         public int dataWidth
         {
-            get {
+            get
+            {
                 return region.Width * bpp / 8;
             }
         }
 
         public byte bpp
         {
-            get {
+            get
+            {
                 switch (flags & 3)
                 {
                     case 0: return 4;
@@ -63,13 +65,14 @@ namespace CTRFramework
         /// Reads TIM from file using BinaryReader.
         /// </summary>
         /// <param name="br">BinaryReader.</param>
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             magic = br.ReadUInt32();
             flags = br.ReadUInt32();
             datasize = br.ReadUInt32();
 
-            if (magic != 16 || flags != 2) {
+            if (magic != 16 || flags != 2)
+            {
                 throw new Exception("probably not a CTR vram");
             }
 
@@ -184,7 +187,7 @@ namespace CTRFramework
                     {
 
                         Bitmap targetBmp = newBmp.Clone(
-                            new Rectangle(0,0, 256,256),
+                            new Rectangle(0, 0, 256, 256),
                             //new Rectangle(point, size),
                             System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
@@ -213,7 +216,7 @@ namespace CTRFramework
                     }
                     catch (Exception ex)
                     {
-                       // System.Windows.Forms.MessageBox.Show(ex.Message + "\r\n\r\n" + ex.ToString());
+                        // System.Windows.Forms.MessageBox.Show(ex.Message + "\r\n\r\n" + ex.ToString());
                     }
                 }
         }
@@ -242,15 +245,15 @@ namespace CTRFramework
         {
             byte[] pal = new byte[16 * 4];
 
-           // pals++;
+            // pals++;
 
-            using (BinaryReader br = new BinaryReader(new MemoryStream(clut)))
+            using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(clut)))
             {
                 for (int i = 0; i < 16; i++)
                 {
                     Color c = Convert16(br.ReadUInt16(), true);
 
-                   // palbmp.SetPixel(i, pals, c);
+                    // palbmp.SetPixel(i, pals, c);
 
                     pal[i * 4] = c.B;
                     pal[i * 4 + 1] = c.G;
@@ -258,7 +261,7 @@ namespace CTRFramework
                     pal[i * 4 + 3] = c.A;
                 }
             }
-            
+
             return pal;
         }
 

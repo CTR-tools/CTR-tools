@@ -1,9 +1,8 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using CTRFramework.Shared;
+using System.Text;
 
 namespace howl
 {
@@ -44,7 +43,7 @@ namespace howl
             }
         }
 
-        public bool Read(BinaryReader br)
+        public bool Read(BinaryReaderEx br)
         {
             header = new HowlHeader(br);
 
@@ -100,14 +99,14 @@ namespace howl
                     }
                 }
             }
-        
+
 
             return true;
         }
 
 
 
-        public void ExportCSEQ(BinaryReader br)
+        public void ExportCSEQ(BinaryReaderEx br)
         {
             string seqdir = String.Format("{0}_cseq\\", name);
             Directory.CreateDirectory(seqdir);
@@ -115,7 +114,7 @@ namespace howl
             string bankdir = String.Format("{0}_bank\\", name);
             Directory.CreateDirectory(bankdir);
 
-            for (int i = 0; i<offbanks.Count-1; i++)
+            for (int i = 0; i < offbanks.Count - 1; i++)
             {
                 br.BaseStream.Position = offbanks[i];
 
@@ -124,7 +123,7 @@ namespace howl
 
                 fn = bankdir + fn;
 
-                File.WriteAllBytes(fn, br.ReadBytes(offbanks[i+1]-offbanks[i]));
+                File.WriteAllBytes(fn, br.ReadBytes(offbanks[i + 1] - offbanks[i]));
             }
 
             Console.WriteLine("---");
@@ -135,7 +134,7 @@ namespace howl
             {
                 string fn = String.Format(
                     "{0}_{1}.cseq",
-                    j.ToString("00"), 
+                    j.ToString("00"),
                     (j < rel.fileList.Length) ? rel.fileList[j] : "sequence"
                 );
 

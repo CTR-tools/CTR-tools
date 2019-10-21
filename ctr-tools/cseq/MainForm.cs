@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
-using System.IO;
-using System.Data;
-using System.Collections.Generic;
+﻿using CTRtools.Helpers;
 using CTRtools.SFX;
-using CTRtools.Helpers;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Windows.Forms;
 
 namespace CTRtools.CSEQ
 {
@@ -46,7 +46,7 @@ namespace CTRtools.CSEQ
             for (int i = 0; i < comboBox1.Items.Count; i++)
             {
                 if (name.Contains(comboBox1.Items[i].ToString()))
-                  comboBox1.SelectedIndex = i;
+                    comboBox1.SelectedIndex = i;
             }
 
             seq = new CSEQ();
@@ -279,7 +279,7 @@ namespace CTRtools.CSEQ
             int id = 0;
 
 
-            MetaInst info  = CTRJson.GetMetaInst(track, instr, id);
+            MetaInst info = CTRJson.GetMetaInst(track, instr, id);
             textBox1.Text += "" + info.Midi + " " + info.Key + " " + info.Title + " " + info.Pitch;
         }
 

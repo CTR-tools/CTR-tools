@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using CTRFramework.Shared;
+using System;
 
 namespace CTRFramework
 {
@@ -24,7 +21,7 @@ namespace CTRFramework
         int offsettooffsets2;
         int unk4; //?
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Replace("\0", "");
             unk0 = br.ReadInt32(); //0?

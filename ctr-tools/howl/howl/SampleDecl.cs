@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using CTRFramework.Shared;
+using System;
 
 namespace howl
 {
@@ -18,12 +15,12 @@ namespace howl
         {
         }
 
-        public SampleDecl(BinaryReader br)
+        public SampleDecl(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             unk1 = br.ReadByte();
             volume = br.ReadByte();

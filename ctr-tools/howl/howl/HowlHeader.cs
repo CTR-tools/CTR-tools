@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using CTRFramework.Shared;
+using System;
 
 namespace howl
 {
@@ -19,12 +16,12 @@ namespace howl
         public int seqCount;
         public int u2;
 
-        public HowlHeader(BinaryReader br)
+        public HowlHeader(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             magic = System.Text.Encoding.ASCII.GetString(br.ReadBytes(4));
 

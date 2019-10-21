@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using CTRFramework.Shared;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -59,13 +59,13 @@ namespace CTRFramework
         {
         }
 
-        public QuadBlock(BinaryReader br)
+        public QuadBlock(BinaryReaderEx br)
         {
             Read(br);
         }
 
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             for (int i = 0; i < 9; i++)
                 ind[i] = br.ReadInt16();
@@ -85,7 +85,7 @@ namespace CTRFramework
 
             bb = new BoundingBox(br);
 
-           // unk2 = br.ReadBytes(4);
+            // unk2 = br.ReadBytes(4);
 
 
             terrainFlag = (TerrainFlags)br.ReadByte();
@@ -115,7 +115,7 @@ namespace CTRFramework
             {
                 if (u != 0)
                 {
-                   // Console.WriteLine(u.ToString("X8"));
+                    // Console.WriteLine(u.ToString("X8"));
                     br.BaseStream.Position = u;
                     texmid.Add(new TextureLayout(br));
                 }
@@ -152,7 +152,7 @@ namespace CTRFramework
 
         public void RecalcBB(List<Vertex> vert)
         {
-            BoundingBox bb_new = new BoundingBox(); 
+            BoundingBox bb_new = new BoundingBox();
 
             foreach (int i in ind)
             {
@@ -161,7 +161,7 @@ namespace CTRFramework
 
                 if (vert[i].coord.Y < bb_new.Min.Y) bb_new.Min.Y = vert[i].coord.Y;
                 if (vert[i].coord.Y > bb_new.Max.Y) bb_new.Max.Y = vert[i].coord.Y;
-                
+
                 if (vert[i].coord.Z < bb_new.Min.Z) bb_new.Min.Z = vert[i].coord.Z;
                 if (vert[i].coord.Z > bb_new.Max.Z) bb_new.Max.Z = vert[i].coord.Z;
             }
@@ -238,8 +238,8 @@ namespace CTRFramework
                                 sb.AppendLine("usemtl default");
                             }
 
-                            sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b+1, b+3, b+2)); // 1 3 2
-                            sb.Append(ASCIIFace("f", a + inds[i * 6 + 3], a + inds[i * 6 + 4], a + inds[i * 6 + 5], b+2, b+3, b+4)); // 2 3 4
+                            sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + 1, b + 3, b + 2)); // 1 3 2
+                            sb.Append(ASCIIFace("f", a + inds[i * 6 + 3], a + inds[i * 6 + 4], a + inds[i * 6 + 5], b + 2, b + 3, b + 4)); // 2 3 4
 
                             sb.AppendLine();
 

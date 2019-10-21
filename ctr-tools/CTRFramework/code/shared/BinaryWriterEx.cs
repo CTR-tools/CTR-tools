@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace CTRFramework.Shared
@@ -19,7 +16,7 @@ namespace CTRFramework.Shared
         public void WriteBig(int value)
         {
             byte[] x = BitConverter.GetBytes(value);
-            for (int i = 0; i < 4; i++) Write(x[3-i]);
+            for (int i = 0; i < 4; i++) Write(x[3 - i]);
         }
 
     }

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using CTRFramework.Shared;
 
 namespace CTRFramework
 {
@@ -27,7 +27,7 @@ namespace CTRFramework
             path = s;
 
             MemoryStream ms = new MemoryStream(File.ReadAllBytes(s));
-            BinaryReader br = new BinaryReader(ms);
+            BinaryReaderEx br = new BinaryReaderEx(ms);
 
             int size = br.ReadInt32();
 
@@ -35,12 +35,12 @@ namespace CTRFramework
             if ((size & 0xFF) == 0)
             {
                 ms = new MemoryStream(br.ReadBytes(size));
-                br = new BinaryReader(ms);
+                br = new BinaryReaderEx(ms);
             }
             else
             {
                 ms = new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 4));
-                br = new BinaryReader(ms);
+                br = new BinaryReaderEx(ms);
             }
 
             Read(br);
@@ -54,7 +54,7 @@ namespace CTRFramework
             {
                 Console.WriteLine("VRAM found!");
 
-                using (BinaryReader brr = new BinaryReader(File.OpenRead(vrmpath)))
+                using (BinaryReaderEx brr = new BinaryReaderEx(File.OpenRead(vrmpath)))
                 {
                     tim = CtrVrm.FromReader(brr);
                 }
@@ -107,7 +107,7 @@ namespace CTRFramework
                 Console.WriteLine("null vram");
             }
         }
-    
+
 
 
         public string Export(string fmt, Detail d)
@@ -178,17 +178,7 @@ namespace CTRFramework
                 sb.Append(String.Format("map_Kd tex\\{0}.png\r\n\r\n", s.Tag()));
             }
 
-            /*
-            for (int i = 8; i < 16; i++)
-                for (int j = 0; j < 2; j++)
-                {
-                    sb.Append(String.Format("newmtl texpage_{0}_{1}\r\n", i, j));
-                    sb.Append(String.Format("map_Ka tex\\page_{0}_{1}.bmp\r\n", i, j));
-                    sb.Append(String.Format("map_Kd tex\\page_{0}_{1}.bmp\r\n\r\n", i, j));
-                }
-            */
-
-            CTRFramework.Shared.Helpers.WriteToFile(mtllib, sb.ToString());
+            Helpers.WriteToFile(mtllib, sb.ToString());
 
             Console.WriteLine("Done!");
 
@@ -196,15 +186,17 @@ namespace CTRFramework
         }
 
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
-            header = Instance<SceneHeader>.ReadFrom(br, 0);   
-            meshinfo = Instance<MeshInfo>.ReadFrom(br, (int)header.ptrMeshInfo);   
-            skybox = Instance<SkyBox>.ReadFrom(br, (int)header.ptrSkybox);
-            vert = InstanceList<Vertex>.ReadFrom(br, (int)meshinfo.ptrVertexArray, meshinfo.cntVertex);
-            restartPts = InstanceList<PosAng>.ReadFrom(br, (int)header.ptrRestartPts, (int)header.numRestartPts);
-            coldata = InstanceList<ColData>.ReadFrom(br, (int)meshinfo.ptrColDataArray, meshinfo.cntColData);
-            quad = InstanceList<QuadBlock>.ReadFrom(br, (int)meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
+            header = Instance<SceneHeader>.ReadFrom(br, 0);
+            meshinfo = Instance<MeshInfo>.ReadFrom(br, header.ptrMeshInfo);
+            skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
+            vert = InstanceList<Vertex>.ReadFrom(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
+            restartPts = InstanceList<PosAng>.ReadFrom(br, header.ptrRestartPts, header.numRestartPts);
+            coldata = InstanceList<ColData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
+            quad = InstanceList<QuadBlock>.ReadFrom(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
+
+
 
             //read pickups
             for (int i = 0; i < header.numPickupHeaders; i++)
@@ -249,7 +241,7 @@ namespace CTRFramework
 
 
             List<short> uniflag = new List<short>();
-                         
+
             foreach (QuadBlock qb in quad)
             {
                 //check unique values here

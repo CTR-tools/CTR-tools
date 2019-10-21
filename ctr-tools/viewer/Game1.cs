@@ -53,7 +53,7 @@ namespace viewer
             graphics.PreferMultiSampling = true;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             IsMouseVisible = false;
-           
+
         }
 
         public void GoFullScreen()
@@ -77,7 +77,7 @@ namespace viewer
 
             ss = new SamplerState();
             ss.FilterMode = TextureFilterMode.Default;
-           
+
             ss.Filter = TextureFilter.Anisotropic;
             ss.MaxAnisotropy = 16;
             ss.MaxMipLevel = 8;
@@ -106,18 +106,18 @@ namespace viewer
             textures.Add(Content.Load<Texture2D>("test"));
             effect.Texture = textures[0];
             effect.TextureEnabled = true;
-            
+
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("File");
 
             tint = new Texture2D(GraphicsDevice, 1, 1);
-            tint.SetData( new Color[] { Color.Black } );
+            tint.SetData(new Color[] { Color.Black });
 
             menu = new Menu(font);
-                //graphics.GraphicsDevice.Viewport.Height / 2));
+            //graphics.GraphicsDevice.Viewport.Height / 2));
 
-            LoadLevel((TerrainFlags) (1 << flag));
+            LoadLevel((TerrainFlags)(1 << flag));
             ResetCamera();
         }
 
@@ -145,7 +145,7 @@ namespace viewer
 
             foreach (Scene s in scn)
                 quads.Add(new MGQuadBlock(s, Detail.Low));
-               // quads.Add(new MGQuadBlock(s, i++, qf, hide_invis));
+            // quads.Add(new MGQuadBlock(s, i++, qf, hide_invis));
 
             if (scn.Count > 0)
             {
@@ -199,7 +199,7 @@ namespace viewer
                 {
                     switch (menu.SelectedItem.Action)
                     {
-                        case "load": LoadLevel((TerrainFlags)(1 << flag)); ResetCamera(); inmenu = false;  break;
+                        case "load": LoadLevel((TerrainFlags)(1 << flag)); ResetCamera(); inmenu = false; break;
                         case "flag":
                             switch (menu.SelectedItem.Param)
                             {
@@ -240,7 +240,7 @@ namespace viewer
                             Exit();
                             break;
                     }
-                
+
                     menu.Exec = !menu.Exec;
                 }
 
@@ -291,7 +291,7 @@ namespace viewer
 
         protected override void Draw(GameTime gameTime)
         {
-           // graphics.BeginDraw();
+            // graphics.BeginDraw();
 
             GraphicsDevice.Clear(backColor);
 
@@ -307,7 +307,7 @@ namespace viewer
 
             spriteBatch.Begin(depthStencilState: DepthStencilState.Default);
 
-            spriteBatch.DrawString(font, (1 << flag).ToString("X4") + ": " + ((TerrainFlags)(1<<flag)).ToString(), new Vector2(20, 20), Color.Yellow);
+            spriteBatch.DrawString(font, (1 << flag).ToString("X4") + ": " + ((TerrainFlags)(1 << flag)).ToString(), new Vector2(20, 20), Color.Yellow);
             if (scn.Count == 0)
                 spriteBatch.DrawString(font, "No levels loaded. Put LEV files in levels folder.".ToString(), new Vector2(20, 60), Color.Yellow);
 
@@ -315,7 +315,7 @@ namespace viewer
 
             base.Draw(gameTime);
 
-           // graphics.EndDraw();
+            // graphics.EndDraw();
         }
     }
 }

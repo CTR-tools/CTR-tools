@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using CTRFramework.Shared;
+using System.Collections.Generic;
 using System.IO;
-using CTRFramework.Shared;
+using System.Text;
 
 namespace CTRtools.SFX
 {
@@ -56,7 +56,7 @@ namespace CTRtools.SFX
 
                 if (frameIsEmpty(buf))
                 {
-                    offs.Add((int)br.BaseStream.Position-16);
+                    offs.Add((int)br.BaseStream.Position - 16);
                     curr++;
                 }
             }
@@ -112,7 +112,7 @@ namespace CTRtools.SFX
 
             foreach (KeyValuePair<int, VAG> s in samples)
             {
-                sb.Append(s.ToString()+"\r\n");
+                sb.Append(s.ToString() + "\r\n");
                 cnt++;
             }
 

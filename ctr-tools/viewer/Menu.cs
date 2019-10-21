@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 
 namespace viewer
@@ -44,7 +43,8 @@ namespace viewer
         public int Selection
         {
             get { return selection; }
-            set {
+            set
+            {
                 selection = value;
                 if (value >= items.Count) selection = 0;
                 if (value < 0) selection = items.Count - 1;
@@ -72,7 +72,7 @@ namespace viewer
             items.Add(new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true));
             items.Add(new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true));
             //items.Add(new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true));
- 
+
             items.Add(new MenuItem("previous flag".ToUpper(), "flag", "prev", true));
             items.Add(new MenuItem("next flag".ToUpper(), "flag", "next", true));
             items.Add(new MenuItem("---", "", "", false));
@@ -117,7 +117,7 @@ namespace viewer
 
             foreach (MenuItem m in items)
             {
-                g.DrawString(fnt, m.Title.ToUpper(), loc + shadow_offset - new Vector2(m.Width / 2 * scale, 0), Color.Black, 
+                g.DrawString(fnt, m.Title.ToUpper(), loc + shadow_offset - new Vector2(m.Width / 2 * scale, 0), Color.Black,
                    0, new Vector2(0, 0), scale, SpriteEffects.None, 0.5f);
 
                 g.DrawString(fnt, m.Title.ToUpper(), loc - new Vector2(m.Width / 2 * scale, 0),

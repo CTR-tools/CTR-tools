@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.IO;
 
 namespace CTRFramework.Shared
 {
@@ -30,12 +30,12 @@ namespace CTRFramework.Shared
             max = new Vector3s(short.MinValue);
         }
 
-        public BoundingBox(BinaryReader br)
+        public BoundingBox(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             min = new Vector3s(br);
             max = new Vector3s(br);

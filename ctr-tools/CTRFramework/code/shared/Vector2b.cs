@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.ComponentModel;
+using System.IO;
 
 namespace CTRFramework.Shared
 {
@@ -37,7 +34,7 @@ namespace CTRFramework.Shared
 
         //constructor
 
-        public Vector2b(BinaryReader br)
+        public Vector2b(BinaryReaderEx br)
         {
             Read(br);
         }
@@ -45,7 +42,7 @@ namespace CTRFramework.Shared
 
         #region Interfaces
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             x = br.ReadByte();
             y = br.ReadByte();

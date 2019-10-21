@@ -1,6 +1,6 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.IO;
-using CTRFramework.Shared;
 
 namespace CTRFramework
 {
@@ -16,7 +16,7 @@ namespace CTRFramework
         {
         }
 
-        public Vertex(BinaryReader br)
+        public Vertex(BinaryReaderEx br)
         {
             Read(br);
         }
@@ -31,19 +31,19 @@ namespace CTRFramework
             }
         }
 
-        public void ReadShort(BinaryReader br)
+        public void ReadShort(BinaryReaderEx br)
         {
             coord = new Vector4s(br);
             color = new Vector4b(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             coord = new Vector4s(br);
             color = new Vector4b(br);
             color_morph = new Vector4b(br);
         }
-        
+
         public void Write(BinaryWriter bw)
         {
             coord.Write(bw);

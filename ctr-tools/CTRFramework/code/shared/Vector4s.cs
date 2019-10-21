@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.ComponentModel;
+using System.IO;
 
 namespace CTRFramework.Shared
 {
@@ -47,7 +47,7 @@ namespace CTRFramework.Shared
             w = ww;
         }
 
-        public Vector4s(BinaryReader br)
+        public Vector4s(BinaryReaderEx br)
         {
             Read(br);
         }
@@ -58,7 +58,7 @@ namespace CTRFramework.Shared
             Y = (short)(Y * x);
             Z = (short)(Z * x);
             W = (short)(W * x);
-        } 
+        }
 
         public void Scale(float x, float y, float z, float w)
         {
@@ -66,9 +66,9 @@ namespace CTRFramework.Shared
             Y = (short)(Y * y);
             Z = (short)(Z * z);
             W = (short)(W * w);
-        } 
+        }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             x = br.ReadInt16();
             y = br.ReadInt16();

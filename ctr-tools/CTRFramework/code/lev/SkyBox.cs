@@ -1,9 +1,7 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.IO;
-using CTRFramework.Shared;
 
 namespace CTRFramework
 {
@@ -20,21 +18,18 @@ namespace CTRFramework
         {
         }
 
-        public SkyBox(BinaryReader br)
+        public SkyBox(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             cntVertex = br.ReadInt32();
             ptrVertex = br.ReadUInt32();
 
-            for (int i = 0; i < 8; i++)
-                sizes[i] = br.ReadInt16();
-
-            for (int i = 0; i < 8; i++)
-                offs[i] = br.ReadUInt32();
+            sizes = br.ReadArrayInt16(8);
+            offs = br.ReadArrayUInt32(8);
 
             for (int i = 0; i < cntVertex; i++)
             {

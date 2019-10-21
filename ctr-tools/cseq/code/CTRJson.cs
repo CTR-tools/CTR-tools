@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json;
+using System;
 using System.IO;
 
 namespace CTRtools.Helpers
 {
-    
+
     public struct MetaInst
     {
         public int Midi;
@@ -46,7 +42,7 @@ namespace CTRtools.Helpers
         public static string GetLevelTitle(string lev)
         {
             foreach (JToken j in levels)
-                if (j["name"].ToString() == lev) 
+                if (j["name"].ToString() == lev)
                     return j["title"].ToString();
 
             return "!" + lev + "!";

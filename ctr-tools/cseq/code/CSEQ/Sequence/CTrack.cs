@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using NAudio.Midi;
-using System.IO;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 using CTRtools.Helpers;
+using NAudio.Midi;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace CTRtools.CSEQ
 {

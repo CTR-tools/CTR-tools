@@ -1,12 +1,9 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Security.Cryptography;
 using p = bigtool.Properties.Resources;
-using Newtonsoft.Json.Linq;
-using CTRFramework;
-using CTRFramework.Shared;
 
 namespace bigtool
 {
@@ -24,7 +21,7 @@ namespace bigtool
 
     class BIG
     {
-        BinaryReader br;
+        BinaryReaderEx br;
         MemoryStream ms;
 
         public uint totalFiles = 0;
@@ -59,7 +56,7 @@ namespace bigtool
             if (bigpath == null || bigpath == "") bigpath = basepath;
             extpath = Path.Combine(bigpath, bigname) + "\\";
             verpath = Path.Combine(basepath, "versions.json");
-            
+
             //uncomment if something goes wrong
             /*
             Console.WriteLine(path);
@@ -85,7 +82,7 @@ namespace bigtool
             string reg = Meta.DetectBig(fn);
 
             ms = new MemoryStream(File.ReadAllBytes(fn));
-            br = new BinaryReader(ms);
+            br = new BinaryReaderEx(ms);
 
             br.BaseStream.Position += 4;
             totalFiles = br.ReadUInt32();
@@ -120,7 +117,7 @@ namespace bigtool
                     case 0x00000010: if (h2 == 2) knownext = ".tim"; break;
                     case 0x00000020: knownext = ".vram"; break;
                     case 0x80010160: knownext = ".str"; break;
-                    //default: knownext = ""; break;
+                        //default: knownext = ""; break;
                 }
 
                 if (p.size == 0) knownext = ".null";
@@ -134,11 +131,11 @@ namespace bigtool
                 if (names.ContainsKey(i))
                     knownname = names[i];
 
-                
-                string fname = 
+
+                string fname =
                     extpath +
-                    i.ToString("0000") + 
-                    (knownname !="" ? ("_" + knownname) : "") + 
+                    i.ToString("0000") +
+                    (knownname != "" ? ("_" + knownname) : "") +
                     knownext;
 
                 /*
@@ -157,7 +154,7 @@ namespace bigtool
                 //string filemd5 = CalculateMD5(data);
 
                 //if (Path.GetExtension(knownname) == ".lev")
-               // biglist.Append(filemd5 + "\t" + "NTSC-J\t" + knownname + "\r\n");
+                // biglist.Append(filemd5 + "\t" + "NTSC-J\t" + knownname + "\r\n");
 
                 biglist.Append(knownname + "\r\n");
 

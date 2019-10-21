@@ -14,7 +14,7 @@ namespace viewer
             get { return _upDownRot; }
             set
             {
-                if ((value < MathHelper.Pi /2) && (value > -MathHelper.Pi / 2))
+                if ((value < MathHelper.Pi / 2) && (value > -MathHelper.Pi / 2))
                 {
                     _upDownRot = value;
                 }
@@ -91,10 +91,10 @@ namespace viewer
             if (keyState.IsKeyDown(Keys.Z))
                 moveVector += new Vector3(0, -1, 0);
 
-            moveVector += new Vector3( padState.ThumbSticks.Left.X, 0, -padState.ThumbSticks.Left.Y );
+            moveVector += new Vector3(padState.ThumbSticks.Left.X, 0, -padState.ThumbSticks.Left.Y);
 
-           // if (keyState.IsKeyDown(Keys.LeftShift) || padState.Buttons.A == ButtonState.Pressed)
-           //     moveVector *= 2;
+            // if (keyState.IsKeyDown(Keys.LeftShift) || padState.Buttons.A == ButtonState.Pressed)
+            //     moveVector *= 2;
 
             moveVector *= (1 + padState.Triggers.Right * 3);
 

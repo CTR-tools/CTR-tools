@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
-using System.Globalization;
 using p = bigtool.Properties.Resources;
 
 namespace bigtool
@@ -15,7 +13,7 @@ namespace bigtool
             //Thread.CurrentThread.CurrentUICulture = new CultureInfo("en");
 
             Greet();
-            
+
             if (args.Length > 0)
             {
                 string ext = Path.GetExtension(args[0]).ToLower();
@@ -30,7 +28,7 @@ namespace bigtool
                 //Console.ReadKey();
                 return;
             }
-            
+
             Info();
             //Console.ReadKey();
         }
@@ -42,7 +40,7 @@ namespace bigtool
             big.Export();
             Console.WriteLine(p.done);
         }
- 
+
 
         static void Build(string path)
         {
@@ -55,11 +53,10 @@ namespace bigtool
         static void Greet()
         {
             Console.WriteLine(
-                "{0}\r\n{1}\r\n\r\n{2}\r\n", 
-                p.project_name, 
-                p.app_desc, 
-                p.copyright, 
-                "\r\n\r\n\r\n2018, DCxDemo*\r\n");
+                "{0}\r\n{1}\r\n\r\n{2}\r\n",
+                p.project_name,
+                p.app_desc,
+                p.copyright);
         }
 
 

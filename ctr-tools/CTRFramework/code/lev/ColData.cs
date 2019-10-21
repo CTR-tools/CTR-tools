@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
+using System;
 
 namespace CTRFramework
 {
@@ -22,12 +18,12 @@ namespace CTRFramework
         {
         }
 
-        public ColData(BinaryReader br)
+        public ColData(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             flag = br.ReadUInt16();
             id = br.ReadUInt16();
@@ -42,7 +38,7 @@ namespace CTRFramework
         {
             return String.Format(
             "id = {1} | flag = {0} | ptr = {6}\r\n{2} {3}\r\n{4} {5}",
-            flag, id, v1, v2, v3,v4, ptrQuadBlock.ToString("X8")
+            flag, id, v1, v2, v3, v4, ptrQuadBlock.ToString("X8")
             );
         }
     }

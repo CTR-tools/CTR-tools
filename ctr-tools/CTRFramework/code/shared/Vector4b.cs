@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Drawing;
+using System.IO;
 
 namespace CTRFramework.Shared
 {
@@ -21,7 +18,7 @@ namespace CTRFramework.Shared
             Y = (byte)(Y * x);
             Z = (byte)(Z * x);
             W = (byte)(W * x);
-        } 
+        }
 
         public void Scale(float x, float y, float z, float w)
         {
@@ -29,8 +26,8 @@ namespace CTRFramework.Shared
             Y = (byte)(Y * y);
             Z = (byte)(Z * z);
             W = (byte)(W * w);
-        } 
-  
+        }
+
 
         public Vector4b(Color c)
         {
@@ -48,7 +45,7 @@ namespace CTRFramework.Shared
             W = (byte)(a & 0xFF);
         }
 
-        public Vector4b(BinaryReader br)
+        public Vector4b(BinaryReaderEx br)
         {
             X = br.ReadByte();
             Y = br.ReadByte();

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
+﻿using CTRFramework.Shared;
 
 namespace CTRFramework
 {
@@ -18,20 +13,20 @@ namespace CTRFramework
         {
         }
 
-        public TexMap(BinaryReader br, string g)
+        public TexMap(BinaryReaderEx br, string g)
         {
             Read(br, g);
         }
 
-        public void Read(BinaryReader br, string g)
+        public void Read(BinaryReaderEx br, string g)
         {
             group = g;
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
-            name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Split('\0')[0];
+            name = br.ReadStringFixed(16);
             id = br.ReadUInt32();
             tl = new TextureLayout(br);
         }

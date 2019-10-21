@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using System.Text;
 
 namespace CTRFramework.Shared
 {
@@ -13,7 +9,7 @@ namespace CTRFramework.Shared
 
         short[] data;
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             s1 = br.ReadInt16();
             s2 = br.ReadInt16();

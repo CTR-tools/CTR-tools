@@ -17,8 +17,8 @@ namespace CTRFramework
     }
 
 
-        //quadblock flags byte 1
-        [Flags]
+    //quadblock flags byte 1
+    [Flags]
     public enum QuadFlags
     {
         Invisible = 1 << 0, //check

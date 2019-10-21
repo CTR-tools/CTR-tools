@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -15,7 +15,7 @@ namespace CTRFramework
 
         List<byte[]> frames = new List<byte[]>();
 
-        public CTRAnim(BinaryReader br)
+        public CTRAnim(BinaryReaderEx br)
         {
             name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Replace("\0", "");
             numFrames = br.ReadInt16();
@@ -29,7 +29,7 @@ namespace CTRFramework
         }
 
 
-        public void Stuff(BinaryReader br)
+        public void Stuff(BinaryReaderEx br)
         {
 
             StringBuilder sb = new StringBuilder();
@@ -44,7 +44,7 @@ namespace CTRFramework
 
 
                 MemoryStream ms = new MemoryStream(data);
-                BinaryReader brz = new BinaryReader(ms);
+                BinaryReaderEx brz = new BinaryReaderEx(ms);
 
                 for (int j = 0; j < frameSize / 3; j++)
                 {

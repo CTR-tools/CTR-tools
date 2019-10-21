@@ -1,11 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.ComponentModel;
+using System.IO;
 
 namespace CTRFramework.Shared
 {
     public class Vector3s : IRead, IWrite
-    {   
+    {
 
         [CategoryAttribute("Values"), DescriptionAttribute("Position of the model.")]
         public short X
@@ -47,12 +47,12 @@ namespace CTRFramework.Shared
             z = zz;
         }
 
-        public Vector3s(BinaryReader br)
+        public Vector3s(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             x = br.ReadInt16();
             y = br.ReadInt16();

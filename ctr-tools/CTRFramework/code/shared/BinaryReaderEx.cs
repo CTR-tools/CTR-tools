@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
 
 namespace CTRFramework.Shared
 {
@@ -66,7 +66,8 @@ namespace CTRFramework.Shared
             return BitConverter.ToInt32(x, 0);
         }
 
-        public short[] ReadInt16Array(int num)
+
+        public short[] ReadArrayInt16(int num)
         {
             short[] kek = new short[num];
 
@@ -76,14 +77,33 @@ namespace CTRFramework.Shared
             return kek;
         }
 
-        public List<uint> ReadUInt32(int num)
+        public uint[] ReadArrayUInt32(int num)
         {
-            List<uint> buf = new List<uint>();
+            uint[] kek = new uint[num];
 
             for (int i = 0; i < num; i++)
-                buf.Add(ReadUInt32());
+                kek[i] = ReadUInt32();
 
+            return kek;
+        }
+
+        public List<short> ReadListInt16(int num)
+        {
+            List<short> buf = new List<short>();
+            buf.AddRange(ReadArrayInt16(num));
             return buf;
+        }
+
+        public List<uint> ReadListUInt32(int num)
+        {
+            List<uint> buf = new List<uint>();
+            buf.AddRange(ReadArrayUInt32(num));
+            return buf;
+        }
+
+        public string ReadStringFixed(int num)
+        {
+            return Encoding.ASCII.GetString(ReadBytes(num)).Split('\0')[0];
         }
     }
 }

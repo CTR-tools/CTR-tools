@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
+﻿using CTRFramework.Shared;
+using System;
 using System.ComponentModel;
-using CTRFramework.Shared;
+using System.IO;
 
 namespace CTRFramework
 {
@@ -74,7 +71,7 @@ namespace CTRFramework
 
 
 
-        public PickupHeader(BinaryReader br)
+        public PickupHeader(BinaryReaderEx br)
         {
             name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Replace("\0", "");
             modelOffset = br.ReadUInt32();

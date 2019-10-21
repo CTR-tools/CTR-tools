@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using CTRtools.SFX;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 using CTRtools.Helpers;
+using CTRtools.SFX;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace CTRtools.CSEQ
 {
@@ -106,7 +106,7 @@ namespace CTRtools.CSEQ
                 shortSamples.Add(Instrument.GetShort(br));
 
             //read offsets
-            short[] seqPtrs = br.ReadInt16Array(header.seqCnt);
+            short[] seqPtrs = br.ReadArrayInt16(header.seqCnt);
 
             //awesome NTSC demo fix
             int p = USdemo ? 1 : 3;
@@ -225,13 +225,13 @@ namespace CTRtools.CSEQ
         {
             foreach (Instrument x in longSamples)
             {
-                if (!bank.Contains(x.sampleID)) 
+                if (!bank.Contains(x.sampleID))
                     return false;
             }
 
             foreach (Instrument x in shortSamples)
             {
-                if (!bank.Contains(x.sampleID)) 
+                if (!bank.Contains(x.sampleID))
                     return false;
             }
 

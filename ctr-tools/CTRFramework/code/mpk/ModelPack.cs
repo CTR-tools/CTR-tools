@@ -1,10 +1,6 @@
-﻿using System;
+﻿using CTRFramework.Shared;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-
 
 namespace CTRFramework
 {
@@ -27,17 +23,17 @@ namespace CTRFramework
             path = s;
 
             MemoryStream ms = new MemoryStream(File.ReadAllBytes(s));
-            BinaryReader br = new BinaryReader(ms);
+            BinaryReaderEx br = new BinaryReaderEx(ms);
 
             int size = br.ReadInt32();
 
             ms = new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 4));
-            br = new BinaryReader(ms);
+            br = new BinaryReaderEx(ms);
 
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             texOff = br.ReadInt32();
 
@@ -52,14 +48,13 @@ namespace CTRFramework
             while (x != 0);
 
 
-            br.BaseStream.Position = texOff;
+            br.Jump(texOff);
 
             map = new UImap(br);
 
-
             foreach (uint u in modOffs)
             {
-                br.BaseStream.Position = u;
+                br.Jump(u);
 
                 LODModel lod = new LODModel(br);
                 lodmods.Add(lod);

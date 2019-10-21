@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.IO;
 
 namespace CTRtools.CSEQ
@@ -11,7 +12,7 @@ namespace CTRtools.CSEQ
         public int MPQN { get { return (int)(60000000.0f / (float)BPM); } }
         //public float tickDuration { get { return 60.0f / BPM / TPQN * 1000.0f; } }
 
-        public bool Read(BinaryReader br)
+        public bool Read(BinaryReaderEx br)
         {
             trackNum = br.ReadByte();
             BPM = br.ReadInt16();

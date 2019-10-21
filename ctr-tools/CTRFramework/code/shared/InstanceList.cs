@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 
 namespace CTRFramework.Shared
 {
     public class InstanceList<T> : List<T> where T : IRead, new()
     {
-        public static List<T> ReadFrom(BinaryReader br, int pos, int count)
+        public static List<T> ReadFrom(BinaryReaderEx br, uint pos, uint count)
         {
             List<T> list = new List<T>();
 
-            br.BaseStream.Position = pos;
+            br.Jump(pos);
 
             for (int i = 0; i < count; i++)
             {
@@ -22,11 +21,11 @@ namespace CTRFramework.Shared
         }
     }
 
-    public class Instance<T> where T: IRead, new()
+    public class Instance<T> where T : IRead, new()
     {
-        public static T ReadFrom(BinaryReader br, int pos)
+        public static T ReadFrom(BinaryReaderEx br, uint pos)
         {
-            br.BaseStream.Position = pos;
+            br.Jump(pos);
             T t = new T();
             t.Read(br);
             return t;

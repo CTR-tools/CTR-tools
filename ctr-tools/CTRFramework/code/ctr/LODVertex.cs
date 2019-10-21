@@ -1,5 +1,4 @@
-﻿using System.IO;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 
 namespace CTRFramework
 {
@@ -10,7 +9,7 @@ namespace CTRFramework
         public short texU;
         public short texV;
 
-        public LODVertex(BinaryReader br)
+        public LODVertex(BinaryReaderEx br)
         {
             coord = new Vector4s(br);
             texU = br.ReadInt16();

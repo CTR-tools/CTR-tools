@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace CTRFramework
 {
@@ -117,7 +117,7 @@ namespace CTRFramework
 
     public class FastBitmap
     {
-        public  static Bitmap LockBits(Bitmap bmp, byte[] data)
+        public static Bitmap LockBits(Bitmap bmp, byte[] data)
         {
             Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
             BitmapData bmpData = bmp.LockBits(rect, ImageLockMode.ReadWrite, bmp.PixelFormat);

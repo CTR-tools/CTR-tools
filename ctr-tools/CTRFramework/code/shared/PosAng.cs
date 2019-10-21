@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-
-namespace CTRFramework.Shared
+﻿namespace CTRFramework.Shared
 {
     public class PosAng : IRead
     {
@@ -15,7 +9,7 @@ namespace CTRFramework.Shared
         {
         }
 
-        public PosAng(BinaryReader br)
+        public PosAng(BinaryReaderEx br)
         {
             Read(br);
         }
@@ -26,7 +20,7 @@ namespace CTRFramework.Shared
             Angle = ang;
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             Position = new Vector3s(br);
             Angle = new Vector3s(br);

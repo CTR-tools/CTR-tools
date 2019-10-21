@@ -1,9 +1,6 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 
 namespace CTRFramework
 {
@@ -16,12 +13,12 @@ namespace CTRFramework
 
         List<TexMap> maps = new List<TexMap>();
 
-        public UImap(BinaryReader br)
+        public UImap(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public void Read(BinaryReader br)
+        public void Read(BinaryReaderEx br)
         {
             numTex = br.ReadInt32();
             ptrTex = br.ReadInt32();
@@ -30,27 +27,21 @@ namespace CTRFramework
 
             br.BaseStream.Position = ptrGroups;
 
-            List<int> gOffs = new List<int>();
+            uint[] gOffs = br.ReadArrayUInt32(numGroups);
 
-            for (int i = 0; i < numGroups; i++)
-                gOffs.Add(br.ReadInt32());
-
-            foreach(int g in gOffs)
+            foreach (int g in gOffs)
             {
-                br.BaseStream.Position = g;
+                br.Jump(g);
 
-                string gname = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Split('\0')[0];
+                string gname = br.ReadStringFixed(16);
                 int unk = br.ReadInt16();
                 int numTex2 = br.ReadInt16();
 
-                List<int> tOffs = new List<int>();
-
-                for (int i = 0; i < numTex2; i++)
-                    tOffs.Add(br.ReadInt32());
+                uint[] tOffs = br.ReadArrayUInt32(numTex2);
 
                 foreach (int i in tOffs)
                 {
-                    br.BaseStream.Position = i;
+                    br.Jump(i);
                     TexMap mp = new TexMap(br, gname);
                     maps.Add(mp);
                 }
@@ -60,7 +51,7 @@ namespace CTRFramework
 
         public void Extract(Tim tim)
         {
-            foreach(TexMap tm in maps)
+            foreach (TexMap tm in maps)
             {
                 tim.GetTexturePage(tm.tl, String.Format("{0}{1}.png", tm.group, (tm.group + "_" + tm.name)));
             }

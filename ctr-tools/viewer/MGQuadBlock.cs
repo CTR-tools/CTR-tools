@@ -9,10 +9,10 @@ namespace viewer
     {
         public VertexPositionColorTexture[] verts;
         public VertexPositionColorTexture[] verts_wire;
-       // public VertexPositionColorTexture[] verts_flag;
+        // public VertexPositionColorTexture[] verts_flag;
 
         public short[] indices;
-       // public short[] indices_flag;
+        // public short[] indices_flag;
 
         public static short[] indices_pattern_low = new short[] { 0, 1, 2, 2, 1, 3 };
 
@@ -36,9 +36,9 @@ namespace viewer
             switch (detail)
             {
                 case Detail.Low:
-                    {      
+                    {
                         for (int i = 0; i < s.quad.Count; i++)
-                        {  
+                        {
                             for (int j = 0; j < 4; j++)
                             {
                                 VertexPositionColorTexture v = new VertexPositionColorTexture();
@@ -53,7 +53,7 @@ namespace viewer
                                 v.Color.R = cv.color.X;
                                 v.Color.G = cv.color.Y;
                                 v.Color.B = cv.color.Z;
-                                
+
                                 if (s.quad[i].offset1 > 0)
                                 {
                                     v.TextureCoordinate.X = tl.uv[j].X / 256.0f;
@@ -67,24 +67,24 @@ namespace viewer
 
                                 verts[i * 4 + j] = v;
                             }
-                            
+
                             for (int k = 0; k < indices_pattern_low.Length; k++)
                             {
-                                indices[i * 6 + k] = (short)(i * 4 + indices_pattern_low[k] );
+                                indices[i * 6 + k] = (short)(i * 4 + indices_pattern_low[k]);
                             }
-                            
+
                         }
-                        
+
                         break;
                     }
 
             }
 
-           // verts_flag = verts;
+            // verts_flag = verts;
             verts_wire = verts;
-           // indices_flag = indices;
+            // indices_flag = indices;
         }
-    
+
 
 
 
@@ -98,7 +98,7 @@ namespace viewer
             verts = vts.ToArray();
 
             for (int i = 0; i < vts.Count; i++)
-                vts[i] = new VertexPositionColorTexture(vts[i].Position, Blend(vts[i].Color, Color.Blue), new Vector2(0,0));
+                vts[i] = new VertexPositionColorTexture(vts[i].Position, Blend(vts[i].Color, Color.Blue), new Vector2(0, 0));
 
             //verts_flag = vts.ToArray();
 
@@ -133,7 +133,7 @@ namespace viewer
                             {
                                 buf[qb.ind[s]].TextureCoordinate = new Vector2(qb.texlow.uv[i].X, qb.texlow.uv[i].Y);
                             }
-                            catch 
+                            catch
                             {
                                 buf[qb.ind[s]].TextureCoordinate = new Vector2(0, 0);
                             }
