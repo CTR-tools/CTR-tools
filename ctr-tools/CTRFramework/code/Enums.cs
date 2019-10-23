@@ -53,7 +53,7 @@ namespace CTRFramework
     //defines mesh quality while exporting to OBJ
     public enum Detail
     {
-        High, Low
+        High, Med, Low
     }
 
     public enum VecFormat

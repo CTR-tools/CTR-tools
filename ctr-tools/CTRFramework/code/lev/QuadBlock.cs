@@ -219,7 +219,7 @@ namespace CTRFramework
             switch (detail)
             {
                 case Detail.Low: vcnt = 4; break;
-                case Detail.High: vcnt = 9; break;
+                case Detail.Med: vcnt = 9; break;
                 default: vcnt = 0; break;
             }
 
@@ -245,7 +245,7 @@ namespace CTRFramework
                         break;
                     }
 
-                case Detail.High:
+                case Detail.Med:
                     {
                         int[] tm = new int[] { 
                             f0, f1, f2, f3

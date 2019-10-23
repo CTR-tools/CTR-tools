@@ -66,7 +66,7 @@ namespace modelReader
                     {
                         Scene scn = new Scene(s, "obj");
                         string objfile = scn.Export("obj", Detail.Low);
-                        objfile = scn.Export("obj", Detail.High);
+                        objfile = scn.Export("obj", Detail.Med);
                         LaunchMeshLab(objfile);
 
                         break;
