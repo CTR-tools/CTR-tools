@@ -347,11 +347,11 @@ namespace levTool
             {
                 foreach (QuadBlock qb in scn.quad)
                 {
-                    sb.Append(qb.midflags[0] + " " + qb.midflags[1] + "\r\n");
+                    qb.bitvalue = 0;
                 }
             }
 
-            textBox1.Text = sb.ToString();
+            //textBox1.Text = sb.ToString();
         }
 
         private void Button18_Click(object sender, EventArgs e)

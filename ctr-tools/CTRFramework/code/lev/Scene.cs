@@ -178,6 +178,8 @@ namespace CTRFramework
                 sb.Append(String.Format("map_Kd tex\\{0}.png\r\n\r\n", s.Tag()));
             }
 
+            sb.Append("newmtl default\r\n");
+
             Helpers.WriteToFile(mtllib, sb.ToString());
 
             Console.WriteLine("Done!");

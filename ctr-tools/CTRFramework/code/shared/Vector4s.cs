@@ -102,6 +102,9 @@ namespace CTRFramework.Shared
             }
 
             return String.Format(fmt, x, y, z);
+
+            //float scale = 1.0f / 2.33f;
+            //return String.Format(fmt, x * scale, y * scale, z * scale);
         }
 
         public override string ToString()

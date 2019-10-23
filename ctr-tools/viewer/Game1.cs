@@ -73,18 +73,9 @@ namespace viewer
 
         protected override void Initialize()
         {
-            graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 4;
-
             ss = new SamplerState();
-            ss.FilterMode = TextureFilterMode.Default;
 
-            ss.Filter = TextureFilter.Anisotropic;
-            ss.MaxAnisotropy = 16;
-            ss.MaxMipLevel = 8;
-            ss.MipMapLevelOfDetailBias = -1.5f;
-
-            graphics.GraphicsDevice.SamplerStates[0] = ss;
-
+            graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 4;
             graphics.ApplyChanges();
 
             effect = new BasicEffect(graphics.GraphicsDevice);
@@ -262,8 +253,25 @@ namespace viewer
         }
 
 
+
+
         private void DrawLevel()
         {
+            ss = new SamplerState();
+            ss.FilterMode = TextureFilterMode.Default;
+
+            ss.Filter = TextureFilter.Point;
+            ss.MaxAnisotropy = 16;
+            ss.MaxMipLevel = 8;
+            ss.MipMapLevelOfDetailBias = -1.5f;
+
+            graphics.GraphicsDevice.SamplerStates[0] = ss;
+
+
+            //GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
+
+            graphics.ApplyChanges();
+
             foreach (MGQuadBlock qb in quads)
                 qb.Render(graphics, effect);
 

@@ -15,6 +15,8 @@ namespace CTRFramework
         public ushort PageX;
         public ushort PageY;
 
+        public byte check;
+
 
         public TextureLayout(BinaryReaderEx br)
         {
@@ -37,11 +39,12 @@ namespace CTRFramework
             PageX = (ushort)(buf & 0xF);
             PageY = (ushort)((buf >> 4) & 1);
 
+            check = br.ReadByte();
             //checking page byte 2 if it's ever not 0
-            if (br.ReadByte() != 0)
+            if (check != 0)
             {
-                Console.Write("---WTF---page 2nd byte != 0");
-                Console.ReadKey();
+                Console.WriteLine("---WTF---page 2nd byte != 0");
+                //Console.ReadKey();
             }
 
             uv.Add(new Vector2b(br));
@@ -76,7 +79,7 @@ namespace CTRFramework
 
             foreach (Vector2b v in uv)
                 sb.AppendFormat(
-                    "vt {0} {1}",
+                    "vt {0} {1}\r\n",
                     Math.Round(v.X / 255f, 3).ToString(),
                     Math.Round((255 - v.Y) / 255f, 3).ToString()
                 );

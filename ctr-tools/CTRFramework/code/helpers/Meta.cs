@@ -6,7 +6,7 @@ namespace CTRFramework.Shared
 {
     public class Meta
     {
-        static string jsonpath = "versions.json";
+        static string jsonpath = System.AppDomain.CurrentDomain.BaseDirectory +"\\versions.json";
 
         public static string DetectBig(string file)
         {

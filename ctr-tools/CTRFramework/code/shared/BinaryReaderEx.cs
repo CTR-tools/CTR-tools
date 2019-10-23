@@ -65,7 +65,12 @@ namespace CTRFramework.Shared
             x.Reverse();
             return BitConverter.ToInt32(x, 0);
         }
-
+        public uint ReadUInt32Big()
+        {
+            byte[] x = BitConverter.GetBytes(ReadUInt32());
+            x.Reverse();
+            return BitConverter.ToUInt32(x, 0);
+        }
 
         public short[] ReadArrayInt16(int num)
         {

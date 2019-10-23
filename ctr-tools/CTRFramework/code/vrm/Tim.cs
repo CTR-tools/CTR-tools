@@ -185,7 +185,6 @@ namespace CTRFramework
 
                     try
                     {
-
                         Bitmap targetBmp = newBmp.Clone(
                             new Rectangle(0, 0, 256, 256),
                             //new Rectangle(point, size),
@@ -213,10 +212,11 @@ namespace CTRFramework
                         */
 
                         targetBmp.Save("tex\\" + (name == "" ? tl.Tag() : name) + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                        //File.Delete("tex\\" + (name == "" ? tl.Tag() : name) + ".bmp");
                     }
                     catch (Exception ex)
                     {
-                        // System.Windows.Forms.MessageBox.Show(ex.Message + "\r\n\r\n" + ex.ToString());
+                        Console.WriteLine(ex.Message + "\r\n\r\n" + ex.ToString());
                     }
                 }
         }

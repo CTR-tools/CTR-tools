@@ -6,15 +6,17 @@ using System.Text;
 
 namespace CTRFramework
 {
+
+
     public class QuadBlock : IRead, IWrite
     {
         public static int pagex = -1;
         public static int pagey = -1;
 
-        //raw data
-        public short[] ind = new short[9];  //9 indices in vertex array, that form 4 quads.
-
+        public short[] ind = new short[9];
+        
         /*
+        //9 indices in vertex array, that form 4 quads.
          * 0--4--1
          * | /| /|
          * |/ |/ |
@@ -26,10 +28,15 @@ namespace CTRFramework
 
         public QuadFlags quadFlags;
 
+        public uint bitvalue; //important! big endian!
+
+        //these 5 values are contained in bitvalue mask is 8b5b5b5b5b4z where b is bit and z is empty
         public byte drawOrderLow;
+        public byte f0;
         public byte f1;
         public byte f2;
         public byte f3;
+
         public byte[] drawOrderHigh = new byte[4];
 
         public uint[] tex = new uint[4];    //offsets to texture definition
@@ -72,21 +79,21 @@ namespace CTRFramework
 
             quadFlags = (QuadFlags)br.ReadUInt16();
 
-            //unk1 = br.ReadBytes(8);
+            bitvalue = br.ReadUInt32Big();
 
-            drawOrderLow = br.ReadByte();
-            f1 = br.ReadByte();
-            f2 = br.ReadByte();
-            f3 = br.ReadByte();
+            drawOrderLow = (byte)(bitvalue & 0xFF);
+
+            f3 = (byte)(bitvalue >> 8 + 5 * 3 & 0x1F);
+            f2 = (byte)(bitvalue >> 8 + 5 * 2 & 0x1F);
+            f1 = (byte)(bitvalue >> 8 + 5 * 1 & 0x1F);
+            f0 = (byte)(bitvalue >> 8 + 5 * 0 & 0x1F);
+
             drawOrderHigh = br.ReadBytes(4);
 
             for (int i = 0; i < 4; i++)
                 tex[i] = br.ReadUInt32();
 
             bb = new BoundingBox(br);
-
-            // unk2 = br.ReadBytes(4);
-
 
             terrainFlag = (TerrainFlags)br.ReadByte();
             WeatherIntensity = br.ReadByte();
@@ -107,7 +114,7 @@ namespace CTRFramework
             //read texture layouts
             int pos = (int)br.BaseStream.Position;
 
-            br.BaseStream.Position = (int)offset1;
+            br.Jump(offset1);
             texlow = new TextureLayout(br);
 
 
@@ -115,9 +122,18 @@ namespace CTRFramework
             {
                 if (u != 0)
                 {
-                    // Console.WriteLine(u.ToString("X8"));
-                    br.BaseStream.Position = u;
+                    br.Jump(u);
                     texmid.Add(new TextureLayout(br));
+
+                    /*
+                    //extra 2 must be defined 
+                    for (int i = 0; i < 3; i++)
+                    { 
+                        TextureLayout t = new TextureLayout(br);
+                        if (t.check == 0) texmid.Add(new TextureLayout(br));
+                        
+                    }
+                    */
                 }
             }
 
@@ -176,16 +192,20 @@ namespace CTRFramework
             7, 9, 8, 8, 9, 4
         };
 
-        /*
-        * 1--5--2
-        * | /| /|
-        * |/ |/ |
-        * 6--7--8
-        * | /| /|
-        * |/ |/ |
-        * 3--9--4 
-        */
 
+        public int[] GetUVIndices(int x, int y, int z, int w)
+        {
+            return new int[]
+            {
+                x, z, y,
+                y, z, w
+            };
+        }
+
+        int[] uvinds = new int[] {
+            1, 3, 2,
+            2, 3, 4
+        };
 
         public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b)
         {
@@ -227,6 +247,10 @@ namespace CTRFramework
 
                 case Detail.High:
                     {
+                        int[] tm = new int[] { 
+                            f0, f1, f2, f3
+                        };
+
                         for (int i = 0; i < 4; i++)
                         {
                             if (texmid.Count == 4)
@@ -238,8 +262,30 @@ namespace CTRFramework
                                 sb.AppendLine("usemtl default");
                             }
 
-                            sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + 1, b + 3, b + 2)); // 1 3 2
-                            sb.Append(ASCIIFace("f", a + inds[i * 6 + 3], a + inds[i * 6 + 4], a + inds[i * 6 + 5], b + 2, b + 3, b + 4)); // 2 3 4
+                            if (quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
+                                sb.AppendLine("usemtl default");
+
+                            RotateFlipType rm = (RotateFlipType)(tm[i] & 0x07);
+
+                            switch (rm)
+                            {
+                                case RotateFlipType.None: uvinds = GetUVIndices(1, 2, 3, 4); break;
+                                case RotateFlipType.Rotate90: uvinds = GetUVIndices(3, 1, 4, 2); break;
+                                case RotateFlipType.Rotate180: uvinds = GetUVIndices(4, 3, 2, 1); break;
+                                case RotateFlipType.Rotate270: uvinds = GetUVIndices(2, 4, 1, 3); break;
+                                case RotateFlipType.Flip: uvinds = GetUVIndices(2, 1, 4, 3); break;
+                                case RotateFlipType.FlipRotate90: uvinds = GetUVIndices(4, 2, 3, 1); break;
+                                case RotateFlipType.FlipRotate180: uvinds = GetUVIndices(3, 4, 1, 2); break;
+                                case RotateFlipType.FlipRotate270: uvinds = GetUVIndices(1, 3, 2, 4); break;
+                                default: uvinds = GetUVIndices(0, 0, 0, 0); break;
+                            }
+
+                            bool isTriangle = ((tm[i] >> 3) & 1) > 0;
+
+                            sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[0], b + uvinds[1], b + uvinds[2])); // 1 3 2 | 0 2 1
+
+                            if (!isTriangle)
+                                sb.Append(ASCIIFace("f", a + inds[i * 6 + 3], a + inds[i * 6 + 4], a + inds[i * 6 + 5], b + uvinds[3], b + uvinds[4], b + uvinds[5])); // 2 3 4 | 1 2 3
 
                             sb.AppendLine();
 
@@ -307,10 +353,8 @@ namespace CTRFramework
             bw.Write((ushort)quadFlags);
             //bw.Write(unk1);
 
-            bw.Write(drawOrderLow);
-            bw.Write(f1);
-            bw.Write(f2);
-            bw.Write(f3);
+           // bw.Write(drawOrderLow);
+            bw.Write(bitvalue);
             bw.Write(drawOrderHigh);
 
             for (int i = 0; i < 4; i++)

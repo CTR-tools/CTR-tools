@@ -2,8 +2,19 @@
 
 namespace CTRFramework
 {
-    [Flags]
+    public enum RotateFlipType
+    {
+        None = 0,
+        Rotate90 = 1,
+        Rotate180 = 2,
+        Rotate270 = 3,
+        FlipRotate270 = 4,
+        FlipRotate180 = 5,
+        FlipRotate90 = 6,
+        Flip = 7
+    }
 
+    [Flags]
     public enum TerrainFlags
     {
         flag0 = 1 << 0, //check
