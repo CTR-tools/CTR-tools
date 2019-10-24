@@ -69,7 +69,8 @@ namespace viewer
             items.Add(new MenuItem("toggle fullscreen".ToUpper(), "toggle", "window", true));
             items.Add(new MenuItem("toggle mouse".ToUpper(), "toggle", "mouse", true));
             items.Add(new MenuItem("---", "", "", false));
-            items.Add(new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true));
+            //currently doesn't work
+            //items.Add(new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true));
             items.Add(new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true));
             //items.Add(new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true));
 

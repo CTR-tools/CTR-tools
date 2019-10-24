@@ -22,6 +22,8 @@ namespace CTRFramework
 
         public List<PosAng> restartPts = new List<PosAng>();
 
+        Tim ctrvram;
+
         public Scene(string s, string fmtm)
         {
             path = s;
@@ -45,9 +47,6 @@ namespace CTRFramework
 
             Read(br);
 
-
-            Tim tim = null;
-
             string vrmpath = Path.ChangeExtension(s, ".vram");
 
             if (File.Exists(vrmpath))
@@ -56,13 +55,8 @@ namespace CTRFramework
 
                 using (BinaryReaderEx brr = new BinaryReaderEx(File.OpenRead(vrmpath)))
                 {
-                    tim = CtrVrm.FromReader(brr);
+                    ctrvram = CtrVrm.FromReader(brr);
                 }
-
-                Console.WriteLine(tim.ToString());
-                Console.WriteLine("Exporting textures...");
-
-                ExportTextures(tim);
             }
 
             /*
@@ -89,17 +83,20 @@ namespace CTRFramework
         }
 
 
-        public void ExportTextures(Tim t)
+        public void ExportTextures(string path)
         {
-            if (t != null)
+            if (ctrvram != null)
             {
+                Console.WriteLine(ctrvram.ToString());
+                Console.WriteLine("Exporting textures...");
+
                 Directory.CreateDirectory(@".\tex\");
 
                 Dictionary<string, TextureLayout> tex = GetTexturesList();
 
                 foreach (TextureLayout tl in tex.Values)
                 {
-                    t.GetTexturePage(tl);
+                    ctrvram.GetTexturePage(tl, path);
                 }
             }
             else
@@ -182,6 +179,7 @@ namespace CTRFramework
 
             Helpers.WriteToFile(mtllib, sb.ToString());
 
+            ExportTextures(Path.GetDirectoryName(path));
             Console.WriteLine("Done!");
 
             return fname;

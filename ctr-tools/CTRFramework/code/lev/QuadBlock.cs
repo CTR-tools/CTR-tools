@@ -289,9 +289,6 @@ namespace CTRFramework
                                 Console.ReadKey();
                             }
 
-
-
-
                             if (!stflag1 & !stflag2)
                             {
                                 sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[0], b + uvinds[1], b + uvinds[2])); // 1 3 2 | 0 2 1

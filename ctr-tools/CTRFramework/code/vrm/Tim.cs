@@ -158,7 +158,7 @@ namespace CTRFramework
         }
 
 
-        public void GetTexturePage(TextureLayout tl, string name = "")
+        public void GetTexturePage(TextureLayout tl, string path, string name = "")
         {
             byte[] buf = new byte[128 * 256];
 
@@ -173,11 +173,11 @@ namespace CTRFramework
             Tim x = new Tim(new Rectangle(0, 0, 256 / 4, 256));
             x.data = buf;
 
-            x.SaveBMP("tex\\" + (name == "" ? tl.Tag() : name) + ".bmp", CtrClutToBmpPalette(GetCtrClut(tl)));
+            x.SaveBMP(path + "\\tex\\" + (name == "" ? tl.Tag() : name) + ".bmp", CtrClutToBmpPalette(GetCtrClut(tl)));
 
             if (tl.Tag() != "0000_00000028")
 
-                using (Bitmap oldBmp = new Bitmap("tex\\" + (name == "" ? tl.Tag() : name) + ".bmp"))
+                using (Bitmap oldBmp = new Bitmap(path + "\\tex\\" + (name == "" ? tl.Tag() : name) + ".bmp"))
                 using (Bitmap newBmp = new Bitmap(oldBmp))
                 {
                     Point point = new Point(tl.uv[0].X, tl.uv[0].Y);
@@ -211,7 +211,7 @@ namespace CTRFramework
                         g.DrawEllipse(Pens.Purple, new Rectangle(poly[3].X, poly[3].Y, 3, 3));
                         */
 
-                        targetBmp.Save("tex\\" + (name == "" ? tl.Tag() : name) + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                        targetBmp.Save(path + "\\tex\\" + (name == "" ? tl.Tag() : name) + ".png", System.Drawing.Imaging.ImageFormat.Png);
                         //File.Delete("tex\\" + (name == "" ? tl.Tag() : name) + ".bmp");
                     }
                     catch (Exception ex)

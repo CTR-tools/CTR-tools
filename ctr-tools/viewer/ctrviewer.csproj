@@ -9,8 +9,8 @@
     <ProjectGuid>{F156E084-F555-4647-A289-7619AB05BB09}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>viewer</RootNamespace>
-    <AssemblyName>viewer</AssemblyName>
+    <RootNamespace>ctrviewer</RootNamespace>
+    <AssemblyName>ctrviewer</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -44,7 +44,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>viewer.Program</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>

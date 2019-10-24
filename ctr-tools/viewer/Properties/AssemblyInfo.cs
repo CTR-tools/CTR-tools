@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("viewer")]
-[assembly: AssemblyProduct("viewer")]
+[assembly: AssemblyTitle("ctrviewer")]
+[assembly: AssemblyProduct("ctrviewer")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("MonoGame based 3D viewer for scene files used in Crash Team Racing (PS1) game.")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("dcxdemo")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
