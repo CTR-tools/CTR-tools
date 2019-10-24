@@ -280,12 +280,33 @@ namespace CTRFramework
                                 default: uvinds = GetUVIndices(0, 0, 0, 0); break;
                             }
 
-                            bool isTriangle = ((tm[i] >> 3) & 1) > 0;
+                            bool stflag1 = ((tm[i] >> 3) & 1) > 0;
+                            bool stflag2 = ((tm[i] >> 4) & 1) > 0;
 
-                            sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[0], b + uvinds[1], b + uvinds[2])); // 1 3 2 | 0 2 1
+                            if (stflag1 && stflag2)
+                            {
+                                Console.WriteLine("both flags are set!");
+                                Console.ReadKey();
+                            }
 
-                            if (!isTriangle)
+
+
+
+                            if (!stflag1 & !stflag2)
+                            {
+                                sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[0], b + uvinds[1], b + uvinds[2])); // 1 3 2 | 0 2 1
                                 sb.Append(ASCIIFace("f", a + inds[i * 6 + 3], a + inds[i * 6 + 4], a + inds[i * 6 + 5], b + uvinds[3], b + uvinds[4], b + uvinds[5])); // 2 3 4 | 1 2 3
+                            }
+
+                            if (stflag1)
+                            {
+                                sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[1], b + uvinds[2], b + uvinds[0])); // 1 3 2 | 0 2 1
+                            }
+
+                            if (stflag2)
+                            {
+                                sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[2], b + uvinds[0], b + uvinds[1]));
+                            }
 
                             sb.AppendLine();
 
