@@ -54,18 +54,16 @@ Usage: lng2txt.exe C:\example\somefile.lng
 * Note: | is considered a new line character
 
 ## model_reader
-Takes a single CTR scene (\*.lev file) or a folder as an input and exports low-res textured and vertex colored mesh of the level in modified OBJ format (vcolor support by MeshLab).
+This tool takes a single CTR scene (\*.lev file) or a folder as an input and exports textured and vertex colored mesh of the level for low and mid levels LODs in modified OBJ format (vcolor support by MeshLab). Hence MeshLab is recommended as an intermediate converter.
 
 Usage:\
-model_reader.exe C:\example\somefile.lev\
-model_reader.exe C:\example\
+modelreader.exe C:\example\somefile.lev\
+modelreader.exe C:\example\
 * Import tested in MeshLab and Blender.
-* MeshLab is recommended as an intermediate converter.
 * Also supports ctr files as an input, but only outputs some info.
 * Ply support is temporarily dropped.
 
-Coco park (non-textured): https://i.imgur.com/RqWH93V.png \
-Coco park (textured low-res): https://i.imgur.com/WogrMs6.png
+Coco park exported example: https://imgur.com/a/v22A1Xk
 
 ## howl
 Extracts CSEQ and BNK files from KART.HWL.
