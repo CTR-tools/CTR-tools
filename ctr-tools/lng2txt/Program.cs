@@ -1,4 +1,6 @@
 ﻿using System;
+using CTRFramework;
+using p = lng2txt.Properties.Resources;
 
 namespace lng2txt
 {
@@ -6,7 +8,7 @@ namespace lng2txt
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Crash Team Racing LNG2TXT");
+            Greet();
 
             if (args.Length > 0)
             {
@@ -17,6 +19,15 @@ namespace lng2txt
             {
                 Console.WriteLine("No filename!");
             }
+        }
+
+        static void Greet()
+        {
+            Console.WriteLine(
+                "{0}\r\n{1}\r\n\r\n{2}\r\n",
+                p.project_name,
+                p.app_desc,
+                p.copyright);
         }
     }
 }

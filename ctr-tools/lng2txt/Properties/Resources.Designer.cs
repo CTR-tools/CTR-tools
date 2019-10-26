@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace bigtool.Properties {
+namespace lng2txt.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace bigtool.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("bigtool.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("lng2txt.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,38 +61,11 @@ namespace bigtool.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Builds and extracts Crash Team Racing BIG files.
+        ///   Ищет локализованную строку, похожую на Converts LNG localization files to TXT and back..
         /// </summary>
         internal static string app_desc {
             get {
                 return ResourceManager.GetString("app_desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на BIG file created..
-        /// </summary>
-        internal static string big_created {
-            get {
-                return ResourceManager.GetString("big_created", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Calculating MD5....
-        /// </summary>
-        internal static string calc_md5 {
-            get {
-                return ResourceManager.GetString("calc_md5", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Press any key to quit....
-        /// </summary>
-        internal static string confirm_quit {
-            get {
-                return ResourceManager.GetString("confirm_quit", resourceCulture);
             }
         }
         
@@ -106,65 +79,11 @@ namespace bigtool.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Dumping to disk....
-        /// </summary>
-        internal static string disk_dump {
-            get {
-                return ResourceManager.GetString("disk_dump", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Done!.
-        /// </summary>
-        internal static string done {
-            get {
-                return ResourceManager.GetString("done", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на This file is not supported:.
-        /// </summary>
-        internal static string file_not_supported {
-            get {
-                return ResourceManager.GetString("file_not_supported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Merge example.
-        /// </summary>
-        internal static string merge_example {
-            get {
-                return ResourceManager.GetString("merge_example", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на CTR-Tools: BIG Tool.
+        ///   Ищет локализованную строку, похожую на CTR-Tools: lng2txt.
         /// </summary>
         internal static string project_name {
             get {
                 return ResourceManager.GetString("project_name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Split example.
-        /// </summary>
-        internal static string split_example {
-            get {
-                return ResourceManager.GetString("split_example", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Usage.
-        /// </summary>
-        internal static string usage {
-            get {
-                return ResourceManager.GetString("usage", resourceCulture);
             }
         }
     }

@@ -52,7 +52,7 @@ namespace CTRFramework
         public byte[] midflags = new byte[2];
 
         public int offset1;                 //offset to LOD texture definition
-        public int offset2;                 //unknown mostly null
+        public int offset2;
         //leads to 3 textures array
 
         public ushort[] unk3 = new ushort[10];  //unknown
@@ -61,6 +61,8 @@ namespace CTRFramework
         public TextureLayout texlow;
         public List<TextureLayout> texmid = new List<TextureLayout>();
         public List<TextureLayout> texhi = new List<TextureLayout>();
+
+        public Texture texture;
 
         public QuadBlock()
         {
@@ -137,6 +139,7 @@ namespace CTRFramework
                 }
             }
 
+
             /* //hires attempt
             if (offset2 > 0)
             {
@@ -161,6 +164,7 @@ namespace CTRFramework
 
             }
              */
+
             br.BaseStream.Position = pos;
         }
 

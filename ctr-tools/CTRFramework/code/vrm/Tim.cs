@@ -181,7 +181,7 @@ namespace CTRFramework
                 using (Bitmap newBmp = new Bitmap(oldBmp))
                 {
                     Point point = new Point(tl.uv[0].X, tl.uv[0].Y);
-                    Size size = new Size((int)(tl.uv[3].X - tl.uv[0].X) + 1, (int)(tl.uv[3].Y - tl.uv[0].Y) + 1);
+                    Size size = new Size((int)(tl.uv[3].X - tl.uv[0].X), (int)(tl.uv[3].Y - tl.uv[0].Y));
 
                     try
                     {
@@ -190,10 +190,9 @@ namespace CTRFramework
                             //new Rectangle(point, size),
                             System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-
                         Graphics g = Graphics.FromImage(targetBmp);
-
-                        g.DrawImage(targetBmp, new Point(0, 0));
+                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                        g.DrawImage(targetBmp, new Point(0,0));
 
                         /*
                         Point[] poly = new Point[]

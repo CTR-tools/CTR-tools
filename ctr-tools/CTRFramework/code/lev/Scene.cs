@@ -59,6 +59,7 @@ namespace CTRFramework
                 }
             }
 
+
             /*
             List<uint> offs = new List<uint>();
 
@@ -107,7 +108,7 @@ namespace CTRFramework
 
 
 
-        public string Export(string fmt, Detail d)
+        public string Export(string fmt, Detail d, bool exportTextures)
         {
             string fname = Path.ChangeExtension(path, d.ToString() + "." + fmt);
             string mtllib = Path.ChangeExtension(path, ".mtl").Replace(" ", "_");
@@ -179,8 +180,11 @@ namespace CTRFramework
 
             Helpers.WriteToFile(mtllib, sb.ToString());
 
-            ExportTextures(Path.GetDirectoryName(path));
-            Console.WriteLine("Done!");
+            if (exportTextures)
+            {
+                ExportTextures(Path.GetDirectoryName(path));
+                Console.WriteLine("Exported!");
+            }
 
             return fname;
         }

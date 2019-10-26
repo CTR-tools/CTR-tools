@@ -99,6 +99,8 @@
     <Compile Include="code\ctr\LODVertex.cs" />
     <Compile Include="code\ctr\LODVertexDef.cs" />
     <Compile Include="code\Enums.cs" />
+    <Compile Include="code\lev\Texture.cs" />
+    <Compile Include="code\lng\LNG.cs" />
     <Compile Include="code\shared\BinaryReaderEx.cs" />
     <Compile Include="code\shared\BinaryWriterEx.cs" />
     <Compile Include="code\helpers\Helpers.cs" />

@@ -92,7 +92,6 @@ namespace levTool
                 foreach (QuadBlock qb in scn.quad)
                     qb.Write(bw);
 
-
             }
         }
 
@@ -347,7 +346,6 @@ namespace levTool
             {
                 foreach (QuadBlock qb in scn.quad)
                 {
-                    qb.bitvalue = 0;
                 }
             }
 
@@ -429,6 +427,40 @@ namespace levTool
                     Process.Start("test.bmp");
                 }
             }
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd1 = new OpenFileDialog();
+            OpenFileDialog ofd2 = new OpenFileDialog();
+
+            if (ofd1.ShowDialog() == DialogResult.OK)
+                if (ofd2.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        LNG lng = new LNG(ofd1.FileName);
+
+                        using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(ofd2.FileName)))
+                        {
+                            br.Jump(0x74280);
+
+                            List<LevelSlot> slots = new List<LevelSlot>();
+
+                            for (int i = 0; i < 64; i++)
+                                slots.Add(new LevelSlot(br));
+
+                            foreach (LevelSlot s in slots)
+                            {
+                                textBox2.Text+= s.unk1 + " " + lng.entries[s.title_index] + "\r\n";
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show("error");
+                    }
+                }
         }
     }
 }

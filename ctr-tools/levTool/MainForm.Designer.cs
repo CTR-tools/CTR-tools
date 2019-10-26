@@ -66,6 +66,8 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.button18 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
+            this.button19 = new System.Windows.Forms.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
@@ -444,6 +446,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.textBox2);
+            this.tabPage1.Controls.Add(this.button19);
             this.tabPage1.Controls.Add(this.button18);
             this.tabPage1.Controls.Add(this.button8);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -473,6 +477,24 @@
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.Button8_Click_1);
             // 
+            // button19
+            // 
+            this.button19.Location = new System.Drawing.Point(231, 3);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(75, 22);
+            this.button19.TabIndex = 16;
+            this.button19.Text = "button19";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(312, 5);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(378, 359);
+            this.textBox2.TabIndex = 18;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -496,6 +518,7 @@
             this.tabQuads.ResumeLayout(false);
             this.tabQuads.PerformLayout();
             this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -541,6 +564,8 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
 

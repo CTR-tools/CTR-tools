@@ -65,8 +65,8 @@ namespace modelReader
                 case ".lev":
                     {
                         Scene scn = new Scene(s, "obj");
-                        string objfile = scn.Export("obj", Detail.Low);
-                        objfile = scn.Export("obj", Detail.Med);
+                        string objfile = scn.Export("obj", Detail.Low, true);
+                        objfile = scn.Export("obj", Detail.Med, false);
                         LaunchMeshLab(objfile);
 
                         break;

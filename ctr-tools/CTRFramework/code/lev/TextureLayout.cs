@@ -23,6 +23,19 @@ namespace CTRFramework
             Read(br);
         }
 
+        /*
+        public List<Vector2b> NormalizedUV()
+        {
+            List<Vector2b> norm = new List<Vector2b>();
+
+            norm.Add(new Vector2b(0, 255));
+            norm.Add(new Vector2b(255, 255));
+            norm.Add(new Vector2b(0, 0));
+            norm.Add(new Vector2b(255, 0));
+            return norm;
+        }
+        */
+
         public void Read(BinaryReaderEx br)
         {
             uv.Add(new Vector2b(br));

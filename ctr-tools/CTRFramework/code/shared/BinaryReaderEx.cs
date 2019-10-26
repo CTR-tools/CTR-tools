@@ -110,5 +110,20 @@ namespace CTRFramework.Shared
         {
             return Encoding.ASCII.GetString(ReadBytes(num)).Split('\0')[0];
         }
+
+        public string ReadStringNT()
+        {
+            string x = "";
+            char c;
+
+            do
+            {
+                c = ReadChar();
+                if (c != 0) x += c;
+            }
+            while (c != 0);
+
+            return x;
+        }
     }
 }

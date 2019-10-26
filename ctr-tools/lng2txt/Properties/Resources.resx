@@ -118,39 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="app_desc" xml:space="preserve">
-    <value>Builds and extracts Crash Team Racing BIG files</value>
-  </data>
-  <data name="big_created" xml:space="preserve">
-    <value>BIG file created.</value>
-  </data>
-  <data name="calc_md5" xml:space="preserve">
-    <value>Calculating MD5...</value>
-  </data>
-  <data name="confirm_quit" xml:space="preserve">
-    <value>Press any key to quit...</value>
+    <value>Converts LNG localization files to TXT and back.</value>
   </data>
   <data name="copyright" xml:space="preserve">
     <value>2016-2019, DCxDemo*.</value>
   </data>
-  <data name="disk_dump" xml:space="preserve">
-    <value>Dumping to disk...</value>
-  </data>
-  <data name="done" xml:space="preserve">
-    <value>Done!</value>
-  </data>
-  <data name="file_not_supported" xml:space="preserve">
-    <value>This file is not supported:</value>
-  </data>
-  <data name="merge_example" xml:space="preserve">
-    <value>Merge example</value>
-  </data>
   <data name="project_name" xml:space="preserve">
-    <value>CTR-Tools: BIG Tool</value>
-  </data>
-  <data name="split_example" xml:space="preserve">
-    <value>Split example</value>
-  </data>
-  <data name="usage" xml:space="preserve">
-    <value>Usage</value>
+    <value>CTR-Tools: lng2txt</value>
   </data>
 </root>

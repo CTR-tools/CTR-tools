@@ -34,6 +34,11 @@ namespace CTRFramework.Shared
 
         //constructor
 
+            public Vector2b(byte x, byte y)
+        {
+            X = x;
+            Y = y;
+        }
         public Vector2b(BinaryReaderEx br)
         {
             Read(br);
