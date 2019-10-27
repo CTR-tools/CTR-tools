@@ -452,7 +452,7 @@ namespace levTool
 
                             foreach (LevelSlot s in slots)
                             {
-                                textBox2.Text+= s.unk1 + " " + lng.entries[s.title_index] + "\r\n";
+                                textBox2.Text+= s.ToString() + lng.entries[s.title_index] + "\r\n";
                             }
                         }
                     }

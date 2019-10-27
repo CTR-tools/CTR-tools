@@ -64,10 +64,10 @@
             this.button9 = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.button19 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.button19 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
@@ -457,6 +457,28 @@
             this.tabPage1.Text = "Vram stuff";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // textBox2
+            // 
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox2.Location = new System.Drawing.Point(136, 10);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox2.Size = new System.Drawing.Size(559, 359);
+            this.textBox2.TabIndex = 18;
+            // 
+            // button19
+            // 
+            this.button19.Location = new System.Drawing.Point(8, 106);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(117, 40);
+            this.button19.TabIndex = 16;
+            this.button19.Text = "Load LNG and EXE";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
+            // 
             // button18
             // 
             this.button18.Location = new System.Drawing.Point(8, 61);
@@ -476,24 +498,6 @@
             this.button8.Text = "convert vram";
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.Button8_Click_1);
-            // 
-            // button19
-            // 
-            this.button19.Location = new System.Drawing.Point(231, 3);
-            this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(75, 22);
-            this.button19.TabIndex = 16;
-            this.button19.Text = "button19";
-            this.button19.UseVisualStyleBackColor = true;
-            this.button19.Click += new System.EventHandler(this.button19_Click);
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(312, 5);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(378, 359);
-            this.textBox2.TabIndex = 18;
             // 
             // MainForm
             // 

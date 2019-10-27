@@ -31,5 +31,10 @@ namespace levTool
             unk5 = br.ReadInt16();
             unk6 = br.ReadInt16();
         }
+
+        public override string ToString()
+        {
+            return unk1 + "\t" + unk1z + "\t" + ptrunk1.ToString("X8") + "\t" + title_index + "\t" + unk2 + "\t" + unk3 + "\t" + unk4 + "\t" + unk5 + "\t" + unk6 + "\t";
+        }
     }
 }

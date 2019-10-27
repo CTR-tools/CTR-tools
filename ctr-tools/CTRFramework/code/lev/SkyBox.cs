@@ -48,14 +48,23 @@ namespace CTRFramework
                 sb.Append(v.ToString(false) + "\r\n");
             }
 
-            int z = 0;
+            int z = 7;
 
             br.BaseStream.Position = offs[z];
 
             for (int i = 0; i < sizes[z]; i++)
             {
-                sb.Append(String.Format("f {0} {1} {2}\r\n", br.ReadInt16(), br.ReadInt16(), br.ReadInt16()));
-                br.ReadInt16();
+                //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
+                //Console.ReadKey();
+                
+                Vector4s tri = new Vector4s(br);
+
+                sb.Append(String.Format("f {0} {1} {2}\r\n", 
+                    tri.X,
+                    tri.Y,
+                    tri.Z
+                    )
+                );   
             }
 
             //CTRFramework.Shared.Helpers.WriteToFile("skytest.obj", sb.ToString());

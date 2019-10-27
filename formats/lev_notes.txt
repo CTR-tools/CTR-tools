@@ -1,20 +1,22 @@
-Quadblock struct:
+Quadblock format
 
 9 shorts	indices in vertex array - form 4 quads
 
 Short	quadflags (check github)
-Byte	drawing order for low poly quad 
-Byte	unknown, assumed rendering mode
-Byte	unknown, assumed rendering mode
-Byte	unknown, not transparency.
-	For some reason only affects 1 quad out of 4.
-	Usually: 0 1 2 3 128 129 130 131.
 
-4 bytes		drawing order for hi poly quads.
+4 Bytes	big endian value
+	8 bits	drawing order for low poly quad 
+	4 * 5 bits - quad flags
+		3 bits - texture rotation mode - 8 values for 0 90 180 270 and mirrored
+			On real hardware it probably defines the order vram is read.
+		1 bit - render only 1 triangle
+		1 bit - second face is degenerate
 
-4 uints		pointers to mid level texture data
+4 * 1 byte	drawing order for hi poly quads.
 
-6 shorts	bounding box min(x,y,z), max(x,y,z)
+4 * 1 uint	pointers to mid level texture data
+
+3 * 2 short	bounding box min(x,y,z), max(x,y,z)
 
 Byte	terrain type - spotted 0-20, more flag values in hub areas.
 Byte	weather intensity - 0 15 30 45 60
@@ -22,18 +24,18 @@ Byte	weather particles type - spotted 1 - snow, 3 - ???, 9 - rain
 Byte	unknown - mostly 0, 129 in sewer. 192 in temple1
 
 Short	unique value for each ngon. Probably an index?
-	Interestingly it starts with 001F then goes down to 0000, then 003F down to 0020, and so on.
+Interestingly it starts with 001F then goes down to 0000, then 003F down to 0020, and so on.
  
-Byte	track progression marker, used to find current player position as well as his direction (wrong way message).
-	Gradually increases from start to finish, everything outside the track is FF.
+Byte	track progression marker, used to find current player position as well as his direction 
+	(wrong way message). Gradually increases from start to finish, everything outside the track is FF.
 
 Byte	unknown. In blizzard bluff: values 13 to 18
 
 Uint	pointer to low level texture data, the one used in the distance. Can be null.
 
 Uint	pointer to 4 pointers group, which assumed to be pointers to high level texture data.
-
 10 shorts	or 20 bytes? unknown. Somehow related to collision.
+
 
 
 TextureLayout struct:
