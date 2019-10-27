@@ -19,6 +19,7 @@ namespace CTRFramework
         public List<ColData> coldata = new List<ColData>();
         public List<LODModel> dynamics = new List<LODModel>();
         public SkyBox skybox;
+        public Nav nav;
 
         public List<PosAng> restartPts = new List<PosAng>();
 
@@ -199,7 +200,7 @@ namespace CTRFramework
             restartPts = InstanceList<PosAng>.ReadFrom(br, header.ptrRestartPts, header.numRestartPts);
             coldata = InstanceList<ColData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
             quad = InstanceList<QuadBlock>.ReadFrom(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
-
+            nav = Instance<Nav>.ReadFrom(br, header.ptrAiNav);
 
 
             //read pickups
@@ -227,7 +228,7 @@ namespace CTRFramework
             */
 
             //exports restart points
-
+            /*
             StringBuilder sb = new StringBuilder();
 
             foreach (PosAng pa in restartPts)
@@ -241,9 +242,9 @@ namespace CTRFramework
             }
 
             //File.WriteAllText("restart_pts.obj", sb.ToString());
+            */
 
-
-
+            /*
             List<short> uniflag = new List<short>();
 
             foreach (QuadBlock qb in quad)
@@ -257,6 +258,17 @@ namespace CTRFramework
 
             foreach (byte b in uniflag)
                 Console.WriteLine(b);
+
+            */
+            /*
+            //ai path test
+            int x = 0;
+            foreach (Path p in nav.paths)
+            {
+                File.WriteAllText("path"+x+".obj", p.ToObj());
+                x++;
+            }
+            */
         }
 
 
@@ -266,7 +278,7 @@ namespace CTRFramework
 
             foreach (QuadBlock qb in quad)
             {
-                if (qb.offset1 != 0)
+                if (qb.ptrTexLow != 0)
                 {
                     if (!tex.ContainsKey(qb.texlow.Tag()))
                     {

@@ -6,17 +6,9 @@ using System.Text;
 
 namespace CTRFramework
 {
-
-
     public class QuadBlock : IRead, IWrite
     {
-        public static int pagex = -1;
-        public static int pagey = -1;
-
-        public short[] ind = new short[9];
-        
         /*
-        //9 indices in vertex array, that form 4 quads.
          * 0--4--1
          * | /| /|
          * |/ |/ |
@@ -26,11 +18,13 @@ namespace CTRFramework
          * 2--8--3
          */
 
+        //9 indices in vertex array, that form 4 quads, see above.
+        public short[] ind = new short[9];
         public QuadFlags quadFlags;
 
         public uint bitvalue; //important! big endian!
 
-        //these 5 values are contained in bitvalue mask is 8b5b5b5b5b4z where b is bit and z is empty
+        //these 5 values are contained in bitvalue, mask is 8b5b5b5b5b4z where b is bit and z is empty
         public byte drawOrderLow;
         public byte f0;
         public byte f1;
@@ -39,7 +33,7 @@ namespace CTRFramework
 
         public byte[] drawOrderHigh = new byte[4];
 
-        public uint[] tex = new uint[4];    //offsets to texture definition
+        public uint[] ptrTexMid = new uint[4];    //offsets to texture definition
 
         public BoundingBox bb;              //a box that bounds
 
@@ -51,9 +45,8 @@ namespace CTRFramework
         public short id;
         public byte[] midflags = new byte[2];
 
-        public int offset1;                 //offset to LOD texture definition
-        public int offset2;
-        //leads to 3 textures array
+        public int ptrTexLow;                 //offset to LOD texture definition
+        public int offset2; 
 
         public ushort[] unk3 = new ushort[10];  //unknown
 
@@ -93,7 +86,7 @@ namespace CTRFramework
             drawOrderHigh = br.ReadBytes(4);
 
             for (int i = 0; i < 4; i++)
-                tex[i] = br.ReadUInt32();
+                ptrTexMid[i] = br.ReadUInt32();
 
             bb = new BoundingBox(br);
 
@@ -106,7 +99,7 @@ namespace CTRFramework
 
             midflags = br.ReadBytes(2);
 
-            offset1 = br.ReadInt32();
+            ptrTexLow = br.ReadInt32();
             offset2 = br.ReadInt32();
 
             for (int i = 0; i < 10; i++)
@@ -116,11 +109,11 @@ namespace CTRFramework
             //read texture layouts
             int pos = (int)br.BaseStream.Position;
 
-            br.Jump(offset1);
+            br.Jump(ptrTexLow);
             texlow = new TextureLayout(br);
 
 
-            foreach (uint u in tex)
+            foreach (uint u in ptrTexMid)
             {
                 if (u != 0)
                 {
@@ -235,87 +228,92 @@ namespace CTRFramework
             sb.AppendLine();
 
 
-            switch (detail)
+            //if (!quadFlags.HasFlag(QuadFlags.OutsideStuff) && 
+                //!quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
             {
-                case Detail.Low:
-                    {
-                        sb.AppendLine(texlow.ToObj());
+                switch (detail)
+                {
+                    case Detail.Low:
+                        {
+                            sb.AppendLine(texlow.ToObj());
 
-                        sb.Append(ASCIIFace("f", a + 1, a + 3, a + 2, b + 1, b + 3, b + 2));
-                        sb.Append(ASCIIFace("f", a + 2, a + 3, a + 4, b + 2, b + 3, b + 4));
+                            sb.Append(ASCIIFace("f", a + 1, a + 3, a + 2, b + 1, b + 3, b + 2));
+                            sb.Append(ASCIIFace("f", a + 2, a + 3, a + 4, b + 2, b + 3, b + 4));
 
-                        b += 4;
+                            b += 4;
 
-                        break;
-                    }
+                            break;
+                        }
 
-                case Detail.Med:
-                    {
-                        int[] tm = new int[] { 
+                    case Detail.Med:
+                        {
+                            int[] tm = new int[] {
                             f0, f1, f2, f3
                         };
 
-                        for (int i = 0; i < 4; i++)
-                        {
-                            if (texmid.Count == 4)
+                            for (int i = 0; i < 4; i++)
                             {
-                                sb.AppendLine(texmid[i].ToObj());
+                                if (texmid.Count == 4)
+                                {
+                                    sb.AppendLine(texmid[i].ToObj());
+                                }
+                                else
+                                {
+                                    sb.AppendLine("usemtl default");
+                                }
+
+                                if (quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
+                                    sb.AppendLine("usemtl default");
+
+                                RotateFlipType rm = (RotateFlipType)(tm[i] & 0x07);
+
+                                switch (rm)
+                                {
+                                    case RotateFlipType.None: uvinds = GetUVIndices(1, 2, 3, 4); break;
+                                    case RotateFlipType.Rotate90: uvinds = GetUVIndices(3, 1, 4, 2); break;
+                                    case RotateFlipType.Rotate180: uvinds = GetUVIndices(4, 3, 2, 1); break;
+                                    case RotateFlipType.Rotate270: uvinds = GetUVIndices(2, 4, 1, 3); break;
+                                    case RotateFlipType.Flip: uvinds = GetUVIndices(2, 1, 4, 3); break;
+                                    case RotateFlipType.FlipRotate90: uvinds = GetUVIndices(4, 2, 3, 1); break;
+                                    case RotateFlipType.FlipRotate180: uvinds = GetUVIndices(3, 4, 1, 2); break;
+                                    case RotateFlipType.FlipRotate270: uvinds = GetUVIndices(1, 3, 2, 4); break;
+                                    default: uvinds = GetUVIndices(0, 0, 0, 0); break;
+                                }
+
+                                bool stflag1 = ((tm[i] >> 3) & 1) > 0;
+                                bool stflag2 = ((tm[i] >> 4) & 1) > 0;
+
+                                if (stflag1 && stflag2)
+                                {
+                                    Console.WriteLine("both flags are set!");
+                                    Console.ReadKey();
+                                }
+
+                                if (!stflag1 & !stflag2)
+                                {
+                                    sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[0], b + uvinds[1], b + uvinds[2])); // 1 3 2 | 0 2 1
+                                    sb.Append(ASCIIFace("f", a + inds[i * 6 + 3], a + inds[i * 6 + 4], a + inds[i * 6 + 5], b + uvinds[3], b + uvinds[4], b + uvinds[5])); // 2 3 4 | 1 2 3
+                                }
+
+                                if (stflag1)
+                                {
+                                    sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[1], b + uvinds[2], b + uvinds[0])); // 1 3 2 | 0 2 1
+                                }
+
+                                if (stflag2)
+                                {
+                                    sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[2], b + uvinds[0], b + uvinds[1]));
+                                }
+
+                                sb.AppendLine();
+
+                                if (texmid.Count == 4) b += 4;
                             }
-                            else
-                            {
-                                sb.AppendLine("usemtl default");
-                            }
 
-                            if (quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
-                                sb.AppendLine("usemtl default");
-
-                            RotateFlipType rm = (RotateFlipType)(tm[i] & 0x07);
-
-                            switch (rm)
-                            {
-                                case RotateFlipType.None: uvinds = GetUVIndices(1, 2, 3, 4); break;
-                                case RotateFlipType.Rotate90: uvinds = GetUVIndices(3, 1, 4, 2); break;
-                                case RotateFlipType.Rotate180: uvinds = GetUVIndices(4, 3, 2, 1); break;
-                                case RotateFlipType.Rotate270: uvinds = GetUVIndices(2, 4, 1, 3); break;
-                                case RotateFlipType.Flip: uvinds = GetUVIndices(2, 1, 4, 3); break;
-                                case RotateFlipType.FlipRotate90: uvinds = GetUVIndices(4, 2, 3, 1); break;
-                                case RotateFlipType.FlipRotate180: uvinds = GetUVIndices(3, 4, 1, 2); break;
-                                case RotateFlipType.FlipRotate270: uvinds = GetUVIndices(1, 3, 2, 4); break;
-                                default: uvinds = GetUVIndices(0, 0, 0, 0); break;
-                            }
-
-                            bool stflag1 = ((tm[i] >> 3) & 1) > 0;
-                            bool stflag2 = ((tm[i] >> 4) & 1) > 0;
-
-                            if (stflag1 && stflag2)
-                            {
-                                Console.WriteLine("both flags are set!");
-                                Console.ReadKey();
-                            }
-
-                            if (!stflag1 & !stflag2)
-                            {
-                                sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[0], b + uvinds[1], b + uvinds[2])); // 1 3 2 | 0 2 1
-                                sb.Append(ASCIIFace("f", a + inds[i * 6 + 3], a + inds[i * 6 + 4], a + inds[i * 6 + 5], b + uvinds[3], b + uvinds[4], b + uvinds[5])); // 2 3 4 | 1 2 3
-                            }
-
-                            if (stflag1)
-                            {
-                                sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[1], b + uvinds[2], b + uvinds[0])); // 1 3 2 | 0 2 1
-                            }
-
-                            if (stflag2)
-                            {
-                                sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[2], b + uvinds[0], b + uvinds[1]));
-                            }
-
-                            sb.AppendLine();
-
-                            if (texmid.Count == 4) b += 4;
+                            break;
                         }
+                }
 
-                        break;
-                    }
             }
 
             a += vcnt;
@@ -380,7 +378,7 @@ namespace CTRFramework
             bw.Write(drawOrderHigh);
 
             for (int i = 0; i < 4; i++)
-                bw.Write(tex[i]);
+                bw.Write(ptrTexMid[i]);
 
             bb.Write(bw);
 
@@ -393,7 +391,7 @@ namespace CTRFramework
 
             bw.Write(midflags);
 
-            bw.Write(offset1);
+            bw.Write(ptrTexLow);
             bw.Write(offset2);
 
             for (int i = 0; i < 10; i++)

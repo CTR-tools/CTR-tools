@@ -221,7 +221,7 @@ namespace levTool
                 foreach (QuadBlock qb in scn.quad)
                 {
                     qb.offset2 = 0;
-                    qb.tex = new uint[] { 0, 0, 0, 0 };
+                    qb.ptrTexMid = new uint[] { 0, 0, 0, 0 };
                 }
             }
         }

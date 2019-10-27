@@ -99,6 +99,8 @@
     <Compile Include="code\ctr\LODVertex.cs" />
     <Compile Include="code\ctr\LODVertexDef.cs" />
     <Compile Include="code\Enums.cs" />
+    <Compile Include="code\lev\nav\Nav.cs" />
+    <Compile Include="code\lev\nav\AIPath.cs" />
     <Compile Include="code\lev\Texture.cs" />
     <Compile Include="code\lng\LNG.cs" />
     <Compile Include="code\shared\BinaryReaderEx.cs" />
@@ -106,7 +108,7 @@
     <Compile Include="code\helpers\Helpers.cs" />
     <Compile Include="code\Interfaces.cs" />
     <Compile Include="code\helpers\Meta.cs" />
-    <Compile Include="code\lev\AINavFrame.cs" />
+    <Compile Include="code\lev\nav\NavFrame.cs" />
     <Compile Include="code\mpk\UImap.cs" />
     <Compile Include="code\mpk\ModelPack.cs" />
     <Compile Include="code\mpk\TexMap.cs" />

@@ -59,7 +59,10 @@ instances:
     type: unk_struct1
     repeat: expr
     repeat-expr: 8
-
+  
+  ai_nav:
+    pos: header.ptr_ai_nav
+    type: ai_paths
 
 types:
 
@@ -354,3 +357,41 @@ types:
         type: u4
         repeat: expr
         repeat-expr: cnt_ptr_entries
+        
+  ai_frame_header:
+    seq:
+      - id: unk1
+        type: u2
+      - id: num_frames
+        type: u2
+      - id: skip
+        size: 0x48
+        
+  nav_frame:
+    seq:
+      - id: position
+        type: vector3s
+      - id: data
+        size: 14
+        
+  ai_path:
+    seq:
+      - id: header
+        type: ai_frame_header
+      - id: start
+        type: nav_frame
+      - id: frames
+        type: nav_frame
+        repeat: expr
+        repeat-expr: header.num_frames
+    
+  ai_paths:
+    seq:
+      - id: ptr
+        type: u4
+        repeat: expr
+        repeat-expr: 3
+      - id: paths
+        type: ai_path
+        repeat: expr
+        repeat-expr: 3

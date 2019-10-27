@@ -49,6 +49,12 @@ instances:
     repeat: expr
     repeat-expr: 37
     
+  ptr_tbl3:
+    pos: 0x7CC40
+    type: psx_ptr
+    repeat: expr
+    repeat-expr: 13 * 3 + 1
+    
   strings2:
     pos: 0x1AE4
     type: string_pad
@@ -61,7 +67,28 @@ instances:
     repeat: expr
     repeat-expr: 65
     
+  more_strings:
+    pos: 0x7DD94
+    type: string_pad
+    repeat: expr
+    repeat-expr: 26
+    
+  triplets:
+    pos: 0x71888
+    type: triplet
+    repeat: expr
+    repeat-expr: 26
+    
 types:
+
+  triplet:
+    seq:
+      - id: x1
+        type: string_ptr
+      - id: x2
+        type: string_ptr
+      - id: x3
+        type: string_ptr
 
   psx_ptr:
     seq:
@@ -78,6 +105,15 @@ types:
         encoding: ascii
       - id: pad
         size: (text.length / 4 + 1) * 4  - (text.length + 1)
+
+  string_ptr:
+    seq:
+      - id: ptr
+        type: psx_ptr
+    instances:
+      text:
+        type: string_pad
+        pos: ptr.converted
 
   level_slot:
     seq:

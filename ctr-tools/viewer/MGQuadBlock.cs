@@ -54,7 +54,7 @@ namespace viewer
                                 v.Color.G = cv.color.Y;
                                 v.Color.B = cv.color.Z;
 
-                                if (s.quad[i].offset1 > 0)
+                                if (s.quad[i].ptrTexLow > 0)
                                 {
                                     v.TextureCoordinate.X = tl.uv[j].X / 256.0f;
                                     v.TextureCoordinate.Y = tl.uv[j].Y / 256.0f;
