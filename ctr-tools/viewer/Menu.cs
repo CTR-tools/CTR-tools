@@ -72,6 +72,7 @@ namespace viewer
             //currently doesn't work
             //items.Add(new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true));
             items.Add(new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true));
+            items.Add(new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true));
             //items.Add(new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true));
 
             items.Add(new MenuItem("previous flag".ToUpper(), "flag", "prev", true));

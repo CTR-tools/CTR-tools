@@ -23,7 +23,7 @@ namespace CTRFramework
 
         public List<PosAng> restartPts = new List<PosAng>();
 
-        Tim ctrvram;
+        public Tim ctrvram;
 
         public Scene(string s, string fmtm)
         {
@@ -92,13 +92,20 @@ namespace CTRFramework
                 Console.WriteLine(ctrvram.ToString());
                 Console.WriteLine("Exporting textures...");
 
-                Directory.CreateDirectory(@".\tex\");
+                Directory.CreateDirectory(path);
 
                 Dictionary<string, TextureLayout> tex = GetTexturesList();
 
                 foreach (TextureLayout tl in tex.Values)
                 {
-                    ctrvram.GetTexturePage(tl, path);
+                    try
+                    {
+                        ctrvram.GetTexturePage(tl, path);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("error");
+                    }
                 }
             }
             else
@@ -183,7 +190,7 @@ namespace CTRFramework
 
             if (exportTextures)
             {
-                ExportTextures(Path.GetDirectoryName(path));
+                ExportTextures(Path.GetDirectoryName(path) + "\\tex\\");
                 Console.WriteLine("Exported!");
             }
 
@@ -200,7 +207,16 @@ namespace CTRFramework
             restartPts = InstanceList<PosAng>.ReadFrom(br, header.ptrRestartPts, header.numRestartPts);
             coldata = InstanceList<ColData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
             quad = InstanceList<QuadBlock>.ReadFrom(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
-            nav = Instance<Nav>.ReadFrom(br, header.ptrAiNav);
+
+            try
+            {
+                if (header.ptrAiNav != 0) 
+                    nav = Instance<Nav>.ReadFrom(br, header.ptrAiNav);
+            }
+            catch
+            {
+                //oh
+            }
 
 
             //read pickups
@@ -294,15 +310,15 @@ namespace CTRFramework
                     }
                 }
 
-                /*
-                foreach (TextureLayout tl in qb.texhi)
+                
+                foreach (TextureLayout tl in qb.texmid3)
                 {
                     if (!tex.ContainsKey(tl.Tag()))
                     {
                         tex.Add(tl.Tag(), tl);
                     }
                 }
-                */
+                
 
             }
 

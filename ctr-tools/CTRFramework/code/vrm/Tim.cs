@@ -2,11 +2,15 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Collections.Generic;
 
 namespace CTRFramework
 {
     public class Tim : IRead
     {
+
+        public Dictionary<string, Bitmap> textures = new Dictionary<string, Bitmap>();
+
         public uint magic;
         public uint flags;
         public uint datasize;
@@ -160,6 +164,8 @@ namespace CTRFramework
 
         public void GetTexturePage(TextureLayout tl, string path, string name = "")
         {
+            Directory.CreateDirectory(path);
+
             byte[] buf = new byte[128 * 256];
 
             for (int i = 0; i < 256; i++)
@@ -173,11 +179,11 @@ namespace CTRFramework
             Tim x = new Tim(new Rectangle(0, 0, 256 / 4, 256));
             x.data = buf;
 
-            x.SaveBMP(path + "\\tex\\" + (name == "" ? tl.Tag() : name) + ".bmp", CtrClutToBmpPalette(GetCtrClut(tl)));
+            x.SaveBMP(path + "\\" + (name == "" ? tl.Tag() : name) + ".bmp", CtrClutToBmpPalette(GetCtrClut(tl)));
 
             if (tl.Tag() != "0000_00000028")
 
-                using (Bitmap oldBmp = new Bitmap(path + "\\tex\\" + (name == "" ? tl.Tag() : name) + ".bmp"))
+                using (Bitmap oldBmp = new Bitmap(path + "\\" + (name == "" ? tl.Tag() : name) + ".bmp"))
                 using (Bitmap newBmp = new Bitmap(oldBmp))
                 {
                     Point point = new Point(tl.uv[0].X, tl.uv[0].Y);
@@ -210,7 +216,8 @@ namespace CTRFramework
                         g.DrawEllipse(Pens.Purple, new Rectangle(poly[3].X, poly[3].Y, 3, 3));
                         */
 
-                        targetBmp.Save(path + "\\tex\\" + (name == "" ? tl.Tag() : name) + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                        targetBmp.Save(path + "\\" + (name == "" ? tl.Tag() : name) + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                        textures.Add((name == "" ? tl.Tag() : name), targetBmp);
                         //File.Delete("tex\\" + (name == "" ? tl.Tag() : name) + ".bmp");
                     }
                     catch (Exception ex)

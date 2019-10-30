@@ -9,7 +9,7 @@ namespace CTRFramework
 {
     public class Nav : IRead
     {
-        List<uint> ptrs = new List<uint>();
+        public List<uint> ptrs = new List<uint>();
         public List<AIPath> paths = new List<AIPath>();
 
         public Nav()

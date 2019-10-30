@@ -53,6 +53,8 @@ namespace CTRFramework
         //additional data
         public TextureLayout texlow;
         public List<TextureLayout> texmid = new List<TextureLayout>();
+        public List<TextureLayout> texmid2 = new List<TextureLayout>();
+        public List<TextureLayout> texmid3 = new List<TextureLayout>();
         public List<TextureLayout> texhi = new List<TextureLayout>();
 
         public Texture texture;
@@ -119,6 +121,8 @@ namespace CTRFramework
                 {
                     br.Jump(u);
                     texmid.Add(new TextureLayout(br));
+                    texmid2.Add(new TextureLayout(br));
+                    texmid3.Add(new TextureLayout(br));
 
                     /*
                     //extra 2 must be defined 
@@ -253,9 +257,9 @@ namespace CTRFramework
 
                             for (int i = 0; i < 4; i++)
                             {
-                                if (texmid.Count == 4)
+                                if (texmid3.Count == 4)
                                 {
-                                    sb.AppendLine(texmid[i].ToObj());
+                                    sb.AppendLine(texmid3[i].ToObj());
                                 }
                                 else
                                 {

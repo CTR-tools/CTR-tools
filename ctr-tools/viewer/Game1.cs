@@ -13,7 +13,7 @@ namespace viewer
         SpriteBatch spriteBatch;
         SpriteFont font;
 
-        List<Texture2D> textures = new List<Texture2D>();
+        Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
         List<Scene> scn = new List<Scene>();
         Menu menu;
@@ -94,8 +94,8 @@ namespace viewer
 
         protected override void LoadContent()
         {
-            textures.Add(Content.Load<Texture2D>("test"));
-            effect.Texture = textures[0];
+            textures.Add("test", Content.Load<Texture2D>("test"));
+            effect.Texture = textures["test"];
             effect.TextureEnabled = true;
 
 
@@ -145,6 +145,21 @@ namespace viewer
                 backColor.B = scn[0].header.backColor.Z;
             }
 
+            
+
+            foreach (Scene s in scn)
+            {
+                s.ExportTextures(@".\tex\");
+
+                foreach (var x in s.ctrvram.textures)
+                {
+                    textures.Add(x.Key, Game1.GetTexture(GraphicsDevice, x.Value));
+                }
+
+            }
+
+            effect.Texture = textures["test"];
+
         }
 
         public void ResetCamera()
@@ -165,6 +180,7 @@ namespace viewer
         public bool wire = true;
         public bool inmenu = false;
         public bool hide_invis = true;
+        public bool filter = true;
 
         GamePadState oldstate = GamePad.GetState(PlayerIndex.One);
         GamePadState newstate = GamePad.GetState(PlayerIndex.One);
@@ -218,6 +234,7 @@ namespace viewer
 
                                 case "invis": hide_invis = !hide_invis; LoadLevel((TerrainFlags)(1 << Flag)); break;
                                 case "mouse": usemouse = !usemouse; break;
+                                case "filter": filter = !filter; break;
                                 case "wire": wire = !wire; break;
                                 case "window":
                                     if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen();
@@ -260,7 +277,7 @@ namespace viewer
             ss = new SamplerState();
             ss.FilterMode = TextureFilterMode.Default;
 
-            ss.Filter = TextureFilter.Point;
+            ss.Filter = filter ? TextureFilter.Anisotropic : TextureFilter.Point;
             ss.MaxAnisotropy = 16;
             ss.MaxMipLevel = 8;
             ss.MipMapLevelOfDetailBias = -1.5f;
@@ -325,5 +342,38 @@ namespace viewer
 
             // graphics.EndDraw();
         }
+
+
+        //magic
+        public static Texture2D GetTexture(GraphicsDevice gd, System.Drawing.Bitmap bmp)
+        {
+            int[] imgData = new int[bmp.Width * bmp.Height];
+            Texture2D texture = new Texture2D(gd, bmp.Width, bmp.Height);
+
+            // lock bitmap
+            System.Drawing.Imaging.BitmapData origdata =
+                bmp.LockBits(new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, bmp.PixelFormat);
+
+            //uint* byteData = (uint*)origdata.Scan0;
+            /*
+            // Switch bgra -> rgba
+            for (int i = 0; i < imgData.Length; i++)
+            {
+                byteData[i] = (byteData[i] & 0x000000ff) << 16 | (byteData[i] & 0x0000FF00) | (byteData[i] & 0x00FF0000) >> 16 | (byteData[i] & 0xFF000000);
+            }
+            */
+            // copy data
+            System.Runtime.InteropServices.Marshal.Copy(origdata.Scan0, imgData, 0, bmp.Width * bmp.Height);
+
+            //byteData = null;
+
+            // unlock bitmap
+            bmp.UnlockBits(origdata);
+
+            texture.SetData(imgData);
+
+            return texture;
+        }
+
     }
 }
