@@ -14,17 +14,25 @@ namespace CTRFramework
         Flip = 7
     }
 
+    public enum FaceMode
+    {
+        Normal = 0,
+        SingleUV1 = 1,
+        SingleUV2 = 2,
+        Unknown = 3
+    }
+
     [Flags]
     public enum TerrainFlags
     {
-        flag0 = 1 << 0, //check
-        flag1 = 1 << 1, //used in space station, probably invisible wall
+        flag0 = 1 << 0, 
+        flag1 = 1 << 1, 
         flag2 = 1 << 2,
         flag3 = 1 << 3,
-        flag4 = 1 << 4,//check
+        flag4 = 1 << 4,
         flag5 = 1 << 5,
         flag6 = 1 << 6,
-        flag7 = 1 << 7 //confirmed
+        flag7 = 1 << 7
     }
 
 

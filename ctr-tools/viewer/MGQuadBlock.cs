@@ -28,22 +28,24 @@ namespace viewer
         };
 
 
+
         public MGQuadBlock(Scene s, Detail detail)
         {
-            verts = new VertexPositionColorTexture[s.quad.Count * 4];
-            indices = new short[s.quad.Count * 6];
+
+            verts = new VertexPositionColorTexture[s.quads.Count * 9];
+            indices = new short[s.quads.Count * 6 * 4];
 
             switch (detail)
             {
                 case Detail.Low:
                     {
-                        for (int i = 0; i < s.quad.Count; i++)
+                        for (int i = 0; i < s.quads.Count; i++)
                         {
                             for (int j = 0; j < 4; j++)
                             {
                                 VertexPositionColorTexture v = new VertexPositionColorTexture();
-                                CTRFramework.Vertex cv = s.vert[s.quad[i].ind[j]];
-                                CTRFramework.TextureLayout tl = s.quad[i].texlow;
+                                CTRFramework.Vertex cv = s.verts[s.quads[i].ind[j]];
+                                CTRFramework.TextureLayout tl = s.quads[i].texlow;
 
                                 v.Position.X = cv.coord.X;
                                 v.Position.Y = cv.coord.Y;
@@ -54,7 +56,7 @@ namespace viewer
                                 v.Color.G = cv.color.Y;
                                 v.Color.B = cv.color.Z;
 
-                                if (s.quad[i].ptrTexLow > 0)
+                                if (s.quads[i].ptrTexLow > 0)
                                 {
                                     v.TextureCoordinate.X = tl.uv[j].X / 256.0f;
                                     v.TextureCoordinate.Y = tl.uv[j].Y / 256.0f;
@@ -78,6 +80,41 @@ namespace viewer
                         break;
                     }
 
+                case Detail.Med:
+                    {
+                        for (int i = 0; i < s.quads.Count; i++)
+                        {
+                            for (int j = 0; j < 9; j++)
+                            {
+                                VertexPositionColorTexture v = new VertexPositionColorTexture();
+                                CTRFramework.Vertex cv = s.verts[s.quads[i].ind[j]];
+                                CTRFramework.TextureLayout tl = s.quads[i].texlow;
+
+                                v.Position.X = cv.coord.X;
+                                v.Position.Y = cv.coord.Y;
+                                v.Position.Z = cv.coord.Z;
+
+                                v.Color.A = 255;
+                                v.Color.R = cv.color.X;
+                                v.Color.G = cv.color.Y;
+                                v.Color.B = cv.color.Z;
+
+                                v.TextureCoordinate.X = 0;
+                                v.TextureCoordinate.Y = 0;
+
+                                verts[i * 9 + j] = v;
+                            }
+
+                            for (int k = 0; k < indices_pattern.Length; k++)
+                            {
+                                indices[i * 6 * 4 + k] = (short)(i * 9 + indices_pattern[k]);
+                            }
+
+                        }
+
+                        break;
+                    }
+
             }
 
             // verts_flag = verts;
@@ -92,7 +129,7 @@ namespace viewer
         {
             List<VertexPositionColorTexture> vts = new List<VertexPositionColorTexture>();
 
-            foreach (Vertex v in scn.vert)
+            foreach (Vertex v in scn.verts)
                 vts.Add(GetMonogameVertex(v, new Vector3(0, 0, 0)));
 
             verts = vts.ToArray();
@@ -115,7 +152,7 @@ namespace viewer
 
             VertexPositionColorTexture[] buf = vts.ToArray();
 
-            foreach (QuadBlock qb in scn.quad)
+            foreach (QuadBlock qb in scn.quads)
             {
                 //if (!qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers) | hide_invis)
                 {
@@ -167,6 +204,8 @@ namespace viewer
         {
             foreach (var pass in effect.CurrentTechnique.Passes)
             {
+                effect.Texture = Game1.textures["test"];
+
                 pass.Apply();
 
                 if (verts.Length > 0)

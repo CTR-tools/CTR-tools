@@ -13,16 +13,14 @@ namespace CTRFramework
         MemoryStream ms;
 
         public string name;
-        public short unk0;
-        public short lodCount;
-        public int unk1; //always 0x18!
+        public ushort evt;
+        public short numLods;
+        public int ptrLodHeads;
 
         List<LODHeader> lh = new List<LODHeader>();
-        List<LODVertexDef> vdef = new List<LODVertexDef>();
+        //List<LODVertexDef> vdef = new List<LODVertexDef>();
 
-        public int numColors;
-
-        List<CTRAnim> anims = new List<CTRAnim>();
+        //public int numColors;
 
 
         public LODModel(string s)
@@ -47,32 +45,31 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Replace("\0", "");
-            unk0 = br.ReadInt16();
-            lodCount = br.ReadInt16();
-            unk1 = br.ReadInt32();
+            Console.WriteLine("lodmodel start: " + br.BaseStream.Position.ToString("X8"));
+            
+            name = br.ReadStringFixed(16);
+            evt = br.ReadUInt16();
+            numLods = br.ReadInt16();
+            ptrLodHeads = br.ReadInt32();
 
-            if (unk1 != 0x18)
+            Console.WriteLine("name: " + name);
+            Console.WriteLine("evt: " + (CTREvent)evt);
+            Console.WriteLine("lodCount: " + numLods);
+            Console.WriteLine("ptrLods: " + (ptrLodHeads+4).ToString("X8"));
+
+            for (int i = 0; i < numLods; i++)
             {
-                Console.WriteLine("unk1 == " + unk1);
-            }
-
-
-            Console.WriteLine("Model: " + name);
-
-            //Console.WriteLine(name + "\t" + unk0 + "\t" + lodCount + "\t" + currentoffset);
-
-            for (int i = 0; i < lodCount; i++)
-            {
-                LODHeader lod = new LODHeader();
-                lod.Read(br);
-                lh.Add(lod);
+                lh.Add(new LODHeader(br));
             }
 
             /*
-            for (int i = 0; i < lodCount; i++)
+            List<CTRAnim> anims = new List<CTRAnim>();
+
+            Console.WriteLine();
+            
+            for (int i = 0; i < numLods; i++)
             {
-                for (int j = 0; j < lh[i].animsCnt; j++)
+                for (int j = 0; j < lh[i].numAnims; j++)
                 {
                     int off = br.ReadInt32();
                     long pos = br.BaseStream.Position;
@@ -84,7 +81,9 @@ namespace CTRFramework
                     br.BaseStream.Position = pos;
                 }
             }
-
+            
+            */
+            /*
             numColors = br.ReadInt32();
 
 

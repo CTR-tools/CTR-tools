@@ -9,23 +9,47 @@ namespace CTRFramework
     class CTRAnim
     {
         string name;
-        short numFrames;
+        byte numFrames;
+        byte unk1;
         short frameSize;
         int someOffset;//??
 
         List<byte[]> frames = new List<byte[]>();
 
-        public CTRAnim(BinaryReaderEx br)
+        public CTRAnim(BinaryReaderEx br, string s)
         {
-            name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Replace("\0", "");
-            numFrames = br.ReadInt16();
+            name = br.ReadStringFixed(16);
+            numFrames = br.ReadByte();
+            unk1 = br.ReadByte();
             frameSize = br.ReadInt16();
             someOffset = br.ReadInt32();
 
             Console.WriteLine("anim -> " + name + " " + numFrames + " frames " + frameSize + " framesize");
 
-            byte[] data = br.ReadBytes(frameSize);
-            frames.Add(data);
+            /*
+            if (numFrames > 0)
+            {
+                byte[] head = br.ReadBytes(0x18);
+                byte[] data = br.ReadBytes(frameSize - 0x18);
+                frames.Add(data);
+
+                Console.WriteLine(frames[0].Length);
+                Console.ReadKey();
+
+                StringBuilder sb = new StringBuilder();
+
+                for (int i = 0; i < (frames[0].Length - 3) / 3; i++)
+                {
+                    sb.AppendFormat("v {0} {1} {2}\r\n",
+                        frames[0][i * 3] - 128,
+                        frames[0][i * 3 + 1] - 128,
+                        frames[0][i * 3 + 2] - 128
+                        );
+                }
+
+                File.WriteAllText(s + "_" + name + ".obj", sb.ToString());
+            }
+            */
         }
 
 

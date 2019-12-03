@@ -25,6 +25,14 @@
 			"big_md5": "eb0b4551f3a4a374080c085dea1a8609",
 			"hwl_md5": "702ac23e8ab5940f32cfc5ab1e8fc913"
 		},
+
+		{
+			"name": "Pizza_Hut_Demo",
+			"timestamp": "1999-09-09",
+			"big_md5": "4d292c60c9438a9713735565ccb788d5",
+			"hwl_md5": "702ac23e8ab5940f32cfc5ab1e8fc913",
+			"comment": "hwl same as NTSC Demo"
+		},
 		{
 			"name": "PAL_Demo",
 			"timestamp": "1999-06-19",
@@ -35,7 +43,8 @@
 			"name": "JAP_Demo",
 			"timestamp": "1999-06-22",
 			"big_md5": "aa71f0adf8a40a77e767c40b73600e46",
-			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9" 
+			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9",
+			"comment": "hwl same as PAL Demo"
 		},
 		{
 			"name": "Review_Proto",

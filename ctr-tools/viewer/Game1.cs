@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace viewer
 {
@@ -13,7 +15,7 @@ namespace viewer
         SpriteBatch spriteBatch;
         SpriteFont font;
 
-        Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
+        public static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
         List<Scene> scn = new List<Scene>();
         Menu menu;
@@ -52,8 +54,9 @@ namespace viewer
 
             graphics.PreferMultiSampling = true;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            IsMouseVisible = false;
 
+
+            IsMouseVisible = false;
         }
 
         public void GoFullScreen()
@@ -61,12 +64,15 @@ namespace viewer
             graphics.PreferredBackBufferWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
             graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
             graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
         }
+
         public void GoWindowed()
         {
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             graphics.IsFullScreen = false;
+            graphics.ApplyChanges();
         }
 
         SamplerState ss;
@@ -75,12 +81,14 @@ namespace viewer
         {
             ss = new SamplerState();
 
-            graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 4;
+            graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
             graphics.ApplyChanges();
 
             effect = new BasicEffect(graphics.GraphicsDevice);
             effect.VertexColorEnabled = true;
             effect.TextureEnabled = true;
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             camera = new FirstPersonCamera(this);
 
@@ -98,8 +106,6 @@ namespace viewer
             effect.Texture = textures["test"];
             effect.TextureEnabled = true;
 
-
-            spriteBatch = new SpriteBatch(GraphicsDevice);
             font = Content.Load<SpriteFont>("File");
 
             tint = new Texture2D(GraphicsDevice, 1, 1);
@@ -107,9 +113,18 @@ namespace viewer
 
             menu = new Menu(font);
             //graphics.GraphicsDevice.Viewport.Height / 2));
+        }
+
+        bool gameLoaded = false;
+
+        private void LoadStuff()
+        {
+            gameLoaded = false;
 
             LoadLevel((TerrainFlags)(1 << flag));
             ResetCamera();
+
+            gameLoaded = true;
         }
 
 
@@ -135,7 +150,7 @@ namespace viewer
                 scn.Add(new Scene(s, "obj"));
 
             foreach (Scene s in scn)
-                quads.Add(new MGQuadBlock(s, Detail.Low));
+                quads.Add(new MGQuadBlock(s, Detail.Med));
             // quads.Add(new MGQuadBlock(s, i++, qf, hide_invis));
 
             if (scn.Count > 0)
@@ -145,7 +160,6 @@ namespace viewer
                 backColor.B = scn[0].header.backColor.Z;
             }
 
-            
 
             foreach (Scene s in scn)
             {
@@ -153,7 +167,8 @@ namespace viewer
 
                 foreach (var x in s.ctrvram.textures)
                 {
-                    textures.Add(x.Key, Game1.GetTexture(GraphicsDevice, x.Value));
+                    if (!textures.ContainsKey(x.Key))
+                        textures.Add(x.Key, Game1.GetTexture(GraphicsDevice, x.Value));
                 }
 
             }
@@ -193,6 +208,12 @@ namespace viewer
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (Keyboard.GetState().IsKeyDown(Keys.RightAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen();
+            }
+
+
             if (newstate.Buttons.Start == ButtonState.Pressed && oldstate.Buttons.Start != newstate.Buttons.Start)
             {
                 inmenu = !inmenu;
@@ -206,7 +227,7 @@ namespace viewer
                 {
                     switch (menu.SelectedItem.Action)
                     {
-                        case "load": LoadLevel((TerrainFlags)(1 << flag)); ResetCamera(); inmenu = false; break;
+                        case "load": LoadGame(); ResetCamera(); inmenu = false; break;
                         case "flag":
                             switch (menu.SelectedItem.Param)
                             {
@@ -219,8 +240,19 @@ namespace viewer
                         case "toggle":
                             switch (menu.SelectedItem.Param)
                             {
-                                /*
+                                
                                 case "antialias":
+
+                                    if (graphics.PreferMultiSampling)
+                                    {
+                                        graphics.PreferMultiSampling = false;
+                                    }
+                                    else
+                                    {
+                                        graphics.PreferMultiSampling = true;
+                                    }
+
+                                    /*
                                     if (graphics.GraphicsProfile != GraphicsProfile.HiDef)
                                     {
                                         graphics.GraphicsProfile = GraphicsProfile.HiDef;
@@ -228,9 +260,9 @@ namespace viewer
                                     else
                                     {
                                         graphics.GraphicsProfile = GraphicsProfile.Reach;
-                                    }
-                                    graphics.ApplyChanges();
-                                    break;*/
+                                    }*/
+                                    //graphics.ApplyChanges();
+                                    break;
 
                                 case "invis": hide_invis = !hide_invis; LoadLevel((TerrainFlags)(1 << Flag)); break;
                                 case "mouse": usemouse = !usemouse; break;
@@ -238,7 +270,6 @@ namespace viewer
                                 case "wire": wire = !wire; break;
                                 case "window":
                                     if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen();
-                                    graphics.ApplyChanges();
                                     break;
 
                             }
@@ -256,7 +287,6 @@ namespace viewer
                 {
                     inmenu = !inmenu;
                 }
-
             }
             else
             {
@@ -270,7 +300,7 @@ namespace viewer
         }
 
 
-
+        Task loading;
 
         private void DrawLevel()
         {
@@ -289,19 +319,38 @@ namespace viewer
 
             graphics.ApplyChanges();
 
-            foreach (MGQuadBlock qb in quads)
-                qb.Render(graphics, effect);
 
-            if (wire)
+            if (loading != null && gameLoaded)
             {
-                WireframeMode(graphics.GraphicsDevice, true);
 
                 foreach (MGQuadBlock qb in quads)
-                    qb.RenderWire(graphics, effect);
+                    qb.Render(graphics, effect);
 
-                WireframeMode(graphics.GraphicsDevice, false);
+                if (wire)
+                {
+                    WireframeMode(graphics.GraphicsDevice, true);
+
+                    foreach (MGQuadBlock qb in quads)
+                        qb.RenderWire(graphics, effect);
+
+                    WireframeMode(graphics.GraphicsDevice, false);
+                }
+            }
+            else
+            {
+                if (loading == null)
+                {
+                    LoadGame();
+                }
             }
         }
+
+        private void LoadGame()
+        {
+            loading = Task.Run(() => LoadStuff());
+            //loading.Wait();
+        }
+
 
         RasterizerState rasterizerState;
 
@@ -333,6 +382,10 @@ namespace viewer
             spriteBatch.Begin(depthStencilState: DepthStencilState.Default);
 
             spriteBatch.DrawString(font, (1 << flag).ToString("X4") + ": " + ((TerrainFlags)(1 << flag)).ToString(), new Vector2(20, 20), Color.Yellow);
+
+            if (!gameLoaded)
+                spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
+
             if (scn.Count == 0)
                 spriteBatch.DrawString(font, "No levels loaded. Put LEV files in levels folder.".ToString(), new Vector2(20, 60), Color.Yellow);
 

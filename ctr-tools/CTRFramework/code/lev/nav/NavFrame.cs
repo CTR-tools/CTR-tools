@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using CTRFramework.Shared;
 
 namespace CTRFramework
@@ -7,7 +10,8 @@ namespace CTRFramework
     public class NavFrame : IRead
     {
         public Vector3s position;
-        public List<short> data = new List<short>();
+        byte[] data;
+        //public List<short> data = new List<short>();
 
         public NavFrame()
         {
@@ -22,10 +26,24 @@ namespace CTRFramework
         public void Read(BinaryReaderEx br)
         {
             position = new Vector3s(br);
+
+            data = br.ReadBytes(7 * 2);
+            /*
             for (int i = 0; i < 7; i++)
-            {
                 data.Add(br.ReadInt16());
-            }
+                */
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (byte s in data)
+                sb.Append(s.ToString("X2"));
+
+            sb.Append("\t" + position);
+
+            return sb.ToString();
         }
     }
 }

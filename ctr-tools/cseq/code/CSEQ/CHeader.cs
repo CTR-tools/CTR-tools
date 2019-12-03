@@ -1,28 +1,30 @@
-﻿using CTRFramework.Shared;
+﻿using CTRFramework;
+using CTRFramework.Shared;
 using System;
 using System.IO;
 
 namespace CTRtools.CSEQ
 {
-    public struct CHeader
+    public struct CHeader : IRead
     {
         public int size;
         public int longCnt;
         public int shortCnt;
         public int seqCnt;
 
-        public bool Read(BinaryReaderEx br)
+        public void Read(BinaryReaderEx br)
         {
             size = br.ReadInt32();
-
-            if (size != br.BaseStream.Length)
-                return false;
-
             longCnt = br.ReadByte();
             shortCnt = br.ReadByte();
             seqCnt = br.ReadInt16();
-
-            return true;
+        }
+        public void Write(BinaryWriter bw)
+        {
+            bw.Write((int)size);
+            bw.Write((byte)longCnt);
+            bw.Write((byte)shortCnt);
+            bw.Write((short)seqCnt);
         }
 
         public override string ToString()
@@ -30,12 +32,6 @@ namespace CTRtools.CSEQ
             return String.Format("size: {0}\r\nlongCnt: {1}\r\nshortCnt: {2}\r\nseqCnt: {3}\r\n", size, longCnt, shortCnt, seqCnt);
         }
 
-        public void WriteBytes(BinaryWriter bw)
-        {
-            bw.Write((int)size);
-            bw.Write((byte)longCnt);
-            bw.Write((byte)shortCnt);
-            bw.Write((short)seqCnt);
-        }
+
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace CTRFramework
-{
+{ 
     public class SkyBox : IRead
     {
         public int cntVertex;
@@ -12,7 +12,8 @@ namespace CTRFramework
         public short[] sizes = new short[8];
         public uint[] offs = new uint[8];
 
-        List<Vertex> verts = new List<Vertex>();
+        public List<Vertex> verts = new List<Vertex>();
+        public List<List<Vector4s>> faces = new List<List<Vector4s>>();
 
         public SkyBox()
         {
@@ -48,26 +49,35 @@ namespace CTRFramework
                 sb.Append(v.ToString(false) + "\r\n");
             }
 
-            int z = 7;
 
-            br.BaseStream.Position = offs[z];
-
-            for (int i = 0; i < sizes[z]; i++)
+            for (int i = 0; i < 8; i++)
             {
-                //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
-                //Console.ReadKey();
-                
-                Vector4s tri = new Vector4s(br);
+                List<Vector4s> ff = new List<Vector4s>();
 
-                sb.Append(String.Format("f {0} {1} {2}\r\n", 
-                    tri.X,
-                    tri.Y,
-                    tri.Z
-                    )
-                );   
+                for (int j = 0; j < sizes[i]; j++)
+                {
+                    ff.Add(new Vector4s(br));
+                }
+
+                faces.Add(ff);
             }
 
-            //CTRFramework.Shared.Helpers.WriteToFile("skytest.obj", sb.ToString());
+            for (int i = 0; i < 8; i++)
+            {
+                sb.AppendFormat("g skyobj_{0}\r\n", i);
+
+                foreach (Vector4s tri in faces[i])
+                {
+                    sb.Append(String.Format("f {0} {1} {2}\r\n",
+                        (tri.X / 0xC) + 1,
+                        (tri.Z / 0xC) + 1,
+                        (tri.Y / 0xC) + 1
+                        )
+                    );
+                }
+            }
+
+            CTRFramework.Shared.Helpers.WriteToFile("data.Sky.obj", sb.ToString());
         }
     }
 }

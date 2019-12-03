@@ -36,6 +36,10 @@ namespace CTRFramework
         public uint somePtr6;
         public Vector4b backColor;
 
+        uint ptrBuildStart;
+        uint ptrBuildEnd;
+        uint ptrBuildType;
+
         byte[] skip;
 
         public uint numRestartPts;
@@ -111,7 +115,12 @@ namespace CTRFramework
             somePtr6 = br.ReadUInt32();
             backColor = new Vector4b(br);
 
-            skip = br.ReadBytes(0x6C);
+            br.ReadUInt32();
+            ptrBuildStart = br.ReadUInt32();
+            ptrBuildEnd = br.ReadUInt32();
+            ptrBuildType = br.ReadUInt32();
+
+            skip = br.ReadBytes(0x6C - 16);
 
             numRestartPts = br.ReadUInt32();
             ptrRestartPts = br.ReadUInt32();
@@ -121,6 +130,18 @@ namespace CTRFramework
             ptrAiNav = br.ReadUInt32();
 
             skip3 = br.ReadBytes(0x24);
+
+            long posx = br.BaseStream.Position;
+
+            br.Jump(ptrBuildStart);
+            Console.WriteLine(br.ReadStringNT());
+            br.Jump(ptrBuildEnd);
+            Console.WriteLine(br.ReadStringNT());
+            br.Jump(ptrBuildType);
+            Console.WriteLine(br.ReadStringNT());
+
+            br.Jump(posx);
+            //Console.ReadKey();
         }
     }
 }

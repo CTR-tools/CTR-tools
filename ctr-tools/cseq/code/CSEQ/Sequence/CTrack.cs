@@ -25,6 +25,11 @@ namespace CTRtools.CSEQ
         }
 
 
+        public void Import(string s)
+        {
+
+        }
+
         public void Read(BinaryReaderEx br, int num)
         {
             trackNum = num;

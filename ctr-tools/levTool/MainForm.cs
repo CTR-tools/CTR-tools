@@ -83,13 +83,13 @@ namespace levTool
 
                 bw.BaseStream.Position = scn.meshinfo.ptrVertexArray + 4;
 
-                foreach (Vertex v in scn.vert)
+                foreach (Vertex v in scn.verts)
                     v.Write(bw);
 
 
                 bw.BaseStream.Position = scn.meshinfo.ptrQuadBlockArray + 4;
 
-                foreach (QuadBlock qb in scn.quad)
+                foreach (QuadBlock qb in scn.quads)
                     qb.Write(bw);
 
             }
@@ -133,7 +133,7 @@ namespace levTool
         {
             if (scn != null)
             {
-                foreach (Vertex v in scn.vert)
+                foreach (Vertex v in scn.verts)
                 {
                     v.SetColor(Vcolor.Default, new Vector4b(vertexcolor1));
                     v.SetColor(Vcolor.Morph, new Vector4b(vertexcolor2));
@@ -164,7 +164,7 @@ namespace levTool
         {
             if (scn != null)
             {
-                foreach (Vertex v in scn.vert)
+                foreach (Vertex v in scn.verts)
                 {
                     v.color.Scale(0.12f, 0.21f, 0.32f, 1f);
                     v.color_morph.Scale(0.12f, 0.21f, 0.32f, 1f);
@@ -182,7 +182,7 @@ namespace levTool
         {
             if (scn != null)
             {
-                foreach (Vertex v in scn.vert)
+                foreach (Vertex v in scn.verts)
                 {
                     v.color_morph = v.color;
                 }
@@ -194,7 +194,7 @@ namespace levTool
         {
             if (scn != null)
             {
-                foreach (QuadBlock qb in scn.quad)
+                foreach (QuadBlock qb in scn.quads)
                 {
                     qb.quadFlags = GetFlags(checkedListBox1);
                 }
@@ -218,7 +218,7 @@ namespace levTool
         {
             if (scn != null)
             {
-                foreach (QuadBlock qb in scn.quad)
+                foreach (QuadBlock qb in scn.quads)
                 {
                     qb.offset2 = 0;
                     qb.ptrTexMid = new uint[] { 0, 0, 0, 0 };
@@ -253,7 +253,7 @@ namespace levTool
 
             if (scn != null)
             {
-                foreach (QuadBlock qb in scn.quad)
+                foreach (QuadBlock qb in scn.quads)
                 {
                     /*
                     if (!uniq1.Contains(qb.unk2[0]))
@@ -298,7 +298,7 @@ namespace levTool
         {
             if (scn != null)
             {
-                foreach (QuadBlock qb in scn.quad)
+                foreach (QuadBlock qb in scn.quads)
                 {
                     qb.terrainFlag = (TerrainFlags)r.Next(20);
                 }
@@ -309,7 +309,7 @@ namespace levTool
         {
             if (scn != null)
             {
-                foreach (QuadBlock qb in scn.quad)
+                foreach (QuadBlock qb in scn.quads)
                 {
                     qb.WeatherIntensity = 255;
                 }
@@ -320,7 +320,7 @@ namespace levTool
         {
             if (scn != null)
             {
-                foreach (QuadBlock qb in scn.quad)
+                foreach (QuadBlock qb in scn.quads)
                 {
                     qb.WeatherIntensity = 0;
                 }
@@ -331,7 +331,7 @@ namespace levTool
         {
             if (scn != null)
             {
-                foreach (QuadBlock qb in scn.quad)
+                foreach (QuadBlock qb in scn.quads)
                 {
                     qb.WeatherIntensity = (byte)r.Next(255);
                 }
@@ -344,8 +344,9 @@ namespace levTool
 
             if (scn != null)
             {
-                foreach (QuadBlock qb in scn.quad)
+                foreach (QuadBlock qb in scn.quads)
                 {
+                    qb.bitvalue = 0;
                 }
             }
 
@@ -452,7 +453,7 @@ namespace levTool
 
                             foreach (LevelSlot s in slots)
                             {
-                                textBox2.Text+= s.ToString() + lng.entries[s.title_index] + "\r\n";
+                                textBox2.Text += s.ToString() + lng.entries[s.title_index] + "\r\n";
                             }
                         }
                     }
@@ -462,5 +463,24 @@ namespace levTool
                     }
                 }
         }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            if (scn != null) textBox1.Text = scn.nav.ToString();
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd1 = new OpenFileDialog();
+
+            if (ofd1.ShowDialog() == DialogResult.OK)
+            {
+                using (BinaryReaderEx br = new BinaryReaderEx(File.Open(ofd1.FileName, FileMode.Open)))
+                {
+                    Mcs m = new Mcs(br);
+                }
+            }
+        }
     }
+
 }

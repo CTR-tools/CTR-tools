@@ -52,7 +52,7 @@ namespace howl
 
                 //br.BaseStream.Position += 16;
 
-                Console.WriteLine(br.BaseStream.Position.ToString("X8"));
+                //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
 
                 do
                 {

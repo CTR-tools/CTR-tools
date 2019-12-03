@@ -30,5 +30,18 @@ namespace CTRFramework
                 paths.Add(new AIPath(br));
             }
         }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (uint u in ptrs)
+                sb.AppendLine(u.ToString("X8"));
+
+            foreach (AIPath p in paths)
+                sb.AppendLine(p.ToString());
+
+            return sb.ToString();
+        }
     }
 }

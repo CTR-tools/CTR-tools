@@ -284,14 +284,14 @@ namespace CTRFramework
             byte b = (byte)(((col >> 10) & 0x1F) << 3);
             byte a = (byte)((col >> 15) * 255);
 
-            /* //investigate
-            if (a != 255)
+            //um...
+            if (a != 255 && r == 0 && g == 0 & b == 0)
             {
                 r = 255;
                 g = 0;
                 b = 255;
             }
-            */
+
 
             return Color.FromArgb((useAlpha ? a : 255), r, g, b);
         }

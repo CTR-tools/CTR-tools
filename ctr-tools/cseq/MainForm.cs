@@ -78,31 +78,7 @@ namespace CTRtools.CSEQ
             }
 
             textBox1.Text = Log.Read();
-
-            DataSet ds = new DataSet();
-            DataTable samples = new DataTable("samples");
-
-            samples.Columns.Add("insttype", typeof(string));
-            samples.Columns.Add("magic1", typeof(byte));
-            samples.Columns.Add("velocity", typeof(byte));
-            samples.Columns.Add("always0", typeof(short));
-            samples.Columns.Add("basepitch", typeof(short));
-            samples.Columns.Add("sampleID", typeof(string));
-            samples.Columns.Add("unknown_80FF", typeof(string));
-            samples.Columns.Add("reverb", typeof(byte));
-            samples.Columns.Add("reverb2", typeof(byte));
-
-            foreach (Instrument s in seq.longSamples)
-                s.ToDataRow(samples);
-
-            foreach (Instrument s in seq.shortSamples)
-                s.ToDataRow(samples);
-
-            ds.Tables.Add(samples);
-
-            dataGridView1.DataSource = ds.Tables["samples"];
-
-            propertyGrid1.SelectedObject = seq.samplesReverb[0];
+            treeView1.Nodes.Clear();
 
             TreeNode tn = new TreeNode("SampleDef");
 
@@ -325,5 +301,23 @@ namespace CTRtools.CSEQ
             }
         }
 
+        private void trackBox_DoubleClick(object sender, EventArgs e)
+        {
+            int x = sequenceBox.SelectedIndex;
+            int y = trackBox.SelectedIndex;
+
+            if (x != -1 && y != -1)
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = "MIDI File (*.mid)|*.mid";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    seq.sequences[x].tracks[y].Import(ofd.FileName);
+                }
+            }
+
+            tabControl1.SelectedIndex = 0;
+        }
     }
 }

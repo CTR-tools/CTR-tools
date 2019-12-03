@@ -55,10 +55,8 @@ instances:
     repeat-expr: mesh_info_header.cnt_col_data
 
   unk_struct1_array:
-    pos: header.unk_ptr2
-    type: unk_struct1
-    repeat: expr
-    repeat-expr: 8
+    pos: header.ptr_tex_array
+    type: unk_struct
   
   ai_nav:
     pos: header.ptr_ai_nav
@@ -102,7 +100,7 @@ types:
         type: u4
       - id: ptr_skybox
         type: u4
-      - id: unk_ptr2
+      - id: ptr_tex_array
         type: u4
       - id: num_pickup_headers
         type: u4
@@ -128,9 +126,9 @@ types:
         type: u4
       - id: some_ptr1
         type: u4     
-      - id: some_ptr2
+      - id: ptr_tex
         type: u4
-      - id: some_ptr3
+      - id: ptr_tex_start
         type: u4
       - id: ptr_array1
         type: u4
@@ -149,14 +147,20 @@ types:
         type: u4
       - id: unkptr2
         type: u4
-      - id: unkptr3
+      - id: ptr_low_tex_array
         type: u4
 
       - id: background_color
         type: color 
-
+        
+      - id: unkptr100
+        type: u4
+        
+      - id: build
+        type: build_info
+        
       - id: skip
-        size: 0x6C
+        size: 0x5C
         
       - id: cnt_restart_pts
         type: u4 
@@ -209,7 +213,12 @@ types:
       - id: z
         type: s2
 
-
+  vector2b:
+    seq:
+      - id: x
+        type: u1
+      - id: y
+        type: u1
       
   pickup_header:
     seq:
@@ -341,22 +350,34 @@ types:
         type: u1
         
         
-  unk_struct1:
+  unk_struct:
     seq:
-    
-      - id: some_ptr
+      - id: self_ptr
         type: u4
-
-      - id: cnt_ptr_entries
+      - id: cnt_entries
         type: u4
-
+      - id: some_ptr2
+        type: u4
       - id: nil
         type: u4
-
-      - id: ptr_array
+      - id: some_ptr3
         type: u4
+      - id: entries
+        type: unk_entry
         repeat: expr
-        repeat-expr: cnt_ptr_entries
+        repeat-expr: cnt_entries
+      
+  unk_entry:
+    seq:
+      - id: name
+        type: strz
+        encoding: ascii
+        size: 16
+      - id: entry_type
+        type: u4
+      - id: layout
+        type: texture_layout
+        if: entry_type != 0x86
         
   ai_frame_header:
     seq:
@@ -395,3 +416,47 @@ types:
         type: ai_path
         repeat: expr
         repeat-expr: 3
+        doc: rewrite it.
+        if: ptr[0] != 0 and ptr[1] != 0 and ptr[2] != 0
+        
+  texture_layout:
+    seq:
+      - id: uv1
+        type: vector2b
+      - id: pal_x
+        type: b6
+      - id: pal_y
+        type: b10
+      - id: uv2
+        type: vector2b
+      - id: page_x
+        type: b4
+      - id: page_y
+        type: b12
+      - id: uv3
+        type: vector2b
+      - id: uv4
+        type: vector2b
+      
+        
+  build_info:
+    seq:
+      - id: ptr_build_start
+        type: u4
+      - id: ptr_build_end
+        type: u4
+      - id: ptr_build_type
+        type: u4
+    instances:
+      build_start:
+        type: strz
+        encoding: ascii
+        pos: ptr_build_start
+      build_end:
+        type: strz
+        encoding: ascii
+        pos: ptr_build_end
+      build_type:
+        type: strz
+        encoding: ascii
+        pos: ptr_build_type

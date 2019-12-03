@@ -77,6 +77,11 @@ namespace CTRFramework.Shared
 
         public string ToString(VecFormat format)
         {
+            return ToString(format, 0);
+        }
+
+        public string ToString(VecFormat format, int inc)
+        {
             string fmt = "{0} {1} {2}";
 
             switch (format)
@@ -85,7 +90,7 @@ namespace CTRFramework.Shared
                 case VecFormat.Braced: fmt = "({0}, {1}, {2})"; break;
             }
 
-            return String.Format(fmt, x, y, z);
+            return String.Format(fmt, x+inc, y+inc, z+inc);
         }
 
 

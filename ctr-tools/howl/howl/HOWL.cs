@@ -36,6 +36,7 @@ namespace howl
             if (rel == null)
             {
                 Console.WriteLine("Unknown HWL.");
+                File.WriteAllText("unknown_md5.txt", md5);
             }
             else
             {
@@ -94,7 +95,7 @@ namespace howl
                         string yy = Helpers.CalculateMD5(new MemoryStream(b.samples[id]));
                         if (xx != yy)
                         {
-                            Console.WriteLine("MD5 differs for same ID!!! " + id + "\r\n" + xx + "\r\n" + yy);
+                            //Console.WriteLine("MD5 differs for same ID!!! " + id + "\r\n" + xx + "\r\n" + yy);
                         }
                     }
                 }

@@ -115,7 +115,7 @@ namespace CTRtools.CSEQ
         }
 
 
-
+        /*
         public void ToDataRow(DataTable dt)
         {
             DataRow dr = dt.NewRow();
@@ -136,7 +136,7 @@ namespace CTRtools.CSEQ
 
             dt.Rows.Add(dr);
         }
-
+        */
 
         public void Write(BinaryWriterEx bw)
         {

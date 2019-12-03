@@ -246,6 +246,24 @@
 				{ key: 40, title: "Open Hi-Hat" },
 				{ key: 51, title: "Jingle Bell" }
 			]
+		},
+		"sewer": {
+			long: [
+				{ midi: 27, pitch: 24, title: "guitar chord" },
+				{ midi: 99, pitch: 0, title: "Clarinet" },
+				{ midi: 12, title: "??" },
+				{ midi: 34, pitch: -24, title: "bass" }
+			],
+			short: [
+				{ key: 63, title: "tam hi" },
+				{ key: 64, title: "tam low" },
+				{ key: 2, title: "Snare" },
+				{ key: 44, title: "Closed Hi-Hat" },
+				{ key: 4, title: "Open Hi-Hat" },
+				{ key: 35, title: "bass drum" },
+				{ key: 6, title: "Open Hi-Hat" },
+				{ key: 28, title: "snare" }
+			]
 		}
 		
 		

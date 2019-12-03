@@ -45,5 +45,21 @@ namespace CTRFramework
 
             return sb.ToString();
         }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("frames = " + numFrames);
+
+            sb.AppendLine("start: " + start.ToString());
+
+            foreach (NavFrame nv in frames)
+            {
+                sb.AppendLine(nv.ToString());
+            }
+
+            return sb.ToString();
+        }
     }
 }

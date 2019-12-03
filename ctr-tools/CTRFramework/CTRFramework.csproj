@@ -124,6 +124,7 @@
     <Compile Include="code\lev\Vertex.cs" />
     <Compile Include="code\lev\ColData.cs" />
     <Compile Include="code\shared\BoundingBox.cs" />
+    <Compile Include="code\shared\OBJ.cs" />
     <Compile Include="code\shared\PosAng.cs" />
     <Compile Include="code\shared\SomeData.cs" />
     <Compile Include="code\shared\Vector2b.cs" />

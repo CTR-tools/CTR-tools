@@ -1,46 +1,106 @@
 ﻿using CTRFramework.Shared;
 using System;
+using System.Collections.Generic;
 
 namespace CTRFramework
 {
-    class LODHeader
+    class LODHeader : IRead
     {
         string name;
         int unk0; //0?
         int unk1;
-        short s0;
-        short s1;
-        short s2;
-        short s3;
-        int vdecloffset;
-        int unk2; //0?
-        public int offsettooffsets;
-        public int palPtr;
+        Vector4s position; 
+        int ptrFaces; //this is null if we have anims
+        int ptrVerts; //0?
+        public int ptrTex;
+        public int ptrClut;
         int unk3; //?
-        public int animsCnt;
-        int offsettooffsets2;
+        public int numAnims;
+        int ptrAnims;
         int unk4; //?
+
+        List<CTRAnim> anims = new List<CTRAnim>();
+
+        public bool isTextured
+        {
+            get { return ptrTex == ptrClut; }
+        }
+
+        public LODHeader()
+        {
+
+        }
+
+        public LODHeader(BinaryReaderEx br)
+        {
+            Read(br);
+        }
 
         public void Read(BinaryReaderEx br)
         {
-            name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Replace("\0", "");
+            name = br.ReadStringFixed(16);
             unk0 = br.ReadInt32(); //0?
-            unk1 = br.ReadInt32();
-            s0 = br.ReadInt16();
-            s1 = br.ReadInt16();
-            s2 = br.ReadInt16();
-            s3 = br.ReadInt16();
-            vdecloffset = br.ReadInt32();
-            unk2 = br.ReadInt32(); //0?
-            offsettooffsets = br.ReadInt32();
-            palPtr = br.ReadInt32();
+            unk1 = br.ReadInt32(); //probably flags
+            position = new Vector4s(br);
+
+            //ptr
+            ptrFaces = br.ReadInt32();
+            ptrVerts = br.ReadInt32();
+            ptrTex = br.ReadInt32();
+            ptrClut = br.ReadInt32();
             unk3 = br.ReadInt32(); //?
-            animsCnt = br.ReadInt32();
-            offsettooffsets2 = br.ReadInt32();
+
+            numAnims = br.ReadInt32();
+            ptrAnims = br.ReadInt32();
             unk4 = br.ReadInt32(); //?
 
             Console.WriteLine(name);
+            Console.WriteLine(position.ToString(VecFormat.CommaSeparated));
+            
+            Console.WriteLine("anims: " + numAnims);
+            Console.WriteLine((ptrFaces).ToString("X8"));
+            Console.WriteLine((ptrVerts).ToString("X8"));
+            Console.WriteLine((ptrTex).ToString("X8"));
+            Console.WriteLine((ptrClut).ToString("X8"));
+            Console.WriteLine((unk3).ToString("X8"));
+
+            if (unk0 != 0)
+            {
+                Console.WriteLine("!!! unk0 != 0 !!!" + unk0);
+                Console.ReadKey();
+            }
+
+            if (unk3 != 0)
+            {
+                Console.WriteLine("!!! unk3 != 0 !!!" + unk3);
+                Console.ReadKey();
+            }
+            if (unk4 != 0)
+            {
+                Console.WriteLine("!!! unk4 != 0 !!!" + unk4);
+                Console.ReadKey();
+            }
+
+            /*
+            long x = br.BaseStream.Position;
+
+            if (ptrAnims > 0)
+            {           
+                br.Jump(ptrAnims);
+
+                uint[] ptrs = br.ReadArrayUInt32(numAnims);
+
+                foreach(uint s in ptrs)
+                {
+                    br.Jump(s);
+                    anims.Add(new CTRAnim(br, name));
+                }
+            }
+
+            br.Jump(x);
+            */
         }
+    
 
     }
 }

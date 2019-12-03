@@ -76,9 +76,9 @@ namespace CTRtools.CSEQ
             name = Path.GetFileNameWithoutExtension(fileName);
             BinaryReaderEx br = BinaryReaderEx.FromFile(fileName);
 
-            //read CSEQ header
-            if (!header.Read(br))
-                return false;
+            header.Read(br);
+
+            if (header.size != br.BaseStream.Length) return false;
 
             long pos = br.BaseStream.Position;
 
@@ -174,7 +174,7 @@ namespace CTRtools.CSEQ
         {
             using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(fileName)))
             {
-                header.WriteBytes(bw);
+                header.Write(bw);
 
                 foreach (Instrument ls in longSamples)
                     ls.Write(bw);

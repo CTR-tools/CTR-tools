@@ -6,6 +6,18 @@ using System.Text;
 
 namespace CTRFramework
 {
+    public struct FaceFlags
+    {
+        public RotateFlipType rotateFlipType;
+        public FaceMode faceMode;
+    
+        public FaceFlags(byte x)
+        {
+            rotateFlipType = (RotateFlipType)(x & 7);
+            faceMode = (FaceMode)(x >> 3 & 3);
+        }
+    }
+
     public class QuadBlock : IRead, IWrite
     {
         /*
@@ -24,16 +36,14 @@ namespace CTRFramework
 
         public uint bitvalue; //important! big endian!
 
-        //these 5 values are contained in bitvalue, mask is 8b5b5b5b5b4z where b is bit and z is empty
+        //these values are contained in bitvalue, mask is 8b5b5b5b5b4z where b is bit and z is empty
         public byte drawOrderLow;
-        public byte f0;
-        public byte f1;
-        public byte f2;
-        public byte f3;
+        public FaceFlags[] faceFlags = new FaceFlags[4];
+        public byte extradata;
 
         public byte[] drawOrderHigh = new byte[4];
 
-        public uint[] ptrTexMid = new uint[4];    //offsets to texture definition
+        public uint[] ptrTexMid = new uint[4];    //offsets to mid texture definition
 
         public BoundingBox bb;              //a box that bounds
 
@@ -77,13 +87,17 @@ namespace CTRFramework
             quadFlags = (QuadFlags)br.ReadUInt16();
 
             bitvalue = br.ReadUInt32Big();
+            {
+                drawOrderLow = (byte)(bitvalue & 0xFF);
 
-            drawOrderLow = (byte)(bitvalue & 0xFF);
+                for (int i = 0; i < 4; i++)
+                {
+                    byte val = (byte)(bitvalue >> 8 + 5 * i & 0x1F);
+                    faceFlags[i] = new FaceFlags(val);
+                }
 
-            f3 = (byte)(bitvalue >> 8 + 5 * 3 & 0x1F);
-            f2 = (byte)(bitvalue >> 8 + 5 * 2 & 0x1F);
-            f1 = (byte)(bitvalue >> 8 + 5 * 1 & 0x1F);
-            f0 = (byte)(bitvalue >> 8 + 5 * 0 & 0x1F);
+                extradata = (byte)(bitvalue & 0xF0000000 >> 28);
+            }
 
             drawOrderHigh = br.ReadBytes(4);
 
@@ -114,7 +128,6 @@ namespace CTRFramework
             br.Jump(ptrTexLow);
             texlow = new TextureLayout(br);
 
-
             foreach (uint u in ptrTexMid)
             {
                 if (u != 0)
@@ -123,48 +136,11 @@ namespace CTRFramework
                     texmid.Add(new TextureLayout(br));
                     texmid2.Add(new TextureLayout(br));
                     texmid3.Add(new TextureLayout(br));
-
-                    /*
-                    //extra 2 must be defined 
-                    for (int i = 0; i < 3; i++)
-                    { 
-                        TextureLayout t = new TextureLayout(br);
-                        if (t.check == 0) texmid.Add(new TextureLayout(br));
-                        
-                    }
-                    */
                 }
             }
-
-
-            /* //hires attempt
-            if (offset2 > 0)
-            {
-                br.BaseStream.Position = offset2;
-
-                List<uint> offs = new List<uint>();
-
-                for (int i = 0; i < 4; i++)
-                {
-                    offs.Add(br.ReadUInt32());
-                }
-
-                foreach(uint i in offs)
-                {
-                    if (i > 0)
-                    {
-                        br.BaseStream.Position = i;
-                        //Console.WriteLine(i.ToString("X8"));
-                        texhi.Add(new TextureLayout(br));
-                    }
-                }
-
-            }
-             */
 
             br.BaseStream.Position = pos;
         }
-
 
 
         public void RecalcBB(List<Vertex> vert)
@@ -212,8 +188,8 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(String.Format("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible")));
-            sb.Append(String.Format("o piece_{0}\r\n\r\n", id.ToString("X4")));
+            sb.AppendFormat("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible"));
+            sb.AppendFormat("o piece_{0}\r\n\r\n", id.ToString("X4"));
 
             int vcnt;
 
@@ -232,8 +208,7 @@ namespace CTRFramework
             sb.AppendLine();
 
 
-            //if (!quadFlags.HasFlag(QuadFlags.OutsideStuff) && 
-                //!quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
+            if (!quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
             {
                 switch (detail)
                 {
@@ -241,8 +216,8 @@ namespace CTRFramework
                         {
                             sb.AppendLine(texlow.ToObj());
 
-                            sb.Append(ASCIIFace("f", a + 1, a + 3, a + 2, b + 1, b + 3, b + 2));
-                            sb.Append(ASCIIFace("f", a + 2, a + 3, a + 4, b + 2, b + 3, b + 4));
+                            sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
+                            sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
 
                             b += 4;
 
@@ -251,10 +226,6 @@ namespace CTRFramework
 
                     case Detail.Med:
                         {
-                            int[] tm = new int[] {
-                            f0, f1, f2, f3
-                        };
-
                             for (int i = 0; i < 4; i++)
                             {
                                 if (texmid3.Count == 4)
@@ -269,9 +240,8 @@ namespace CTRFramework
                                 if (quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                     sb.AppendLine("usemtl default");
 
-                                RotateFlipType rm = (RotateFlipType)(tm[i] & 0x07);
 
-                                switch (rm)
+                                switch (faceFlags[i].rotateFlipType)
                                 {
                                     case RotateFlipType.None: uvinds = GetUVIndices(1, 2, 3, 4); break;
                                     case RotateFlipType.Rotate90: uvinds = GetUVIndices(3, 1, 4, 2); break;
@@ -281,32 +251,35 @@ namespace CTRFramework
                                     case RotateFlipType.FlipRotate90: uvinds = GetUVIndices(4, 2, 3, 1); break;
                                     case RotateFlipType.FlipRotate180: uvinds = GetUVIndices(3, 4, 1, 2); break;
                                     case RotateFlipType.FlipRotate270: uvinds = GetUVIndices(1, 3, 2, 4); break;
-                                    default: uvinds = GetUVIndices(0, 0, 0, 0); break;
                                 }
 
-                                bool stflag1 = ((tm[i] >> 3) & 1) > 0;
-                                bool stflag2 = ((tm[i] >> 4) & 1) > 0;
-
-                                if (stflag1 && stflag2)
+                                switch (faceFlags[i].faceMode)
                                 {
-                                    Console.WriteLine("both flags are set!");
-                                    Console.ReadKey();
-                                }
+                                    case FaceMode.Normal:
+                                        {
+                                            sb.Append(OBJ.ASCIIFace("f", a, b, inds[i * 6], inds[i * 6 + 1], inds[i * 6 + 2], uvinds[0], uvinds[1], uvinds[2])); // 1 3 2 | 0 2 1
+                                            sb.Append(OBJ.ASCIIFace("f", a, b, inds[i * 6 + 3], inds[i * 6 + 4], inds[i * 6 + 5], uvinds[3], uvinds[4], uvinds[5])); // 2 3 4 | 1 2 3
+                                            break;
+                                        }
+                                    case FaceMode.SingleUV1:
+                                        {
+                                            sb.Append(OBJ.ASCIIFace("f", a, b, inds[i * 6], inds[i * 6 + 1], inds[i * 6 + 2], uvinds[1], uvinds[2], uvinds[0])); // 1 3 2 | 0 2 1
+                                            break;
+                                        }
 
-                                if (!stflag1 & !stflag2)
-                                {
-                                    sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[0], b + uvinds[1], b + uvinds[2])); // 1 3 2 | 0 2 1
-                                    sb.Append(ASCIIFace("f", a + inds[i * 6 + 3], a + inds[i * 6 + 4], a + inds[i * 6 + 5], b + uvinds[3], b + uvinds[4], b + uvinds[5])); // 2 3 4 | 1 2 3
-                                }
+                                    case FaceMode.SingleUV2:
+                                        {
+                                            sb.Append(OBJ.ASCIIFace("f", a, b, inds[i * 6], inds[i * 6 + 1], inds[i * 6 + 2], uvinds[2], uvinds[0], uvinds[1]));
+                                            break;
+                                        }
 
-                                if (stflag1)
-                                {
-                                    sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[1], b + uvinds[2], b + uvinds[0])); // 1 3 2 | 0 2 1
-                                }
-
-                                if (stflag2)
-                                {
-                                    sb.Append(ASCIIFace("f", a + inds[i * 6], a + inds[i * 6 + 1], a + inds[i * 6 + 2], b + uvinds[2], b + uvinds[0], b + uvinds[1]));
+                                    case FaceMode.Unknown:
+                                        {
+                                            //should never happen i guess
+                                            Console.WriteLine("both flags are set!");
+                                            Console.ReadKey();
+                                            break;
+                                        }
                                 }
 
                                 sb.AppendLine();
@@ -322,51 +295,9 @@ namespace CTRFramework
 
             a += vcnt;
 
-            /*
-            if (fmt == "ply")
-             * 
-            {
-                sb.Append(ASCIIFace("3", ind, 5, 4, 0));
-                sb.Append(ASCIIFace("3", ind, 4, 5, 6));
-                sb.Append(ASCIIFace("3", ind, 6, 1, 4));
-                sb.Append(ASCIIFace("3", ind, 1, 6, 7));
-                sb.Append(ASCIIFace("3", ind, 2, 6, 5));
-                sb.Append(ASCIIFace("3", ind, 6, 2, 8));
-                sb.Append(ASCIIFace("3", ind, 8, 7, 6));
-                sb.Append(ASCIIFace("3", ind, 7, 8, 3));
-            }
-            else
-            {
-                sb.Append("o piece_" + i.ToString("0000") + "\r\n");
-                sb.Append("g piece_" + i.ToString("0000") + "\r\n");
-
-                sb.Append(ASCIIFace("f", ind, 5, 4, 0));
-                sb.Append(ASCIIFace("f", ind, 4, 5, 6));
-                sb.Append(ASCIIFace("f", ind, 6, 1, 4));
-                sb.Append(ASCIIFace("f", ind, 1, 6, 7));
-                sb.Append(ASCIIFace("f", ind, 2, 6, 5));
-                sb.Append(ASCIIFace("f", ind, 6, 2, 8));
-                sb.Append(ASCIIFace("f", ind, 8, 7, 6));
-                sb.Append(ASCIIFace("f", ind, 7, 8, 3));
-            }
-            */
-
-
             return sb.ToString();
         }
 
-
-        public string ASCIIFace(string label, int x, int y, int z)
-        {
-            return label + " " + x + " " + y + " " + z + "\r\n";
-        }
-
-        public string ASCIIFace(string label, int x, int y, int z, float xuv, float yuv, float zuv)
-        {
-            return String.Format(
-                "{0} {1}/{2} {3}/{4} {5}/{6}\r\n",
-                label, x, xuv, y, yuv, z, zuv);
-        }
 
 
         public void Write(BinaryWriter bw)

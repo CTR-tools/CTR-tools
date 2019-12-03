@@ -13,8 +13,8 @@ namespace CTRFramework
         public SceneHeader header;
         public MeshInfo meshinfo;
 
-        public List<Vertex> vert = new List<Vertex>();
-        public List<QuadBlock> quad = new List<QuadBlock>();
+        public List<Vertex> verts = new List<Vertex>();
+        public List<QuadBlock> quads = new List<QuadBlock>();
         public List<PickupHeader> pickups = new List<PickupHeader>();
         public List<ColData> coldata = new List<ColData>();
         public List<LODModel> dynamics = new List<LODModel>();
@@ -104,7 +104,7 @@ namespace CTRFramework
                     }
                     catch
                     {
-                        Console.WriteLine("error");
+                        Console.WriteLine("error " + tl.Tag());
                     }
                 }
             }
@@ -118,11 +118,12 @@ namespace CTRFramework
 
         public string Export(string fmt, Detail d, bool exportTextures)
         {
+            StringBuilder sb = new StringBuilder();
+
             string fname = Path.ChangeExtension(path, d.ToString() + "." + fmt);
             string mtllib = Path.ChangeExtension(path, ".mtl").Replace(" ", "_");
-            Console.WriteLine("Exporting to: " + fname);
 
-            StringBuilder sb = new StringBuilder();
+            Console.WriteLine("Exporting to: " + fname);
 
             switch (fmt)
             {
@@ -136,9 +137,9 @@ namespace CTRFramework
                     int a = 0;
                     int b = 0;
 
-                    foreach (QuadBlock g in quad)
+                    foreach (QuadBlock g in quads)
                     {
-                        sb.AppendLine(g.ToObj(vert, d, ref a, ref b));
+                        sb.AppendLine(g.ToObj(verts, d, ref a, ref b));
                         //a += 9;
                         //b += (d == Detail.Low ? 4 : 16); 
                     }
@@ -203,10 +204,12 @@ namespace CTRFramework
             header = Instance<SceneHeader>.ReadFrom(br, 0);
             meshinfo = Instance<MeshInfo>.ReadFrom(br, header.ptrMeshInfo);
             skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
-            vert = InstanceList<Vertex>.ReadFrom(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
+            verts = InstanceList<Vertex>.ReadFrom(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
             restartPts = InstanceList<PosAng>.ReadFrom(br, header.ptrRestartPts, header.numRestartPts);
             coldata = InstanceList<ColData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
-            quad = InstanceList<QuadBlock>.ReadFrom(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
+            quads = InstanceList<QuadBlock>.ReadFrom(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
+
+
 
             try
             {
@@ -216,14 +219,16 @@ namespace CTRFramework
             catch
             {
                 //oh
+                Console.WriteLine("!!! error reading nav !!!");
+                //Console.ReadKey();
             }
 
 
             //read pickups
             for (int i = 0; i < header.numPickupHeaders; i++)
             {
-                br.BaseStream.Position = header.ptrPickupHeadersPtrArray + 4 * i;
-                br.BaseStream.Position = br.ReadUInt32();
+                br.Jump(header.ptrPickupHeadersPtrArray + 4 * i);
+                br.Jump(br.ReadUInt32());
 
                 pickups.Add(new PickupHeader(br));
             }
@@ -231,7 +236,8 @@ namespace CTRFramework
 
             //read pickup models
             //starts out right, but anims ruin it
-            /*
+            
+            br.Jump(header.ptrPickupModelsPtr);
             int x = (int)br.BaseStream.Position;
 
             for (int i = 0; i < header.numPickupModels; i++)
@@ -241,7 +247,8 @@ namespace CTRFramework
 
                 dynamics.Add(new LODModel(br));
             }
-            */
+
+            //Console.ReadKey();
 
             //exports restart points
             /*
@@ -276,23 +283,22 @@ namespace CTRFramework
                 Console.WriteLine(b);
 
             */
-            /*
+            
             //ai path test
-            int x = 0;
-            foreach (Path p in nav.paths)
+            int xz = 0;
+            foreach (AIPath p in nav.paths)
             {
-                File.WriteAllText("path"+x+".obj", p.ToObj());
-                x++;
+                File.WriteAllText("path"+xz+".obj", p.ToObj());
+                xz++;
             }
-            */
+            
         }
-
 
         public Dictionary<string, TextureLayout> GetTexturesList()
         {
             Dictionary<string, TextureLayout> tex = new Dictionary<string, TextureLayout>();
 
-            foreach (QuadBlock qb in quad)
+            foreach (QuadBlock qb in quads)
             {
                 if (qb.ptrTexLow != 0)
                 {
@@ -302,15 +308,6 @@ namespace CTRFramework
                     }
                 }
 
-                foreach (TextureLayout tl in qb.texmid)
-                {
-                    if (!tex.ContainsKey(tl.Tag()))
-                    {
-                        tex.Add(tl.Tag(), tl);
-                    }
-                }
-
-                
                 foreach (TextureLayout tl in qb.texmid3)
                 {
                     if (!tex.ContainsKey(tl.Tag()))
@@ -318,8 +315,6 @@ namespace CTRFramework
                         tex.Add(tl.Tag(), tl);
                     }
                 }
-                
-
             }
 
             return tex;
