@@ -13,7 +13,7 @@ namespace CTRFramework
         public uint[] offs = new uint[8];
 
         public List<Vertex> verts = new List<Vertex>();
-        public List<List<Vector4s>> faces = new List<List<Vector4s>>();
+        public List<Vector4s> faces = new List<Vector4s>();
 
         public SkyBox()
         {
@@ -40,44 +40,38 @@ namespace CTRFramework
                 verts.Add(x);
             }
 
-            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < sizes[i]; j++)
+                    faces.Add(new Vector4s(br));
 
-            //sb.Append(br.BaseStream.Position.ToString("X8"));
+            for (int j = 0; j < faces.Count; j++)
+            {
+                faces[j].X /= 0xC;
+                faces[j].Y /= 0xC;
+                faces[j].Z /= 0xC;
+            }
+        }
+
+        public string ToObj()
+        {
+            StringBuilder sb = new StringBuilder();
 
             foreach (Vertex v in verts)
             {
                 sb.Append(v.ToString(false) + "\r\n");
             }
 
-
-            for (int i = 0; i < 8; i++)
+            foreach (Vector4s tri in faces)
             {
-                List<Vector4s> ff = new List<Vector4s>();
-
-                for (int j = 0; j < sizes[i]; j++)
-                {
-                    ff.Add(new Vector4s(br));
-                }
-
-                faces.Add(ff);
+                sb.Append(String.Format("f {0} {1} {2}\r\n",
+                    tri.X + 1,
+                    tri.Z + 1,
+                    tri.Y + 1
+                    )
+                );
             }
 
-            for (int i = 0; i < 8; i++)
-            {
-                sb.AppendFormat("g skyobj_{0}\r\n", i);
-
-                foreach (Vector4s tri in faces[i])
-                {
-                    sb.Append(String.Format("f {0} {1} {2}\r\n",
-                        (tri.X / 0xC) + 1,
-                        (tri.Z / 0xC) + 1,
-                        (tri.Y / 0xC) + 1
-                        )
-                    );
-                }
-            }
-
-            CTRFramework.Shared.Helpers.WriteToFile("data.Sky.obj", sb.ToString());
+            return sb.ToString();
         }
     }
 }

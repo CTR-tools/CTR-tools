@@ -39,7 +39,7 @@ namespace viewer
         #region Изменение объекта
 
         #region Цикл обновления
-        public void Update(GameTime gameTime, bool usemouse)
+        public void Update(GameTime gameTime, bool usemouse, bool move)
         {
             base.Update(gameTime);
 
@@ -70,9 +70,11 @@ namespace viewer
             leftRightRot -= GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X / 20.0f;
             upDownRot += GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y / 20.0f;
 
-
             #region Изменение пространственного положения камеры при помощи клавиатуры
             Vector3 moveVector = new Vector3(0, 0, 0);
+
+            if (move)
+            { 
 
             KeyboardState keyState = Keyboard.GetState();
             GamePadState padState = GamePad.GetState(PlayerIndex.One);
@@ -109,8 +111,10 @@ namespace viewer
                 upDownRot -= rotationSpeed;
             #endregion
 
-            AddToCameraPosition(moveVector * amount);
 
+            }
+
+            AddToCameraPosition(moveVector * amount);
 
         }
         #endregion

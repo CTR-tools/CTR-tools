@@ -121,7 +121,8 @@ namespace CTRFramework
             StringBuilder sb = new StringBuilder();
 
             string fname = Path.ChangeExtension(path, d.ToString() + "." + fmt);
-            string mtllib = Path.ChangeExtension(path, ".mtl").Replace(" ", "_");
+            string skyname = Path.ChangeExtension(path, ".sky." + fmt);
+            string mtllib = Path.ChangeExtension(path, ".mtl").Replace(" ", "_"); //this brutally breaks paths with spaces. but obj doesn't seem to like spaces in materials.
 
             Console.WriteLine("Exporting to: " + fname);
 
@@ -157,6 +158,7 @@ namespace CTRFramework
             }
 
             CTRFramework.Shared.Helpers.WriteToFile(fname, sb.ToString());
+            CTRFramework.Shared.Helpers.WriteToFile(skyname, skybox.ToObj());
 
             sb.Clear();
 

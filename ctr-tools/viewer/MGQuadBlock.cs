@@ -29,6 +29,25 @@ namespace viewer
 
 
 
+        public MGQuadBlock(SkyBox sb)
+        {
+            verts = new VertexPositionColorTexture[sb.cntVertex];
+            indices = new short[sb.faces.Count * 3];
+
+            for (int i = 0; i < sb.cntVertex; i++)
+            {
+                verts[i] = GetMonogameVertex(sb.verts[i], new Vector3(0, 0, 0));
+            }
+
+            for (int i = 0; i < sb.faces.Count; i++)
+            {
+                indices[i * 3 + 0] = sb.faces[i].X;
+                indices[i * 3 + 1] = sb.faces[i].Y;
+                indices[i * 3 + 2] = sb.faces[i].Z;
+            }
+        }
+
+
         public MGQuadBlock(Scene s, Detail detail)
         {
 
@@ -204,7 +223,6 @@ namespace viewer
         {
             foreach (var pass in effect.CurrentTechnique.Passes)
             {
-                effect.Texture = Game1.textures["test"];
 
                 pass.Apply();
 
@@ -262,7 +280,10 @@ namespace viewer
         {
             VertexPositionColorTexture mono_v = new VertexPositionColorTexture();
             mono_v.Position = new Microsoft.Xna.Framework.Vector3(v.coord.X, v.coord.Y, v.coord.Z) + add_offset;
-            mono_v.Color = new Color(v.color.X, v.color.Y, v.color.Z);
+
+            float scale = 1.0f;
+
+            mono_v.Color = new Color((v.color.X * scale / 255.0f), v.color.Y * scale / 255.0f, v.color.Z * scale / 255.0f);
             mono_v.TextureCoordinate = new Vector2(0, 0);
 
             return mono_v;

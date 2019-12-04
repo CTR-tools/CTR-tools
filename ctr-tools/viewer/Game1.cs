@@ -22,9 +22,11 @@ namespace viewer
 
         BasicEffect effect;
         FirstPersonCamera camera;
+        FirstPersonCamera skycamera;
 
         //List<VertexPositionColor> verts = new List<VertexPositionColor>();
         List<MGQuadBlock> quads = new List<MGQuadBlock>();
+        MGQuadBlock sky;
 
         Color backColor = Color.Blue;
 
@@ -91,6 +93,7 @@ namespace viewer
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             camera = new FirstPersonCamera(this);
+            skycamera = new FirstPersonCamera(this);
 
             base.Initialize();
         }
@@ -104,7 +107,7 @@ namespace viewer
         {
             textures.Add("test", Content.Load<Texture2D>("test"));
             effect.Texture = textures["test"];
-            effect.TextureEnabled = true;
+            effect.TextureEnabled = false;
 
             font = Content.Load<SpriteFont>("File");
 
@@ -150,7 +153,10 @@ namespace viewer
                 scn.Add(new Scene(s, "obj"));
 
             foreach (Scene s in scn)
+            {
                 quads.Add(new MGQuadBlock(s, Detail.Med));
+            }
+
             // quads.Add(new MGQuadBlock(s, i++, qf, hide_invis));
 
             if (scn.Count > 0)
@@ -158,6 +164,8 @@ namespace viewer
                 backColor.R = scn[0].header.backColor.X;
                 backColor.G = scn[0].header.backColor.Y;
                 backColor.B = scn[0].header.backColor.Z;
+
+                sky = new MGQuadBlock(scn[0].skybox);
             }
 
 
@@ -290,7 +298,8 @@ namespace viewer
             }
             else
             {
-                camera.Update(gameTime, usemouse);
+                camera.Update(gameTime, usemouse, true);
+                skycamera.Update(gameTime, usemouse, false);
             }
 
             oldstate = newstate;
@@ -322,6 +331,15 @@ namespace viewer
 
             if (loading != null && gameLoaded)
             {
+                effect.View = skycamera.ViewMatrix;
+                effect.Projection = skycamera.ProjectionMatrix;
+
+                sky.Render(graphics, effect);
+
+                GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
+
+                effect.View = camera.ViewMatrix;
+                effect.Projection = camera.ProjectionMatrix;
 
                 foreach (MGQuadBlock qb in quads)
                     qb.Render(graphics, effect);
