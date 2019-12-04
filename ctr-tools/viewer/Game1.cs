@@ -171,7 +171,7 @@ namespace viewer
 
             foreach (Scene s in scn)
             {
-                s.ExportTextures(@".\tex\");
+                //s.ExportTextures(@".\tex\");
 
                 foreach (var x in s.ctrvram.textures)
                 {
@@ -309,7 +309,6 @@ namespace viewer
         }
 
 
-        Task loading;
 
         private void DrawLevel()
         {
@@ -362,6 +361,9 @@ namespace viewer
                 }
             }
         }
+
+
+        Task loading;
 
         private void LoadGame()
         {

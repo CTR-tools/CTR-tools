@@ -67,18 +67,18 @@ namespace CTRFramework
             if (unk0 != 0)
             {
                 Console.WriteLine("!!! unk0 != 0 !!!" + unk0);
-                Console.ReadKey();
+                //Console.ReadKey();
             }
 
             if (unk3 != 0)
             {
                 Console.WriteLine("!!! unk3 != 0 !!!" + unk3);
-                Console.ReadKey();
+                //Console.ReadKey();
             }
             if (unk4 != 0)
             {
                 Console.WriteLine("!!! unk4 != 0 !!!" + unk4);
-                Console.ReadKey();
+                //Console.ReadKey();
             }
 
             /*
