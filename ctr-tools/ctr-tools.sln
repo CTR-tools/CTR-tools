@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "levTool", "levTool\levTool.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTRFramework", "CTRFramework\CTRFramework.csproj", "{0326F8B5-F788-4529-9F87-C725A5D13BC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ctrviewer", "viewer\ctrviewer.csproj", "{F156E084-F555-4647-A289-7619AB05BB09}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ctrviewer", "ctrviewer\ctrviewer.csproj", "{F156E084-F555-4647-A289-7619AB05BB09}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0326F8B5-F788-4529-9F87-C725A5D13BC0} = {0326F8B5-F788-4529-9F87-C725A5D13BC0}
 	EndProjectSection

@@ -105,8 +105,8 @@ namespace viewer
 
         protected override void LoadContent()
         {
-            textures.Add("test", Content.Load<Texture2D>("test"));
-            effect.Texture = textures["test"];
+            //textures.Add("test", Content.Load<Texture2D>("test"));
+            //effect.Texture = textures["test"];
             effect.TextureEnabled = false;
 
             font = Content.Load<SpriteFont>("File");
@@ -165,7 +165,8 @@ namespace viewer
                 backColor.G = scn[0].header.backColor.Y;
                 backColor.B = scn[0].header.backColor.Z;
 
-                sky = new MGQuadBlock(scn[0].skybox);
+                if (scn[0].skybox != null)
+                    sky = new MGQuadBlock(scn[0].skybox);
             }
 
 
@@ -181,7 +182,7 @@ namespace viewer
 
             }
 
-            effect.Texture = textures["test"];
+           // effect.Texture = textures["test"];
 
         }
 
@@ -333,7 +334,8 @@ namespace viewer
                 effect.View = skycamera.ViewMatrix;
                 effect.Projection = skycamera.ProjectionMatrix;
 
-                sky.Render(graphics, effect);
+                if (sky != null)
+                    sky.Render(graphics, effect);
 
                 GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
 

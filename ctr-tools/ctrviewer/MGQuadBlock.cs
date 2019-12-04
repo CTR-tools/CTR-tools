@@ -16,6 +16,7 @@ namespace viewer
 
         public static short[] indices_pattern_low = new short[] { 0, 1, 2, 2, 1, 3 };
 
+
         public static short[] indices_pattern = new short[] {
             0, 4, 5,
             5, 4, 6,

@@ -205,7 +205,7 @@ namespace CTRFramework
         {
             header = Instance<SceneHeader>.ReadFrom(br, 0);
             meshinfo = Instance<MeshInfo>.ReadFrom(br, header.ptrMeshInfo);
-            skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
+            if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
             verts = InstanceList<Vertex>.ReadFrom(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
             restartPts = InstanceList<PosAng>.ReadFrom(br, header.ptrRestartPts, header.numRestartPts);
             coldata = InstanceList<ColData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
@@ -285,7 +285,7 @@ namespace CTRFramework
                 Console.WriteLine(b);
 
             */
-            
+            /*
             //ai path test
             int xz = 0;
             foreach (AIPath p in nav.paths)
@@ -293,7 +293,7 @@ namespace CTRFramework
                 File.WriteAllText("path"+xz+".obj", p.ToObj());
                 xz++;
             }
-            
+            */
         }
 
         public Dictionary<string, TextureLayout> GetTexturesList()
