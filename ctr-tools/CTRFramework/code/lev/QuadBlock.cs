@@ -10,7 +10,7 @@ namespace CTRFramework
     {
         public RotateFlipType rotateFlipType;
         public FaceMode faceMode;
-    
+
         public FaceFlags(byte x)
         {
             rotateFlipType = (RotateFlipType)(x & 7);
@@ -56,7 +56,7 @@ namespace CTRFramework
         public byte[] midflags = new byte[2];
 
         public int ptrTexLow;                 //offset to LOD texture definition
-        public int offset2; 
+        public int offset2;
 
         public ushort[] unk3 = new ushort[10];  //unknown
 
@@ -308,7 +308,7 @@ namespace CTRFramework
             bw.Write((ushort)quadFlags);
             //bw.Write(unk1);
 
-           // bw.Write(drawOrderLow);
+            // bw.Write(drawOrderLow);
             bw.Write(bitvalue);
             bw.Write(drawOrderHigh);
 

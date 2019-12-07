@@ -1,22 +1,16 @@
 ﻿using CTRFramework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
-namespace viewer
+namespace ctrviewer
 {
     class MGQuadBlock
     {
-        public VertexPositionColorTexture[] verts;
-        public VertexPositionColorTexture[] verts_wire;
-        // public VertexPositionColorTexture[] verts_flag;
+        public TriList normal = new TriList();
+        public TriList wire = new TriList();
 
-        public short[] indices;
-        // public short[] indices_flag;
 
         public static short[] indices_pattern_low = new short[] { 0, 1, 2, 2, 1, 3 };
-
-
         public static short[] indices_pattern = new short[] {
             0, 4, 5,
             5, 4, 6,
@@ -29,22 +23,28 @@ namespace viewer
         };
 
 
-
         public MGQuadBlock(SkyBox sb)
         {
-            verts = new VertexPositionColorTexture[sb.cntVertex];
-            indices = new short[sb.faces.Count * 3];
+            normal.verts = new VertexPositionColorTexture[sb.cntVertex];
+            normal.indices = new short[sb.faces.Count * 3];
 
             for (int i = 0; i < sb.cntVertex; i++)
             {
-                verts[i] = GetMonogameVertex(sb.verts[i], new Vector3(0, 0, 0));
+                normal.verts[i] = GetMonogameVertex(sb.verts[i], new Vector3(0, 0, 0));
             }
 
             for (int i = 0; i < sb.faces.Count; i++)
             {
-                indices[i * 3 + 0] = sb.faces[i].X;
-                indices[i * 3 + 1] = sb.faces[i].Y;
-                indices[i * 3 + 2] = sb.faces[i].Z;
+                normal.indices[i * 3 + 0] = sb.faces[i].X;
+                normal.indices[i * 3 + 1] = sb.faces[i].Y;
+                normal.indices[i * 3 + 2] = sb.faces[i].Z;
+            }
+
+            wire = new TriList(normal);
+
+            for (int i = 0; i < wire.verts.Length; i++)
+            {
+                wire.verts[i].Color = Color.DarkRed;
             }
         }
 
@@ -52,8 +52,8 @@ namespace viewer
         public MGQuadBlock(Scene s, Detail detail)
         {
 
-            verts = new VertexPositionColorTexture[s.quads.Count * 9];
-            indices = new short[s.quads.Count * 6 * 4];
+            normal.verts = new VertexPositionColorTexture[s.quads.Count * 9];
+            normal.indices = new short[s.quads.Count * 6 * 4];
 
             switch (detail)
             {
@@ -87,12 +87,12 @@ namespace viewer
                                     v.TextureCoordinate.Y = 0;
                                 }
 
-                                verts[i * 4 + j] = v;
+                                normal.verts[i * 4 + j] = v;
                             }
 
                             for (int k = 0; k < indices_pattern_low.Length; k++)
                             {
-                                indices[i * 6 + k] = (short)(i * 4 + indices_pattern_low[k]);
+                                normal.indices[i * 6 + k] = (short)(i * 4 + indices_pattern_low[k]);
                             }
 
                         }
@@ -122,12 +122,12 @@ namespace viewer
                                 v.TextureCoordinate.X = 0;
                                 v.TextureCoordinate.Y = 0;
 
-                                verts[i * 9 + j] = v;
+                                normal.verts[i * 9 + j] = v;
                             }
 
                             for (int k = 0; k < indices_pattern.Length; k++)
                             {
-                                indices[i * 6 * 4 + k] = (short)(i * 9 + indices_pattern[k]);
+                                normal.indices[i * 6 * 4 + k] = (short)(i * 9 + indices_pattern[k]);
                             }
 
                         }
@@ -137,14 +137,17 @@ namespace viewer
 
             }
 
-            // verts_flag = verts;
-            verts_wire = verts;
-            // indices_flag = indices;
+            wire = new TriList(normal);
+
+            for (int i = 0; i < wire.verts.Length; i++)
+            {
+                wire.verts[i].Color = Color.DarkRed;
+            }
         }
 
 
 
-
+        /*
         public MGQuadBlock(Scene scn, int num, TerrainFlags qf, bool hide_invis)
         {
             List<VertexPositionColorTexture> vts = new List<VertexPositionColorTexture>();
@@ -218,54 +221,19 @@ namespace viewer
 
 
             */
-        }
 
         public void Render(GraphicsDeviceManager graphics, BasicEffect effect)
         {
-            foreach (var pass in effect.CurrentTechnique.Passes)
-            {
-
-                pass.Apply();
-
-                if (verts.Length > 0)
-                    if (indices.Length > 0)
-                        graphics.GraphicsDevice.DrawUserIndexedPrimitives(
-                    PrimitiveType.TriangleList,
-                    verts, 0, verts.Length,
-                    indices, 0, indices.Length / 3,
-                    VertexPositionColorTexture.VertexDeclaration
-                   );
-
-                /*
-                if (verts_flag.Length > 0)
-                    if (indices_flag.Length > 0)
-                    {
-                        graphics.GraphicsDevice.DrawUserIndexedPrimitives(
-                            PrimitiveType.TriangleList,
-                            verts_flag, 0, verts_flag.Length,
-                            indices_flag, 0, indices_flag.Length / 3,
-                            VertexPositionColorTexture.VertexDeclaration
-                        );
-                    }
-                    */
-            }
+            if (normal.verts.Length > 0)
+                if (normal.indices.Length > 0)
+                    normal.Render(graphics, effect);
         }
 
         public void RenderWire(GraphicsDeviceManager graphics, BasicEffect effect)
         {
-            foreach (var pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-
-                if (verts_wire.Length > 0)
-                    if (indices.Length > 0)
-                        graphics.GraphicsDevice.DrawUserIndexedPrimitives(
-                    PrimitiveType.TriangleList,
-                    verts_wire, 0, verts.Length,
-                    indices, 0, indices.Length / 3,
-                    VertexPositionColorTexture.VertexDeclaration
-                   );
-            }
+            if (wire.verts.Length > 0)
+                if (wire.indices.Length > 0)
+                    wire.Render(graphics, effect);
         }
 
         public Color Blend(Color c1, Color c2)

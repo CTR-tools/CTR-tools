@@ -4,10 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace viewer
+namespace ctrviewer
 {
     public class Game1 : Game
     {
@@ -22,10 +21,12 @@ namespace viewer
 
         BasicEffect effect;
         FirstPersonCamera camera;
+        FirstPersonCamera lowcamera;
         FirstPersonCamera skycamera;
 
         //List<VertexPositionColor> verts = new List<VertexPositionColor>();
         List<MGQuadBlock> quads = new List<MGQuadBlock>();
+        List<MGQuadBlock> quads_low = new List<MGQuadBlock>();
         MGQuadBlock sky;
 
         Color backColor = Color.Blue;
@@ -93,7 +94,13 @@ namespace viewer
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             camera = new FirstPersonCamera(this);
+            lowcamera = new FirstPersonCamera(this);
             skycamera = new FirstPersonCamera(this);
+
+            camera.NearClip = 0.1f;
+            camera.FarClip = 3000;
+            lowcamera.NearClip = 2000;
+            lowcamera.FarClip = 70000;
 
             base.Initialize();
         }
@@ -140,7 +147,6 @@ namespace viewer
 
         private void LoadLevel(TerrainFlags qf)
         {
-
             scn.Clear();
             quads.Clear();
 
@@ -155,6 +161,11 @@ namespace viewer
             foreach (Scene s in scn)
             {
                 quads.Add(new MGQuadBlock(s, Detail.Med));
+            }
+
+            foreach (Scene s in scn)
+            {
+                quads_low.Add(new MGQuadBlock(s, Detail.Low));
             }
 
             // quads.Add(new MGQuadBlock(s, i++, qf, hide_invis));
@@ -182,18 +193,22 @@ namespace viewer
 
             }
 
-           // effect.Texture = textures["test"];
+            // effect.Texture = textures["test"];
 
         }
 
         public void ResetCamera()
         {
             if (scn.Count > 0)
+            {
                 camera.Position = new Vector3(
                     scn[0].header.startGrid[0].Position.X,
                     scn[0].header.startGrid[0].Position.Y,
                     scn[0].header.startGrid[0].Position.Z
                     );
+
+                lowcamera.Position = camera.Position;
+            }
         }
 
         protected override void UnloadContent()
@@ -249,28 +264,9 @@ namespace viewer
                         case "toggle":
                             switch (menu.SelectedItem.Param)
                             {
-                                
+
                                 case "antialias":
-
-                                    if (graphics.PreferMultiSampling)
-                                    {
-                                        graphics.PreferMultiSampling = false;
-                                    }
-                                    else
-                                    {
-                                        graphics.PreferMultiSampling = true;
-                                    }
-
-                                    /*
-                                    if (graphics.GraphicsProfile != GraphicsProfile.HiDef)
-                                    {
-                                        graphics.GraphicsProfile = GraphicsProfile.HiDef;
-                                    }
-                                    else
-                                    {
-                                        graphics.GraphicsProfile = GraphicsProfile.Reach;
-                                    }*/
-                                    //graphics.ApplyChanges();
+                                    graphics.PreferMultiSampling = !graphics.PreferMultiSampling;
                                     break;
 
                                 case "invis": hide_invis = !hide_invis; LoadLevel((TerrainFlags)(1 << Flag)); break;
@@ -301,6 +297,8 @@ namespace viewer
             {
                 camera.Update(gameTime, usemouse, true);
                 skycamera.Update(gameTime, usemouse, false);
+                lowcamera.Update(gameTime, usemouse, true);
+                lowcamera.Position = camera.Position;
             }
 
             oldstate = newstate;
@@ -311,36 +309,68 @@ namespace viewer
 
 
 
-        private void DrawLevel()
+        private SamplerState GetCurrentSampler()
         {
             ss = new SamplerState();
             ss.FilterMode = TextureFilterMode.Default;
 
             ss.Filter = filter ? TextureFilter.Anisotropic : TextureFilter.Point;
             ss.MaxAnisotropy = 16;
-            ss.MaxMipLevel = 8;
-            ss.MipMapLevelOfDetailBias = -1.5f;
+            //ss.MaxMipLevel = 8;
+            //ss.MipMapLevelOfDetailBias = -1.5f;
 
-            graphics.GraphicsDevice.SamplerStates[0] = ss;
+            return ss;
+        }
 
-
-            //GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
-
+        private void DrawLevel()
+        {
+            graphics.GraphicsDevice.SamplerStates[0] = GetCurrentSampler();
             graphics.ApplyChanges();
-
 
             if (loading != null && gameLoaded)
             {
-                effect.View = skycamera.ViewMatrix;
-                effect.Projection = skycamera.ProjectionMatrix;
-
                 if (sky != null)
+                {
+                    effect.View = skycamera.ViewMatrix;
+                    effect.Projection = skycamera.ProjectionMatrix;
+
                     sky.Render(graphics, effect);
+
+                    if (wire)
+                    {
+                        WireframeMode(graphics.GraphicsDevice, true);
+                        sky.RenderWire(graphics, effect);
+                        WireframeMode(graphics.GraphicsDevice, false);
+                    }
+                }
+
 
                 GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
 
+
+                effect.View = lowcamera.ViewMatrix;
+                effect.Projection = lowcamera.ProjectionMatrix;
+
+                foreach (MGQuadBlock qb in quads_low)
+                    qb.Render(graphics, effect);
+
+                if (wire)
+                {
+                    WireframeMode(graphics.GraphicsDevice, true);
+
+                    foreach (MGQuadBlock qb in quads_low)
+                        qb.RenderWire(graphics, effect);
+
+                    WireframeMode(graphics.GraphicsDevice, false);
+                }
+
+
+                GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
+
+
                 effect.View = camera.ViewMatrix;
                 effect.Projection = camera.ProjectionMatrix;
+
 
                 foreach (MGQuadBlock qb in quads)
                     qb.Render(graphics, effect);
@@ -354,6 +384,7 @@ namespace viewer
 
                     WireframeMode(graphics.GraphicsDevice, false);
                 }
+
             }
             else
             {
@@ -382,7 +413,8 @@ namespace viewer
             rasterizerState.FillMode = (toggle ? FillMode.WireFrame : FillMode.Solid);
             rasterizerState.CullMode = (toggle ? CullMode.None : CullMode.CullCounterClockwiseFace);
 
-            gd.RasterizerState = rasterizerState;
+            if (gd.RasterizerState != rasterizerState)
+                gd.RasterizerState = rasterizerState;
         }
 
         protected override void Draw(GameTime gameTime)

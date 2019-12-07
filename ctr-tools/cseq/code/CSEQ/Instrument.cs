@@ -2,7 +2,6 @@
 using CTRFramework.Shared;
 using CTRtools.Helpers;
 using System;
-using System.Data;
 using System.Text;
 
 namespace CTRtools.CSEQ

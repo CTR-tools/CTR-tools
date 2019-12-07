@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace viewer
+namespace ctrviewer
 {
     public partial class FirstPersonCamera : Camera
     {
@@ -74,42 +74,42 @@ namespace viewer
             Vector3 moveVector = new Vector3(0, 0, 0);
 
             if (move)
-            { 
+            {
 
-            KeyboardState keyState = Keyboard.GetState();
-            GamePadState padState = GamePad.GetState(PlayerIndex.One);
+                KeyboardState keyState = Keyboard.GetState();
+                GamePadState padState = GamePad.GetState(PlayerIndex.One);
 
-            if (keyState.IsKeyDown(Keys.W) || padState.DPad.Up == ButtonState.Pressed)
-                moveVector += new Vector3(0, 0, -1);
-            if (keyState.IsKeyDown(Keys.S) || padState.DPad.Down == ButtonState.Pressed)
-                moveVector += new Vector3(0, 0, 1);
-            if (keyState.IsKeyDown(Keys.D) || padState.DPad.Right == ButtonState.Pressed)
-                moveVector += new Vector3(1, 0, 0);
-            if (keyState.IsKeyDown(Keys.A) || padState.DPad.Left == ButtonState.Pressed)
-                moveVector += new Vector3(-1, 0, 0);
+                if (keyState.IsKeyDown(Keys.W) || padState.DPad.Up == ButtonState.Pressed)
+                    moveVector += new Vector3(0, 0, -1);
+                if (keyState.IsKeyDown(Keys.S) || padState.DPad.Down == ButtonState.Pressed)
+                    moveVector += new Vector3(0, 0, 1);
+                if (keyState.IsKeyDown(Keys.D) || padState.DPad.Right == ButtonState.Pressed)
+                    moveVector += new Vector3(1, 0, 0);
+                if (keyState.IsKeyDown(Keys.A) || padState.DPad.Left == ButtonState.Pressed)
+                    moveVector += new Vector3(-1, 0, 0);
 
-            if (keyState.IsKeyDown(Keys.Q))
-                moveVector += new Vector3(0, 1, 0);
-            if (keyState.IsKeyDown(Keys.Z))
-                moveVector += new Vector3(0, -1, 0);
+                if (keyState.IsKeyDown(Keys.Q))
+                    moveVector += new Vector3(0, 1, 0);
+                if (keyState.IsKeyDown(Keys.Z))
+                    moveVector += new Vector3(0, -1, 0);
 
-            moveVector += new Vector3(padState.ThumbSticks.Left.X, 0, -padState.ThumbSticks.Left.Y);
+                moveVector += new Vector3(padState.ThumbSticks.Left.X, 0, -padState.ThumbSticks.Left.Y);
 
-            // if (keyState.IsKeyDown(Keys.LeftShift) || padState.Buttons.A == ButtonState.Pressed)
-            //     moveVector *= 2;
+                // if (keyState.IsKeyDown(Keys.LeftShift) || padState.Buttons.A == ButtonState.Pressed)
+                //     moveVector *= 2;
 
-            moveVector *= (1 + padState.Triggers.Right * 3);
+                moveVector *= (1 + padState.Triggers.Right * 3);
 
 
-            if (keyState.IsKeyDown(Keys.Left))
-                leftRightRot += rotationSpeed;
-            if (keyState.IsKeyDown(Keys.Right))
-                leftRightRot -= rotationSpeed;
-            if (keyState.IsKeyDown(Keys.Up))
-                upDownRot += rotationSpeed;
-            if (keyState.IsKeyDown(Keys.Down))
-                upDownRot -= rotationSpeed;
-            #endregion
+                if (keyState.IsKeyDown(Keys.Left))
+                    leftRightRot += rotationSpeed;
+                if (keyState.IsKeyDown(Keys.Right))
+                    leftRightRot -= rotationSpeed;
+                if (keyState.IsKeyDown(Keys.Up))
+                    upDownRot += rotationSpeed;
+                if (keyState.IsKeyDown(Keys.Down))
+                    upDownRot -= rotationSpeed;
+                #endregion
 
 
             }

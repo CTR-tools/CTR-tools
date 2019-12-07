@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using CTRFramework.Shared;
 using System.Text;
-using System.Threading.Tasks;
-using CTRFramework.Shared;
 
 namespace CTRFramework
 {

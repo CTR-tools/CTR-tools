@@ -34,7 +34,7 @@ namespace CTRFramework.Shared
 
         //constructor
 
-            public Vector2b(byte x, byte y)
+        public Vector2b(byte x, byte y)
         {
             X = x;
             Y = y;

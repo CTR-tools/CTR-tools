@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace viewer
+namespace ctrviewer
 {
 
     public partial class Camera : GameComponent
@@ -17,9 +17,9 @@ namespace viewer
                 return Game.GraphicsDevice.Viewport.AspectRatio;
             }
         }
-        public const float NearClip = 1.0f;
-        public const float FarClip = 75000.0f;
-        public const float ViewAngle = 80.0f;
+        public  float NearClip = 1.0f;
+        public  float FarClip = 75000.0f;
+        public  float ViewAngle = 80.0f;
         #endregion
 
         #region Раздел инициализации: конструктор, инициализация

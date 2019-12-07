@@ -17,7 +17,8 @@ seq:
   - id: restart_pts
     type: posang
     repeat: expr
-    repeat-expr: header.cnt_restart_pts
+    repeat-expr: header.cnt_restart_pts + 1
+    doc: wtf with +1
         
   - id: pickup_headers
     type: pickup_header
@@ -31,7 +32,7 @@ seq:
     
   - id: mesh_info_header
     type: mesh_info
-    
+
   - id: quad_block_array
     type: quad_block
     repeat: expr
@@ -40,19 +41,21 @@ seq:
   - id: vertex_array
     type: vertex
     repeat: expr
-    repeat-expr: mesh_info_header.vertexnum
+    repeat-expr: mesh_info_header.vertexnum  
 
+    
 instances:
   skybox:
     pos: header.ptr_skybox
     size: 1
     type: skybox
+    if: header.ptr_skybox != 0
     
-  col_data_array:
-    pos: mesh_info_header.ptr_col_data_array
-    type: col_data
+  vis_data_array:
+    pos: mesh_info_header.ptr_vis_data_array
+    type: vis_data
     repeat: expr
-    repeat-expr: mesh_info_header.cnt_col_data
+    repeat-expr: mesh_info_header.cnt_vis_data
 
   unk_struct1_array:
     pos: header.ptr_tex_array
@@ -64,14 +67,18 @@ instances:
 
 types:
 
-  col_data:
+  vis_data:
     seq:
       - id: flag
         type: u2
       - id: id
         type: u2
-      - id: skip_someptrs_somedata
-        size: 24
+      - id: bbox_min
+        type: vector3s
+      - id: bbox_max
+        type: vector3s      
+      - id: skip_somedata
+        size: 12
       - id: ptr_quad_block
         type: u4
       
@@ -89,7 +96,7 @@ types:
         type: u4
         repeat: expr
         repeat-expr: 8
-      - id: vrtex_array
+      - id: vertex_array
         type: skybox_vertex
         repeat: expr
         repeat-expr: num_vertex
@@ -122,9 +129,9 @@ types:
         type: u4
       - id: null2
         type: u4   
-      - id: some_count1
+      - id: cnt_water
         type: u4
-      - id: some_ptr1
+      - id: ptr_water
         type: u4     
       - id: ptr_tex
         type: u4
@@ -153,7 +160,7 @@ types:
       - id: background_color
         type: color 
         
-      - id: unkptr100
+      - id: bg_mode
         type: u4
         
       - id: build
@@ -164,13 +171,20 @@ types:
         
       - id: cnt_restart_pts
         type: u4 
-          
       - id: ptr_restart_pts
         type: u4 
         
       - id: skip2
-        size: 0x38
-        
+        size: 16
+      - id: bg_color
+        type: color
+        repeat: expr
+        repeat-expr: 4
+      - id: skip2_unkptr
+        type: u4
+      - id: skip2_3
+        size: 20
+
       - id: ptr_ai_nav
         type: u4 
         
@@ -259,9 +273,9 @@ types:
         type: u4
       - id: unk2
         type: u4
-      - id: ptr_col_data_array
+      - id: ptr_vis_data_array
         type: u4
-      - id: cnt_col_data
+      - id: cnt_vis_data
         type: u4
         
   bounding_box:

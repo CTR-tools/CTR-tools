@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CTRFramework;
+﻿using CTRFramework;
 using CTRFramework.Shared;
 using System.IO;
+using System.Text;
 
 namespace levTool
 {
     class Mcs : IRead
     {
-        
+
 
         public Mcs()
         {

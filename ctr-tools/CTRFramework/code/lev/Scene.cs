@@ -211,11 +211,9 @@ namespace CTRFramework
             coldata = InstanceList<ColData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
             quads = InstanceList<QuadBlock>.ReadFrom(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
 
-
-
             try
             {
-                if (header.ptrAiNav != 0) 
+                if (header.ptrAiNav != 0)
                     nav = Instance<Nav>.ReadFrom(br, header.ptrAiNav);
             }
             catch
@@ -224,6 +222,51 @@ namespace CTRFramework
                 Console.WriteLine("!!! error reading nav !!!");
                 //Console.ReadKey();
             }
+
+            /*
+             //water texture
+            br.BaseStream.Position = header.ptrWater;
+
+            List<uint> vptr = new List<uint>();
+            List<uint> wptr = new List<uint>();
+
+            for (int i = 0; i < header.cntWater; i++)
+            {
+                vptr.Add(br.ReadUInt32());
+                wptr.Add(br.ReadUInt32());
+            }
+
+            wptr.Sort();
+
+            foreach(uint u in wptr)
+            {
+                Console.WriteLine(u.ToString("X8"));
+            }
+
+            Console.ReadKey();
+            */
+
+            /*
+            StringBuilder sb = new StringBuilder();
+
+
+            sb.Append("g lol1");
+
+            foreach (ColData cd in coldata)
+            {
+                sb.Append(String.Format("v {0} {1} {2}\r\n", cd.v1.X, cd.v1.Y, cd.v1.Z));
+            }
+
+            sb.Append("g lol2");
+
+            foreach (ColData cd in coldata)
+            {
+                sb.Append(String.Format("v {0} {1} {2}\r\n", cd.v2.X, cd.v2.Y, cd.v2.Z));
+            }
+
+            File.WriteAllText("coldata.obj", sb.ToString());
+            */
+
 
 
             //read pickups
@@ -238,7 +281,7 @@ namespace CTRFramework
 
             //read pickup models
             //starts out right, but anims ruin it
-            
+
             br.Jump(header.ptrPickupModelsPtr);
             int x = (int)br.BaseStream.Position;
 

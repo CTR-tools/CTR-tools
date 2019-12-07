@@ -7,7 +7,7 @@ namespace CTRFramework
     {
         public uint ptrMeshInfo;
         public uint ptrSkybox;  //leads to a small aray of vertices?
-        public uint unk2;  //facegroup //leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
+        public uint ptrTexArray;  //facegroup //leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
 
         public int numPickupHeaders;
         public uint ptrPickupHeaders;
@@ -22,8 +22,8 @@ namespace CTRFramework
         public int null1;
         public int null2;
 
-        public uint someCount1;
-        public uint somePtr1; //leads to another array of offsets, those lead to locations in vrtex array
+        public uint cntWater;
+        public uint ptrWater;
         public uint somePtr2; //lead to the header for the data below
         public uint somePtr3; //leads to some named data (drop, bubble, map-asphalt01) with an array of 0x0C bytes afterwards
         public uint ptrArray1;
@@ -33,7 +33,7 @@ namespace CTRFramework
 
         public uint somePtr4;
         public uint somePtr5;
-        public uint somePtr6;
+        public uint ptrLowTexArray;
         public Vector4b backColor;
 
         uint ptrBuildStart;
@@ -65,7 +65,7 @@ namespace CTRFramework
         {
             ptrMeshInfo = br.ReadUInt32();
             ptrSkybox = br.ReadUInt32();
-            unk2 = br.ReadUInt32();
+            ptrTexArray = br.ReadUInt32();
 
             numPickupHeaders = br.ReadInt32();
             ptrPickupHeaders = br.ReadUInt32();
@@ -85,8 +85,8 @@ namespace CTRFramework
                 Console.WriteLine("WARNING header.null1 = " + null1 + "; header.null2 = " + null2);
             }
 
-            someCount1 = br.ReadUInt32();
-            somePtr1 = br.ReadUInt32();
+            cntWater = br.ReadUInt32();
+            ptrWater = br.ReadUInt32();
             somePtr2 = br.ReadUInt32();
             somePtr3 = br.ReadUInt32();
 
@@ -112,7 +112,7 @@ namespace CTRFramework
 
             somePtr4 = br.ReadUInt32();
             somePtr5 = br.ReadUInt32();
-            somePtr6 = br.ReadUInt32();
+            ptrLowTexArray = br.ReadUInt32();
             backColor = new Vector4b(br);
 
             br.ReadUInt32();

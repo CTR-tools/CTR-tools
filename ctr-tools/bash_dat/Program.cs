@@ -1,9 +1,7 @@
-﻿using System;
-using CTRFramework.Shared;
-using CTRFramework;
-using System.IO;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
 
 namespace bash_dat
 {
@@ -101,77 +99,77 @@ namespace bash_dat
                         }
                         */
 
-                        
-                    br.Jump(ptrs[0]);
-                    File.WriteAllBytes("kek.vb", br.ReadBytes((int)ptrs[1] - (int)ptrs[0]));
 
-                    br.Jump(ptrs[1]);
-                    File.WriteAllBytes("kek.vh", br.ReadBytes((int)ptrs[2] - (int)ptrs[1]));
-                    
+                        br.Jump(ptrs[0]);
+                        File.WriteAllBytes("kek.vb", br.ReadBytes((int)ptrs[1] - (int)ptrs[0]));
+
+                        br.Jump(ptrs[1]);
+                        File.WriteAllBytes("kek.vh", br.ReadBytes((int)ptrs[2] - (int)ptrs[1]));
+
                         if (ptrs[3] != 0)
-                            {
-                                br.Jump(ptrs[2]);
-                                File.WriteAllBytes("kek1.seq", br.ReadBytes((int)ptrs[3] - (int)ptrs[2]));
+                        {
+                            br.Jump(ptrs[2]);
+                            File.WriteAllBytes("kek1.seq", br.ReadBytes((int)ptrs[3] - (int)ptrs[2]));
 
-                                br.Jump(ptrs[3]);
-                                File.WriteAllBytes("kek2.seq", br.ReadBytes((int)br.BaseStream.Length - (int)ptrs[2]));
+                            br.Jump(ptrs[3]);
+                            File.WriteAllBytes("kek2.seq", br.ReadBytes((int)br.BaseStream.Length - (int)ptrs[2]));
 
-                            }
-                            /*
-                            br.Jump(0x1ca54);
-
-                            List<Vector3s> vv = new List<Vector3s>();
-
-                            for (int i =0; i < 0x17e8 / 6; i++)
-                            {
-                                vv.Add(new Vector3s(br));
-                            }
-
-                            StringBuilder sb = new StringBuilder();
-
-                            foreach (var v in vv)
-                            {
-                                sb.AppendFormat("v {0}\r\n", v.ToString(VecFormat.Numbers));
-                            }
-                            */
-                            /*
-                            br.Jump(0x3ef2);
-
-                            List<Vector4s> vv2 = new List<Vector4s>();
-
-                            for (int i = 0; i < 0x6a; i++)
-                            {
-                                vv2.Add(new Vector4s(br));
-                            }
-
-                            foreach (var v in vv2)
-                            {
-                                sb.AppendFormat("f {0} {1} {2}\r\n", v.X + 1, v.Y + 1, v.Z + 1);
-                            }
-
-                            File.AppendAllText("test.obj", sb.ToString());
-                            */
-
-
-                            /*
-                            TexPak x = new TexPak(br);
-
-                            int i = 0;
-                            foreach(Tex t in x.tex)
-                            {
-                                BMPHeader b = new BMPHeader();
-                                b.Update(t.height, t.width, 256, 4);
-                                b.UpdateData(x.pals[t.unk3], t.data);
-
-                                i++;
-
-                                using (BinaryWriter bw = new BinaryWriter(File.OpenWrite("kek" + i + ".bmp")))
-                                {
-                                    b.Write(bw);
-                                }
-                            }
-                            */
                         }
+                        /*
+                        br.Jump(0x1ca54);
+
+                        List<Vector3s> vv = new List<Vector3s>();
+
+                        for (int i =0; i < 0x17e8 / 6; i++)
+                        {
+                            vv.Add(new Vector3s(br));
+                        }
+
+                        StringBuilder sb = new StringBuilder();
+
+                        foreach (var v in vv)
+                        {
+                            sb.AppendFormat("v {0}\r\n", v.ToString(VecFormat.Numbers));
+                        }
+                        */
+                        /*
+                        br.Jump(0x3ef2);
+
+                        List<Vector4s> vv2 = new List<Vector4s>();
+
+                        for (int i = 0; i < 0x6a; i++)
+                        {
+                            vv2.Add(new Vector4s(br));
+                        }
+
+                        foreach (var v in vv2)
+                        {
+                            sb.AppendFormat("f {0} {1} {2}\r\n", v.X + 1, v.Y + 1, v.Z + 1);
+                        }
+
+                        File.AppendAllText("test.obj", sb.ToString());
+                        */
+
+
+                        /*
+                        TexPak x = new TexPak(br);
+
+                        int i = 0;
+                        foreach(Tex t in x.tex)
+                        {
+                            BMPHeader b = new BMPHeader();
+                            b.Update(t.height, t.width, 256, 4);
+                            b.UpdateData(x.pals[t.unk3], t.data);
+
+                            i++;
+
+                            using (BinaryWriter bw = new BinaryWriter(File.OpenWrite("kek" + i + ".bmp")))
+                            {
+                                b.Write(bw);
+                            }
+                        }
+                        */
+                    }
 
                     Console.ReadKey();
                 }

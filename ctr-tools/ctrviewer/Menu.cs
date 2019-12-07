@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
-namespace viewer
+namespace ctrviewer
 {
     public class MenuItem
     {
@@ -86,12 +86,20 @@ namespace viewer
 
         public void Next()
         {
-            Selection++;
+            do
+            {
+                Selection++;
+            }
+            while (items[Selection].Action == "");
         }
 
         public void Previous()
         {
-            Selection--;
+            do
+            {
+                Selection--;
+            }
+            while (items[Selection].Action == "");
         }
 
 
@@ -124,7 +132,7 @@ namespace viewer
 
                 g.DrawString(fnt, m.Title.ToUpper(), loc - new Vector2(m.Width / 2 * scale, 0),
                     (i == selection ? (m.Enabled ? Color.Red : Color.DarkRed) : (m.Enabled ? Color.White : Color.Gray)),
-                    0, new Vector2(0, 0), scale, SpriteEffects.None, 0.5f);
+                   0, new Vector2(0, 0), scale, SpriteEffects.None, 0.5f);
 
                 loc += new Vector2(0, 40 * scale);
 

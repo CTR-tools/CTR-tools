@@ -1,8 +1,8 @@
 ﻿using CTRFramework.Shared;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Collections.Generic;
 
 namespace CTRFramework
 {
@@ -198,7 +198,7 @@ namespace CTRFramework
 
                         Graphics g = Graphics.FromImage(targetBmp);
                         g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                        g.DrawImage(targetBmp, new Point(0,0));
+                        g.DrawImage(targetBmp, new Point(0, 0));
 
                         /*
                         Point[] poly = new Point[]

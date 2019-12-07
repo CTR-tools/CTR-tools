@@ -9,7 +9,7 @@ namespace CTRFramework
         string name;
         int unk0; //0?
         int unk1;
-        Vector4s position; 
+        Vector4s position;
         int ptrFaces; //this is null if we have anims
         int ptrVerts; //0?
         public int ptrTex;
@@ -56,7 +56,7 @@ namespace CTRFramework
 
             Console.WriteLine(name);
             Console.WriteLine(position.ToString(VecFormat.CommaSeparated));
-            
+
             Console.WriteLine("anims: " + numAnims);
             Console.WriteLine((ptrFaces).ToString("X8"));
             Console.WriteLine((ptrVerts).ToString("X8"));
@@ -100,7 +100,7 @@ namespace CTRFramework
             br.Jump(x);
             */
         }
-    
+
 
     }
 }

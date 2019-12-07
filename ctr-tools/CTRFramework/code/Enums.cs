@@ -25,8 +25,8 @@ namespace CTRFramework
     [Flags]
     public enum TerrainFlags
     {
-        flag0 = 1 << 0, 
-        flag1 = 1 << 1, 
+        flag0 = 1 << 0,
+        flag1 = 1 << 1,
         flag2 = 1 << 2,
         flag3 = 1 << 3,
         flag4 = 1 << 4,

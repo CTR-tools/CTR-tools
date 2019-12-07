@@ -46,7 +46,7 @@ namespace CTRFramework
         public void Read(BinaryReaderEx br)
         {
             Console.WriteLine("lodmodel start: " + br.BaseStream.Position.ToString("X8"));
-            
+
             name = br.ReadStringFixed(16);
             evt = br.ReadUInt16();
             numLods = br.ReadInt16();
@@ -55,7 +55,7 @@ namespace CTRFramework
             Console.WriteLine("name: " + name);
             Console.WriteLine("evt: " + (CTREvent)evt);
             Console.WriteLine("lodCount: " + numLods);
-            Console.WriteLine("ptrLods: " + (ptrLodHeads+4).ToString("X8"));
+            Console.WriteLine("ptrLods: " + (ptrLodHeads + 4).ToString("X8"));
 
             for (int i = 0; i < numLods; i++)
             {

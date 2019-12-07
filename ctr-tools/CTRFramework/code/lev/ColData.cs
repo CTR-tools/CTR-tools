@@ -32,6 +32,8 @@ namespace CTRFramework
             v3 = new Vector3s(br);
             v4 = new Vector3s(br);
             ptrQuadBlock = br.ReadUInt32();
+
+            Console.WriteLine(ToString());
         }
 
         public override string ToString()

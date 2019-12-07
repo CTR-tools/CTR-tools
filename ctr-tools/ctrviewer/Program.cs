@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace viewer
+namespace ctrviewer
 {
 #if WINDOWS || LINUX
     /// <summary>

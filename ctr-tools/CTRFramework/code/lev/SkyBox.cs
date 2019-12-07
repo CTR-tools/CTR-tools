@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace CTRFramework
-{ 
+{
     public class SkyBox : IRead
     {
         public int cntVertex;

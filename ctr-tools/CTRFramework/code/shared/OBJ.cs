@@ -18,8 +18,8 @@ namespace CTRFramework
         {
             return String.Format(
                 "{0} {1}/{2} {3}/{4} {5}/{6}\r\n",
-                label, 
-                totalv+x, totalvt+xuv,
+                label,
+                totalv + x, totalvt + xuv,
                 totalv + y, totalvt + yuv,
                 totalv + z, totalvt + zuv
                 );

@@ -90,7 +90,7 @@ namespace CTRFramework.Shared
                 case VecFormat.Braced: fmt = "({0}, {1}, {2})"; break;
             }
 
-            return String.Format(fmt, x+inc, y+inc, z+inc);
+            return String.Format(fmt, x + inc, y + inc, z + inc);
         }
 
 
