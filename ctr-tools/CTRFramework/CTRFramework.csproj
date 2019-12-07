@@ -122,7 +122,7 @@
     <Compile Include="code\lev\SkyBox.cs" />
     <Compile Include="code\lev\TextureLayout.cs" />
     <Compile Include="code\lev\Vertex.cs" />
-    <Compile Include="code\lev\ColData.cs" />
+    <Compile Include="code\lev\VisData.cs" />
     <Compile Include="code\shared\BoundingBox.cs" />
     <Compile Include="code\shared\OBJ.cs" />
     <Compile Include="code\shared\PosAng.cs" />

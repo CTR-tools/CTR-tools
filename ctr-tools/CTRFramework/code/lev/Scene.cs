@@ -16,7 +16,7 @@ namespace CTRFramework
         public List<Vertex> verts = new List<Vertex>();
         public List<QuadBlock> quads = new List<QuadBlock>();
         public List<PickupHeader> pickups = new List<PickupHeader>();
-        public List<ColData> coldata = new List<ColData>();
+        public List<VisData> coldata = new List<VisData>();
         public List<LODModel> dynamics = new List<LODModel>();
         public SkyBox skybox;
         public Nav nav;
@@ -208,7 +208,7 @@ namespace CTRFramework
             if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
             verts = InstanceList<Vertex>.ReadFrom(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
             restartPts = InstanceList<PosAng>.ReadFrom(br, header.ptrRestartPts, header.numRestartPts);
-            coldata = InstanceList<ColData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
+            coldata = InstanceList<VisData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
             quads = InstanceList<QuadBlock>.ReadFrom(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
 
             try

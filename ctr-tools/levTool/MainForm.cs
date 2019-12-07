@@ -231,7 +231,7 @@ namespace levTool
             if (scn != null)
             {
                 StringBuilder sb = new StringBuilder();
-                foreach (ColData vi in scn.coldata)
+                foreach (VisData vi in scn.coldata)
                 {
                     sb.Append(vi.ToString() + "\r\n");
                 }

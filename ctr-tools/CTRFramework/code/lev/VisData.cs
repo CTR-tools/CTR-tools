@@ -3,8 +3,7 @@ using System;
 
 namespace CTRFramework
 {
-    //just a made up name
-    public class ColData : IRead
+    public class VisData : IRead
     {
         public ushort flag;
         public ushort id;
@@ -14,11 +13,11 @@ namespace CTRFramework
         public Vector3s v4;
         public uint ptrQuadBlock;
 
-        public ColData()
+        public VisData()
         {
         }
 
-        public ColData(BinaryReaderEx br)
+        public VisData(BinaryReaderEx br)
         {
             Read(br);
         }
@@ -33,7 +32,7 @@ namespace CTRFramework
             v4 = new Vector3s(br);
             ptrQuadBlock = br.ReadUInt32();
 
-            Console.WriteLine(ToString());
+            //Console.WriteLine(ToString());
         }
 
         public override string ToString()

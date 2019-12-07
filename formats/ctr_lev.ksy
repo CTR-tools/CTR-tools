@@ -14,10 +14,14 @@ seq:
   - id: header
     type: scene_header
     
+  - id: restart_main
+    type: posang
+    if: header.ptr_array1 != 0
+    
   - id: restart_pts
     type: posang
     repeat: expr
-    repeat-expr: header.cnt_restart_pts + 1
+    repeat-expr: header.cnt_restart_pts
     doc: wtf with +1
         
   - id: pickup_headers
@@ -41,7 +45,7 @@ seq:
   - id: vertex_array
     type: vertex
     repeat: expr
-    repeat-expr: mesh_info_header.vertexnum  
+    repeat-expr: mesh_info_header.vertexnum
 
     
 instances:
