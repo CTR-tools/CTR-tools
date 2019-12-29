@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CTRFramework.Shared;
 
 namespace howl
 {
@@ -21,7 +22,7 @@ namespace howl
         }
 
 
-        public void Write(BinaryWriter bw)
+        public void Write(BinaryWriterEx bw)
         {
             bw.Write(magic.ToCharArray());
             WriteBig(bw, version);
@@ -34,7 +35,7 @@ namespace howl
             bw.Write(System.Text.Encoding.ASCII.GetBytes("testtesttesttest")); //name should go here
         }
 
-        public void WriteBig(BinaryWriter bw, int value)
+        public void WriteBig(BinaryWriterEx bw, int value)
         {
             byte[] x = BitConverter.GetBytes(value);
             for (int i = 0; i < 4; i++) bw.Write(x[3 - i]);

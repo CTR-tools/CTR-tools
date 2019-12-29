@@ -19,7 +19,7 @@ namespace CTRtools.CSEQ
             shortCnt = br.ReadByte();
             seqCnt = br.ReadInt16();
         }
-        public void Write(BinaryWriter bw)
+        public void Write(BinaryWriterEx bw)
         {
             bw.Write((int)size);
             bw.Write((byte)longCnt);

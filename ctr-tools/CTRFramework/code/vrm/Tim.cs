@@ -1,8 +1,9 @@
-﻿using CTRFramework.Shared;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using CTRFramework.Shared;
 
 namespace CTRFramework
 {
@@ -94,7 +95,7 @@ namespace CTRFramework
         /// <param name="s">Filename.</param>
         public void Write(string s)
         {
-            using (BinaryWriter bw = new BinaryWriter(File.OpenWrite(s)))
+            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(s)))
             {
                 bw.Write(magic);
                 bw.Write(flags);
@@ -137,7 +138,7 @@ namespace CTRFramework
         /// <param name="pal">Palette.</param>
         public void SaveBMP(string s, byte[] pal)
         {
-            using (BinaryWriter bw = new BinaryWriter(File.Create(s)))
+            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(s)))
             {
                 BMPHeader bh = new BMPHeader();
                 bh.Update(region.Width * 4, region.Height, 16, 4);

@@ -63,7 +63,7 @@ namespace CTRFramework
 
             List<int> offsets = new List<int>();
 
-            using (BinaryWriter bw = new BinaryWriter(File.Open(Path.ChangeExtension(s, ".lng"), FileMode.Create)))
+            using (BinaryWriterEx bw = new BinaryWriterEx(File.Open(Path.ChangeExtension(s, ".lng"), FileMode.Create)))
             {
                 bw.Write((int)s.Count());
                 bw.Write((int)0); //get back here to know the offset

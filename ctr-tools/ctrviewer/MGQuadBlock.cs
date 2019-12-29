@@ -61,41 +61,45 @@ namespace ctrviewer
                     {
                         for (int i = 0; i < s.quads.Count; i++)
                         {
-                            for (int j = 0; j < 4; j++)
+                            if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                             {
-                                VertexPositionColorTexture v = new VertexPositionColorTexture();
-                                CTRFramework.Vertex cv = s.verts[s.quads[i].ind[j]];
-                                CTRFramework.TextureLayout tl = s.quads[i].texlow;
-
-                                v.Position.X = cv.coord.X;
-                                v.Position.Y = cv.coord.Y;
-                                v.Position.Z = cv.coord.Z;
-
-                                v.Color.A = 255;
-                                v.Color.R = cv.color.X;
-                                v.Color.G = cv.color.Y;
-                                v.Color.B = cv.color.Z;
-
-                                if (s.quads[i].ptrTexLow > 0)
+                                for (int j = 0; j < 4; j++)
                                 {
-                                    v.TextureCoordinate.X = tl.uv[j].X / 256.0f;
-                                    v.TextureCoordinate.Y = tl.uv[j].Y / 256.0f;
-                                }
-                                else
-                                {
-                                    v.TextureCoordinate.X = 0;
-                                    v.TextureCoordinate.Y = 0;
+                                    VertexPositionColorTexture v = new VertexPositionColorTexture();
+                                    CTRFramework.Vertex cv = s.verts[s.quads[i].ind[j]];
+                                    CTRFramework.TextureLayout tl = s.quads[i].texlow;
+
+                                    v.Position.X = cv.coord.X;
+                                    v.Position.Y = cv.coord.Y;
+                                    v.Position.Z = cv.coord.Z;
+
+                                    v.Color.A = 255;
+                                    v.Color.R = cv.color.X;
+                                    v.Color.G = cv.color.Y;
+                                    v.Color.B = cv.color.Z;
+
+                                    if (s.quads[i].ptrTexLow > 0)
+                                    {
+                                        v.TextureCoordinate.X = tl.uv[j].X / 256.0f;
+                                        v.TextureCoordinate.Y = tl.uv[j].Y / 256.0f;
+                                    }
+                                    else
+                                    {
+                                        v.TextureCoordinate.X = 0;
+                                        v.TextureCoordinate.Y = 0;
+                                    }
+
+                                    normal.verts[i * 4 + j] = v;
                                 }
 
-                                normal.verts[i * 4 + j] = v;
+                                for (int k = 0; k < indices_pattern_low.Length; k++)
+                                {
+                                    normal.indices[i * 6 + k] = (short)(i * 4 + indices_pattern_low[k]);
+                                }
+
                             }
 
-                            for (int k = 0; k < indices_pattern_low.Length; k++)
-                            {
-                                normal.indices[i * 6 + k] = (short)(i * 4 + indices_pattern_low[k]);
-                            }
-
-                        }
+                        }  
 
                         break;
                     }
@@ -104,32 +108,36 @@ namespace ctrviewer
                     {
                         for (int i = 0; i < s.quads.Count; i++)
                         {
-                            for (int j = 0; j < 9; j++)
+                            if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                             {
-                                VertexPositionColorTexture v = new VertexPositionColorTexture();
-                                CTRFramework.Vertex cv = s.verts[s.quads[i].ind[j]];
-                                CTRFramework.TextureLayout tl = s.quads[i].texlow;
 
-                                v.Position.X = cv.coord.X;
-                                v.Position.Y = cv.coord.Y;
-                                v.Position.Z = cv.coord.Z;
+                                for (int j = 0; j < 9; j++)
+                                {
+                                    VertexPositionColorTexture v = new VertexPositionColorTexture();
+                                    CTRFramework.Vertex cv = s.verts[s.quads[i].ind[j]];
+                                    CTRFramework.TextureLayout tl = s.quads[i].texlow;
 
-                                v.Color.A = 255;
-                                v.Color.R = cv.color.X;
-                                v.Color.G = cv.color.Y;
-                                v.Color.B = cv.color.Z;
+                                    v.Position.X = cv.coord.X;
+                                    v.Position.Y = cv.coord.Y;
+                                    v.Position.Z = cv.coord.Z;
 
-                                v.TextureCoordinate.X = 0;
-                                v.TextureCoordinate.Y = 0;
+                                    v.Color.A = 255;
+                                    v.Color.R = cv.color.X;
+                                    v.Color.G = cv.color.Y;
+                                    v.Color.B = cv.color.Z;
 
-                                normal.verts[i * 9 + j] = v;
+                                    v.TextureCoordinate.X = 0;
+                                    v.TextureCoordinate.Y = 0;
+
+                                    normal.verts[i * 9 + j] = v;
+                                }
+
+                                for (int k = 0; k < indices_pattern.Length; k++)
+                                {
+                                    normal.indices[i * 6 * 4 + k] = (short)(i * 9 + indices_pattern[k]);
+                                }
+
                             }
-
-                            for (int k = 0; k < indices_pattern.Length; k++)
-                            {
-                                normal.indices[i * 6 * 4 + k] = (short)(i * 9 + indices_pattern[k]);
-                            }
-
                         }
 
                         break;

@@ -41,7 +41,7 @@ namespace CTRFramework.Shared
             max = new Vector3s(br);
         }
 
-        public void Write(BinaryWriter bw)
+        public void Write(BinaryWriterEx bw)
         {
             min.Write(bw);
             max.Write(bw);

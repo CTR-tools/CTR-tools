@@ -14,7 +14,7 @@ namespace CTRFramework
     {
         /// <summary>Writes data to BinaryWriter.</summary>
         /// <param name="bw">BinaryWriteer to write data to.</param>
-        void Write(BinaryWriter bw);
+        void Write(BinaryWriterEx bw);
     }
 
     public interface IByteArray

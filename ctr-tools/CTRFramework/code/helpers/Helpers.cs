@@ -5,6 +5,8 @@ namespace CTRFramework.Shared
 {
     public class Helpers
     {
+        public static Random Random = new Random();
+
         public static string CalculateMD5(string filename)
         {
             using (var stream = File.OpenRead(filename))

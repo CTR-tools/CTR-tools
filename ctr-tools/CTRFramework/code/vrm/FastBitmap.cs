@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
+using CTRFramework.Shared;
 
 namespace CTRFramework
 {
@@ -91,7 +92,7 @@ namespace CTRFramework
             return null;
         }
 
-        public void Write(BinaryWriter bw)
+        public void Write(BinaryWriterEx bw)
         {
             bw.Write(magic);
             bw.Write(filesize);

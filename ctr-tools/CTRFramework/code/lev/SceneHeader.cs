@@ -35,10 +35,11 @@ namespace CTRFramework
         public uint somePtr5;
         public uint ptrLowTexArray;
         public Vector4b backColor;
+        public uint bgMode;
 
-        uint ptrBuildStart;
-        uint ptrBuildEnd;
-        uint ptrBuildType;
+        public uint ptrBuildStart;
+        public uint ptrBuildEnd;
+        public uint ptrBuildType;
 
         byte[] skip;
 
@@ -46,6 +47,15 @@ namespace CTRFramework
         public uint ptrRestartPts;
 
         byte[] skip2;
+
+        public Vector4b[] bgColor;
+        public uint skip2_unkPtr;
+
+        public uint cntVcolAnim;
+        public uint ptrVcolAnim;
+
+        byte[] skip23;
+
 
         public uint ptrAiNav;
 
@@ -115,7 +125,7 @@ namespace CTRFramework
             ptrLowTexArray = br.ReadUInt32();
             backColor = new Vector4b(br);
 
-            br.ReadUInt32();
+            bgMode = br.ReadUInt32();
             ptrBuildStart = br.ReadUInt32();
             ptrBuildEnd = br.ReadUInt32();
             ptrBuildType = br.ReadUInt32();
@@ -125,7 +135,20 @@ namespace CTRFramework
             numRestartPts = br.ReadUInt32();
             ptrRestartPts = br.ReadUInt32();
 
-            skip2 = br.ReadBytes(0x38);
+            //skip2 = br.ReadBytes(0x38);
+
+            skip2 = br.ReadBytes(16);
+
+            bgColor = new Vector4b[4];
+
+            for (int i = 0; i < 4; i++)
+                bgColor[i] = new Vector4b(br);
+
+            skip2_unkPtr = br.ReadUInt32(); 
+            cntVcolAnim = br.ReadUInt32(); ;
+            ptrVcolAnim = br.ReadUInt32(); ;
+
+            skip23 = br.ReadBytes(12);
 
             ptrAiNav = br.ReadUInt32();
 

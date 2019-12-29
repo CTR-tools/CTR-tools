@@ -51,6 +51,7 @@ namespace levTool
                     propertyGrid1.SelectedObject = scn.pickups[trackBar1.Value];
         }
 
+        string bak;
 
         private void LoadLEV()
         {
@@ -60,6 +61,11 @@ namespace levTool
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 path = ofd.FileName;
+                bak = path + ".bak";
+
+                if (!File.Exists(bak))
+                    File.Copy(path, bak);
+
                 scn = new Scene(path, "obj");
 
                 Text = String.Format("levTool - {0}", path);
@@ -72,7 +78,7 @@ namespace levTool
 
         private void SaveLEV()
         {
-            using (BinaryWriter bw = new BinaryWriter(File.OpenWrite(path)))
+            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(path)))
             {
 
                 bw.BaseStream.Position = scn.header.ptrPickupHeaders + 4;
@@ -92,6 +98,10 @@ namespace levTool
                 foreach (QuadBlock qb in scn.quads)
                     qb.Write(bw);
 
+                bw.BaseStream.Position = scn.header.ptrVcolAnim + 4;
+
+                foreach (VertexAnim vc in scn.vertanims)
+                    vc.Write(bw);
             }
         }
 
@@ -479,6 +489,38 @@ namespace levTool
                 {
                     Mcs m = new Mcs(br);
                 }
+            }
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+
+                StringBuilder sb = new StringBuilder();
+
+                foreach (VertexAnim vc in scn.vertanims)
+                {
+                    sb.Append(vc.ToString() + "\r\n");
+                    vc.RandomizeColors(scn.vertanims[0].unk1, scn.vertanims[0].unk2);
+                }
+
+                textBox3.Text = sb.ToString();
+            }
+        }
+
+        private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void restoreToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            if (File.Exists(bak))
+            {
+                File.Delete(path);
+                File.Copy(bak, path);
+                File.Delete(bak);
+                File.Copy(path, bak);
             }
         }
     }

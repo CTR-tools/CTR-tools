@@ -1,3 +1,6 @@
+#nuget packages
+packages/
+
 #release data
 release.*
 dependencies

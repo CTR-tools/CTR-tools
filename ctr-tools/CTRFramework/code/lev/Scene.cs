@@ -14,10 +14,11 @@ namespace CTRFramework
         public MeshInfo meshinfo;
 
         public List<Vertex> verts = new List<Vertex>();
+        public List<VertexAnim> vertanims = new List<VertexAnim>();
         public List<QuadBlock> quads = new List<QuadBlock>();
         public List<PickupHeader> pickups = new List<PickupHeader>();
         public List<VisData> coldata = new List<VisData>();
-        public List<LODModel> dynamics = new List<LODModel>();
+        public List<LODModel> dynamics = new List<LODModel>(); 
         public SkyBox skybox;
         public Nav nav;
 
@@ -122,7 +123,10 @@ namespace CTRFramework
 
             string fname = Path.ChangeExtension(path, d.ToString() + "." + fmt);
             string skyname = Path.ChangeExtension(path, ".sky." + fmt);
-            string mtllib = Path.ChangeExtension(path, ".mtl").Replace(" ", "_"); //this brutally breaks paths with spaces. but obj doesn't seem to like spaces in materials.
+            string mtllib = Path.ChangeExtension(path, ".mtl");
+
+            if (path.Contains(" "))
+                Console.WriteLine("warning, there are spaces in the path. this may affect material import.");
 
             Console.WriteLine("Exporting to: " + fname);
 
@@ -205,11 +209,14 @@ namespace CTRFramework
         {
             header = Instance<SceneHeader>.ReadFrom(br, 0);
             meshinfo = Instance<MeshInfo>.ReadFrom(br, header.ptrMeshInfo);
-            if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
-            verts = InstanceList<Vertex>.ReadFrom(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
+            verts = InstanceList<Vertex>.ReadFrom(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);       
             restartPts = InstanceList<PosAng>.ReadFrom(br, header.ptrRestartPts, header.numRestartPts);
             coldata = InstanceList<VisData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
             quads = InstanceList<QuadBlock>.ReadFrom(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
+
+            //optional stuff
+            if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
+            if (header.cntVcolAnim != 0) vertanims = InstanceList<VertexAnim>.ReadFrom(br, header.ptrVcolAnim, header.cntVcolAnim);
 
             try
             {

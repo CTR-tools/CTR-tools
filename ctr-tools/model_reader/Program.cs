@@ -67,7 +67,7 @@ namespace modelReader
                         Scene scn = new Scene(s, "obj");
                         string objfile = scn.Export("obj", Detail.Low, true);
                         objfile = scn.Export("obj", Detail.Med, false);
-                        //LaunchMeshLab(objfile);
+                        LaunchMeshLab(objfile);
 
                         break;
                     }
@@ -88,7 +88,7 @@ namespace modelReader
             try
             {
                 ProcessStartInfo psi = new ProcessStartInfo();
-                psi.Arguments = objfile;
+                psi.Arguments = $"\"{objfile}\"";
                 psi.FileName = @"C:\Program Files\VCG\MeshLab\MeshLab.exe";
 
                 Process.Start(psi);

@@ -44,7 +44,7 @@ namespace CTRFramework
             color_morph = new Vector4b(br);
         }
 
-        public void Write(BinaryWriter bw)
+        public void Write(BinaryWriterEx bw)
         {
             coord.Write(bw);
             color.Write(bw);

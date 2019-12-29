@@ -1,6 +1,7 @@
 ﻿using CTRFramework.Shared;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -31,6 +32,14 @@ namespace CTRFramework
             br = new BinaryReaderEx(ms);
 
             Read(br);
+
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (LODModel mod in lodmods)
+                sb.Append(mod.ToString());
+
+            File.WriteAllText(Path.ChangeExtension(s, ".txt"), sb.ToString());
         }
 
         public void Read(BinaryReaderEx br)
@@ -58,6 +67,7 @@ namespace CTRFramework
 
                 LODModel lod = new LODModel(br);
                 lodmods.Add(lod);
+
             }
         }
 

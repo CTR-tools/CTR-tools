@@ -100,7 +100,7 @@ namespace CTRtools.CSEQ
         }
 
 
-        public void WriteBytes(BinaryWriter bw)
+        public void WriteBytes(BinaryWriterEx bw)
         {
             header.WriteBytes(bw);
 

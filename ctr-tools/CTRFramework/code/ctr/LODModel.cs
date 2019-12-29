@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -36,6 +37,7 @@ namespace CTRFramework
             br = new BinaryReaderEx(ms);
 
             Read(br);
+
         }
 
         public LODModel(BinaryReaderEx br)
@@ -43,25 +45,61 @@ namespace CTRFramework
             Read(br);
         }
 
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(name + ": ");
+
+            foreach(LODHeader head in lh)
+                sb.Append(head.name + ", ");
+
+            sb.Append("\r\n");
+
+            return sb.ToString();
+        }
+
         public void Read(BinaryReaderEx br)
         {
-            Console.WriteLine("lodmodel start: " + br.BaseStream.Position.ToString("X8"));
+            //Console.WriteLine("lodmodel start: " + br.BaseStream.Position.ToString("X8"));
 
             name = br.ReadStringFixed(16);
             evt = br.ReadUInt16();
             numLods = br.ReadInt16();
             ptrLodHeads = br.ReadInt32();
 
+            /*
             Console.WriteLine("name: " + name);
             Console.WriteLine("evt: " + (CTREvent)evt);
             Console.WriteLine("lodCount: " + numLods);
             Console.WriteLine("ptrLods: " + (ptrLodHeads + 4).ToString("X8"));
-
+            */
+            
             for (int i = 0; i < numLods; i++)
             {
                 lh.Add(new LODHeader(br));
             }
 
+            //Console.ReadKey();
+
+            /*
+            br.BaseStream.Position = 0x28F;
+
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < 0x136 / 3; i++)
+            {
+                sb.AppendFormat("v {0} {1} {2}\r\n",
+                    br.ReadByte(),
+                    br.ReadByte(),
+                    br.ReadByte()
+                    );
+            }
+
+            File.WriteAllText("model.obj", sb.ToString());
+
+            Console.ReadKey();
+            */
             /*
             List<CTRAnim> anims = new List<CTRAnim>();
 

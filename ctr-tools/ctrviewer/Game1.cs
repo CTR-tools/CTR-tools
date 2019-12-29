@@ -58,7 +58,6 @@ namespace ctrviewer
             graphics.PreferMultiSampling = true;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
-
             IsMouseVisible = false;
         }
 
@@ -84,6 +83,7 @@ namespace ctrviewer
         {
             ss = new SamplerState();
 
+            graphics.SynchronizeWithVerticalRetrace = true;
             graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
             graphics.ApplyChanges();
 
@@ -98,9 +98,9 @@ namespace ctrviewer
             skycamera = new FirstPersonCamera(this);
 
             camera.NearClip = 0.1f;
-            camera.FarClip = 3000;
-            lowcamera.NearClip = 2000;
-            lowcamera.FarClip = 70000;
+            camera.FarClip = 10000;
+            lowcamera.NearClip = 9000;
+            lowcamera.FarClip = 50000;
 
             base.Initialize();
         }
@@ -172,9 +172,9 @@ namespace ctrviewer
 
             if (scn.Count > 0)
             {
-                backColor.R = scn[0].header.backColor.X;
-                backColor.G = scn[0].header.backColor.Y;
-                backColor.B = scn[0].header.backColor.Z;
+                backColor.R = scn[0].header.bgColor[1].X;
+                backColor.G = scn[0].header.bgColor[1].Y;
+                backColor.B = scn[0].header.bgColor[1].Z;
 
                 if (scn[0].skybox != null)
                     sky = new MGQuadBlock(scn[0].skybox);
@@ -295,10 +295,7 @@ namespace ctrviewer
             }
             else
             {
-                camera.Update(gameTime, usemouse, true);
-                skycamera.Update(gameTime, usemouse, false);
-                lowcamera.Update(gameTime, usemouse, true);
-                lowcamera.Position = camera.Position;
+                UpdateCameras(gameTime);
             }
 
             oldstate = newstate;
@@ -308,6 +305,13 @@ namespace ctrviewer
         }
 
 
+        private void UpdateCameras(GameTime gameTime)
+        {
+            skycamera.Update(gameTime, usemouse, false);
+            camera.Update(gameTime, usemouse, true);
+            lowcamera.Update(gameTime, usemouse, true);
+            lowcamera.Position = camera.Position;
+        }
 
         private SamplerState GetCurrentSampler()
         {

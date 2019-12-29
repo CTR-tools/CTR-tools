@@ -199,7 +199,7 @@ namespace bigtool
 
             byte[] final_big = new byte[TotalSize()];
             MemoryStream ms = new MemoryStream(final_big);
-            BinaryWriter bw = new BinaryWriter(ms);
+            BinaryWriterEx bw = new BinaryWriterEx(ms);
 
             bw.BaseStream.Position = 4;
             bw.Write(ctrfiles.Count);

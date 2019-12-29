@@ -93,7 +93,7 @@ namespace CTRtools.CSEQ
         }
 
 
-        public void WriteBytes(BinaryWriter bw)
+        public void WriteBytes(BinaryWriterEx bw)
         {
             bw.Write(isDrumTrack ? (short)1 : (short)0);
 

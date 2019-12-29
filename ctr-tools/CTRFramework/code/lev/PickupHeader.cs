@@ -94,7 +94,7 @@ namespace CTRFramework
             evt = br.ReadInt32();
         }
 
-        public void Write(BinaryWriter bw)
+        public void Write(BinaryWriterEx bw)
         {
             bw.Write(System.Text.Encoding.ASCII.GetBytes(name));
             for (int i = 0; i < 16 - name.Length; i++) bw.Write((byte)0);

@@ -76,7 +76,7 @@ namespace CTRFramework.Shared
             w = br.ReadInt16();
         }
 
-        public void Write(BinaryWriter bw)
+        public void Write(BinaryWriterEx bw)
         {
             bw.Write(X);
             bw.Write(Y);

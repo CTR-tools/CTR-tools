@@ -79,7 +79,7 @@ namespace howl
         {
             Directory.CreateDirectory(".\\vag");
 
-            using (BinaryWriter bw = new BinaryWriter(File.Create("vag\\sample_" + id.ToString("0000") + ".vag")))
+            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create("vag\\sample_" + id.ToString("0000") + ".vag")))
             {
                 VAGHeader vh = new VAGHeader(samples[id]);
                 vh.Write(bw);

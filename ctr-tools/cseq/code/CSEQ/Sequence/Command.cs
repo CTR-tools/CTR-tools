@@ -154,7 +154,7 @@ namespace CTRtools.CSEQ
         }
 
 
-        public void WriteBytes(BinaryWriter bw)
+        public void WriteBytes(BinaryWriterEx bw)
         {
 
             int value = wait;

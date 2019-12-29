@@ -13,15 +13,15 @@ namespace mpktool
             {
                 ModelPack mpk = new ModelPack(args[0]);
 
+                /*
                 using (BinaryReaderEx br = new BinaryReaderEx(File.Open("ui_textures.vram", FileMode.Open)))
                 {
                     Tim x = CtrVrm.FromReader(br);
                     mpk.Extract(x);
                 }
-
-                Console.ReadKey();
+                */
+                //Console.ReadKey();
             }
         }
     }
-
 }

@@ -186,8 +186,12 @@ types:
         repeat-expr: 4
       - id: skip2_unkptr
         type: u4
+      - id: cnt_vcanim
+        type: u4
+      - id: ptr_vcanim
+        type: u4
       - id: skip2_3
-        size: 20
+        size: 12
 
       - id: ptr_ai_nav
         type: u4 

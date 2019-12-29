@@ -208,7 +208,7 @@ namespace CTRFramework
             sb.AppendLine();
 
 
-            if (!quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
+            //if (!quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
             {
                 switch (detail)
                 {
@@ -300,7 +300,7 @@ namespace CTRFramework
 
 
 
-        public void Write(BinaryWriter bw)
+        public void Write(BinaryWriterEx bw)
         {
             for (int i = 0; i < 9; i++)
                 bw.Write(ind[i]);

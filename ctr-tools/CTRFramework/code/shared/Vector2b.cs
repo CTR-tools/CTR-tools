@@ -53,7 +53,7 @@ namespace CTRFramework.Shared
             y = br.ReadByte();
         }
 
-        public void Write(BinaryWriter bw)
+        public void Write(BinaryWriterEx bw)
         {
             bw.Write(ToByteArray());
         }

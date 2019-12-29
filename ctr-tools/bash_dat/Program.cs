@@ -89,7 +89,7 @@ namespace bash_dat
 
                         List<uint> ptrs = br.ReadListUInt32(4);
                         /*
-                        using (BinaryWriter bw = new BinaryWriter(File.Create("kek.vab")))
+                        using (BinaryWriterEx bw = new BinaryWriterEx(File.Create("kek.vab")))
                         {
                             br.Jump(ptrs[1]);
                             bw.Write(br.ReadBytes((int)ptrs[2] - (int)ptrs[1]));
@@ -163,7 +163,7 @@ namespace bash_dat
 
                             i++;
 
-                            using (BinaryWriter bw = new BinaryWriter(File.OpenWrite("kek" + i + ".bmp")))
+                            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite("kek" + i + ".bmp")))
                             {
                                 b.Write(bw);
                             }

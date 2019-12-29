@@ -37,12 +37,15 @@
             this.showConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
+            this.button21 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.button3 = new System.Windows.Forms.Button();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabVertex = new System.Windows.Forms.TabPage();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.button22 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button7 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -69,7 +72,7 @@
             this.button19 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.button21 = new System.Windows.Forms.Button();
+            this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
@@ -85,7 +88,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.showConsoleToolStripMenuItem});
+            this.showConsoleToolStripMenuItem,
+            this.restoreToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(706, 24);
@@ -106,26 +110,26 @@
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.loadToolStripMenuItem.Text = "Open...";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.saveToolStripMenuItem.Text = "Save...";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(109, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -166,6 +170,16 @@
             this.tabPickups.TabIndex = 0;
             this.tabPickups.Text = "Pickup headers";
             this.tabPickups.UseVisualStyleBackColor = true;
+            // 
+            // button21
+            // 
+            this.button21.Location = new System.Drawing.Point(54, 142);
+            this.button21.Name = "button21";
+            this.button21.Size = new System.Drawing.Size(66, 26);
+            this.button21.TabIndex = 13;
+            this.button21.Text = "button21";
+            this.button21.UseVisualStyleBackColor = true;
+            this.button21.Click += new System.EventHandler(this.button21_Click);
             // 
             // button4
             // 
@@ -228,6 +242,8 @@
             // 
             // tabVertex
             // 
+            this.tabVertex.Controls.Add(this.textBox3);
+            this.tabVertex.Controls.Add(this.button22);
             this.tabVertex.Controls.Add(this.groupBox1);
             this.tabVertex.Location = new System.Drawing.Point(4, 22);
             this.tabVertex.Name = "tabVertex";
@@ -236,6 +252,24 @@
             this.tabVertex.TabIndex = 1;
             this.tabVertex.Text = "Vertex array";
             this.tabVertex.UseVisualStyleBackColor = true;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(270, 6);
+            this.textBox3.Multiline = true;
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(420, 358);
+            this.textBox3.TabIndex = 8;
+            // 
+            // button22
+            // 
+            this.button22.Location = new System.Drawing.Point(17, 185);
+            this.button22.Name = "button22";
+            this.button22.Size = new System.Drawing.Size(234, 23);
+            this.button22.TabIndex = 7;
+            this.button22.Text = "Randomize vertex anim";
+            this.button22.UseVisualStyleBackColor = true;
+            this.button22.Click += new System.EventHandler(this.button22_Click);
             // 
             // groupBox1
             // 
@@ -520,15 +554,12 @@
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.Button8_Click_1);
             // 
-            // button21
+            // restoreToolStripMenuItem
             // 
-            this.button21.Location = new System.Drawing.Point(54, 142);
-            this.button21.Name = "button21";
-            this.button21.Size = new System.Drawing.Size(66, 26);
-            this.button21.TabIndex = 13;
-            this.button21.Text = "button21";
-            this.button21.UseVisualStyleBackColor = true;
-            this.button21.Click += new System.EventHandler(this.button21_Click);
+            this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.restoreToolStripMenuItem.Text = "Restore";
+            this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click_1);
             // 
             // MainForm
             // 
@@ -548,6 +579,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.tabVertex.ResumeLayout(false);
+            this.tabVertex.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabQuads.ResumeLayout(false);
@@ -603,6 +635,9 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Button button20;
         private System.Windows.Forms.Button button21;
+        private System.Windows.Forms.Button button22;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
     }
 }
 

@@ -54,7 +54,7 @@ namespace CTRtools.CSEQ
                 throw new Exception(String.Format("SampleDef always0 = {0} ", always0));
         }
 
-        public override void Write(BinaryWriter bw)
+        public override void Write(BinaryWriterEx bw)
         {
             bw.Write((byte)magic1);
             bw.Write((byte)Volume);
