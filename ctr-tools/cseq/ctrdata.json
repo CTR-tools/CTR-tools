@@ -301,6 +301,18 @@
 				{ key: 36, title: "Open Hi-Hat" },
 				{ key: 28, title: "bass drum" }
 			]
+		},
+		"character_select": {
+			long: [				
+				{ midi: 27, pitch: 12, title: "guitar" },
+				{ midi: 12, pitch: 0, title: "marimba" },
+				{ midi: 33, pitch: -12, title: "bass" },
+				{ midi: 66, pitch: 0, title: "sax" }
+			],
+			short: [
+				{ key: 38, title: "tam hi" },
+				{ key: 36, title: "tam low" }
+			]
 		}
 		
 		
