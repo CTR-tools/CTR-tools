@@ -146,7 +146,7 @@ namespace CTRtools.CSEQ
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 seq.sequences[sequenceBox.SelectedIndex].ExportMIDI(sfd.FileName, seq);
-                seq.ToSFZ(Path.ChangeExtension(sfd.FileName, ".sfz"));
+                //seq.ToSFZ(Path.ChangeExtension(sfd.FileName, ".sfz"));
             }
 
         }

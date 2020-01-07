@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class Nav : IRead
+    public class Nav : IRead, IWrite
     {
         public List<uint> ptrs = new List<uint>();
         public List<AIPath> paths = new List<AIPath>();
@@ -26,6 +26,15 @@ namespace CTRFramework
             {
                 paths.Add(new AIPath(br));
             }
+        }
+
+        public void Write(BinaryWriterEx bw)
+        {
+            foreach (uint p in ptrs)
+                bw.Write(p);
+
+            foreach (AIPath ai in paths)
+                ai.Write(bw);
         }
 
         public override string ToString()

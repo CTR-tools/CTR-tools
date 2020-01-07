@@ -4,12 +4,15 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class AIPath : IRead
-    {
+    public class AIPath : IRead, IWrite
+    { 
         public ushort unk1;
         public ushort numFrames;
+        public byte[] data;
         public NavFrame start;
+
         public List<NavFrame> frames = new List<NavFrame>();
+
         public AIPath()
         {
 
@@ -23,7 +26,7 @@ namespace CTRFramework
         {
             unk1 = br.ReadUInt16();
             numFrames = br.ReadUInt16();
-            br.Skip(0x4C - 4); //0x4c = total header size
+            data = br.ReadBytes(4*18); //0x4c = total header size
 
             start = new NavFrame(br);
 
@@ -38,10 +41,11 @@ namespace CTRFramework
             StringBuilder sb = new StringBuilder();
 
             foreach (NavFrame f in frames)
-                sb.AppendFormat("v {0}\r\n", f.position.ToString(VecFormat.Numbers));
+                sb.AppendFormat("v {0}\r\n", f.position.ToString());
 
             return sb.ToString();
         }
+
 
         public override string ToString()
         {
@@ -57,6 +61,20 @@ namespace CTRFramework
             }
 
             return sb.ToString();
+        }
+
+
+        public void Write(BinaryWriterEx bw)
+        {
+            bw.Write(unk1);
+            bw.Write(numFrames);
+            bw.Write(data);
+            start.Write(bw);
+
+            foreach (NavFrame f in frames)
+            {
+                f.Write(bw);
+            }
         }
     }
 }

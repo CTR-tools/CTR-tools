@@ -264,6 +264,43 @@
 				{ key: 6, title: "Open Hi-Hat" },
 				{ key: 28, title: "snare" }
 			]
+		},
+		"caves": {
+			long: [
+				{ midi: 81, pitch: -12, title: "deep distorted bass" },
+				{ midi: 36, pitch: -24, title: "bass" },
+				{ midi: 27, pitch: 0, title: "guitar chord" },
+				{ midi: 22, pitch: -12, title: "harmonica 1" },
+				{ midi: 21, pitch: 0, title: "harmonica 2" }
+			],
+			short: [
+				{ key: 64, title: "tam hi" },
+				{ key: 63, title: "tam low" },
+				{ key: 56, title: "cowbell" },
+				{ key: 44, title: "Closed Hi-Hat" },
+				{ key: 46, title: "Open Hi-Hat" },
+				{ key: 36, title: "bass drum" },
+				{ key: 38, title: "snare" }
+			]
+		},
+		"park": {
+			long: [				
+				{ midi: 114, pitch: 12, title: "harmonica 1" },
+				{ midi: 84, pitch: 0, title: "deep distorted bass" },
+				{ midi: 73, pitch: -12, title: "bass" },
+				{ midi: 94, pitch: 0, title: "guitar chord" },
+				{ midi: 4, pitch: 0, title: "harmonica 2" },
+				{ midi: 34, pitch: -24, title: "bass" },
+				{ midi: 6, pitch: 0, title: "chorus lead" }
+			],
+			short: [
+				{ key: 39, title: "tam hi" },
+				{ key: 55, title: "tam low" },
+				{ key: 44, title: "cowbell" },
+				{ key: 46, title: "Closed Hi-Hat" },
+				{ key: 36, title: "Open Hi-Hat" },
+				{ key: 28, title: "bass drum" }
+			]
 		}
 		
 		

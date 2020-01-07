@@ -102,6 +102,10 @@ namespace levTool
 
                 foreach (VertexAnim vc in scn.vertanims)
                     vc.Write(bw);
+
+                bw.BaseStream.Position = scn.header.ptrAiNav + 4;
+                scn.nav.Write(bw);
+
             }
         }
 
@@ -476,7 +480,23 @@ namespace levTool
 
         private void button20_Click(object sender, EventArgs e)
         {
-            if (scn != null) textBox1.Text = scn.nav.ToString();
+            if (scn != null)
+            {
+                if (scn.nav != null)
+                {
+                    foreach (AIPath ai in scn.nav.paths)
+                    {
+                        foreach (NavFrame f in ai.frames)
+                        {
+                            f.unk11 = 0;
+                            f.unk2 = 0;
+                            f.unk3 = 0;
+                        }
+                    }
+
+                    textBox1.Text = scn.nav.ToString();
+                }
+            }
         }
 
         private void button21_Click(object sender, EventArgs e)
