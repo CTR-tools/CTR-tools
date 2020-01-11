@@ -313,7 +313,26 @@
 				{ key: 38, title: "tam hi" },
 				{ key: 36, title: "tam low" }
 			]
-		}
+		},
+		"arena": {
+			long: [				
+				{ midi: 33, pitch: -12, title: "bass" },
+				{ midi: 22, pitch: -12, title: "harmonica?" },
+				{ midi: 30, pitch: -12, title: "dist guitar" },
+				{ midi: 18, pitch: 0, title: "rock organ" },
+			],
+			short: [
+				{ key: 44, title: "tam hi" },
+				{ key: 55, title: "tam low" },
+				{ key: 54, title: "cowbell" },
+				{ key: 36, title: "Closed Hi-Hat" },
+				{ key: 40, title: "Open Hi-Hat" },
+				{ key: 46, title: "bass drum" },
+				{ key: 47, title: "Closed Hi-Hat" },
+				{ key: 43, title: "Open Hi-Hat" },
+				{ key: 51, title: "bass drum" }
+			]
+		},
 		
 		
 	}

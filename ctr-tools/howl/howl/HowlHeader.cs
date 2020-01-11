@@ -6,15 +6,18 @@ namespace howl
     class HowlHeader
     {
         public string magic;
-        public int u1;
-        public int reserved1;
-        public int reserved2;
+
+        public int u1; //freezes the game if changed
+        public int reserved1; //no effect
+        public int reserved2; //no effect
+
         public int cnt4;
         public int cnt81;
         public int cnt82;
-        public int bankCount;
-        public int seqCount;
-        public int u2;
+        public int cntBank;
+        public int cntSeq;
+
+        public int sampleDataSize;
 
         public HowlHeader(BinaryReaderEx br)
         {
@@ -37,17 +40,17 @@ namespace howl
 
             if (reserved1 != 0 || reserved2 != 0)
             {
-                Console.WriteLine("uz1 or uz2 is not null. Possible error.");
+                Console.WriteLine("reserved is not null. Possible error.");
             }
 
             cnt4 = br.ReadInt32();
             cnt81 = br.ReadInt32();
             cnt82 = br.ReadInt32();
 
-            bankCount = br.ReadInt32();
-            seqCount = br.ReadInt32();
+            cntBank = br.ReadInt32();
+            cntSeq = br.ReadInt32();
 
-            u2 = br.ReadInt32();
+            sampleDataSize = br.ReadInt32();
         }
     }
 }

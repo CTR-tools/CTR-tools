@@ -60,10 +60,10 @@ namespace howl
             for (int i = 0; i < header.cnt82; i++)
                 samples2.Add(new SampleDecl(br));
 
-            for (int i = 0; i < header.bankCount; i++)
+            for (int i = 0; i < header.cntBank; i++)
                 offbanks.Add(br.ReadUInt16() * (int)0x800);
 
-            for (int i = 0; i < header.seqCount; i++)
+            for (int i = 0; i < header.cntSeq; i++)
                 offseqs.Add(br.ReadUInt16() * (int)0x800);
 
 
@@ -158,8 +158,8 @@ namespace howl
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append("banks: " + header.bankCount + "\r\n");
-            sb.Append("sequences: " + header.seqCount + "\r\n");
+            sb.Append("banks: " + header.cntBank + "\r\n");
+            sb.Append("sequences: " + header.cntSeq + "\r\n");
 
             return sb.ToString();
         }
