@@ -1,4 +1,6 @@
 {
+
+	
 	versions:
 	[
 		{
@@ -333,7 +335,45 @@
 				{ key: 51, title: "bass drum" }
 			]
 		},
-		
+		"skyway": {
+			long: [				
+				{ midi: 61, pitch: -12, title: "brass" },
+				{ midi: 73, pitch: -12, title: "flute" },
+				{ midi: 13, title: "xylophone" },
+				{ midi: 57, pitch: -12, title: "rock organ" },
+				{ midi: 6,  title: "harpsichord" },
+				{ midi: 33, pitch: -12, title: "bass" },
+			],
+			short: [
+				{ key: 56, title: "cowbell" },
+				{ key: 67, title: "agogo hi" },
+				{ key: 68, title: "agogo low" },
+				{ key: 52, title: "Closed Hi-Hat" },
+				{ key: 46, title: "Open Hi-Hat" },
+				{ key: 40, title: "snare" },
+				{ key: 36, title: "bass drum" },
+				{ key: 38, title: "snare 2?" },
+				{ key: 44, title: "Closed Hi-Hat" }
+			]
+		},
+		"boss_challenge": {
+			long: [				
+				{ midi: 30, pitch: -12, title: "brass" },
+				{ midi: 11, title: "flute" },
+				{ midi: 33, pitch: -24, title: "xylophone" },
+				{ midi: 18, pitch: -12, title: "rock organ" }
+			],
+			short: [
+				{ key: 44, title: "cowbell" },
+				{ key: 46, title: "agogo hi" },
+				{ key: 49, title: "agogo low" },
+				{ key: 36, title: "Closed Hi-Hat" },
+				{ key: 4, title: "Open Hi-Hat" },
+				{ key: 38, title: "snare" },
+				{ key: 6, title: "bass drum" },
+				{ key: 7, title: "snare 2?" }
+			]
+		}			
 		
 	}
 }
