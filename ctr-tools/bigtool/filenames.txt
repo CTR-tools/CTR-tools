@@ -411,7 +411,7 @@
 379=models\trophy_win\polardance2.ctr
 380=models\trophy_win\puradance.ctr
 381=models\trophy_win\puradance2.ctr
-382=models\trophy_win\pinstripedance2.ctr
+382=models\trophy_win\pinstripedance.ctr
 383=models\trophy_win\pinstripedance2.ctr
 384=models\trophy_win\papudance.ctr
 385=models\trophy_win\papudance2.ctr
