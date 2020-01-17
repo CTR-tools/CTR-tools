@@ -1,5 +1,35 @@
 {
 
+	releases: {
+		"usarel" :
+		{
+			"region": "USA",
+			"descr": "final",
+			"date": "1999-09-07",
+			"type": "full"
+		},
+		"usademo" :
+		{
+			"region": "USA",
+			"descr": "review copy",
+			"date": "1999-09-07",
+			"type": "demo"
+		},	
+		"usaprerel" :
+		{
+			"region": "USA",
+			"descr": "review copy",
+			"date": "1999-09-07",
+			"type": "beta"
+		}
+	},
+	
+	files: {
+		"c43eba5a20f0b4fc69a00c8d61a8ec10": { name: "bigfile.big", release: "usarel" },
+		"269df8e697e879cb2254ff091f7aefc7": { name: "kart.hwl", release: "usarel" },
+		"03a005e2abc6022fd1e1e7405300ad77": { name: "bigfile.big", release: "palrel" },
+		"3d5e358c2750f0b318a9f23676d15782": { name: "kart.hwl", release: "palrel" }
+	},
 	
 	versions:
 	[
@@ -373,7 +403,24 @@
 				{ key: 6, title: "bass drum" },
 				{ key: 7, title: "snare 2?" }
 			]
-		}			
-		
+		},
+		"credits": {
+			long: [				
+				{ midi: 26, pitch: -12, title: "brass" },
+				{ midi: 30, title: "dist guitar" },
+				{ midi: 33, pitch: -24, title: "bass" }
+			],
+			short: [
+				{ key: 0, title: "cowbell" },
+				{ key: 1, title: "agogo hi" },
+				{ key: 2, title: "agogo low" },
+				{ key: 3, title: "Closed Hi-Hat" },
+				{ key: 44, title: "Open Hi-Hat" },
+				{ key: 5, title: "snare" },
+				{ key: 6, title: "bass drum" },
+				{ key: 7, title: "snare 2?" },
+				{ key: 28, title: "snare 2?" }
+			]
+		}
 	}
 }

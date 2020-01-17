@@ -109,7 +109,7 @@ namespace CTRtools.CSEQ
             short[] seqPtrs = br.ReadArrayInt16(header.seqCnt);
 
             //awesome NTSC demo fix
-            int p = USdemo ? 1 : 3;
+            int p = (header.seqCnt == 4) ? 1 : 3;
 
             //checking whether it's 0 or not
             for (int i = 0; i < p; i++)

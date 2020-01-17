@@ -143,6 +143,7 @@ namespace CTRtools.CSEQ
             this.skipBytesForUSDemoToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.skipBytesForUSDemoToolStripMenuItem.Text = "Skip bytes for US Demo";
             this.skipBytesForUSDemoToolStripMenuItem.ToolTipText = "This option is needed to parse correctly CSEQ files from NTSC Demo.";
+            this.skipBytesForUSDemoToolStripMenuItem.Visible = false;
             this.skipBytesForUSDemoToolStripMenuItem.Click += new System.EventHandler(this.skipBytesForUSDemoToolStripMenuItem_Click);
             // 
             // patchMIDIInstrumentsToolStripMenuItem
@@ -200,28 +201,28 @@ namespace CTRtools.CSEQ
             // 
             this.toolStripMenuItem2.CheckOnClick = true;
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem2.Text = "11025";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem3.Text = "22050";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem4.Text = "33075";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem5.Text = "44100";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
             // 
@@ -245,7 +246,7 @@ namespace CTRtools.CSEQ
             // tutorialToolStripMenuItem
             // 
             this.tutorialToolStripMenuItem.Name = "tutorialToolStripMenuItem";
-            this.tutorialToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.tutorialToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.tutorialToolStripMenuItem.Text = "Tutorial";
             this.tutorialToolStripMenuItem.Click += new System.EventHandler(this.tutorialToolStripMenuItem_Click);
             // 
