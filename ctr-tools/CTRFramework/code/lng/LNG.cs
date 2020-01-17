@@ -65,7 +65,7 @@ namespace CTRFramework
 
             using (BinaryWriterEx bw = new BinaryWriterEx(File.Open(Path.ChangeExtension(s, ".lng"), FileMode.Create)))
             {
-                bw.Write((int)s.Count());
+                bw.Write((int)entries.Count());
                 bw.Write((int)0); //get back here to know the offset
 
                 foreach (string en in entries)
