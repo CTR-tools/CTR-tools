@@ -543,6 +543,91 @@ namespace levTool
                 File.Copy(path, bak);
             }
         }
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+                scn.ExportTextures(@"kek");
+            }
+        }
+
+        private TreeNode GetOrCreateNode(TreeNode tn, string name)
+        {
+            foreach (TreeNode n in tn.Nodes)
+                if (n.Text == name) return n;
+
+            TreeNode child = new TreeNode(name);
+            tn.Nodes.Add(child);
+
+            return child;
+        }
+
+        BIG big;
+
+        private void button24_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Crash Team Racing BIG file|*.big";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                treeView1.Nodes.Clear();
+                big = null;
+                GC.Collect();
+
+                big = new BIG(ofd.FileName);
+
+                TreeNode tn = new TreeNode("bigfile");
+                tn.Expand();
+
+                foreach (CTRFile cf in big.files)
+                {
+                    string[] s = cf.name.Split('\\');
+
+                    TreeNode curnode = tn;
+
+                    for (int i = 0; i < s.Length - 1; i++)
+                    {
+                        curnode = GetOrCreateNode(curnode, s[i]);
+                    }
+
+                    TreeNode final = new TreeNode(s[s.Length - 1]);
+                    final.Tag = cf;
+
+                    curnode.Nodes.Add(final);
+                }
+
+                treeView1.Nodes.Add(tn);
+
+                //big.Export("data");
+            }
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag != null)
+            {
+                CTRFile cf = treeView1.SelectedNode.Tag as CTRFile;
+
+                if (Path.GetExtension(cf.name) == ".lng")
+                {
+                    try
+                    {
+                        File.WriteAllBytes("temp.lng", cf.data);
+                        LNG lng = new LNG("temp.lng");
+                        textBox4.Text = File.ReadAllText("temp.txt");
+                        File.Delete("temp.txt");
+                        File.Delete("temp.lng");
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+
+
+        }
     }
 
 }

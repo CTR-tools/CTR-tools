@@ -93,6 +93,8 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="code\big\BIG.cs" />
+    <Compile Include="code\big\CTRFile.cs" />
     <Compile Include="code\ctr\CTRAnim.cs" />
     <Compile Include="code\ctr\LODHeader.cs" />
     <Compile Include="code\ctr\LODModel.cs" />

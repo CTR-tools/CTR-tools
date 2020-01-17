@@ -35,7 +35,11 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabBig = new System.Windows.Forms.TabPage();
+            this.button24 = new System.Windows.Forms.Button();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.tabPickups = new System.Windows.Forms.TabPage();
             this.button21 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -68,13 +72,15 @@
             this.button9 = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button23 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.button19 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tabBig.SuspendLayout();
             this.tabPickups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -141,8 +147,16 @@
             this.showConsoleToolStripMenuItem.Visible = false;
             this.showConsoleToolStripMenuItem.Click += new System.EventHandler(this.showConsoleToolStripMenuItem_Click);
             // 
+            // restoreToolStripMenuItem
+            // 
+            this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.restoreToolStripMenuItem.Text = "Restore";
+            this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click_1);
+            // 
             // tabControl1
             // 
+            this.tabControl1.Controls.Add(this.tabBig);
             this.tabControl1.Controls.Add(this.tabPickups);
             this.tabControl1.Controls.Add(this.tabVertex);
             this.tabControl1.Controls.Add(this.tabQuads);
@@ -153,6 +167,36 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(706, 398);
             this.tabControl1.TabIndex = 2;
+            // 
+            // tabBig
+            // 
+            this.tabBig.Controls.Add(this.textBox4);
+            this.tabBig.Controls.Add(this.button24);
+            this.tabBig.Controls.Add(this.treeView1);
+            this.tabBig.Location = new System.Drawing.Point(4, 22);
+            this.tabBig.Name = "tabBig";
+            this.tabBig.Size = new System.Drawing.Size(698, 372);
+            this.tabBig.TabIndex = 5;
+            this.tabBig.Text = "BIG";
+            this.tabBig.UseVisualStyleBackColor = true;
+            // 
+            // button24
+            // 
+            this.button24.Location = new System.Drawing.Point(267, 3);
+            this.button24.Name = "button24";
+            this.button24.Size = new System.Drawing.Size(97, 29);
+            this.button24.TabIndex = 1;
+            this.button24.Text = "Load BIG";
+            this.button24.UseVisualStyleBackColor = true;
+            this.button24.Click += new System.EventHandler(this.button24_Click);
+            // 
+            // treeView1
+            // 
+            this.treeView1.Location = new System.Drawing.Point(8, 3);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(253, 361);
+            this.treeView1.TabIndex = 0;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // tabPickups
             // 
@@ -501,6 +545,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button23);
             this.tabPage1.Controls.Add(this.textBox2);
             this.tabPage1.Controls.Add(this.button19);
             this.tabPage1.Controls.Add(this.button18);
@@ -511,6 +556,16 @@
             this.tabPage1.TabIndex = 4;
             this.tabPage1.Text = "Vram stuff";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button23
+            // 
+            this.button23.Location = new System.Drawing.Point(8, 152);
+            this.button23.Name = "button23";
+            this.button23.Size = new System.Drawing.Size(75, 23);
+            this.button23.TabIndex = 19;
+            this.button23.Text = "button23";
+            this.button23.UseVisualStyleBackColor = true;
+            this.button23.Click += new System.EventHandler(this.button23_Click);
             // 
             // textBox2
             // 
@@ -554,12 +609,13 @@
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.Button8_Click_1);
             // 
-            // restoreToolStripMenuItem
+            // textBox4
             // 
-            this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
-            this.restoreToolStripMenuItem.Text = "Restore";
-            this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click_1);
+            this.textBox4.Location = new System.Drawing.Point(267, 38);
+            this.textBox4.Multiline = true;
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(423, 326);
+            this.textBox4.TabIndex = 2;
             // 
             // MainForm
             // 
@@ -574,6 +630,8 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            this.tabBig.ResumeLayout(false);
+            this.tabBig.PerformLayout();
             this.tabPickups.ResumeLayout(false);
             this.tabPickups.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
@@ -638,6 +696,11 @@
         private System.Windows.Forms.Button button22;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
+        private System.Windows.Forms.Button button23;
+        private System.Windows.Forms.TabPage tabBig;
+        private System.Windows.Forms.Button button24;
+        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TextBox textBox4;
     }
 }
 
