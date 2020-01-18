@@ -76,6 +76,8 @@ namespace CTRFramework
                     bw.Write((byte)0);
                 }
 
+                bw.BaseStream.Position = ((bw.BaseStream.Position / 4) + 1 ) * 4;
+
                 int lastoff = (int)bw.BaseStream.Position;
 
                 foreach (int i in offsets)
