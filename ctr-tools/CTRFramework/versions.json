@@ -1,4 +1,25 @@
 {
+	"files": {
+		"e73f0f3cade06dc5fc2719fe186cbe26": { name: "bigfile.big", list: "usa_proto",  comment: "NTSC-U review copy" },
+		"c43eba5a20f0b4fc69a00c8d61a8ec10": { name: "bigfile.big", list: "usa", comment: "NTSC-U release" },
+		"ead88f93cfb4f9ad53d93b1b93d1bd97": { name: "bigfile.big", list: "usa", comment: "NTSC-U release, russian Vector" },
+		
+		"03a005e2abc6022fd1e1e7405300ad77": { name: "bigfile.big", list: "pal", comment: "PAL release" },
+		"870780bddb386d04882d57526a03c966": { name: "bigfile.big", list: "ntsc_demo", comment: "PAL Spyro demo" },
+		
+		"b22c894eff31539de853c83cf52a9025": { name: "bigfile.big", list: "ntsc", comment: "NTSC-J release" },
+		"aa71f0adf8a40a77e767c40b73600e46": { name: "bigfile.big", list: "ntsc_demo", comment: "NTSC-J demo (Dengeki 86)" },
+
+
+		"c5de2d39e42267e74aa4d5e7b47165a5": { name: "kart.hwl", comment: "NTSC-U review copy" },
+		"269df8e697e879cb2254ff091f7aefc7": { name: "kart.hwl", comment: "NTSC-U release" },
+		
+		"3d5e358c2750f0b318a9f23676d15782": { name: "kart.hwl", comment: "PAL release"  },
+		"cf0595a1f22da724b4a4205c7bb7d5e9": { name: "kart.hwl", comment: "PAL/NTSC-J demo" },
+		
+		"aeab71ba44ab09c2da4d45dc5467d719": { name: "kart.hwl", comment: "NTSC-J release"  }
+	},
+	
 	"versions":
 	[
 		{

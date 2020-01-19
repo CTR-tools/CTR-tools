@@ -14,6 +14,11 @@ namespace CTRFramework
 
         public uint magic;
         public uint flags;
+
+        public uint clutsize;
+        public Rectangle clutregion;
+        public byte[] clutdata;
+
         public uint datasize;
         public Rectangle region;
         public byte[] data;
@@ -99,12 +104,22 @@ namespace CTRFramework
             {
                 bw.Write(magic);
                 bw.Write(flags);
+
+                if (hasClut)
+                {
+                    bw.Write(clutsize);
+                    bw.Write((short)clutregion.X);
+                    bw.Write((short)clutregion.Y);
+                    bw.Write((short)clutregion.Width);
+                    bw.Write((short)clutregion.Height);
+                    bw.Write(clutdata);
+                }
+
                 bw.Write(datasize);
                 bw.Write((short)region.X);
                 bw.Write((short)region.Y);
                 bw.Write((short)region.Width);
                 bw.Write((short)region.Height);
-                //pal here
                 bw.Write(data);
             }
         }
@@ -179,8 +194,17 @@ namespace CTRFramework
 
             Tim x = new Tim(new Rectangle(0, 0, 256 / 4, 256));
             x.data = buf;
+            x.clutregion.X = tl.PalX;
+            x.clutregion.Y = tl.PalY;
+            x.clutregion.Width = 16;
+            x.clutregion.Height = 1;
+            x.clutsize = 16 * 2;
+            x.clutdata = GetCtrClut(tl);
+            x.flags = 8;
 
-            x.SaveBMP(path + "\\" + (name == "" ? tl.Tag() : name) + ".bmp", CtrClutToBmpPalette(GetCtrClut(tl)));
+            x.Write(path + "\\" + (name == "" ? tl.Tag() : name) + ".tim");
+
+            x.SaveBMP(path + "\\" + (name == "" ? tl.Tag() : name) + ".bmp", CtrClutToBmpPalette(x.clutdata));
 
             if (tl.Tag() != "0000_00000028")
 

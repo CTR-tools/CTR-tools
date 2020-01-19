@@ -38,6 +38,7 @@
             this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabBig = new System.Windows.Forms.TabPage();
+            this.textBox4 = new System.Windows.Forms.TextBox();
             this.button24 = new System.Windows.Forms.Button();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.tabPickups = new System.Windows.Forms.TabPage();
@@ -77,7 +78,6 @@
             this.button19 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabBig.SuspendLayout();
@@ -179,6 +179,14 @@
             this.tabBig.TabIndex = 5;
             this.tabBig.Text = "BIG";
             this.tabBig.UseVisualStyleBackColor = true;
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(267, 38);
+            this.textBox4.Multiline = true;
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(423, 326);
+            this.textBox4.TabIndex = 2;
             // 
             // button24
             // 
@@ -559,11 +567,11 @@
             // 
             // button23
             // 
-            this.button23.Location = new System.Drawing.Point(8, 152);
+            this.button23.Location = new System.Drawing.Point(8, 106);
             this.button23.Name = "button23";
-            this.button23.Size = new System.Drawing.Size(75, 23);
+            this.button23.Size = new System.Drawing.Size(117, 23);
             this.button23.TabIndex = 19;
-            this.button23.Text = "button23";
+            this.button23.Text = "export all textures";
             this.button23.UseVisualStyleBackColor = true;
             this.button23.Click += new System.EventHandler(this.button23_Click);
             // 
@@ -572,7 +580,7 @@
             this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(136, 10);
+            this.textBox2.Location = new System.Drawing.Point(136, 5);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -581,9 +589,9 @@
             // 
             // button19
             // 
-            this.button19.Location = new System.Drawing.Point(8, 106);
+            this.button19.Location = new System.Drawing.Point(8, 77);
             this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(117, 40);
+            this.button19.Size = new System.Drawing.Size(117, 23);
             this.button19.TabIndex = 16;
             this.button19.Text = "Load LNG and EXE";
             this.button19.UseVisualStyleBackColor = true;
@@ -591,7 +599,7 @@
             // 
             // button18
             // 
-            this.button18.Location = new System.Drawing.Point(8, 61);
+            this.button18.Location = new System.Drawing.Point(8, 32);
             this.button18.Name = "button18";
             this.button18.Size = new System.Drawing.Size(117, 39);
             this.button18.TabIndex = 15;
@@ -603,19 +611,11 @@
             // 
             this.button8.Location = new System.Drawing.Point(8, 3);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(117, 52);
+            this.button8.Size = new System.Drawing.Size(117, 23);
             this.button8.TabIndex = 14;
             this.button8.Text = "convert vram";
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.Button8_Click_1);
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(267, 38);
-            this.textBox4.Multiline = true;
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(423, 326);
-            this.textBox4.TabIndex = 2;
             // 
             // MainForm
             // 
