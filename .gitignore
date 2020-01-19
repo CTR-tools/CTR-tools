@@ -4,6 +4,8 @@ packages/
 #release data
 release.*
 dependencies
+*-x86-r*
+*-x64-r*
 
 # Windows image file caches
 Thumbs.db

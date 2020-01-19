@@ -14,8 +14,7 @@ namespace howl
             if (args.Length == 1)
             {
                 string fn = args[0];
-
-                fn = "kart.hwl";
+                //fn = "kart.hwl";
 
                 if (File.Exists(fn))
                 {
@@ -43,7 +42,7 @@ namespace howl
                 Console.WriteLine("Usage:\r\n\thowl.exe <path to KART.HWL>\r\n\r\nPress any key to quit...");
             }
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }
