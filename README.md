@@ -84,4 +84,4 @@ Usage: use File menu or drag-drop CSEQ file on the application window.
 Loads CTR scenes. Put lev files in levels folder. All lev files are loaded at once.
 Meant to be used with an XInput controller (XBOX360 Controller or similiar).
 
-2016-2019, DCxDemo*.
+2016-2020, DCxDemo*.
