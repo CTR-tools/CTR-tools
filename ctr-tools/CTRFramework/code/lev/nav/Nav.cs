@@ -24,7 +24,8 @@ namespace CTRFramework
 
             for (int i = 0; i < 3; i++)
             {
-                paths.Add(new AIPath(br));
+                if (ptrs[i] != 0) 
+                    paths.Add(new AIPath(br));
             }
         }
 
