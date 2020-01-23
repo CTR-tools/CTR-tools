@@ -1,83 +1,35 @@
 {
 	"files": {
-		"e73f0f3cade06dc5fc2719fe186cbe26": { name: "bigfile.big", list: "usa_proto",  comment: "NTSC-U review copy" },
-		"c43eba5a20f0b4fc69a00c8d61a8ec10": { name: "bigfile.big", list: "usa", comment: "NTSC-U release" },
-		"ead88f93cfb4f9ad53d93b1b93d1bd97": { name: "bigfile.big", list: "usa", comment: "NTSC-U release, russian Vector" },
+		"e73f0f3cade06dc5fc2719fe186cbe26": { "name": "bigfile.big", "list": "usa_proto",  "comment": "NTSC-U review copy" },
+		"c43eba5a20f0b4fc69a00c8d61a8ec10": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release" },
 		
-		"03a005e2abc6022fd1e1e7405300ad77": { name: "bigfile.big", list: "pal", comment: "PAL release" },
-		"870780bddb386d04882d57526a03c966": { name: "bigfile.big", list: "ntsc_demo", comment: "PAL Spyro demo" },
+		"ead88f93cfb4f9ad53d93b1b93d1bd97": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release, russian Vector" },
+		"3e8fac9eb6dfacbba4ab793c7acb8661": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release, russian Golden Leon" },
+		"2cbb119c607300afe6aa9db04bffe8c2": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release, russian Paradox" },
+		"01c8b4db80f24e976b093097e5d4163d": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release, russian Neizvestnaya Kontora" },
+		"8b39957aef7e4d80611933a30f783b37": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release, russian RGR" },
 		
-		"b22c894eff31539de853c83cf52a9025": { name: "bigfile.big", list: "ntsc", comment: "NTSC-J release" },
-		"aa71f0adf8a40a77e767c40b73600e46": { name: "bigfile.big", list: "ntsc_demo", comment: "NTSC-J demo (Dengeki 86)" },
-
-
-		"c5de2d39e42267e74aa4d5e7b47165a5": { name: "kart.hwl", comment: "NTSC-U review copy" },
-		"269df8e697e879cb2254ff091f7aefc7": { name: "kart.hwl", comment: "NTSC-U release" },
+		"72fbd632f2ba68a3392a92204f29b118": { "name": "bigfile.big", "list": "ntsc_demo", "comment": "NTSC-U Spyro 2 demo" }, 
+		"eb0b4551f3a4a374080c085dea1a8609": { "name": "bigfile.big", "list": "ntsc_demo", "comment": "NTSC-U Standalone Toys R Us/Pizza Hut Demo" }, 
+		"4d292c60c9438a9713735565ccb788d5": { "name": "bigfile.big", "list": "ntsc_demo", "comment": "NTSC-U ????? check" }, 
+			
+		"03a005e2abc6022fd1e1e7405300ad77": { "name": "bigfile.big", "list": "pal", "comment": "PAL release" },
+		"870780bddb386d04882d57526a03c966": { "name": "bigfile.big", "list": "pal_demo", "comment": "PAL Spyro demo" },
+		"efb66723fe589d9cd3321d109a34dfd9": { "name": "bigfile.big", "list": "pal_demo", "comment": "PAL PS Magazine demo" },
 		
-		"3d5e358c2750f0b318a9f23676d15782": { name: "kart.hwl", comment: "PAL release"  },
-		"cf0595a1f22da724b4a4205c7bb7d5e9": { name: "kart.hwl", comment: "PAL/NTSC-J demo" },
-		
-		"aeab71ba44ab09c2da4d45dc5467d719": { name: "kart.hwl", comment: "NTSC-J release"  }
+		"b22c894eff31539de853c83cf52a9025": { "name": "bigfile.big", "list": "ntsc", "comment": "NTSC-J release" },
+		"aa71f0adf8a40a77e767c40b73600e46": { "name": "bigfile.big", "list": "ntsc_demo", "comment": "NTSC-J Dengeki D26 demo" }
 	},
-	
-	"versions":
-	[
-		{
-			"name": "NTSC_Release",
-			"timestamp": "1999-09-07",
-			"big_md5": "c43eba5a20f0b4fc69a00c8d61a8ec10",
-			"hwl_md5": "269df8e697e879cb2254ff091f7aefc7"
-		},
-		{
-			"name": "PAL_Release",
-			"timestamp": "1999-10-11",
-			"big_md5": "03a005e2abc6022fd1e1e7405300ad77",
-			"hwl_md5": "3d5e358c2750f0b318a9f23676d15782"
-		},
-		{
-			"name": "JAP_Release",
-			"timestamp": "1999-09-06",
-			"big_md5": "b22c894eff31539de853c83cf52a9025",
-			"hwl_md5": "aeab71ba44ab09c2da4d45dc5467d719"
-		},
-		{
-			"name": "NTSC_Demo",
-			"timestamp": "1999-07-26",
-			"big_md5": "eb0b4551f3a4a374080c085dea1a8609",
-			"hwl_md5": "702ac23e8ab5940f32cfc5ab1e8fc913"
-		},
 
-		{
-			"name": "Pizza_Hut_Demo",
-			"timestamp": "1999-09-09",
-			"big_md5": "4d292c60c9438a9713735565ccb788d5",
-			"hwl_md5": "702ac23e8ab5940f32cfc5ab1e8fc913",
-			"comment": "hwl same as NTSC Demo"
-		},
-		{
-			"name": "PAL_Demo",
-			"timestamp": "1999-06-19",
-			"big_md5": "870780bddb386d04882d57526a03c966",
-			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9" 
-		},
-		{
-			"name": "JAP_Demo",
-			"timestamp": "1999-06-22",
-			"big_md5": "aa71f0adf8a40a77e767c40b73600e46",
-			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9",
-			"comment": "hwl same as PAL Demo"
-		},
-		{
-			"name": "Review_Proto",
-			"timestamp": "1999-08-17",
-			"big_md5": "e73f0f3cade06dc5fc2719fe186cbe26",
-			"hwl_md5": "c5de2d39e42267e74aa4d5e7b47165a5"
-		},
-		{
-			"name": "NTSC_Spyro2_Demo",
-			"timestamp": "1999-06-01",
-			"big_md5": "72fbd632f2ba68a3392a92204f29b118",
-			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9" 
-		},
-	]
+	"howls": {
+		"c5de2d39e42267e74aa4d5e7b47165a5": { "name": "kart.hwl", "comment": "NTSC-U review copy" },
+		"269df8e697e879cb2254ff091f7aefc7": { "name": "kart.hwl", "comment": "NTSC-U release" },
+		"702ac23e8ab5940f32cfc5ab1e8fc913": { "name": "kart.hwl", "comment": "NTSC-U demo" },
+		
+		"3d5e358c2750f0b318a9f23676d15782": { "name": "kart.hwl", "comment": "PAL release"  },
+		"cf0595a1f22da724b4a4205c7bb7d5e9": { "name": "kart.hwl", "comment": "PAL/NTSC-J demo" },
+		"41B4524491B6900CC0EF8C889218A78A": { "name": "kart.hwl", "comment": "PAL PS Magazine demo"  },
+		
+		"aeab71ba44ab09c2da4d45dc5467d719": { "name": "kart.hwl", "comment": "NTSC-J release"  },
+	}
 }
