@@ -169,8 +169,64 @@ instances:
     repeat: expr
     repeat-expr: 35
     
+  x7ab84_wheelanim:
+    pos: 0x7ab84
+    size: 0x84
+    
+  x78ccc_terrains:
+    pos: 0x78ccc
+    type: terrain
+    repeat: expr
+    repeat-expr: 16
+    
 types:
 
+  terrain:
+    seq:
+      - id: name
+        type: string_ptr
+      - id: flags
+        type: u4
+      - id: pushback
+        type: u4
+      - id: acceleration
+        type: u4
+      - id: turning_slowdown_maybe
+        type: u4
+      - id: turning_slowdown_maybe_too
+        type: u4
+        
+      - id: ptr_part_def1
+        type: psx_ptr  
+      - id: ptr_part_def2
+        type: psx_ptr   
+        
+      - id: val6
+        type: u4
+      - id: val7
+        type: u4
+      - id: val8
+        type: u4  
+      - id: val9_unknown_4bytes
+        type: u4  
+        
+      - id: sval1
+        type: u2
+      - id: sval2
+        type: u2
+      - id: sval3
+        type: u2
+      - id: sval4
+        type: u2
+      - id: sval5
+        type: u2
+      - id: sval6
+        type: u2
+      - id: sval7
+        type: u2
+      - id: sval8
+        type: u2
+        
   colorbox:
     seq:
       - id: tl
@@ -216,6 +272,7 @@ types:
     instances:
       converted:
         value: value - _root.ptr_text + 0x800
+        if: value != 0
 
   string_pad:
     seq:
