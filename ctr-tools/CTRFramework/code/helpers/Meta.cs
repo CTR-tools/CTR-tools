@@ -36,8 +36,7 @@ namespace CTRFramework.Shared
                 res = j.Value<string>("list");
 
                 Console.WriteLine(
-                    String.Format("Known '{0}' from {1}",
-                    j.Value<string>("name"),
+                    String.Format("Detected BIG from {0}",
                     j.Value<string>("comment")
                     ));
             }
@@ -57,7 +56,7 @@ namespace CTRFramework.Shared
             if (res == "Unknown")
                 File.WriteAllText("unknown_md5.txt", md5);
 
-            Console.WriteLine("result = {0}", res);
+            Console.WriteLine("list tag = {0}", res);
             return res;
         }
 
