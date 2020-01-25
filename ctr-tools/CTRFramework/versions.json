@@ -1,24 +1,24 @@
 {
 	"files": {
-		"e73f0f3cade06dc5fc2719fe186cbe26": { "name": "bigfile.big", "list": "usa_proto",  "comment": "NTSC-U review copy" },
-		"c43eba5a20f0b4fc69a00c8d61a8ec10": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release" },
+		"e73f0f3cade06dc5fc2719fe186cbe26": { "list": "usa_proto",  "comment": "NTSC-U review copy" },
+		"c43eba5a20f0b4fc69a00c8d61a8ec10": { "list": "usa", "comment": "NTSC-U release" },
 		
-		"ead88f93cfb4f9ad53d93b1b93d1bd97": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release, russian Vector" },
-		"3e8fac9eb6dfacbba4ab793c7acb8661": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release, russian Golden Leon" },
-		"2cbb119c607300afe6aa9db04bffe8c2": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release, russian Paradox" },
-		"01c8b4db80f24e976b093097e5d4163d": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release, russian Neizvestnaya Kontora" },
-		"8b39957aef7e4d80611933a30f783b37": { "name": "bigfile.big", "list": "usa", "comment": "NTSC-U release, russian RGR" },
+		"ead88f93cfb4f9ad53d93b1b93d1bd97": { "list": "usa", "comment": "NTSC-U release, russian Vector" },
+		"3e8fac9eb6dfacbba4ab793c7acb8661": { "list": "usa", "comment": "NTSC-U release, russian Golden Leon" },
+		"2cbb119c607300afe6aa9db04bffe8c2": { "list": "usa", "comment": "NTSC-U release, russian Paradox" },
+		"01c8b4db80f24e976b093097e5d4163d": { "list": "usa", "comment": "NTSC-U release, russian Neizvestnaya Kontora" },
+		"8b39957aef7e4d80611933a30f783b37": { "list": "usa", "comment": "NTSC-U release, russian RGR" },
 		
-		"72fbd632f2ba68a3392a92204f29b118": { "name": "bigfile.big", "list": "ntsc_demo", "comment": "NTSC-U Spyro 2 demo" }, 
-		"eb0b4551f3a4a374080c085dea1a8609": { "name": "bigfile.big", "list": "ntsc_demo", "comment": "NTSC-U Standalone Toys R Us/Pizza Hut Demo" }, 
-		"4d292c60c9438a9713735565ccb788d5": { "name": "bigfile.big", "list": "ntsc_demo", "comment": "NTSC-U ????? check" }, 
+		"72fbd632f2ba68a3392a92204f29b118": { "list": "usa_demo", "comment": "NTSC-U Spyro 2 demo" }, 
+		"eb0b4551f3a4a374080c085dea1a8609": { "list": "usa_demo", "comment": "NTSC-U Standalone Toys R Us/Pizza Hut Demo" }, 
+		"4d292c60c9438a9713735565ccb788d5": { "list": "usa_demo", "comment": "NTSC-U ????? check" }, 
 			
-		"03a005e2abc6022fd1e1e7405300ad77": { "name": "bigfile.big", "list": "pal", "comment": "PAL release" },
-		"870780bddb386d04882d57526a03c966": { "name": "bigfile.big", "list": "pal_demo", "comment": "PAL Spyro demo" },
-		"efb66723fe589d9cd3321d109a34dfd9": { "name": "bigfile.big", "list": "pal_demo", "comment": "PAL PS Magazine demo" },
+		"03a005e2abc6022fd1e1e7405300ad77": { "list": "pal", "comment": "PAL release" },
+		"870780bddb386d04882d57526a03c966": { "list": "usa_demo", "comment": "PAL Spyro demo" },
+		"efb66723fe589d9cd3321d109a34dfd9": { "list": "usa_demo", "comment": "PAL PS Magazine demo" },
 		
-		"b22c894eff31539de853c83cf52a9025": { "name": "bigfile.big", "list": "ntsc", "comment": "NTSC-J release" },
-		"aa71f0adf8a40a77e767c40b73600e46": { "name": "bigfile.big", "list": "ntsc_demo", "comment": "NTSC-J Dengeki D26 demo" }
+		"b22c894eff31539de853c83cf52a9025": { "list": "usa", "comment": "NTSC-J release" },
+		"aa71f0adf8a40a77e767c40b73600e46": { "list": "usa_demo", "comment": "NTSC-J Dengeki D26 demo" }
 	},
 
 	"howls": {

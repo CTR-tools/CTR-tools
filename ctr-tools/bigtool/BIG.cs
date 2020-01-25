@@ -50,7 +50,7 @@ namespace bigtool
         {
             path = fn;
             basepath = System.AppDomain.CurrentDomain.BaseDirectory;
-            filelist = Path.Combine(basepath, "filenames.txt");
+            filelist = Path.Combine(basepath, "filenames_usa.txt");
             bigname = Path.GetFileNameWithoutExtension(fn);
             bigpath = Path.GetDirectoryName(fn);
             if (bigpath == null || bigpath == "") bigpath = basepath;
@@ -74,12 +74,28 @@ namespace bigtool
             Console.WriteLine("Begin: " + fn);
             InitPaths(fn);
 
-            bool listExists = LoadNames(filelist);
-            Console.WriteLine("File list - {0}\r\n", (listExists ? "OK" : "ERROR"));
-
             Console.WriteLine(p.calc_md5);
 
             string reg = Meta.DetectBig(fn);
+
+            //so messy
+            switch (reg)
+            {
+                case "usa_demo":
+                case "pal_demo": //check if matches
+                    filelist = Path.Combine(basepath, "filenames_demo.txt"); break;
+
+                case "pal": filelist = Path.Combine(basepath, "filenames_pal.txt"); break;
+
+                case "proto": //no list yet
+                case "usa":
+                case "jap": break; //we're usa by default, jap matches
+
+                default: break;
+            }
+
+            bool listExists = LoadNames(filelist);
+            Console.WriteLine("File list ({0}) - {1}\r\n", filelist, (listExists ? "OK" : "ERROR"));
 
             ms = new MemoryStream(File.ReadAllBytes(fn));
             br = new BinaryReaderEx(ms);
