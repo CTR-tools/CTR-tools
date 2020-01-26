@@ -143,7 +143,7 @@ instances:
     pos: 0x71888
     type: triplet
     repeat: expr
-    repeat-expr: 26
+    repeat-expr: 120
     
   x074280_level_slots:
     pos: 0x74280
@@ -178,6 +178,12 @@ instances:
     type: terrain
     repeat: expr
     repeat-expr: 21
+    
+  x77584_chars:
+    pos: 0x77584
+    type: char_slot
+    repeat: expr
+    repeat-expr: 16
     
 types:
 
@@ -291,6 +297,22 @@ types:
         type: string_pad
         pos: ptr.converted
 
+  char_slot:
+    seq:
+      - id: ptr_model_name
+        type: string_ptr
+      - id: name_index_long
+        type: u2
+      - id: name_index_short
+        type: u2
+      - id: char_icon_index
+        type: u2
+      - id: always0
+        type: u2
+      - id: difficulty
+        type: u4
+        enum: difficulty
+
   level_slot:
     seq:
       - id: unk1
@@ -316,3 +338,11 @@ types:
         pos: filename_ptr.converted
         type: strz
         encoding: ascii
+
+enums:
+  difficulty:
+    0: default_intermediate
+    1: intermediate
+    2: advanced
+    3: begginer
+    4: pal_penta
