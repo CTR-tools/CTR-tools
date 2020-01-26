@@ -177,7 +177,7 @@ instances:
     pos: 0x78ccc
     type: terrain
     repeat: expr
-    repeat-expr: 16
+    repeat-expr: 21
     
 types:
 

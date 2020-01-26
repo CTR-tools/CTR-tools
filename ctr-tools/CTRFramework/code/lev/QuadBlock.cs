@@ -106,7 +106,12 @@ namespace CTRFramework
 
             bb = new BoundingBox(br);
 
-            terrainFlag = (TerrainFlags)br.ReadByte();
+            byte tf = br.ReadByte();
+
+            if (tf > 20)
+                Console.WriteLine("Attention: unexpected terrain flag value -> " + tf);
+
+            terrainFlag = (TerrainFlags)tf;
             WeatherIntensity = br.ReadByte();
             WeatherType = br.ReadByte();
             TerrainFlagUnknown = br.ReadByte();
@@ -120,7 +125,6 @@ namespace CTRFramework
 
             for (int i = 0; i < 10; i++)
                 unk3[i] = br.ReadUInt16();
-
 
             //read texture layouts
             int pos = (int)br.BaseStream.Position;
@@ -136,6 +140,10 @@ namespace CTRFramework
                     texmid.Add(new TextureLayout(br));
                     texmid2.Add(new TextureLayout(br));
                     texmid3.Add(new TextureLayout(br));
+                }
+                else
+                {
+                    if (ptrTexLow != 0) Console.WriteLine("!");
                 }
             }
 

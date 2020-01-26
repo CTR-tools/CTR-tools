@@ -22,17 +22,29 @@ namespace CTRFramework
         Unknown = 3
     }
 
-    [Flags]
     public enum TerrainFlags
     {
-        flag0 = 1 << 0,
-        flag1 = 1 << 1,
-        flag2 = 1 << 2,
-        flag3 = 1 << 3,
-        flag4 = 1 << 4,
-        flag5 = 1 << 5,
-        flag6 = 1 << 6,
-        flag7 = 1 << 7
+        Asphalt = 0,
+        Dirt = 1,
+        Grass = 2,
+        Wood = 3,
+        Water = 4,
+        Stone = 5,
+        Ice = 6,
+        Track = 7,
+        IcyRoad = 8,
+        Snow = 9,
+        None = 10,
+        HardPack = 11,
+        Metal = 12,
+        FastWater = 13,
+        Mud = 14,
+        SideSlip = 15,
+        RiverAsphalt = 16,
+        SteamAsphalt = 17,
+        OceanAsphalt = 18,
+        SlowGrass = 19,
+        SlowDirt = 20
     }
 
 
