@@ -1,0 +1,91 @@
+Info in this file is only valid for NTSC-U executable (SCUS_944.26)
+
+
+ePSXe.exe+B03B60
+0x72340 in the exe
+
+this is basically a list of colorboxes, used to change UI vertex colors.
+
+there are 35 entries of 16 bytes
+
+number_of_entries *
+{
+  topleft: rgba 4 bytes
+  topright: rgba 4 bytes
+  bottomleft: rgba 4 bytes
+  bottomright: rgba 4 bytes
+}
+
+number_of_entries *
+{
+  uint - psx pointer to the colorbox entries 
+}
+
+
+0 - primary UI (all menus)
+1 - secondary UI (lap number, time)
+2 - ?
+3 - additional UI (L1, L2, L3)
+4 - player name, flicker 2nd color, settings (mono, vibrate)
+5 - 1234 mark at player selection
+6 - crash, following player order is assumes and may be incorrect
+7 - cortex
+8 - tiny
+9 - coco
+10 - ngin
+11 - dingo
+12 - polar
+13 - pura
+14 - pinstripe, gold star (n. tropy)
+15 - papu
+16 - roo
+17 - joe
+18 - tropy
+19 - penta
+20 - fake
+21 - oxide
+22 - platinum star (n.oxide)
+23 - ps buttons (XCOT)
+24 - 1P selection box (only first color used)
+25 - 2P selection box (only first color used)
+26 - assumed 3P selection box (only first color used)
+27 - assumed 4P selection box (only first color used)
+...
+35 - ?
+
+
+
+0x79208 - something related to AI handling?
+
+
+
+ePSXe.exe+B0A4EC
+exe -> 0x78CCC
+
+Terrain definitions
+size: 0x60, 16 entries
+
+dword - pointer to string - terrain name
+dword - flags (like 0x04 sets white snow trail)
+4 dwords - params that affect handling
+2 dwords - pointers to particle structs (like grass, snow and dirt)
+3 dwords - even more values!
+4 bytes - unknown smaller values (04 05 04 40)
+8 words - somehow affect bots, seems to control speed as well.
+
+
+
+ePSXe.exe+B08DA4
+exe -> 0x77584
+
+16 entries (num of players)
+
+dword - ptr to model_name
+short - char name index in lng. also changes the layout on adventure selection screen
+short - short char name index in lng. probably used at save
+short - texture index
+short - unknown always 0
+dword - char difficulty (0 - med - all equal, 1 - med - accel+ turn-, 2 - advanced, 3 - beginner) anything beyond these values screws handling.
+
+right after this array there are 8 shorts, that's basically selected character index for every bot.
+but as we already know you can only pick those loaded in memory.

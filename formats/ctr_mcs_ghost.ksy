@@ -1,5 +1,5 @@
 meta:
-  id: ctr_mcs
+  id: ctr_mcs_ghost
   application: Crash Team Racing
   title: CTR ghost save slot
   file-extension: mcs

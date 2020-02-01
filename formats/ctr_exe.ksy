@@ -156,6 +156,12 @@ instances:
     type: psx_ptr
     repeat: expr
     repeat-expr: 13 * 3 + 1
+    
+  x07ac08_ptr_tbl3:
+    pos: 0x7ac08
+    type: psx_ptr
+    repeat: expr
+    repeat-expr: 0x78 / 4
 
   x07dd94_more_strings:
     pos: 0x7DD94
@@ -168,6 +174,12 @@ instances:
     type: colorbox
     repeat: expr
     repeat-expr: 35
+
+  x072570_ptr_colorboxes:
+    pos: 0x72570
+    type: psx_ptr
+    repeat: expr
+    repeat-expr: 0x8c / 4
     
   x7ab84_wheelanim:
     pos: 0x7ab84
@@ -320,7 +332,7 @@ types:
       - id: unk2_null
         type: u2
       - id: filename_ptr
-        type: psx_ptr
+        type: string_ptr
       - id: title_id
         type: u4
       - id: some_size
@@ -333,11 +345,6 @@ types:
         type: s2
       - id: unk6
         type: s2
-    instances:
-      filename:
-        pos: filename_ptr.converted
-        type: strz
-        encoding: ascii
 
 enums:
   difficulty:

@@ -11,23 +11,28 @@
 		
 		"72fbd632f2ba68a3392a92204f29b118": { "list": "usa_demo", "comment": "NTSC-U Spyro 2 demo" }, 
 		"eb0b4551f3a4a374080c085dea1a8609": { "list": "usa_demo", "comment": "NTSC-U Standalone Toys R Us/Pizza Hut Demo" }, 
+		
 		"4d292c60c9438a9713735565ccb788d5": { "list": "usa_demo", "comment": "NTSC-U ????? check" }, 
-			
+		"ceb0b4551f3a4a374080c085dea1a860": { "list": "usa_demo", "comment": "NTSC-U ????? check" }, 
+		
 		"03a005e2abc6022fd1e1e7405300ad77": { "list": "pal", "comment": "PAL release" },
 		"870780bddb386d04882d57526a03c966": { "list": "usa_demo", "comment": "PAL Spyro demo" },
 		"efb66723fe589d9cd3321d109a34dfd9": { "list": "usa_demo", "comment": "PAL PS Magazine demo" },
 		
 		"b22c894eff31539de853c83cf52a9025": { "list": "usa", "comment": "NTSC-J release" },
-		"aa71f0adf8a40a77e767c40b73600e46": { "list": "usa_demo", "comment": "NTSC-J Dengeki D26 demo" }
+		"aa71f0adf8a40a77e767c40b73600e46": { "list": "usa_demo", "comment": "NTSC-J Dengeki D26 demo" },
+		
+		"md5_wanted": { "list": "beta", "comment": "Confirmed beta" },
+		"md5_wanted": { "list": "jap_demo", "comment": "NTSC-J Standalone demo" }
 	},
 
 	"howls": {
 		"c5de2d39e42267e74aa4d5e7b47165a5": { "name": "kart.hwl", "comment": "NTSC-U review copy" },
 		"269df8e697e879cb2254ff091f7aefc7": { "name": "kart.hwl", "comment": "NTSC-U release" },
-		"702ac23e8ab5940f32cfc5ab1e8fc913": { "name": "kart.hwl", "comment": "NTSC-U demo" },
+		"702ac23e8ab5940f32cfc5ab1e8fc913": { "name": "kart.hwl", "comment": "NTSC-U Standalone Toys R Us/Pizza Hut Demo" },
 		
 		"3d5e358c2750f0b318a9f23676d15782": { "name": "kart.hwl", "comment": "PAL release"  },
-		"cf0595a1f22da724b4a4205c7bb7d5e9": { "name": "kart.hwl", "comment": "PAL Spyro 2 demo/NTSC-J dengeki D26 demo" },
+		"cf0595a1f22da724b4a4205c7bb7d5e9": { "name": "kart.hwl", "comment": "NTSC-U/PAL Spyro 2 demo/NTSC-J dengeki D26 demo" },
 		"41b4524491b6900cc0ef8c889218a78a": { "name": "kart.hwl", "comment": "PAL PS Magazine demo"  },
 		
 		"aeab71ba44ab09c2da4d45dc5467d719": { "name": "kart.hwl", "comment": "NTSC-J release"  },
