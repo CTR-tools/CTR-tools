@@ -61,22 +61,20 @@ types:
   
   level_times_slot:
     seq:
-      - id: unk
-        type: u4
       - id: trial_slots
         type: level_time
         repeat: expr
         repeat-expr: 12
+      - id: unk
+        type: u4
         
   level_time:
     seq:
+      - id: time
+        type: u4
       - id: name
         type: strz
         encoding: ascii
         size: 0x12
       - id: char
-        type: u2
-      - id: time
-        type: u2
-      - id: unk
         type: u2
