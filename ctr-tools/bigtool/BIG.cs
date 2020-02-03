@@ -76,7 +76,7 @@ namespace bigtool
 
             Console.WriteLine(p.calc_md5);
 
-            string reg = Meta.DetectBig(fn);
+            string reg = Meta.Detect(fn, "files");
 
             //so messy
             switch (reg)

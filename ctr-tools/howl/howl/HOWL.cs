@@ -26,10 +26,9 @@ namespace howl
         {
             name = fn;
 
+            string reg = Meta.Detect(fn, "howls");
+            Console.ReadKey();
             string md5 = Helpers.CalculateMD5(fn);
-
-            Console.WriteLine("Reading " + fn);
-            Console.WriteLine("MD5 = " + md5);
 
             rel = Release.Find(md5);
 

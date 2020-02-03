@@ -82,6 +82,16 @@ namespace CTRFramework.Shared
             return kek;
         }
 
+        public ushort[] ReadArrayUInt16(int num)
+        {
+            ushort[] kek = new ushort[num];
+
+            for (int i = 0; i < num; i++)
+                kek[i] = ReadUInt16();
+
+            return kek;
+        }
+
         public uint[] ReadArrayUInt32(int num)
         {
             uint[] kek = new uint[num];

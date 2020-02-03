@@ -90,6 +90,9 @@ namespace CTRFramework
         {
             if (ctrvram != null)
             {
+                ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
+
+
                 Console.WriteLine(ctrvram.ToString());
                 Console.WriteLine("Exporting textures...");
 
@@ -101,11 +104,13 @@ namespace CTRFramework
                 {
                     try
                     {
-                        ctrvram.GetTexturePage(tl, path);
+                        ctrvram.GetTexture(tl, path);
+                        //ctrvram.GetTexturePage(tl, path);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("error " + tl.Tag());
+                        Console.WriteLine("error " + tl.Tag() + "\r\n" + ex.ToString() + "\r\n\r\n" + tl.ToString());
+                        Console.ReadKey();
                     }
                 }
             }
@@ -217,18 +222,7 @@ namespace CTRFramework
             //optional stuff
             if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
             if (header.cntVcolAnim != 0) vertanims = InstanceList<VertexAnim>.ReadFrom(br, header.ptrVcolAnim, header.cntVcolAnim);
-
-            try
-            {
-                if (header.ptrAiNav != 0)
-                    nav = Instance<Nav>.ReadFrom(br, header.ptrAiNav);
-            }
-            catch
-            {
-                //oh
-                Console.WriteLine("!!! error reading nav !!!");
-                //Console.ReadKey();
-            }
+            if (header.ptrAiNav != 0) nav = Instance<Nav>.ReadFrom(br, header.ptrAiNav);
 
             /*
              //water texture
@@ -359,7 +353,22 @@ namespace CTRFramework
                         tex.Add(qb.texlow.Tag(), qb.texlow);
                     }
                 }
-
+                
+                foreach (TextureLayout tl in qb.texmid)
+                {
+                    if (!tex.ContainsKey(tl.Tag()))
+                    {
+                        tex.Add(tl.Tag(), tl);
+                    }
+                }
+                foreach (TextureLayout tl in qb.texmid2)
+                {
+                    if (!tex.ContainsKey(tl.Tag()))
+                    {
+                        tex.Add(tl.Tag(), tl);
+                    }
+                }
+                
                 foreach (TextureLayout tl in qb.texmid3)
                 {
                     if (!tex.ContainsKey(tl.Tag()))
@@ -368,6 +377,15 @@ namespace CTRFramework
                     }
                 }
             }
+
+            List<string> tt = new List<string>();
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string s in tex.Keys) tt.Add(s);
+            tt.Sort();
+            foreach (string s in tt) sb.AppendLine(s);
+
+            File.WriteAllText("texture.txt", sb.ToString());
 
             return tex;
         }

@@ -17,18 +17,18 @@ namespace CTRFramework.Shared
                 json = JObject.Parse(File.ReadAllText(jsonpath));
         }
 
-        public static string DetectBig(string file)
+        public static string Detect(string file, string list)
         {
             if (json == null) Load();
 
-            Console.WriteLine("DetectBig({0})", Path.GetFileName(file));
+            Console.WriteLine("Detect({0}, {1})", Path.GetFileName(file), list);
 
             string md5 = Helpers.CalculateMD5(file);
             string res = "Unknown";
 
             Console.WriteLine("MD5 = {0}", md5);
 
-            JToken j = json["files"][md5];
+            JToken j = json[list][md5];
            // string tag = "ntsc";
 
             if (j != null)
@@ -36,7 +36,7 @@ namespace CTRFramework.Shared
                 res = j.Value<string>("list");
 
                 Console.WriteLine(
-                    String.Format("Detected BIG from {0}",
+                    String.Format("Detected file from {0}",
                     j.Value<string>("comment")
                     ));
             }
@@ -59,6 +59,7 @@ namespace CTRFramework.Shared
             Console.WriteLine("list tag = {0}", res);
             return res;
         }
+
 
         public static List<string> GetFileListByTag(string tag)
         {

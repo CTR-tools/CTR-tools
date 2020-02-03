@@ -2,12 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 
 namespace CTRFramework
 {
     public class TextureLayout : IRead
     {
+        public uint offset;
+
         public List<Vector2b> uv = new List<Vector2b>();
+        public List<Vector2b> normuv = new List<Vector2b>();
 
         public ushort PalX;
         public ushort PalY;
@@ -18,26 +22,113 @@ namespace CTRFramework
         public byte check;
 
 
+        public Point min
+        {
+            get
+            {
+                return new Point(
+                    Math.Min(Math.Min(uv[0].X, uv[1].X), Math.Min(uv[2].X, uv[3].X)),
+                    Math.Min(Math.Min(uv[0].Y, uv[1].Y), Math.Min(uv[2].Y, uv[3].Y))
+                    );
+            }
+        }
+        public Point max
+        {
+            get
+            {
+                return new Point(
+                    Math.Max(Math.Max(uv[0].X, uv[1].X), Math.Max(uv[2].X, uv[3].X)),
+                    Math.Max(Math.Max(uv[0].Y, uv[1].Y), Math.Max(uv[2].Y, uv[3].Y))
+                    );
+            }
+        }
+
+
+        public int width
+        {
+            get
+            {
+                return max.X - min.X + 1; //uv[1].X - uv[0].X + 1; }
+            }
+        }
+
+        public int height
+        {
+            get
+            {
+                return max.Y - min.Y + 1;// return uv[3].Y - uv[0].Y + 1; }
+            }
+        }
+
+        public int Position
+        {
+            get
+            {
+                return PageY * (CtrVrm.Height * CtrVrm.Width / 2) + uv[0].Y * CtrVrm.Width + PageX * 64 + uv[0].X / 4;
+            }
+        }
+
+        public int PalPosition
+        {
+            get
+            {
+                return CtrVrm.Width * PalY + PalX * 16;
+            }
+        }
+        
+
+        public int RealX
+        {
+            get
+            {
+                return PageX * 64 + min.X;
+            }
+        }
+        public int RealY
+        {
+            get
+            {
+                return PageY * 256 + min.Y;
+            }
+        }
+
+
+        public Rectangle frame
+        {
+            get
+            {
+                return new Rectangle(RealX, RealY, width / 4, height);
+            }
+        }
+
+
         public TextureLayout(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        /*
-        public List<Vector2b> NormalizedUV()
+        
+        public int Normalize(int min, int max, int val)
         {
-            List<Vector2b> norm = new List<Vector2b>();
-
-            norm.Add(new Vector2b(0, 255));
-            norm.Add(new Vector2b(255, 255));
-            norm.Add(new Vector2b(0, 0));
-            norm.Add(new Vector2b(255, 0));
-            return norm;
+            return (val - min) / (max - min);
         }
-        */
+
+        public void NormalizeUV()
+        {
+            foreach(Vector2b v in uv)
+            {
+                Vector2b n = new Vector2b(0,0);
+                n.X = (byte)Normalize(min.X, max.X, v.X);
+                n.Y = (byte)Normalize(min.Y, max.Y, v.Y);
+                normuv.Add(n);
+            }
+        }
+        
 
         public void Read(BinaryReaderEx br)
         {
+            offset = (uint)br.BaseStream.Position;
+
             uv.Add(new Vector2b(br));
 
             ushort buf = br.ReadUInt16();
@@ -56,12 +147,14 @@ namespace CTRFramework
             //checking page byte 2 if it's ever not 0
             if (check != 0)
             {
-                Console.WriteLine("---WTF---page 2nd byte != 0");
+                Console.WriteLine("TextureLayout says ---WTF--- page 2nd byte != 0");
                 //Console.ReadKey();
             }
 
             uv.Add(new Vector2b(br));
             uv.Add(new Vector2b(br));
+
+            NormalizeUV();
 
             //Console.WriteLine(Tag());
         }
@@ -69,8 +162,12 @@ namespace CTRFramework
         //meant to be unique
         public string Tag()
         {
+            return offset.ToString("X8");
+
+            /*
             return PageX.ToString("X2") + PageY.ToString("X2") + "_" +
                 PalX.ToString("X4") + PalY.ToString("X4") + "_" + uv[0].X.ToString("X2") + uv[0].Y.ToString("X2");
+                */
         }
 
         public override string ToString()
@@ -84,17 +181,16 @@ namespace CTRFramework
                 PageX + ", " + PageY;
         }
 
-
-
         public string ToObj()
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (Vector2b v in uv)
+            foreach (Vector2b v in normuv)
                 sb.AppendFormat(
                     "vt {0} {1}\r\n",
-                    Math.Round(v.X / 255f, 3).ToString(),
-                    Math.Round((255 - v.Y) / 255f, 3).ToString()
+
+                    Math.Round(v.X * 1.0, 3).ToString(),
+                    Math.Round(-v.Y * 1.0, 3).ToString()
                 );
 
             sb.AppendFormat("\r\nusemtl {0}\r\n", Tag());

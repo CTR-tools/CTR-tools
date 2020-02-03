@@ -1,7 +1,7 @@
 meta:
   id: ctr_mcs_save
   application: Crash Team Racing
-  title: CTR ghost save slot
+  title: CTR save slot
   file-extension: mcs
   endian: le
 

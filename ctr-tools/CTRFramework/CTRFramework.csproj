@@ -134,7 +134,7 @@
     <Compile Include="code\shared\Vector3s.cs" />
     <Compile Include="code\shared\Vector4b.cs" />
     <Compile Include="code\shared\Vector4s.cs" />
-    <Compile Include="code\vrm\FastBitmap.cs" />
+    <Compile Include="code\vrm\BMPHeader.cs" />
     <Compile Include="code\vrm\Tim.cs" />
     <Compile Include="code\vrm\CtrVrm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

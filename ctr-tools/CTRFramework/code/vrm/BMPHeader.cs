@@ -83,7 +83,18 @@ namespace CTRFramework
             palette = pal;
             data = d;
         }
+        /*
+        public void UpdateData(byte[] pal, ushort[] d)
+        {
+            palette = pal;
 
+            for (int i = 0; i < d.Length; i++)
+            {
+                data[i*2] = (byte)(d[i] & 0xFF);
+                data[i * 2 + 1] = (byte)(d[i] >> 8);
+            }
+         }
+         */
         public Color? GetColor(int x)
         {
             if (x < palette.Length / 4)
