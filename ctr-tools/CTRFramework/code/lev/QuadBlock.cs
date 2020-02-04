@@ -1,7 +1,6 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 
 namespace CTRFramework
@@ -36,7 +35,7 @@ namespace CTRFramework
 
         public uint bitvalue; //important! big endian!
 
-        //these values are contained in bitvalue, mask is 8b5b5b5b5b4z where b is bit and z is empty
+        //these values are contained in bitvalue, mask is 8b5b5b5b5b4z where b is bit and z is empty. or is it?
         public byte drawOrderLow;
         public FaceFlags[] faceFlags = new FaceFlags[4];
         public byte extradata;
@@ -62,12 +61,9 @@ namespace CTRFramework
 
         //additional data
         public TextureLayout texlow;
-        public List<TextureLayout> texmid = new List<TextureLayout>();
-        public List<TextureLayout> texmid2 = new List<TextureLayout>();
-        public List<TextureLayout> texmid3 = new List<TextureLayout>();
-        public List<TextureLayout> texhi = new List<TextureLayout>();
 
-        public Texture texture;
+        public List<CtrTex> tex = new List<CtrTex>();
+
 
         public QuadBlock()
         {
@@ -109,7 +105,7 @@ namespace CTRFramework
             byte tf = br.ReadByte();
 
             if (tf > 20)
-                Console.WriteLine("Attention: unexpected terrain flag value -> " + tf);
+                Helpers.Panic(this, "unexpected terrain flag value -> " + tf);
 
             terrainFlag = (TerrainFlags)tf;
             WeatherIntensity = br.ReadByte();
@@ -126,6 +122,8 @@ namespace CTRFramework
             for (int i = 0; i < 10; i++)
                 unk3[i] = br.ReadUInt16();
 
+            //struct done
+
             //read texture layouts
             int pos = (int)br.BaseStream.Position;
 
@@ -137,9 +135,7 @@ namespace CTRFramework
                 if (u != 0)
                 {
                     br.Jump(u);
-                    texmid.Add(new TextureLayout(br));
-                    texmid2.Add(new TextureLayout(br));
-                    texmid3.Add(new TextureLayout(br));
+                    tex.Add(new CtrTex(br));
                 }
                 else
                 {
@@ -236,9 +232,9 @@ namespace CTRFramework
                         {
                             for (int i = 0; i < 4; i++)
                             {
-                                if (texmid3.Count == 4)
+                                if (tex.Count == 4)
                                 {
-                                    sb.AppendLine(texmid3[i].ToObj());
+                                    sb.AppendLine(tex[i].midlods[2].ToObj());
                                 }
                                 else
                                 {
@@ -280,11 +276,10 @@ namespace CTRFramework
                                             sb.Append(OBJ.ASCIIFace("f", a, b, inds[i * 6], inds[i * 6 + 1], inds[i * 6 + 2], uvinds[2], uvinds[0], uvinds[1]));
                                             break;
                                         }
-
                                     case FaceMode.Unknown:
                                         {
                                             //should never happen i guess
-                                            Console.WriteLine("both flags are set!");
+                                            Helpers.Panic(this, "FaceMode: both flags are set!");
                                             Console.ReadKey();
                                             break;
                                         }
@@ -292,7 +287,7 @@ namespace CTRFramework
 
                                 sb.AppendLine();
 
-                                if (texmid.Count == 4) b += 4;
+                                if (tex.Count == 4) b += 4;
                             }
 
                             break;

@@ -1,10 +1,21 @@
 ﻿using System;
 using System.IO;
 
+
 namespace CTRFramework.Shared
 {
     public class Helpers
     {
+        public static void Panic(object x, string msg)
+        {
+            Console.WriteLine(String.Format("{0}:\t{1}", x.GetType().Name, msg));
+        }
+
+        public static int Normalize(int min, int max, int val)
+        {
+            return (val - min) / (max - min);
+        }
+
         public static Random Random = new Random();
 
         public static string CalculateMD5(string filename)

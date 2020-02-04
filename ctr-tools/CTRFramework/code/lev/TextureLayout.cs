@@ -108,18 +108,13 @@ namespace CTRFramework
         }
 
         
-        public int Normalize(int min, int max, int val)
-        {
-            return (val - min) / (max - min);
-        }
-
         public void NormalizeUV()
         {
             foreach(Vector2b v in uv)
             {
                 Vector2b n = new Vector2b(0,0);
-                n.X = (byte)Normalize(min.X, max.X, v.X);
-                n.Y = (byte)Normalize(min.Y, max.Y, v.Y);
+                n.X = (byte)Helpers.Normalize(min.X, max.X, v.X);
+                n.Y = (byte)Helpers.Normalize(min.Y, max.Y, v.Y);
                 normuv.Add(n);
             }
         }
@@ -147,7 +142,7 @@ namespace CTRFramework
             //checking page byte 2 if it's ever not 0
             if (check != 0)
             {
-                Console.WriteLine("TextureLayout says ---WTF--- page 2nd byte != 0");
+                Helpers.Panic(this, "---WTF--- page 2nd byte != 0");
                 //Console.ReadKey();
             }
 

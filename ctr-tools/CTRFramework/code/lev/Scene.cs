@@ -92,6 +92,16 @@ namespace CTRFramework
             {
                 ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
 
+                /*
+                foreach (QuadBlock qb in quads)
+                    foreach(CtrTex ct in qb.tex)
+                    {
+                        foreach(TextureLayout tl in ct.hi)
+                        {
+                            ctrvram.GetTexture(tl, "tex_hi", ct.ptrHi.ToString("X8") + "_"+ tl.Tag());
+                        }
+                    }
+                 */
 
                 Console.WriteLine(ctrvram.ToString());
                 Console.WriteLine("Exporting textures...");
@@ -109,7 +119,7 @@ namespace CTRFramework
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("error " + tl.Tag() + "\r\n" + ex.ToString() + "\r\n\r\n" + tl.ToString());
+                        Helpers.Panic(this, "error " + tl.Tag() + "\r\n" + ex.ToString() + "\r\n\r\n" + tl.ToString());
                         Console.ReadKey();
                     }
                 }
@@ -166,8 +176,8 @@ namespace CTRFramework
 
             }
 
-            CTRFramework.Shared.Helpers.WriteToFile(fname, sb.ToString());
-            CTRFramework.Shared.Helpers.WriteToFile(skyname, skybox.ToObj());
+            Helpers.WriteToFile(fname, sb.ToString());
+            Helpers.WriteToFile(skyname, skybox.ToObj());
 
             sb.Clear();
 
@@ -209,7 +219,6 @@ namespace CTRFramework
             return fname;
         }
 
-
         public void Read(BinaryReaderEx br)
         {
             header = Instance<SceneHeader>.ReadFrom(br, 0);
@@ -221,8 +230,10 @@ namespace CTRFramework
 
             //optional stuff
             if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
-            if (header.cntVcolAnim != 0) vertanims = InstanceList<VertexAnim>.ReadFrom(br, header.ptrVcolAnim, header.cntVcolAnim);
+            if (header.ptrVcolAnim != 0) vertanims = InstanceList<VertexAnim>.ReadFrom(br, header.ptrVcolAnim, header.cntVcolAnim);
             if (header.ptrAiNav != 0) nav = Instance<Nav>.ReadFrom(br, header.ptrAiNav);
+
+
 
             /*
              //water texture
@@ -354,30 +365,16 @@ namespace CTRFramework
                     }
                 }
                 
-                foreach (TextureLayout tl in qb.texmid)
-                {
-                    if (!tex.ContainsKey(tl.Tag()))
+                foreach(CtrTex t in qb.tex)
+                    foreach (TextureLayout tl in t.midlods)
                     {
-                        tex.Add(tl.Tag(), tl);
+                        if (!tex.ContainsKey(tl.Tag()))
+                        {
+                            tex.Add(tl.Tag(), tl);
+                        }
                     }
-                }
-                foreach (TextureLayout tl in qb.texmid2)
-                {
-                    if (!tex.ContainsKey(tl.Tag()))
-                    {
-                        tex.Add(tl.Tag(), tl);
-                    }
-                }
-                
-                foreach (TextureLayout tl in qb.texmid3)
-                {
-                    if (!tex.ContainsKey(tl.Tag()))
-                    {
-                        tex.Add(tl.Tag(), tl);
-                    }
-                }
             }
-
+            
             List<string> tt = new List<string>();
             StringBuilder sb = new StringBuilder();
 
