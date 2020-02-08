@@ -106,7 +106,7 @@ namespace ctrviewer
         }
 
 
-        int currentCameraPosIndex = 0;
+       // int currentCameraPosIndex = 0;
 
         Texture2D tint;
 
@@ -114,7 +114,14 @@ namespace ctrviewer
         {
             //textures.Add("test", Content.Load<Texture2D>("test"));
             //effect.Texture = textures["test"];
-            effect.TextureEnabled = false;
+            effect.TextureEnabled = true;
+
+            string[] files = Directory.GetFiles("tex", "*.png");
+
+            foreach (string s in files)
+            {
+                textures.Add(Path.GetFileName(s), GetTexture(GraphicsDevice, (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile(s)));
+            }
 
             font = Content.Load<SpriteFont>("File");
 

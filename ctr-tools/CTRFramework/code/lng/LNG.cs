@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace CTRFramework
+namespace CTRFramework.Lang
 {
     public class LNG
     {

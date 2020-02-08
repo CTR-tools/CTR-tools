@@ -77,6 +77,8 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
+            long pos = br.BaseStream.Position;
+
             for (int i = 0; i < 9; i++)
                 ind[i] = br.ReadInt16();
 
@@ -125,10 +127,11 @@ namespace CTRFramework
             //struct done
 
             //read texture layouts
-            int pos = (int)br.BaseStream.Position;
+            int texpos = (int)br.BaseStream.Position;
 
             br.Jump(ptrTexLow);
             texlow = new TextureLayout(br);
+
 
             foreach (uint u in ptrTexMid)
             {
@@ -143,7 +146,7 @@ namespace CTRFramework
                 }
             }
 
-            br.BaseStream.Position = pos;
+            br.BaseStream.Position = texpos;
         }
 
 
@@ -241,10 +244,10 @@ namespace CTRFramework
                                     sb.AppendLine("usemtl default");
                                 }
 
+                                
                                 if (quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                     sb.AppendLine("usemtl default");
-
-
+    
                                 switch (faceFlags[i].rotateFlipType)
                                 {
                                     case RotateFlipType.None: uvinds = GetUVIndices(1, 2, 3, 4); break;

@@ -62,6 +62,7 @@ namespace CTRFramework
             }
 
 
+
             /*
             List<uint> offs = new List<uint>();
 
@@ -92,16 +93,40 @@ namespace CTRFramework
             {
                 ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
 
-                /*
+                
                 foreach (QuadBlock qb in quads)
                     foreach(CtrTex ct in qb.tex)
                     {
-                        foreach(TextureLayout tl in ct.hi)
+
+                        foreach(TextureLayout tl in ct.animframes)
                         {
-                            ctrvram.GetTexture(tl, "tex_hi", ct.ptrHi.ToString("X8") + "_"+ tl.Tag());
+                            try
+                            {
+                                ctrvram.GetTexture(tl, "tex_anim", tl.Tag());
+                            } 
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.ToString());
+                                Console.ReadKey();
+                            }
                         }
+
+                        /*
+                        foreach (TextureLayout tl in ct.hi)
+                        {
+                            try
+                            {
+                                if (tl != null)
+                                    ctrvram.GetTexture(tl, "tex_hi", tl.Tag());
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.ToString());
+                                Console.ReadKey();
+                            }
+                        }*/
                     }
-                 */
+                 
 
                 Console.WriteLine(ctrvram.ToString());
                 Console.WriteLine("Exporting textures...");
@@ -120,9 +145,26 @@ namespace CTRFramework
                     catch (Exception ex)
                     {
                         Helpers.Panic(this, "error " + tl.Tag() + "\r\n" + ex.ToString() + "\r\n\r\n" + tl.ToString());
+
+                        foreach(QuadBlock qb in quads)
+                        {
+                            foreach(CtrTex t in qb.tex)
+                            {
+                                foreach(TextureLayout ttl in t.midlods)
+                                {
+                                    if (ttl.Tag() == tl.Tag())
+                                    {
+                                        Console.WriteLine(qb.id.ToString("X8"));
+                                    }
+                                }
+                            }
+                        }
+
                         Console.ReadKey();
                     }
                 }
+
+
             }
             else
             {
@@ -138,7 +180,7 @@ namespace CTRFramework
 
             string fname = Path.ChangeExtension(path, d.ToString() + "." + fmt);
             string skyname = Path.ChangeExtension(path, ".sky." + fmt);
-            string mtllib = Path.ChangeExtension(path, ".mtl");
+            string mtllib = Path.ChangeExtension(path, d.ToString() + ".mtl");
 
             if (path.Contains(" "))
                 Console.WriteLine("warning, there are spaces in the path. this may affect material import.");
@@ -207,6 +249,8 @@ namespace CTRFramework
             }
 
             sb.Append("newmtl default\r\n");
+            sb.Append("map_kd tex\\default.png\r\n");
+            sb.Append("map_kd tex\\default.png\r\n");
 
             Helpers.WriteToFile(mtllib, sb.ToString());
 
@@ -223,7 +267,7 @@ namespace CTRFramework
         {
             header = Instance<SceneHeader>.ReadFrom(br, 0);
             meshinfo = Instance<MeshInfo>.ReadFrom(br, header.ptrMeshInfo);
-            verts = InstanceList<Vertex>.ReadFrom(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);       
+            verts = InstanceList<Vertex>.ReadFrom(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
             restartPts = InstanceList<PosAng>.ReadFrom(br, header.ptrRestartPts, header.numRestartPts);
             coldata = InstanceList<VisData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
             quads = InstanceList<QuadBlock>.ReadFrom(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
@@ -232,6 +276,7 @@ namespace CTRFramework
             if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
             if (header.ptrVcolAnim != 0) vertanims = InstanceList<VertexAnim>.ReadFrom(br, header.ptrVcolAnim, header.cntVcolAnim);
             if (header.ptrAiNav != 0) nav = Instance<Nav>.ReadFrom(br, header.ptrAiNav);
+
 
 
 

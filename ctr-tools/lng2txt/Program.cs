@@ -1,5 +1,5 @@
-﻿using CTRFramework;
-using System;
+﻿using System;
+using CTRFramework.Lang;
 using p = lng2txt.Properties.Resources;
 
 namespace lng2txt

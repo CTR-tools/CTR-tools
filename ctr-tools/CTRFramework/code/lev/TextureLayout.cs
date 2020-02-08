@@ -110,6 +110,8 @@ namespace CTRFramework
         
         public void NormalizeUV()
         {
+            normuv.Clear();
+
             foreach(Vector2b v in uv)
             {
                 Vector2b n = new Vector2b(0,0);
@@ -142,7 +144,7 @@ namespace CTRFramework
             //checking page byte 2 if it's ever not 0
             if (check != 0)
             {
-                Helpers.Panic(this, "---WTF--- page 2nd byte != 0");
+                Helpers.Panic(this, offset.ToString("X8") + " WTF? page 2nd byte != 0");
                 //Console.ReadKey();
             }
 
@@ -180,14 +182,27 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
+            //this is to avoid negative UV and make it clamp friendly
+            int[] inds = new int[4] { 2, 3, 0, 1 };
+
+            for (int i = 0; i < 4; i++)
+            {
+                sb.AppendFormat(
+                    "vt {0} {1}\r\n",
+                    normuv[inds[i]].X,
+                    normuv[inds[i]].Y
+                );
+            }
+
+            /*
             foreach (Vector2b v in normuv)
                 sb.AppendFormat(
                     "vt {0} {1}\r\n",
 
                     Math.Round(v.X * 1.0, 3).ToString(),
-                    Math.Round(-v.Y * 1.0, 3).ToString()
+                    Math.Round(v.Y * 1.0, 3).ToString()
                 );
-
+                */
             sb.AppendFormat("\r\nusemtl {0}\r\n", Tag());
 
             return sb.ToString();

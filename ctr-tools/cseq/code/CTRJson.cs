@@ -18,7 +18,7 @@ namespace CTRtools.Helpers
     {
         static string jsonpath = "ctrdata.json";
 
-        public static JArray levels;
+        //public static JArray levels;
         public static JObject midi;
 
         public static bool Load()
@@ -38,7 +38,7 @@ namespace CTRtools.Helpers
                 return false;
             }
         }
-
+        /*
         public static string GetLevelTitle(string lev)
         {
             foreach (JToken j in levels)
@@ -47,7 +47,7 @@ namespace CTRtools.Helpers
 
             return "!" + lev + "!";
         }
-
+        */
         public static MetaInst GetMetaInst(string track, string inst, int x)
         {
             //string output = JsonConvert.SerializeObject(product);

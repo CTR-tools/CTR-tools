@@ -1,6 +1,4 @@
-﻿using CTRFramework;
-using CTRFramework.Shared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,6 +6,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using CTRFramework;
+using CTRFramework.Shared;
+using CTRFramework.Lang;
 
 namespace levTool
 {
