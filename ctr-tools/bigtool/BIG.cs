@@ -87,7 +87,9 @@ namespace bigtool
 
                 case "pal": filelist = Path.Combine(basepath, "filenames_pal.txt"); break;
 
-                case "proto": //no list yet
+                case "usa_beta_aug": filelist = Path.Combine(basepath, "filenames_beta.txt"); break;
+
+                case "usa_beta_sep": //no list yet
                 case "usa":
                 case "jap": break; //we're usa by default, jap matches
 
@@ -286,7 +288,7 @@ namespace bigtool
 
                             if (x == -1)
                             {
-                                Console.WriteLine("List parsing error at: {0}", bb);
+                                Console.WriteLine("List parsing error at: {0}", b);
                                 continue;
                             }
 
