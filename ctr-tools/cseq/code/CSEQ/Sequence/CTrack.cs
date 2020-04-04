@@ -54,7 +54,7 @@ namespace CTRtools.CSEQ
 
                 cmd.Add(cx);
             }
-            while (cx.evt != CSEQEvent.EndTrack && cx.evt != CSEQEvent.EndTrack2);
+            while (cx.evt != CSEQEvent.EndTrack );
 
             name = "Track_" + trackNum.ToString("00") + (isDrumTrack ? "_drum" : "");
         }

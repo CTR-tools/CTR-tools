@@ -97,27 +97,27 @@ namespace CTRtools.CSEQ
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // exportSEQToolStripMenuItem
             // 
             this.exportSEQToolStripMenuItem.Name = "exportSEQToolStripMenuItem";
-            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exportSEQToolStripMenuItem.Text = "Export CSEQ";
             this.exportSEQToolStripMenuItem.Click += new System.EventHandler(this.exportSEQToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -179,7 +179,6 @@ namespace CTRtools.CSEQ
             // 
             // exportSamplesToolStripMenuItem
             // 
-            this.exportSamplesToolStripMenuItem.Enabled = false;
             this.exportSamplesToolStripMenuItem.Name = "exportSamplesToolStripMenuItem";
             this.exportSamplesToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.exportSamplesToolStripMenuItem.Text = "Export samples";
@@ -246,7 +245,7 @@ namespace CTRtools.CSEQ
             // tutorialToolStripMenuItem
             // 
             this.tutorialToolStripMenuItem.Name = "tutorialToolStripMenuItem";
-            this.tutorialToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tutorialToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.tutorialToolStripMenuItem.Text = "Tutorial";
             this.tutorialToolStripMenuItem.Click += new System.EventHandler(this.tutorialToolStripMenuItem_Click);
             // 

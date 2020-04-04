@@ -1,113 +1,35 @@
 {
-
-	releases: {
-		"usarel" :
-		{
-			"region": "USA",
-			"descr": "final",
-			"date": "1999-09-07",
-			"type": "full"
-		},
-		"usademo" :
-		{
-			"region": "USA",
-			"descr": "review copy",
-			"date": "1999-09-07",
-			"type": "demo"
-		},	
-		"usaprerel" :
-		{
-			"region": "USA",
-			"descr": "review copy",
-			"date": "1999-09-07",
-			"type": "beta"
-		}
-	},
-	
-	files: {
-		"c43eba5a20f0b4fc69a00c8d61a8ec10": { name: "bigfile.big", release: "usarel" },
-		"269df8e697e879cb2254ff091f7aefc7": { name: "kart.hwl", release: "usarel" },
-		"03a005e2abc6022fd1e1e7405300ad77": { name: "bigfile.big", release: "palrel" },
-		"3d5e358c2750f0b318a9f23676d15782": { name: "kart.hwl", release: "palrel" }
-	},
-	
-	versions:
-	[
-		{
-			"name": "NTSC_Release",
-			"timestamp": "1999-09-07",
-			"big_md5": "c43eba5a20f0b4fc69a00c8d61a8ec10",
-			"hwl_md5": "269df8e697e879cb2254ff091f7aefc7"
-		},
-		{
-			"name": "PAL_Release",
-			"timestamp": "1999-10-11",
-			"big_md5": "03a005e2abc6022fd1e1e7405300ad77",
-			"hwl_md5": "3d5e358c2750f0b318a9f23676d15782"
-		},
-		{
-			"name": "JAP_Release",
-			"timestamp": "1999-09-06",
-			"big_md5": "b22c894eff31539de853c83cf52a9025",
-			"hwl_md5": "aeab71ba44ab09c2da4d45dc5467d719"
-		},
-		{
-			"name": "NTSC_Demo",
-			"timestamp": "1999-07-26",
-			"big_md5": "ceb0b4551f3a4a374080c085dea1a860",
-			"hwl_md5": "702ac23e8ab5940f32cfc5ab1e8fc913"
-		},
-		{
-			"name": "PAL_Demo",
-			"timestamp": "1999-06-19",
-			"big_md5": "870780bddb386d04882d57526a03c966",
-			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9" 
-		},
-		{
-			"name": "JAP_Demo",
-			"timestamp": "1999-06-22",
-			"big_md5": "aa71f0adf8a40a77e767c40b73600e46",
-			"hwl_md5": "cf0595a1f22da724b4a4205c7bb7d5e9" 
-		},
-		{
-			"name": "Review_Proto",
-			"timestamp": "1999-08-17",
-			"big_md5": "e73f0f3cade06dc5fc2719fe186cbe26",
-			"hwl_md5": "c5de2d39e42267e74aa4d5e7b47165a5"
-		}
-	],
-	
 	levels: [
-		{ ndiname: "proto8",	name: "canyon", 	title: "Dingo Canyon" },
-		{ ndiname: "proto9",	name: "mines",		title: "Dragon Mines" },
-		{ ndiname: "desert2",	name: "bluff",		title: "Blizzard Bluff" },
-		{ ndiname: "island1",	name: "cove",		title: "Crash Cove" },
-		{ ndiname: "temple1",	name: "temple", 	title: "Tiger Temple" },
-		{ ndiname: "temple2",	name: "pyramid", 	title: "Papu's Pyramid" },
-		{ ndiname: "tube1",		name: "tubes", 		title: "Roo's Tubes" },
-		{ ndiname: "blimp1",	name: "skyway",		title: "Hot Air Skyway" },
-		{ ndiname: "sewer1",	name: "sewer",		title: "Sewer Speedway" },
-		{ ndiname: "cave1",		name: "caves",		title: "Mystery Caves" },
-		{ ndiname: "castle1",	name: "castle",		title: "Cortex Castle" },
-		{ ndiname: "labs1",		name: "labs",		title: "N. Gin Labs" },
-		{ ndiname: "ice1",		name: "pass",		title: "Polar Pass" },
-		{ ndiname: "space",		name: "station",	title: "Oxide Station" },
-		{ ndiname: "coco1",		name: "park",		title: "Coco Park" },
-		{ ndiname: "arena2",	name: "arena",		title: "Tiny Arena" },
-		{ ndiname: "secret1",	name: "coliseum",	title: "Slide Coliseum" },
-		{ ndiname: "secret2",	name: "turbo",		title: "Turbo Track" },
-		{ ndiname: "battle1",	name: "nitro",		title: "Nitro Court" },
-		{ ndiname: "battle2",	name: "rampage",	title: "Rampage Ruins" },
-		{ ndiname: "battle3",	name: "parking",	title: "Parking Lot" },
-		{ ndiname: "battle4",	name: "skull",		title: "Skull Rock" },
-		{ ndiname: "battle5",	name: "bowl",		title: "North Bowl" },
-		{ ndiname: "battle6",	name: "rocky",		title: "Rocky Road" },
-		{ ndiname: "battle7",	name: "basement",	title: "Lab Basement" },
-		{ ndiname: "hub1",		name: "valley",		title: "Gem Valley" },
-		{ ndiname: "hub2",		name: "nsanity",	title: "N. Sanity Beach" },
-		{ ndiname: "hub3",		name: "ruins",		title: "Lost Ruins" },
-		{ ndiname: "hub4",		name: "glacier",	title: "Glacier Park" },
-		{ ndiname: "hub5",		name: "citadel",	title: "Citadel City" }
+		{ id: "00", ndiname: "proto8",	name: "canyon", 	title: "Dingo Canyon" },
+		{ id: "01", ndiname: "proto9",	name: "mines",		title: "Dragon Mines" },
+		{ id: "02", ndiname: "desert2",	name: "bluff",		title: "Blizzard Bluff" },
+		{ id: "03", ndiname: "island1",	name: "cove",		title: "Crash Cove" },
+		{ id: "04", ndiname: "temple1",	name: "temple", 	title: "Tiger Temple" },
+		{ id: "05", ndiname: "temple2",	name: "pyramid", 	title: "Papu's Pyramid" },
+		{ id: "06", ndiname: "tube1",	name: "tubes", 		title: "Roo's Tubes" },
+		{ id: "07", ndiname: "blimp1",	name: "skyway",		title: "Hot Air Skyway" },
+		{ id: "08", ndiname: "sewer1",	name: "sewer",		title: "Sewer Speedway" },
+		{ id: "09", ndiname: "cave1",	name: "caves",		title: "Mystery Caves" },
+		{ id: "10", ndiname: "castle1",	name: "castle",		title: "Cortex Castle" },
+		{ id: "11", ndiname: "labs1",	name: "labs",		title: "N. Gin Labs" },
+		{ id: "12", ndiname: "ice1",	name: "pass",		title: "Polar Pass" },
+		{ id: "13", ndiname: "space",	name: "station",	title: "Oxide Station" },
+		{ id: "14", ndiname: "coco1",	name: "park",		title: "Coco Park" },
+		{ id: "15", ndiname: "arena2",	name: "arena",		title: "Tiny Arena" },
+		{ id: "16", ndiname: "secret1",	name: "coliseum",	title: "Slide Coliseum" },
+		{ id: "17", ndiname: "secret2",	name: "turbo",		title: "Turbo Track" },
+		{ id: "18", ndiname: "battle1",	name: "nitro",		title: "Nitro Court" },
+		{ id: "19", ndiname: "battle2",	name: "rampage",	title: "Rampage Ruins" },
+		{ id: "20", ndiname: "battle3",	name: "parking",	title: "Parking Lot" },
+		{ id: "21", ndiname: "battle4",	name: "skull",		title: "Skull Rock" },
+		{ id: "22", ndiname: "battle5",	name: "bowl",		title: "North Bowl" },
+		{ id: "23", ndiname: "battle6",	name: "rocky",		title: "Rocky Road" },
+		{ id: "24", ndiname: "battle7",	name: "basement",	title: "Lab Basement" },
+		{ id: "25", ndiname: "hub1",	name: "valley",		title: "Gem Valley" },
+		{ id: "26", ndiname: "hub2",	name: "nsanity",	title: "N. Sanity Beach" },
+		{ id: "27", ndiname: "hub3",	name: "ruins",		title: "Lost Ruins" },
+		{ id: "28", ndiname: "hub4",	name: "glacier",	title: "Glacier Park" },
+		{ id: "29", ndiname: "hub5",	name: "citadel",	title: "Citadel City" }
 		
 	],
 

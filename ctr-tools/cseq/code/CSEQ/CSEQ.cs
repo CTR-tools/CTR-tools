@@ -1,6 +1,6 @@
 ﻿using CTRFramework.Shared;
+using CTRFramework.Sound;
 using CTRtools.Helpers;
-using CTRtools.SFX;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -26,6 +26,7 @@ namespace CTRtools.CSEQ
 
         #region [Properties]
 
+        public string path;
         public string name;
         public CHeader header;
         public List<Instrument> longSamples;
@@ -73,6 +74,7 @@ namespace CTRtools.CSEQ
         /// <param name="textBox1">to be removed</param>
         public bool Read(string fileName, System.Windows.Forms.TextBox textBox1)
         {
+            path = Path.GetDirectoryName(fileName);
             name = Path.GetFileNameWithoutExtension(fileName);
             BinaryReaderEx br = BinaryReaderEx.FromFile(fileName);
 
@@ -238,6 +240,25 @@ namespace CTRtools.CSEQ
             return true;
         }
 
+        public string ListMissingSamples()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (Instrument x in longSamples)
+            {
+                if (!bank.Contains(x.sampleID))
+                    sb.Append("long: " + x.sampleID + "\r\n");
+            }
+
+            foreach (Instrument x in shortSamples)
+            {
+                if (!bank.Contains(x.sampleID))
+                    sb.Append("short: " + x.sampleID + "\r\n");
+            }
+
+            return sb.ToString();
+        }
+
         public List<int> GetAllIDs()
         {
             List<int> ids = new List<int>();
@@ -261,7 +282,7 @@ namespace CTRtools.CSEQ
                 if (s.sampleID == id)
                     return s.frequency;
 
-            return VAG.DefaultSampleRate;
+            return VagHeader.DefaultSampleRate;
         }
 
         public int GetLongSampleIDByTrack(CTrack ct)

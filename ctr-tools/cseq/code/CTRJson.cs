@@ -6,6 +6,8 @@ using System.IO;
 namespace CTRtools.Helpers
 {
 
+    //move this to Meta
+
     public struct MetaInst
     {
         public int Midi;

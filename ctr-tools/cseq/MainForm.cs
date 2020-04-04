@@ -1,5 +1,5 @@
 ﻿using CTRtools.Helpers;
-using CTRtools.SFX;
+using CTRFramework.Sound;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -180,7 +180,9 @@ namespace CTRtools.CSEQ
                 {
                     seq.LoadBank(ofd.FileName);
 
-                    MessageBox.Show(seq.CheckBankForSamples() ? "samples OK!" : "samples missing.");
+                    MessageBox.Show(seq.CheckBankForSamples() ? "samples OK!" : "samples missing");
+
+                    textBox1.Text = seq.ListMissingSamples();
 
                     /*
                     foreach (VABSample v in bnk.vs)
@@ -196,7 +198,7 @@ namespace CTRtools.CSEQ
                 }
                 else
                 {
-                    bnk.ExportAll();
+                    bnk.ExportAll(Path.GetDirectoryName(ofd.FileName));
                 }
             }
         }
@@ -222,22 +224,22 @@ namespace CTRtools.CSEQ
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            VAG.DefaultSampleRate = 11025;
+            VagHeader.DefaultSampleRate = 11025;
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            VAG.DefaultSampleRate = 22050;
+            VagHeader.DefaultSampleRate = 22050;
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            VAG.DefaultSampleRate = 33075;
+            VagHeader.DefaultSampleRate = 33075;
         }
 
         private void toolStripMenuItem5_Click(object sender, EventArgs e)
         {
-            VAG.DefaultSampleRate = 44100;
+            VagHeader.DefaultSampleRate = 44100;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -267,7 +269,7 @@ namespace CTRtools.CSEQ
         {
             if (seq != null)
                 if (seq.bank != null)
-                    seq.bank.ExportAll();
+                    seq.bank.ExportAll(seq.path, seq.name);
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

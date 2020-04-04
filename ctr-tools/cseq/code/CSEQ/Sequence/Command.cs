@@ -141,7 +141,7 @@ namespace CTRtools.CSEQ
                 case CSEQEvent.PanAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.Pan, pitch / 2)); break;
                 case CSEQEvent.VelAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, pitch / 2)); break; //not really used
 
-                case CSEQEvent.EndTrack2:
+                //case CSEQEvent.EndTrack2:
                 case CSEQEvent.EndTrack: events.Add(new MetaEvent(MetaEventType.EndTrack, 0, absTime)); break;
             }
 
