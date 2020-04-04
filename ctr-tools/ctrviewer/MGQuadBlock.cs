@@ -1,6 +1,9 @@
 ﻿using CTRFramework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System;
+using System.Collections;
 
 namespace ctrviewer
 {
@@ -8,6 +11,8 @@ namespace ctrviewer
     {
         public TriList normal = new TriList();
         public TriList wire = new TriList();
+
+        public QuadList normalq = new QuadList();
 
 
         public static short[] indices_pattern_low = new short[] { 0, 1, 2, 2, 1, 3 };
@@ -49,9 +54,13 @@ namespace ctrviewer
         }
 
 
+        
+
+
         public MGQuadBlock(Scene s, Detail detail)
         {
-
+            normal.textureName = "test";
+            normal.textureEnabled = true;
             normal.verts = new VertexPositionColorTexture[s.quads.Count * 9];
             normal.indices = new short[s.quads.Count * 6 * 4];
 
@@ -99,15 +108,52 @@ namespace ctrviewer
 
                             }
 
-                        }  
+                        }
 
                         break;
                     }
 
                 case Detail.Med:
                     {
+                        normal.verts = new VertexPositionColorTexture[s.quads.Count * 24];
+                        normal.indices = new short[s.quads.Count * 24];
+
+                        for (int i = 0; i < normal.indices.Length; i++)
+                        {
+                            normal.indices[i] = (short)i;
+                        }
+
                         for (int i = 0; i < s.quads.Count; i++)
                         {
+                            List<CTRFramework.Vertex> vts = s.quads[i].GetVertexList(s);
+                            List<VertexPositionColorTexture> monolist = new List<VertexPositionColorTexture>();
+
+                            foreach (Vertex cv in vts)
+                            {
+                                VertexPositionColorTexture v = new VertexPositionColorTexture();
+
+                                v.Position.X = cv.coord.X;
+                                v.Position.Y = cv.coord.Y;
+                                v.Position.Z = cv.coord.Z;
+
+                                v.Color.A = 255;
+                                v.Color.R = cv.color.X;
+                                v.Color.G = cv.color.Y;
+                                v.Color.B = cv.color.Z;
+
+                                v.TextureCoordinate.X = cv.uv.X;
+                                v.TextureCoordinate.Y = cv.uv.Y;
+
+                                monolist.Add(v);
+                                
+                            }
+
+                            Array.Copy(
+                                monolist.ToArray(), 0,
+                                normal.verts, i * 24,
+                                24);
+
+                            /*
                             if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                             {
 
@@ -138,6 +184,7 @@ namespace ctrviewer
                                 }
 
                             }
+                            */
                         }
 
                         break;
@@ -146,6 +193,7 @@ namespace ctrviewer
             }
 
             wire = new TriList(normal);
+            
 
             for (int i = 0; i < wire.verts.Length; i++)
             {

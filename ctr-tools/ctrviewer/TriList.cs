@@ -32,7 +32,7 @@ namespace ctrviewer
         public void Render(GraphicsDeviceManager graphics, BasicEffect effect)
         {
             effect.TextureEnabled = textureEnabled;
-            effect.Texture = null;
+            //effect.Texture = null;
 
             foreach (var pass in effect.CurrentTechnique.Passes)
             {

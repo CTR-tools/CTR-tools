@@ -112,8 +112,8 @@ namespace ctrviewer
 
         protected override void LoadContent()
         {
-            //textures.Add("test", Content.Load<Texture2D>("test"));
-            //effect.Texture = textures["test"];
+            textures.Add("test", Content.Load<Texture2D>("test"));
+            effect.Texture = textures["test"];
             effect.TextureEnabled = true;
 
             string[] files = Directory.GetFiles("tex", "*.png");
@@ -322,11 +322,14 @@ namespace ctrviewer
 
         private SamplerState GetCurrentSampler()
         {
-            ss = new SamplerState();
-            ss.FilterMode = TextureFilterMode.Default;
+            ss = SamplerState.PointClamp;
+           // ss = new SamplerState();
+           // ss.FilterMode = TextureFilterMode.Default;
 
-            ss.Filter = filter ? TextureFilter.Anisotropic : TextureFilter.Point;
-            ss.MaxAnisotropy = 16;
+           // ss.Filter = filter ? TextureFilter.Anisotropic : TextureFilter.Point;
+           // ss.MaxAnisotropy = 16;
+
+            
             //ss.MaxMipLevel = 8;
             //ss.MipMapLevelOfDetailBias = -1.5f;
 

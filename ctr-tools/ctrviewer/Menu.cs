@@ -119,7 +119,7 @@ namespace ctrviewer
 
             g.Begin(depthStencilState: DepthStencilState.Default);
 
-            g.Draw(background, color: Color.White * 0.25f, destinationRectangle: gd.Viewport.Bounds, layerDepth: 0.99f);
+            //g.Draw(background, color: Color.White * 0.25f, destinationRectangle: gd.Viewport.Bounds, layerDepth: 0.99f);
 
             int i = 0;
 

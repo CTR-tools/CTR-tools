@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using CTRFramework;
 using CTRFramework.Shared;
 using CTRFramework.Lang;
+using CTRFramework.Vram;
 
 namespace levTool
 {

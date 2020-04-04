@@ -24,7 +24,7 @@ namespace ctrviewer
         #endregion
 
         #region Глобальные свойства
-        public float rotationSpeed = 0.25f;     // Скорость угла поворота
+        public float rotationSpeed = 0.1f;     // Скорость угла поворота
         public float translationSpeed = 2500f;    // Скорость перемещения
         #endregion
 
