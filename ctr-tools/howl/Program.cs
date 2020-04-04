@@ -1,6 +1,7 @@
-﻿using CTRFramework.Shared;
-using System;
+﻿using System;
 using System.IO;
+using CTRFramework.Shared;
+using CTRFramework.Sound;
 
 namespace howl
 {
@@ -14,7 +15,6 @@ namespace howl
             if (args.Length == 1)
             {
                 string fn = args[0];
-                //fn = "kart.hwl";
 
                 if (File.Exists(fn))
                 {
@@ -22,7 +22,7 @@ namespace howl
                     MemoryStream ms = new MemoryStream(data);
                     BinaryReaderEx br = new BinaryReaderEx(ms);
 
-                    HOWL hwl = new HOWL(fn);
+                    Howl hwl = new Howl(fn);
                     hwl.Read(br);
 
                     Console.Write(hwl.ToString());
@@ -33,7 +33,7 @@ namespace howl
                 }
                 else
                 {
-                    Console.Write(fn + " doesn't exist.");
+                    Console.WriteLine("{0} doesn't exist.", fn);
                 }
 
             }
