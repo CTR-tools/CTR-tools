@@ -10,9 +10,6 @@ namespace CTRFramework
     {
         public string path;
 
-        BinaryReaderEx br;
-        MemoryStream ms;
-
         public string name;
         public ushort evt;
         public short numLods;
@@ -28,16 +25,15 @@ namespace CTRFramework
         {
             path = s;
 
-            ms = new MemoryStream(File.ReadAllBytes(s));
-            br = new BinaryReaderEx(ms);
+            MemoryStream ms = new MemoryStream(File.ReadAllBytes(s));
+            BinaryReaderEx br = new BinaryReaderEx(ms);
 
             int size = br.ReadInt32();
 
-            ms = new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 4));
+            ms = new MemoryStream(br.ReadBytes((int)size));
             br = new BinaryReaderEx(ms);
 
             Read(br);
-
         }
 
         public LODModel(BinaryReaderEx br)
@@ -79,6 +75,22 @@ namespace CTRFramework
             {
                 lh.Add(new LODHeader(br));
             }
+
+
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (LODHeader h in lh)
+            {
+                sb.AppendFormat("o {0}\r\n", h.name);
+
+                foreach (LODVertexDef d in h.defs)
+                {
+                    sb.AppendFormat("v {0}\r\n", h.ReadVertex(br, d.stackIndex).ToString(VecFormat.Numbers));
+                }
+            }
+
+            Helpers.WriteToFile("test.obj", sb.ToString());
 
             //Console.ReadKey();
 

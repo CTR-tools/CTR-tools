@@ -2,14 +2,14 @@
 {
     class LODVertexDef
     {
-        int value;
+        public uint value;
 
-        byte flags { get { return (byte)(value >> (8 * 3) & 0xFF); } }
-        byte stackIndex { get { return (byte)(value >> (8 * 2) & 0xFF); } }
-        byte colorIndex { get { return (byte)(value >> (8 * 1) & 0xFF); } }
-        byte texIndex { get { return (byte)(value >> (8 * 0) & 0xFF); } }
+        public byte flags { get { return (byte)(value >> (8 * 3) & 0xFF); } }
+        public byte stackIndex { get { return (byte)(value >> 16 & 0xFF); } }
+        public byte colorIndex { get { return (byte)(value >> 9 & 0x7F); } }
+        public byte texIndex { get { return (byte)(value & 0x1FF); } }
 
-        public LODVertexDef(int x)
+        public LODVertexDef(uint x)
         {
             value = x;
             //Console.WriteLine(ToString());
