@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using CTRFramework.Shared;
 
-namespace CTRFramework
+namespace CTRFramework.Vram
 {
     public class BMPHeader
     {
