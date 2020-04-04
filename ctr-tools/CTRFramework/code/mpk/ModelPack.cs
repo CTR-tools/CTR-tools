@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using CTRFramework.Vram;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;

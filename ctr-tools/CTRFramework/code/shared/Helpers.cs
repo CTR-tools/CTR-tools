@@ -6,9 +6,18 @@ namespace CTRFramework.Shared
 {
     public class Helpers
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x">the object that wants to panic</param>
+        /// <param name="msg">the message it wants to send</param>
         public static void Panic(object x, string msg)
         {
             Console.WriteLine(String.Format("{0}:\t{1}", x.GetType().Name, msg));
+            #if DEBUG
+                //if it's debug, i want to know what's going on
+                //Console.ReadKey();
+            #endif
         }
 
         public static int Normalize(int min, int max, int val)

@@ -7,7 +7,9 @@ namespace CTRFramework.Shared
 {
     public class Meta
     {
-        static string jsonpath = System.AppDomain.CurrentDomain.BaseDirectory + "\\versions.json";
+        public static string apppath = System.AppDomain.CurrentDomain.BaseDirectory;
+        public static string jsonpath =  apppath + "\\versions.json";
+        public static string howlpath = apppath + "\\howlnames.txt";
 
         static JObject json;
 
@@ -24,7 +26,7 @@ namespace CTRFramework.Shared
             Console.WriteLine("Detect({0}, {1})", Path.GetFileName(file), list);
 
             string md5 = Helpers.CalculateMD5(file);
-            string res = "Unknown";
+            string res = "";
 
             Console.WriteLine("MD5 = {0}", md5);
 
@@ -53,7 +55,7 @@ namespace CTRFramework.Shared
                 
             Console.ReadKey();
             */
-            if (res == "Unknown")
+            if (res == "")
                 File.WriteAllText("unknown_md5.txt", md5);
 
             Console.WriteLine("list tag = {0}", res);
