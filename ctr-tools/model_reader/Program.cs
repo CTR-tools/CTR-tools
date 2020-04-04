@@ -1,9 +1,9 @@
-﻿using CTRFramework;
-using System;
+﻿using System;
 using System.Diagnostics;  //to launch meshlab
 using System.Globalization; //for cultureinfo
 using System.IO; //file handling
 using System.Threading;
+using CTRFramework;
 
 namespace modelReader
 {
