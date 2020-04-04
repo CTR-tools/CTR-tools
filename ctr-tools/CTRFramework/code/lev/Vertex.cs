@@ -8,6 +8,7 @@ namespace CTRFramework
         public Vector4s coord;
         public Vector4b color;
         public Vector4b color_morph;
+        public Vector2b uv;
 
         static Vector4b flagColor = new Vector4b(0x0000FF00); //blue for flags
 

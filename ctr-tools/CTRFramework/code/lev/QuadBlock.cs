@@ -17,6 +17,8 @@ namespace CTRFramework
         }
     }
 
+
+
     public class QuadBlock : IRead, IWrite
     {
         /*
@@ -170,12 +172,45 @@ namespace CTRFramework
         //magic array of indices, each line contains 2 quads
         int[] inds = new int[]
         {
+            6, 5, 1,
+            6, 7, 5,
+            7, 2, 5,
+            7, 8, 2,
+            3, 7, 6,
+            3, 9, 7,
+            9, 8, 7,
+            9, 4, 8
+        };
+
+        /*
+        //magic array of indices, each line contains 2 quads
+        int[] inds = new int[]
+        {
             1, 6, 5, 5, 6, 7,
             5, 7, 2, 2, 7, 8,
             6, 3, 7, 7, 3, 9,
             7, 9, 8, 8, 9, 4
         };
+        */
+        public List<CTRFramework.Vertex> GetVertexList(Scene s)
+        {
+            List<CTRFramework.Vertex> buf = new List<CTRFramework.Vertex>();
+          
+            for (int i = inds.Length-1; i >= 0; i--)
+                buf.Add(s.verts[ind[inds[i]-1]]);
 
+            for (int i = 0; i < inds.Length / 6; i++)
+            {
+                buf[i * 6 + 0].uv = new Vector2b(0, 1);
+                buf[i * 6 + 1].uv = new Vector2b(1, 0);
+                buf[i * 6 + 2].uv = new Vector2b(0, 0);
+                buf[i * 6 + 3].uv = new Vector2b(0, 1);
+                buf[i * 6 + 4].uv = new Vector2b(1, 1);
+                buf[i * 6 + 5].uv = new Vector2b(1, 0);
+            }
+
+            return buf;
+        }
 
         public int[] GetUVIndices(int x, int y, int z, int w)
         {

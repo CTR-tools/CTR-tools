@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -187,11 +188,12 @@ namespace CTRFramework
 
             for (int i = 0; i < 4; i++)
             {
-                sb.AppendFormat(
-                    "vt {0} {1}\r\n",
-                    normuv[inds[i]].X,
-                    normuv[inds[i]].Y
-                );
+                    sb.AppendFormat(
+                        "vt {0} {1}\r\n",
+                        normuv[inds[i]].X,
+                        normuv[inds[i]].Y
+                    );
+
             }
 
             /*

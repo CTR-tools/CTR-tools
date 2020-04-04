@@ -22,8 +22,14 @@ namespace CTRFramework
         {
             int pos = (int)br.BaseStream.Position;
 
-            //this apparently defines animated texture, really
-            if ((pos & 1) == 1)
+            if ((pos & 2) > 0)
+            {
+                Console.WriteLine("!!!");
+                Console.ReadKey();
+            }
+
+                //this apparently defines animated texture, really
+                if ((pos & 1) == 1)
             {
                 isAnimated = true;
 
@@ -34,7 +40,7 @@ namespace CTRFramework
                 int whatsthat = br.ReadInt16();
 
                 if (br.ReadUInt32() != 0)
-                    Console.WriteLine("ctrtex panic, not 0!");
+                    Helpers.Panic(this, "not 0!");
 
                 uint[] ptrs = br.ReadArrayUInt32(numFrames);
 
@@ -52,23 +58,17 @@ namespace CTRFramework
 
             ptrHi = br.ReadUInt32();
 
+            /*
             if (ptrHi != 0)
             {
-                if (ptrHi > br.BaseStream.Length)
-                {
-                    //there must be some flag that defines hi tex existence
-                    Helpers.Panic(this, "hi tex ptr overflow at " + pos.ToString("X8"));
-                }
-                else
-                {
-                    br.Jump(ptrHi);
+                br.Jump(ptrHi);
 
-                    for (int i = 0; i < 4; i++)
-                    {
-                        hi[i] = new TextureLayout(br);
-                    }
+                for (int i = 0; i < 4; i++)
+                {
+                    hi[i] = new TextureLayout(br);
                 }
             }
+            */
         }
     }
 }

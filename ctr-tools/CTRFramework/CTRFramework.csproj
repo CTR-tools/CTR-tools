@@ -105,7 +105,8 @@
     <Compile Include="code\lev\nav\Nav.cs" />
     <Compile Include="code\lev\nav\AIPath.cs" />
     <Compile Include="code\lev\VertexAnim.cs" />
-    <Compile Include="code\lng\LNG.cs" />
+    <Compile Include="code\lang\LNG.cs" />
+    <Compile Include="code\sound\Bank.cs" />
     <Compile Include="code\shared\BinaryReaderEx.cs" />
     <Compile Include="code\shared\BinaryWriterEx.cs" />
     <Compile Include="code\shared\Helpers.cs" />
@@ -134,6 +135,10 @@
     <Compile Include="code\shared\Vector3s.cs" />
     <Compile Include="code\shared\Vector4b.cs" />
     <Compile Include="code\shared\Vector4s.cs" />
+    <Compile Include="code\sound\Howl.cs" />
+    <Compile Include="code\sound\HowlHeader.cs" />
+    <Compile Include="code\sound\SampleDecl.cs" />
+    <Compile Include="code\sound\VagHeader.cs" />
     <Compile Include="code\vrm\BMPHeader.cs" />
     <Compile Include="code\vrm\Tim.cs" />
     <Compile Include="code\vrm\CtrVrm.cs" />
@@ -157,6 +162,11 @@
     <None Include="versions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="howlnames.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

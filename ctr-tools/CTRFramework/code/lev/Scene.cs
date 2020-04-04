@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -61,7 +62,12 @@ namespace CTRFramework
                 }
             }
 
+            ExecuteTests();
+        }
 
+        public void ExecuteTests()
+        {
+            Console.WriteLine("==========test area========");
 
             /*
             List<uint> offs = new List<uint>();
@@ -84,6 +90,25 @@ namespace CTRFramework
 
             */
 
+            /*
+            List<short> uniflag = new List<short>();
+
+            foreach (QuadBlock qb in quad)
+            {
+                //check unique values here
+                if (!uniflag.Contains(qb.midflags[1]))
+                    uniflag.Add(qb.midflags[1]);
+            }
+
+            uniflag.Sort();
+
+            foreach (byte b in uniflag)
+                Console.WriteLine(b);
+
+            */
+
+
+            Console.WriteLine("==========test done========");
         }
 
 
@@ -91,7 +116,7 @@ namespace CTRFramework
         {
             if (ctrvram != null)
             {
-                ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
+               // ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
 
                 
                 foreach (QuadBlock qb in quads)
@@ -102,12 +127,12 @@ namespace CTRFramework
                         {
                             try
                             {
-                                ctrvram.GetTexture(tl, "tex_anim", tl.Tag());
+                               // ctrvram.GetTexture(tl, "tex_anim", tl.Tag());
                             } 
                             catch (Exception ex)
                             {
                                 Console.WriteLine(ex.ToString());
-                                Console.ReadKey();
+                                //Console.ReadKey();
                             }
                         }
 
@@ -144,7 +169,7 @@ namespace CTRFramework
                     }
                     catch (Exception ex)
                     {
-                        Helpers.Panic(this, "error " + tl.Tag() + "\r\n" + ex.ToString() + "\r\n\r\n" + tl.ToString());
+                        Helpers.Panic(this, "texture export error " + tl.Tag() + "\r\n" + ex.ToString() + "\r\n\r\n" + tl.ToString());
 
                         foreach(QuadBlock qb in quads)
                         {
@@ -154,17 +179,13 @@ namespace CTRFramework
                                 {
                                     if (ttl.Tag() == tl.Tag())
                                     {
-                                        Console.WriteLine(qb.id.ToString("X8"));
+                                        Console.WriteLine("texture tag found in object: " + qb.id.ToString("X8"));
                                     }
                                 }
                             }
                         }
-
-                        Console.ReadKey();
                     }
                 }
-
-
             }
             else
             {
@@ -202,8 +223,6 @@ namespace CTRFramework
                     foreach (QuadBlock g in quads)
                     {
                         sb.AppendLine(g.ToObj(verts, d, ref a, ref b));
-                        //a += 9;
-                        //b += (d == Detail.Low ? 4 : 16); 
                     }
 
                     break;
@@ -260,6 +279,59 @@ namespace CTRFramework
                 Console.WriteLine("Exported!");
             }
 
+
+
+            //exports restart points
+            /*
+            StringBuilder sb = new StringBuilder();
+
+            foreach (PosAng pa in restartPts)
+            {
+                sb.AppendFormat("v {0}\r\n", pa.Position.ToString(VecFormat.Numbers));
+            }
+
+            for (int i = 1; i <= header.numRestartPts; i++)
+            {
+                sb.AppendFormat("l {0} {1}\r\n", i, (i == header.numRestartPts ? 1 : i + 1));
+            }
+
+            //File.WriteAllText("restart_pts.obj", sb.ToString());
+            */
+
+
+
+            /*
+            StringBuilder sb = new StringBuilder();
+
+
+            sb.Append("g lol1");
+
+            foreach (ColData cd in coldata)
+            {
+                sb.Append(String.Format("v {0} {1} {2}\r\n", cd.v1.X, cd.v1.Y, cd.v1.Z));
+            }
+
+            sb.Append("g lol2");
+
+            foreach (ColData cd in coldata)
+            {
+                sb.Append(String.Format("v {0} {1} {2}\r\n", cd.v2.X, cd.v2.Y, cd.v2.Z));
+            }
+
+            File.WriteAllText("coldata.obj", sb.ToString());
+            */
+
+            /*
+            //ai path test
+            int xz = 0;
+            foreach (AIPath p in nav.paths)
+            {
+                File.WriteAllText("path"+xz+".obj", p.ToObj());
+                xz++;
+            }
+            */
+
+
             return fname;
         }
 
@@ -276,9 +348,6 @@ namespace CTRFramework
             if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
             if (header.ptrVcolAnim != 0) vertanims = InstanceList<VertexAnim>.ReadFrom(br, header.ptrVcolAnim, header.cntVcolAnim);
             if (header.ptrAiNav != 0) nav = Instance<Nav>.ReadFrom(br, header.ptrAiNav);
-
-
-
 
             /*
              //water texture
@@ -303,29 +372,6 @@ namespace CTRFramework
             Console.ReadKey();
             */
 
-            /*
-            StringBuilder sb = new StringBuilder();
-
-
-            sb.Append("g lol1");
-
-            foreach (ColData cd in coldata)
-            {
-                sb.Append(String.Format("v {0} {1} {2}\r\n", cd.v1.X, cd.v1.Y, cd.v1.Z));
-            }
-
-            sb.Append("g lol2");
-
-            foreach (ColData cd in coldata)
-            {
-                sb.Append(String.Format("v {0} {1} {2}\r\n", cd.v2.X, cd.v2.Y, cd.v2.Z));
-            }
-
-            File.WriteAllText("coldata.obj", sb.ToString());
-            */
-
-
-
             //read pickups
             for (int i = 0; i < header.numPickupHeaders; i++)
             {
@@ -334,7 +380,6 @@ namespace CTRFramework
 
                 pickups.Add(new PickupHeader(br));
             }
-
 
             //read pickup models
             //starts out right, but anims ruin it
@@ -349,51 +394,6 @@ namespace CTRFramework
 
                 dynamics.Add(new LODModel(br));
             }
-
-            //Console.ReadKey();
-
-            //exports restart points
-            /*
-            StringBuilder sb = new StringBuilder();
-
-            foreach (PosAng pa in restartPts)
-            {
-                sb.AppendFormat("v {0}\r\n", pa.Position.ToString(VecFormat.Numbers));
-            }
-
-            for (int i = 1; i <= header.numRestartPts; i++)
-            {
-                sb.AppendFormat("l {0} {1}\r\n", i, (i == header.numRestartPts ? 1 : i + 1));
-            }
-
-            //File.WriteAllText("restart_pts.obj", sb.ToString());
-            */
-
-            /*
-            List<short> uniflag = new List<short>();
-
-            foreach (QuadBlock qb in quad)
-            {
-                //check unique values here
-                if (!uniflag.Contains(qb.midflags[1]))
-                    uniflag.Add(qb.midflags[1]);
-            }
-
-            uniflag.Sort();
-
-            foreach (byte b in uniflag)
-                Console.WriteLine(b);
-
-            */
-            /*
-            //ai path test
-            int xz = 0;
-            foreach (AIPath p in nav.paths)
-            {
-                File.WriteAllText("path"+xz+".obj", p.ToObj());
-                xz++;
-            }
-            */
         }
 
         public Dictionary<string, TextureLayout> GetTexturesList()
@@ -427,33 +427,9 @@ namespace CTRFramework
             tt.Sort();
             foreach (string s in tt) sb.AppendLine(s);
 
-            File.WriteAllText("texture.txt", sb.ToString());
+            //File.WriteAllText("texture.txt", sb.ToString());
 
             return tex;
         }
-
     }
 }
-
-
-
-
-/*                   //get back ply later
-                   if (fmt == "ply")
-                   {
-                       sb.Append("ply\r\n");
-                       sb.Append("format ascii 1.0\r\n");
-                       sb.Append("comment CTR-Tools by DCxDemo*\r\n");
-                       sb.Append("comment source file: " + path + "\r\n");
-                       sb.Append("element vertex " + vertexnum + "\r\n");
-                       sb.Append("property float x\r\n");
-                       sb.Append("property float y\r\n");
-                       sb.Append("property float z\r\n");
-                       sb.Append("property uchar red\r\n");
-                       sb.Append("property uchar green\r\n");
-                       sb.Append("property uchar blue\r\n");
-                       sb.Append("element face " + facesnum * 8 + "\r\n");
-                       sb.Append("property list uchar int vertex_indices\r\n");
-                       sb.Append("end_header\r\n");
-                   }
-*/

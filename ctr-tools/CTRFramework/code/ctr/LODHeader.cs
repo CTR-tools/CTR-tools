@@ -9,7 +9,7 @@ namespace CTRFramework
         public string name;
         int unk0; //0?
         int unk1;
-        Vector4s position;
+        Vector4s scale;
         int ptrFaces; //this is null if we have anims
         int ptrVerts; //0?
         public int ptrTex;
@@ -20,6 +20,44 @@ namespace CTRFramework
         int unk4; //?
 
         List<CTRAnim> anims = new List<CTRAnim>();
+
+        public List<LODVertexDef> defs = new List<LODVertexDef>();
+
+        public Vector3s ReadVertex(BinaryReaderEx br, int i)
+        {
+            Vector3s v = new Vector3s(0, 0, 0);
+
+            if (ptrVerts != 0)
+            {
+                br.Jump(ptrVerts + 0x1C + i * 3);
+
+                v.X = br.ReadByte();
+                v.Y = br.ReadByte();
+                v.Z = br.ReadByte();
+            }
+
+            return v;
+        }
+
+        public Vector3s ReadColor(BinaryReaderEx br, int i)
+        {
+            Vector3s c = new Vector3s(0, 0, 0);
+            br.Jump(ptrClut * 4);
+
+            c.X = br.ReadByte();
+            c.Y = br.ReadByte();
+            c.Z = br.ReadByte();
+
+            return c;
+        }
+
+        public TextureLayout ReadTexture(BinaryReaderEx br, int i)
+        {
+            br.Jump(ptrTex + i * 4);
+            br.Jump(br.ReadUInt32());
+
+            return new TextureLayout(br);
+        }
 
         public bool isTextured
         {
@@ -39,9 +77,13 @@ namespace CTRFramework
         public void Read(BinaryReaderEx br)
         {
             name = br.ReadStringFixed(16);
+
+            Console.WriteLine(name);
+            //Console.ReadKey();
+
             unk0 = br.ReadInt32(); //0?
             unk1 = br.ReadInt32(); //probably flags
-            position = new Vector4s(br);
+            scale = new Vector4s(br);
 
             //ptr
             ptrFaces = br.ReadInt32();
@@ -53,6 +95,38 @@ namespace CTRFramework
             numAnims = br.ReadInt32();
             ptrAnims = br.ReadInt32();
             unk4 = br.ReadInt32(); //?
+
+            long pos = br.BaseStream.Position;
+
+            br.Jump(ptrFaces);
+
+            uint x;
+
+            do
+            {
+                x = br.ReadUInt32Big();
+                if (x != 0xFFFFFFFF)
+                    defs.Add(new LODVertexDef(x));
+            }
+            while (x != 0xFFFFFFFF);
+
+            foreach (LODVertexDef d in defs)
+            {
+                Console.WriteLine(
+                    d.value.ToString("X8") +
+                    " t:" + d.texIndex +
+                    " c:" + d.colorIndex +
+                    " s:" + d.stackIndex);
+
+                Console.WriteLine(ReadVertex(br, d.stackIndex).ToString());
+                //Console.WriteLine(d.texIndex == 0 ? "no textured" : ReadTexture(br, d.texIndex-1).ToString());
+                //Console.WriteLine(d.colorIndex == 0 ? " no color?" : ReadColor(br, d.colorIndex-1).ToString());
+            }
+
+            br.BaseStream.Position = pos;
+
+
+            //Console.ReadKey();
 
             /*
             Console.WriteLine(name);
