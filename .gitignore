@@ -1,3 +1,5 @@
+formats/*.bat
+
 #nuget packages
 packages/
 
