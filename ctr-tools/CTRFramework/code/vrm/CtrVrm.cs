@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 
-namespace CTRFramework
+namespace CTRFramework.Vram
 {
     public class CtrVrm
     {
@@ -19,7 +19,7 @@ namespace CTRFramework
                 {
                     br.ReadInt32();
                     Tim tim = new Tim(br);
-                    tim.Write("vram" + i.ToString("X2") + ".tim");
+                    //tim.Write("vram" + i.ToString("X2") + ".tim");
                     buffer.DrawTim(tim);
 
                     Console.WriteLine(tim.ToString());
@@ -29,7 +29,7 @@ namespace CTRFramework
             {
                 br.BaseStream.Position = 0;
                 Tim tim = new Tim(br);
-                tim.Write("vram01.tim");
+                //tim.Write("vram01.tim");
                 buffer.DrawTim(tim);
             }
 

@@ -4,7 +4,7 @@ using System.Drawing;
 using System.IO;
 using CTRFramework.Shared;
 
-namespace CTRFramework
+namespace CTRFramework.Vram
 {
     public class Tim : IRead
     {
@@ -87,7 +87,7 @@ namespace CTRFramework
             region.Width = br.ReadUInt16();
             region.Height = br.ReadUInt16();
 
-            data = br.ReadArrayUInt16(((int)datasize - 4 * 3) / 2);
+            data = br.ReadArrayUInt16(region.Width * region.Height);
         }
 
         /// <summary>
