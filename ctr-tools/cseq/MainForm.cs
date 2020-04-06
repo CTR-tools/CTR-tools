@@ -83,7 +83,7 @@ namespace CTRtools.CSEQ
 
             foreach (SampleDef sd in seq.samples)
             {
-                TreeNode tn1 = new TreeNode(sd.SampleID + "");
+                TreeNode tn1 = new TreeNode(sd.Tag + "");
                 tn.Nodes.Add(tn1);
             }
 
@@ -91,7 +91,7 @@ namespace CTRtools.CSEQ
 
             foreach (SampleDefReverb sd in seq.samplesReverb)
             {
-                TreeNode tn3 = new TreeNode(sd.SampleID + "");
+                TreeNode tn3 = new TreeNode(sd.Tag + "");
                 tn2.Nodes.Add(tn3);
             }
 
@@ -268,8 +268,7 @@ namespace CTRtools.CSEQ
         private void exportSamplesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (seq != null)
-                if (seq.bank != null)
-                    seq.bank.ExportAll(seq.path, seq.name);
+                seq.ExportSamples();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

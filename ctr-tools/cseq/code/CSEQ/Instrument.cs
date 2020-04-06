@@ -64,6 +64,8 @@ namespace CTRtools.CSEQ
             }
         }
 
+        public string Tag => sampleID.ToString("0000") + "_" + frequency;
+
         public override string ToString()
         {
             switch (instType)

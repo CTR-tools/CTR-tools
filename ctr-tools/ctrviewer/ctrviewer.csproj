@@ -79,7 +79,7 @@
   <ItemGroup>
     <Reference Include="CTRFramework, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\CTRFramework\bin\x64\Release\CTRFramework.dll</HintPath>
+      <HintPath>..\CTRFramework\obj\x64\Release\CTRFramework.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>

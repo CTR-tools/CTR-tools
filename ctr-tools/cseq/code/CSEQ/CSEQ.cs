@@ -155,6 +155,7 @@ namespace CTRtools.CSEQ
             bank = new Bank(s);
         }
 
+        /*
         /// <summary>Exports every instrument to a SFZ text file.</summary>
         /// <param name="fileName">Target file name.</param>
         public void ToSFZ(string fileName)
@@ -169,6 +170,8 @@ namespace CTRtools.CSEQ
 
             File.WriteAllText(fileName, sb.ToString());
         }
+
+    */
 
         /// <summary>Saves CSEQ file.</summary>
         /// <param name="fileName">Target file name.</param>
@@ -222,6 +225,22 @@ namespace CTRtools.CSEQ
             System.Windows.Forms.MessageBox.Show("done");
         }
 
+
+        public void ExportSamples()
+        {
+            if (bank != null)
+            {
+                foreach (SampleDef s in samples)
+                {
+                    bank.Export(s.SampleID, s.frequency, path, name, s.Tag);
+                }
+
+                foreach (SampleDefReverb s in samplesReverb)
+                {
+                    bank.Export(s.SampleID, s.frequency, path, name, s.Tag);
+                }
+            }
+        }
 
         public bool CheckBankForSamples()
         {
