@@ -34,7 +34,7 @@ namespace CTRtools.CSEQ
         private byte midi;
         private string pitchshift;
 
-        public string Tag => SampleID.ToString("0000") + "_" + frequency;
+        public string Tag => SampleID.ToString("X4") + "_" + frequency;
 
 
         [CategoryAttribute("General"), DescriptionAttribute("Sample volume.")]

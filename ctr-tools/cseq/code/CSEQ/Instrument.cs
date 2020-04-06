@@ -64,7 +64,7 @@ namespace CTRtools.CSEQ
             }
         }
 
-        public string Tag => sampleID.ToString("0000") + "_" + frequency;
+        public string Tag => sampleID.ToString("X4") + "_" + frequency;
 
         public override string ToString()
         {

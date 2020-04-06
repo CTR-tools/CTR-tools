@@ -78,15 +78,18 @@ namespace CTRFramework.Sound
 
         public void Export(int id, int freq, string path, string path2 = null, string name = null)
         {
-            string vagpath = Path.Combine(path, (path2 == null ? "vag" : path2));
-            Directory.CreateDirectory(vagpath);
-
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(vagpath + "\\" + (name == null ? "sample_" + id.ToString("0000") : name) + ".vag")))
+            if (Contains(id))
             {
-                VagHeader vh = new VagHeader(samples[id]);
-                if (freq != -1) vh.frequency = freq;
-                vh.Write(bw);
-                bw.Write(samples[id]);
+                string vagpath = Path.Combine(path, (path2 == null ? "vag" : path2));
+                Directory.CreateDirectory(vagpath);
+
+                using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(vagpath + "\\" + (name == null ? "sample_" + id.ToString("0000") : name) + ".vag")))
+                {
+                    VagHeader vh = new VagHeader(samples[id]);
+                    if (freq != -1) vh.frequency = freq;
+                    vh.Write(bw);
+                    bw.Write(samples[id]);
+                }
             }
         }
 
