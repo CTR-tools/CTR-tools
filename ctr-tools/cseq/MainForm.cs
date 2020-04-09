@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using System.Text;
 
 namespace CTRtools.CSEQ
 {
@@ -98,6 +99,7 @@ namespace CTRtools.CSEQ
             treeView1.Nodes.Add(tn2);
             treeView1.Nodes.Add(tn);
 
+            treeView1.ExpandAll();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -198,7 +200,8 @@ namespace CTRtools.CSEQ
                 }
                 else
                 {
-                    bnk.ExportAll(Path.GetDirectoryName(ofd.FileName));
+                    bnk = new Bank(ofd.FileName);
+                    bnk.ExportAll(1, Path.GetDirectoryName(ofd.FileName), Path.GetFileNameWithoutExtension(ofd.FileName));
                 }
             }
         }
@@ -210,11 +213,6 @@ namespace CTRtools.CSEQ
         private void Form1_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
-        }
-
-        private void skipBytesForUSDemoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CSEQ.USdemo = skipBytesForUSDemoToolStripMenuItem.Checked;
         }
 
         private void tutorialToolStripMenuItem_Click(object sender, EventArgs e)
@@ -251,6 +249,31 @@ namespace CTRtools.CSEQ
 
         private void testJsonToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                string[] files = Directory.GetFiles(fbd.SelectedPath);
+
+
+                List<string> x = new List<string>();
+
+                foreach(string s in files)
+                {
+                    CSEQ c = new CSEQ(s, textBox1);
+                    foreach (SampleDef sd in c.samples) if (!x.Contains(sd.Tag)) x.Add(sd.Tag); 
+                    foreach (SampleDefReverb sd in c.samplesReverb) if (!x.Contains(sd.Tag)) x.Add(sd.Tag);
+                }
+
+                x.Sort();
+                StringBuilder sb = new StringBuilder();
+
+                foreach (string s in x) sb.AppendLine(s);
+
+                textBox1.Text = sb.ToString();
+            }
+
+            /*
             string track = "canyon";
             string instr = "long";
             int id = 0;
@@ -258,6 +281,7 @@ namespace CTRtools.CSEQ
 
             MetaInst info = CTRJson.GetMetaInst(track, instr, id);
             textBox1.Text += "" + info.Midi + " " + info.Key + " " + info.Title + " " + info.Pitch;
+            */
         }
 
         private void patchMIDIInstrumentsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -318,6 +342,11 @@ namespace CTRtools.CSEQ
             }
 
             tabControl1.SelectedIndex = 0;
+        }
+
+        private void copyInstrumentVolumeToTracksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CSEQ.UseSampleVolumeForTracks = copyInstrumentVolumeToTracksToolStripMenuItem.Checked;
         }
     }
 }

@@ -250,7 +250,19 @@
 219=japfont.vram
 220=japfont.mpk
 
-
+221=dll\221.dll
+222=dll\222.dll
+223=dll\223.dll
+224=dll\224.dll
+225=dll\225.dll
+226=dll\226.dll
+227=dll\227.dll
+228=dll\228.dll
+229=dll\229.dll
+230=dll\230_movie.dll
+231=dll\231_weapons.dll
+232=dll\232_hub.dll
+233=dll\233_podium.dll
 
 234=lang\ja.lng
 235=lang\en.lng

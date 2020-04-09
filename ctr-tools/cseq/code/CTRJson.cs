@@ -52,15 +52,13 @@ namespace CTRtools.Helpers
         */
         public static MetaInst GetMetaInst(string track, string inst, int x)
         {
-            //string output = JsonConvert.SerializeObject(product);
-            try
-            {
-                return JsonConvert.DeserializeObject<MetaInst>(midi[track][inst][x].ToString());
-            }
-            catch
-            {
-                return new MetaInst();
-            }
+            //really?
+            if (midi != null)
+                if (midi[track] != null)
+                    if (midi[track][inst] != null)
+                        if (midi[track][inst][x] != null)
+                            return JsonConvert.DeserializeObject<MetaInst>(midi[track][inst][x].ToString());
+            return new MetaInst();
         }
     }
 }

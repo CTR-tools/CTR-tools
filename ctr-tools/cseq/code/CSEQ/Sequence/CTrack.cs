@@ -83,6 +83,9 @@ namespace CTRtools.CSEQ
             me.Add(new TextEvent(name, MetaEventType.SequenceTrackName, absTime));
             me.Add(new TempoEvent(header.MPQN, absTime));
 
+
+            me.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, seq.samplesReverb[instrument].Volume / 2));
+
             foreach (Command c in cmd)
             {
                 me.AddRange(c.ToMidiEvent(absTime, channel, seq, this));

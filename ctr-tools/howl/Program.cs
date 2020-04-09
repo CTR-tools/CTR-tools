@@ -28,6 +28,7 @@ namespace howl
                     Console.Write(hwl.ToString());
 
                     hwl.ExportCSEQ(br);
+                    hwl.ExportAllSamples();
 
                     Console.WriteLine("Done!");
                 }

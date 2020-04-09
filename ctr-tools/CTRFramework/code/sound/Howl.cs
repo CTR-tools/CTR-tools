@@ -73,8 +73,6 @@ namespace CTRFramework.Sound
                 Bank x = new Bank();
                 x.Read(br);
                 banks.Add(x);
-
-                x.ExportAll(Path.GetDirectoryName(name));
             }
 
             Bank sfx = new Bank();
@@ -160,6 +158,16 @@ namespace CTRFramework.Sound
                 File.WriteAllBytes(fn, data);
 
                 j++;
+            }
+        }
+
+        public void ExportAllSamples()
+        {
+            int i = 0;
+            foreach (Bank b in banks)
+            {
+                b.ExportAll(i, Path.GetDirectoryName(name));
+                i++;
             }
         }
 

@@ -21,6 +21,7 @@ namespace CTRtools.CSEQ
 
         public static int ActiveInstrument = 0;
         public static string PatchName = "";
+        public static bool UseSampleVolumeForTracks = true;
 
         #endregion
 

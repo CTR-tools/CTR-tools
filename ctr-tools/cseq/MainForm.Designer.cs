@@ -38,7 +38,6 @@ namespace CTRtools.CSEQ
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.skipBytesForUSDemoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.patchMIDIInstrumentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ignoreOriginalVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
@@ -63,6 +62,7 @@ namespace CTRtools.CSEQ
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.copyInstrumentVolumeToTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -78,7 +78,7 @@ namespace CTRtools.CSEQ
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(925, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(644, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -124,9 +124,9 @@ namespace CTRtools.CSEQ
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.skipBytesForUSDemoToolStripMenuItem,
             this.patchMIDIInstrumentsToolStripMenuItem,
             this.ignoreOriginalVolumeToolStripMenuItem,
+            this.copyInstrumentVolumeToTracksToolStripMenuItem,
             this.toolStripMenuItem6,
             this.loadBankToolStripMenuItem,
             this.exportSamplesToolStripMenuItem,
@@ -135,16 +135,6 @@ namespace CTRtools.CSEQ
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
-            // 
-            // skipBytesForUSDemoToolStripMenuItem
-            // 
-            this.skipBytesForUSDemoToolStripMenuItem.CheckOnClick = true;
-            this.skipBytesForUSDemoToolStripMenuItem.Name = "skipBytesForUSDemoToolStripMenuItem";
-            this.skipBytesForUSDemoToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.skipBytesForUSDemoToolStripMenuItem.Text = "Skip bytes for US Demo";
-            this.skipBytesForUSDemoToolStripMenuItem.ToolTipText = "This option is needed to parse correctly CSEQ files from NTSC Demo.";
-            this.skipBytesForUSDemoToolStripMenuItem.Visible = false;
-            this.skipBytesForUSDemoToolStripMenuItem.Click += new System.EventHandler(this.skipBytesForUSDemoToolStripMenuItem_Click);
             // 
             // patchMIDIInstrumentsToolStripMenuItem
             // 
@@ -160,8 +150,8 @@ namespace CTRtools.CSEQ
             // 
             this.ignoreOriginalVolumeToolStripMenuItem.CheckOnClick = true;
             this.ignoreOriginalVolumeToolStripMenuItem.Name = "ignoreOriginalVolumeToolStripMenuItem";
-            this.ignoreOriginalVolumeToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.ignoreOriginalVolumeToolStripMenuItem.Text = "Ignore original volume";
+            this.ignoreOriginalVolumeToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.ignoreOriginalVolumeToolStripMenuItem.Text = "Force max velocity";
             this.ignoreOriginalVolumeToolStripMenuItem.Click += new System.EventHandler(this.ignoreOriginalVolumeToolStripMenuItem_Click);
             // 
             // toolStripMenuItem6
@@ -200,28 +190,28 @@ namespace CTRtools.CSEQ
             // 
             this.toolStripMenuItem2.CheckOnClick = true;
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(104, 22);
             this.toolStripMenuItem2.Text = "11025";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(104, 22);
             this.toolStripMenuItem3.Text = "22050";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(104, 22);
             this.toolStripMenuItem4.Text = "33075";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(104, 22);
             this.toolStripMenuItem5.Text = "44100";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
             // 
@@ -229,8 +219,7 @@ namespace CTRtools.CSEQ
             // 
             this.testJsonToolStripMenuItem.Name = "testJsonToolStripMenuItem";
             this.testJsonToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.testJsonToolStripMenuItem.Text = "test json";
-            this.testJsonToolStripMenuItem.Visible = false;
+            this.testJsonToolStripMenuItem.Text = "List all samples";
             this.testJsonToolStripMenuItem.Click += new System.EventHandler(this.testJsonToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
@@ -259,7 +248,7 @@ namespace CTRtools.CSEQ
             this.groupBox1.Controls.Add(this.textBox2);
             this.groupBox1.Location = new System.Drawing.Point(12, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(133, 420);
+            this.groupBox1.Size = new System.Drawing.Size(133, 448);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "SEQ Info";
@@ -269,7 +258,7 @@ namespace CTRtools.CSEQ
             this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(5, 392);
+            this.comboBox1.Location = new System.Drawing.Point(5, 420);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
             this.comboBox1.TabIndex = 5;
@@ -282,7 +271,7 @@ namespace CTRtools.CSEQ
             this.trackBox.FormattingEnabled = true;
             this.trackBox.Location = new System.Drawing.Point(6, 199);
             this.trackBox.Name = "trackBox";
-            this.trackBox.Size = new System.Drawing.Size(120, 186);
+            this.trackBox.Size = new System.Drawing.Size(120, 212);
             this.trackBox.TabIndex = 4;
             this.trackBox.SelectedIndexChanged += new System.EventHandler(this.trackBox_SelectedIndexChanged);
             this.trackBox.DoubleClick += new System.EventHandler(this.trackBox_DoubleClick);
@@ -317,7 +306,7 @@ namespace CTRtools.CSEQ
             this.tabControl1.Location = new System.Drawing.Point(151, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(762, 420);
+            this.tabControl1.Size = new System.Drawing.Size(481, 448);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
@@ -350,7 +339,7 @@ namespace CTRtools.CSEQ
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(754, 394);
+            this.tabPage2.Size = new System.Drawing.Size(473, 422);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Instruments / Samples";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -361,7 +350,7 @@ namespace CTRtools.CSEQ
             | System.Windows.Forms.AnchorStyles.Left)));
             this.treeView1.Location = new System.Drawing.Point(6, 14);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(137, 374);
+            this.treeView1.Size = new System.Drawing.Size(137, 402);
             this.treeView1.TabIndex = 3;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -372,15 +361,25 @@ namespace CTRtools.CSEQ
             | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid1.Location = new System.Drawing.Point(148, 14);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(600, 374);
+            this.propertyGrid1.Size = new System.Drawing.Size(319, 402);
             this.propertyGrid1.TabIndex = 2;
+            // 
+            // copyInstrumentVolumeToTracksToolStripMenuItem
+            // 
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.Checked = true;
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.CheckOnClick = true;
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.Name = "copyInstrumentVolumeToTracksToolStripMenuItem";
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.Text = "Copy instrument volume to tracks";
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.Click += new System.EventHandler(this.copyInstrumentVolumeToTracksToolStripMenuItem_Click);
             // 
             // MainForm
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(925, 459);
+            this.ClientSize = new System.Drawing.Size(644, 487);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
@@ -417,7 +416,6 @@ namespace CTRtools.CSEQ
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem skipBytesForUSDemoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportSEQToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadBankToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
@@ -436,6 +434,7 @@ namespace CTRtools.CSEQ
         private System.Windows.Forms.ToolStripMenuItem ignoreOriginalVolumeToolStripMenuItem;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.ToolStripMenuItem copyInstrumentVolumeToTracksToolStripMenuItem;
     }
 }
 

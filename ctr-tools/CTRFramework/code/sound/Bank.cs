@@ -93,12 +93,12 @@ namespace CTRFramework.Sound
             }
         }
 
-        public void ExportAll(string path, string path2 = null)
+        public void ExportAll(int bnum, string path, string path2 = null)
         {
             int i = 0;
             foreach (KeyValuePair<int, byte[]> s in samples)
             {
-                Export(s.Key, -1, path, path2, i.ToString() + "_" + s.Key);
+                Export(s.Key, -1, path, path2, s.Key.ToString("0000") + "_" + s.Key.ToString("X4"));
                 i++;
             }
         }
