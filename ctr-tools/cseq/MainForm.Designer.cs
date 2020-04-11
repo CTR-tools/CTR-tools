@@ -40,6 +40,7 @@ namespace CTRtools.CSEQ
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.patchMIDIInstrumentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ignoreOriginalVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyInstrumentVolumeToTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
             this.loadBankToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportSamplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,6 +50,7 @@ namespace CTRtools.CSEQ
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.testJsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alistAlBankSamplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tutorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -62,7 +64,6 @@ namespace CTRtools.CSEQ
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.copyInstrumentVolumeToTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -131,7 +132,8 @@ namespace CTRtools.CSEQ
             this.loadBankToolStripMenuItem,
             this.exportSamplesToolStripMenuItem,
             this.defaultSampleRateToolStripMenuItem,
-            this.testJsonToolStripMenuItem});
+            this.testJsonToolStripMenuItem,
+            this.alistAlBankSamplesToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
@@ -140,7 +142,7 @@ namespace CTRtools.CSEQ
             // 
             this.patchMIDIInstrumentsToolStripMenuItem.CheckOnClick = true;
             this.patchMIDIInstrumentsToolStripMenuItem.Name = "patchMIDIInstrumentsToolStripMenuItem";
-            this.patchMIDIInstrumentsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.patchMIDIInstrumentsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.patchMIDIInstrumentsToolStripMenuItem.Text = "Patch MIDI Instruments";
             this.patchMIDIInstrumentsToolStripMenuItem.ToolTipText = "Only use this option if you\'re not planning to create SF2 out of original samples" +
     ".";
@@ -154,15 +156,25 @@ namespace CTRtools.CSEQ
             this.ignoreOriginalVolumeToolStripMenuItem.Text = "Force max velocity";
             this.ignoreOriginalVolumeToolStripMenuItem.Click += new System.EventHandler(this.ignoreOriginalVolumeToolStripMenuItem_Click);
             // 
+            // copyInstrumentVolumeToTracksToolStripMenuItem
+            // 
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.Checked = true;
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.CheckOnClick = true;
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.Name = "copyInstrumentVolumeToTracksToolStripMenuItem";
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.Text = "Copy instrument volume to tracks";
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.Click += new System.EventHandler(this.copyInstrumentVolumeToTracksToolStripMenuItem_Click);
+            // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(195, 6);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(251, 6);
             // 
             // loadBankToolStripMenuItem
             // 
             this.loadBankToolStripMenuItem.Name = "loadBankToolStripMenuItem";
-            this.loadBankToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.loadBankToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.loadBankToolStripMenuItem.Text = "Load bank";
             this.loadBankToolStripMenuItem.ToolTipText = "Loads BNK file and checks whether it contains the samples used by CSEQ.";
             this.loadBankToolStripMenuItem.Click += new System.EventHandler(this.loadBankToolStripMenuItem_Click);
@@ -170,7 +182,7 @@ namespace CTRtools.CSEQ
             // exportSamplesToolStripMenuItem
             // 
             this.exportSamplesToolStripMenuItem.Name = "exportSamplesToolStripMenuItem";
-            this.exportSamplesToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.exportSamplesToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.exportSamplesToolStripMenuItem.Text = "Export samples";
             this.exportSamplesToolStripMenuItem.Click += new System.EventHandler(this.exportSamplesToolStripMenuItem_Click);
             // 
@@ -182,45 +194,51 @@ namespace CTRtools.CSEQ
             this.toolStripMenuItem4,
             this.toolStripMenuItem5});
             this.defaultSampleRateToolStripMenuItem.Name = "defaultSampleRateToolStripMenuItem";
-            this.defaultSampleRateToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.defaultSampleRateToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.defaultSampleRateToolStripMenuItem.Text = "Default sample rate";
             this.defaultSampleRateToolStripMenuItem.ToolTipText = "Sets sample rate to use for samples not used by any CSEQ instrument.";
             // 
             // toolStripMenuItem2
             // 
-            this.toolStripMenuItem2.CheckOnClick = true;
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem2.Text = "11025";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem3.Text = "22050";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem4.Text = "33075";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(104, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem5.Text = "44100";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
             // 
             // testJsonToolStripMenuItem
             // 
             this.testJsonToolStripMenuItem.Name = "testJsonToolStripMenuItem";
-            this.testJsonToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.testJsonToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.testJsonToolStripMenuItem.Text = "List all samples";
             this.testJsonToolStripMenuItem.Click += new System.EventHandler(this.testJsonToolStripMenuItem_Click);
+            // 
+            // alistAlBankSamplesToolStripMenuItem
+            // 
+            this.alistAlBankSamplesToolStripMenuItem.Name = "alistAlBankSamplesToolStripMenuItem";
+            this.alistAlBankSamplesToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.alistAlBankSamplesToolStripMenuItem.Text = "Sample to bank relation list";
+            this.alistAlBankSamplesToolStripMenuItem.Click += new System.EventHandler(this.alistAlBankSamplesToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -315,7 +333,7 @@ namespace CTRtools.CSEQ
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(754, 394);
+            this.tabPage1.Size = new System.Drawing.Size(473, 422);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Track Info";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -328,7 +346,7 @@ namespace CTRtools.CSEQ
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(748, 388);
+            this.textBox1.Size = new System.Drawing.Size(467, 416);
             this.textBox1.TabIndex = 5;
             this.textBox1.Text = "  ";
             // 
@@ -363,16 +381,6 @@ namespace CTRtools.CSEQ
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.Size = new System.Drawing.Size(319, 402);
             this.propertyGrid1.TabIndex = 2;
-            // 
-            // copyInstrumentVolumeToTracksToolStripMenuItem
-            // 
-            this.copyInstrumentVolumeToTracksToolStripMenuItem.Checked = true;
-            this.copyInstrumentVolumeToTracksToolStripMenuItem.CheckOnClick = true;
-            this.copyInstrumentVolumeToTracksToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.copyInstrumentVolumeToTracksToolStripMenuItem.Name = "copyInstrumentVolumeToTracksToolStripMenuItem";
-            this.copyInstrumentVolumeToTracksToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.copyInstrumentVolumeToTracksToolStripMenuItem.Text = "Copy instrument volume to tracks";
-            this.copyInstrumentVolumeToTracksToolStripMenuItem.Click += new System.EventHandler(this.copyInstrumentVolumeToTracksToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -435,6 +443,7 @@ namespace CTRtools.CSEQ
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.ToolStripMenuItem copyInstrumentVolumeToTracksToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem alistAlBankSamplesToolStripMenuItem;
     }
 }
 

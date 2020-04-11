@@ -84,7 +84,8 @@ namespace CTRtools.CSEQ
             me.Add(new TempoEvent(header.MPQN, absTime));
 
 
-            me.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, seq.samplesReverb[instrument].Volume / 2));
+            if (CSEQ.UseSampleVolumeForTracks)
+                me.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, seq.samplesReverb[instrument].Volume / 2));
 
             foreach (Command c in cmd)
             {

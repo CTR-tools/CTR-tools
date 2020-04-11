@@ -39,8 +39,62 @@ namespace CTRFramework.Sound
             }
         }
 
+
+
+
+        public static Dictionary<int, string> sampledict = new Dictionary<int, string>();
+
+        private bool ReadSampleNames(string path)
+        {
+            try
+            {
+                if (File.Exists(path))
+                {
+                    string[] buf = File.ReadAllLines(path);
+
+                    foreach (string b in buf)
+                    {
+                        if (b.Trim() != "")
+                        {
+                            if (b.ToCharArray()[0] != '#')
+                            { 
+                            string[] bb = b.Replace(" ", "").Split('=');
+
+                            int x = -1;
+                            Int32.TryParse(bb[0], out x);
+
+                            if (x == -1)
+                            {
+                                Console.WriteLine("List parsing error at: {0}", b);
+                                continue;
+                            }
+
+                                Console.WriteLine(x + " " + bb[1]);
+                            sampledict.Add(x, bb[1]);
+                        }
+                        }
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+
         public bool Read(BinaryReaderEx br)
         {
+            if (File.Exists(Meta.apppath + "samplenames.txt"))
+                ReadSampleNames(Meta.apppath + "samplenames.txt");
+
             header = new HowlHeader(br);
 
             for (int i = 0; i < header.cnt4; i++)
@@ -185,6 +239,7 @@ namespace CTRFramework.Sound
 
             return null;
         }
+
 
         public override string ToString()
         {

@@ -348,5 +348,36 @@ namespace CTRtools.CSEQ
         {
             CSEQ.UseSampleVolumeForTracks = copyInstrumentVolumeToTracksToolStripMenuItem.Checked;
         }
+
+        private void alistAlBankSamplesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                string[] files = Directory.GetFiles(fbd.SelectedPath);
+
+
+                List<string> x = new List<string>();
+
+                foreach (string s in files)
+                {
+                    Bank b = new Bank(s);
+
+                    foreach (var v in b.samples)
+                    {
+                        x.Add(Path.GetFileNameWithoutExtension(s) + "," + v.Key.ToString("000"));
+                    }
+                }
+
+                x.Sort();
+                StringBuilder sb = new StringBuilder();
+
+                foreach (string s in x) sb.AppendLine(s);
+
+                textBox1.Text = sb.ToString();
+            }
+
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using CTRFramework.Shared;
 using CTRFramework.Sound;
 
@@ -7,7 +8,6 @@ namespace howl
 {
     class Program
     {
-
         static void Main(string[] args)
         {
             Console.WriteLine("Crash Team Racing HOWL Extractor by DCxDemo*.\r\n");
