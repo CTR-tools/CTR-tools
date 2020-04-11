@@ -326,6 +326,30 @@
 				{ key: 7, title: "snare 2?" }
 			]
 		},
+		"mines": {
+			long: [				
+				{ midi: 2, pitch: -12, title: "brass" },
+				{ midi: 22, pitch: 12,  title: "flute" },
+				{ midi: 33, pitch: -12, title: "bass" },
+				{ midi: 115, pitch: -12, title: "rock organ" },
+				{ midi: 87, title: "rock organ" },
+				{ midi: 0, pitch: -12, title: "rock organ" },
+				{ midi: 1, title: "rock organ" }
+			],
+			short: [
+				{ key: 35, title: "cowbell" },
+				{ key: 28, title: "agogo hi" },
+				{ key: 44, title: "agogo low" },
+				{ key: 87, title: "Closed Hi-Hat" },
+				{ key: 86, title: "Open Hi-Hat" },
+				{ key: 41, title: "snare" },
+				{ key: 6, title: "bass drum" },
+				{ key: 7, title: "snare 2?" },
+				{ key: 8, title: "snare" },
+				{ key: 9, title: "bass drum" },
+				{ key: 9, title: "bass drum" }
+			]
+		},
 		"credits": {
 			long: [				
 				{ midi: 26, pitch: -12, title: "brass" },
