@@ -528,7 +528,7 @@
 478=models\boss_body\noxidebody1.ctr
 479=models\boss_body\noxidebody2.ctr
 
-
+480=VlcTable.bin
 
 481=movies\thumb00.str
 482=movies\thumb01.str
@@ -591,8 +591,14 @@
 536=cutscenes\sleeping_crash\data.vram
 537=cutscenes\sleeping_crash\data.lev
 538=cutscenes\sleeping_crash\data.ptr
+539=cutscenes\last_oxide_intro.vram
+540=cutscenes\last_oxide_intro.lev
+541=cutscenes\last_oxide_intro.ptr
 
-
+542=cutscenes\oxide01.vram
+543=cutscenes\oxide01.lev
+544=cutscenes\oxide02.vram
+545=cutscenes\oxide02.lev
 
 546=credits\crashdance\data.vram
 547=credits\crashdance\data.lev
