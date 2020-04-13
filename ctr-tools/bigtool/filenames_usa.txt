@@ -250,19 +250,19 @@
 219=japfont.vram
 220=japfont.mpk
 
-221=dll\221.dll
-222=dll\222.dll
-223=dll\223.dll
-224=dll\224.dll
-225=dll\225.dll
-226=dll\226.dll
-227=dll\227.dll
-228=dll\228.dll
-229=dll\229.dll
-230=dll\230_movie.dll
-231=dll\231_weapons.dll
-232=dll\232_hub.dll
-233=dll\233_podium.dll
+221=lib\221_05.dll
+222=lib\222_06.dll
+223=lib\223_07.dll
+224=lib\224_08.dll
+225=lib\225_09.dll
+226=lib\226_0B.dll
+227=lib\227_0C.dll
+228=lib\228_0D.dll
+229=lib\229_0E.dll
+230=lib\230_10_main_menu.dll
+231=lib\231_11_weapons.dll
+232=lib\232_12_hub.dll
+233=lib\233_13_podium.dll
 
 234=lang\ja.lng
 235=lang\en.lng
