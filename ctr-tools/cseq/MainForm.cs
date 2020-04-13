@@ -22,14 +22,23 @@ namespace CTRtools.CSEQ
             InitializeComponent();
             this.DoubleBuffered = true;
 
+            LoadMeta();
+        }
+
+        public void LoadMeta()
+        {
             if (!CTRJson.Load())
             {
                 MessageBox.Show("Couldn't load Json!");
             }
             else
             {
+                listBox1.Items.Clear();
+                comboBox1.Items.Clear();
+
                 foreach (KeyValuePair<string, JToken> j in CTRJson.midi)
                 {
+                    listBox1.Items.Add(j.Key);
                     comboBox1.Items.Add(j.Key);
                 }
             }
@@ -378,6 +387,16 @@ namespace CTRtools.CSEQ
                 textBox1.Text = sb.ToString();
             }
 
+        }
+
+        private void reloadMetaFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadMeta();
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            textBox3.Text = CTRJson.midi[listBox1.SelectedItem].ToString();
         }
     }
 }

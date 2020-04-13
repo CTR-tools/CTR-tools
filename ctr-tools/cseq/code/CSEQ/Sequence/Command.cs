@@ -94,13 +94,15 @@ namespace CTRtools.CSEQ
                 velocity = 127;
             }
 
+            var p = pitch;
+
             if (CSEQ.PatchMidi)
             {
                 if (ct.isDrumTrack)
                 {
                     if (evt == CSEQEvent.NoteOn || evt == CSEQEvent.NoteOff)
                     {
-                        pitch = (byte)seq.shortSamples[pitch].info.Key;
+                        p = (byte)seq.shortSamples[pitch].info.Key;
                     }
                 }
 
@@ -109,13 +111,13 @@ namespace CTRtools.CSEQ
                     if (evt == CSEQEvent.ChangePatch)
                     {
                         CSEQ.ActiveInstrument = pitch;
-                        pitch = (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Midi;
+                        p = (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Midi;
                     }
                     else if (evt == CSEQEvent.NoteOn || evt == CSEQEvent.NoteOff)
                     {
                         try
                         {
-                            pitch += (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Pitch;
+                            p += (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Pitch;
                         }
                         catch //(Exception ex)
                         {
@@ -129,17 +131,17 @@ namespace CTRtools.CSEQ
 
             switch (evt)
             {
-                case CSEQEvent.NoteOn: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOn, pitch, velocity)); break;
-                case CSEQEvent.NoteOff: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOff, pitch, velocity)); break;
+                case CSEQEvent.NoteOn: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOn, p, velocity)); break;
+                case CSEQEvent.NoteOff: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOff, p, velocity)); break;
 
                 case CSEQEvent.ChangePatch:
                     // events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, seq.longSamples[pitch].velocity / 2));
-                    events.Add(new PatchChangeEvent(absTime, channel, pitch));
+                    events.Add(new PatchChangeEvent(absTime, channel, p));
                     break;
 
-                case CSEQEvent.BendAssume: events.Add(new PitchWheelChangeEvent(absTime, channel, pitch * 64)); break;
-                case CSEQEvent.PanAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.Pan, pitch / 2)); break;
-                case CSEQEvent.VelAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, pitch / 2)); break; //not really used
+                case CSEQEvent.BendAssume: events.Add(new PitchWheelChangeEvent(absTime, channel, p * 64)); break;
+                case CSEQEvent.PanAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.Pan, p / 2)); break;
+                case CSEQEvent.VelAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, p / 2)); break; //not really used
 
                 //case CSEQEvent.EndTrack2:
                 case CSEQEvent.EndTrack: events.Add(new MetaEvent(MetaEventType.EndTrack, 0, absTime)); break;

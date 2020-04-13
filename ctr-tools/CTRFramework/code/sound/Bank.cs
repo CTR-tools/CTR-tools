@@ -84,7 +84,16 @@ namespace CTRFramework.Sound
                 Directory.CreateDirectory(vagpath);
 
                 //string vagname = vagpath + "\\" +  (name == null ?  (Howl.sampledict.ContainsKey(id) ? Howl.sampledict[id] : "sample_" + id.ToString("0000")) : name) + ".vag";
-                string vagname = vagpath + "\\" + (Howl.sampledict.ContainsKey(id) ? Howl.sampledict[id] : (name != null ? name : "sample_" + id.ToString("0000"))) + ".vag";
+                string vagname = vagpath + "\\";
+
+                if (name != null)
+                {
+                    vagname += (name != null ? name : "sample") + (Howl.sampledict.ContainsKey(id) ? "_" + Howl.sampledict[id] : "" ) + ".vag";
+                }
+                else
+                {
+                    vagname += "sample_" + id.ToString("0000") + ".vag";
+                }
 
                 using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(vagname)))
                 {
