@@ -245,7 +245,12 @@
 232=japfont.vram
 233=japfont.mpk
 
-
+234=lib\234_04.dll
+235=lib\235_05.dll
+236=lib\236_06.dll
+237=lib\237_07.dll
+238=lib\238_08.dll
+239=lib\239_09.dll
 
 240=lang\ja.lng
 241=lang\en.lng
