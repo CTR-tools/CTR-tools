@@ -18,7 +18,7 @@ namespace CTRtools.CSEQ
         public int frequency
         {
             //cents needed?
-            get { return (int)(basepitch * 44100.0 / 4096.0); }
+            get { return (int)Math.Round(basepitch * 44100.0f / 1024.0f); }
         }
 
         public short sampleID;

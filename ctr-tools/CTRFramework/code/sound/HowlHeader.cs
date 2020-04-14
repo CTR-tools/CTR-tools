@@ -3,9 +3,9 @@ using System;
 
 namespace CTRFramework.Sound
 {
-    public class HowlHeader
+    public class HowlHeader : IRead, IWrite
     {
-        public string magic;
+        public char[] magic;
 
         public int u1; //freezes the game if changed
         public int reserved1; //no effect
@@ -26,9 +26,9 @@ namespace CTRFramework.Sound
 
         public void Read(BinaryReaderEx br)
         {
-            magic = System.Text.Encoding.ASCII.GetString(br.ReadBytes(4));
+            magic = br.ReadChars(4); //System.Text.Encoding.ASCII.GetString(br.ReadBytes(4));
 
-            if (magic != "HOWL")
+            if (new string(magic) != "HOWL")
             {
                 Console.WriteLine("Not a CTR HOWL file.");
                 return;
@@ -51,6 +51,30 @@ namespace CTRFramework.Sound
             cntSeq = br.ReadInt32();
 
             sampleDataSize = br.ReadInt32();
+        }
+
+        public void Write(BinaryWriterEx bw)
+        {
+            if (new string(magic) != "HOWL")
+            {
+                Console.WriteLine("Not a CTR HOWL file.");
+                return;
+            }
+
+            bw.Write(magic);
+            bw.Write(u1);
+            bw.Write(reserved1);
+            bw.Write(reserved2);
+
+            bw.Write(cnt4);
+            bw.Write(cnt81);
+            bw.Write(cnt82);
+
+            bw.Write(cntBank);
+            bw.Write(cntSeq);
+
+            bw.Write(sampleDataSize);
+
         }
     }
 }
