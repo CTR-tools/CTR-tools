@@ -110,7 +110,7 @@ namespace CTRFramework.Sound
             int i = 0;
             foreach (KeyValuePair<int, byte[]> s in samples)
             {
-                Export(s.Key, -1, path, path2, s.Key.ToString("0000") + "_" + s.Key.ToString("X4"));
+                Export(s.Key, Howl.GetFreq(s.Key), path, path2, s.Key.ToString("0000") + "_" + s.Key.ToString("X4"));
                 i++;
             }
         }

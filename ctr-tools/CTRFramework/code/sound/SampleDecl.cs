@@ -3,13 +3,19 @@ using System;
 
 namespace CTRFramework.Sound
 {
-    class SampleDecl
+    public class SampleDecl
     {
         public byte unk1;
         public byte volume;
         public ushort pitch;
         public ushort sampleID;
         public ushort unk2;
+
+        public int frequency
+        {
+            //cents needed?
+            get { return (int)Math.Round(pitch * 44100.0f / 4096.0f); }
+        }
 
         public SampleDecl()
         {

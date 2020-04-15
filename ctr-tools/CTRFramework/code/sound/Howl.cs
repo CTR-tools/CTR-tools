@@ -16,13 +16,23 @@ namespace CTRFramework.Sound
         public HowlHeader header;
 
         List<ushort> unk = new List<ushort>();
-        List<SampleDecl> samples1 = new List<SampleDecl>();
+        public static List<SampleDecl> samples1 = new List<SampleDecl>();
         List<SampleDecl> samples2 = new List<SampleDecl>();
 
         List<int> offbanks = new List<int>();
         List<int> offseqs = new List<int>();
 
         List<Bank> banks = new List<Bank>();
+
+        public static int GetFreq(int sampleId)
+        {
+            foreach(SampleDecl sd in samples1)
+            {
+                if (sd.sampleID == sampleId) return sd.frequency;
+            }
+
+            return -1;
+        }
 
         public Howl(string fn)
         {

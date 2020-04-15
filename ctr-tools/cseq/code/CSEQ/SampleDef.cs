@@ -68,7 +68,7 @@ namespace CTRtools.CSEQ
         public int frequency
         {
             //cents needed?
-            get { return (int)(pitch * 44100.0 / 4096.0); }
+            get { return (int)Math.Round(pitch * 44100.0f / 4096.0f); }
         }
 
 
