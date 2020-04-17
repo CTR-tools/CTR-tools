@@ -55,7 +55,7 @@ namespace CTRtools.CSEQ
 
         public void ExportMIDI(string fn, CSEQ seq)
         {
-            string cr = Properties.Resources.midi_copyright;
+            string cr = Path.GetFileNameWithoutExtension(fn) + "\r\n\r\n" + Properties.Resources.midi_copyright;
 
             MidiEventCollection mc = new MidiEventCollection(1, header.TPQN);
 

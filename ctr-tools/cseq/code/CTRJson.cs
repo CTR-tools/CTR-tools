@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Windows.Forms;
 
 namespace CTRtools.Helpers
 {
@@ -68,6 +69,29 @@ namespace CTRtools.Helpers
             }
 
             return new MetaInst();
+        }
+
+        public static int GetBankIndex(string track)
+        {
+            try
+            {
+                //really?
+                if (midi != null)
+                {
+                    if (midi[track] != null)
+                    {
+                        if (midi[track]["bank"] != null)
+                        {
+                            return midi[track]["bank"].ToObject<int>();
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return 0;
         }
     }
 }

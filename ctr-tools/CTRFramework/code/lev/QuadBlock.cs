@@ -54,7 +54,10 @@ namespace CTRFramework
         public byte TerrainFlagUnknown;
 
         public short id;
-        public byte[] midflags = new byte[2];
+        public byte trackPos;
+        public byte midunk;
+
+        //public byte[] midflags = new byte[2];
 
         public int ptrTexLow;                 //offset to LOD texture definition
         public int offset2;
@@ -118,7 +121,10 @@ namespace CTRFramework
 
             id = br.ReadInt16();
 
-            midflags = br.ReadBytes(2);
+            trackPos = br.ReadByte();
+            midunk = br.ReadByte();
+
+            //midflags = br.ReadBytes(2);
 
             ptrTexLow = br.ReadInt32();
             offset2 = br.ReadInt32();
@@ -365,7 +371,9 @@ namespace CTRFramework
 
             bw.Write(id);
 
-            bw.Write(midflags);
+            bw.Write(trackPos);
+            bw.Write(midunk);
+            //bw.Write(midflags);
 
             bw.Write(ptrTexLow);
             bw.Write(offset2);

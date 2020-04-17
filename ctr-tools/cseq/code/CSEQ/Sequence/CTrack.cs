@@ -83,6 +83,12 @@ namespace CTRtools.CSEQ
             me.Add(new TextEvent(name, MetaEventType.SequenceTrackName, absTime));
             me.Add(new TempoEvent(header.MPQN, absTime));
 
+            if (channel == 10)
+            {
+                me.Add(new ControlChangeEvent(absTime, channel, MidiController.BankSelect, 120));
+                me.Add(new ControlChangeEvent(absTime, channel, MidiController.BankSelect, 0));
+                me.Add(new PatchChangeEvent(absTime, channel, CTRJson.GetBankIndex(CSEQ.PatchName)));
+            }
 
             if (CSEQ.UseSampleVolumeForTracks && !CSEQ.IgnoreVolume)
                 me.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, seq.samplesReverb[instrument].Volume / 2));

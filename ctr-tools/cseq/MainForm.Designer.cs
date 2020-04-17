@@ -51,6 +51,7 @@ namespace CTRtools.CSEQ
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.testJsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alistAlBankSamplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadMIDIMappingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tutorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -64,10 +65,9 @@ namespace CTRtools.CSEQ
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.reloadMetaFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -81,8 +81,7 @@ namespace CTRtools.CSEQ
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.optionsToolStripMenuItem,
-            this.helpToolStripMenuItem,
-            this.reloadMetaFileToolStripMenuItem});
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(644, 24);
@@ -139,7 +138,8 @@ namespace CTRtools.CSEQ
             this.exportSamplesToolStripMenuItem,
             this.defaultSampleRateToolStripMenuItem,
             this.testJsonToolStripMenuItem,
-            this.alistAlBankSamplesToolStripMenuItem});
+            this.alistAlBankSamplesToolStripMenuItem,
+            this.reloadMIDIMappingsToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
@@ -160,6 +160,8 @@ namespace CTRtools.CSEQ
             this.ignoreOriginalVolumeToolStripMenuItem.Name = "ignoreOriginalVolumeToolStripMenuItem";
             this.ignoreOriginalVolumeToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.ignoreOriginalVolumeToolStripMenuItem.Text = "Force max velocity";
+            this.ignoreOriginalVolumeToolStripMenuItem.ToolTipText = "If this option is set, MIDI notes ignore original velocity value and use max velo" +
+    "city.";
             this.ignoreOriginalVolumeToolStripMenuItem.Click += new System.EventHandler(this.ignoreOriginalVolumeToolStripMenuItem_Click);
             // 
             // copyInstrumentVolumeToTracksToolStripMenuItem
@@ -170,6 +172,8 @@ namespace CTRtools.CSEQ
             this.copyInstrumentVolumeToTracksToolStripMenuItem.Name = "copyInstrumentVolumeToTracksToolStripMenuItem";
             this.copyInstrumentVolumeToTracksToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.copyInstrumentVolumeToTracksToolStripMenuItem.Text = "Copy instrument volume to tracks";
+            this.copyInstrumentVolumeToTracksToolStripMenuItem.ToolTipText = "This option will ensure that MIDI track volume setting is filled with sample volu" +
+    "me value.";
             this.copyInstrumentVolumeToTracksToolStripMenuItem.Click += new System.EventHandler(this.copyInstrumentVolumeToTracksToolStripMenuItem_Click);
             // 
             // toolStripMenuItem6
@@ -190,6 +194,7 @@ namespace CTRtools.CSEQ
             this.exportSamplesToolStripMenuItem.Name = "exportSamplesToolStripMenuItem";
             this.exportSamplesToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
             this.exportSamplesToolStripMenuItem.Text = "Export samples";
+            this.exportSamplesToolStripMenuItem.ToolTipText = "Exports all the samples used by currently loaded CSEQ";
             this.exportSamplesToolStripMenuItem.Click += new System.EventHandler(this.exportSamplesToolStripMenuItem_Click);
             // 
             // defaultSampleRateToolStripMenuItem
@@ -246,6 +251,14 @@ namespace CTRtools.CSEQ
             this.alistAlBankSamplesToolStripMenuItem.Text = "Sample to bank relation list";
             this.alistAlBankSamplesToolStripMenuItem.Click += new System.EventHandler(this.alistAlBankSamplesToolStripMenuItem_Click);
             // 
+            // reloadMIDIMappingsToolStripMenuItem
+            // 
+            this.reloadMIDIMappingsToolStripMenuItem.Name = "reloadMIDIMappingsToolStripMenuItem";
+            this.reloadMIDIMappingsToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.reloadMIDIMappingsToolStripMenuItem.Text = "Reload MIDI mappings";
+            this.reloadMIDIMappingsToolStripMenuItem.ToolTipText = "Might be useful if you\'re editing JSON file.";
+            this.reloadMIDIMappingsToolStripMenuItem.Click += new System.EventHandler(this.reloadMIDIMappingsToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -258,7 +271,7 @@ namespace CTRtools.CSEQ
             // tutorialToolStripMenuItem
             // 
             this.tutorialToolStripMenuItem.Name = "tutorialToolStripMenuItem";
-            this.tutorialToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.tutorialToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.tutorialToolStripMenuItem.Text = "Tutorial";
             this.tutorialToolStripMenuItem.Click += new System.EventHandler(this.tutorialToolStripMenuItem_Click);
             // 
@@ -389,13 +402,6 @@ namespace CTRtools.CSEQ
             this.propertyGrid1.Size = new System.Drawing.Size(319, 402);
             this.propertyGrid1.TabIndex = 2;
             // 
-            // reloadMetaFileToolStripMenuItem
-            // 
-            this.reloadMetaFileToolStripMenuItem.Name = "reloadMetaFileToolStripMenuItem";
-            this.reloadMetaFileToolStripMenuItem.Size = new System.Drawing.Size(104, 20);
-            this.reloadMetaFileToolStripMenuItem.Text = "Reload meta file";
-            this.reloadMetaFileToolStripMenuItem.Click += new System.EventHandler(this.reloadMetaFileToolStripMenuItem_Click);
-            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.textBox3);
@@ -406,19 +412,6 @@ namespace CTRtools.CSEQ
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Meta";
             this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // listBox1
-            // 
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.listBox1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 15;
-            this.listBox1.Location = new System.Drawing.Point(3, 3);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(120, 409);
-            this.listBox1.TabIndex = 0;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // textBox3
             // 
@@ -432,6 +425,19 @@ namespace CTRtools.CSEQ
             this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox3.Size = new System.Drawing.Size(341, 416);
             this.textBox3.TabIndex = 1;
+            // 
+            // listBox1
+            // 
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBox1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 15;
+            this.listBox1.Location = new System.Drawing.Point(3, 3);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(120, 409);
+            this.listBox1.TabIndex = 0;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // MainForm
             // 
@@ -497,10 +503,10 @@ namespace CTRtools.CSEQ
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.ToolStripMenuItem copyInstrumentVolumeToTracksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem alistAlBankSamplesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem reloadMetaFileToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ToolStripMenuItem reloadMIDIMappingsToolStripMenuItem;
     }
 }
 
