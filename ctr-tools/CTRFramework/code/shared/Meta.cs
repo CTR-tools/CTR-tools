@@ -2,33 +2,43 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using p = CTRFramework.Properties.Resources;
 
 namespace CTRFramework.Shared
 {
     public class Meta
     {
-        public static string apppath = System.AppDomain.CurrentDomain.BaseDirectory;
-        public static string jsonpath =  apppath + "\\versions.json";
-        public static string howlpath = apppath + "\\howlnames.txt";
+        public static int SectorSize = 0x800;
+
+        public static string BasePath = System.AppDomain.CurrentDomain.BaseDirectory;
+        public static string DataPath = Path.Combine(BasePath, "data");
+        public static string JsonPath = Path.Combine(DataPath, "versions.json");
+        public static string HowlPath = Path.Combine(DataPath, "howlnames.json");
 
         static JObject json;
 
         public static void Load()
         {
-            if (File.Exists(jsonpath))
-                json = JObject.Parse(File.ReadAllText(jsonpath));
+            if (File.Exists(JsonPath))
+                json = JObject.Parse(File.ReadAllText(JsonPath));
         }
 
-        public static string Detect(string file, string list)
+        public List<string> LoadList(string fn)
+        {
+            string[] s = File.ReadAllLines(fn);
+            return new List<string>(s);
+        }
+
+        public static string Detect(string file, string list, int fc)
         {
             if (json == null) Load();
 
-            Console.WriteLine("Detect({0}, {1})", Path.GetFileName(file), list);
+            Console.Write("Calculating MD5... ");
 
             string md5 = Helpers.CalculateMD5(file);
             string res = "";
 
-            Console.WriteLine("MD5 = {0}", md5);
+            Console.WriteLine(md5);
 
             JToken j = json[list][md5];
            // string tag = "ntsc";
@@ -45,16 +55,20 @@ namespace CTRFramework.Shared
             else
             {
                 Console.WriteLine("Unknown file.");
+
+                j = json["big_nums"][fc.ToString()];
+
+                if (j != null)
+                {
+                    res = j.ToString();
+
+                    Console.WriteLine(
+                        String.Format("{0} files in BIG. Assume: {1}",
+                        fc, res
+                        ));
+                }
             }
 
-            /*
-            List<string> l = GetFileListByTag(tag);
-
-            foreach (string s in l)
-                Console.WriteLine(s);
-                
-            Console.ReadKey();
-            */
             if (res == "")
                 File.WriteAllText("unknown_md5.txt", md5);
 
@@ -62,76 +76,60 @@ namespace CTRFramework.Shared
             return res;
         }
 
-
-        public static List<string> GetFileListByTag(string tag)
+        public static Dictionary<int, string> GetProperBigList(string fn, int fc)
         {
-            List<string> result = new List<string>();
+            string s = Meta.Detect(fn, "bigs", fc);
+            return Meta.LoadNumberedList(Path.Combine(Meta.DataPath, s + ".txt"));
+        }
 
-            switch (tag)
+        public static Dictionary<int, string> LoadNumberedList(string path)
+        {
+            if (File.Exists(path))
             {
-                case "usa":
-                    result.AddRange(GetLevelsList());
-                    result.AddRange(GetBattleList());
-                    break;
+                try
+                {
+                    Dictionary<int, string> names = new Dictionary<int, string>();
+
+                    string[] buf = File.ReadAllLines(path);
+
+                    foreach (string b in buf)
+                    {
+                        if (b.Trim() != "" && !b.Contains("#"))
+                        {
+                            string[] bb = b.Replace(" ", "").Split('=');
+
+                            int x = -1;
+                            Int32.TryParse(bb[0], out x);
+
+                            if (x == -1)
+                            {
+                                Console.WriteLine("List parsing error at: {0}", b);
+                                continue;
+                            }
+
+                            names.Add(x, bb[1]);
+                        }
+                    }
+
+                    return names;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    throw new Exception("Failed to access or parse data file: " + path);
+                }
+            }
+            else
+            {
+                Console.WriteLine("File doesn't exist: " + path);
+                return new Dictionary<int, string>();
             }
 
-            if (result.Count == 0)
-                Console.WriteLine("Empty file list for bigfile.big");
-
-            return result;
         }
 
-        public static List<string> GetFileListByNumber(int x)
+        public static string GetVersion()
         {
-            switch (x)
-            {
-                case 607: return GetFileListByTag("ntsc");
-                default: return new List<string>();
-            }
-        }
-
-
-        static string[] types = new string[] { "1P", "2P", "4P", "relic" };
-        static string[] ext = new string[] { "lev", "vram" };
-
-
-        static List<string> GetLevelsList()
-        {
-            List<string> result = new List<string>();
-
-            string trackspath = "levels\\tracks";
-            string[] levels = new string[] { 
-                "canyon", "mines", "bluff", "cove",
-                "temple", "pyramid", "tubes", "skyway",
-                "sewer", "cave", "castle", "labs",
-                "pass", "station", "park", "arena",
-                "coliseum", "turbo"
-            };
-
-
-            foreach (string lev in levels)
-                foreach (string typ in types)
-                    foreach (string ex in ext)
-                        result.Add($"{trackspath}\\{lev}\\{typ}\\data.{ex}");
-
-            return result;
-        }
-        static List<string> GetBattleList()
-        {
-            List<string> result = new List<string>();
-
-            string trackspath = "levels\\tracks";
-            string[] levels = new string[] {
-                "battle1", "battle2", "battle3", "battle4",
-                "battle5", "battle6", "battle7"
-            };
-
-            foreach (string lev in levels)
-                foreach (string typ in types)
-                    foreach (string ex in ext)
-                        result.Add($"{trackspath}\\{lev}\\{typ}\\data.{ex}");
-
-            return result;
+            return "CTRFramework " + p.Version + " (" + p.BuildDate.Split(',')[0] + ")";
         }
     }
 }

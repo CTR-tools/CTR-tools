@@ -144,7 +144,7 @@ namespace CTRFramework
             for (int i = 0; i < 4; i++)
                 bgColor[i] = new Vector4b(br);
 
-            skip2_unkPtr = br.ReadUInt32(); 
+            skip2_unkPtr = br.ReadUInt32();
             cntVcolAnim = br.ReadUInt32(); ;
             ptrVcolAnim = br.ReadUInt32(); ;
 
@@ -165,6 +165,73 @@ namespace CTRFramework
 
             br.Jump(posx);
             //Console.ReadKey();
+        }
+
+
+        public void Write(BinaryWriterEx bw)
+        {
+            {
+                bw.Write(ptrMeshInfo);
+                bw.Write(ptrSkybox); 
+                bw.Write(ptrTexArray);
+
+                bw.Write(numPickupHeaders);
+                bw.Write(ptrPickupHeaders);
+                bw.Write(numPickupModels);
+                bw.Write(ptrPickupModelsPtr);
+
+                bw.Write(unk3);
+                bw.Write(unk4);
+                bw.Write(ptrPickupHeadersPtrArray);
+                bw.Write(unk5);
+
+                bw.Write(null1);
+                bw.Write(null2);
+
+                bw.Write(cntWater);
+                bw.Write(ptrWater);
+                bw.Write(somePtr2);
+                bw.Write(somePtr3); 
+                bw.Write(ptrArray1);
+
+                for (int i = 0; i < someData.Length; i++)
+                    someData[i].Write(bw);
+
+                for (int i = 0; i < startGrid.Length; i++)
+                    startGrid[i].Write(bw);
+
+                bw.Write(somePtr4);
+                bw.Write(somePtr5);
+                bw.Write(ptrLowTexArray);
+                backColor.Write(bw);
+                bw.Write(bgMode);
+
+                bw.Write(ptrBuildStart);
+                bw.Write(ptrBuildEnd);
+                bw.Write(ptrBuildType);
+
+                bw.Write(skip);
+
+                bw.Write(numRestartPts);
+                bw.Write(ptrRestartPts);
+
+                bw.Write(skip2);
+
+                for (int i = 0; i < bgColor.Length; i++)
+                    bgColor[i].Write(bw);
+
+                bw.Write(skip2_unkPtr);
+
+                bw.Write(cntVcolAnim);
+                bw.Write(ptrVcolAnim);
+
+                bw.Write(skip23);
+
+
+                bw.Write(ptrAiNav);
+
+                bw.Write(skip3);
+            }
         }
     }
 }
