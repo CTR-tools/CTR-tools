@@ -64,12 +64,14 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="FPSCamera.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Menu.cs" />
+    <Compile Include="MGConverter.cs" />
     <Compile Include="MGQuadBlock.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

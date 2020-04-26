@@ -12,8 +12,27 @@ namespace ctrviewer
         public TriList normal = new TriList();
         public TriList wire = new TriList();
 
-        public QuadList normalq = new QuadList();
+        Dictionary<string, QuadList> normalq = new Dictionary<string, QuadList>();
+        Dictionary<string, QuadList> animatedq = new Dictionary<string, QuadList>();
+        QuadList wireq = new QuadList();
 
+        public List<string> textureList
+        {
+            get
+            {
+                List<string> list = new List<string>();
+
+                foreach(var n in normalq) 
+                    if (!list.Contains(n.Key))
+                        list.Add(n.Key);
+
+                foreach (var n in animatedq) 
+                    if (!list.Contains(n.Key))
+                        list.Add(n.Key);
+
+                return list;
+            }
+        }
 
         public static short[] indices_pattern_low = new short[] { 0, 1, 2, 2, 1, 3 };
         public static short[] indices_pattern = new short[] {
@@ -28,6 +47,7 @@ namespace ctrviewer
         };
 
 
+
         public MGQuadBlock(SkyBox sb)
         {
             normal.verts = new VertexPositionColorTexture[sb.cntVertex];
@@ -35,7 +55,7 @@ namespace ctrviewer
 
             for (int i = 0; i < sb.cntVertex; i++)
             {
-                normal.verts[i] = GetMonogameVertex(sb.verts[i], new Vector3(0, 0, 0));
+                normal.verts[i] = MGConverter.ToVptc(sb.verts[i], new CTRFramework.Shared.Vector2b(0, 0));
             }
 
             for (int i = 0; i < sb.faces.Count; i++)
@@ -54,8 +74,6 @@ namespace ctrviewer
         }
 
 
-        
-
 
         public MGQuadBlock(Scene s, Detail detail)
         {
@@ -68,50 +86,90 @@ namespace ctrviewer
             {
                 case Detail.Low:
                     {
+                        List<VertexPositionColorTexture> monolist = new List<VertexPositionColorTexture>();
+
                         for (int i = 0; i < s.quads.Count; i++)
                         {
                             if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                             {
-                                for (int j = 0; j < 4; j++)
+                                List<CTRFramework.Vertex> vts = s.quads[i].GetVertexListq(s, -1);
+                                monolist.Clear();
+
+                                if (vts != null)
                                 {
-                                    VertexPositionColorTexture v = new VertexPositionColorTexture();
-                                    CTRFramework.Vertex cv = s.verts[s.quads[i].ind[j]];
-                                    CTRFramework.TextureLayout tl = s.quads[i].texlow;
+                                    foreach (Vertex cv in vts)
+                                        monolist.Add(MGConverter.ToVptc(cv, cv.uv));
 
-                                    v.Position.X = cv.coord.X;
-                                    v.Position.Y = cv.coord.Y;
-                                    v.Position.Z = cv.coord.Z;
+                                    wireq.PushQuad(monolist);
 
-                                    v.Color.A = 255;
-                                    v.Color.R = cv.color.X;
-                                    v.Color.G = cv.color.Y;
-                                    v.Color.B = cv.color.Z;
 
-                                    if (s.quads[i].ptrTexLow > 0)
+                                    TextureLayout t = s.quads[i].texlow;
+
+                                    string texTag = t.Tag();
+
+                                    if (normalq.ContainsKey(texTag))
                                     {
-                                        v.TextureCoordinate.X = tl.uv[j].X / 256.0f;
-                                        v.TextureCoordinate.Y = tl.uv[j].Y / 256.0f;
+                                        normalq[texTag].PushQuad(monolist);
                                     }
                                     else
                                     {
-                                        v.TextureCoordinate.X = 0;
-                                        v.TextureCoordinate.Y = 0;
+                                        QuadList ql = new QuadList(monolist, true, texTag);
+                                        normalq.Add(texTag, ql);
                                     }
-
-                                    normal.verts[i * 4 + j] = v;
                                 }
-
-                                for (int k = 0; k < indices_pattern_low.Length; k++)
-                                {
-                                    normal.indices[i * 6 + k] = (short)(i * 4 + indices_pattern_low[k]);
-                                }
-
                             }
-
                         }
 
+                        foreach (var ql in normalq)
+                            ql.Value.Seal();
+
+                        wireq.Seal();
+                        wireq.SetColor(Color.Black);
+
                         break;
+
+                        /*
+                        if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
+                        {
+                            for (int j = 0; j < 4; j++)
+                            {
+                                VertexPositionColorTexture v = new VertexPositionColorTexture();
+                                CTRFramework.Vertex cv = s.verts[s.quads[i].ind[j]];
+                                CTRFramework.TextureLayout tl = s.quads[i].texlow;
+
+                                v.Position.X = cv.coord.X;
+                                v.Position.Y = cv.coord.Y;
+                                v.Position.Z = cv.coord.Z;
+
+                                v.Color.A = 255;
+                                v.Color.R = cv.color.X;
+                                v.Color.G = cv.color.Y;
+                                v.Color.B = cv.color.Z;
+
+                                if (s.quads[i].ptrTexLow > 0)
+                                {
+                                    v.TextureCoordinate.X = tl.uv[j].X / 256.0f;
+                                    v.TextureCoordinate.Y = tl.uv[j].Y / 256.0f;
+                                }
+                                else
+                                {
+                                    v.TextureCoordinate.X = 0;
+                                    v.TextureCoordinate.Y = 0;
+                                }
+
+                                normal.verts[i * 4 + j] = v;
+                            }
+
+                            for (int k = 0; k < indices_pattern_low.Length; k++)
+                            {
+                                normal.indices[i * 6 + k] = (short)(i * 4 + indices_pattern_low[k]);
+                            }
+
+                        }*/
+
                     }
+
+        
 
                 case Detail.Med:
                     {
@@ -123,10 +181,93 @@ namespace ctrviewer
                             normal.indices[i] = (short)i;
                         }
 
+                        List<VertexPositionColorTexture> monolist = new List<VertexPositionColorTexture>();
+
+
+                        for (int i = 0; i < s.quads.Count; i++)
+                        {
+                            if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
+                                for (int j = 0; j < 4; j++)
+                                {
+
+                                    List<CTRFramework.Vertex> vts = s.quads[i].GetVertexListq(s, j);
+                                    monolist.Clear();
+
+                                    if (vts != null)
+                                    {
+                                        foreach (Vertex cv in vts)
+                                            monolist.Add(MGConverter.ToVptc(cv, cv.uv));
+
+                                        wireq.PushQuad(monolist);
+
+                                        CtrTex t = s.quads[i].tex[j];
+
+                                        string texTag = t.midlods[2].Tag();
+
+                                        if (!t.isAnimated)
+                                        {
+                                            if (normalq.ContainsKey(texTag))
+                                            {
+                                                normalq[texTag].PushQuad(monolist);
+                                            }
+                                            else
+                                            {
+                                                QuadList ql = new QuadList(monolist, true, texTag);
+                                                normalq.Add(texTag, ql);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (animatedq.ContainsKey(texTag))
+                                            {
+                                                animatedq[texTag].PushQuad(monolist);
+                                            }
+                                            else
+                                            {
+                                                QuadList ql = new QuadList(monolist, true, texTag);
+                                                ql.scrollingEnabled = true;
+                                                animatedq.Add(texTag, ql);
+                                            }
+                                        }
+
+                                    }
+                                }
+                        }
+
+                        int numVerts = 0;
+                        int numQuads = 0;
+                        int numDrawCalls = 0;
+
+                        foreach (var ql in normalq)
+                        {
+                            ql.Value.Seal();
+                            numVerts += ql.Value.numVerts;
+                            numQuads += ql.Value.numQuads;
+                            numDrawCalls++;
+                        }
+
+                        foreach (var ql in animatedq)
+                        {
+                            ql.Value.Seal();
+                            numVerts += ql.Value.numVerts;
+                            numQuads += ql.Value.numQuads;
+                            numDrawCalls++;
+                        }
+
+                        wireq.Seal();
+                        wireq.SetColor(Color.Black);
+
+
+                        Console.WriteLine("numVerts " + numVerts);
+                        Console.WriteLine("numQuads " + numQuads);
+                        Console.WriteLine("numDrawCalls " + numDrawCalls);
+
+                        /*
+                        //load trilist stuff
                         for (int i = 0; i < s.quads.Count; i++)
                         {
                             List<CTRFramework.Vertex> vts = s.quads[i].GetVertexList(s);
-                            List<VertexPositionColorTexture> monolist = new List<VertexPositionColorTexture>();
+                            monolist = new List<VertexPositionColorTexture>();
 
                             foreach (Vertex cv in vts)
                             {
@@ -141,6 +282,14 @@ namespace ctrviewer
                                 v.Color.G = cv.color.Y;
                                 v.Color.B = cv.color.Z;
 
+
+                                if (s.quads[i].quadFlags.HasFlag(QuadFlags.Reverb))
+                                {
+                                    v.Color.R = 255;
+                                    v.Color.G = 0;
+                                    v.Color.B = 255;
+                                }
+
                                 v.TextureCoordinate.X = cv.uv.X;
                                 v.TextureCoordinate.Y = cv.uv.Y;
 
@@ -152,48 +301,13 @@ namespace ctrviewer
                                 monolist.ToArray(), 0,
                                 normal.verts, i * 24,
                                 24);
-
-                            /*
-                            if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
-                            {
-
-                                for (int j = 0; j < 9; j++)
-                                {
-                                    VertexPositionColorTexture v = new VertexPositionColorTexture();
-                                    CTRFramework.Vertex cv = s.verts[s.quads[i].ind[j]];
-                                    CTRFramework.TextureLayout tl = s.quads[i].texlow;
-
-                                    v.Position.X = cv.coord.X;
-                                    v.Position.Y = cv.coord.Y;
-                                    v.Position.Z = cv.coord.Z;
-
-                                    v.Color.A = 255;
-                                    v.Color.R = cv.color.X;
-                                    v.Color.G = cv.color.Y;
-                                    v.Color.B = cv.color.Z;
-
-                                    v.TextureCoordinate.X = 0;
-                                    v.TextureCoordinate.Y = 0;
-
-                                    normal.verts[i * 9 + j] = v;
-                                }
-
-                                for (int k = 0; k < indices_pattern.Length; k++)
-                                {
-                                    normal.indices[i * 6 * 4 + k] = (short)(i * 9 + indices_pattern[k]);
-                                }
-
-                            }
-                            */
                         }
-
+                    */
                         break;
                     }
-
             }
 
             wire = new TriList(normal);
-            
 
             for (int i = 0; i < wire.verts.Length; i++)
             {
@@ -202,83 +316,37 @@ namespace ctrviewer
         }
 
 
-
-        /*
-        public MGQuadBlock(Scene scn, int num, TerrainFlags qf, bool hide_invis)
+        public void Update()
         {
-            List<VertexPositionColorTexture> vts = new List<VertexPositionColorTexture>();
-
-            foreach (Vertex v in scn.verts)
-                vts.Add(GetMonogameVertex(v, new Vector3(0, 0, 0)));
-
-            verts = vts.ToArray();
-
-            for (int i = 0; i < vts.Count; i++)
-                vts[i] = new VertexPositionColorTexture(vts[i].Position, Blend(vts[i].Color, Color.Blue), new Vector2(0, 0));
-
-            //verts_flag = vts.ToArray();
-
-
-            for (int i = 0; i < vts.Count; i++)
-                vts[i] = new VertexPositionColorTexture(vts[i].Position, Color.DarkRed, new Vector2(0, 0));
-
-            verts_wire = vts.ToArray();
-
-
-            List<short> inds = new List<short>();
-            List<short> indsf = new List<short>();
-
-
-            VertexPositionColorTexture[] buf = vts.ToArray();
-
-            foreach (QuadBlock qb in scn.quads)
+            foreach (var ql in animatedq)
             {
-                //if (!qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers) | hide_invis)
-                {
-                    if (qb.terrainFlag.HasFlag(qf))
-                    //if (qb.f2 > 0)
-                    {
-
-                        int i = 0;
-
-                        foreach (short s in indices_pattern_low)
-                        {
-                            indsf.Add(qb.ind[s]);
-
-                            try
-                            {
-                                buf[qb.ind[s]].TextureCoordinate = new Vector2(qb.texlow.uv[i].X, qb.texlow.uv[i].Y);
-                            }
-                            catch
-                            {
-                                buf[qb.ind[s]].TextureCoordinate = new Vector2(0, 0);
-                            }
-
-                            i++;
-                        }
-                    }
-                    else
-                    {
-                        foreach (short s in indices_pattern_low)
-                            inds.Add(qb.ind[s]);
-                    }
-                }
+                ql.Value.Update();
             }
-
-            vts.Clear();
-            vts.AddRange(buf);
-
-            indices = inds.ToArray();
-            //indices_flag = indsf.ToArray();
-            /*
-            if (quadFlags.HasFlag(QuadFlags.Renderable))
-            {
-                vpc.Color = Blend(vpc.Color, Color.Green);
-
-
-            */
+        }
 
         public void Render(GraphicsDeviceManager graphics, BasicEffect effect)
+        {
+            /*
+            if (normal.verts.Length > 0)
+                if (normal.indices.Length > 0)
+                    normal.Render(graphics, effect);
+                    */
+
+            Game1.clamp = true;
+            Game1.UpdateSamplerState(graphics);
+
+            foreach (var ql in normalq)
+                ql.Value.Render(graphics, effect);
+            
+
+            Game1.clamp = false;
+            Game1.UpdateSamplerState(graphics);
+
+            foreach (var ql in animatedq)
+                ql.Value.Render(graphics, effect);
+        }
+
+        public void RenderSky(GraphicsDeviceManager graphics, BasicEffect effect)
         {
             if (normal.verts.Length > 0)
                 if (normal.indices.Length > 0)
@@ -287,9 +355,12 @@ namespace ctrviewer
 
         public void RenderWire(GraphicsDeviceManager graphics, BasicEffect effect)
         {
+            
             if (wire.verts.Length > 0)
                 if (wire.indices.Length > 0)
                     wire.Render(graphics, effect);
+                    
+            wireq.Render(graphics, effect);
         }
 
         public Color Blend(Color c1, Color c2)
@@ -301,18 +372,6 @@ namespace ctrviewer
             return x;
         }
 
-        public VertexPositionColorTexture GetMonogameVertex(CTRFramework.Vertex v, Vector3 add_offset)
-        {
-            VertexPositionColorTexture mono_v = new VertexPositionColorTexture();
-            mono_v.Position = new Microsoft.Xna.Framework.Vector3(v.coord.X, v.coord.Y, v.coord.Z) + add_offset;
-
-            float scale = 1.0f;
-
-            mono_v.Color = new Color((v.color.X * scale / 255.0f), v.color.Y * scale / 255.0f, v.color.Z * scale / 255.0f);
-            mono_v.TextureCoordinate = new Vector2(0, 0);
-
-            return mono_v;
-        }
 
     }
 }

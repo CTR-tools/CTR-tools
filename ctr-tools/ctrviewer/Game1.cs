@@ -3,8 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using CTRFramework.Shared;
 
 namespace ctrviewer
 {
@@ -31,21 +34,8 @@ namespace ctrviewer
 
         Color backColor = Color.Blue;
 
-        private short flag = 0;
-        public short Flag
-        {
-            get
-            {
-                return flag;
-            }
-            set
-            {
-                flag = value;
-                if (flag > 7) flag = 0;
-                if (flag < 0) flag = 7;
-            }
-        }
-
+        public static SamplerState ss;
+        public static PlayerIndex activeGamePad = PlayerIndex.One;
 
         public Game1()
         {
@@ -53,10 +43,23 @@ namespace ctrviewer
 
             graphics = new GraphicsDeviceManager(this);
 
-            GoWindowed();
-
             graphics.PreferMultiSampling = true;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
+            graphics.SynchronizeWithVerticalRetrace = true;
+            graphics.ApplyChanges();
+            graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 4;
+
+            graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            /*
+                = new BlendState()
+            {
+                ColorSourceBlend = Blend.SourceColor,
+                ColorDestinationBlend = Blend.DestinationColor,
+                ColorBlendFunction = BlendFunction.Add
+            };
+            */
+
+            GoWindowed();
 
             IsMouseVisible = false;
         }
@@ -77,19 +80,16 @@ namespace ctrviewer
             graphics.ApplyChanges();
         }
 
-        SamplerState ss;
+
 
         protected override void Initialize()
         {
             ss = new SamplerState();
 
-            graphics.SynchronizeWithVerticalRetrace = true;
-            graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 8;
-            graphics.ApplyChanges();
-
             effect = new BasicEffect(graphics.GraphicsDevice);
             effect.VertexColorEnabled = true;
-            effect.TextureEnabled = true;
+            effect.TextureEnabled = true; 
+            effect.DiffuseColor = new Vector3(2f, 2f, 2f);
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -97,13 +97,51 @@ namespace ctrviewer
             lowcamera = new FirstPersonCamera(this);
             skycamera = new FirstPersonCamera(this);
 
-            camera.NearClip = 0.1f;
-            camera.FarClip = 10000;
-            lowcamera.NearClip = 9000;
-            lowcamera.FarClip = 50000;
+            DisableLodCamera();
+
+            for (PlayerIndex i = PlayerIndex.One; i <= PlayerIndex.Four; i++)
+            {
+                GamePadState state = GamePad.GetState(i);
+                if (state.IsConnected)
+                {
+                    activeGamePad = i;
+                    break;
+                }
+            }
 
             base.Initialize();
         }
+
+
+        private void EnableLodCamera()
+        {
+            lodEnabled = true;
+            /*
+            camera.NearClip = 1f;
+            camera.FarClip = 10000f;
+            lowcamera.NearClip = 9000f;
+            lowcamera.FarClip = 50000f;
+            */
+            lowcamera.NearClip = 1f;
+            lowcamera.FarClip = 100000f;
+            camera.NearClip = 1f;
+            camera.FarClip = 2f;
+
+            camera.Update(null);
+            lowcamera.Update(null);
+        }
+
+        private void DisableLodCamera()
+        {
+            lodEnabled = false;
+            camera.NearClip = 1f;
+            camera.FarClip = 100000f;
+            lowcamera.NearClip = 1f;
+            lowcamera.FarClip = 2f;
+            camera.Update(null);
+            lowcamera.Update(null);
+        }
+
 
 
        // int currentCameraPosIndex = 0;
@@ -115,13 +153,6 @@ namespace ctrviewer
             textures.Add("test", Content.Load<Texture2D>("test"));
             effect.Texture = textures["test"];
             effect.TextureEnabled = true;
-
-            string[] files = Directory.GetFiles("tex", "*.png");
-
-            foreach (string s in files)
-            {
-                textures.Add(Path.GetFileName(s), GetTexture(GraphicsDevice, (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile(s)));
-            }
 
             font = Content.Load<SpriteFont>("File");
 
@@ -138,24 +169,21 @@ namespace ctrviewer
         {
             gameLoaded = false;
 
-            LoadLevel((TerrainFlags)(1 << flag));
+            LoadLevel((TerrainFlags)(0));
             ResetCamera();
 
             gameLoaded = true;
         }
 
-
-        public Microsoft.Xna.Framework.Vector3 toMGv2(CTRFramework.Shared.Vector3s v)
-        {
-            return new Vector3(v.X, v.Y, v.Z);
-        }
-
-
-
         private void LoadLevel(TerrainFlags qf)
         {
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
             scn.Clear();
             quads.Clear();
+            quads_low.Clear();
 
             string[] files = new string[] { };
 
@@ -165,32 +193,70 @@ namespace ctrviewer
             foreach (string s in files)
                 scn.Add(new Scene(s, "obj"));
 
+            Console.WriteLine("scenes loaded: " + sw.Elapsed.TotalSeconds);
+
             foreach (Scene s in scn)
-            {
                 quads.Add(new MGQuadBlock(s, Detail.Med));
-            }
 
             foreach (Scene s in scn)
-            {
                 quads_low.Add(new MGQuadBlock(s, Detail.Low));
-            }
 
-            // quads.Add(new MGQuadBlock(s, i++, qf, hide_invis));
+            Console.WriteLine("scenes converted to mg: " + sw.Elapsed.TotalSeconds);
 
             if (scn.Count > 0)
             {
-                backColor.R = scn[0].header.bgColor[1].X;
-                backColor.G = scn[0].header.bgColor[1].Y;
-                backColor.B = scn[0].header.bgColor[1].Z;
+                backColor.R = scn[0].header.bgColor[0].X;
+                backColor.G = scn[0].header.bgColor[0].Y;
+                backColor.B = scn[0].header.bgColor[0].Z;
 
                 if (scn[0].skybox != null)
                     sky = new MGQuadBlock(scn[0].skybox);
             }
 
+            scn[0].ExportTextures("levels\\tex");
 
+            //files = Directory.GetFiles("tex", "*.png");
+
+            foreach (MGQuadBlock qb in quads)
+                foreach (string s in qb.textureList)
+                {
+                    string path = String.Format("levels\\tex\\{0}.png", s);
+                    string path_new = String.Format("levels\\newtex\\{0}.png", s);
+
+                    if (File.Exists(path_new)) path = path_new;
+
+                    if (!textures.ContainsKey(s))
+                            textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path)));  
+                }
+            /*
+            foreach (MGQuadBlock qb in quads_low)
+                foreach (string s in qb.textureList)
+                {
+                    string path = String.Format("levels\\tex\\{0}.png", s);
+                    string path_new = String.Format("levels\\newtex\\{0}.png", s);
+
+                    if (!textures.ContainsKey(s))
+                    {
+                        if (File.Exists(path_new))
+                        {
+                            textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path_new)));
+                        }
+                        else
+                        {
+                            textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path)));
+                            //textures.Add(s, MGConverter.GetTexture(GraphicsDevice, (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile(path)));
+                        }
+                    }
+                }
+                */
+
+            Console.WriteLine("loading done: " + sw.Elapsed.TotalSeconds);
+            sw.Stop();
+
+            /*
             foreach (Scene s in scn)
             {
-                //s.ExportTextures(@".\tex\");
+                //s.ExportTextures("tex");
 
                 foreach (var x in s.ctrvram.textures)
                 {
@@ -201,7 +267,7 @@ namespace ctrviewer
             }
 
             // effect.Texture = textures["test"];
-
+            */
         }
 
         public void ResetCamera()
@@ -214,6 +280,11 @@ namespace ctrviewer
                     scn[0].header.startGrid[0].Position.Z
                     );
 
+                camera.SetRotation((float)(scn[0].header.startGrid[0].Angle.Y/1024 * Math.PI * 2), scn[0].header.startGrid[0].Angle.X / 1024);
+                lowcamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.Y / 1024 * Math.PI * 2), scn[0].header.startGrid[0].Angle.X / 1024);
+
+                Console.WriteLine(scn[0].header.startGrid[0].Angle.ToString());
+
                 lowcamera.Position = camera.Position;
             }
         }
@@ -223,20 +294,28 @@ namespace ctrviewer
         }
 
         public bool usemouse = false;
-        public bool wire = true;
+        public bool wire = false;
         public bool inmenu = false;
         public bool hide_invis = true;
-        public bool filter = true;
+        public static bool filter = true;
+        public static bool clamp = true;
+        public bool lodEnabled = false;
 
-        GamePadState oldstate = GamePad.GetState(PlayerIndex.One);
-        GamePadState newstate = GamePad.GetState(PlayerIndex.One);
-
+        GamePadState oldstate = GamePad.GetState(activeGamePad);
+        GamePadState newstate = GamePad.GetState(activeGamePad);
 
         protected override void Update(GameTime gameTime)
         {
-            newstate = GamePad.GetState(PlayerIndex.One);
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            //x += 0.01f ;
+            //if (x > Math.PI * 2)
+            //    x = 0;
+            //camera.SetRotation(x, y);
+            //Console.WriteLine(x);
+
+            newstate = GamePad.GetState(activeGamePad);
+
+            if (newstate.Buttons.Start == ButtonState.Pressed && newstate.Buttons.Back == ButtonState.Pressed)
                 Exit();
 
             if (Keyboard.GetState().IsKeyDown(Keys.RightAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
@@ -245,7 +324,32 @@ namespace ctrviewer
             }
 
 
-            if (newstate.Buttons.Start == ButtonState.Pressed && oldstate.Buttons.Start != newstate.Buttons.Start)
+            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus))
+            {
+                float x = camera.ViewAngle;
+                x--;
+                if (x < 20) x = 20;
+
+                camera.ViewAngle = x;
+                lowcamera.ViewAngle=x ;
+                skycamera.ViewAngle=x;
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.OemPlus))
+            {
+                float x = camera.ViewAngle;
+                x++;
+                if (x > 150) x = 150;
+
+                camera.ViewAngle = x;
+                lowcamera.ViewAngle = x;
+                skycamera.ViewAngle = x;
+            }
+
+
+
+
+            if (newstate.Buttons.Start == ButtonState.Pressed && oldstate.Buttons.Start != newstate.Buttons.Start || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 inmenu = !inmenu;
             }
@@ -258,32 +362,24 @@ namespace ctrviewer
                 {
                     switch (menu.SelectedItem.Action)
                     {
-                        case "load": LoadGame(); ResetCamera(); inmenu = false; break;
-                        case "flag":
-                            switch (menu.SelectedItem.Param)
-                            {
-                                case "next": Flag++; break;
-                                case "prev": Flag--; break;
-                            }
-                            LoadLevel((TerrainFlags)(1 << flag));
+                        case "close":
+                            inmenu = false;
                             break;
-
+                        case "load": 
+                            LoadGame(); 
+                            ResetCamera(); 
+                            inmenu = false; 
+                            break;
                         case "toggle":
                             switch (menu.SelectedItem.Param)
                             {
-
-                                case "antialias":
-                                    graphics.PreferMultiSampling = !graphics.PreferMultiSampling;
-                                    break;
-
-                                case "invis": hide_invis = !hide_invis; LoadLevel((TerrainFlags)(1 << Flag)); break;
+                                case "lod": lodEnabled = !lodEnabled; if (lodEnabled) EnableLodCamera(); else DisableLodCamera(); break;
+                                case "antialias": graphics.PreferMultiSampling = !graphics.PreferMultiSampling; break;
+                                //case "invis": hide_invis = !hide_invis; LoadLevel((TerrainFlags)(1 << Flag)); break;
                                 case "mouse": usemouse = !usemouse; break;
                                 case "filter": filter = !filter; break;
                                 case "wire": wire = !wire; break;
-                                case "window":
-                                    if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen();
-                                    break;
-
+                                case "window": if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen(); break;
                             }
                             break;
 
@@ -302,6 +398,10 @@ namespace ctrviewer
             }
             else
             {
+                foreach(MGQuadBlock mg in quads)
+                {
+                    mg.Update();
+                }
                 UpdateCameras(gameTime);
             }
 
@@ -311,34 +411,55 @@ namespace ctrviewer
             base.Update(gameTime);
         }
 
+        MouseState oldms;
+        MouseState newms;
 
         private void UpdateCameras(GameTime gameTime)
         {
-            skycamera.Update(gameTime, usemouse, false);
-            camera.Update(gameTime, usemouse, true);
-            lowcamera.Update(gameTime, usemouse, true);
-            lowcamera.Position = camera.Position;
+            newms = Mouse.GetState();
+            Mouse.SetPosition(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+
+            skycamera.Update(gameTime, usemouse, false, newms, oldms);
+
+            camera.Update(gameTime, usemouse, true, newms, oldms);
+            lowcamera.Copy(gameTime, camera);
+
+
+            oldms = Mouse.GetState();
+
         }
 
-        private SamplerState GetCurrentSampler()
+        public static void UpdateSamplerState(GraphicsDeviceManager g)
         {
-            ss = SamplerState.PointClamp;
-           // ss = new SamplerState();
-           // ss.FilterMode = TextureFilterMode.Default;
+            //ss = SamplerState.PointClamp;
+            ss = new SamplerState();
+            ss.FilterMode = TextureFilterMode.Default;
 
-           // ss.Filter = filter ? TextureFilter.Anisotropic : TextureFilter.Point;
-           // ss.MaxAnisotropy = 16;
+            ss.Filter = filter ? TextureFilter.Anisotropic : TextureFilter.Point;
+            ss.MaxAnisotropy = 16;
 
-            
-            //ss.MaxMipLevel = 8;
-            //ss.MipMapLevelOfDetailBias = -1.5f;
+            if (clamp)
+            {
+                ss.AddressU = TextureAddressMode.Clamp;
+                ss.AddressV = TextureAddressMode.Clamp;
+            }
+            else
+            {
+                //only use wrap on V, cause it only scrolls on V.
+                //this helps to avoid seams on animated quads.
+                ss.AddressU = TextureAddressMode.Clamp;
+                ss.AddressV = TextureAddressMode.Wrap;
+            }
 
-            return ss;
+            ss.MaxMipLevel = 8;
+            ss.MipMapLevelOfDetailBias = 0;
+
+            g.GraphicsDevice.SamplerStates[0] = ss;
         }
 
         private void DrawLevel()
         {
-            graphics.GraphicsDevice.SamplerStates[0] = GetCurrentSampler();
+            UpdateSamplerState(graphics);
             graphics.ApplyChanges();
 
             if (loading != null && gameLoaded)
@@ -348,7 +469,9 @@ namespace ctrviewer
                     effect.View = skycamera.ViewMatrix;
                     effect.Projection = skycamera.ProjectionMatrix;
 
-                    sky.Render(graphics, effect);
+                    effect.DiffuseColor = new Vector3(1, 1, 1);
+                    sky.RenderSky(graphics, effect);
+                    effect.DiffuseColor = new Vector3(2.0f, 2.0f, 2.0f);
 
                     if (wire)
                     {
@@ -442,6 +565,7 @@ namespace ctrviewer
 
             DrawLevel();
 
+
             if (inmenu)
             {
                 menu.Render(GraphicsDevice, spriteBatch, font, tint);
@@ -449,13 +573,31 @@ namespace ctrviewer
 
             spriteBatch.Begin(depthStencilState: DepthStencilState.Default);
 
-            spriteBatch.DrawString(font, (1 << flag).ToString("X4") + ": " + ((TerrainFlags)(1 << flag)).ToString(), new Vector2(20, 20), Color.Yellow);
+            if (inmenu)
+            {
+                spriteBatch.DrawString(
+                    font, 
+                    Meta.GetVersion(), 
+                    new Vector2(((graphics.PreferredBackBufferWidth - font.MeasureString(Meta.GetVersion()).X * graphics.GraphicsDevice.Viewport.Height / 1080f) / 2), graphics.PreferredBackBufferHeight - 60),
+                    Color.Aquamarine,
+                    0, 
+                    new Vector2(0, 0),
+                    graphics.GraphicsDevice.Viewport.Height / 1080f,
+                    SpriteEffects.None, 
+                     0.5f
+                    );
+            }
+
+            //spriteBatch.DrawString(font, (1 << flag).ToString("X4") + ": " + ((TerrainFlags)(1 << flag)).ToString(), new Vector2(20, 20), Color.Yellow);
 
             if (!gameLoaded)
                 spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
             if (scn.Count == 0)
                 spriteBatch.DrawString(font, "No levels loaded. Put LEV files in levels folder.".ToString(), new Vector2(20, 60), Color.Yellow);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Keyboard.GetState().IsKeyDown(Keys.OemPlus))
+                spriteBatch.DrawString(font, String.Format("FOV {0}", camera.ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", camera.ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
 
             spriteBatch.End();
 
@@ -464,37 +606,6 @@ namespace ctrviewer
             // graphics.EndDraw();
         }
 
-
-        //magic
-        public static Texture2D GetTexture(GraphicsDevice gd, System.Drawing.Bitmap bmp)
-        {
-            int[] imgData = new int[bmp.Width * bmp.Height];
-            Texture2D texture = new Texture2D(gd, bmp.Width, bmp.Height);
-
-            // lock bitmap
-            System.Drawing.Imaging.BitmapData origdata =
-                bmp.LockBits(new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, bmp.PixelFormat);
-
-            //uint* byteData = (uint*)origdata.Scan0;
-            /*
-            // Switch bgra -> rgba
-            for (int i = 0; i < imgData.Length; i++)
-            {
-                byteData[i] = (byteData[i] & 0x000000ff) << 16 | (byteData[i] & 0x0000FF00) | (byteData[i] & 0x00FF0000) >> 16 | (byteData[i] & 0xFF000000);
-            }
-            */
-            // copy data
-            System.Runtime.InteropServices.Marshal.Copy(origdata.Scan0, imgData, 0, bmp.Width * bmp.Height);
-
-            //byteData = null;
-
-            // unlock bitmap
-            bmp.UnlockBits(origdata);
-
-            texture.SetData(imgData);
-
-            return texture;
-        }
 
     }
 }

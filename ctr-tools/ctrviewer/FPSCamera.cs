@@ -1,11 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace ctrviewer
 {
     public partial class FirstPersonCamera : Camera
     {
         #region Локальные свойства
+
+
+        public void SetRotation(float x, float y)
+        {
+            leftRightRot = x;
+            upDownRot = y;
+        }
 
         private float leftRightRot = 0;       // Угол поворота по оси Y
         private float _upDownRot = 0;
@@ -36,10 +44,12 @@ namespace ctrviewer
         }
         #endregion
 
+        Vector3 slowdown = new Vector3(0, 0, 0);
+
         #region Изменение объекта
 
         #region Цикл обновления
-        public void Update(GameTime gameTime, bool usemouse, bool move)
+        public void Update(GameTime gameTime, bool usemouse, bool move, MouseState newms, MouseState oldms)
         {
             base.Update(gameTime);
 
@@ -48,27 +58,24 @@ namespace ctrviewer
             if (usemouse)
             {
                 #region Изменение направления цели камера при помощи мыши
-                MouseState currentMouseState = Mouse.GetState();
-                if (currentMouseState != originalMouseState)
-                {
-                    float xDifference = currentMouseState.X - originalMouseState.X;
-                    float yDifference = currentMouseState.Y - originalMouseState.Y;
 
-                    leftRightRot -= rotationSpeed * xDifference * amount;
+                if (oldms != newms)
+                {
+                    float xDifference = newms.X - oldms.X;
+                    float yDifference = newms.Y - oldms.Y;
+
+                    leftRightRot -= xDifference * 0.0025f;//rotationSpeed * xDifference * amount;
                     //System.Diagnostics.Debug.WriteLine("leftRightRot=" + leftRightRot);
 
-                    upDownRot -= rotationSpeed * yDifference * amount;
+                    upDownRot -= yDifference * 0.0025f;// rotationSpeed * yDifference* amount;
                     //System.Diagnostics.Debug.WriteLine("upDownRot=" + upDownRot);
-
-                    Mouse.SetPosition(Game.GraphicsDevice.Viewport.Width / 2, Game.GraphicsDevice.Viewport.Height / 2);
                     UpdateViewMatrix();
-                    originalMouseState = Mouse.GetState();
                 }
             }
             #endregion
 
-            leftRightRot -= GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.X / 20.0f;
-            upDownRot += GamePad.GetState(PlayerIndex.One).ThumbSticks.Right.Y / 20.0f;
+            leftRightRot -= GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.X / 20.0f;
+            upDownRot += GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.Y / 20.0f;
 
             #region Изменение пространственного положения камеры при помощи клавиатуры
             Vector3 moveVector = new Vector3(0, 0, 0);
@@ -77,7 +84,7 @@ namespace ctrviewer
             {
 
                 KeyboardState keyState = Keyboard.GetState();
-                GamePadState padState = GamePad.GetState(PlayerIndex.One);
+                GamePadState padState = GamePad.GetState(Game1.activeGamePad);
 
                 if (keyState.IsKeyDown(Keys.W) || padState.DPad.Up == ButtonState.Pressed)
                     moveVector += new Vector3(0, 0, -1);
@@ -92,6 +99,22 @@ namespace ctrviewer
                     moveVector += new Vector3(0, 1, 0);
                 if (keyState.IsKeyDown(Keys.Z))
                     moveVector += new Vector3(0, -1, 0);
+
+                moveVector *= (Keyboard.GetState().IsKeyDown(Keys.LeftShift) ? 0.6f : 0.3f);
+
+                if (Math.Abs(moveVector.X) > Math.Abs(slowdown.X))
+                    slowdown.X = moveVector.X;
+
+                if (Math.Abs(moveVector.Y) > Math.Abs(slowdown.Y))
+                    slowdown.Y = moveVector.Y;
+
+                if (Math.Abs(moveVector.Z) > Math.Abs(slowdown.Z))
+                    slowdown.Z = moveVector.Z;
+
+                moveVector += slowdown;
+
+                slowdown *= 0.75f;
+
 
                 moveVector += new Vector3(padState.ThumbSticks.Left.X, 0, -padState.ThumbSticks.Left.Y);
 
@@ -118,6 +141,12 @@ namespace ctrviewer
 
         }
         #endregion
+
+        public void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            AddToCameraPosition(new Vector3(0, 0, 0));
+        }
 
         #region Изменение положения камеры и направления смотра
         private void AddToCameraPosition(Vector3 vectorToAdd)
@@ -147,6 +176,16 @@ namespace ctrviewer
         }
         #endregion
         #endregion
+
+
+        public void Copy(GameTime gameTime, FirstPersonCamera c)
+        {
+            leftRightRot = c.leftRightRot;
+            upDownRot = c.upDownRot;
+            Position = c.Position;
+            Target = c.Target;
+            Update(gameTime);
+        }
     }
 
 }
