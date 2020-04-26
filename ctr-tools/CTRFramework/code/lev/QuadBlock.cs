@@ -198,12 +198,13 @@ namespace CTRFramework
             7, 9, 8, 8, 9, 4
         };
         */
+
         public List<CTRFramework.Vertex> GetVertexList(Scene s)
         {
             List<CTRFramework.Vertex> buf = new List<CTRFramework.Vertex>();
-          
-            for (int i = inds.Length-1; i >= 0; i--)
-                buf.Add(s.verts[ind[inds[i]-1]]);
+
+            for (int i = inds.Length - 1; i >= 0; i--)
+                buf.Add(s.verts[ind[inds[i] - 1]]);
 
             for (int i = 0; i < inds.Length / 6; i++)
             {
@@ -215,8 +216,146 @@ namespace CTRFramework
                 buf[i * 6 + 5].uv = new Vector2b(1, 0);
             }
 
+
             return buf;
         }
+
+
+        /*
+ * 0--4--1
+ * | /| /|
+ * |/ |/ |
+ * 5--6--7
+ * | /| /|
+ * |/ |/ |
+ * 2--8--3
+ */
+        /*
+       //magic array of indices, each line contains 2 quads
+       int[] inds = new int[]
+       {
+           1, 6, 5, 5, 6, 7,
+           5, 7, 2, 2, 7, 8,
+           6, 3, 7, 7, 3, 9,
+           7, 9, 8, 8, 9, 4
+       };
+       */
+
+
+
+        //use this later for obj export too
+        public List<CTRFramework.Vertex> GetVertexListq(Scene s, int i)
+        {
+            try
+            {
+                List<CTRFramework.Vertex> buf = new List<CTRFramework.Vertex>();
+
+                if (i == -1)
+                {
+                    int[] arrind = new int[] { 0, 1, 2, 3 };
+
+                    for (int j = 0; j < 4; j++)
+                        buf.Add(s.verts[ind[arrind[j]]]);
+
+                    for (int j = 0; j < 4; j++)
+                    {
+                        buf[j].uv = texlow.normuv[j];
+                    }
+
+                    if (buf.Count != 4)
+                    {
+                        Helpers.Panic(this, "not a quad! " + buf.Count);
+                        Console.ReadKey();
+                    }
+
+                    return buf;
+                }
+                else
+                {
+                    int[] arrind;
+                    int[] uvinds;
+
+                    switch (faceFlags[i].rotateFlipType)
+                    {
+                        case RotateFlipType.None: uvinds = GetUVIndices2(1, 2, 3, 4); break;
+                        case RotateFlipType.Rotate90: uvinds = GetUVIndices2(3, 1, 4, 2); break;
+                        case RotateFlipType.Rotate180: uvinds = GetUVIndices2(4, 3, 2, 1); break;
+                        case RotateFlipType.Rotate270: uvinds = GetUVIndices2(2, 4, 1, 3); break;
+                        case RotateFlipType.Flip: uvinds = GetUVIndices2(2, 1, 4, 3); break;
+                        case RotateFlipType.FlipRotate90: uvinds = GetUVIndices2(4, 2, 3, 1); break;
+                        case RotateFlipType.FlipRotate180: uvinds = GetUVIndices2(3, 4, 1, 2); break;
+                        case RotateFlipType.FlipRotate270: uvinds = GetUVIndices2(1, 3, 2, 4); break;
+                        default: throw new Exception("Impossible rotatefliptype.");
+                    }
+
+
+                    switch (faceFlags[i].faceMode)
+                    {
+                        case FaceMode.SingleUV1:
+                            {
+                                uvinds = new int[] { uvinds[2], uvinds[0], uvinds[3], uvinds[1] };
+                                //uvinds = new int[] { uvinds[0], uvinds[0], uvinds[0], uvinds[0] };
+                                break;
+                            }
+
+                        case FaceMode.SingleUV2:
+                            {
+                                uvinds = new int[] { uvinds[1], uvinds[2], uvinds[3], uvinds[0] };
+                                //uvinds = new int[] { uvinds[0], uvinds[0], uvinds[0], uvinds[0] };
+                                break;
+                            }
+                    }
+
+
+                    switch (i)
+                    {
+                        case 0: arrind = new int[4] { 0, 4, 5, 6 }; break;
+                        case 1: arrind = new int[4] { 4, 1, 6, 7 }; break;
+                        case 2: arrind = new int[4] { 5, 6, 2, 8 }; break;
+                        case 3: arrind = new int[4] { 6, 7, 8, 3 }; break;
+                        default: throw new Exception("Can't have more than 4 quads in a quad block.");
+                    }
+
+                    for (int j = 0; j < 4; j++)
+                        buf.Add(s.verts[ind[arrind[j]]]);
+
+
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (!tex[i].isAnimated)
+                        {
+                            buf[j].uv = tex[i].midlods[2].normuv[uvinds[j] - 1];
+                        }
+                        else
+                        {
+                            buf[j].uv = tex[i].animframes[1].normuv[uvinds[j] - 1];
+                        }
+                    }
+
+                    if (buf.Count != 4)
+                    {
+                        Helpers.Panic(this, "not a quad! " + buf.Count);
+                        Console.ReadKey();
+                    }
+                }
+
+                return buf;
+            }
+             catch (Exception ex)
+            {
+                Helpers.Panic(this, "Can't export quad to MG. Give null.\r\n" + ex.Message);
+                return null;
+            }
+        }
+
+        public int[] GetUVIndices2(int x, int y, int z, int w)
+        {
+            return new int[]
+            {
+                x, y, z, w
+            };
+        }
+
 
         public int[] GetUVIndices(int x, int y, int z, int w)
         {
@@ -256,8 +395,11 @@ namespace CTRFramework
             sb.AppendLine();
 
 
+
+
             //if (!quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
             {
+
                 switch (detail)
                 {
                     case Detail.Low:
@@ -285,10 +427,10 @@ namespace CTRFramework
                                     sb.AppendLine("usemtl default");
                                 }
 
-                                
+
                                 if (quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                     sb.AppendLine("usemtl default");
-    
+
                                 switch (faceFlags[i].rotateFlipType)
                                 {
                                     case RotateFlipType.None: uvinds = GetUVIndices(1, 2, 3, 4); break;
@@ -339,9 +481,9 @@ namespace CTRFramework
                 }
 
             }
-
-            a += vcnt;
-
+                
+                a += vcnt;
+            
             return sb.ToString();
         }
 
