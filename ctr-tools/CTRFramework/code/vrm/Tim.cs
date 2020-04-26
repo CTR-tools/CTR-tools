@@ -208,7 +208,7 @@ namespace CTRFramework.Vram
 
             ushort[] buf = new ushort[width * height];
 
-            Console.WriteLine(width + "x" + height);
+            //Console.WriteLine(width + "x" + height);
 
             int ptr = tl.Position * 2; // tl.PageY * 1024 * (1024 * 2 / 16) + tl.frame.Y * 1024 + tl.PageX * (1024 * 2 / 16) + tl.frame.X;
 
@@ -232,19 +232,24 @@ namespace CTRFramework.Vram
             x.clutsize = (uint)(x.clutregion.Width * 2 + 12);
             x.flags = 8; //4 bit + pal = 8
 
-            Console.WriteLine(x.clutdata.Length);
+            //Console.WriteLine(x.clutdata.Length);
 
             if (x.region.Width > 0 && x.region.Height > 0)
             {
                 string n = path + "\\" + (name == "" ? tl.Tag() : name);
-                x.Write(n + ".tim");
-                x.SaveBMP(n + ".bmp", CtrClutToBmpPalette(x.clutdata));
 
-                using (Bitmap oldBmp = new Bitmap(n + ".bmp"))
-                using (Bitmap newBmp = new Bitmap(oldBmp))
-                {
-                    newBmp.Save(n + ".png", System.Drawing.Imaging.ImageFormat.Png);
-                }
+                if (!File.Exists(n + ".tim"))
+                    x.Write(n + ".tim");
+
+                if (!File.Exists(n + ".bmp"))
+                    x.SaveBMP(n + ".bmp", CtrClutToBmpPalette(x.clutdata));
+
+                if (!File.Exists(n + ".png"))
+                    using (Bitmap oldBmp = new Bitmap(n + ".bmp"))
+                    using (Bitmap newBmp = new Bitmap(oldBmp))
+                    {
+                        newBmp.Save(n + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                    }
             }
             else
             {
