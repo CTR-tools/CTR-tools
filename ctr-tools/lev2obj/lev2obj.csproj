@@ -8,8 +8,8 @@
     <ProjectGuid>{7E49CD09-1EB8-47D6-94C1-49ED3A03A00F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>modelReader</RootNamespace>
-    <AssemblyName>modelReader</AssemblyName>
+    <RootNamespace>lev2obj</RootNamespace>
+    <AssemblyName>lev2obj</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -93,7 +93,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>modelReader.Program</StartupObject>
+    <StartupObject>lev2obj.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics;  //to launch meshlab
-using System.Globalization; //for cultureinfo
-using System.IO; //file handling
+﻿using CTRFramework;
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Threading;
-using CTRFramework;
 
-namespace modelReader
+namespace lev2obj
 {
     class Program
     {
@@ -17,7 +17,7 @@ namespace modelReader
             Thread.CurrentThread.CurrentCulture = customCulture;
 
 
-            Console.WriteLine("CTR-Tools: model_reader\r\nDCxDemo*.\r\n");
+            Console.WriteLine("CTR-Tools: lev2obj\r\nDCxDemo*.\r\n");
 
             if (args.Length > 0)
             {
