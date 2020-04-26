@@ -1,11 +1,13 @@
 ﻿using CTRtools.Helpers;
 using CTRFramework.Sound;
+using CTRFramework.Shared;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Text;
+using NAudio.Wave;
 
 namespace CTRtools.CSEQ
 {
@@ -23,6 +25,8 @@ namespace CTRtools.CSEQ
             this.DoubleBuffered = true;
 
             LoadMeta();
+
+            Howl.ReadSampleNames(Meta.BasePath + "samplenames.txt");
         }
 
         public void LoadMeta()
@@ -44,7 +48,7 @@ namespace CTRtools.CSEQ
             }
         }
 
-        private void ReadCSEQ(string fn)
+        private void LoadCseq(string fn)
         {
             Log.Clear();
             sequenceBox.Items.Clear();
@@ -93,7 +97,7 @@ namespace CTRtools.CSEQ
 
             foreach (SampleDef sd in seq.samples)
             {
-                TreeNode tn1 = new TreeNode(sd.Tag + "");
+                TreeNode tn1 = new TreeNode(sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : "") );
                 tn.Nodes.Add(tn1);
             }
 
@@ -101,7 +105,7 @@ namespace CTRtools.CSEQ
 
             foreach (SampleDefReverb sd in seq.samplesReverb)
             {
-                TreeNode tn3 = new TreeNode(sd.Tag + "");
+                TreeNode tn3 = new TreeNode(sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : ""));
                 tn2.Nodes.Add(tn3);
             }
 
@@ -117,7 +121,7 @@ namespace CTRtools.CSEQ
             ofd.Filter = "Crash Team Racing CSEQ (*.cseq)|*.cseq";
 
             if (ofd.ShowDialog() == DialogResult.OK)
-                ReadCSEQ(ofd.FileName);
+                LoadCseq(ofd.FileName);
         }
 
         private void sequenceBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -167,7 +171,14 @@ namespace CTRtools.CSEQ
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
             if (files.Length > 0)
-                ReadCSEQ(files[0]);
+            {
+                switch (Path.GetExtension(files[0]))
+                {
+                    case ".cseq": LoadCseq(files[0]); break;
+                    case ".bnk": LoadBank(files[0]); tabControl1.SelectedIndex = 3; break;
+                    default: MessageBox.Show("Unsupported file."); break;
+                }
+            }
         }
 
 
@@ -177,8 +188,27 @@ namespace CTRtools.CSEQ
                 seq.Export("test.cseq");
         }
 
-
         Bank bnk = new Bank();
+
+        public void LoadBank(string s)
+        {
+            bnk = new Bank(s);
+            bnk.ExportAll(1, Path.GetDirectoryName(s), Path.GetFileNameWithoutExtension(s));
+
+            listBox2.Items.Clear();
+            foreach (var samp in bnk.samples)
+            {
+                listBox2.Items.Add(samp.Key); 
+            }
+
+            if (seq != null)
+            {
+                seq.bank = bnk;
+                MessageBox.Show(seq.CheckBankForSamples() ? "samples OK!" : "samples missing");
+                textBox1.Text = seq.ListMissingSamples();
+            }
+        }
+
 
         private void loadBankToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -187,31 +217,7 @@ namespace CTRtools.CSEQ
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                if (seq != null)
-                {
-                    seq.LoadBank(ofd.FileName);
-
-                    MessageBox.Show(seq.CheckBankForSamples() ? "samples OK!" : "samples missing");
-
-                    textBox1.Text = seq.ListMissingSamples();
-
-                    /*
-                    foreach (VABSample v in bnk.vs)
-                    {
-                        v.frequency = seq.GetFrequencyBySampleID(v.id);
-                    }
-                   
-                    foreach (int i in seq.GetAllIDs())
-                    {
-                        bnk.Export(i);
-                    }
-                     */
-                }
-                else
-                {
-                    bnk = new Bank(ofd.FileName);
-                    bnk.ExportAll(1, Path.GetDirectoryName(ofd.FileName), Path.GetFileNameWithoutExtension(ofd.FileName));
-                }
+                LoadBank(ofd.FileName);
             }
         }
 
@@ -316,17 +322,43 @@ namespace CTRtools.CSEQ
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            AudioFileReader wave = null;
+            WaveOut outputSound = null;
+            string x = "";
+
             if (treeView1.SelectedNode.Parent != null)
             {
                 if (treeView1.SelectedNode.Parent.Index == 1)
                 {
-                    propertyGrid1.SelectedObject = seq.samples[treeView1.SelectedNode.Index];
+                    SampleDef sd = seq.samples[treeView1.SelectedNode.Index];
+                    propertyGrid1.SelectedObject = sd;
+                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : "") + ".vag.wav";
                 }
 
                 if (treeView1.SelectedNode.Parent.Index == 0)
                 {
-                    propertyGrid1.SelectedObject = seq.samplesReverb[treeView1.SelectedNode.Index];
+                    SampleDefReverb sd = seq.samplesReverb[treeView1.SelectedNode.Index];
+                    propertyGrid1.SelectedObject = sd;
+                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : "") + ".vag.wav";
                 }
+
+
+                if (File.Exists(x))
+                {
+                    try
+                    {
+                        wave = new NAudio.Wave.AudioFileReader(x);
+
+                        outputSound = new WaveOut();
+                        outputSound.Init(wave);
+                        outputSound.Play();
+                    }
+                    catch (Exception ex)
+                    {
+                        textBox1.Text = ex.Message;
+                    }
+                }
+
             }
             else
             {
@@ -401,6 +433,26 @@ namespace CTRtools.CSEQ
         private void reloadMIDIMappingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LoadMeta();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "VAG File (*.vag)|*.vag";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(ofd.FileName)))
+                {
+
+                }
+            }
+        }
+
+        private void treeView1_DoubleClick(object sender, EventArgs e)
+        {
+
+
         }
     }
 }
