@@ -37,7 +37,7 @@ namespace CTRFramework.Sound
         public Howl(string fn)
         {
             name = fn;
-            reg = Meta.Detect(fn, "howls");
+            reg = Meta.Detect(fn, "howls", 0);
 
             if (reg != "")
             {
@@ -54,12 +54,14 @@ namespace CTRFramework.Sound
 
         public static Dictionary<int, string> sampledict = new Dictionary<int, string>();
 
-        private bool ReadSampleNames(string path)
+        public  static bool ReadSampleNames(string path)
         {
             try
             {
                 if (File.Exists(path))
                 {
+                    sampledict.Clear();
+
                     string[] buf = File.ReadAllLines(path);
 
                     foreach (string b in buf)
@@ -102,8 +104,8 @@ namespace CTRFramework.Sound
 
         public bool Read(BinaryReaderEx br)
         {
-            if (File.Exists(Meta.apppath + "samplenames.txt"))
-                ReadSampleNames(Meta.apppath + "samplenames.txt");
+            if (File.Exists(Meta.BasePath + "samplenames.txt"))
+                ReadSampleNames(Meta.BasePath + "samplenames.txt");
 
             header = new HowlHeader(br);
 
@@ -120,6 +122,15 @@ namespace CTRFramework.Sound
 
             for (int i = 0; i < header.cnt81; i++)
                 samples1.Add(new SampleDecl(br));
+            /*
+             * 
+             * dump whole header to sql later
+            StringBuilder sb = new StringBuilder();
+            foreach (SampleDecl sd in samples1)
+            {
+                sb.Append(sd.)
+            }
+            */
 
             for (int i = 0; i < header.cnt82; i++)
                 samples2.Add(new SampleDecl(br));
@@ -237,7 +248,7 @@ namespace CTRFramework.Sound
 
         public static string[] ReadNames(string listname)
         {
-            string[] lines = File.ReadAllLines(Meta.howlpath);
+            string[] lines = File.ReadAllLines(Meta.HowlPath);
 
             for (int i = 0; i < lines.Length; i++)
             {

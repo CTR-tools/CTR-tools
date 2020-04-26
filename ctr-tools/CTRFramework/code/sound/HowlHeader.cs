@@ -5,19 +5,19 @@ namespace CTRFramework.Sound
 {
     public class HowlHeader : IRead, IWrite
     {
-        public char[] magic;
+        public char[] magic;    //HOWL char[]
 
-        public int u1; //freezes the game if changed
-        public int reserved1; //no effect
-        public int reserved2; //no effect
+        public int u1;          //freezes the game if changed
+        public int reserved1;   //no effect
+        public int reserved2;   //no effect
 
-        public int cnt4;
-        public int cnt81;
-        public int cnt82;
-        public int cntBank;
-        public int cntSeq;
+        public int cnt4;        //number of entries in an unknown array, messes up all samples if anything is modified
+        public int cnt81;       //number of sample declarations, contains all sfx entries (not instruments)
+        public int cnt82;       //number of engine sound array entries
+        public int cntBank;     //number of banks
+        public int cntSeq;      //number of sequences
 
-        public int sampleDataSize;
+        public int sampleDataSize;    //whole header to the last seq pointer size
 
         public HowlHeader(BinaryReaderEx br)
         {
