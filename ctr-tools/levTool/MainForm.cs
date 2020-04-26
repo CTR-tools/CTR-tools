@@ -586,7 +586,7 @@ namespace levTool
             return child;
         }
 
-        BIG2 big;
+        BigFile big;
 
         private void button24_Click(object sender, EventArgs e)
         {
@@ -605,7 +605,7 @@ namespace levTool
             big = null;
             GC.Collect();
 
-            big = new BIG2(fn);
+            big = BigFile.FromFile(fn);
 
             TreeNode tn = new TreeNode("bigfile");
             tn.Expand();

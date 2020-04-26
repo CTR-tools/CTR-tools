@@ -96,8 +96,7 @@
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="code\big\BIG.cs" />
-    <Compile Include="code\big\BIG2.cs" />
+    <Compile Include="code\big\BigFile.cs" />
     <Compile Include="code\big\BigEntry.cs" />
     <Compile Include="code\ctr\CTRAnim.cs" />
     <Compile Include="code\ctr\LODHeader.cs" />

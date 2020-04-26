@@ -15,7 +15,7 @@ namespace CTRFramework
             get
             {
                 int val = Size;
-                while (SizePadded % 2048 != 0) val++;
+                while (val % 2048 != 0) val++;
                 return val;
             }
         }
