@@ -4,7 +4,7 @@ using System.IO;
 
 namespace CTRFramework.Shared
 {
-    public class Vector4b
+    public class Vector4b : IWrite
     {
         public byte X;
         public byte Y;

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
 
-
 namespace CTRFramework.Shared
 {
     public class Helpers
     {
+        public static bool panicEnabled = true;
+        public static bool panicIntense = false;
+
         /// <summary>
         /// 
         /// </summary>
@@ -13,11 +15,11 @@ namespace CTRFramework.Shared
         /// <param name="msg">the message it wants to send</param>
         public static void Panic(object x, string msg)
         {
-            Console.WriteLine(String.Format("{0}:\t{1}", x.GetType().Name, msg));
-            #if DEBUG
-                //if it's debug, i want to know what's going on
-                //Console.ReadKey();
-            #endif
+            if (panicEnabled)
+            {
+                Console.WriteLine(String.Format("{0}:\t{1}", x.GetType().Name, msg));
+                if (panicIntense) Console.ReadKey();
+            }
         }
 
         public static int Normalize(int min, int max, int val)

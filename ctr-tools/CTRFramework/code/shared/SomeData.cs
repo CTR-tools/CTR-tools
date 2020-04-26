@@ -2,7 +2,7 @@
 
 namespace CTRFramework.Shared
 {
-    public class SomeData
+    public class SomeData : IRead, IWrite
     {
         short s1;
         short s2;
@@ -18,6 +18,15 @@ namespace CTRFramework.Shared
 
             for (int i = 0; i < 4; i++)
                 data[i] = br.ReadInt16();
+        }
+
+        public void Write(BinaryWriterEx bw)
+        {
+            bw.Write(s1);
+            bw.Write(s2);
+
+            foreach(short s in data)
+                bw.Write(s);
         }
 
         public override string ToString()

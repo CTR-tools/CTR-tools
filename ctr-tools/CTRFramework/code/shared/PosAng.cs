@@ -1,6 +1,6 @@
 ﻿namespace CTRFramework.Shared
 {
-    public class PosAng : IRead
+    public class PosAng : IRead, IWrite
     {
         public Vector3s Position;
         public Vector3s Angle;
@@ -24,6 +24,12 @@
         {
             Position = new Vector3s(br);
             Angle = new Vector3s(br);
+        }
+
+        public void Write(BinaryWriterEx bw)
+        {
+            Position.Write(bw);
+            Angle.Write(bw);
         }
 
         public override string ToString()
