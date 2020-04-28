@@ -232,6 +232,16 @@ namespace CTRFramework.Vram
             x.clutsize = (uint)(x.clutregion.Width * 2 + 12);
             x.flags = 8; //4 bit + pal = 8
 
+            /*
+            Rectangle r = x.clutregion;
+
+            if (r.Width % 4 != 0)
+                r.Width += 16;
+
+            Tim x2 = new Tim(r);
+            x2.DrawTim(x);
+            */
+
             //Console.WriteLine(x.clutdata.Length);
 
             if (x.region.Width > 0 && x.region.Height > 0)
@@ -253,94 +263,12 @@ namespace CTRFramework.Vram
             }
             else
             {
+                throw new Exception("negative or null size");
                 Console.WriteLine("failed!" + tl.ToString());
                 Console.ReadKey();
             }
             
         }
-
-
-
-        
-        public void GetTexturePage(TextureLayout tl, string path, string name = "")
-        {
-            Directory.CreateDirectory(path);
-
-            int width = 256;
-            int height = 256;
-            int bpp = 4;
-
-            ushort[] buf = new ushort[width * 8 / bpp * height];
-
-            for (int i = 0; i < height; i++)
-            {
-                Buffer.BlockCopy(
-                    this.data, 2048 * i + 128 * tl.PageX + tl.PageY * 2048 * 256,
-                    buf, i * 128,
-                    128);
-            }
-
-            Tim x = new Tim(new Rectangle(0, 0, 256 / 4, 256));
-
-            x.data = buf;
-            x.clutregion.X = tl.PalX * 16;
-            x.clutregion.Y = tl.PalY;
-            x.clutregion.Width = 16;
-            x.clutregion.Height = 1;
-            x.clutsize = 16 * 2 + 12;
-            x.clutdata = GetCtrClut(tl);
-            x.flags = 8; //4 bit + pal = 8
-
-            x.Write(path + "\\" + (name == "" ? tl.Tag() : name) + ".tim");
-
-            //x.SaveBMP(path + "\\" + (name == "" ? tl.Tag() : name) + ".bmp", CtrClutToBmpPalette(x.clutdata));
-
-            //if (tl.Tag() != "0000_00000028")
-
-            using (Bitmap oldBmp = new Bitmap(path + "\\" + (name == "" ? tl.Tag() : name) + ".bmp"))
-            using (Bitmap newBmp = new Bitmap(oldBmp))
-            {
-                Point point = new Point(tl.uv[0].X, tl.uv[0].Y);
-                Size size = new Size((int)(tl.uv[3].X - tl.uv[0].X), (int)(tl.uv[3].Y - tl.uv[0].Y));
-
-                try
-                {
-                    Bitmap targetBmp = newBmp.Clone(
-                        new Rectangle(0, 0, 256, 256),
-                        //new Rectangle(point, size),
-                        System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-                    Graphics g = Graphics.FromImage(targetBmp);
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-                    g.DrawImage(targetBmp, new Point(0, 0));
-
-                    /*
-                    Point[] poly = new Point[]
-                    {
-                        new Point(tl.uv[0].X, tl.uv[0].Y),
-                        new Point(tl.uv[1].X, tl.uv[1].Y),
-                        new Point(tl.uv[3].X, tl.uv[3].Y),
-                        new Point(tl.uv[2].X, tl.uv[2].Y)
-                    };
-
-                    g.DrawPolygon(Pens.White, poly);
-                    g.DrawEllipse(Pens.Red, new Rectangle(poly[0].X, poly[0].Y, 3, 3));
-                    g.DrawEllipse(Pens.Green, new Rectangle(poly[2].X, poly[2].Y, 3, 3));
-                    g.DrawEllipse(Pens.Blue, new Rectangle(poly[1].X, poly[1].Y, 3, 3));
-                    g.DrawEllipse(Pens.Purple, new Rectangle(poly[3].X, poly[3].Y, 3, 3));
-                    */
-
-                    targetBmp.Save(path + "\\" + (name == "" ? tl.Tag() : name) + ".png", System.Drawing.Imaging.ImageFormat.Png);
-                    textures.Add((name == "" ? tl.Tag() : name), targetBmp);
-                    //File.Delete("tex\\" + (name == "" ? tl.Tag() : name) + ".bmp");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message + "\r\n\r\n" + ex.ToString());
-                }
-            }
-        }
-
 
 
         /// <summary>

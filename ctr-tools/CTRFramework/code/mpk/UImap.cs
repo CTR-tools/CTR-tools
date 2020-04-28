@@ -54,7 +54,8 @@ namespace CTRFramework
         {
             foreach (TexMap tm in maps)
             {
-                tim.GetTexturePage(tm.tl, String.Format("{0}{1}.png", tm.group, (tm.group + "_" + tm.name)));
+                tim.GetTexture(tm.tl, tm.tl.Tag());
+                //tim.GetTexturePage(tm.tl, String.Format("{0}{1}.png", tm.group, (tm.group + "_" + tm.name)));
             }
         }
     }

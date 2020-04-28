@@ -415,7 +415,7 @@ namespace levTool
 
                         foreach (TextureLayout tl in tex.Values)
                         {
-                            buf.GetTexturePage(tl, "");
+                            //buf.GetTexturePage(tl, "");
                         }
                     }
 
@@ -449,7 +449,7 @@ namespace levTool
 
                         foreach (TexMap map in list)
                         {
-                            buf.GetTexturePage(map.tl, map.id.ToString("X2") + "." + map.name);
+                            //buf.GetTexturePage(map.tl, map.id.ToString("X2") + "." + map.name);
                         }
                     }
 

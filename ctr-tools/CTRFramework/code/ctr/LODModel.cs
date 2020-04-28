@@ -90,7 +90,7 @@ namespace CTRFramework
                 }
             }
 
-            Helpers.WriteToFile("test.obj", sb.ToString());
+            //Helpers.WriteToFile("test.obj", sb.ToString());
 
             //Console.ReadKey();
 
