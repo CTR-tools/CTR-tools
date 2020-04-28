@@ -196,13 +196,12 @@ namespace CTRFramework
 
                 Console.WriteLine("Dumping to disk...");
 
-                File.WriteAllBytes(fn + ".BIG", final_big);
+                File.WriteAllBytes(fn, final_big);
             }
 
             sw.Stop();
 
             Console.WriteLine("BIG file created in " + sw.Elapsed.TotalSeconds);
         }
-
     }
 }

@@ -48,7 +48,6 @@ namespace CTRFramework
 
             if (Offset + Size > br.BaseStream.Length)
             {
-                Console.WriteLine("Attempt to read data beyond binary stream.");
                 throw new ArgumentOutOfRangeException("Attempt to read data beyond binary stream.");
             }
 
