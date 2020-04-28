@@ -1,6 +1,8 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
+using System.Text;
+using System.IO;
 
 namespace CTRFramework
 {
@@ -21,7 +23,7 @@ namespace CTRFramework
 
         List<CTRAnim> anims = new List<CTRAnim>();
 
-        public List<LODVertexDef> defs = new List<LODVertexDef>();
+        public List<MshCommand> defs = new List<MshCommand>();
 
         public Vector3s ReadVertex(BinaryReaderEx br, int i)
         {
@@ -31,9 +33,9 @@ namespace CTRFramework
             {
                 br.Jump(ptrVerts + 0x1C + i * 3);
 
-                v.X = br.ReadByte();
-                v.Y = br.ReadByte();
-                v.Z = br.ReadByte();
+                v.X = (short)(((int)br.ReadByte() / 255.0f) * scale.X);
+                v.Y = (short)(((int)br.ReadByte() / 255.0f) * scale.Z);
+                v.Z = (short)(((int)br.ReadByte() / 255.0f) * scale.Y);
             }
 
             return v;
@@ -98,7 +100,7 @@ namespace CTRFramework
 
             long pos = br.BaseStream.Position;
 
-            br.Jump(ptrFaces);
+            br.Jump(ptrFaces+4);
 
             uint x;
 
@@ -106,19 +108,92 @@ namespace CTRFramework
             {
                 x = br.ReadUInt32Big();
                 if (x != 0xFFFFFFFF)
-                    defs.Add(new LODVertexDef(x));
+                    defs.Add(new MshCommand(x));
             }
             while (x != 0xFFFFFFFF);
 
-            foreach (LODVertexDef d in defs)
-            {
-                Console.WriteLine(
-                    d.value.ToString("X8") +
-                    " t:" + d.texIndex +
-                    " c:" + d.colorIndex +
-                    " s:" + d.stackIndex);
 
-                Console.WriteLine(ReadVertex(br, d.stackIndex).ToString());
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendFormat("o {0}\r\n", name);
+
+                Vector3s[] crd = new Vector3s[4];
+                Vector3s[] stack = new Vector3s[256];
+                Vector3s curvert;
+
+                bool invert = false;
+
+                int i = 0;
+                int cur_i = 0;
+
+                int ttl_faces = 0;
+
+                foreach (MshCommand d in defs)
+                {
+                    Console.WriteLine(
+                        d.value.ToString("X8") +
+                        //" t:" + d.texIndex +
+                        " c:" + d.colorIndex +
+                        " s:" + d.stackIndex);
+
+                    if (d.flags.HasFlag(Flags.s))
+                    {
+                        cur_i = 0;
+                    }
+
+                    if (d.flags.HasFlag(Flags.v))
+                    {
+                        curvert = stack[d.value >> 16 & 0xFF];
+                    }
+                    else
+                    {
+                        curvert = ReadVertex(br, i);
+                        stack[d.value >> 16 & 0xFF] = curvert;
+                        i++;
+                    }
+
+                    crd[0] = crd[1];
+                    crd[1] = crd[2];
+                    crd[2] = crd[3];
+                    crd[3] = curvert;
+
+                    if (d.flags.HasFlag(Flags.l))
+                    {
+                        crd[1] = crd[0];
+                    }
+
+                    if (cur_i >= 2)
+                    {
+                        for (int z = 1; z < 4; z++)
+                            sb.AppendLine("v " + crd[z].ToString(VecFormat.Numbers));
+
+                        if (!invert)
+                        {
+                            sb.AppendFormat("f {0} {1} {2}\r\n\r\n", ttl_faces + 1, ttl_faces + 2, ttl_faces + 3);
+                        }
+                        else
+                        {
+                            sb.AppendFormat("f {0} {1} {2}\r\n\r\n", ttl_faces + 3, ttl_faces + 2, ttl_faces + 1);
+                        }
+
+                        invert = !invert;
+
+                        ttl_faces += 3;
+                    }
+
+                    cur_i++;
+
+                   // Console.ReadKey();
+
+                }
+
+                if (ptrVerts != 0)
+                {
+                    Directory.CreateDirectory("mpk");
+                    Helpers.WriteToFile("mpk\\" + name + ".obj", sb.ToString());
+                }
+            
+                //Console.WriteLine(ReadVertex(br, d.stackIndex).ToString());
                 //Console.WriteLine(d.texIndex == 0 ? "no textured" : ReadTexture(br, d.texIndex-1).ToString());
                 //Console.WriteLine(d.colorIndex == 0 ? " no color?" : ReadColor(br, d.colorIndex-1).ToString());
             }

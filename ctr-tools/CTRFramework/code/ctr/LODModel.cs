@@ -76,20 +76,6 @@ namespace CTRFramework
                 lh.Add(new LODHeader(br));
             }
 
-
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (LODHeader h in lh)
-            {
-                sb.AppendFormat("o {0}\r\n", h.name);
-
-                foreach (LODVertexDef d in h.defs)
-                {
-                    sb.AppendFormat("v {0}\r\n", h.ReadVertex(br, d.stackIndex).ToString(VecFormat.Numbers));
-                }
-            }
-
             //Helpers.WriteToFile("test.obj", sb.ToString());
 
             //Console.ReadKey();

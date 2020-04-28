@@ -10,7 +10,6 @@ namespace CTRFramework
     {
         string path;
         int texOff;
-
         List<uint> modOffs = new List<uint>();
         UImap map;
 

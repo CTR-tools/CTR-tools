@@ -1,7 +1,9 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
+using CTRFramework.Vram;
 using System;
 using System.IO;
+
 
 namespace mpktool
 {
@@ -12,14 +14,13 @@ namespace mpktool
             if (args.Length > 0)
             {
                 ModelPack mpk = new ModelPack(args[0]);
-
-                /*
+         
                 using (BinaryReaderEx br = new BinaryReaderEx(File.Open("ui_textures.vram", FileMode.Open)))
                 {
                     Tim x = CtrVrm.FromReader(br);
                     mpk.Extract(x);
                 }
-                */
+                
                 //Console.ReadKey();
             }
         }

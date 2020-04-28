@@ -311,61 +311,61 @@
 
 # ==========258 = UI AND GENERIC MODELS SECTION===============
 
-258=ui_textures.vram
+258=packs\ui_textures.vram
 259=packs\259.mpk
 
 # =========260 = MODEL PACKS SECTION===============
 
-260=packs\1P\crash.mpk
-261=packs\1P\cortex.mpk
-262=packs\1P\tiny.mpk
-263=packs\1P\coco.mpk
-264=packs\1P\ngin.mpk
-265=packs\1P\dingo.mpk
-266=packs\1P\polar.mpk
-267=packs\1P\pura.mpk
-268=packs\1P\pinstripe.mpk
-269=packs\1P\papu.mpk
-270=packs\1P\roo.mpk
-271=packs\1P\joe.mpk
-272=packs\1P\ntropy.mpk
-273=packs\1P\pen.mpk
-274=packs\1P\fake.mpk
-275=packs\1P\oxide.mpk
+260=packs\1P_arcade\crash.mpk
+261=packs\1P_arcade\cortex.mpk
+262=packs\1P_arcade\tiny.mpk
+263=packs\1P_arcade\coco.mpk
+264=packs\1P_arcade\ngin.mpk
+265=packs\1P_arcade\dingo.mpk
+266=packs\1P_arcade\polar.mpk
+267=packs\1P_arcade\pura.mpk
+268=packs\1P_arcade\pinstripe.mpk
+269=packs\1P_arcade\papu.mpk
+270=packs\1P_arcade\roo.mpk
+271=packs\1P_arcade\joe.mpk
+272=packs\1P_arcade\ntropy.mpk
+273=packs\1P_arcade\pen.mpk
+274=packs\1P_arcade\fake.mpk
+275=packs\1P_arcade\oxide.mpk
 
-276=packs\4P\crash.mpk
-277=packs\4P\cortex.mpk
-278=packs\4P\tiny.mpk
-279=packs\4P\coco.mpk
-280=packs\4P\ngin.mpk
-281=packs\4P\dingo.mpk
-282=packs\4P\polar.mpk
-283=packs\4P\pura.mpk
-284=packs\4P\pinstripe.mpk
-285=packs\4P\papu.mpk
-286=packs\4P\roo.mpk
-287=packs\4P\joe.mpk
-288=packs\4P\ntropy.mpk
-289=packs\4P\pen.mpk
-290=packs\4P\fake.mpk
-291=packs\4P\oxide.mpk
+276=packs\1P_adventure\crash.mpk
+277=packs\1P_adventure\cortex.mpk
+278=packs\1P_adventure\tiny.mpk
+279=packs\1P_adventure\coco.mpk
+280=packs\1P_adventure\ngin.mpk
+281=packs\1P_adventure\dingo.mpk
+282=packs\1P_adventure\polar.mpk
+283=packs\1P_adventure\pura.mpk
+284=packs\1P_adventure\pinstripe.mpk
+285=packs\1P_adventure\papu.mpk
+286=packs\1P_adventure\roo.mpk
+287=packs\1P_adventure\joe.mpk
+288=packs\1P_adventure\ntropy.mpk
+289=packs\1P_adventure\pen.mpk
+290=packs\1P_adventure\fake.mpk
+291=packs\1P_adventure\oxide.mpk
 
-292=packs\2P\crash.mpk
-293=packs\2P\cortex.mpk
-294=packs\2P\tiny.mpk
-295=packs\2P\coco.mpk
-296=packs\2P\ngin.mpk
-297=packs\2P\dingo.mpk
-298=packs\2P\polar.mpk
-299=packs\2P\pura.mpk
-300=packs\2P\pinstripe.mpk
-301=packs\2P\papu.mpk
-302=packs\2P\roo.mpk
-303=packs\2P\joe.mpk
-304=packs\2P\ntropy.mpk
-305=packs\2P\pen.mpk
-306=packs\2P\fake.mpk
-307=packs\2P\oxide.mpk
+292=packs\1P_timetrial\crash.mpk
+293=packs\1P_timetrial\cortex.mpk
+294=packs\1P_timetrial\tiny.mpk
+295=packs\1P_timetrial\coco.mpk
+296=packs\1P_timetrial\ngin.mpk
+297=packs\1P_timetrial\dingo.mpk
+298=packs\1P_timetrial\polar.mpk
+299=packs\1P_timetrial\pura.mpk
+300=packs\1P_timetrial\pinstripe.mpk
+301=packs\1P_timetrial\papu.mpk
+302=packs\1P_timetrial\roo.mpk
+303=packs\1P_timetrial\joe.mpk
+304=packs\1P_timetrial\ntropy.mpk
+305=packs\1P_timetrial\pen.mpk
+306=packs\1P_timetrial\fake.mpk
+307=packs\1P_timetrial\oxide.mpk
 
 # ==========308 = CHARS MED SECTION===============
 
@@ -388,14 +388,14 @@
 
 # ========324 = MORE MODEL PACKS SECTION===============
 
-324=packs\unknown\324.mpk
-325=packs\unknown\325.mpk
-326=packs\unknown\326.mpk
-327=packs\unknown\327.mpk
-328=packs\unknown\328.mpk
-329=packs\unknown\329.mpk
-330=packs\unknown\330.mpk
-331=packs\unknown\331.mpk
+324=packs\1P_gem_cups\324.mpk
+325=packs\1P_gem_cups\325.mpk
+326=packs\1P_gem_cups\326.mpk
+327=packs\1P_gem_cups\327.mpk
+328=packs\1P_gem_cups\328.mpk
+329=packs\1P_gem_cups\329.mpk
+330=packs\1P_gem_cups\330.mpk
+331=packs\1P_gem_cups\331_bosses.mpk
 
 # ==========332 = CHARS LOW SECTION===============
 
@@ -520,18 +520,18 @@
 
 # =========438 = ADDITIONAL MODELS SECTION===============
 
-438=uka1.vram
-439=uka1.ctr
-440=uka2.vram
-441=uka2.ctr
-442=aku1.vram
-443=aku1.ctr
-444=aku2.vram
-445=aku2.ctr
-446=dingofire1.ctr
-447=dingofire2.ctr
-448=podium1.ctr
-449=podium2.ctr
+438=models\misc\uka1.vram
+439=models\misc\uka1.ctr
+440=models\misc\uka2.vram
+441=models\misc\uka2.ctr
+442=models\misc\aku1.vram
+443=models\misc\aku1.ctr
+444=models\misc\aku2.vram
+445=models\misc\aku2.ctr
+446=models\misc\dingofire1.ctr
+447=models\misc\dingofire2.ctr
+448=models\misc\podium1.ctr
+449=models\misc\podium2.ctr
 
 # =========450 = BOSS CUTSCENE ANIMS SECTION===============
 
@@ -609,8 +609,8 @@
 
 # ===========513 = CUTSCENES SECTION=================
 
-513=intro_box.vram
-514=intro_box.lev
+513=cutscenes\intro_box\data.vram
+514=cutscenes\intro_box\data.lev
 515=cutscenes\race_today\data.vram
 516=cutscenes\race_today\data.lev
 517=cutscenes\race_today\data.ptr

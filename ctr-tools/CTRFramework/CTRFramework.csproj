@@ -102,13 +102,14 @@
     <Compile Include="code\ctr\LODHeader.cs" />
     <Compile Include="code\ctr\LODModel.cs" />
     <Compile Include="code\ctr\LODVertex.cs" />
-    <Compile Include="code\ctr\LODVertexDef.cs" />
+    <Compile Include="code\ctr\MshCommand.cs" />
     <Compile Include="code\Enums.cs" />
     <Compile Include="code\lev\CtrTex.cs" />
     <Compile Include="code\lev\nav\Nav.cs" />
     <Compile Include="code\lev\nav\AIPath.cs" />
     <Compile Include="code\lev\VertexAnim.cs" />
     <Compile Include="code\lang\LNG.cs" />
+    <Compile Include="code\shared\Vector2b.cs" />
     <Compile Include="code\sound\Bank.cs" />
     <Compile Include="code\shared\BinaryReaderEx.cs" />
     <Compile Include="code\shared\BinaryWriterEx.cs" />
@@ -134,7 +135,6 @@
     <Compile Include="code\shared\OBJ.cs" />
     <Compile Include="code\shared\PosAng.cs" />
     <Compile Include="code\shared\SomeData.cs" />
-    <Compile Include="code\shared\Vector2b.cs" />
     <Compile Include="code\shared\Vector3s.cs" />
     <Compile Include="code\shared\Vector4b.cs" />
     <Compile Include="code\shared\Vector4s.cs" />
