@@ -16,6 +16,15 @@ namespace ctrviewer
             return mono_v;
         }
 
+        public static Color Blend(Color c1, Color c2)
+        {
+            Color x = Color.White;
+            x.R = (byte)((c1.R + c2.R) / 2);
+            x.G = (byte)((c1.G + c2.G) / 2);
+            x.B = (byte)((c1.B + c2.B) / 2);
+            return x;
+        }
+
         //magic
         public unsafe static Texture2D GetTexture(GraphicsDevice gd, System.Drawing.Bitmap bmp)
         {

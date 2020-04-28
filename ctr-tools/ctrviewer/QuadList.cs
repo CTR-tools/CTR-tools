@@ -64,7 +64,7 @@ namespace ctrviewer
             }
         }
 
-        public QuadList(List<VertexPositionColorTexture> v, bool te, string name = "")
+        public QuadList(List<VertexPositionColorTexture> v, bool te,string name = "")
         {
             verts.AddRange(v);
             textureEnabled = te;
@@ -110,9 +110,13 @@ namespace ctrviewer
                     effect.Texture = Game1.textures["test"];
                 }
 
+                
+
                 foreach (var pass in effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
+
+                    
 
                     graphics.GraphicsDevice.DrawUserIndexedPrimitives(
                             PrimitiveType.TriangleList,

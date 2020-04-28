@@ -23,11 +23,12 @@ namespace ctrviewer
         Menu menu;
 
         BasicEffect effect;
+        BasicEffect instanceEffect;
         FirstPersonCamera camera;
         FirstPersonCamera lowcamera;
         FirstPersonCamera skycamera;
 
-        //List<VertexPositionColor> verts = new List<VertexPositionColor>();
+
         List<MGQuadBlock> quads = new List<MGQuadBlock>();
         List<MGQuadBlock> quads_low = new List<MGQuadBlock>();
         MGQuadBlock sky;
@@ -36,6 +37,9 @@ namespace ctrviewer
 
         public static SamplerState ss;
         public static PlayerIndex activeGamePad = PlayerIndex.One;
+
+
+        public static int currentflag = 1;
 
         public Game1()
         {
@@ -90,6 +94,10 @@ namespace ctrviewer
             effect.VertexColorEnabled = true;
             effect.TextureEnabled = true; 
             effect.DiffuseColor = new Vector3(2f, 2f, 2f);
+
+            instanceEffect = new BasicEffect(graphics.GraphicsDevice);
+            instanceEffect.VertexColorEnabled = true;
+            instanceEffect.TextureEnabled = false;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -151,6 +159,8 @@ namespace ctrviewer
         protected override void LoadContent()
         {
             textures.Add("test", Content.Load<Texture2D>("test"));
+            textures.Add("flag", Content.Load<Texture2D>("flag"));
+
             effect.Texture = textures["test"];
             effect.TextureEnabled = true;
 
@@ -161,7 +171,45 @@ namespace ctrviewer
 
             menu = new Menu(font);
             //graphics.GraphicsDevice.Viewport.Height / 2));
+
+            AddCone("greencone", Color.Green);
+            AddCone("yellowcone", Color.Yellow);
+            AddCone("redcone", Color.Red);
+            AddCone("purplecone", Color.Purple);
+            AddCone("cyancone", Color.Cyan);
         }
+
+
+
+        public void AddCone(string name, Color c)
+        {
+            QuadList modl = new QuadList();
+
+            List<VertexPositionColorTexture> vptc = new List<VertexPositionColorTexture>();
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), MGConverter.Blend(Color.Black, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), MGConverter.Blend(Color.Black, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+
+            modl.Seal();
+
+            instmodels.Add(name, modl);
+        }
+
 
         bool gameLoaded = false;
 
@@ -203,6 +251,7 @@ namespace ctrviewer
 
             Console.WriteLine("scenes converted to mg: " + sw.Elapsed.TotalSeconds);
 
+            
             if (scn.Count > 0)
             {
                 backColor.R = scn[0].header.bgColor[0].X;
@@ -213,61 +262,79 @@ namespace ctrviewer
                     sky = new MGQuadBlock(scn[0].skybox);
             }
 
+
+
+            foreach (Scene s in scn)
+                foreach (PickupHeader ph in s.pickups)
+                    instanced.Add(new InstancedModel("purplecone", new Vector3(ph.Position.X, ph.Position.Y, ph.Position.Z), 3));
+            
+            foreach (Scene s in scn)
+            {
+                foreach (PosAng n in s.restartPts)
+                    instanced.Add(new InstancedModel("cyancone", new Vector3(n.Position.X, n.Position.Y, n.Position.Z), 3));
+            }
+
+
+            foreach (Scene s in scn)
+            {
+                if (s.nav.paths.Count == 3)
+                {
+                    foreach (NavFrame n in s.nav.paths[0].frames)
+                        instanced.Add(new InstancedModel("greencone", new Vector3(n.position.X, n.position.Y, n.position.Z), 3));
+                    foreach (NavFrame n in s.nav.paths[1].frames)
+                        instanced.Add(new InstancedModel("yellowcone", new Vector3(n.position.X, n.position.Y, n.position.Z), 3));
+                    foreach (NavFrame n in s.nav.paths[2].frames)
+                        instanced.Add(new InstancedModel("redcone", new Vector3(n.position.X, n.position.Y, n.position.Z), 3));
+                }
+            }
+            
+
+
+
+
+
             scn[0].ExportTextures("levels\\tex");
 
             //files = Directory.GetFiles("tex", "*.png");
 
             foreach (MGQuadBlock qb in quads)
                 foreach (string s in qb.textureList)
-                {
+                {                  
                     string path = String.Format("levels\\tex\\{0}.png", s);
                     string path_new = String.Format("levels\\newtex\\{0}.png", s);
 
-                    if (File.Exists(path_new)) path = path_new;
+                    if (File.Exists(path_new))
+                        path = path_new;
 
-                    if (!textures.ContainsKey(s))
-                            textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path)));  
+                    if (File.Exists(path))
+                    {
+                        if (!textures.ContainsKey(s))
+                            textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path)));
+                    }
+                    else Console.WriteLine("Missing texture: " + s);
+                          
                 }
-            /*
+
+            
             foreach (MGQuadBlock qb in quads_low)
                 foreach (string s in qb.textureList)
                 {
                     string path = String.Format("levels\\tex\\{0}.png", s);
                     string path_new = String.Format("levels\\newtex\\{0}.png", s);
 
-                    if (!textures.ContainsKey(s))
+                    if (File.Exists(path_new))
+                        path = path_new;
+
+                    if (File.Exists(path))
                     {
-                        if (File.Exists(path_new))
-                        {
-                            textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path_new)));
-                        }
-                        else
-                        {
+                        if (!textures.ContainsKey(s))
                             textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path)));
-                            //textures.Add(s, MGConverter.GetTexture(GraphicsDevice, (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile(path)));
-                        }
                     }
+                    else Console.WriteLine("Missing low texture: " + s);
                 }
-                */
-
-            Console.WriteLine("loading done: " + sw.Elapsed.TotalSeconds);
+                
             sw.Stop();
-
-            /*
-            foreach (Scene s in scn)
-            {
-                //s.ExportTextures("tex");
-
-                foreach (var x in s.ctrvram.textures)
-                {
-                    if (!textures.ContainsKey(x.Key))
-                        textures.Add(x.Key, Game1.GetTexture(GraphicsDevice, x.Value));
-                }
-
-            }
-
-            // effect.Texture = textures["test"];
-            */
+            Console.WriteLine("loading done: " + sw.Elapsed.TotalSeconds);
         }
 
         public void ResetCamera()
@@ -280,7 +347,7 @@ namespace ctrviewer
                     scn[0].header.startGrid[0].Position.Z
                     );
 
-                camera.SetRotation((float)(scn[0].header.startGrid[0].Angle.Y/1024 * Math.PI * 2), scn[0].header.startGrid[0].Angle.X / 1024);
+                camera.SetRotation((float)(scn[0].header.startGrid[0].Angle.Y / 1024 * Math.PI * 2), scn[0].header.startGrid[0].Angle.X / 1024);
                 lowcamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.Y / 1024 * Math.PI * 2), scn[0].header.startGrid[0].Angle.X / 1024);
 
                 Console.WriteLine(scn[0].header.startGrid[0].Angle.ToString());
@@ -300,6 +367,7 @@ namespace ctrviewer
         public static bool filter = true;
         public static bool clamp = true;
         public bool lodEnabled = false;
+        public bool show_inst = false;
 
         GamePadState oldstate = GamePad.GetState(activeGamePad);
         GamePadState newstate = GamePad.GetState(activeGamePad);
@@ -358,6 +426,8 @@ namespace ctrviewer
             {
                 menu.Update(oldstate, newstate);
 
+                //currentflag = menu.items.Find(x => x.Title == "current flag: {0}").rangeval;
+
                 if (menu.Exec)
                 {
                     switch (menu.SelectedItem.Action)
@@ -373,6 +443,7 @@ namespace ctrviewer
                         case "toggle":
                             switch (menu.SelectedItem.Param)
                             {
+                                case "inst": show_inst = !show_inst; break;
                                 case "lod": lodEnabled = !lodEnabled; if (lodEnabled) EnableLodCamera(); else DisableLodCamera(); break;
                                 case "antialias": graphics.PreferMultiSampling = !graphics.PreferMultiSampling; break;
                                 //case "invis": hide_invis = !hide_invis; LoadLevel((TerrainFlags)(1 << Flag)); break;
@@ -428,6 +499,8 @@ namespace ctrviewer
             oldms = Mouse.GetState();
 
         }
+
+        public static bool twoSided = false;
 
         public static void UpdateSamplerState(GraphicsDeviceManager g)
         {
@@ -502,7 +575,12 @@ namespace ctrviewer
                 }
 
 
+                if (show_inst)
+                    foreach (var v in instanced)
+                        v.Render(graphics, instanceEffect, lowcamera);
+
                 GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
+
 
 
                 effect.View = camera.ViewMatrix;
@@ -521,6 +599,10 @@ namespace ctrviewer
 
                     WireframeMode(graphics.GraphicsDevice, false);
                 }
+
+                if (show_inst)
+                    foreach (var v in instanced)
+                        v.Render(graphics, instanceEffect, camera);
 
             }
             else
@@ -544,6 +626,8 @@ namespace ctrviewer
 
         RasterizerState rasterizerState;
 
+
+
         public void WireframeMode(GraphicsDevice gd, bool toggle)
         {
             rasterizerState = new RasterizerState();
@@ -553,6 +637,9 @@ namespace ctrviewer
             if (gd.RasterizerState != rasterizerState)
                 gd.RasterizerState = rasterizerState;
         }
+
+        public static Dictionary<string, QuadList> instmodels = new System.Collections.Generic.Dictionary<string, QuadList>();
+        List<InstancedModel> instanced = new List<InstancedModel>();
 
         protected override void Draw(GameTime gameTime)
         {
@@ -565,6 +652,8 @@ namespace ctrviewer
 
             DrawLevel();
 
+
+          //  WireframeMode(GraphicsDevice, false);
 
             if (inmenu)
             {

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using System.Text;
+using CTRFramework;
 
 namespace ctrviewer
 {
@@ -47,7 +48,7 @@ namespace ctrviewer
         public Vector2 Position = new Vector2(0.5f, 0.25f);
         public bool Exec = false;
 
-        List<MenuItem> items = new List<MenuItem>();
+        public List<MenuItem> items = new List<MenuItem>();
 
         public MenuItem SelectedItem
         {
@@ -88,11 +89,13 @@ namespace ctrviewer
             //currently doesn't work
             //items.Add(new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true));
             items.Add(new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true));
+            items.Add(new MenuItem("toggle game objects".ToUpper(), "toggle", "inst", true));
             items.Add(new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true));
+
             items.Add(new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true));
             items.Add(new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true));
 
-            items.Add(new MenuItem("current flag: {0}".ToUpper(), "flag", "scroll", true, SwitchType.Range, 7));
+            items.Add(new MenuItem("low lod quadflag: {0}".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15));
             items.Add(new MenuItem("---", "", "", false));
 
             //items.Add(new MenuItem("reload level".ToUpper(), "load", "", true));
@@ -132,6 +135,8 @@ namespace ctrviewer
                     SelectedItem.rangeval--;
                     if (SelectedItem.rangeval < 0)
                         SelectedItem.rangeval = SelectedItem.rangemax;
+
+                    Game1.currentflag = SelectedItem.rangeval;
                 }
             }
             if (newstate.DPad.Right == ButtonState.Pressed && newstate.DPad.Right != oldstate.DPad.Right)
@@ -141,6 +146,8 @@ namespace ctrviewer
                     SelectedItem.rangeval++;
                     if (SelectedItem.rangeval > SelectedItem.rangemax)
                         SelectedItem.rangeval = 0;
+
+                    Game1.currentflag = SelectedItem.rangeval;
                 }
             }
             if (newstate.Buttons.A == ButtonState.Pressed && newstate.Buttons.A != oldstate.Buttons.A) Exec = true;
@@ -163,7 +170,7 @@ namespace ctrviewer
 
             foreach (MenuItem m in items)
             {
-                string s = (m.sType == SwitchType.Range ? String.Format(m.Title.ToUpper(), m.rangeval) : m.Title.ToUpper());
+                string s = (m.sType == SwitchType.Range ? String.Format(m.Title, ((QuadFlags)(1 << Game1.currentflag)).ToString(),m.rangeval) : m.Title.ToUpper()); //m.Title.ToUpper(), 
 
                 g.DrawString(fnt, s, loc + shadow_offset - new Vector2(m.Width / 2 * scale, 0), Color.Black,
                    0, new Vector2(0, 0), scale, SpriteEffects.None, 0.5f);

@@ -16,6 +16,8 @@ namespace ctrviewer
         Dictionary<string, QuadList> animatedq = new Dictionary<string, QuadList>();
         QuadList wireq = new QuadList();
 
+        Dictionary<string, QuadList> flagq = new Dictionary<string, QuadList>();
+
         public List<string> textureList
         {
             get
@@ -90,7 +92,7 @@ namespace ctrviewer
 
                         for (int i = 0; i < s.quads.Count; i++)
                         {
-                            if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
+                            //if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                             {
                                 List<CTRFramework.Vertex> vts = s.quads[i].GetVertexListq(s, -1);
                                 monolist.Clear();
@@ -101,7 +103,6 @@ namespace ctrviewer
                                         monolist.Add(MGConverter.ToVptc(cv, cv.uv));
 
                                     wireq.PushQuad(monolist);
-
 
                                     TextureLayout t = s.quads[i].texlow;
 
@@ -116,6 +117,24 @@ namespace ctrviewer
                                         QuadList ql = new QuadList(monolist, true, texTag);
                                         normalq.Add(texTag, ql);
                                     }
+
+
+                                    foreach (QuadFlags fl in (QuadFlags[])Enum.GetValues(typeof(QuadFlags)))
+                                    {
+                                        if (s.quads[i].quadFlags.HasFlag(fl))
+                                        {
+                                            if (flagq.ContainsKey(fl.ToString()))
+                                            {
+                                                flagq[fl.ToString()].PushQuad(monolist);
+                                            }
+                                            else
+                                            {
+                                                QuadList ql = new QuadList(monolist, true, "flag");
+                                                flagq.Add(fl.ToString(), ql);
+                                            }
+                                        }
+                                    }
+                                    
                                 }
                             }
                         }
@@ -126,47 +145,12 @@ namespace ctrviewer
                         wireq.Seal();
                         wireq.SetColor(Color.Black);
 
-                        break;
-
-                        /*
-                        if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
+                        foreach (var ql in flagq)
                         {
-                            for (int j = 0; j < 4; j++)
-                            {
-                                VertexPositionColorTexture v = new VertexPositionColorTexture();
-                                CTRFramework.Vertex cv = s.verts[s.quads[i].ind[j]];
-                                CTRFramework.TextureLayout tl = s.quads[i].texlow;
+                            ql.Value.Seal();
+                        }
 
-                                v.Position.X = cv.coord.X;
-                                v.Position.Y = cv.coord.Y;
-                                v.Position.Z = cv.coord.Z;
-
-                                v.Color.A = 255;
-                                v.Color.R = cv.color.X;
-                                v.Color.G = cv.color.Y;
-                                v.Color.B = cv.color.Z;
-
-                                if (s.quads[i].ptrTexLow > 0)
-                                {
-                                    v.TextureCoordinate.X = tl.uv[j].X / 256.0f;
-                                    v.TextureCoordinate.Y = tl.uv[j].Y / 256.0f;
-                                }
-                                else
-                                {
-                                    v.TextureCoordinate.X = 0;
-                                    v.TextureCoordinate.Y = 0;
-                                }
-
-                                normal.verts[i * 4 + j] = v;
-                            }
-
-                            for (int k = 0; k < indices_pattern_low.Length; k++)
-                            {
-                                normal.indices[i * 6 + k] = (short)(i * 4 + indices_pattern_low[k]);
-                            }
-
-                        }*/
-
+                        break;
                     }
 
         
@@ -188,50 +172,50 @@ namespace ctrviewer
                         {
                             if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                 for (int j = 0; j < 4; j++)
+                            {
+
+                                List<CTRFramework.Vertex> vts = s.quads[i].GetVertexListq(s, j);
+                                monolist.Clear();
+
+                                if (vts != null)
                                 {
+                                    foreach (Vertex cv in vts)
+                                        monolist.Add(MGConverter.ToVptc(cv, cv.uv));
 
-                                    List<CTRFramework.Vertex> vts = s.quads[i].GetVertexListq(s, j);
-                                    monolist.Clear();
+                                    wireq.PushQuad(monolist);
 
-                                    if (vts != null)
+                                    CtrTex t = s.quads[i].tex[j];
+
+                                    string texTag = t.midlods[2].Tag();
+
+                                    if (!t.isAnimated)
                                     {
-                                        foreach (Vertex cv in vts)
-                                            monolist.Add(MGConverter.ToVptc(cv, cv.uv));
-
-                                        wireq.PushQuad(monolist);
-
-                                        CtrTex t = s.quads[i].tex[j];
-
-                                        string texTag = t.midlods[2].Tag();
-
-                                        if (!t.isAnimated)
+                                        if (normalq.ContainsKey(texTag))
                                         {
-                                            if (normalq.ContainsKey(texTag))
-                                            {
-                                                normalq[texTag].PushQuad(monolist);
-                                            }
-                                            else
-                                            {
-                                                QuadList ql = new QuadList(monolist, true, texTag);
-                                                normalq.Add(texTag, ql);
-                                            }
+                                            normalq[texTag].PushQuad(monolist);
                                         }
                                         else
                                         {
-                                            if (animatedq.ContainsKey(texTag))
-                                            {
-                                                animatedq[texTag].PushQuad(monolist);
-                                            }
-                                            else
-                                            {
-                                                QuadList ql = new QuadList(monolist, true, texTag);
-                                                ql.scrollingEnabled = true;
-                                                animatedq.Add(texTag, ql);
-                                            }
+                                            QuadList ql = new QuadList(monolist, true, texTag);
+                                            normalq.Add(texTag, ql);
                                         }
-
                                     }
+                                    else
+                                    {
+                                        if (animatedq.ContainsKey(texTag))
+                                        {
+                                            animatedq[texTag].PushQuad(monolist);
+                                        }
+                                        else
+                                        {
+                                            QuadList ql = new QuadList(monolist, true, texTag);
+                                            ql.scrollingEnabled = true;
+                                            animatedq.Add(texTag, ql);
+                                        }
+                                    }
+
                                 }
+                            }
                         }
 
                         int numVerts = 0;
@@ -335,6 +319,7 @@ namespace ctrviewer
             Game1.clamp = true;
             Game1.UpdateSamplerState(graphics);
 
+            
             foreach (var ql in normalq)
                 ql.Value.Render(graphics, effect);
             
@@ -344,6 +329,10 @@ namespace ctrviewer
 
             foreach (var ql in animatedq)
                 ql.Value.Render(graphics, effect);
+
+            if (flagq.ContainsKey(((QuadFlags)(1<<Game1.currentflag)).ToString()))
+                flagq[((QuadFlags)(1 << Game1.currentflag)).ToString()].Render(graphics, effect);
+
         }
 
         public void RenderSky(GraphicsDeviceManager graphics, BasicEffect effect)
@@ -362,16 +351,6 @@ namespace ctrviewer
                     
             wireq.Render(graphics, effect);
         }
-
-        public Color Blend(Color c1, Color c2)
-        {
-            Color x = Color.White;
-            x.R = (byte)((c1.R + c2.R) / 2);
-            x.G = (byte)((c1.G + c2.G) / 2);
-            x.B = (byte)((c1.B + c2.B) / 2);
-            return x;
-        }
-
 
     }
 }

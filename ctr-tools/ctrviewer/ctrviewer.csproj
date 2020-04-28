@@ -70,6 +70,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="FPSCamera.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="InstancedModel.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="MGConverter.cs" />
     <Compile Include="MGQuadBlock.cs" />
