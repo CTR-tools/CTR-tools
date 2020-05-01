@@ -52,20 +52,20 @@ namespace CTRFramework
     [Flags]
     public enum QuadFlags
     {
-        Invisible = 1 << 0, //check
-        NeverUsed1 = 1 << 1, //used in space station, probably invisible wall
-        Reflection = 1 << 2,
-        Kickers = 1 << 3,
-        OutOfBounds = 1 << 4,//check
-        NeverUsed2 = 1 << 5,
-        TriggerScript = 1 << 6,
-        Reverb = 1 << 7, //confirmed
-        KickersToo = 1 << 8,
-        KillRacer = 1 << 9, //confirmed, terrain kills racer
-        TikiMouth = 1 << 10,
-        Renderable = 1 << 11, //mostly same as collidable, driveable?
-        Collidable = 1 << 12, //confirmed, setting this to 1 makes quad collidable, able to drive
-        NotTrack = 1 << 13, //the opposite of collidable?
+        Invisible = 1 << 0,     //check
+        NeverUsed1 = 1 << 1,    //used in space station, probably invisible wall
+        Reflection = 1 << 2,    //used in snow levels
+        Kickers = 1 << 3,       //?? maybe denotes that you whould be awarded extra turbo for landing?
+        OutOfBounds = 1 << 4,   //check
+        NeverUsed2 = 1 << 5,    //??
+        TriggerScript = 1 << 6, //turbo pads, but not only. maybe quad has a linked script?
+        Reverb = 1 << 7,        //used in various indoor areas
+        KickersToo = 1 << 8,    //??
+        KillRacer = 1 << 9,     //these quads trigger mask
+        TikiMouth = 1 << 10,    //only spotted on tiny arena
+        Renderable = 1 << 11,   //mostly same as ground, but more.
+        Ground = 1 << 12,       //ground, makes it collidable
+        Wall = 1 << 13,         //walls
         OutsideStuff = 1 << 14, //third state? looks like all quads on the track are either 12, 13 or 14
         InvisibleTriggers = 1 << 15 //invisible stuff like triggers
     }
