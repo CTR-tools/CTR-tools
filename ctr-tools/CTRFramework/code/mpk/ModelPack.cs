@@ -67,7 +67,6 @@ namespace CTRFramework
 
                 LODModel lod = new LODModel(br);
                 lodmods.Add(lod);
-
             }
         }
 

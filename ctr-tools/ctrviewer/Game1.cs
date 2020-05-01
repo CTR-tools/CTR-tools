@@ -223,6 +223,26 @@ namespace ctrviewer
             gameLoaded = true;
         }
 
+
+        private void LoadTextures(MGQuadBlock qb)
+        {
+            foreach (string s in qb.textureList)
+            {
+                string path = String.Format("levels\\tex\\{0}.png", s);
+                string path_new = String.Format("levels\\newtex\\{0}.png", s);
+
+                if (File.Exists(path_new))
+                    path = path_new;
+
+                if (File.Exists(path))
+                {
+                    if (!textures.ContainsKey(s))
+                        textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path)));
+                }
+                else Console.WriteLine("Missing texture: " + s);
+            }
+        }
+
         private void LoadLevel(TerrainFlags qf)
         {
             Stopwatch sw = new Stopwatch();
@@ -254,15 +274,10 @@ namespace ctrviewer
             
             if (scn.Count > 0)
             {
-                backColor.R = scn[0].header.bgColor[0].X;
-                backColor.G = scn[0].header.bgColor[0].Y;
-                backColor.B = scn[0].header.bgColor[0].Z;
-
+                backColor = MGConverter.ToColor(scn[0].header.backColor) ;
                 if (scn[0].skybox != null)
                     sky = new MGQuadBlock(scn[0].skybox);
             }
-
-
 
             foreach (Scene s in scn)
                 foreach (PickupHeader ph in s.pickups)
@@ -297,42 +312,9 @@ namespace ctrviewer
 
             //files = Directory.GetFiles("tex", "*.png");
 
-            foreach (MGQuadBlock qb in quads)
-                foreach (string s in qb.textureList)
-                {                  
-                    string path = String.Format("levels\\tex\\{0}.png", s);
-                    string path_new = String.Format("levels\\newtex\\{0}.png", s);
+            foreach (MGQuadBlock q in quads) LoadTextures(q);
+            foreach (MGQuadBlock q in quads_low) LoadTextures(q);
 
-                    if (File.Exists(path_new))
-                        path = path_new;
-
-                    if (File.Exists(path))
-                    {
-                        if (!textures.ContainsKey(s))
-                            textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path)));
-                    }
-                    else Console.WriteLine("Missing texture: " + s);
-                          
-                }
-
-            
-            foreach (MGQuadBlock qb in quads_low)
-                foreach (string s in qb.textureList)
-                {
-                    string path = String.Format("levels\\tex\\{0}.png", s);
-                    string path_new = String.Format("levels\\newtex\\{0}.png", s);
-
-                    if (File.Exists(path_new))
-                        path = path_new;
-
-                    if (File.Exists(path))
-                    {
-                        if (!textures.ContainsKey(s))
-                            textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path)));
-                    }
-                    else Console.WriteLine("Missing low texture: " + s);
-                }
-                
             sw.Stop();
             Console.WriteLine("loading done: " + sw.Elapsed.TotalSeconds);
         }
@@ -341,18 +323,13 @@ namespace ctrviewer
         {
             if (scn.Count > 0)
             {
-                camera.Position = new Vector3(
-                    scn[0].header.startGrid[0].Position.X,
-                    scn[0].header.startGrid[0].Position.Y,
-                    scn[0].header.startGrid[0].Position.Z
-                    );
+                camera.Position = MGConverter.ToVector3(scn[0].header.startGrid[0].Position);
+                lowcamera.Position = camera.Position;
 
                 camera.SetRotation((float)(scn[0].header.startGrid[0].Angle.Y / 1024 * Math.PI * 2), scn[0].header.startGrid[0].Angle.X / 1024);
                 lowcamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.Y / 1024 * Math.PI * 2), scn[0].header.startGrid[0].Angle.X / 1024);
 
                 Console.WriteLine(scn[0].header.startGrid[0].Angle.ToString());
-
-                lowcamera.Position = camera.Position;
             }
         }
 

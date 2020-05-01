@@ -16,13 +16,11 @@
     {
         public uint value;
 
-        public byte flagsval { get { return (byte)(value >> (8 * 3) & 0xFF); } }
-
-        public Flags flags { get { return (Flags)flagsval; } } 
-
-        public byte stackIndex { get { return (byte)(value >> 16 & 0xFF); } }
-        public byte colorIndex { get { return (byte)(value >> 9 & 0x7F); } }
-        //public byte texIndex { get { return (byte)(value & 0x1FF); } }
+        public byte flagsval => (byte)(value >> (8 * 3) & 0xFF); 
+        public Flags flags => (Flags)flagsval;
+        public byte stackIndex => (byte)(value >> 16 & 0xFF);
+        public byte colorIndex => (byte)(value >> 9 & 0x7F); 
+        public byte texIndex => (byte)(value & 0x1FF);
 
         public MshCommand(uint x)
         {

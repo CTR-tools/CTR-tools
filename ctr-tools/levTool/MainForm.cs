@@ -390,10 +390,6 @@ namespace levTool
             //textBox1.Text = sb.ToString();
         }
 
-        private void Button18_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void Button8_Click_1(object sender, EventArgs e)
         {
@@ -423,46 +419,6 @@ namespace levTool
                     //buf.palbmp.Save("palletes.png", System.Drawing.Imaging.ImageFormat.Png);
 
                     //Process.Start("palletes.png");
-                }
-            }
-        }
-
-        private void button18_Click_1(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CTR VRAM file|*.vram";
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                using (BinaryReaderEx br = new BinaryReaderEx(File.Open(ofd.FileName, FileMode.Open)))
-                {
-                    Tim buf = CtrVrm.FromReader(br);
-
-                    using (BinaryReaderEx br2 = new BinaryReaderEx(File.Open("ui_map", FileMode.Open)))
-                    {
-                        List<TexMap> list = new List<TexMap>();
-
-                        for (int i = 0; i < 0xEC; i++)
-                        {
-                            list.Add(new TexMap(br2));
-                        }
-
-                        foreach (TexMap map in list)
-                        {
-                            //buf.GetTexturePage(map.tl, map.id.ToString("X2") + "." + map.name);
-                        }
-                    }
-
-                    /*
-                        Dictionary<string, TextureLayout> tex = scn.GetTexturesList();
-                        MessageBox.Show(tex.Count.ToString());
-                    }
-                    */
-
-                    buf.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
-                    //buf.palbmp.Save("palletes.png", System.Drawing.Imaging.ImageFormat.Png);
-
-                    Process.Start("test.bmp");
                 }
             }
         }
@@ -844,6 +800,71 @@ namespace levTool
 
             //m.WriteArray(lev, b);
         }
+
+
+        private void button18_Click_1(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "CTR VRAM file|*.vram";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                using (BinaryReaderEx br = new BinaryReaderEx(File.Open(ofd.FileName, FileMode.Open)))
+                {
+                    Tim buf = CtrVrm.FromReader(br);
+                    Bitmap bmp = new Bitmap(160, 80);
+                    Graphics g = Graphics.FromImage(bmp);
+
+                   
+
+                    using (BinaryReaderEx br2 = new BinaryReaderEx(File.Open("ui_map", FileMode.Open)))
+                    {
+                        int z = br2.ReadInt32();
+                        List<TexMap> list = new List<TexMap>();
+
+                        for (int i = 0; i < 50; i++)
+                        {
+                            list.Add(new TexMap(br2));
+                        }
+
+                        MessageBox.Show(list.Count + "");
+
+                        int x = 0;
+                        int y = 0;
+
+                        foreach (TexMap map in list)
+                        {
+                            buf.GetTexture(map.tl, "tex", map.name);
+
+                            Bitmap b = (Bitmap)Bitmap.FromFile("tex" + "\\" + map.name + ".png");
+
+                            g.DrawImage(b, x * 16, y * 16);
+
+                            x++;
+                            if (x >= 10 )
+                            {
+                                x = 0;
+                                y++;
+                            }
+                        }
+
+                        bmp.Save("font.png", System.Drawing.Imaging.ImageFormat.Png);
+                    }
+
+                    /*
+                        Dictionary<string, TextureLayout> tex = scn.GetTexturesList();
+                        MessageBox.Show(tex.Count.ToString());
+                    }
+                    */
+
+                    buf.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
+                    //buf.palbmp.Save("palletes.png", System.Drawing.Imaging.ImageFormat.Png);
+
+                    Process.Start("font.png");
+                }
+            }
+        }
+
     }
 
 }

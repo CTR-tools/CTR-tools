@@ -118,7 +118,7 @@ namespace CTRFramework.Shared
 
         public string ReadStringFixed(int num)
         {
-            return Encoding.ASCII.GetString(ReadBytes(num)).Split('\0')[0];
+            return new string(ReadChars(num)).Split('\0')[0];
         }
 
         public string ReadStringNT()

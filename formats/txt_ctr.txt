@@ -1,0 +1,50 @@
+model {
+  char[16] - name
+  short - event id, assumed to be
+  short - number of models
+  short - pointer to model headers
+
+  model header[number of models] - headers
+
+  byte[] model data
+}
+
+model header {
+  char[16] - name
+  int - unk0
+  int - unk1
+  Vector4s - model scale
+  int - pointer to command list
+  int - pointer to vertex data
+  int - point to texture layout data (same as in lev)
+  int - pointer to colors (clut)
+  int - unk3
+  int - number of animations
+  int - pointer to animation data
+  int - unk4
+}
+
+the format does not define any size, so you have to read all commands properly
+
+command - big endian dword
+bitmask according to horror's spec
+sl??kv?? iiiiiiii ccccccct tttttttt //8-8-7-9 bits
+
+t - tex coord index (0 = no texture)
+c - color coord index
+i - index of write location in stack (multiplied by 8 makes it a pointer)
+v - don't read next vertex from array, but read from stack index 
+l - swap 1st vertex of the new face with the 1st from the last one (could be quad maybe?)
+s - new face block
+k - tells whether it should take color from scratchpad or ram (only affects real psx).
+? - unknown
+
+if command is -1 (0xFFFFFFFF) 
+
+vertex - vector3b, a byte per coord. the final coord = vertex coord / 255 * scale coord.
+
+texture data - same as texturelayout from lev file
+
+color data - just usual 4 bytes RGBA
+
+animation - simply an array of vertex data array that cycles through.

@@ -22,9 +22,9 @@ namespace CTRFramework.Shared
             }
         }
 
-        public static int Normalize(int min, int max, int val)
+        public static float Normalize(int min, int max, int val)
         {
-            return (val - min) / (max - min);
+            return ((float)val - (float)min) / ((float)max - (float)min);
         }
 
         public static Random Random = new Random();

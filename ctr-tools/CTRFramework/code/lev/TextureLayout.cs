@@ -116,8 +116,8 @@ namespace CTRFramework
             foreach(Vector2b v in uv)
             {
                 Vector2b n = new Vector2b(0,0);
-                n.X = (byte)Helpers.Normalize(min.X, max.X, v.X);
-                n.Y = (byte)Helpers.Normalize(min.Y, max.Y, v.Y);
+                n.X = (byte)(Helpers.Normalize(min.X, max.X, v.X) * 255);
+                n.Y = (byte)(Helpers.Normalize(min.Y, max.Y, v.Y) * 255);
                 normuv.Add(n);
             }
         }
@@ -154,7 +154,10 @@ namespace CTRFramework
 
             NormalizeUV();
 
-            //Console.WriteLine(Tag());
+            if (Tag() == "0006235C")
+            {
+                Console.WriteLine(ToString());
+            }
         }
 
         //meant to be unique

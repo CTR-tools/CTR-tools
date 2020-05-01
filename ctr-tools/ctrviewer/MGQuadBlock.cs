@@ -330,6 +330,9 @@ namespace ctrviewer
             foreach (var ql in animatedq)
                 ql.Value.Render(graphics, effect);
 
+            Game1.clamp = true;
+            Game1.UpdateSamplerState(graphics);
+
             if (flagq.ContainsKey(((QuadFlags)(1<<Game1.currentflag)).ToString()))
                 flagq[((QuadFlags)(1 << Game1.currentflag)).ToString()].Render(graphics, effect);
 
@@ -351,6 +354,5 @@ namespace ctrviewer
                     
             wireq.Render(graphics, effect);
         }
-
     }
 }

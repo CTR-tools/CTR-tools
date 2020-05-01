@@ -893,6 +893,7 @@
             this.button18.TabIndex = 21;
             this.button18.Text = "export UI textures (requires ui_map file)";
             this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click_1);
             // 
             // button8
             // 

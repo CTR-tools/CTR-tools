@@ -7,12 +7,22 @@ namespace ctrviewer
 {
     class MGConverter
     {
+        public static Vector3 ToVector3(CTRFramework.Shared.Vector3s s)
+        {
+            return new Vector3(s.X, s.Y, s.Z);
+        }
+
+        public static Color ToColor(CTRFramework.Shared.Vector4b s)
+        {
+            return new Color(s.X, s.Y, s.Z, s.W);
+        }
+
         public static VertexPositionColorTexture ToVptc(CTRFramework.Vertex v, CTRFramework.Shared.Vector2b uv)
         {
             VertexPositionColorTexture mono_v = new VertexPositionColorTexture();
             mono_v.Position = new Microsoft.Xna.Framework.Vector3(v.coord.X, v.coord.Y, v.coord.Z);
             mono_v.Color = new Color(v.color.X / 255.0f, v.color.Y / 255.0f, v.color.Z / 255.0f);
-            mono_v.TextureCoordinate = new Microsoft.Xna.Framework.Vector2(uv.X, uv.Y);
+            mono_v.TextureCoordinate = new Microsoft.Xna.Framework.Vector2(uv.X / 255.0f, uv.Y / 255.0f);
             return mono_v;
         }
 
