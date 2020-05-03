@@ -54,6 +54,7 @@ namespace ctrviewer
             base.Update(gameTime);
 
             float amount = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
+            //float amount = 0.01f;
 
             if (usemouse)
             {
@@ -74,8 +75,8 @@ namespace ctrviewer
             }
             #endregion
 
-            leftRightRot -= GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.X / 20.0f;
-            upDownRot += GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.Y / 20.0f;
+            leftRightRot -= GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.X * amount * 4;
+            upDownRot += GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.Y * amount * 4;
 
             #region Изменение пространственного положения камеры при помощи клавиатуры
             Vector3 moveVector = new Vector3(0, 0, 0);

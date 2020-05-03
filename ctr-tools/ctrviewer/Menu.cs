@@ -83,19 +83,17 @@ namespace ctrviewer
             items.Add(new MenuItem("paused".ToUpper(), "", "", false));
             items.Add(new MenuItem("".ToUpper(), "", "", false));
             items.Add(new MenuItem("resume".ToUpper(), "close", "", true));
-            items.Add(new MenuItem("toggle fullscreen".ToUpper(), "toggle", "window", true));
-            items.Add(new MenuItem("toggle mouse".ToUpper(), "toggle", "mouse", true));
-            items.Add(new MenuItem("---", "", "", false));
-            //currently doesn't work
-            //items.Add(new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true));
-            items.Add(new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true));
-            items.Add(new MenuItem("toggle game objects".ToUpper(), "toggle", "inst", true));
             items.Add(new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true));
-
+            items.Add(new MenuItem("toggle game objects".ToUpper(), "toggle", "inst", true));
+            items.Add(new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true));
+            items.Add(new MenuItem("<< quadflag (low): {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15));
+            items.Add(new MenuItem("toggle invisible (hi)".ToUpper(), "toggle", "invis", true));
+            items.Add(new MenuItem("---", "", "", false));
+            items.Add(new MenuItem("toggle mouse".ToUpper(), "toggle", "mouse", true));
+            items.Add(new MenuItem("toggle fullscreen".ToUpper(), "toggle", "window", true));
+            items.Add(new MenuItem("toggle fps lock".ToUpper(), "toggle", "lockfps", true));
             items.Add(new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true));
             items.Add(new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true));
-
-            items.Add(new MenuItem("low lod quadflag: {0}".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15));
             items.Add(new MenuItem("---", "", "", false));
 
             //items.Add(new MenuItem("reload level".ToUpper(), "load", "", true));
@@ -128,6 +126,12 @@ namespace ctrviewer
         {
             if (newstate.DPad.Up == ButtonState.Pressed && newstate.DPad.Up != oldstate.DPad.Up) Previous();
             if (newstate.DPad.Down == ButtonState.Pressed && newstate.DPad.Down != oldstate.DPad.Down) Next();
+
+            /*
+            if (newkb.IsKeyDown(Keys.Up) && !oldkb.IsKeyDown(Keys.Up)) Previous();
+            if (newkb.IsKeyDown(Keys.Down) && !oldkb.IsKeyDown(Keys.Down)) Next();
+            */
+
             if (newstate.DPad.Left == ButtonState.Pressed && newstate.DPad.Left != oldstate.DPad.Left)
             {
                 if (SelectedItem.sType == SwitchType.Range)
@@ -162,7 +166,7 @@ namespace ctrviewer
 
             g.Begin(depthStencilState: DepthStencilState.Default);
 
-            //g.Draw(background, color: Color.White * 0.25f, destinationRectangle: gd.Viewport.Bounds, layerDepth: 0.99f);
+            g.Draw(background, color: Color.White * 0.25f, destinationRectangle: gd.Viewport.Bounds, layerDepth: 0.99f);
 
             int i = 0;
 

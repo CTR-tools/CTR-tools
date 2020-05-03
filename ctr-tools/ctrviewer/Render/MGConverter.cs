@@ -21,7 +21,11 @@ namespace ctrviewer
         {
             VertexPositionColorTexture mono_v = new VertexPositionColorTexture();
             mono_v.Position = new Microsoft.Xna.Framework.Vector3(v.coord.X, v.coord.Y, v.coord.Z);
-            mono_v.Color = new Color(v.color.X / 255.0f, v.color.Y / 255.0f, v.color.Z / 255.0f);
+            mono_v.Color = new Color(
+                v.color.X / 255f,
+                v.color.Y / 255f,
+                v.color.Z / 255f
+                );
             mono_v.TextureCoordinate = new Microsoft.Xna.Framework.Vector2(uv.X / 255.0f, uv.Y / 255.0f);
             return mono_v;
         }
@@ -34,6 +38,7 @@ namespace ctrviewer
             x.B = (byte)((c1.B + c2.B) / 2);
             return x;
         }
+
 
         //magic
         public unsafe static Texture2D GetTexture(GraphicsDevice gd, System.Drawing.Bitmap bmp)

@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
+using System;
 
 namespace ctrviewer
 {
-    public class QuadList
+    public class TriList
     {
         public List<VertexPositionColorTexture> verts = new List<VertexPositionColorTexture>();
         public bool textureEnabled;
@@ -20,7 +20,7 @@ namespace ctrviewer
 
         public int numQuads
         {
-            get { return indices.Length / 6; }
+            get { return indices.Length / 3; }
         }
 
         public void SetColor(Color c)
@@ -33,16 +33,16 @@ namespace ctrviewer
             }
         }
 
-        public QuadList()
+
+        public TriList()
         {
         }
-
         public void Seal()
         {
             indices = GenerateIndices().ToArray();
         }
 
-        public void PushQuad(List<VertexPositionColorTexture> lv)
+        public void PushTri(List<VertexPositionColorTexture> lv)
         {
             if (lv != null)
                 verts.AddRange(lv);
@@ -64,71 +64,70 @@ namespace ctrviewer
             }
         }
 
-        public QuadList(List<VertexPositionColorTexture> v, bool te,string name = "")
+        public TriList(VertexPositionColorTexture[] v, short[] i, bool te, string name = "")
         {
             verts.AddRange(v);
             textureEnabled = te;
             textureName = name;
         }
 
-        public QuadList(QuadList t)
+        public TriList(TriList t)
         {
             verts.AddRange(t.verts);
+            indices = (short[])t.indices.Clone();
             textureEnabled = t.textureEnabled;
             textureName = t.textureName;
-            GenerateIndices();
         }
-
-        short[] pattern = new short[] { 0, 1, 2, 2, 1, 3 };
 
         public List<short> GenerateIndices()
         {
             List<short> x = new List<short>();
 
-            for (int i = 0; i < verts.Count / 4; i++)
-            {
-                foreach (short s in pattern)
-                    x.Add((short)(i * 4 + s));
-            }
+            for (int i = 0; i < verts.Count; i++)
+                x.Add((short)i);
 
             return x;
         }
+
 
         public void Render(GraphicsDeviceManager graphics, BasicEffect effect)
         {
             if (indices != null && verts != null)
             {
-                effect.TextureEnabled = textureEnabled;
-
-                if (Game1.textures.ContainsKey(textureName))
+                if (verts.Count > 0)
                 {
-                    effect.Texture = Game1.textures[textureName];
+                    effect.TextureEnabled = textureEnabled;
+
+                    if (textureEnabled)
+                        if (Game1.textures.ContainsKey(textureName))
+                        {
+                            effect.Texture = Game1.textures[textureName];
+                        }
+                        else
+                        {
+                            //Console.WriteLine("missing texture: " + textureName);
+                            effect.Texture = Game1.textures["test"];
+                        }
+
+                    foreach (var pass in effect.CurrentTechnique.Passes)
+                    {
+                        pass.Apply();
+
+                        graphics.GraphicsDevice.DrawUserIndexedPrimitives(
+                                PrimitiveType.TriangleList,
+                                verts.ToArray(), 0, verts.Count,
+                                indices, 0, indices.Length / 3,
+                                VertexPositionColorTexture.VertexDeclaration
+                        );
+
+                    }
                 }
                 else
                 {
-                    //Console.WriteLine("missing texture: " + textureName);
-                    effect.Texture = Game1.textures["test"];
-                }
-
-                
-
-                foreach (var pass in effect.CurrentTechnique.Passes)
-                {
-                    pass.Apply();
-
-                    
-
-                    graphics.GraphicsDevice.DrawUserIndexedPrimitives(
-                            PrimitiveType.TriangleList,
-                            verts.ToArray(), 0, verts.Count,
-                            indices, 0, indices.Length / 3,
-                            VertexPositionColorTexture.VertexDeclaration
-                    );
-
+                    Console.WriteLine("Empty Trilist!");
                 }
             }
-           
         }
-
     }
+
 }

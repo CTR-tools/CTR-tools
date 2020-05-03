@@ -559,7 +559,6 @@ namespace levTool
         {
             treeView1.Nodes.Clear();
             big = null;
-            GC.Collect();
 
             big = BigFile.FromFile(fn);
 
@@ -813,9 +812,7 @@ namespace levTool
                 {
                     Tim buf = CtrVrm.FromReader(br);
                     Bitmap bmp = new Bitmap(160, 80);
-                    Graphics g = Graphics.FromImage(bmp);
-
-                   
+                    Graphics g = Graphics.FromImage(bmp);            
 
                     using (BinaryReaderEx br2 = new BinaryReaderEx(File.Open("ui_map", FileMode.Open)))
                     {
@@ -823,11 +820,8 @@ namespace levTool
                         List<TexMap> list = new List<TexMap>();
 
                         for (int i = 0; i < 50; i++)
-                        {
                             list.Add(new TexMap(br2));
-                        }
-
-                        MessageBox.Show(list.Count + "");
+                        
 
                         int x = 0;
                         int y = 0;

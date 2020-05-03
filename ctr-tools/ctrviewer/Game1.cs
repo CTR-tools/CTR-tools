@@ -35,33 +35,30 @@ namespace ctrviewer
 
         Color backColor = Color.Blue;
 
-        public static SamplerState ss;
         public static PlayerIndex activeGamePad = PlayerIndex.One;
 
 
         public static int currentflag = 1;
 
+        public static string version;
+
+
+
         public Game1()
         {
             Content.RootDirectory = "Content";
 
-            graphics = new GraphicsDeviceManager(this);
+            version = Meta.GetVersion();
 
+            graphics = new GraphicsDeviceManager(this);
             graphics.PreferMultiSampling = true;
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             graphics.SynchronizeWithVerticalRetrace = true;
+            IsFixedTimeStep = true;
             graphics.ApplyChanges();
             graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = 4;
 
-            graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            /*
-                = new BlendState()
-            {
-                ColorSourceBlend = Blend.SourceColor,
-                ColorDestinationBlend = Blend.DestinationColor,
-                ColorBlendFunction = BlendFunction.Add
-            };
-            */
+            Samplers.Refresh();
 
             GoWindowed();
 
@@ -88,8 +85,6 @@ namespace ctrviewer
 
         protected override void Initialize()
         {
-            ss = new SamplerState();
-
             effect = new BasicEffect(graphics.GraphicsDevice);
             effect.VertexColorEnabled = true;
             effect.TextureEnabled = true; 
@@ -160,6 +155,7 @@ namespace ctrviewer
         {
             textures.Add("test", Content.Load<Texture2D>("test"));
             textures.Add("flag", Content.Load<Texture2D>("flag"));
+            textures.Add("logo", Content.Load<Texture2D>("logo"));
 
             effect.Texture = textures["test"];
             effect.TextureEnabled = true;
@@ -246,8 +242,9 @@ namespace ctrviewer
         private void LoadLevel(TerrainFlags qf)
         {
             Stopwatch sw = new Stopwatch();
-
             sw.Start();
+
+            Console.WriteLine("LoadLevel()");
 
             scn.Clear();
             quads.Clear();
@@ -258,57 +255,88 @@ namespace ctrviewer
             if (Directory.Exists(@"levels\"))
                 files = Directory.GetFiles(@"levels\", "*.lev");
 
+            if (files.Length == 0)
+            {
+                Console.WriteLine("no files");
+                return;
+            }
+
             foreach (string s in files)
                 scn.Add(new Scene(s, "obj"));
 
-            Console.WriteLine("scenes loaded: " + sw.Elapsed.TotalSeconds);
+            Console.WriteLine("scenes parsed at: " + sw.Elapsed.TotalSeconds);
 
             foreach (Scene s in scn)
+            {
                 quads.Add(new MGQuadBlock(s, Detail.Med));
-
-            foreach (Scene s in scn)
                 quads_low.Add(new MGQuadBlock(s, Detail.Low));
+            }
 
-            Console.WriteLine("scenes converted to mg: " + sw.Elapsed.TotalSeconds);
+            Console.WriteLine("converted scenes to monogame render at: " + sw.Elapsed.TotalSeconds);
 
-            
+            //force 1st scene sky and back color
             if (scn.Count > 0)
             {
-                backColor = MGConverter.ToColor(scn[0].header.backColor) ;
+                backColor = MGConverter.ToColor(scn[0].header.backColor);
                 if (scn[0].skybox != null)
                     sky = new MGQuadBlock(scn[0].skybox);
             }
 
+
             foreach (Scene s in scn)
+                foreach (LODModel m in s.dynamics)
+                {
+                    if (!instTris.ContainsKey(m.name))
+                    {
+                        List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
+
+                        foreach (var x in m.lh[0].verts)
+                            li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0)));
+
+
+                        TriList t = new TriList();
+                        t.textureEnabled = true;
+                        t.textureName = "test";
+                        t.scrollingEnabled = false;
+                        t.PushTri(li);
+                        t.Seal();
+
+                        instTris.Add(m.name, t);
+                    }
+                    
+                }
+        
+            Console.WriteLine("extracted dynamics at: " + sw.Elapsed.TotalSeconds);
+
+
+
+            foreach (Scene s in scn)
+            {
+                foreach(PosAng pa in s.header.startGrid)
+                    instanced.Add(new InstancedModel("purplecone", new Vector3(pa.Position.X, pa.Position.Y, pa.Position.Z), Vector3.Zero, 3));
+
                 foreach (PickupHeader ph in s.pickups)
-                    instanced.Add(new InstancedModel("purplecone", new Vector3(ph.Position.X, ph.Position.Y, ph.Position.Z), 3));
-            
-            foreach (Scene s in scn)
-            {
+                    instanced.Add(new InstancedModel(ph.ModelName, new Vector3(ph.Position.X, ph.Position.Y, ph.Position.Z), Vector3.Zero, 1));
+                
                 foreach (PosAng n in s.restartPts)
-                    instanced.Add(new InstancedModel("cyancone", new Vector3(n.Position.X, n.Position.Y, n.Position.Z), 3));
-            }
+                    instanced.Add(new InstancedModel("cyancone", new Vector3(n.Position.X, n.Position.Y, n.Position.Z), Vector3.Zero, 3));
 
-
-            foreach (Scene s in scn)
-            {
                 if (s.nav.paths.Count == 3)
                 {
                     foreach (NavFrame n in s.nav.paths[0].frames)
-                        instanced.Add(new InstancedModel("greencone", new Vector3(n.position.X, n.position.Y, n.position.Z), 3));
+                        instanced.Add(new InstancedModel("greencone", new Vector3(n.position.X, n.position.Y, n.position.Z), Vector3.Zero, 3));
                     foreach (NavFrame n in s.nav.paths[1].frames)
-                        instanced.Add(new InstancedModel("yellowcone", new Vector3(n.position.X, n.position.Y, n.position.Z), 3));
+                        instanced.Add(new InstancedModel("yellowcone", new Vector3(n.position.X, n.position.Y, n.position.Z), Vector3.Zero, 3));
                     foreach (NavFrame n in s.nav.paths[2].frames)
-                        instanced.Add(new InstancedModel("redcone", new Vector3(n.position.X, n.position.Y, n.position.Z), 3));
+                        instanced.Add(new InstancedModel("redcone", new Vector3(n.position.X, n.position.Y, n.position.Z), Vector3.Zero, 3));
                 }
             }
             
 
+            foreach(Scene s in scn)
+                s.ExportTextures("levels\\tex");
 
-
-
-
-            scn[0].ExportTextures("levels\\tex");
+            Console.WriteLine("textures extracted at: " + sw.Elapsed.TotalSeconds);
 
             //files = Directory.GetFiles("tex", "*.png");
 
@@ -316,7 +344,10 @@ namespace ctrviewer
             foreach (MGQuadBlock q in quads_low) LoadTextures(q);
 
             sw.Stop();
-            Console.WriteLine("loading done: " + sw.Elapsed.TotalSeconds);
+
+            Console.WriteLine("textures loaded. level done: " + sw.Elapsed.TotalSeconds);
+
+            ResetCamera();
         }
 
         public void ResetCamera()
@@ -340,14 +371,18 @@ namespace ctrviewer
         public bool usemouse = false;
         public bool wire = false;
         public bool inmenu = false;
-        public bool hide_invis = true;
-        public static bool filter = true;
-        public static bool clamp = true;
+        public static bool hide_invis = true;
+        //public static bool filter = true;
+        //public static bool clamp = true;
         public bool lodEnabled = false;
         public bool show_inst = false;
+        public bool lock_fps = true;
 
         GamePadState oldstate = GamePad.GetState(activeGamePad);
         GamePadState newstate = GamePad.GetState(activeGamePad);
+
+        KeyboardState oldkb = new KeyboardState();
+        KeyboardState newkb = new KeyboardState();
 
         protected override void Update(GameTime gameTime)
         {
@@ -359,6 +394,7 @@ namespace ctrviewer
             //Console.WriteLine(x);
 
             newstate = GamePad.GetState(activeGamePad);
+            newkb = new KeyboardState();
 
             if (newstate.Buttons.Start == ButtonState.Pressed && newstate.Buttons.Back == ButtonState.Pressed)
                 Exit();
@@ -413,8 +449,7 @@ namespace ctrviewer
                             inmenu = false;
                             break;
                         case "load": 
-                            LoadGame(); 
-                            ResetCamera(); 
+                            LoadGame();
                             inmenu = false; 
                             break;
                         case "toggle":
@@ -423,11 +458,17 @@ namespace ctrviewer
                                 case "inst": show_inst = !show_inst; break;
                                 case "lod": lodEnabled = !lodEnabled; if (lodEnabled) EnableLodCamera(); else DisableLodCamera(); break;
                                 case "antialias": graphics.PreferMultiSampling = !graphics.PreferMultiSampling; break;
-                                //case "invis": hide_invis = !hide_invis; LoadLevel((TerrainFlags)(1 << Flag)); break;
+                                case "invis": hide_invis = !hide_invis; break;
                                 case "mouse": usemouse = !usemouse; break;
-                                case "filter": filter = !filter; break;
+                                case "filter": Samplers.EnableBilinear = Samplers.EnableBilinear = !Samplers.EnableBilinear; Samplers.Refresh(); break;
                                 case "wire": wire = !wire; break;
                                 case "window": if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen(); break;
+                                case "lockfps":
+                                    lock_fps = !lock_fps;
+                                    graphics.SynchronizeWithVerticalRetrace = lock_fps;
+                                    IsFixedTimeStep = lock_fps;
+                                    graphics.ApplyChanges();
+                                    break;
                             }
                             break;
 
@@ -448,7 +489,7 @@ namespace ctrviewer
             {
                 foreach(MGQuadBlock mg in quads)
                 {
-                    mg.Update();
+                    mg.Update(gameTime);
                 }
                 UpdateCameras(gameTime);
             }
@@ -458,6 +499,8 @@ namespace ctrviewer
 
             base.Update(gameTime);
         }
+
+        int curframe = 0;
 
         MouseState oldms;
         MouseState newms;
@@ -479,9 +522,9 @@ namespace ctrviewer
 
         public static bool twoSided = false;
 
-        public static void UpdateSamplerState(GraphicsDeviceManager g)
+        /*
+        public static void CreateSamplerState(GraphicsDevice graphics, int i, bool clamp)
         {
-            //ss = SamplerState.PointClamp;
             ss = new SamplerState();
             ss.FilterMode = TextureFilterMode.Default;
 
@@ -504,14 +547,12 @@ namespace ctrviewer
             ss.MaxMipLevel = 8;
             ss.MipMapLevelOfDetailBias = 0;
 
-            g.GraphicsDevice.SamplerStates[0] = ss;
+            graphics.SamplerStates[i] = ss;
         }
+        */
 
         private void DrawLevel()
         {
-            UpdateSamplerState(graphics);
-            graphics.ApplyChanges();
-
             if (loading != null && gameLoaded)
             {
                 if (sky != null)
@@ -531,7 +572,7 @@ namespace ctrviewer
                     }
                 }
 
-
+                
                 GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
 
 
@@ -551,22 +592,23 @@ namespace ctrviewer
                     WireframeMode(graphics.GraphicsDevice, false);
                 }
 
-
+                
                 if (show_inst)
                     foreach (var v in instanced)
                         v.Render(graphics, instanceEffect, lowcamera);
 
                 GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
 
-
+    
 
                 effect.View = camera.ViewMatrix;
                 effect.Projection = camera.ProjectionMatrix;
-
-
+                
+                
                 foreach (MGQuadBlock qb in quads)
                     qb.Render(graphics, effect);
-
+                    
+                    
                 if (wire)
                 {
                     WireframeMode(graphics.GraphicsDevice, true);
@@ -576,11 +618,11 @@ namespace ctrviewer
 
                     WireframeMode(graphics.GraphicsDevice, false);
                 }
-
+                
                 if (show_inst)
                     foreach (var v in instanced)
                         v.Render(graphics, instanceEffect, camera);
-
+                        
             }
             else
             {
@@ -615,7 +657,9 @@ namespace ctrviewer
                 gd.RasterizerState = rasterizerState;
         }
 
+        public static Dictionary<string, TriList> instTris = new System.Collections.Generic.Dictionary<string, TriList>();
         public static Dictionary<string, QuadList> instmodels = new System.Collections.Generic.Dictionary<string, QuadList>();
+
         List<InstancedModel> instanced = new List<InstancedModel>();
 
         protected override void Draw(GameTime gameTime)
@@ -641,10 +685,12 @@ namespace ctrviewer
 
             if (inmenu)
             {
+                spriteBatch.Draw(textures["logo"], new Vector2(graphics.GraphicsDevice.Viewport.Width / 2 - textures["logo"].Width / 2, 20), Color.White); 
+
                 spriteBatch.DrawString(
-                    font, 
-                    Meta.GetVersion(), 
-                    new Vector2(((graphics.PreferredBackBufferWidth - font.MeasureString(Meta.GetVersion()).X * graphics.GraphicsDevice.Viewport.Height / 1080f) / 2), graphics.PreferredBackBufferHeight - 60),
+                    font,
+                    version,
+                    new Vector2(((graphics.PreferredBackBufferWidth - font.MeasureString(version).X * graphics.GraphicsDevice.Viewport.Height / 1080f) / 2), graphics.PreferredBackBufferHeight - 60),
                     Color.Aquamarine,
                     0, 
                     new Vector2(0, 0),
