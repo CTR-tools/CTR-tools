@@ -322,13 +322,20 @@ namespace CTRFramework
 
                     for (int j = 0; j < 4; j++)
                     {
-                        if (!tex[i].isAnimated)
+                        if (tex.Count > 0)
                         {
-                            buf[j].uv = tex[i].midlods[2].normuv[uvinds[j] - 1];
+                            if (!tex[i].isAnimated)
+                            {
+                                buf[j].uv = tex[i].midlods[2].normuv[uvinds[j] - 1];
+                            }
+                            else
+                            {
+                                buf[j].uv = tex[i].animframes[1].normuv[uvinds[j] - 1];
+                            }
                         }
                         else
                         {
-                            buf[j].uv = tex[i].animframes[1].normuv[uvinds[j] - 1];
+                            buf[j].uv = new Vector2b((byte)((j & 3) >> 1), (byte)(j & 1));
                         }
                     }
 
@@ -341,9 +348,9 @@ namespace CTRFramework
 
                 return buf;
             }
-             catch (Exception ex)
+            catch (Exception ex)
             {
-                Helpers.Panic(this, "Can't export quad to MG. Give null.\r\n" + ex.Message);
+                Helpers.Panic(this, "Can't export quad to MG. Give null.\r\n" + i + "\r\n" + ex.Message);
                 return null;
             }
         }

@@ -1,6 +1,6 @@
 ﻿namespace CTRFramework
 {
-    enum Flags
+    public enum Flags
     {
         s = 1 << 7,
         l = 1 << 6,
@@ -12,7 +12,7 @@
         b4 = 1 << 0
     }
 
-    class MshCommand
+    public class MshCommand
     {
         public uint value;
 

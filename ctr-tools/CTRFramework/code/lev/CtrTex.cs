@@ -56,19 +56,57 @@ namespace CTRFramework
             for (int i = 0; i < 3; i++)
                 midlods[i] = new TextureLayout(br);
 
+            //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
+            //Console.ReadKey();
+
             ptrHi = br.ReadUInt32();
 
-            /*
-            if (ptrHi != 0)
+
+            if (ptrHi != 0 && ptrHi < br.BaseStream.Position)
             {
                 br.Jump(ptrHi);
 
-                for (int i = 0; i < 4; i++)
+                ptrHi = br.ReadUInt32();
+                if (ptrHi != 0 && ptrHi < br.BaseStream.Position)
                 {
-                    hi[i] = new TextureLayout(br);
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        try
+                        {
+                            hi[i] = new TextureLayout(br);
+                        }
+                        catch
+                        {
+                            Console.WriteLine("fail");
+                            Console.ReadKey();
+                        }
+                    }
+                }
+                else
+                {
+                    ptrHi -= 4;
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        try
+                        {
+                            hi[i] = new TextureLayout(br);
+                        }
+                        catch
+                        {
+                            Console.WriteLine("fail");
+                            Console.ReadKey();
+                        }
+                    }
+
                 }
             }
-            */
+            else
+            {
+               // Console.WriteLine("not a hi res texture");
+            }
+            
         }
     }
 }

@@ -69,7 +69,7 @@ namespace CTRFramework
         private int evt;
 
 
-
+        public string ModelName;
 
         public PickupHeader(BinaryReaderEx br)
         {
@@ -92,6 +92,14 @@ namespace CTRFramework
             angle = new Vector3s(br);
 
             evt = br.ReadInt32();
+
+            int x = (int)br.BaseStream.Position;
+
+            br.Jump(modelOffset);
+
+            ModelName = br.ReadStringFixed(16);
+
+            br.BaseStream.Position = x;
         }
 
         public void Write(BinaryWriterEx bw)

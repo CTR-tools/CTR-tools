@@ -120,23 +120,25 @@ namespace CTRFramework
 
                 
                 foreach (QuadBlock qb in quads)
+                    /*
                     foreach(CtrTex ct in qb.tex)
                     {
 
+                        
                         foreach(TextureLayout tl in ct.animframes)
                         {
                             try
                             {
-                               // ctrvram.GetTexture(tl, "tex_anim", tl.Tag());
+                                ctrvram.GetTexture(tl, "tex_anim", tl.Tag());
                             } 
                             catch (Exception ex)
                             {
                                 Console.WriteLine(ex.ToString());
-                                //Console.ReadKey();
+                                Console.ReadKey();
                             }
                         }
-
-                        /*
+                        
+                        
                         foreach (TextureLayout tl in ct.hi)
                         {
                             try
@@ -149,9 +151,9 @@ namespace CTRFramework
                                 Console.WriteLine(ex.ToString());
                                 Console.ReadKey();
                             }
-                        }*/
+                        }
                     }
-                 
+                 */
 
                 Console.WriteLine(ctrvram.ToString());
                 Console.WriteLine("Exporting textures...");
@@ -418,6 +420,19 @@ namespace CTRFramework
                             tex.Add(tl.Tag(), tl);
                         }
                     }
+                
+                foreach (CtrTex t in qb.tex)
+                {
+                        foreach (TextureLayout tl in t.hi)
+                        { 
+                        if (tl != null)
+                            if (!tex.ContainsKey(tl.Tag()))
+                            {
+                                tex.Add(tl.Tag(), tl);
+                            }
+                        }
+                }
+                
             }
             
             List<string> tt = new List<string>();

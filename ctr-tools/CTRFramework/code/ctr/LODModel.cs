@@ -15,7 +15,7 @@ namespace CTRFramework
         public short numLods;
         public int ptrLodHeads;
 
-        List<LODHeader> lh = new List<LODHeader>();
+        public List<LODHeader> lh = new List<LODHeader>();
 
         public LODModel(string s)
         {

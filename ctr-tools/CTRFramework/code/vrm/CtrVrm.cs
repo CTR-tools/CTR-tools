@@ -1,6 +1,7 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Drawing;
+using System.Collections.Generic;
 
 namespace CTRFramework.Vram
 {
@@ -8,6 +9,9 @@ namespace CTRFramework.Vram
     {
         public static int Width = 1024;
         public static int Height = 512;
+
+        public static List<Rectangle> frames = new List<Rectangle>();
+
 
         public static Tim FromReader(BinaryReaderEx br)
         {
@@ -22,6 +26,8 @@ namespace CTRFramework.Vram
                     //tim.Write("vram" + i.ToString("X2") + ".tim");
                     buffer.DrawTim(tim);
 
+                    frames.Add(tim.region);
+
                     Console.WriteLine(tim.ToString());
                 }
             }
@@ -31,9 +37,9 @@ namespace CTRFramework.Vram
                 Tim tim = new Tim(br);
                 //tim.Write("vram01.tim");
                 buffer.DrawTim(tim);
-            }
 
-            GC.Collect();
+                frames.Add(tim.region);
+            }
 
             return buffer;
         }

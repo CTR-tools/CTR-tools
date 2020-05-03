@@ -6,7 +6,7 @@ using System.IO;
 
 namespace CTRFramework
 {
-    class LODHeader : IRead
+    public class LODHeader : IRead
     {
         public string name;
         int unk0; //0?
@@ -20,6 +20,8 @@ namespace CTRFramework
         public int numAnims;
         int ptrAnims;
         int unk4; //?
+
+        public List<Vertex> verts = new List<Vertex>();
 
         public bool IsAnimated
         {
@@ -58,9 +60,13 @@ namespace CTRFramework
                 //Console.ReadKey();
             }
 
-            v.X = (short)(((int)br.ReadByte() / 255.0f) * scale.X);
-            v.Y = (short)(((int)br.ReadByte() / 255.0f) * scale.Z);
-            v.Z = (short)(((int)br.ReadByte() / 255.0f) * scale.Y);
+            v.X = (short)(((int)br.ReadByte() / 255.0f - 0.5) * (scale.X / 16f));
+            v.Y = (short)(((int)br.ReadByte() / 255.0f - 0.5) * (scale.Z / 16f));
+            v.Z = (short)(((int)br.ReadByte() / 255.0f) * (scale.Y / 16f));
+
+            short x = v.Z;
+            v.Z = (short)-v.Y;
+            v.Y = x;
 
             return v;
         }
@@ -69,7 +75,7 @@ namespace CTRFramework
         {
             br.Jump(ptrClut + i * 4);
             Vector4b b = new Vector4b(br);
-           // Console.WriteLine(i + " " + b.ToString());
+            //Console.WriteLine(i + " " + b.ToString());
             //Console.ReadKey();
             return b;
         }
@@ -222,11 +228,13 @@ namespace CTRFramework
 
             foreach (MshCommand d in defs)
             {
+                /*
                 Console.WriteLine(
                     d.value.ToString("X8") +
                     //" t:" + d.texIndex +
                     " c:" + d.colorIndex +
                     " s:" + d.stackIndex);
+*/
 
                 if (d.flags.HasFlag(Flags.s))
                 {
@@ -261,20 +269,28 @@ namespace CTRFramework
                 if (cur_i >= 2)
                 {
                     for (int z = 1; z < 4; z++)
-                        sb.AppendLine("v " + crd[z].ToString(VecFormat.Numbers) + " " + clr[z - 1].ToString(VecFormat.Numbers));
-
-                    if (!invert)
                     {
-                        sb.AppendFormat("f {0} {1} {2}\r\n\r\n", ttl_faces + 1, ttl_faces + 2, ttl_faces + 3);
-                    }
-                    else
-                    {
-                        sb.AppendFormat("f {0} {1} {2}\r\n\r\n", ttl_faces + 3, ttl_faces + 2, ttl_faces + 1);
-                    }
+                        Vertex v = new Vertex();
+                        v.coord = new Vector4s(crd[z].X, crd[z].Y, crd[z].Z, 0);
+                        v.color = clr[z - 1];
 
-                    invert = !invert;
+                       // v.color_morph = v.color;
+                        verts.Add(v);
+                    }
+                       // sb.AppendLine("v " + crd[z].ToString(VecFormat.Numbers) + " " + clr[z - 1].ToString(VecFormat.Numbers));
 
-                    ttl_faces += 3;
+                   // if (!invert)
+                  //  {
+                  //      sb.AppendFormat("f {0} {1} {2}\r\n\r\n", ttl_faces + 1, ttl_faces + 2, ttl_faces + 3);
+                 //   }
+                   // else
+                  //  {
+                       // sb.AppendFormat("f {0} {1} {2}\r\n\r\n", ttl_faces + 3, ttl_faces + 2, ttl_faces + 1);
+                  //  }
+
+                  //  invert = !invert;
+
+                  //  ttl_faces += 3;
                 }
 
                 cur_i++;
@@ -283,8 +299,8 @@ namespace CTRFramework
 
             }
 
-            Directory.CreateDirectory("mpk");
-            Helpers.WriteToFile("mpk\\" + name + ".obj", sb.ToString());
+           // Directory.CreateDirectory("mpk");
+           // Helpers.WriteToFile("mpk\\" + name + ".obj", sb.ToString());
 
 
             br.BaseStream.Position = pos;

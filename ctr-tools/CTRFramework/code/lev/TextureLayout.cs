@@ -142,6 +142,7 @@ namespace CTRFramework
             PageY = (ushort)((buf >> 4) & 1);
 
             check = br.ReadByte();
+
             //checking page byte 2 if it's ever not 0
             if (check != 0)
             {
@@ -153,11 +154,6 @@ namespace CTRFramework
             uv.Add(new Vector2b(br));
 
             NormalizeUV();
-
-            if (Tag() == "0006235C")
-            {
-                Console.WriteLine(ToString());
-            }
         }
 
         //meant to be unique
