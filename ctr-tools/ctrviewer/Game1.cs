@@ -267,6 +267,7 @@ namespace ctrviewer
             scn.Clear();
             quads.Clear();
             quads_low.Clear();
+            instanced.Clear();
 
             string[] files = new string[] { };
 
