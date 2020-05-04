@@ -1,9 +1,11 @@
 ﻿using CTRFramework;
+using CTRFramework.Shared;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using System.Linq;
 
 namespace lev2obj
 {
@@ -18,6 +20,7 @@ namespace lev2obj
 
 
             Console.WriteLine("CTR-Tools: lev2obj\r\nDCxDemo*.\r\n");
+            Console.WriteLine(Meta.GetVersion() + "\r\n");
 
             if (args.Length > 0)
             {
@@ -65,6 +68,7 @@ namespace lev2obj
                 case ".lev":
                     {
                         Scene scn = new Scene(s, "obj");
+                        scn.quads = scn.quads.OrderBy(o => o.id).ToList();
                         string objfile = scn.Export("obj", Detail.Low, true);
                         objfile = scn.Export("obj", Detail.Med, false);
                         //LaunchMeshLab(objfile);

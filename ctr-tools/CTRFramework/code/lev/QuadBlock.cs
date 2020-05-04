@@ -221,28 +221,6 @@ namespace CTRFramework
         }
 
 
-        /*
- * 0--4--1
- * | /| /|
- * |/ |/ |
- * 5--6--7
- * | /| /|
- * |/ |/ |
- * 2--8--3
- */
-        /*
-       //magic array of indices, each line contains 2 quads
-       int[] inds = new int[]
-       {
-           1, 6, 5, 5, 6, 7,
-           5, 7, 2, 2, 7, 8,
-           6, 3, 7, 7, 3, 9,
-           7, 9, 8, 8, 9, 4
-       };
-       */
-
-
-
         //use this later for obj export too
         public List<CTRFramework.Vertex> GetVertexListq(List<Vertex> v, int i)
         {
@@ -379,24 +357,67 @@ namespace CTRFramework
         };
 
         
-        public string ToObj2(List<Vertex> v, Detail detail, ref int a, ref int b)
+        public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b)
         {
             StringBuilder sb = new StringBuilder();
 
             sb.AppendFormat("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible"));
             sb.AppendFormat("o piece_{0}\r\n\r\n", id.ToString("X4"));
 
-            for (int i = 0; i < 4; i++)
+            switch (detail)
             {
-                foreach (Vertex vt in GetVertexListq(v, i))
-                    sb.AppendLine(vt.ToString(false));
+                case Detail.Low:
+                    {
+                        List<Vertex> list = GetVertexListq(v, -1);
+
+                        foreach (Vertex vt in list)
+                        {
+                            sb.AppendLine(vt.ToString());
+                            sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
+                        }
+
+                        sb.AppendLine("\r\nusemtl " + (ptrTexLow != 0 ? texlow.Tag() : "default"));
+
+                        sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
+                        sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
+
+                        a += 4;
+                        b += 4;
+
+                        break;
+                    }
+                case Detail.Med:
+                    {
+
+                        for (int i = 0; i < 4; i++)
+                        {
+                            List<Vertex> list = GetVertexListq(v, i);
+
+                            foreach (Vertex vt in list)
+                            {
+                                sb.AppendLine(vt.ToString());
+                                sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
+                            }
+
+                            sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != 0 ? tex[i].midlods[2].Tag() : "default"));
+
+                            sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
+                            sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
+
+                            sb.AppendLine();
+
+                            b += 4;
+                            a += 4;
+                        }
+
+                        break;
+                    }
             }
-
-
 
             return sb.ToString();
         }
         
+        /*
         public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b)
         {
             StringBuilder sb = new StringBuilder();
@@ -415,7 +436,7 @@ namespace CTRFramework
 
             for (int i = 0; i < vcnt; i++)
             {
-                sb.AppendLine(v[ind[i]].ToString(false));
+                sb.AppendLine(v[ind[i]].ToString());
             }
 
             sb.AppendLine();
@@ -511,7 +532,7 @@ namespace CTRFramework
             
             return sb.ToString();
         }
-
+        */
 
 
         public void Write(BinaryWriterEx bw)

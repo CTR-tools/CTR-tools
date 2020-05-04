@@ -8,9 +8,7 @@ namespace CTRFramework
         public Vector4s coord;
         public Vector4b color;
         public Vector4b color_morph;
-        public Vector2b uv;
-
-        static Vector4b flagColor = new Vector4b(0x0000FF00); //blue for flags
+        public Vector2b uv; //not used by CTR, added for convinience
 
         public Vertex()
         {
@@ -27,7 +25,7 @@ namespace CTRFramework
             {
                 case Vcolor.Default: color = col; break;
                 case Vcolor.Morph: color_morph = col; break;
-                case Vcolor.Flag: Vertex.flagColor = col; break;
+                //case Vcolor.Flag: Vertex.flagColor = col; break;
             }
         }
 
@@ -51,13 +49,13 @@ namespace CTRFramework
             color_morph.Write(bw);
         }
 
-        public string ToString(bool flag)
+        public override string ToString()
         {
             string fmt = "v {0} {1}";
 
             return String.Format(fmt,
                 coord.ToString(VecFormat.Numbers),
-                (flag ? flagColor : color).ToString(VecFormat.Numbers)
+                color.ToString(VecFormat.Numbers)
             );
         }
 

@@ -119,7 +119,7 @@ namespace CTRFramework
                // ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
 
                 
-                foreach (QuadBlock qb in quads)
+               // foreach (QuadBlock qb in quads)
                     /*
                     foreach(CtrTex ct in qb.tex)
                     {
@@ -214,7 +214,7 @@ namespace CTRFramework
             {
                 case "obj":
 
-                    sb.Append("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.\r\n");
+                    sb.Append("#Converted to OBJ using lev2obj, CTR-Tools by DCxDemo*.\r\n");
                     sb.Append("#(C) 1999, Activision, Naughty Dog.\r\n\r\n");
 
                     sb.Append("mtllib " + Path.GetFileName(mtllib) + "\r\n\r\n");

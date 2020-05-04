@@ -58,7 +58,7 @@ namespace CTRFramework
 
             foreach (Vertex v in verts)
             {
-                sb.Append(v.ToString(false) + "\r\n");
+                sb.Append(v.ToString() + "\r\n");
             }
 
             foreach (Vector4s tri in faces)
