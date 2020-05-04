@@ -127,6 +127,27 @@ namespace ctrviewer
                             VertexPositionColorTexture.VertexDeclaration
                         );
                     }
+
+                    if (Samplers.EnableWireframe)
+                    {
+                        effect.TextureEnabled = false;
+
+                        Samplers.SetToDevice(graphics, EngineRasterizer.Wireframe);
+
+                        foreach (var pass in effect.CurrentTechnique.Passes)
+                        {
+                            pass.Apply();
+
+                            graphics.GraphicsDevice.DrawUserIndexedPrimitives(
+                                PrimitiveType.TriangleList,
+                                verts_sealed, 0, verts_sealed.Length,
+                                indices, 0, indices.Length / 3,
+                                VertexPositionColorTexture.VertexDeclaration
+                            );
+                        }
+
+                        Samplers.SetToDevice(graphics, EngineRasterizer.Default);
+                    }
                     
                 }
                 else

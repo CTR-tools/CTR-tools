@@ -75,7 +75,7 @@ namespace ctrviewer
                         {
                             //if (!s.quads[i].quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                             {
-                                List<CTRFramework.Vertex> vts = s.quads[i].GetVertexListq(s, -1);
+                                List<CTRFramework.Vertex> vts = s.quads[i].GetVertexListq(s.verts, -1);
                                 monolist.Clear();
 
                                 if (vts != null)
@@ -137,7 +137,7 @@ namespace ctrviewer
                             for (int j = 0; j < 4; j++)
                             {
 
-                                List<CTRFramework.Vertex> vts = s.quads[i].GetVertexListq(s, j);
+                                List<CTRFramework.Vertex> vts = s.quads[i].GetVertexListq(s.verts, j);
                                 monolist.Clear();
 
                                 if (vts != null)
@@ -263,7 +263,7 @@ namespace ctrviewer
             if (flagq.ContainsKey(((QuadFlags)(1<<Game1.currentflag)).ToString()))
                 flagq[((QuadFlags)(1 << Game1.currentflag)).ToString()].Render(graphics, effect);
 
-            if (!Game1.hide_invis)
+            if (!Game1.HideInvisible)
             {
                 effect.Alpha = 0.25f;
 

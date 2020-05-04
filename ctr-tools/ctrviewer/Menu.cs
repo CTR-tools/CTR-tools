@@ -45,7 +45,11 @@ namespace ctrviewer
 
     class Menu
     {
-        public Vector2 Position = new Vector2(0.5f, 0.25f);
+
+        public static Dictionary<string, List<MenuItem>> menus = new Dictionary<string, List<MenuItem>>();
+
+
+        public Vector2 Position = new Vector2(0.5f, 0.35f);
         public bool Exec = false;
 
         public List<MenuItem> items = new List<MenuItem>();
@@ -78,27 +82,50 @@ namespace ctrviewer
                 m.CalcWidth(font);
         }
 
+        public void SetMenu(SpriteFont font)
+        {
+            string s = SelectedItem.Param;
+
+            if (!menus.ContainsKey(s))
+                throw new Exception("missing menu! " + s);
+
+            items = menus[s];
+            selection = 0;
+
+            foreach (MenuItem m in items)
+                m.CalcWidth(font);
+        }
+
         public void LoadMenuItems()
         {
-            items.Add(new MenuItem("paused".ToUpper(), "", "", false));
-            items.Add(new MenuItem("".ToUpper(), "", "", false));
-            items.Add(new MenuItem("resume".ToUpper(), "close", "", true));
-            items.Add(new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true));
-            items.Add(new MenuItem("toggle game objects".ToUpper(), "toggle", "inst", true));
-            items.Add(new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true));
-            items.Add(new MenuItem("<< quadflag (low): {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15));
-            items.Add(new MenuItem("toggle invisible (hi)".ToUpper(), "toggle", "invis", true));
-            items.Add(new MenuItem("---", "", "", false));
-            items.Add(new MenuItem("toggle mouse".ToUpper(), "toggle", "mouse", true));
-            items.Add(new MenuItem("toggle fullscreen".ToUpper(), "toggle", "window", true));
-            items.Add(new MenuItem("toggle fps lock".ToUpper(), "toggle", "lockfps", true));
-            items.Add(new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true));
-            items.Add(new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true));
-            items.Add(new MenuItem("---", "", "", false));
+            List<MenuItem> level = new List<MenuItem>();
+            level.Add(new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true));
+            level.Add(new MenuItem("toggle invisible (hi)".ToUpper(), "toggle", "invis", true));
+            level.Add(new MenuItem("toggle game objects".ToUpper(), "toggle", "inst", true));
+            level.Add(new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true));
+            level.Add(new MenuItem("<< quadflag (low): {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15));
+            level.Add(new MenuItem("back".ToUpper(), "link", "main", true));
+            menus.Add("level", level);
 
-            //items.Add(new MenuItem("reload level".ToUpper(), "load", "", true));
-            //items.Add(new MenuItem("options".ToUpper(), "options", "", false));
-            items.Add(new MenuItem("quit".ToUpper(), "exit", "", true));
+            List<MenuItem> video = new List<MenuItem>();
+            video.Add(new MenuItem("toggle mouse".ToUpper(), "toggle", "mouse", true));
+            video.Add(new MenuItem("toggle fullscreen".ToUpper(), "toggle", "window", true));
+            video.Add(new MenuItem("toggle fps lock".ToUpper(), "toggle", "lockfps", true));
+            video.Add(new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true));
+            video.Add(new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true));
+            video.Add(new MenuItem("back".ToUpper(), "link", "main", true));
+            menus.Add("video", video);
+
+            List<MenuItem> main = new List<MenuItem>();
+            main.Add(new MenuItem("resume".ToUpper(), "close", "", true));
+            main.Add(new MenuItem("reload level".ToUpper(), "load", "", true));
+            main.Add(new MenuItem("level options".ToUpper(), "link", "level", true));
+            main.Add(new MenuItem("video options".ToUpper(), "link", "video", true));
+            main.Add(new MenuItem("quit".ToUpper(), "exit", "", true));
+
+            menus.Add("main", main);
+
+            items = main;
 
             Selection = 2;
         }
@@ -164,9 +191,9 @@ namespace ctrviewer
 
             float scale = gd.Viewport.Height / 1080f;
 
-            g.Begin(depthStencilState: DepthStencilState.Default);
+            g.Begin(depthStencilState: DepthStencilState.None);
 
-            g.Draw(background, color: Color.White * 0.25f, destinationRectangle: gd.Viewport.Bounds, layerDepth: 0.99f);
+            g.Draw(background, gd.Viewport.Bounds, Color.White * 0.25f);
 
             int i = 0;
 
@@ -188,7 +215,7 @@ namespace ctrviewer
                 i++;
             }
 
-            loc = Position;
+            //loc = Position;
 
             g.End();
         }

@@ -53,7 +53,7 @@ namespace CTRFramework
     public enum QuadFlags
     {
         Invisible = 1 << 0,     //check
-        NeverUsed1 = 1 << 1,    //used in space station, probably invisible wall
+        MoonGravity = 1 << 1,   //triggers MG in 
         Reflection = 1 << 2,    //used in snow levels
         Kickers = 1 << 3,       //?? maybe denotes that you whould be awarded extra turbo for landing?
         OutOfBounds = 1 << 4,   //check

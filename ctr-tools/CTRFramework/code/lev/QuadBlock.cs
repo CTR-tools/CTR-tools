@@ -244,7 +244,7 @@ namespace CTRFramework
 
 
         //use this later for obj export too
-        public List<CTRFramework.Vertex> GetVertexListq(Scene s, int i)
+        public List<CTRFramework.Vertex> GetVertexListq(List<Vertex> v, int i)
         {
             try
             {
@@ -255,7 +255,7 @@ namespace CTRFramework
                     int[] arrind = new int[] { 0, 1, 2, 3 };
 
                     for (int j = 0; j < 4; j++)
-                        buf.Add(s.verts[ind[arrind[j]]]);
+                        buf.Add(v[ind[arrind[j]]]);
 
                     for (int j = 0; j < 4; j++)
                     {
@@ -317,7 +317,7 @@ namespace CTRFramework
                     }
 
                     for (int j = 0; j < 4; j++)
-                        buf.Add(s.verts[ind[arrind[j]]]);
+                        buf.Add(v[ind[arrind[j]]]);
 
 
                     for (int j = 0; j < 4; j++)
@@ -378,6 +378,25 @@ namespace CTRFramework
             2, 3, 4
         };
 
+        
+        public string ToObj2(List<Vertex> v, Detail detail, ref int a, ref int b)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible"));
+            sb.AppendFormat("o piece_{0}\r\n\r\n", id.ToString("X4"));
+
+            for (int i = 0; i < 4; i++)
+            {
+                foreach (Vertex vt in GetVertexListq(v, i))
+                    sb.AppendLine(vt.ToString(false));
+            }
+
+
+
+            return sb.ToString();
+        }
+        
         public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b)
         {
             StringBuilder sb = new StringBuilder();
@@ -433,7 +452,6 @@ namespace CTRFramework
                                 {
                                     sb.AppendLine("usemtl default");
                                 }
-
 
                                 if (quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                     sb.AppendLine("usemtl default");
