@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace lev2obj
+namespace model_reader
 {
     class Program
     {
@@ -19,7 +19,7 @@ namespace lev2obj
             Thread.CurrentThread.CurrentCulture = customCulture;
 
 
-            Console.WriteLine("CTR-Tools: lev2obj\r\nDCxDemo*.\r\n");
+            Console.WriteLine("CTR-Tools: model_reader\r\nDCxDemo*.\r\n");
             Console.WriteLine(Meta.GetVersion() + "\r\n");
 
             if (args.Length > 0)

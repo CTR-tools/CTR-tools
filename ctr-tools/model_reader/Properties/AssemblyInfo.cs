@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("lev2obj")]
+[assembly: AssemblyTitle("model_reader")]
 [assembly: AssemblyDescription("Converts Crash Team Racing scene to OBJ format")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("lev2obj")]
+[assembly: AssemblyProduct("model_reader")]
 [assembly: AssemblyCopyright("dcxdemo")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

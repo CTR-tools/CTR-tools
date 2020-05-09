@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lng2txt", "lng2txt\lng2txt.csproj", "{244D645A-172A-4CB5-9E64-9C4BA68EF08C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lev2obj", "lev2obj\lev2obj.csproj", "{7E49CD09-1EB8-47D6-94C1-49ED3A03A00F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "model_reader", "model_reader\model_reader.csproj", "{7E49CD09-1EB8-47D6-94C1-49ED3A03A00F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0326F8B5-F788-4529-9F87-C725A5D13BC0} = {0326F8B5-F788-4529-9F87-C725A5D13BC0}
 	EndProjectSection
@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "howl", "howl\howl.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cseq", "cseq\cseq.csproj", "{69BCF237-3D55-4A30-B3C8-8716C8EBF212}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTR-tools-gui", "levTool\CTR-tools-gui.csproj", "{36BC2F61-99A4-43E3-9246-28A1BE39D714}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTRTools", "levTool\CTRTools.csproj", "{36BC2F61-99A4-43E3-9246-28A1BE39D714}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0326F8B5-F788-4529-9F87-C725A5D13BC0} = {0326F8B5-F788-4529-9F87-C725A5D13BC0}
 	EndProjectSection
