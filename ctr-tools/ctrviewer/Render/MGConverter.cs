@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using CTRFramework;
-using CTRFramework.Shared;
-using System.Collections.Generic;
 
 namespace ctrviewer
 {

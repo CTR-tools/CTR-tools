@@ -1,10 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CTRFramework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 using System;
-using System.Text;
-using CTRFramework;
+using System.Collections.Generic;
 
 namespace ctrviewer
 {
@@ -25,7 +24,7 @@ namespace ctrviewer
         public int rangeval;
         public int rangemax;
 
-        public MenuItem(string t, string a, string p, bool e, SwitchType st = SwitchType.None, int rmax = 0 )
+        public MenuItem(string t, string a, string p, bool e, SwitchType st = SwitchType.None, int rmax = 0)
         {
             Title = t;
             Action = a;
@@ -84,12 +83,15 @@ namespace ctrviewer
 
         public void SetMenu(SpriteFont font)
         {
-            string s = SelectedItem.Param;
+            SetMenu(font, SelectedItem.Param);
+        }
 
-            if (!menus.ContainsKey(s))
-                throw new Exception("missing menu! " + s);
+        public void SetMenu(SpriteFont font, string name)
+        {
+            if (!menus.ContainsKey(name))
+                throw new Exception("missing menu! " + name);
 
-            items = menus[s];
+            items = menus[name];
             selection = 0;
 
             foreach (MenuItem m in items)
@@ -100,18 +102,18 @@ namespace ctrviewer
         {
             List<MenuItem> level = new List<MenuItem>();
             level.Add(new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true));
-            level.Add(new MenuItem("toggle invisible (hi)".ToUpper(), "toggle", "invis", true));
+            level.Add(new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true));
+            level.Add(new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true));
             level.Add(new MenuItem("toggle game objects".ToUpper(), "toggle", "inst", true));
+            level.Add(new MenuItem("toggle paths".ToUpper(), "toggle", "paths", true));
             level.Add(new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true));
-            level.Add(new MenuItem("<< quadflag (low): {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15));
+            level.Add(new MenuItem("<< quadflag: {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15));
             level.Add(new MenuItem("back".ToUpper(), "link", "main", true));
             menus.Add("level", level);
 
             List<MenuItem> video = new List<MenuItem>();
-            video.Add(new MenuItem("toggle mouse".ToUpper(), "toggle", "mouse", true));
             video.Add(new MenuItem("toggle fullscreen".ToUpper(), "toggle", "window", true));
-            video.Add(new MenuItem("toggle fps lock".ToUpper(), "toggle", "lockfps", true));
-            video.Add(new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true));
+            video.Add(new MenuItem("toggle vsync/fps lock".ToUpper(), "toggle", "lockfps", true));
             video.Add(new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true));
             video.Add(new MenuItem("back".ToUpper(), "link", "main", true));
             menus.Add("video", video);
@@ -127,7 +129,7 @@ namespace ctrviewer
 
             items = main;
 
-            Selection = 2;
+            //Selection = 0;
         }
 
         public void Next()
@@ -149,17 +151,17 @@ namespace ctrviewer
         }
 
 
-        public void Update(GamePadState oldstate, GamePadState newstate)
+        public bool IsPressed(Keys key, KeyboardState oldkb, KeyboardState newkb)
         {
-            if (newstate.DPad.Up == ButtonState.Pressed && newstate.DPad.Up != oldstate.DPad.Up) Previous();
-            if (newstate.DPad.Down == ButtonState.Pressed && newstate.DPad.Down != oldstate.DPad.Down) Next();
+            return newkb.IsKeyDown(key) && oldkb.IsKeyDown(key) != newkb.IsKeyDown(key);
+        }
 
-            /*
-            if (newkb.IsKeyDown(Keys.Up) && !oldkb.IsKeyDown(Keys.Up)) Previous();
-            if (newkb.IsKeyDown(Keys.Down) && !oldkb.IsKeyDown(Keys.Down)) Next();
-            */
+        public void Update(GamePadState oldstate, GamePadState newstate, KeyboardState oldkb, KeyboardState newkb)
+        {
+            if ((newstate.DPad.Up == ButtonState.Pressed && newstate.DPad.Up != oldstate.DPad.Up) || IsPressed(Keys.W, oldkb, newkb) || IsPressed(Keys.Up, oldkb, newkb)) Previous();
+            if ((newstate.DPad.Down == ButtonState.Pressed && newstate.DPad.Down != oldstate.DPad.Down) || IsPressed(Keys.S, oldkb, newkb) || IsPressed(Keys.Down, oldkb, newkb)) Next();
 
-            if (newstate.DPad.Left == ButtonState.Pressed && newstate.DPad.Left != oldstate.DPad.Left)
+            if (newstate.DPad.Left == ButtonState.Pressed && newstate.DPad.Left != oldstate.DPad.Left || IsPressed(Keys.A, oldkb, newkb) || IsPressed(Keys.Left, oldkb, newkb))
             {
                 if (SelectedItem.sType == SwitchType.Range)
                 {
@@ -170,7 +172,7 @@ namespace ctrviewer
                     Game1.currentflag = SelectedItem.rangeval;
                 }
             }
-            if (newstate.DPad.Right == ButtonState.Pressed && newstate.DPad.Right != oldstate.DPad.Right)
+            if ((newstate.DPad.Right == ButtonState.Pressed && newstate.DPad.Right != oldstate.DPad.Right) || IsPressed(Keys.D, oldkb, newkb) || IsPressed(Keys.Right, oldkb, newkb))
             {
                 if (SelectedItem.sType == SwitchType.Range)
                 {
@@ -181,7 +183,7 @@ namespace ctrviewer
                     Game1.currentflag = SelectedItem.rangeval;
                 }
             }
-            if (newstate.Buttons.A == ButtonState.Pressed && newstate.Buttons.A != oldstate.Buttons.A) Exec = true;
+            if ((newstate.Buttons.A == ButtonState.Pressed && newstate.Buttons.A != oldstate.Buttons.A) || IsPressed(Keys.Enter, oldkb, newkb) || IsPressed(Keys.Space, oldkb, newkb)) Exec = true;
         }
 
         Vector2 shadow_offset = new Vector2(2, 4);
@@ -201,7 +203,7 @@ namespace ctrviewer
 
             foreach (MenuItem m in items)
             {
-                string s = (m.sType == SwitchType.Range ? String.Format(m.Title, ((QuadFlags)(1 << Game1.currentflag)).ToString(),m.rangeval) : m.Title.ToUpper()); //m.Title.ToUpper(), 
+                string s = (m.sType == SwitchType.Range ? String.Format(m.Title, ((QuadFlags)(1 << Game1.currentflag)).ToString(), m.rangeval) : m.Title.ToUpper()); //m.Title.ToUpper(), 
 
                 g.DrawString(fnt, s, loc + shadow_offset - new Vector2(m.Width / 2 * scale, 0), Color.Black,
                    0, new Vector2(0, 0), scale, SpriteEffects.None, 0.5f);

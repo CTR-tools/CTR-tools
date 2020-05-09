@@ -101,7 +101,7 @@ namespace ctrviewer
                 if (keyState.IsKeyDown(Keys.Z))
                     moveVector += new Vector3(0, -1, 0);
 
-                moveVector *= (Keyboard.GetState().IsKeyDown(Keys.LeftShift) ? 0.6f : 0.3f);
+                moveVector *= (Keyboard.GetState().IsKeyDown(Keys.LeftShift) ? 0.9f : 0.3f);
 
                 if (Math.Abs(moveVector.X) > Math.Abs(slowdown.X))
                     slowdown.X = moveVector.X;
@@ -126,13 +126,13 @@ namespace ctrviewer
 
 
                 if (keyState.IsKeyDown(Keys.Left))
-                    leftRightRot += rotationSpeed;
+                    leftRightRot += rotationSpeed * amount * 20;
                 if (keyState.IsKeyDown(Keys.Right))
-                    leftRightRot -= rotationSpeed;
+                    leftRightRot -= rotationSpeed * amount * 20;
                 if (keyState.IsKeyDown(Keys.Up))
-                    upDownRot += rotationSpeed;
+                    upDownRot += rotationSpeed * amount * 20;
                 if (keyState.IsKeyDown(Keys.Down))
-                    upDownRot -= rotationSpeed;
+                    upDownRot -= rotationSpeed * amount * 20;
                 #endregion
 
 

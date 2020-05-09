@@ -4,29 +4,27 @@ using System;
 
 namespace ctrviewer
 {
-    class InstancedModel
+    class Kart
     {
         public Vector3 Position;
-        public Vector3 Rotation;
+        public Vector3 Angle;
         public float Scale;
-        public string ModelName;
+        public string ModelName = "bluecone";
 
-        public InstancedModel()
+        public Kart()
         {
         }
-
-        public InstancedModel(string name, Vector3 pos, Vector3 rot, float scale)
+        public Kart(Vector3 pos, Vector3 ang)
         {
             Position = pos;
-            Rotation = rot;
-            ModelName = name;
-            Scale = scale;
+            Angle = ang;
         }
 
         public void Update()
         {
-            Position += new Vector3(0, 1f, 0f);
+            /// Position += new Vector3(0, 0, 0.001f);
         }
+
 
         public void Render(GraphicsDeviceManager graphics, BasicEffect effect, FirstPersonCamera camera)
         {

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace ctrviewer
 {
@@ -15,7 +11,7 @@ namespace ctrviewer
 
     public enum EngineRasterizer
     {
-        Default, Wireframe
+        Default, Wireframe, DoubleSided
     }
 
     class Samplers
@@ -30,7 +26,7 @@ namespace ctrviewer
 
         public static RasterizerState DefaultRasterizer = new RasterizerState();
         public static RasterizerState WireframeRasterizer = new RasterizerState();
-
+        public static RasterizerState DoubleSidedRasterizer = new RasterizerState();
 
         public static void InitRasterizers()
         {
@@ -41,6 +37,10 @@ namespace ctrviewer
             WireframeRasterizer = new RasterizerState();
             WireframeRasterizer.FillMode = FillMode.WireFrame;
             WireframeRasterizer.CullMode = CullMode.None;
+
+            DoubleSidedRasterizer = new RasterizerState();
+            DoubleSidedRasterizer.FillMode = FillMode.Solid;
+            DoubleSidedRasterizer.CullMode = CullMode.None;
         }
 
 
@@ -69,6 +69,7 @@ namespace ctrviewer
             {
                 case EngineRasterizer.Default: graphics.GraphicsDevice.RasterizerState = DefaultRasterizer; break;
                 case EngineRasterizer.Wireframe: graphics.GraphicsDevice.RasterizerState = WireframeRasterizer; break;
+                case EngineRasterizer.DoubleSided: graphics.GraphicsDevice.RasterizerState = DoubleSidedRasterizer; break;
                 default: throw new Exception("Unexpected rasterizer value");
             }
 
