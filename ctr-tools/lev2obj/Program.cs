@@ -4,8 +4,8 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Threading;
 using System.Linq;
+using System.Threading;
 
 namespace lev2obj
 {
@@ -67,10 +67,10 @@ namespace lev2obj
             {
                 case ".lev":
                     {
-                        Scene scn = new Scene(s, "obj");
+                        Scene scn = Scene.FromFile(s);
                         scn.quads = scn.quads.OrderBy(o => o.id).ToList();
-                        string objfile = scn.Export("obj", Detail.Low, true);
-                        objfile = scn.Export("obj", Detail.Med, false);
+                        string objfile = scn.Export("obj", Detail.Low, false, false);
+                        objfile = scn.Export("obj", Detail.Med, true, true);
                         //LaunchMeshLab(objfile);
 
                         break;

@@ -1,4 +1,8 @@
-﻿using System;
+﻿using CTRFramework;
+using CTRFramework.Lang;
+using CTRFramework.Shared;
+using CTRFramework.Vram;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -6,11 +10,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using CTRFramework;
-using CTRFramework.Shared;
-using CTRFramework.Lang;
-using CTRFramework.Vram;
-using System.Threading.Tasks;
 
 namespace levTool
 {
@@ -20,7 +19,7 @@ namespace levTool
         Scene scn;
         ColorDialog cd;
 
-        
+
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
@@ -80,7 +79,7 @@ namespace levTool
                 if (!File.Exists(bak))
                     File.Copy(path, bak);
 
-                scn = new Scene(path, "obj");
+                scn = Scene.FromFile(path);
 
                 Text = String.Format("levTool - {0}", path);
                 propertyGrid1.SelectedObject = scn.pickups[0];
@@ -398,28 +397,25 @@ namespace levTool
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                using (BinaryReaderEx br = new BinaryReaderEx(File.Open(ofd.FileName, FileMode.Open)))
+                Tim buf = CtrVrm.FromFile(ofd.FileName);
+
+                MessageBox.Show(buf.data.Length / 256 + "");
+
+                if (scn != null)
                 {
-                    Tim buf = CtrVrm.FromReader(br);
+                    Dictionary<string, TextureLayout> tex = scn.GetTexturesList();
+                    MessageBox.Show(tex.Count.ToString());
 
-                    MessageBox.Show(buf.data.Length / 256 + "");
-
-                    if (scn != null)
+                    foreach (TextureLayout tl in tex.Values)
                     {
-                        Dictionary<string, TextureLayout> tex = scn.GetTexturesList();
-                        MessageBox.Show(tex.Count.ToString());
-
-                        foreach (TextureLayout tl in tex.Values)
-                        {
-                            //buf.GetTexturePage(tl, "");
-                        }
+                        //buf.GetTexturePage(tl, "");
                     }
-
-                    buf.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
-                    //buf.palbmp.Save("palletes.png", System.Drawing.Imaging.ImageFormat.Png);
-
-                    //Process.Start("palletes.png");
                 }
+
+                buf.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
+                //buf.palbmp.Save("palletes.png", System.Drawing.Imaging.ImageFormat.Png);
+
+                //Process.Start("palletes.png");
             }
         }
 
@@ -612,6 +608,20 @@ namespace levTool
                     {
                     }
                 }
+
+                if (Path.GetExtension(cf.Name) == ".lev")
+                {
+                    try
+                    {
+                        File.WriteAllBytes("temp.lev", cf.Data);
+                        Scene s = Scene.FromFile("temp.lev");
+                        textBox4.Text = s.Info();
+                        File.Delete("temp.lev");
+                    }
+                    catch
+                    {
+                    }
+                }
             }
 
 
@@ -648,7 +658,7 @@ namespace levTool
                 foreach (QuadBlock qb in scn.quads)
                 {
                     if (qb.trackPos != 0xFF)
-                        qb.trackPos = (byte) (maxpos - qb.trackPos);
+                        qb.trackPos = (byte)(maxpos - qb.trackPos);
                 }
             }
         }
@@ -715,7 +725,7 @@ namespace levTool
                     c.curWeapon = (byte)comboBox1.SelectedIndex;
                     c.numCharges = (byte)numericUpDown2.Value;
 
-                    byte[] b = new byte[14*4+2];
+                    byte[] b = new byte[14 * 4 + 2];
                     using (BinaryWriter bw = new BinaryWriter(new MemoryStream(b)))
                     {
                         c.Write(bw);
@@ -777,13 +787,13 @@ namespace levTool
 
             uint levPtr = 0x80083a48;
             uint lev = m.ReadPSXUInt32(levPtr);
-            uint size = m.ReadPSXUInt32(lev-4);
+            uint size = m.ReadPSXUInt32(lev - 4);
             uint ptrMeshInfo = m.ReadPSXUInt32(lev - 4);
 
             byte[] meshinfodata = m.ReadArray(ptrMeshInfo, 8 * 4);
-            
+
             MeshInfo mi;
-            
+
             using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(meshinfodata)))
             {
                 mi = new MeshInfo(br);
@@ -808,57 +818,111 @@ namespace levTool
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                using (BinaryReaderEx br = new BinaryReaderEx(File.Open(ofd.FileName, FileMode.Open)))
+                Tim buf = CtrVrm.FromFile(ofd.FileName);
+                Bitmap bmp = new Bitmap(160, 80);
+                Graphics g = Graphics.FromImage(bmp);
+
+                using (BinaryReaderEx br2 = new BinaryReaderEx(File.Open("ui_map", FileMode.Open)))
                 {
-                    Tim buf = CtrVrm.FromReader(br);
-                    Bitmap bmp = new Bitmap(160, 80);
-                    Graphics g = Graphics.FromImage(bmp);            
+                    int z = br2.ReadInt32();
+                    List<TexMap> list = new List<TexMap>();
 
-                    using (BinaryReaderEx br2 = new BinaryReaderEx(File.Open("ui_map", FileMode.Open)))
+                    for (int i = 0; i < 50; i++)
+                        list.Add(new TexMap(br2));
+
+
+                    int x = 0;
+                    int y = 0;
+
+                    foreach (TexMap map in list)
                     {
-                        int z = br2.ReadInt32();
-                        List<TexMap> list = new List<TexMap>();
+                        buf.GetTexture(map.tl, "tex", map.name);
 
-                        for (int i = 0; i < 50; i++)
-                            list.Add(new TexMap(br2));
-                        
+                        Bitmap b = (Bitmap)Bitmap.FromFile("tex" + "\\" + map.name + ".png");
 
-                        int x = 0;
-                        int y = 0;
+                        g.DrawImage(b, x * 16, y * 16);
 
-                        foreach (TexMap map in list)
+                        x++;
+                        if (x >= 10)
                         {
-                            buf.GetTexture(map.tl, "tex", map.name);
-
-                            Bitmap b = (Bitmap)Bitmap.FromFile("tex" + "\\" + map.name + ".png");
-
-                            g.DrawImage(b, x * 16, y * 16);
-
-                            x++;
-                            if (x >= 10 )
-                            {
-                                x = 0;
-                                y++;
-                            }
+                            x = 0;
+                            y++;
                         }
-
-                        bmp.Save("font.png", System.Drawing.Imaging.ImageFormat.Png);
                     }
 
-                    /*
-                        Dictionary<string, TextureLayout> tex = scn.GetTexturesList();
-                        MessageBox.Show(tex.Count.ToString());
+                    bmp.Save("font.png", System.Drawing.Imaging.ImageFormat.Png);
+                }
+
+                /*
+                    Dictionary<string, TextureLayout> tex = scn.GetTexturesList();
+                    MessageBox.Show(tex.Count.ToString());
+                }
+                */
+
+                buf.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
+                //buf.palbmp.Save("palletes.png", System.Drawing.Imaging.ImageFormat.Png);
+
+                Process.Start("font.png");
+            }
+        }
+
+        private void button29_Click(object sender, EventArgs e)
+        {
+            Scene s = Scene.FromFile("test.lev");
+            s.ExportTextures("test");
+
+            MessageBox.Show("done");
+        }
+
+        private void button30_Click(object sender, EventArgs e)
+        {
+            Scene s = Scene.FromFile("test.lev");
+
+            s.ctrvram.SaveBMP("before.bmp", BMPHeader.GrayScalePalette(16));
+
+            foreach (var t in s.GetTexturesList())
+            {
+                if (File.Exists("test\\" + t.Value.Tag() + ".tim"))
+                {
+                    using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead("test\\" + t.Value.Tag() + ".tim")))
+                    {
+                        Tim tim = new Tim(br);
+                        s.ctrvram.DrawTim(tim);
                     }
-                    */
+                }
+            }
 
-                    buf.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
-                    //buf.palbmp.Save("palletes.png", System.Drawing.Imaging.ImageFormat.Png);
+            s.ctrvram.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
+        }
 
-                    Process.Start("font.png");
+        private void exportFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            BigEntry en = (BigEntry)treeView1.SelectedNode.Tag;
+
+            if (en != null)
+            {
+                SaveFileDialog fd = new SaveFileDialog();
+                fd.FileName = Path.GetFileName(en.Name);
+
+                if (fd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        File.WriteAllBytes(fd.FileName, en.Data);
+                    }
+                    catch (Exception ex)
+                    {
+                        tabConsole.Select();
+                        Console.WriteLine(ex.Message + "\r\n" + ex.ToString());
+                    }
                 }
             }
         }
 
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
     }
 
 }
