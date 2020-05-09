@@ -3,7 +3,6 @@ using CTRtools.Helpers;
 using NAudio.Midi;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 
 namespace CTRtools.CSEQ

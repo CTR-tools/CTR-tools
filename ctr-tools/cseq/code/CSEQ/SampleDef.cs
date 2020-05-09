@@ -2,7 +2,6 @@
 using CTRFramework.Shared;
 using System;
 using System.ComponentModel;
-using System.IO;
 
 namespace CTRtools.CSEQ
 {

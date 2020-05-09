@@ -2,7 +2,6 @@
 using CTRtools.Helpers;
 using NAudio.Midi;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 
 namespace CTRtools.CSEQ
@@ -54,7 +53,7 @@ namespace CTRtools.CSEQ
 
                 cmd.Add(cx);
             }
-            while (cx.evt != CSEQEvent.EndTrack );
+            while (cx.evt != CSEQEvent.EndTrack);
 
             name = "Track_" + trackNum.ToString("00") + (isDrumTrack ? "_drum" : "");
         }

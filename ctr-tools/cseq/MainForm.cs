@@ -1,13 +1,13 @@
-﻿using CTRtools.Helpers;
+﻿using CTRFramework.Shared;
 using CTRFramework.Sound;
-using CTRFramework.Shared;
+using CTRtools.Helpers;
+using NAudio.Wave;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
 using System.Text;
-using NAudio.Wave;
+using System.Windows.Forms;
 
 namespace CTRtools.CSEQ
 {
@@ -97,7 +97,7 @@ namespace CTRtools.CSEQ
 
             foreach (SampleDef sd in seq.samples)
             {
-                TreeNode tn1 = new TreeNode(sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : "") );
+                TreeNode tn1 = new TreeNode(sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : ""));
                 tn.Nodes.Add(tn1);
             }
 
@@ -198,7 +198,7 @@ namespace CTRtools.CSEQ
             listBox2.Items.Clear();
             foreach (var samp in bnk.samples)
             {
-                listBox2.Items.Add(samp.Key); 
+                listBox2.Items.Add(samp.Key);
             }
 
             if (seq != null)
@@ -273,10 +273,10 @@ namespace CTRtools.CSEQ
 
                 List<string> x = new List<string>();
 
-                foreach(string s in files)
+                foreach (string s in files)
                 {
                     CSEQ c = new CSEQ(s, textBox1);
-                    foreach (SampleDef sd in c.samples) if (!x.Contains(sd.Tag)) x.Add(sd.Tag); 
+                    foreach (SampleDef sd in c.samples) if (!x.Contains(sd.Tag)) x.Add(sd.Tag);
                     foreach (SampleDefReverb sd in c.samplesReverb) if (!x.Contains(sd.Tag)) x.Add(sd.Tag);
                 }
 

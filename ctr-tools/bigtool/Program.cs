@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using CTRFramework;
+﻿using CTRFramework;
 using CTRFramework.Shared;
+using System;
+using System.IO;
 
 namespace bigtool
 {
@@ -14,7 +13,7 @@ namespace bigtool
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 "CTR-tools: BigTool",
                 "Builds and extracts Crash Team Racing BIG files",
-                Meta.GetVersion() );
+                Meta.GetVersion());
 
             if (args.Length > 0)
             {
