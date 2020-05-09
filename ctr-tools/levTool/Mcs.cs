@@ -3,7 +3,7 @@ using CTRFramework.Shared;
 using System.IO;
 using System.Text;
 
-namespace levTool
+namespace CTRTools
 {
     class Mcs : IRead
     {

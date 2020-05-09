@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace levTool
+namespace CTRTools
 {
     public partial class MainForm : Form
     {

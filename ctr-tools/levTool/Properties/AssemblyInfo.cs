@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("levTool")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("CTRTools")]
+[assembly: AssemblyDescription("A GUI tool to operate Crash Team Racing (PS1) files.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("levTool")]
+[assembly: AssemblyProduct("CTRTools")]
 [assembly: AssemblyCopyright("dcxdemo")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

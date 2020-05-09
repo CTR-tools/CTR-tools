@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace levTool
+namespace CTRTools
 {
     class Char
     {

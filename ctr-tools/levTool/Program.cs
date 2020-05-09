@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace levTool
+namespace CTRTools
 {
     static class Program
     {

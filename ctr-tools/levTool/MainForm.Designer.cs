@@ -1,4 +1,4 @@
-﻿namespace levTool
+﻿namespace CTRTools
 {
     partial class MainForm
     {
@@ -272,7 +272,7 @@
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pictureBox1.ErrorImage = null;
-            this.pictureBox1.Image = global::levTool.Properties.Resources.ctr_tools_logo;
+            this.pictureBox1.Image = global::CTRTools.Properties.Resources.ctr_tools_logo;
             this.pictureBox1.Location = new System.Drawing.Point(258, 95);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(365, 84);
@@ -283,7 +283,7 @@
             // 
             this.pictureBox3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pictureBox3.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox3.Image = global::levTool.Properties.Resources.icon_discord;
+            this.pictureBox3.Image = global::CTRTools.Properties.Resources.icon_discord;
             this.pictureBox3.InitialImage = null;
             this.pictureBox3.Location = new System.Drawing.Point(446, 238);
             this.pictureBox3.Name = "pictureBox3";
@@ -297,7 +297,7 @@
             this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox2.ErrorImage = null;
-            this.pictureBox2.Image = global::levTool.Properties.Resources.icon_github;
+            this.pictureBox2.Image = global::CTRTools.Properties.Resources.icon_github;
             this.pictureBox2.Location = new System.Drawing.Point(367, 238);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(64, 64);

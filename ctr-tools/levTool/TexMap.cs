@@ -1,7 +1,7 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
 
-namespace levTool
+namespace CTRTools
 {
     class TexMap : IRead
     {

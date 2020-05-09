@@ -2,7 +2,7 @@
 using System.Text;
 using System.Windows.Forms;
 
-namespace levTool
+namespace CTRTools
 {
     class ConsoleHook : TextWriter
     {
