@@ -61,7 +61,7 @@ namespace CTRFramework.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на 24.04.2020  1:17:40,43 
+        ///   Ищет локализованную строку, похожую на 09.05.2020 14:53:01,68 
         ///.
         /// </summary>
         public static string BuildDate {
@@ -71,7 +71,7 @@ namespace CTRFramework.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на r10 [WIP].
+        ///   Ищет локализованную строку, похожую на r10.
         /// </summary>
         public static string Version {
             get {
