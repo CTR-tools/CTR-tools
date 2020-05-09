@@ -78,6 +78,10 @@ namespace model_reader
                 case ".ctr":
                     {
                         LODModel mod = new LODModel(s);
+
+                        foreach (LODHeader lh in mod.lh)
+                            Helpers.WriteToFile(".\\"+mod.name + "_" + lh.name + ".obj", lh.ToObj());
+
                         break;
                     }
 

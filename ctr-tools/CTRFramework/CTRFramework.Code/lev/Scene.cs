@@ -219,8 +219,6 @@ namespace CTRFramework
             string skyname = Path.ChangeExtension(path, ".sky." + fmt);
             string mtllib = Path.ChangeExtension(path, d.ToString() + ".mtl");
 
-
-
             if (path.Contains(" "))
                 Console.WriteLine("warning, there are spaces in the path. this may affect material import.");
 
@@ -242,6 +240,7 @@ namespace CTRFramework
                     }
                 }
             }
+
 
             switch (fmt)
             {
@@ -273,7 +272,9 @@ namespace CTRFramework
             }
 
             Helpers.WriteToFile(fname, sb.ToString());
-            Helpers.WriteToFile(skyname, skybox.ToObj());
+
+            if (skybox != null)
+                Helpers.WriteToFile(skyname, skybox.ToObj());
 
             sb.Clear();
 

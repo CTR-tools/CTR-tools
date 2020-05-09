@@ -144,13 +144,23 @@ namespace CTRFramework
             Console.WriteLine("maxt: " + maxt);
 
 
-            int ppos = (int)br.BaseStream.Position;
+            //int ppos = (int)br.BaseStream.Position;
 
             br.Jump(ptrClut);
             for (int k = 0; k <= maxc; k++)
                 cols.Add(new Vector4b(br));
 
-            br.Jump(ptrVerts + 0x1C);
+            if (!IsAnimated)
+            {
+                br.Jump(ptrVerts + 0x1C);
+            }
+            else
+            {
+                br.Jump(ptrAnims);
+                br.Jump(br.ReadInt32() + 0x1C + 0x18);
+            }
+
+
             for (int k = 0; k <= maxv; k++)
                 vtx.Add(new Vector3s(br.ReadByte(), br.ReadByte(), br.ReadByte()));
 
@@ -165,7 +175,7 @@ namespace CTRFramework
                 v.Y = zz;
             }
 
-            br.Jump(ppos);
+            //br.Jump(ppos);
 
             foreach (MshCommand d in defs)
             {
