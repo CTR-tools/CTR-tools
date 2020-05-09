@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace CTRtools.CSEQ
+namespace cseq
 {
     public class Sequence
     {

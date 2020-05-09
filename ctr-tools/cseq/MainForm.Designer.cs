@@ -1,6 +1,6 @@
 ﻿
 
-namespace CTRtools.CSEQ
+namespace cseq
 {
 
     partial class MainForm
@@ -94,6 +94,7 @@ namespace CTRtools.CSEQ
             this.menuStrip1.Size = new System.Drawing.Size(825, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // fileToolStripMenuItem
             // 
@@ -417,7 +418,7 @@ namespace CTRtools.CSEQ
             this.tabPage3.Controls.Add(this.listBox1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(473, 422);
+            this.tabPage3.Size = new System.Drawing.Size(654, 422);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Meta";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -458,7 +459,7 @@ namespace CTRtools.CSEQ
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(473, 422);
+            this.tabPage4.Size = new System.Drawing.Size(654, 422);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Bank";
             this.tabPage4.UseVisualStyleBackColor = true;

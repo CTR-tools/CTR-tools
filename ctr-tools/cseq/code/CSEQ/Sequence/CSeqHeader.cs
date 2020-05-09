@@ -1,7 +1,7 @@
 ﻿using CTRFramework.Shared;
 using System;
 
-namespace CTRtools.CSEQ
+namespace cseq
 {
     public struct CSeqHeader
     {

@@ -1,10 +1,10 @@
-﻿using CTRFramework.Shared;
-using CTRtools.Helpers;
+﻿using cseq.Helpers;
+using CTRFramework.Shared;
 using NAudio.Midi;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CTRtools.CSEQ
+namespace cseq
 {
     public class CTrack
     {

@@ -1,6 +1,6 @@
-﻿using CTRFramework.Shared;
+﻿using cseq.Helpers;
+using CTRFramework.Shared;
 using CTRFramework.Sound;
-using CTRtools.Helpers;
 using NAudio.Wave;
 using Newtonsoft.Json.Linq;
 using System;
@@ -9,7 +9,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace CTRtools.CSEQ
+namespace cseq
 {
     public partial class MainForm : Form
     {
@@ -26,7 +26,7 @@ namespace CTRtools.CSEQ
 
             LoadMeta();
 
-            Howl.ReadSampleNames(Meta.BasePath + "samplenames.txt");
+            Howl.ReadSampleNames(Meta.BasePath + "CTRFramework.Data\\samplenames.txt");
         }
 
         public void LoadMeta()
@@ -452,6 +452,11 @@ namespace CTRtools.CSEQ
         private void treeView1_DoubleClick(object sender, EventArgs e)
         {
 
+
+        }
+
+        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
 
         }
     }

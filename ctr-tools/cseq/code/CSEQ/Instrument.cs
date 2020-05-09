@@ -1,10 +1,10 @@
-﻿using CTRFramework;
+﻿using cseq.Helpers;
+using CTRFramework;
 using CTRFramework.Shared;
-using CTRtools.Helpers;
 using System;
 using System.Text;
 
-namespace CTRtools.CSEQ
+namespace cseq
 {
     public class Instrument
     {

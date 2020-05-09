@@ -3,7 +3,7 @@ using CTRFramework.Shared;
 using System;
 using System.ComponentModel;
 
-namespace CTRtools.CSEQ
+namespace cseq
 {
     public class SampleDef : IRead, IWrite
     {

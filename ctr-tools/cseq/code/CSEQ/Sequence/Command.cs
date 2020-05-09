@@ -1,11 +1,11 @@
-﻿using CTRFramework.Shared;
-using CTRtools.Helpers;
+﻿using cseq.Helpers;
+using CTRFramework.Shared;
 using NAudio.Midi;
 using System;
 using System.Collections.Generic;
 
 
-namespace CTRtools.CSEQ
+namespace cseq
 {
     public enum CSEQEvent
     {

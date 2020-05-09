@@ -8,7 +8,7 @@
     <ProjectGuid>{69BCF237-3D55-4A30-B3C8-8716C8EBF212}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CTRtools.CSEQ</RootNamespace>
+    <RootNamespace>cseq</RootNamespace>
     <AssemblyName>cseq</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
@@ -90,7 +90,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>CTRtools.CSEQ.Program</StartupObject>
+    <StartupObject>cseq.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -117,7 +117,7 @@
   <ItemGroup>
     <Compile Include="code\CSEQ\SampleDefReverb.cs" />
     <Compile Include="code\CSEQ\SampleDef.cs" />
-    <Compile Include="code\CTRJson.cs" />
+    <Compile Include="code\Helpers\CTRJson.cs" />
     <Compile Include="code\CSEQ\CHeader.cs" />
     <Compile Include="code\CSEQ\Sequence\Command.cs" />
     <Compile Include="code\CSEQ\CSEQ.cs" />

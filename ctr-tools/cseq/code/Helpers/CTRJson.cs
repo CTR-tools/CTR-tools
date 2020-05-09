@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 
-namespace CTRtools.Helpers
+namespace cseq.Helpers
 {
 
     //move this to Meta

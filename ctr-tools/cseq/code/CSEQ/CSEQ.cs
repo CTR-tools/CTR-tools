@@ -1,11 +1,11 @@
-﻿using CTRFramework.Shared;
+﻿using cseq.Helpers;
+using CTRFramework.Shared;
 using CTRFramework.Sound;
-using CTRtools.Helpers;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace CTRtools.CSEQ
+namespace cseq
 {
     public class CSEQ
     {
