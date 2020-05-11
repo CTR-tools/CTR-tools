@@ -252,7 +252,7 @@ namespace ctrviewer
                 if (File.Exists(path))
                 {
                     if (!textures.ContainsKey(s))
-                        textures.Add(s, Texture2D.FromFile(graphics.GraphicsDevice, path));
+                        textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path)));
                 }
                 else Console.WriteLine("Missing texture: " + s);
             }
@@ -559,7 +559,7 @@ namespace ctrviewer
             oldms = newms;
             newms = Mouse.GetState();
 
-            if (IsActive && newms.LeftButton == ButtonState.Pressed)
+            if (IsActive && newms.X >= 0 && newms.Y >=0 && newms.LeftButton == ButtonState.Pressed)
             {
                 IsMouseVisible = false;
                 updatemouse = true;
@@ -665,7 +665,9 @@ namespace ctrviewer
 
         private void LoadGame()
         {
-            loading = Task.Run(() => LoadStuff());
+            LoadStuff();
+            loading = Task.Run(() => { });
+            //loading = Task.Run(() => LoadStuff());
             //loading.Wait();
         }
 
