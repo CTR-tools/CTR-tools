@@ -14,19 +14,19 @@ namespace CTRFramework
         public int numPickupModels;
         public uint ptrPickupModelsPtr;
 
-        public uint unk3;
-        public uint unk4;
+        public uint unkptr3;
+        public uint unkptr4;
         public uint ptrPickupHeadersPtrArray;
-        public uint unk5;
+        public uint unkptr5;
 
         public int null1;
         public int null2;
 
         public uint cntWater;
         public uint ptrWater;
-        public uint somePtr2; //lead to the header for the data below
-        public uint somePtr3; //leads to some named data (drop, bubble, map-asphalt01) with an array of 0x0C bytes afterwards
-        public uint ptrArray1;
+        public uint ptrNamedTex; //lead to the header for the data below
+        public uint ptrNamedTexArray; //leads to some named data (drop, bubble, map-asphalt01) with an array of 0x0C bytes afterwards
+        public uint ptrRestartMain;
 
         public SomeData[] someData;
         public PosAng[] startGrid;
@@ -43,7 +43,7 @@ namespace CTRFramework
 
         byte[] skip;
 
-        public uint numRestartPts;
+        public uint cntRestartPts;
         public uint ptrRestartPts;
 
         byte[] skip2;
@@ -82,10 +82,10 @@ namespace CTRFramework
             numPickupModels = br.ReadInt32();
             ptrPickupModelsPtr = br.ReadUInt32();
 
-            unk3 = br.ReadUInt32();
-            unk4 = br.ReadUInt32();
+            unkptr3 = br.ReadUInt32();
+            unkptr4 = br.ReadUInt32();
             ptrPickupHeadersPtrArray = br.ReadUInt32();
-            unk5 = br.ReadUInt32();
+            unkptr5 = br.ReadUInt32();
 
             null1 = br.ReadInt32();
             null2 = br.ReadInt32();
@@ -97,10 +97,10 @@ namespace CTRFramework
 
             cntWater = br.ReadUInt32();
             ptrWater = br.ReadUInt32();
-            somePtr2 = br.ReadUInt32();
-            somePtr3 = br.ReadUInt32();
+            ptrNamedTex = br.ReadUInt32();
+            ptrNamedTexArray = br.ReadUInt32();
 
-            ptrArray1 = br.ReadUInt32();
+            ptrRestartMain = br.ReadUInt32();
 
             someData = new SomeData[3];
 
@@ -132,7 +132,7 @@ namespace CTRFramework
 
             skip = br.ReadBytes(0x6C - 16);
 
-            numRestartPts = br.ReadUInt32();
+            cntRestartPts = br.ReadUInt32();
             ptrRestartPts = br.ReadUInt32();
 
             //skip2 = br.ReadBytes(0x38);
@@ -180,19 +180,19 @@ namespace CTRFramework
                 bw.Write(numPickupModels);
                 bw.Write(ptrPickupModelsPtr);
 
-                bw.Write(unk3);
-                bw.Write(unk4);
+                bw.Write(unkptr3);
+                bw.Write(unkptr4);
                 bw.Write(ptrPickupHeadersPtrArray);
-                bw.Write(unk5);
+                bw.Write(unkptr5);
 
                 bw.Write(null1);
                 bw.Write(null2);
 
                 bw.Write(cntWater);
                 bw.Write(ptrWater);
-                bw.Write(somePtr2);
-                bw.Write(somePtr3);
-                bw.Write(ptrArray1);
+                bw.Write(ptrNamedTex);
+                bw.Write(ptrNamedTexArray);
+                bw.Write(ptrRestartMain);
 
                 for (int i = 0; i < someData.Length; i++)
                     someData[i].Write(bw);
@@ -212,7 +212,7 @@ namespace CTRFramework
 
                 bw.Write(skip);
 
-                bw.Write(numRestartPts);
+                bw.Write(cntRestartPts);
                 bw.Write(ptrRestartPts);
 
                 bw.Write(skip2);

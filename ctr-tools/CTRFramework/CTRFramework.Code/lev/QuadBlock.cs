@@ -138,7 +138,7 @@ namespace CTRFramework
             int texpos = (int)br.BaseStream.Position;
 
             br.Jump(ptrTexLow);
-            texlow = new TextureLayout(br);
+            texlow = TextureLayout.FromStream(br);
 
 
             foreach (uint u in ptrTexMid)

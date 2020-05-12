@@ -267,7 +267,7 @@ namespace CTRTools
             if (scn != null)
             {
                 StringBuilder sb = new StringBuilder();
-                foreach (VisData vi in scn.coldata)
+                foreach (VisData vi in scn.visdata)
                 {
                     sb.Append(vi.ToString() + "\r\n");
                 }

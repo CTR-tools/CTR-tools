@@ -28,7 +28,7 @@ namespace CTRFramework
         {
             name = br.ReadStringFixed(16);
             id = br.ReadUInt32();
-            tl = new TextureLayout(br);
+            tl = TextureLayout.FromStream(br);
         }
     }
 }

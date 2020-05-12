@@ -102,7 +102,6 @@ namespace CTRFramework
             }
         }
 
-
         public TextureLayout(BinaryReaderEx br)
         {
             Read(br);
@@ -122,6 +121,17 @@ namespace CTRFramework
             }
         }
 
+
+        public static TextureLayout FromStream(BinaryReaderEx br)
+        {
+            int test = br.ReadInt32();
+
+            if (test == 0)
+                return null;
+
+            br.BaseStream.Position -= 4;
+            return new TextureLayout(br);
+        }
 
         public void Read(BinaryReaderEx br)
         {

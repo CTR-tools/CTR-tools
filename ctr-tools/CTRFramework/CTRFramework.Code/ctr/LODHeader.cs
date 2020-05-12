@@ -241,7 +241,7 @@ namespace CTRFramework
             {
                 Console.WriteLine(t.ToString("X8"));
                 br.Jump(t);
-                TextureLayout tx = new TextureLayout(br);
+                TextureLayout tx = TextureLayout.FromStream(br);
                 tl.Add(tx);
                 Console.WriteLine(tx.ToString());
             }

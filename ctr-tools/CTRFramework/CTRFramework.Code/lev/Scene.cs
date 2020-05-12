@@ -18,7 +18,7 @@ namespace CTRFramework
         public List<VertexAnim> vertanims = new List<VertexAnim>();
         public List<QuadBlock> quads = new List<QuadBlock>();
         public List<PickupHeader> pickups = new List<PickupHeader>();
-        public List<VisData> coldata = new List<VisData>();
+        public List<VisData> visdata = new List<VisData>();
         public List<LODModel> dynamics = new List<LODModel>();
         public SkyBox skybox;
         public Nav nav;
@@ -167,9 +167,9 @@ namespace CTRFramework
 
                 Directory.CreateDirectory(path);
 
-                Dictionary<string, TextureLayout> tex = GetTexturesList();
+                //Dictionary<string, TextureLayout> tex = GetTexturesList();
 
-                foreach (TextureLayout tl in tex.Values)
+                foreach (TextureLayout tl in GetTexturesList().Values)
                 {
                     // try
                     {
@@ -374,8 +374,8 @@ namespace CTRFramework
             header = Instance<SceneHeader>.ReadFrom(br, 0);
             meshinfo = Instance<MeshInfo>.ReadFrom(br, header.ptrMeshInfo);
             verts = InstanceList<Vertex>.ReadFrom(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
-            restartPts = InstanceList<PosAng>.ReadFrom(br, header.ptrRestartPts, header.numRestartPts);
-            coldata = InstanceList<VisData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
+            restartPts = InstanceList<PosAng>.ReadFrom(br, header.ptrRestartPts, header.cntRestartPts);
+            visdata = InstanceList<VisData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
             quads = InstanceList<QuadBlock>.ReadFrom(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
 
             //optional stuff
