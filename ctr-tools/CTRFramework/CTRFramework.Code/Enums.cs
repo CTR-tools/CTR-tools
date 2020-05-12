@@ -53,20 +53,20 @@ namespace CTRFramework
     public enum QuadFlags
     {
         Invisible = 1 << 0,     //check
-        MoonGravity = 1 << 1,   //triggers MG in 
+        MoonGravity = 1 << 1,   //triggers MG in Oxide Station
         Reflection = 1 << 2,    //used in snow levels
         Kickers = 1 << 3,       //?? maybe denotes that you whould be awarded extra turbo for landing?
         OutOfBounds = 1 << 4,   //check
-        NeverUsed2 = 1 << 5,    //??
+        NeverUsed = 1 << 5,    //??
         TriggerScript = 1 << 6, //turbo pads, but not only. maybe quad has a linked script?
-        Reverb = 1 << 7,        //used in various indoor areas
+        Reverb = 1 << 7,        //used in various indoor areas or tunnels
         KickersToo = 1 << 8,    //??
         KillRacer = 1 << 9,     //these quads trigger mask
-        TikiMouth = 1 << 10,    //only spotted on tiny arena
-        Renderable = 1 << 11,   //mostly same as ground, but more.
+        TikiMouth = 1 << 10,    //only spotted on tiger temple
+        Unknown = 1 << 11,   //mostly same as ground, but more.
         Ground = 1 << 12,       //ground, makes it collidable
-        Wall = 1 << 13,         //walls
-        OutsideStuff = 1 << 14, //third state? looks like all quads on the track are either 12, 13 or 14
+        Wall = 1 << 13,         //walls, if it's flat, char will keep bouncing
+        NoCollision = 1 << 14,  //visible stuff like water and outside areas
         InvisibleTriggers = 1 << 15 //invisible stuff like triggers
     }
 

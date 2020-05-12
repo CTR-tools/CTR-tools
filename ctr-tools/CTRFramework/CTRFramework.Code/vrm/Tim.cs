@@ -76,17 +76,10 @@ namespace CTRFramework.Vram
             magic = br.ReadUInt32();
             flags = br.ReadUInt32();
             datasize = br.ReadUInt32();
-
-            if (magic != 16 || flags != 2)
-            {
-                //throw new Exception("probably not a CTR vram");
-            }
-
             region.X = br.ReadUInt16();
             region.Y = br.ReadUInt16();
             region.Width = br.ReadUInt16();
             region.Height = br.ReadUInt16();
-
             data = br.ReadArrayUInt16(region.Width * region.Height);
         }
 
@@ -208,7 +201,7 @@ namespace CTRFramework.Vram
                 int width = (tl.width / 4) * 2;
                 int height = tl.height;
 
-                ushort[] buf = new ushort[width * height];
+                ushort[] buf = new ushort[width * height / 2];
 
                 //Console.WriteLine(width + "x" + height);
 
@@ -219,7 +212,7 @@ namespace CTRFramework.Vram
                     Buffer.BlockCopy(
                         this.data, ptr,
                         buf, i * width,
-                        width * 2);
+                        width);
 
                     ptr += CtrVrm.Width * 2;
                 }
@@ -250,13 +243,13 @@ namespace CTRFramework.Vram
                 {
                     string n = path + "\\" + (name == "" ? tl.Tag() : name);
 
-                    if (!File.Exists(n + ".tim"))
+                    //if (!File.Exists(n + ".tim"))
                         x.Write(n + ".tim");
 
-                    if (!File.Exists(n + ".bmp"))
+                    //if (!File.Exists(n + ".bmp"))
                         x.SaveBMP(n + ".bmp", CtrClutToBmpPalette(x.clutdata));
 
-                    if (!File.Exists(n + ".png"))
+                    //if (!File.Exists(n + ".png"))
                         using (Bitmap oldBmp = new Bitmap(n + ".bmp"))
                         using (Bitmap newBmp = new Bitmap(oldBmp))
                         {

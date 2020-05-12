@@ -170,7 +170,6 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw)
         {
-            {
                 bw.Write(ptrMeshInfo);
                 bw.Write(ptrSkybox);
                 bw.Write(ptrTexArray);
@@ -231,7 +230,6 @@ namespace CTRFramework
                 bw.Write(ptrAiNav);
 
                 bw.Write(skip3);
-            }
         }
     }
 }
