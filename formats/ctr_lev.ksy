@@ -16,7 +16,7 @@ seq:
     
   - id: restart_main
     type: posang
-    if: header.ptr_array1 != 0
+    if: header.ptr_restart_main != 0
     
   - id: restart_pts
     type: posang
@@ -137,11 +137,11 @@ types:
         type: u4
       - id: ptr_water
         type: u4     
-      - id: ptr_tex
+      - id: ptr_named_tex
         type: u4
-      - id: ptr_tex_start
+      - id: ptr_named_tex_array
         type: u4
-      - id: ptr_array1
+      - id: ptr_restart_main
         type: u4
         
       - id: some_data
@@ -161,7 +161,7 @@ types:
       - id: ptr_low_tex_array
         type: u4
 
-      - id: background_color
+      - id: back_color
         type: color 
         
       - id: bg_mode
@@ -234,6 +234,17 @@ types:
         type: s2
       - id: z
         type: s2
+        
+  vector4s:
+    seq:
+      - id: x
+        type: s2
+      - id: y
+        type: s2
+      - id: z
+        type: s2
+      - id: w
+        type: s2
 
   vector2b:
     seq:
@@ -292,6 +303,15 @@ types:
         type: vector3s
       - id: max
         type: vector3s
+   
+  ctr_tex:
+    seq:
+      - id: mid_tex
+        type: texture_layout
+        repeat: expr
+        repeat-expr: 3
+      - id: ptr_hi
+        type: u4
     
   quad_block:
     seq:
@@ -339,6 +359,19 @@ types:
         type: u2
         repeat: expr
         repeat-expr: 10
+    instances:
+      midtex1:
+        pos: ptr_texture_mid[0]
+        type: ctr_tex
+      midtex2:
+        pos: ptr_texture_mid[1]
+        type: ctr_tex
+      midtex3:
+        pos: ptr_texture_mid[2]
+        type: ctr_tex
+      midtex4:
+        pos: ptr_texture_mid[3]
+        type: ctr_tex
         
   vertex:
     seq: 
@@ -354,9 +387,7 @@ types:
   skybox_vertex:
     seq:
       - id: position
-        type: vector3s
-      - id: nil
-        type: u2
+        type: vector4s
       - id: colorz
         type: color
         
@@ -412,10 +443,10 @@ types:
         
   nav_frame:
     seq:
-      - id: position
-        type: vector3s
+      - id: point
+        type: posang
       - id: data
-        size: 14
+        size: 8
         
   ai_path:
     seq:
