@@ -106,6 +106,7 @@
     <Compile Include="CTRFramework.Code\lev\CtrTex.cs" />
     <Compile Include="CTRFramework.Code\lev\nav\Nav.cs" />
     <Compile Include="CTRFramework.Code\lev\nav\AIPath.cs" />
+    <Compile Include="CTRFramework.Code\lev\UnkAdv.cs" />
     <Compile Include="CTRFramework.Code\lev\VertexAnim.cs" />
     <Compile Include="CTRFramework.Code\lang\LNG.cs" />
     <Compile Include="CTRFramework.Code\shared\Vector2b.cs" />

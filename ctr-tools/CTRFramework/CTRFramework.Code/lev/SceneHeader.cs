@@ -43,6 +43,9 @@ namespace CTRFramework
 
         byte[] skip;
 
+        public uint cntUnk;
+        public uint ptrUnk;
+
         public uint cntRestartPts;
         public uint ptrRestartPts;
 
@@ -130,7 +133,10 @@ namespace CTRFramework
             ptrBuildEnd = br.ReadUInt32();
             ptrBuildType = br.ReadUInt32();
 
-            skip = br.ReadBytes(0x6C - 16);
+            skip = br.ReadBytes(0x6C - 16 - 8);
+
+            cntUnk = br.ReadUInt32();
+            ptrUnk = br.ReadUInt32();
 
             cntRestartPts = br.ReadUInt32();
             ptrRestartPts = br.ReadUInt32();
@@ -170,66 +176,68 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw)
         {
-                bw.Write(ptrMeshInfo);
-                bw.Write(ptrSkybox);
-                bw.Write(ptrTexArray);
+            bw.Write(ptrMeshInfo);
+            bw.Write(ptrSkybox);
+            bw.Write(ptrTexArray);
 
-                bw.Write(numPickupHeaders);
-                bw.Write(ptrPickupHeaders);
-                bw.Write(numPickupModels);
-                bw.Write(ptrPickupModelsPtr);
+            bw.Write(numPickupHeaders);
+            bw.Write(ptrPickupHeaders);
+            bw.Write(numPickupModels);
+            bw.Write(ptrPickupModelsPtr);
 
-                bw.Write(unkptr3);
-                bw.Write(unkptr4);
-                bw.Write(ptrPickupHeadersPtrArray);
-                bw.Write(unkptr5);
+            bw.Write(unkptr3);
+            bw.Write(unkptr4);
+            bw.Write(ptrPickupHeadersPtrArray);
+            bw.Write(unkptr5);
 
-                bw.Write(null1);
-                bw.Write(null2);
+            bw.Write(null1);
+            bw.Write(null2);
 
-                bw.Write(cntWater);
-                bw.Write(ptrWater);
-                bw.Write(ptrNamedTex);
-                bw.Write(ptrNamedTexArray);
-                bw.Write(ptrRestartMain);
+            bw.Write(cntWater);
+            bw.Write(ptrWater);
+            bw.Write(ptrNamedTex);
+            bw.Write(ptrNamedTexArray);
+            bw.Write(ptrRestartMain);
 
-                for (int i = 0; i < someData.Length; i++)
-                    someData[i].Write(bw);
+            for (int i = 0; i < someData.Length; i++)
+                someData[i].Write(bw);
 
-                for (int i = 0; i < startGrid.Length; i++)
-                    startGrid[i].Write(bw);
+            for (int i = 0; i < startGrid.Length; i++)
+                startGrid[i].Write(bw);
 
-                bw.Write(somePtr4);
-                bw.Write(somePtr5);
-                bw.Write(ptrLowTexArray);
-                backColor.Write(bw);
-                bw.Write(bgMode);
+            bw.Write(somePtr4);
+            bw.Write(somePtr5);
+            bw.Write(ptrLowTexArray);
+            backColor.Write(bw);
+            bw.Write(bgMode);
 
-                bw.Write(ptrBuildStart);
-                bw.Write(ptrBuildEnd);
-                bw.Write(ptrBuildType);
+            bw.Write(ptrBuildStart);
+            bw.Write(ptrBuildEnd);
+            bw.Write(ptrBuildType);
 
-                bw.Write(skip);
+            bw.Write(skip);
 
-                bw.Write(cntRestartPts);
-                bw.Write(ptrRestartPts);
+            bw.Write(cntUnk);
+            bw.Write(ptrUnk);
+            bw.Write(cntRestartPts);
+            bw.Write(ptrRestartPts);
 
-                bw.Write(skip2);
+            bw.Write(skip2);
 
-                for (int i = 0; i < bgColor.Length; i++)
-                    bgColor[i].Write(bw);
+            for (int i = 0; i < bgColor.Length; i++)
+                bgColor[i].Write(bw);
 
-                bw.Write(skip2_unkPtr);
+            bw.Write(skip2_unkPtr);
 
-                bw.Write(cntVcolAnim);
-                bw.Write(ptrVcolAnim);
+            bw.Write(cntVcolAnim);
+            bw.Write(ptrVcolAnim);
 
-                bw.Write(skip23);
+            bw.Write(skip23);
 
 
-                bw.Write(ptrAiNav);
+            bw.Write(ptrAiNav);
 
-                bw.Write(skip3);
+            bw.Write(skip3);
         }
     }
 }

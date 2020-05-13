@@ -23,6 +23,8 @@ namespace CTRFramework
         public SkyBox skybox;
         public Nav nav;
 
+        public UnkAdv unkadv;
+
         public List<PosAng> restartPts = new List<PosAng>();
 
         public Tim ctrvram;
@@ -61,63 +63,8 @@ namespace CTRFramework
             {
                 Console.WriteLine("VRAM found!");
                 ctrvram = CtrVrm.FromFile(vrmpath);
-                /*
-                using (BinaryReaderEx brz = new BinaryReaderEx(File.OpenRead(vrmpath)))
-                {
-                    ctrvram = CtrVrm.FromReader(brz);
-                }
-               */
             }
-
-            ExecuteTests();
         }
-
-        public void ExecuteTests()
-        {
-            Console.WriteLine("==========test area========");
-
-            /*
-            List<uint> offs = new List<uint>();
-
-            foreach (QuadBlock qb in quad)
-            {
-                foreach (uint u in qb.tex)
-                {
-                    if (u > 0 && !offs.Contains(u)) offs.Add(u);
-                }
-            }
-
-            offs.Sort();
-
-            foreach (uint u in offs)
-            {
-                Console.WriteLine(u.ToString("X8"));
-                Console.Read();
-            }
-
-            */
-
-            /*
-            List<short> uniflag = new List<short>();
-
-            foreach (QuadBlock qb in quad)
-            {
-                //check unique values here
-                if (!uniflag.Contains(qb.midflags[1]))
-                    uniflag.Add(qb.midflags[1]);
-            }
-
-            uniflag.Sort();
-
-            foreach (byte b in uniflag)
-                Console.WriteLine(b);
-
-            */
-
-
-            Console.WriteLine("==========test done========");
-        }
-
 
         public void ExportTextures(string path)
         {
@@ -371,17 +318,24 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            header = Instance<SceneHeader>.ReadFrom(br, 0);
-            meshinfo = Instance<MeshInfo>.ReadFrom(br, header.ptrMeshInfo);
-            verts = InstanceList<Vertex>.ReadFrom(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
-            restartPts = InstanceList<PosAng>.ReadFrom(br, header.ptrRestartPts, header.cntRestartPts);
-            visdata = InstanceList<VisData>.ReadFrom(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
-            quads = InstanceList<QuadBlock>.ReadFrom(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
+            //data that seems to be present in every level
+            header = Instance<SceneHeader>.FromStream(br, 0);
+            meshinfo = Instance<MeshInfo>.FromStream(br, header.ptrMeshInfo);
+            verts = InstanceList<Vertex>.FromStream(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
+            restartPts = InstanceList<PosAng>.FromStream(br, header.ptrRestartPts, header.cntRestartPts);
+            visdata = InstanceList<VisData>.FromStream(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
+            quads = InstanceList<QuadBlock>.FromStream(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
 
-            //optional stuff
-            if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.ReadFrom(br, header.ptrSkybox);
-            if (header.ptrVcolAnim != 0) vertanims = InstanceList<VertexAnim>.ReadFrom(br, header.ptrVcolAnim, header.cntVcolAnim);
-            if (header.ptrAiNav != 0) nav = Instance<Nav>.ReadFrom(br, header.ptrAiNav);
+            if (header.cntUnk != 0)
+            {
+                br.Jump(header.ptrUnk);
+                unkadv = new UnkAdv(br, (int)header.cntUnk);
+            }
+
+            //optional stuff, can be missing
+            if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.FromStream(br, header.ptrSkybox);
+            if (header.ptrVcolAnim != 0) vertanims = InstanceList<VertexAnim>.FromStream(br, header.ptrVcolAnim, header.cntVcolAnim);
+            if (header.ptrAiNav != 0) nav = Instance<Nav>.FromStream(br, header.ptrAiNav);
 
             /*
              //water texture

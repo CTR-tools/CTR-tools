@@ -4,7 +4,7 @@ namespace CTRFramework.Shared
 {
     public class InstanceList<T> : List<T> where T : IRead, new()
     {
-        public static List<T> ReadFrom(BinaryReaderEx br, uint pos, uint count)
+        public static List<T> FromStream(BinaryReaderEx br, uint pos, uint count)
         {
             List<T> list = new List<T>();
 
@@ -23,7 +23,7 @@ namespace CTRFramework.Shared
 
     public class Instance<T> where T : IRead, new()
     {
-        public static T ReadFrom(BinaryReaderEx br, uint pos)
+        public static T FromStream(BinaryReaderEx br, uint pos)
         {
             br.Jump(pos);
             T t = new T();

@@ -52,6 +52,14 @@ namespace CTRFramework.Vram
         {
         }
 
+        public static Tim FromFile(string fn)
+        {
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(fn)))
+            {
+                return new Tim(br);
+            }
+        }
+
         public Tim(BinaryReaderEx br)
         {
             Read(br);
@@ -75,6 +83,17 @@ namespace CTRFramework.Vram
         {
             magic = br.ReadUInt32();
             flags = br.ReadUInt32();
+
+            if (hasClut)
+            {
+                clutsize = br.ReadUInt32();
+                clutregion.X = br.ReadUInt16();
+                clutregion.Y = br.ReadUInt16();
+                clutregion.Width = br.ReadUInt16();
+                clutregion.Height = br.ReadUInt16();
+                clutdata = br.ReadArrayUInt16(clutregion.Width * clutregion.Height);
+            }
+
             datasize = br.ReadUInt32();
             region.X = br.ReadUInt16();
             region.Y = br.ReadUInt16();
@@ -109,7 +128,8 @@ namespace CTRFramework.Vram
                 bw.Write((short)region.Y);
                 bw.Write((short)region.Width);
                 bw.Write((short)region.Height);
-                foreach (ushort u in data) bw.Write(u);
+                foreach (ushort u in data)
+                    bw.Write(u);
             }
         }
 
@@ -201,7 +221,7 @@ namespace CTRFramework.Vram
                 int width = (tl.width / 4) * 2;
                 int height = tl.height;
 
-                ushort[] buf = new ushort[width * height / 2];
+                ushort[] buf = new ushort[(width / 2) * height];
 
                 //Console.WriteLine(width + "x" + height);
 
@@ -221,6 +241,8 @@ namespace CTRFramework.Vram
                 Tim x = new Tim(tl.frame);
 
                 x.data = buf;
+
+                x.region = new Rectangle(tl.RealX, tl.RealY, tl.width / 4, tl.height);
 
                 x.clutregion = new Rectangle(tl.PalX * 16, tl.PalY, 16, 1);
                 x.clutdata = GetCtrClut(tl);
@@ -244,17 +266,17 @@ namespace CTRFramework.Vram
                     string n = path + "\\" + (name == "" ? tl.Tag() : name);
 
                     //if (!File.Exists(n + ".tim"))
-                        x.Write(n + ".tim");
+                    x.Write(n + ".tim");
 
                     //if (!File.Exists(n + ".bmp"))
-                        x.SaveBMP(n + ".bmp", CtrClutToBmpPalette(x.clutdata));
+                    x.SaveBMP(n + ".bmp", CtrClutToBmpPalette(x.clutdata));
 
                     //if (!File.Exists(n + ".png"))
-                        using (Bitmap oldBmp = new Bitmap(n + ".bmp"))
-                        using (Bitmap newBmp = new Bitmap(oldBmp))
-                        {
-                            newBmp.Save(n + ".png", System.Drawing.Imaging.ImageFormat.Png);
-                        }
+                    using (Bitmap oldBmp = new Bitmap(n + ".bmp"))
+                    using (Bitmap newBmp = new Bitmap(oldBmp))
+                    {
+                        newBmp.Save(n + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                    }
                 }
                 else
                 {
