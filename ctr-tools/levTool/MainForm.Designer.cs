@@ -40,20 +40,10 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.tabEmu = new System.Windows.Forms.TabPage();
-            this.button28 = new System.Windows.Forms.Button();
-            this.propertyGrid2 = new System.Windows.Forms.PropertyGrid();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.button26 = new System.Windows.Forms.Button();
             this.tabBig = new System.Windows.Forms.TabPage();
             this.button27 = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
@@ -104,16 +94,20 @@
             this.button19 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.tabConsole = new System.Windows.Forms.TabPage();
-            this.txtConsole = new System.Windows.Forms.TextBox();
+            this.tabEmu = new System.Windows.Forms.TabPage();
+            this.button28 = new System.Windows.Forms.Button();
+            this.propertyGrid2 = new System.Windows.Forms.PropertyGrid();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.button26 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabAbout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            this.tabEmu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.tabBig.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.tabLev.SuspendLayout();
@@ -125,7 +119,8 @@
             this.groupBox1.SuspendLayout();
             this.tabQuadz.SuspendLayout();
             this.tabVramz.SuspendLayout();
-            this.tabConsole.SuspendLayout();
+            this.tabEmu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -198,10 +193,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabAbout);
-            this.tabControl1.Controls.Add(this.tabEmu);
             this.tabControl1.Controls.Add(this.tabBig);
             this.tabControl1.Controls.Add(this.tabLev);
-            this.tabControl1.Controls.Add(this.tabConsole);
+            this.tabControl1.Controls.Add(this.tabEmu);
             this.tabControl1.Location = new System.Drawing.Point(4, 28);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -211,8 +205,6 @@
             // tabAbout
             // 
             this.tabAbout.Controls.Add(this.label6);
-            this.tabAbout.Controls.Add(this.label5);
-            this.tabAbout.Controls.Add(this.label4);
             this.tabAbout.Controls.Add(this.label3);
             this.tabAbout.Controls.Add(this.pictureBox1);
             this.tabAbout.Controls.Add(this.pictureBox3);
@@ -229,40 +221,18 @@
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(341, 350);
+            this.label6.Location = new System.Drawing.Point(342, 304);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(200, 24);
             this.label6.TabIndex = 9;
             this.label6.Text = "2016-2020, DCxDemo*";
-            // 
-            // label5
-            // 
-            this.label5.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(442, 305);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(74, 24);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Discord";
-            // 
-            // label4
-            // 
-            this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(363, 305);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(65, 24);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "Github";
             // 
             // label3
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(240, 182);
+            this.label3.Location = new System.Drawing.Point(260, 168);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(251, 24);
             this.label3.TabIndex = 6;
@@ -273,7 +243,7 @@
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pictureBox1.ErrorImage = null;
             this.pictureBox1.Image = global::CTRTools.Properties.Resources.ctr_tools_logo;
-            this.pictureBox1.Location = new System.Drawing.Point(258, 95);
+            this.pictureBox1.Location = new System.Drawing.Point(259, 81);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(365, 84);
             this.pictureBox1.TabIndex = 3;
@@ -285,12 +255,12 @@
             this.pictureBox3.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox3.Image = global::CTRTools.Properties.Resources.icon_discord;
             this.pictureBox3.InitialImage = null;
-            this.pictureBox3.Location = new System.Drawing.Point(446, 238);
+            this.pictureBox3.Location = new System.Drawing.Point(447, 224);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(64, 64);
             this.pictureBox3.TabIndex = 5;
             this.pictureBox3.TabStop = false;
-            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
+            this.pictureBox3.Click += new System.EventHandler(this.discordBox_Click);
             // 
             // pictureBox2
             // 
@@ -298,113 +268,12 @@
             this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox2.ErrorImage = null;
             this.pictureBox2.Image = global::CTRTools.Properties.Resources.icon_github;
-            this.pictureBox2.Location = new System.Drawing.Point(367, 238);
+            this.pictureBox2.Location = new System.Drawing.Point(368, 224);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(64, 64);
             this.pictureBox2.TabIndex = 4;
             this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
-            // 
-            // tabEmu
-            // 
-            this.tabEmu.Controls.Add(this.button28);
-            this.tabEmu.Controls.Add(this.propertyGrid2);
-            this.tabEmu.Controls.Add(this.checkBox1);
-            this.tabEmu.Controls.Add(this.numericUpDown2);
-            this.tabEmu.Controls.Add(this.comboBox1);
-            this.tabEmu.Controls.Add(this.textBox5);
-            this.tabEmu.Controls.Add(this.button26);
-            this.tabEmu.Location = new System.Drawing.Point(4, 22);
-            this.tabEmu.Name = "tabEmu";
-            this.tabEmu.Size = new System.Drawing.Size(887, 434);
-            this.tabEmu.TabIndex = 6;
-            this.tabEmu.Text = "ePSXe";
-            this.tabEmu.UseVisualStyleBackColor = true;
-            // 
-            // button28
-            // 
-            this.button28.Location = new System.Drawing.Point(8, 370);
-            this.button28.Name = "button28";
-            this.button28.Size = new System.Drawing.Size(75, 23);
-            this.button28.TabIndex = 6;
-            this.button28.Text = "button28";
-            this.button28.UseVisualStyleBackColor = true;
-            this.button28.Click += new System.EventHandler(this.button28_Click);
-            // 
-            // propertyGrid2
-            // 
-            this.propertyGrid2.Location = new System.Drawing.Point(334, 59);
-            this.propertyGrid2.Name = "propertyGrid2";
-            this.propertyGrid2.Size = new System.Drawing.Size(343, 305);
-            this.propertyGrid2.TabIndex = 5;
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(212, 34);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(61, 17);
-            this.checkBox1.TabIndex = 4;
-            this.checkBox1.Text = "60 FPS";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDown2
-            // 
-            this.numericUpDown2.Location = new System.Drawing.Point(612, 30);
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(64, 20);
-            this.numericUpDown2.TabIndex = 3;
-            this.numericUpDown2.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Turbo",
-            "Rolling Bomb",
-            "Rocket",
-            "TNT Crate",
-            "Beaker",
-            "Spring (removed)",
-            "Shield",
-            "Mask",
-            "Clock",
-            "Orb",
-            "Rolling Bomb x3",
-            "Rocket x3",
-            "Invisibility",
-            "Super Turbo",
-            "Weapon Slot 0x0E",
-            "Empty",
-            "Random"});
-            this.comboBox1.Location = new System.Drawing.Point(435, 30);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(171, 21);
-            this.comboBox1.TabIndex = 2;
-            // 
-            // textBox5
-            // 
-            this.textBox5.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox5.Location = new System.Drawing.Point(8, 59);
-            this.textBox5.Multiline = true;
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(320, 305);
-            this.textBox5.TabIndex = 1;
-            // 
-            // button26
-            // 
-            this.button26.Location = new System.Drawing.Point(8, 30);
-            this.button26.Name = "button26";
-            this.button26.Size = new System.Drawing.Size(198, 23);
-            this.button26.TabIndex = 0;
-            this.button26.Text = "Attach";
-            this.button26.UseVisualStyleBackColor = true;
-            this.button26.Click += new System.EventHandler(this.button26_Click);
+            this.pictureBox2.Click += new System.EventHandler(this.gitHubBox_Click);
             // 
             // tabBig
             // 
@@ -464,6 +333,7 @@
             this.treeView1.Size = new System.Drawing.Size(257, 427);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.treeView1.DoubleClick += new System.EventHandler(this.treeView1_DoubleClick);
             // 
             // contextMenuStrip1
             // 
@@ -472,19 +342,18 @@
             this.replaceFileToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(135, 48);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // exportFileToolStripMenuItem
             // 
             this.exportFileToolStripMenuItem.Name = "exportFileToolStripMenuItem";
-            this.exportFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportFileToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.exportFileToolStripMenuItem.Text = "Export file";
             this.exportFileToolStripMenuItem.Click += new System.EventHandler(this.exportFileToolStripMenuItem_Click);
             // 
             // replaceFileToolStripMenuItem
             // 
             this.replaceFileToolStripMenuItem.Name = "replaceFileToolStripMenuItem";
-            this.replaceFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.replaceFileToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.replaceFileToolStripMenuItem.Text = "Replace file";
             // 
             // tabLev
@@ -673,6 +542,7 @@
             this.button6.TabIndex = 9;
             this.button6.Text = "Darken";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // button5
             // 
@@ -682,6 +552,7 @@
             this.button5.TabIndex = 8;
             this.button5.Text = "morph color";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button2
             // 
@@ -691,6 +562,7 @@
             this.button2.TabIndex = 7;
             this.button2.Text = "apply";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button1
             // 
@@ -700,6 +572,7 @@
             this.button1.TabIndex = 6;
             this.button1.Text = "main color";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // tabQuadz
             // 
@@ -930,26 +803,106 @@
             this.button8.Text = "convert vram";
             this.button8.UseVisualStyleBackColor = true;
             // 
-            // tabConsole
+            // tabEmu
             // 
-            this.tabConsole.Controls.Add(this.txtConsole);
-            this.tabConsole.Location = new System.Drawing.Point(4, 22);
-            this.tabConsole.Name = "tabConsole";
-            this.tabConsole.Size = new System.Drawing.Size(887, 434);
-            this.tabConsole.TabIndex = 8;
-            this.tabConsole.Text = "Console";
-            this.tabConsole.UseVisualStyleBackColor = true;
+            this.tabEmu.Controls.Add(this.button28);
+            this.tabEmu.Controls.Add(this.propertyGrid2);
+            this.tabEmu.Controls.Add(this.checkBox1);
+            this.tabEmu.Controls.Add(this.numericUpDown2);
+            this.tabEmu.Controls.Add(this.comboBox1);
+            this.tabEmu.Controls.Add(this.textBox5);
+            this.tabEmu.Controls.Add(this.button26);
+            this.tabEmu.Location = new System.Drawing.Point(4, 22);
+            this.tabEmu.Name = "tabEmu";
+            this.tabEmu.Size = new System.Drawing.Size(887, 434);
+            this.tabEmu.TabIndex = 6;
+            this.tabEmu.Text = "ePSXe";
+            this.tabEmu.UseVisualStyleBackColor = true;
             // 
-            // txtConsole
+            // button28
             // 
-            this.txtConsole.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtConsole.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.txtConsole.Location = new System.Drawing.Point(0, 0);
-            this.txtConsole.Multiline = true;
-            this.txtConsole.Name = "txtConsole";
-            this.txtConsole.ReadOnly = true;
-            this.txtConsole.Size = new System.Drawing.Size(887, 434);
-            this.txtConsole.TabIndex = 0;
+            this.button28.Location = new System.Drawing.Point(8, 370);
+            this.button28.Name = "button28";
+            this.button28.Size = new System.Drawing.Size(75, 23);
+            this.button28.TabIndex = 6;
+            this.button28.Text = "button28";
+            this.button28.UseVisualStyleBackColor = true;
+            this.button28.Click += new System.EventHandler(this.button28_Click);
+            // 
+            // propertyGrid2
+            // 
+            this.propertyGrid2.Location = new System.Drawing.Point(334, 59);
+            this.propertyGrid2.Name = "propertyGrid2";
+            this.propertyGrid2.Size = new System.Drawing.Size(343, 305);
+            this.propertyGrid2.TabIndex = 5;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(212, 34);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(61, 17);
+            this.checkBox1.TabIndex = 4;
+            this.checkBox1.Text = "60 FPS";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Location = new System.Drawing.Point(612, 30);
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDown2.TabIndex = 3;
+            this.numericUpDown2.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Turbo",
+            "Rolling Bomb",
+            "Rocket",
+            "TNT Crate",
+            "Beaker",
+            "Spring (removed)",
+            "Shield",
+            "Mask",
+            "Clock",
+            "Orb",
+            "Rolling Bomb x3",
+            "Rocket x3",
+            "Invisibility",
+            "Super Turbo",
+            "Weapon Slot 0x0E",
+            "Empty",
+            "Random"});
+            this.comboBox1.Location = new System.Drawing.Point(435, 30);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(171, 21);
+            this.comboBox1.TabIndex = 2;
+            // 
+            // textBox5
+            // 
+            this.textBox5.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.textBox5.Location = new System.Drawing.Point(8, 59);
+            this.textBox5.Multiline = true;
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(320, 305);
+            this.textBox5.TabIndex = 1;
+            // 
+            // button26
+            // 
+            this.button26.Location = new System.Drawing.Point(8, 30);
+            this.button26.Name = "button26";
+            this.button26.Size = new System.Drawing.Size(198, 23);
+            this.button26.TabIndex = 0;
+            this.button26.Text = "Attach";
+            this.button26.UseVisualStyleBackColor = true;
+            this.button26.Click += new System.EventHandler(this.button26_Click);
             // 
             // MainForm
             // 
@@ -962,6 +915,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "CTR-tools GUI";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
             this.menuStrip1.ResumeLayout(false);
@@ -972,9 +926,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            this.tabEmu.ResumeLayout(false);
-            this.tabEmu.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.tabBig.ResumeLayout(false);
             this.tabBig.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
@@ -992,8 +943,9 @@
             this.tabQuadz.PerformLayout();
             this.tabVramz.ResumeLayout(false);
             this.tabVramz.PerformLayout();
-            this.tabConsole.ResumeLayout(false);
-            this.tabConsole.PerformLayout();
+            this.tabEmu.ResumeLayout(false);
+            this.tabEmu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1028,10 +980,6 @@
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TabPage tabConsole;
-        private System.Windows.Forms.TextBox txtConsole;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPickups;
         private System.Windows.Forms.Button button21;

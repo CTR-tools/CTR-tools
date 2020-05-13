@@ -10,6 +10,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace CTRTools
 {
@@ -28,6 +29,7 @@ namespace CTRTools
 
         public MainForm()
         {
+            this.DoubleBuffered = true;
             InitializeComponent();
             cd = new ColorDialog();
 
@@ -37,9 +39,9 @@ namespace CTRTools
 
             comboBox1.SelectedIndex = 0xF;
 
-            _writer = new ConsoleHook(txtConsole);
+           // _writer = new ConsoleHook(txtConsole);
             // Redirect the out Console stream
-            Console.SetOut(_writer);
+           // Console.SetOut(_writer);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -540,13 +542,16 @@ namespace CTRTools
 
         BigFile big;
 
-        private void button24_Click(object sender, EventArgs e)
+        private async void button24_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Crash Team Racing BIG file|*.big";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                Task load = new Task(() => big = BigFile.FromFile(ofd.FileName));
+                load.Start();
+                await load;
                 LoadBig(ofd.FileName);
             }
         }
@@ -554,9 +559,6 @@ namespace CTRTools
         private void LoadBig(string fn)
         {
             treeView1.Nodes.Clear();
-            big = null;
-
-            big = BigFile.FromFile(fn);
 
             TreeNode tn = new TreeNode("bigfile");
             tn.Expand();
@@ -582,10 +584,6 @@ namespace CTRTools
             }
 
             treeView1.Nodes.Add(tn);
-
-            tabControl1.SelectedTab = tabControl1.TabPages["tabBig"];
-
-            //big.Export("data");
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -618,8 +616,9 @@ namespace CTRTools
                         textBox4.Text = s.Info();
                         File.Delete("temp.lev");
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        MessageBox.Show(ex.Message);
                     }
                 }
             }
@@ -666,7 +665,6 @@ namespace CTRTools
 
         Mem m;
         Char c;
-
 
         private void button26_Click(object sender, EventArgs e)
         {
@@ -771,12 +769,12 @@ namespace CTRTools
             }
         }
 
-        private void pictureBox2_Click(object sender, EventArgs e)
+        private void gitHubBox_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/DCxDemo/CTR-tools");
         }
 
-        private void pictureBox3_Click(object sender, EventArgs e)
+        private void discordBox_Click(object sender, EventArgs e)
         {
             Process.Start("https://discord.gg/56xm9Aj");
         }
@@ -880,19 +878,25 @@ namespace CTRTools
 
             s.ctrvram.SaveBMP("before.bmp", BMPHeader.GrayScalePalette(16));
 
+            s.ctrvram = new Tim(new Rectangle(0, 0, 1024, 512));
+
             foreach (var t in s.GetTexturesList())
             {
                 if (File.Exists("test\\" + t.Value.Tag() + ".tim"))
                 {
-                    using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead("test\\" + t.Value.Tag() + ".tim")))
+                    try
                     {
-                        Tim tim = new Tim(br);
-                        s.ctrvram.DrawTim(tim);
+                        s.ctrvram.DrawTim(Tim.FromFile("test\\" + t.Value.Tag() + ".tim"));
+                    }
+                    catch (Exception ex)
+                    {
                     }
                 }
             }
 
-            s.ctrvram.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
+            s.ctrvram.SaveBMP("after.bmp", BMPHeader.GrayScalePalette(16));
+
+            MessageBox.Show("done");
         }
 
         private void exportFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -912,14 +916,18 @@ namespace CTRTools
                     }
                     catch (Exception ex)
                     {
-                        tabConsole.Select();
                         Console.WriteLine(ex.Message + "\r\n" + ex.ToString());
                     }
                 }
             }
         }
 
-        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void treeView1_DoubleClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
         {
 
         }

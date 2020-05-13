@@ -8,8 +8,8 @@
     <ProjectGuid>{36BC2F61-99A4-43E3-9246-28A1BE39D714}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>levTool</RootNamespace>
-    <AssemblyName>CTR-tools-GUI</AssemblyName>
+    <RootNamespace>CTRTools</RootNamespace>
+    <AssemblyName>CTR-tools</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>

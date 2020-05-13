@@ -16,7 +16,8 @@ namespace CTRTools
         public override void Write(char value)
         {
             base.Write(value);
-            _output.AppendText(value.ToString()); // When character data is written, append it to the text box.
+            _output.Invoke((MethodInvoker)delegate { _output.AppendText(value.ToString()); });
+            Application.DoEvents();
         }
 
         public override Encoding Encoding
