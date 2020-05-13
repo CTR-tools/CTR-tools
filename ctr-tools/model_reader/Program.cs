@@ -80,7 +80,7 @@ namespace model_reader
                         LODModel mod = new LODModel(s);
 
                         foreach (LODHeader lh in mod.lh)
-                            Helpers.WriteToFile(".\\"+mod.name + "_" + lh.name + ".obj", lh.ToObj());
+                            Helpers.WriteToFile(".\\" + mod.name + "_" + lh.name + ".obj", lh.ToObj());
 
                         break;
                     }
