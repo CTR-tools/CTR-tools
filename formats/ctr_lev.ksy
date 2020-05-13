@@ -171,7 +171,12 @@ types:
         type: build_info
         
       - id: skip
-        size: 0x5C
+        size: 0x54
+        
+      - id: cnt_spawn_arrays
+        type: u4 
+      - id: ptr_spawn_arrays
+        type: u4   
         
       - id: cnt_restart_pts
         type: u4 
