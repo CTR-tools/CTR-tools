@@ -191,6 +191,7 @@ namespace ctrviewer
             AddCone("redcone", Color.Red);
             AddCone("purplecone", Color.Purple);
             AddCone("cyancone", Color.Cyan);
+            AddCone("limecone", Color.Lime);
             AddCone("bluecone", Color.Blue);
         }
 
@@ -307,6 +308,13 @@ namespace ctrviewer
                 if (scn[0].skybox != null)
                     sky = new MGLevel(scn[0].skybox);
             }
+
+            foreach (Scene s in scn)
+                if (s.unkadv != null)
+                {
+                    foreach (PosAng pa in s.unkadv.smth)
+                        instanced.Add(new InstancedModel("limecone", new Vector3(pa.Position.X, pa.Position.Y, pa.Position.Z), Vector3.Zero, 3));
+                }
 
 
             foreach (Scene s in scn)
@@ -559,7 +567,7 @@ namespace ctrviewer
             oldms = newms;
             newms = Mouse.GetState();
 
-            if (IsActive && newms.X >= 0 && newms.Y >=0 && newms.LeftButton == ButtonState.Pressed)
+            if (IsActive && newms.X >= 0 && newms.Y >= 0 && newms.LeftButton == ButtonState.Pressed)
             {
                 IsMouseVisible = false;
                 updatemouse = true;
