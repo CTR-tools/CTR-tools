@@ -25,7 +25,7 @@ namespace CTRFramework
             for (int i = 0; i < numFrames; i++)
             {
                 Console.WriteLine(name + " frame " + i + "/" + numFrames + ": " + br.BaseStream.Position.ToString("X8") + 4);
-                Console.ReadKey();
+                //Console.ReadKey();
                 frames.Add(br.ReadBytes(frameSize));
             }
 

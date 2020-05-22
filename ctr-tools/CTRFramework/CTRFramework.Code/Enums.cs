@@ -2,6 +2,19 @@
 
 namespace CTRFramework
 {
+    [Flags]
+    public enum ExportFlags
+    {
+        MeshLow = 1 << 0,
+        TexLow = 1 << 1,
+        MeshMed = 1 << 2,
+        TexMed = 1 << 3,
+        Models = 1 << 4,
+        SkyBox = 1 << 5,
+        All = -1
+    }
+
+
     public enum RotateFlipType
     {
         None = 0,

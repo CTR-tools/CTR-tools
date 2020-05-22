@@ -4,12 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Drawing;
 
 namespace CTRFramework
 {
-    public class Scene : IRead
+    public class Scene : IRead, IDisposable
     {
         public string path;
+        public string name;
 
         public SceneHeader header;
         public MeshInfo meshinfo;
@@ -24,6 +26,7 @@ namespace CTRFramework
         public Nav nav;
 
         public UnkAdv unkadv;
+        public TrialData trial;
 
         public List<PosAng> restartPts = new List<PosAng>();
 
@@ -33,10 +36,10 @@ namespace CTRFramework
         {
             return new Scene(fn);
         }
-
         public Scene(string s)
         {
             path = s;
+            name = Path.GetFileNameWithoutExtension(s);
 
             MemoryStream ms = new MemoryStream(File.ReadAllBytes(s));
             BinaryReaderEx br = new BinaryReaderEx(ms);
@@ -44,7 +47,7 @@ namespace CTRFramework
             int size = br.ReadInt32();
 
             //this is for files with external offs file
-            if ((size & 0xFF) == 0)
+            if ((size & 0xFF) == 0x80)
             {
                 ms = new MemoryStream(br.ReadBytes(size));
                 br = new BinaryReaderEx(ms);
@@ -57,6 +60,7 @@ namespace CTRFramework
 
             Read(br);
 
+
             string vrmpath = Path.ChangeExtension(s, ".vram");
 
             if (File.Exists(vrmpath))
@@ -66,255 +70,9 @@ namespace CTRFramework
             }
         }
 
-        public void ExportTextures(string path)
-        {
-            if (ctrvram != null)
-            {
-                // ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
 
-
-                // foreach (QuadBlock qb in quads)
-                /*
-                foreach(CtrTex ct in qb.tex)
-                {
-
-
-                    foreach(TextureLayout tl in ct.animframes)
-                    {
-                        try
-                        {
-                            ctrvram.GetTexture(tl, "tex_anim", tl.Tag());
-                        } 
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.ToString());
-                            Console.ReadKey();
-                        }
-                    }
-
-
-                    foreach (TextureLayout tl in ct.hi)
-                    {
-                        try
-                        {
-                            if (tl != null)
-                                ctrvram.GetTexture(tl, "tex_hi", tl.Tag());
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.ToString());
-                            Console.ReadKey();
-                        }
-                    }
-                }
-             */
-
-                Console.WriteLine(ctrvram.ToString());
-                Console.WriteLine("Exporting textures...");
-
-                Directory.CreateDirectory(path);
-
-                //Dictionary<string, TextureLayout> tex = GetTexturesList();
-
-                foreach (TextureLayout tl in GetTexturesList().Values)
-                {
-                    // try
-                    {
-                        ctrvram.GetTexture(tl, path);
-                    }
-                    /*
-                    catch (Exception ex)
-                    {
-                        Helpers.Panic(this, "texture export error " + tl.Tag() + "\r\n" + ex.ToString() + "\r\n\r\n" + tl.ToString());
-
-                        foreach (QuadBlock qb in quads)
-                        {
-                            foreach (CtrTex t in qb.tex)
-                            {
-                                foreach (TextureLayout ttl in t.midlods)
-                                {
-                                    if (ttl.Tag() == tl.Tag())
-                                    {
-                                        Console.WriteLine("texture tag found in object: " + qb.id.ToString("X8"));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    */
-                }
-                /*
-                foreach (LODModel lm in dynamics)
-                    foreach (LODHeader lh in lm.lh)
-                        foreach (TextureLayout tl in lh.tl)
-                            ctrvram.GetTexture(tl, path + "\\dyn");
-                           */
-            }
-            else
-            {
-                Console.WriteLine("null vram");
-            }
-        }
-
-
-
-        public string Export(string fmt, Detail d, bool exportTextures, bool exportModels)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            string fname = Path.ChangeExtension(path, d.ToString() + "." + fmt);
-            string skyname = Path.ChangeExtension(path, ".sky." + fmt);
-            string mtllib = Path.ChangeExtension(path, d.ToString() + ".mtl");
-
-            if (path.Contains(" "))
-                Console.WriteLine("warning, there are spaces in the path. this may affect material import.");
-
-            Console.WriteLine("Exporting to: " + fname);
-
-            if (exportModels)
-            {
-                string md = Path.GetDirectoryName(path) + "\\models";
-
-                if (!Directory.Exists(md))
-                    Directory.CreateDirectory(md);
-
-                foreach (LODModel m in dynamics)
-                {
-                    foreach (LODHeader lh in m.lh)
-                    {
-                        string fn = md + "\\" + m.name + "_" + lh.name + ".obj";
-                        Helpers.WriteToFile(fn, lh.ToObj());
-                    }
-                }
-            }
-
-
-            switch (fmt)
-            {
-                case "obj":
-
-                    sb.Append("#Converted to OBJ using lev2obj, CTR-Tools by DCxDemo*.\r\n");
-                    sb.Append("#(C) 1999, Activision, Naughty Dog.\r\n\r\n");
-
-                    sb.Append("mtllib " + Path.GetFileName(mtllib) + "\r\n\r\n");
-
-                    int a = 0;
-                    int b = 0;
-
-                    foreach (QuadBlock g in quads)
-                    {
-                        sb.AppendLine(g.ToObj(verts, d, ref a, ref b));
-                    }
-
-                    break;
-
-                case "ply":
-                    Console.WriteLine("ply format is yet to be reimplemented");
-                    break;
-
-                default:
-                    Console.WriteLine("Unknown export format.");
-                    break;
-
-            }
-
-            Helpers.WriteToFile(fname, sb.ToString());
-
-            if (skybox != null)
-                Helpers.WriteToFile(skyname, skybox.ToObj());
-
-            sb.Clear();
-
-
-            /*
-            List<string> tags = new List<string>();
-
-            foreach(QuadBlock qb in quad)
-            {
-                foreach(TextureLayout tl in qb.ctrtex)
-                {
-                    if (!tags.Contains(tl.Tag()))
-                    {
-                        tags.Add(tl.Tag());
-                    }
-                }
-            }
-            */
-
-            Dictionary<string, TextureLayout> tex = GetTexturesList();
-
-            foreach (var s in tex.Values)
-            {
-                sb.Append(String.Format("newmtl {0}\r\n", s.Tag()));
-                sb.Append(String.Format("map_Kd tex\\{0}.png\r\n\r\n", s.Tag()));
-            }
-
-            sb.Append("newmtl default\r\n");
-            sb.Append("map_kd tex\\default.png\r\n");
-
-            Helpers.WriteToFile(mtllib, sb.ToString());
-
-            if (exportTextures)
-            {
-                ExportTextures(Path.GetDirectoryName(path) + "\\tex\\");
-                Console.WriteLine("Exported!");
-            }
-
-
-
-            //exports restart points
-            /*
-            StringBuilder sb = new StringBuilder();
-
-            foreach (PosAng pa in restartPts)
-            {
-                sb.AppendFormat("v {0}\r\n", pa.Position.ToString(VecFormat.Numbers));
-            }
-
-            for (int i = 1; i <= header.numRestartPts; i++)
-            {
-                sb.AppendFormat("l {0} {1}\r\n", i, (i == header.numRestartPts ? 1 : i + 1));
-            }
-
-            //File.WriteAllText("restart_pts.obj", sb.ToString());
-            */
-
-
-
-            /*
-            StringBuilder sb = new StringBuilder();
-
-
-            sb.Append("g lol1");
-
-            foreach (ColData cd in coldata)
-            {
-                sb.Append(String.Format("v {0} {1} {2}\r\n", cd.v1.X, cd.v1.Y, cd.v1.Z));
-            }
-
-            sb.Append("g lol2");
-
-            foreach (ColData cd in coldata)
-            {
-                sb.Append(String.Format("v {0} {1} {2}\r\n", cd.v2.X, cd.v2.Y, cd.v2.Z));
-            }
-
-            File.WriteAllText("coldata.obj", sb.ToString());
-            */
-
-            /*
-            //ai path test
-            int xz = 0;
-            foreach (AIPath p in nav.paths)
-            {
-                File.WriteAllText("path"+xz+".obj", p.ToObj());
-                xz++;
-            }
-            */
-
-
-            return fname;
-        }
+        public List<Vector3s> posu2 = new List<Vector3s>();
+        public List<PosAng> posu1 = new List<PosAng>();
 
         public void Read(BinaryReaderEx br)
         {
@@ -326,16 +84,46 @@ namespace CTRFramework
             visdata = InstanceList<VisData>.FromStream(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
             quads = InstanceList<QuadBlock>.FromStream(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
 
-            if (header.cntUnk != 0)
-            {
-                br.Jump(header.ptrUnk);
-                unkadv = new UnkAdv(br, (int)header.cntUnk);
-            }
-
             //optional stuff, can be missing
             if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.FromStream(br, header.ptrSkybox);
             if (header.ptrVcolAnim != 0) vertanims = InstanceList<VertexAnim>.FromStream(br, header.ptrVcolAnim, header.cntVcolAnim);
             if (header.ptrAiNav != 0) nav = Instance<Nav>.FromStream(br, header.ptrAiNav);
+            if (header.ptrTrialData != 0) trial = Instance<TrialData>.FromStream(br, header.ptrTrialData);
+
+            if (header.cntSpawnPts != 0)
+            {
+                br.Jump(header.ptrSpawnPts);
+                unkadv = new UnkAdv(br, (int)header.cntSpawnPts);
+            }
+
+
+            if (header.cntTrialData != 0)
+            {
+                br.Jump(header.ptrTrialData);
+
+                int cnt = br.ReadInt32();
+                int ptr = br.ReadInt32();
+
+                br.Jump(ptr);
+
+                for (int i = 0; i < cnt; i++)
+                    posu1.Add(new PosAng(br));
+            }
+
+
+            if (header.cntu2 != 0)
+            {
+                br.Jump(header.ptru2);
+
+                int cnt = br.ReadInt32();
+                int ptr = br.ReadInt32();
+
+
+                br.Jump(ptr);
+
+                for (int i = 0; i < cnt; i++)
+                    posu2.Add(new Vector3s(br));
+            }
 
             /*
              //water texture
@@ -384,6 +172,139 @@ namespace CTRFramework
             }
         }
 
+
+
+        public void ExportMesh(string dir, Detail lod)
+        {
+            if (quads.Count > 0)
+            {
+                string fname = name + "_" + lod.ToString();
+
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.\r\n");
+                sb.Append("#" + Meta.GetVersion()+"\r\n");
+                sb.Append("#(C) 1999, Activision, Naughty Dog.\r\n\r\n");
+                sb.Append("mtllib " + Path.GetFileName(fname + ".mtl") + "\r\n\r\n");
+
+                int a = 0;
+                int b = 0;
+
+                foreach (QuadBlock g in quads)
+                    sb.AppendLine(g.ToObj(verts, lod, ref a, ref b));
+
+                Helpers.WriteToFile(Path.Combine(dir, fname + ".obj"), sb.ToString());
+
+                sb.Clear();
+
+                Dictionary<string, TextureLayout> tex = GetTexturesList(lod);
+
+                foreach (var s in tex.Values)
+                {
+                    if (s.Position != 0)
+                    {
+                        sb.Append(String.Format("newmtl {0}\r\n", s.Tag()));
+                        sb.Append(String.Format("map_Kd tex{0}\\{1}.png\r\n\r\n", lod.ToString(), s.Tag()));
+
+                        if (!File.Exists(Path.Combine(dir, "tex" + lod.ToString() + "\\" + s.Tag() + ".png")))
+                        {
+                            Bitmap bmp = new Bitmap(1, 1);
+                            bmp.Save(Path.Combine(dir, "tex" + lod.ToString() + "\\" + s.Tag() + ".png"));
+                        }
+                    }
+                }
+
+                sb.Append("newmtl default\r\n");
+                //sb.Append("map_kd tex\\default.png\r\n");
+
+                Helpers.WriteToFile(Path.Combine(dir, fname + ".mtl"), sb.ToString());
+
+                sb.Clear();
+            }
+        }
+
+        public void ExportModels(string dir)
+        {
+            foreach (LODModel m in dynamics)
+            {
+                foreach (LODHeader lh in m.lh)
+                {
+                    string fn = Path.Combine(dir, String.Format("models\\{0}\\{1}.obj", m.name, lh.name));
+                    Helpers.WriteToFile(fn, lh.ToObj());
+                }
+            }
+
+            Console.WriteLine("Models done!");
+        }
+
+        public void ExportSkyBox(string dir)
+        {
+            if (skybox != null)
+                Helpers.WriteToFile(Path.Combine(dir, name + "_sky.obj"), skybox.ToObj());
+        }
+
+        public void ExportAll(string dir, ExportFlags flags)
+        {
+            Console.WriteLine("Exporting to: " + dir);
+            if (dir.Contains(" "))
+                Console.WriteLine("Warning, there are spaces in the path. This may affect material import.");
+
+            if (flags.HasFlag(ExportFlags.TexLow)) ExportTextures(Path.Combine(dir, "texLow"), Detail.Low);
+            if (flags.HasFlag(ExportFlags.MeshLow)) ExportMesh(dir, Detail.Low);
+
+            if (flags.HasFlag(ExportFlags.TexMed)) ExportTextures(Path.Combine(dir, "texMed"), Detail.Med);
+            if (flags.HasFlag(ExportFlags.MeshMed)) ExportMesh(dir, Detail.Med);
+
+            if (flags.HasFlag(ExportFlags.Models)) ExportModels(dir);
+            if (flags.HasFlag(ExportFlags.SkyBox)) ExportSkyBox(dir);
+        }
+
+        public void ExportTextures(string dir, Detail lod)
+        {
+            if (ctrvram != null)
+            {
+                // ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
+
+                Console.WriteLine(ctrvram.ToString());
+                Console.WriteLine("Exporting textures...");
+
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                foreach (TextureLayout tl in GetTexturesList(lod).Values)
+                    ctrvram.GetTexture(tl, dir);
+
+                Console.WriteLine("Textures done!");
+            }
+            else
+            {
+                Console.WriteLine("No vram found. Make sure to copy vram file along with lev.");
+            }
+        }
+
+        public void ExportTexturesAll(string dir)
+        {
+            if (ctrvram != null)
+            {
+                // ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
+
+                Console.WriteLine(ctrvram.ToString());
+                Console.WriteLine("Exporting textures...");
+
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                foreach (TextureLayout tl in GetTexturesList().Values)
+                    ctrvram.GetTexture(tl, dir);
+
+                Console.WriteLine("Textures done!");
+            }
+            else
+            {
+                Console.WriteLine("No vram found. Make sure to copy vram file along with lev.");
+            }
+        }
+
         public string Info()
         {
             StringBuilder sb = new StringBuilder();
@@ -399,6 +320,49 @@ namespace CTRFramework
 
             return sb.ToString();
         }
+
+        public string InfoCsv()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendFormat("{0},", verts.Count);
+            sb.AppendFormat("{0},", quads.Count);
+            sb.AppendFormat("{0},", quads.Count);
+            sb.AppendFormat("{0},", quads.Count * 2);
+            sb.AppendFormat("{0},",  quads.Count * 4);
+            sb.AppendFormat("{0},", quads.Count * 4 * 2);
+            sb.AppendFormat("{0},", (skybox != null ? skybox.verts.Count : 0));
+            sb.AppendFormat("{0},", (skybox != null ? skybox.faces.Count : 0));
+
+            return sb.ToString();
+        }
+
+
+        public Dictionary<string, TextureLayout> GetTexturesList(Detail lod)
+        {
+            Dictionary<string, TextureLayout> tex = new Dictionary<string, TextureLayout>();
+
+            foreach (QuadBlock qb in quads)
+            {
+                switch (lod)
+                {
+                    case Detail.Low:
+                        if (qb.ptrTexLow != 0)
+                            if (!tex.ContainsKey(qb.texlow.Tag()))
+                                tex.Add(qb.texlow.Tag(), qb.texlow);
+                        break;
+                    case Detail.Med:
+                        foreach (CtrTex t in qb.tex)
+                            if (t.midlods[2].Position != 0)
+                                if (!tex.ContainsKey(t.midlods[2].Tag()))
+                                    tex.Add(t.midlods[2].Tag(), t.midlods[2]);
+                        break;
+                }
+            }
+
+            return tex;
+        }
+
 
         public Dictionary<string, TextureLayout> GetTexturesList()
         {
@@ -438,16 +402,34 @@ namespace CTRFramework
 
             }
 
+            /*
             List<string> tt = new List<string>();
             StringBuilder sb = new StringBuilder();
 
             foreach (string s in tex.Keys) tt.Add(s);
             tt.Sort();
             foreach (string s in tt) sb.AppendLine(s);
-
+            */
             //File.WriteAllText("texture.txt", sb.ToString());
 
             return tex;
+        }
+
+        public void Dispose()
+        {
+            header = null;
+            meshinfo = null;
+            verts.Clear();
+            vertanims.Clear();
+            quads.Clear();
+            pickups.Clear();
+            visdata.Clear();
+            dynamics.Clear();
+            skybox = null;
+            nav = null;
+            unkadv = null;
+            restartPts.Clear();
+            ctrvram = null;
         }
     }
 }

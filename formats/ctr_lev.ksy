@@ -49,6 +49,12 @@ seq:
 
     
 instances:
+  
+  trial:
+    pos: header.ptr_trial_data
+    type: trial_data
+    if: header.cnt_trial_data > 0
+
   skybox:
     pos: header.ptr_skybox
     size: 1
@@ -171,7 +177,17 @@ types:
         type: build_info
         
       - id: skip
-        size: 0x54
+        size: 0x44
+       
+      - id: cnt_trial_data
+        type: u4 
+      - id: ptr_trial_data
+        type: u4   
+        
+      - id: cnt_spawn_arrays2
+        type: u4 
+      - id: ptr_spawn_arrays2
+        type: u4   
         
       - id: cnt_spawn_arrays
         type: u4 
@@ -203,7 +219,24 @@ types:
         
       - id: skip3
         size: 0x24
-
+        
+  trial_data:
+    seq:
+      - id: cnt_pointers
+        type: u4
+      - id: ptr_map
+        type: u4
+      - id: ptr_null
+        type: u4
+      - id: ptr_post_cam
+        type: u4
+      - id: ptr_intro_cam
+        type: u4
+      - id: ptr_tropy_ghost
+        type: u4
+      - id: ptr_oxide_ghost
+        type: u4
+        
   somedata:
     seq:
       - id: s1

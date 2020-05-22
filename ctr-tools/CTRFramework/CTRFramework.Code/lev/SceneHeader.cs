@@ -43,9 +43,12 @@ namespace CTRFramework
 
         byte[] skip;
 
-        public uint cntUnk;
-        public uint ptrUnk;
-
+        public uint cntTrialData; //that's incorrect
+        public uint ptrTrialData;
+        public uint cntu2;
+        public uint ptru2;
+        public uint cntSpawnPts;
+        public uint ptrSpawnPts;
         public uint cntRestartPts;
         public uint ptrRestartPts;
 
@@ -133,10 +136,15 @@ namespace CTRFramework
             ptrBuildEnd = br.ReadUInt32();
             ptrBuildType = br.ReadUInt32();
 
-            skip = br.ReadBytes(0x6C - 16 - 8);
+            skip = br.ReadBytes(0x6C - 16 - 8 - 16);
 
-            cntUnk = br.ReadUInt32();
-            ptrUnk = br.ReadUInt32();
+            cntTrialData = br.ReadUInt32();
+            ptrTrialData = br.ReadUInt32();
+            cntu2 = br.ReadUInt32();
+            ptru2 = br.ReadUInt32();
+
+            cntSpawnPts = br.ReadUInt32();
+            ptrSpawnPts = br.ReadUInt32();
 
             cntRestartPts = br.ReadUInt32();
             ptrRestartPts = br.ReadUInt32();
@@ -217,8 +225,12 @@ namespace CTRFramework
 
             bw.Write(skip);
 
-            bw.Write(cntUnk);
-            bw.Write(ptrUnk);
+            bw.Write(cntTrialData);
+            bw.Write(ptrTrialData);
+            bw.Write(cntu2);
+            bw.Write(ptru2);
+            bw.Write(cntSpawnPts);
+            bw.Write(ptrSpawnPts);
             bw.Write(cntRestartPts);
             bw.Write(ptrRestartPts);
 

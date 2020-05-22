@@ -342,21 +342,6 @@ namespace CTRFramework
         }
 
 
-        public int[] GetUVIndices(int x, int y, int z, int w)
-        {
-            return new int[]
-            {
-                x, z, y,
-                y, z, w
-            };
-        }
-
-        int[] uvinds = new int[] {
-            1, 3, 2,
-            2, 3, 4
-        };
-
-
         public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b)
         {
             StringBuilder sb = new StringBuilder();

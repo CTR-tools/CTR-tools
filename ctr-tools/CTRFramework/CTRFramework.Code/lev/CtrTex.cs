@@ -58,7 +58,7 @@ namespace CTRFramework
 
             //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
             //Console.ReadKey();
-
+            /*
             ptrHi = br.ReadUInt32();
 
 
@@ -106,6 +106,8 @@ namespace CTRFramework
             {
                 // Console.WriteLine("not a hi res texture");
             }
+
+    */
 
         }
     }

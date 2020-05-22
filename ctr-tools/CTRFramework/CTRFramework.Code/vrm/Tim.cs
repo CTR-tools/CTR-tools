@@ -287,7 +287,7 @@ namespace CTRFramework.Vram
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, "GetTexture fails: " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
+                Helpers.Panic(this, "GetTexture fails: " +path + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
             }
         }
 

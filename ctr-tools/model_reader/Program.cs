@@ -1,7 +1,6 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
 using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -18,7 +17,6 @@ namespace model_reader
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
             Thread.CurrentThread.CurrentCulture = customCulture;
 
-
             Console.WriteLine("CTR-Tools: model_reader\r\nDCxDemo*.\r\n");
             Console.WriteLine(Meta.GetVersion() + "\r\n");
 
@@ -27,37 +25,23 @@ namespace model_reader
                 if ((File.GetAttributes(args[0]) & FileAttributes.Directory) == FileAttributes.Directory)
                 {
                     foreach (string s in Directory.GetFiles(args[0], "*.lev"))
-                        ConvertFile(s);
+                    {
+                        Console.WriteLine(s + " " + Path.IsPathRooted(s));
+                        ConvertFile(Path.IsPathRooted(s) ? s : ".\\" + s);
+                    }
                 }
                 else
                 {
-                    ConvertFile(args[0]);
+                    string s = args[0];
+                    s = (Path.IsPathRooted(s) ? s : ".\\" + s);
+                    ConvertFile(s);
                 }
-
-                /*
-                string format = "obj";
-                
-                try
-                {
-                    if (args[1] == "ply")
-                        format = args[1];
-                    else
-                        format = "obj";
-                }
-                catch
-                {
-                    Console.WriteLine("Incorrect input.");
-                }
-                */
             }
             else
             {
                 Console.WriteLine("No filename given!");
             }
-
-            // Console.ReadKey();
         }
-
 
         static void ConvertFile(string s)
         {
@@ -69,8 +53,7 @@ namespace model_reader
                     {
                         Scene scn = Scene.FromFile(s);
                         scn.quads = scn.quads.OrderBy(o => o.id).ToList();
-                        string objfile = scn.Export("obj", Detail.Low, false, false);
-                        objfile = scn.Export("obj", Detail.Med, true, true);
+                        scn.ExportAll(Path.GetDirectoryName(s), ExportFlags.All);
                         //LaunchMeshLab(objfile);
 
                         break;
@@ -84,27 +67,8 @@ namespace model_reader
 
                         break;
                     }
-
             }
             Console.WriteLine("Done!");
-        }
-
-
-        static void LaunchMeshLab(string objfile)
-        {
-            //launch meshlab
-            try
-            {
-                ProcessStartInfo psi = new ProcessStartInfo();
-                psi.Arguments = $"\"{objfile}\"";
-                psi.FileName = @"C:\Program Files\VCG\MeshLab\MeshLab.exe";
-
-                Process.Start(psi);
-            }
-            catch
-            {
-                Console.WriteLine("Install MeshLab into default path to preview models automatically.");
-            }
         }
     }
 }

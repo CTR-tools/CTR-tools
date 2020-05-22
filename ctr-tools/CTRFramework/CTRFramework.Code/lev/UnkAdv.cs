@@ -26,7 +26,7 @@ namespace CTRFramework
             }
 
             Console.WriteLine(br.BaseStream.Position.ToString("X8"));
-            Console.ReadKey();
+            //Console.ReadKey();
 
             for (int i = 0; i < ttl; i++)
             {
