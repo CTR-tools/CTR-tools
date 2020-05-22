@@ -93,7 +93,7 @@ to extract main CTR files.
 Download ctr tools: https://github.com/DCxDemo/CTR-tools/releases
 For this tutorial I'm going to use **R10**
 
-![a](https://imgur.com/5g5LlkJ)
+![a](https://imgur.com/5g5LlkJ.gif)
 
 ## Alternative ways
 
