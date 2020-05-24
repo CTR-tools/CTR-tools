@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CTRFramework
 {
-    class CTRAnim
+    class DynAnim
     {
         string name;
         byte numFrames;
@@ -14,7 +14,7 @@ namespace CTRFramework
 
         List<byte[]> frames = new List<byte[]>();
 
-        public CTRAnim(BinaryReaderEx br)
+        public DynAnim(BinaryReaderEx br)
         {
             name = br.ReadStringFixed(16);
             numFrames = br.ReadByte();

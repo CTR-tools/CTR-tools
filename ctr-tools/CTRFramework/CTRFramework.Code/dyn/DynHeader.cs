@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class LODHeader : IRead
+    public class DynHeader : IRead
     {
         public string name;
         int unk0; //0?
@@ -34,9 +34,9 @@ namespace CTRFramework
         private int maxTex = 0;
         private int maxClut = 0;
 
-        List<CTRAnim> anims = new List<CTRAnim>();
+        List<DynAnim> anims = new List<DynAnim>();
 
-        public List<MshCommand> defs = new List<MshCommand>();
+        public List<DynDraw> defs = new List<DynDraw>();
         public List<Vector3s> vtx = new List<Vector3s>();
         public List<TextureLayout> tl = new List<TextureLayout>();
         public List<Vector4b> cols = new List<Vector4b>();
@@ -47,12 +47,12 @@ namespace CTRFramework
             get { return ptrTex == ptrClut; }
         }
 
-        public LODHeader()
+        public DynHeader()
         {
 
         }
 
-        public LODHeader(BinaryReaderEx br)
+        public DynHeader(BinaryReaderEx br)
         {
             Read(br);
         }
@@ -89,7 +89,7 @@ namespace CTRFramework
             {
                 x = br.ReadUInt32Big();
                 if (x != 0xFFFFFFFF)
-                    defs.Add(new MshCommand(x));
+                    defs.Add(new DynDraw(x));
             }
             while (x != 0xFFFFFFFF);
 
@@ -126,7 +126,7 @@ namespace CTRFramework
             int maxc = 0;
             int maxt = 0;
 
-            foreach (MshCommand d in defs)
+            foreach (DynDraw d in defs)
             {
                 if (!d.flags.HasFlag(Flags.v))
                     maxv++;
@@ -177,7 +177,7 @@ namespace CTRFramework
 
             //br.Jump(ppos);
 
-            foreach (MshCommand d in defs)
+            foreach (DynDraw d in defs)
             {
                 if (d.flags.HasFlag(Flags.s))
                 {
