@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace CTRFramework
+namespace CTRFramework.Big
 {
     public class BigFile
     {

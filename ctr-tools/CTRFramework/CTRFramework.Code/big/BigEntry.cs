@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace CTRFramework
+namespace CTRFramework.Big
 {
     public class BigEntry
     {

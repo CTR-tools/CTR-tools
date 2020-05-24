@@ -1,5 +1,6 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
+using CTRFramework.Vram;
 using System;
 using System.Globalization;
 using System.IO;
@@ -17,8 +18,11 @@ namespace model_reader
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
             Thread.CurrentThread.CurrentCulture = customCulture;
 
-            Console.WriteLine("CTR-Tools: model_reader\r\nDCxDemo*.\r\n");
-            Console.WriteLine(Meta.GetVersion() + "\r\n");
+            Console.WriteLine(
+                "{0}\r\n{1}\r\n\r\n{2}\r\n",
+                "CTR-Tools: model_reader by DCxDemo*.",
+                "Converts LEV, DYN and MPK files to OBJ format.",
+                Meta.GetVersion());
 
             if (args.Length > 0)
             {
@@ -43,9 +47,12 @@ namespace model_reader
             }
         }
 
+
         static void ConvertFile(string s)
         {
-            string ext = Path.GetExtension(s);
+            string basepath = Path.GetDirectoryName(s);
+            string name = Path.GetFileNameWithoutExtension(s);
+            string ext = Path.GetExtension(s).ToLower();
 
             switch (ext)
             {
@@ -53,17 +60,22 @@ namespace model_reader
                     {
                         Scene scn = Scene.FromFile(s);
                         scn.quads = scn.quads.OrderBy(o => o.id).ToList();
-                        scn.ExportAll(Path.GetDirectoryName(s), ExportFlags.All);
-                        //LaunchMeshLab(objfile);
+                        scn.Export(basepath, ExportFlags.All);
 
                         break;
                     }
                 case ".ctr":
+                case ".dyn":
                     {
-                        LODModel mod = new LODModel(s);
+                        Dyn d = new Dyn(s);
+                        d.Export(basepath);
 
-                        foreach (LODHeader lh in mod.lh)
-                            Helpers.WriteToFile(".\\" + mod.name + "_" + lh.name + ".obj", lh.ToObj());
+                        break;
+                    }
+                case ".mpk":
+                    {
+                        ModelPack mpk = new ModelPack(s);
+                        mpk.Extract(basepath + "\\" + name, CtrVrm.FromFile("shared.vrm"));
 
                         break;
                     }
