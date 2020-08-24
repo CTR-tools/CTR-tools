@@ -156,6 +156,8 @@ namespace CTRFramework
 
         DoorUnknown = 0x7A, //122
 
+        Token = 0x7D, //125
+
         LetterC = 0x93, //147
         LetterT = 0x94, //148
         LetterR = 0x95, //149
