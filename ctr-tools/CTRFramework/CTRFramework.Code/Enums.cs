@@ -98,49 +98,71 @@ namespace CTRFramework
     public enum CTREvent
     {
         Nothing = -1,
-        SingleFruit = 2,
-        CrateNitro = 6,
-        CrateFruit = 7,
-        CrateWeapon = 8,
-        StateBurned = 18,
-        StateEaten = 19,
+        
+        SingleFruit = 0x02,
+        
+        CrateNitro = 0x06,
+        CrateFruit = 0x07,
+        CrateWeapon = 0x08,
+
+        StateBurned = 0x12, //18
+        StateEaten = 0x13, //19
+
+        StateSquished = 0x21, //33,
+        StateSquishedBall = 0x22, //34,
+
+        StateRotatedArmadillo = 0x24, //36,
+        StateKilledBlades = 0x25, //37,
+
         CrateTNT = 0x27,
-        StateSquished = 33,
-        StateSquishedBall = 34,
-        StateRotatedArmadillo = 36,
-        StateKilledBlades = 37,
-        Pipe = 0x57,
-        Vent = 0x59,
-        Crystal = 0x60,
-        pass_seal = 76,
-        StateSquishedBarrel = 78,
-        StateTurleJump = 81,
-        StateRotatedSpider = 82,
-        StateBurnedInAir = 84,
-        labs_drum = 85,
-        StateCastleSign = 91, //what?
-        WarpPad = 108,
-        Teeth = 112,  //trigger secret passage script?
-        SaveScreen = 114,
 
-        GaragePin = 115,
-        GaragePapu = 116,
-        GarageRoo = 117,
-        GarageJoe = 118,
-        GarageOxide = 119,
+        FruitDispenser = 0x37, //55
+        Big1 = 0x38, //56 - maybe next 7 are for 2-8?
 
-        DoorUnknown = 122,
+        pass_seal = 0x4C, //76
 
-        LetterC = 147,
-        LetterT = 148,
-        LetterR = 149,
-        FinishLap = 166, //check
+        StateSquishedBarrel = 0x4E, //78
 
-        HubDoor = 225,
-        CrateRelic1 = 0x5C,
-        CrateRelic2 = 0x64,
-        CrateRelic3 = 0x65
+        StateTurleJump = 0x51, //81
+        StateRotatedSpider = 0x52, // 82
 
+        StateBurnedInAir = 0x54, //84
+        labs_drum = 0x55, // 85
+
+        Pipe = 0x57, //87
+
+        Vent = 0x59, //89
+
+        StateCastleSign = 0x5B, //91, //what?
+        CrateRelic1 = 0x5C, //92
+
+        Crystal = 0x60, //96
+        Relic = 0x61, //97
+        Trophy = 0x62, //98
+        Key = 0x63, //99
+        CrateRelic2 = 0x64, //100
+        CrateRelic3 = 0x65, //101
+
+        WarpPad = 0x6C, //108
+
+        Teeth = 0x70, //112 - trigger secret passage script?
+
+        SaveScreen = 0x72, //114
+        GaragePin = 0x73, //115
+        GaragePapu = 0x74, //116
+        GarageRoo = 0x75, //117
+        GarageJoe = 0x76, //118
+        GarageOxide = 0x77, //119
+
+        DoorUnknown = 0x7A, //122
+
+        LetterC = 0x93, //147
+        LetterT = 0x94, //148
+        LetterR = 0x95, //149
+
+        FinishLap = 0xA6, //166 - check
+
+        HubDoor = 0xE1 //225
     }
 
     public enum Vcolor

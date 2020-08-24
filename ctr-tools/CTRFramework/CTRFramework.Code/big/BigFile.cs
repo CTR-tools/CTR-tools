@@ -9,7 +9,6 @@ namespace CTRFramework.Big
 {
     public class BigFile
     {
-        public int progress = 0;
         public List<BigEntry> Entries = new List<BigEntry>();
 
         public int TotalSize
@@ -62,8 +61,6 @@ namespace CTRFramework.Big
         /// <param name="fn">Filename.</param>
         private void LoadFromBig(string fn)
         {
-            progress = 0;
-
             if (File.Exists(fn))
             {
                 Console.WriteLine("Loading BIG from: " + fn);
@@ -78,10 +75,7 @@ namespace CTRFramework.Big
                     var names = Meta.GetProperBigList(fn, totalFiles);
 
                     for (int i = 0; i < totalFiles; i++)
-                    {
                         Entries.Add(new BigEntry(br, (names.ContainsKey(i) ? names[i] : i.ToString("000")), i));
-                        progress = (int)(i * 100.0f / totalFiles);
-                    }
                 }
 
                 Console.WriteLine("BIG loaded.");
@@ -148,7 +142,7 @@ namespace CTRFramework.Big
                 Console.Write(".");
             }
 
-            File.WriteAllText("bigfile.txt", biglist.ToString());
+            File.WriteAllText(Path.GetFileNameWithoutExtension(path) + ".txt", biglist.ToString());
 
             Console.WriteLine("\r\nDone.");
         }

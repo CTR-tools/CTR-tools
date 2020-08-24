@@ -87,6 +87,7 @@
             this.button9 = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabVramz = new System.Windows.Forms.TabPage();
+            this.button31 = new System.Windows.Forms.Button();
             this.button30 = new System.Windows.Forms.Button();
             this.button29 = new System.Windows.Forms.Button();
             this.button23 = new System.Windows.Forms.Button();
@@ -450,6 +451,7 @@
             this.trackBar1.Size = new System.Drawing.Size(45, 395);
             this.trackBar1.TabIndex = 15;
             this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // propertyGrid1
             // 
@@ -720,6 +722,7 @@
             // 
             // tabVramz
             // 
+            this.tabVramz.Controls.Add(this.button31);
             this.tabVramz.Controls.Add(this.button30);
             this.tabVramz.Controls.Add(this.button29);
             this.tabVramz.Controls.Add(this.button23);
@@ -733,6 +736,16 @@
             this.tabVramz.TabIndex = 3;
             this.tabVramz.Text = "VRAM";
             this.tabVramz.UseVisualStyleBackColor = true;
+            // 
+            // button31
+            // 
+            this.button31.Location = new System.Drawing.Point(3, 234);
+            this.button31.Name = "button31";
+            this.button31.Size = new System.Drawing.Size(75, 23);
+            this.button31.TabIndex = 27;
+            this.button31.Text = "button31";
+            this.button31.UseVisualStyleBackColor = true;
+            this.button31.Click += new System.EventHandler(this.button31_Click);
             // 
             // button30
             // 
@@ -760,8 +773,9 @@
             this.button23.Name = "button23";
             this.button23.Size = new System.Drawing.Size(117, 23);
             this.button23.TabIndex = 24;
-            this.button23.Text = "export all textures";
+            this.button23.Text = "export mpk textures";
             this.button23.UseVisualStyleBackColor = true;
+            this.button23.Click += new System.EventHandler(this.button23_Click_1);
             // 
             // textBox2
             // 
@@ -1026,6 +1040,7 @@
         private System.Windows.Forms.Button button28;
         private System.Windows.Forms.Button button29;
         private System.Windows.Forms.Button button30;
+        private System.Windows.Forms.Button button31;
     }
 }
 

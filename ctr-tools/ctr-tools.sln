@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "howl", "howl\howl.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cseq", "cseq\cseq.csproj", "{69BCF237-3D55-4A30-B3C8-8716C8EBF212}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTRTools", "levTool\CTRTools.csproj", "{36BC2F61-99A4-43E3-9246-28A1BE39D714}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTR-tools", "levTool\CTR-tools.csproj", "{36BC2F61-99A4-43E3-9246-28A1BE39D714}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0326F8B5-F788-4529-9F87-C725A5D13BC0} = {0326F8B5-F788-4529-9F87-C725A5D13BC0}
 	EndProjectSection
@@ -27,8 +27,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ctrviewer", "ctrviewer\ctrv
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bigtool", "bigtool\bigtool.csproj", "{43F67739-B59B-49CF-A22A-F487AB1157E4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mpktool", "mpktool\mpktool.csproj", "{FED2DC2A-3D77-4E9D-A0D2-24575EF62C30}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bash_dat", "bash_dat\bash_dat.csproj", "{712E662C-419B-42F9-A5A3-0027D91FE88E}"
 EndProject
@@ -104,14 +102,6 @@ Global
 		{43F67739-B59B-49CF-A22A-F487AB1157E4}.Release|x64.Build.0 = Release|x64
 		{43F67739-B59B-49CF-A22A-F487AB1157E4}.Release|x86.ActiveCfg = Release|x86
 		{43F67739-B59B-49CF-A22A-F487AB1157E4}.Release|x86.Build.0 = Release|x86
-		{FED2DC2A-3D77-4E9D-A0D2-24575EF62C30}.Debug|x64.ActiveCfg = Debug|x64
-		{FED2DC2A-3D77-4E9D-A0D2-24575EF62C30}.Debug|x64.Build.0 = Debug|x64
-		{FED2DC2A-3D77-4E9D-A0D2-24575EF62C30}.Debug|x86.ActiveCfg = Debug|x86
-		{FED2DC2A-3D77-4E9D-A0D2-24575EF62C30}.Debug|x86.Build.0 = Debug|x86
-		{FED2DC2A-3D77-4E9D-A0D2-24575EF62C30}.Release|x64.ActiveCfg = Release|x64
-		{FED2DC2A-3D77-4E9D-A0D2-24575EF62C30}.Release|x64.Build.0 = Release|x64
-		{FED2DC2A-3D77-4E9D-A0D2-24575EF62C30}.Release|x86.ActiveCfg = Release|x86
-		{FED2DC2A-3D77-4E9D-A0D2-24575EF62C30}.Release|x86.Build.0 = Release|x86
 		{712E662C-419B-42F9-A5A3-0027D91FE88E}.Debug|x64.ActiveCfg = Debug|x64
 		{712E662C-419B-42F9-A5A3-0027D91FE88E}.Debug|x64.Build.0 = Debug|x64
 		{712E662C-419B-42F9-A5A3-0027D91FE88E}.Debug|x86.ActiveCfg = Debug|x86

@@ -21,7 +21,7 @@ namespace CTRFramework
         public List<QuadBlock> quads = new List<QuadBlock>();
         public List<PickupHeader> pickups = new List<PickupHeader>();
         public List<VisData> visdata = new List<VisData>();
-        public List<LODModel> dynamics = new List<LODModel>();
+        public List<Dyn> dynamics = new List<Dyn>();
         public SkyBox skybox;
         public Nav nav;
 
@@ -61,7 +61,7 @@ namespace CTRFramework
             Read(br);
 
 
-            string vrmpath = Path.ChangeExtension(s, ".vram");
+            string vrmpath = Path.ChangeExtension(s, ".vrm");
 
             if (File.Exists(vrmpath))
             {
@@ -168,7 +168,7 @@ namespace CTRFramework
                 br.BaseStream.Position = x + 4 * i;
                 br.BaseStream.Position = br.ReadUInt32();
 
-                dynamics.Add(new LODModel(br));
+                dynamics.Add(new Dyn(br));
             }
         }
 
@@ -225,14 +225,8 @@ namespace CTRFramework
 
         public void ExportModels(string dir)
         {
-            foreach (LODModel m in dynamics)
-            {
-                foreach (LODHeader lh in m.lh)
-                {
-                    string fn = Path.Combine(dir, String.Format("models\\{0}\\{1}.obj", m.name, lh.name));
-                    Helpers.WriteToFile(fn, lh.ToObj());
-                }
-            }
+            foreach (Dyn d in dynamics)
+                d.Export(Path.Combine(dir, "\\models"));
 
             Console.WriteLine("Models done!");
         }
@@ -243,7 +237,7 @@ namespace CTRFramework
                 Helpers.WriteToFile(Path.Combine(dir, name + "_sky.obj"), skybox.ToObj());
         }
 
-        public void ExportAll(string dir, ExportFlags flags)
+        public void Export(string dir, ExportFlags flags)
         {
             Console.WriteLine("Exporting to: " + dir);
             if (dir.Contains(" "))

@@ -1,8 +1,8 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace CTRFramework
 {
@@ -10,10 +10,9 @@ namespace CTRFramework
     {
         string path;
         int texOff;
-        List<uint> modOffs = new List<uint>();
         UImap map;
 
-        public List<LODModel> lodmods = new List<LODModel>();
+        public List<Dyn> dynamics = new List<Dyn>();
 
         public ModelPack()
         {
@@ -32,14 +31,6 @@ namespace CTRFramework
             br = new BinaryReaderEx(ms);
 
             Read(br);
-
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (LODModel mod in lodmods)
-                sb.Append(mod.ToString());
-
-            File.WriteAllText(Path.ChangeExtension(s, ".txt"), sb.ToString());
         }
 
         public void Read(BinaryReaderEx br)
@@ -47,6 +38,7 @@ namespace CTRFramework
             texOff = br.ReadInt32();
 
             uint x = 0;
+            List<uint> modOffs = new List<uint>();
 
             do
             {
@@ -65,20 +57,19 @@ namespace CTRFramework
             {
                 br.Jump(u);
 
-                LODModel lod = new LODModel(br);
-                lodmods.Add(lod);
+                Dyn lod = new Dyn(br);
+                dynamics.Add(lod);
             }
         }
 
-        public void Extract(Tim tim)
+        public void Extract(string dir, Tim tim)
         {
             map.Extract(tim);
 
-            foreach (LODModel m in lodmods)
-                foreach (LODHeader lh in m.lh)
-                {
-                    Helpers.WriteToFile(Meta.BasePath + "\\models\\" + m.name + "_" + lh.name + ".obj", lh.ToObj());
-                }
+            foreach (Dyn d in dynamics)
+                d.Export(dir);
+
+            Console.WriteLine("Models done!");
         }
     }
 }

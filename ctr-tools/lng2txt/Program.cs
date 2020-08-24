@@ -8,7 +8,11 @@ namespace lng2txt
     {
         static void Main(string[] args)
         {
-            Greet();
+            Console.WriteLine(
+                "{0}\r\n{1}\r\n\r\n{2}\r\n",
+                p.project_name,
+                p.app_desc,
+                p.copyright);
 
             if (args.Length > 0)
             {
@@ -19,15 +23,6 @@ namespace lng2txt
             {
                 Console.WriteLine("No filename!");
             }
-        }
-
-        static void Greet()
-        {
-            Console.WriteLine(
-                "{0}\r\n{1}\r\n\r\n{2}\r\n",
-                p.project_name,
-                p.app_desc,
-                p.copyright);
         }
     }
 }

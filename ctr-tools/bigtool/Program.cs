@@ -1,4 +1,4 @@
-﻿using CTRFramework;
+﻿using CTRFramework.Big;
 using CTRFramework.Shared;
 using System;
 using System.IO;
@@ -11,7 +11,7 @@ namespace bigtool
         {
             Console.WriteLine(
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
-                "CTR-tools: BigTool",
+                "CTR-tools: bigtool by DCxDemo*",
                 "Builds and extracts Crash Team Racing BIG files",
                 Meta.GetVersion());
 
@@ -19,6 +19,7 @@ namespace bigtool
             {
                 Console.WriteLine("Current path: " + Environment.CurrentDirectory);
 
+                string name = Path.GetFileNameWithoutExtension(args[0]).ToLower();
                 string ext = Path.GetExtension(args[0]).ToLower();
 
                 try
@@ -29,8 +30,8 @@ namespace bigtool
                     {
                         switch (ext)
                         {
-                            case ".big": big.Export(".\\bigfile"); break;
-                            case ".txt": big.Build(".\\bigfile.big"); break;
+                            case ".big": big.Export(".\\" + name ); break;
+                            case ".txt": big.Build(".\\" + name + ".big"); break;
                             default: Console.WriteLine("{0}: {1}", "Unsupported file", ext); break;
                         }
                     }

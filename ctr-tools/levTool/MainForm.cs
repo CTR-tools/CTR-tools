@@ -1,4 +1,5 @@
 ﻿using CTRFramework;
+using CTRFramework.Big;
 using CTRFramework.Lang;
 using CTRFramework.Shared;
 using CTRFramework.Vram;
@@ -395,7 +396,7 @@ namespace CTRTools
         private void Button8_Click_1(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CTR VRAM file|*.vram";
+            ofd.Filter = "CTR VRAM file|*.vrm";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -525,7 +526,7 @@ namespace CTRTools
         {
             if (scn != null)
             {
-                scn.ExportTextures(@"kek");
+                scn.ExportTexturesAll(@"kek");
             }
         }
 
@@ -812,7 +813,7 @@ namespace CTRTools
         private void button18_Click_1(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CTR VRAM file|*.vram";
+            ofd.Filter = "CTR VRAM file|*.vrm";
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -867,7 +868,7 @@ namespace CTRTools
         private void button29_Click(object sender, EventArgs e)
         {
             Scene s = Scene.FromFile("test.lev");
-            s.ExportTextures("test");
+            s.ExportTexturesAll("test");
 
             MessageBox.Show("done");
         }
@@ -928,6 +929,34 @@ namespace CTRTools
         }
 
         private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button31_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                string[] files = Directory.GetFiles(fbd.SelectedPath, "*.lev");
+
+                StringBuilder sb = new StringBuilder();
+
+                foreach (string str in files)
+                {
+                    using (Scene s = Scene.FromFile(str))
+                    { 
+                        sb.AppendLine(Path.GetFileNameWithoutExtension(str) + "," + s.InfoCsv());
+                    }
+            
+                }
+
+                Helpers.WriteToFile(fbd.SelectedPath+"\\stats.csv", sb.ToString());
+            }
+        }
+
+        private void button23_Click_1(object sender, EventArgs e)
         {
 
         }

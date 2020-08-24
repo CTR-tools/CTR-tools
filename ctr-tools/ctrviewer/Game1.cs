@@ -266,13 +266,13 @@ namespace ctrviewer
             {
                 Scene karts = Scene.FromFile("karts.lev");
 
-                    foreach (LODModel m in karts.dynamics)
+                    foreach (Dyn m in karts.dynamics)
                     {
-                        if (!instTris.ContainsKey(m.name) && m.name == "selectkart")
+                        if (!instTris.ContainsKey(m.Name) && m.Name == "selectkart")
                         {
                             List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
-                            foreach (var x in m.lh[0].verts)
+                            foreach (var x in m.headers[0].verts)
                                 li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0)));
 
                             TriList t = new TriList();
@@ -282,7 +282,7 @@ namespace ctrviewer
                             t.PushTri(li);
                             t.Seal();
 
-                            instTris.Add(m.name, t);
+                            instTris.Add(m.Name, t);
                         }
 
                     }
@@ -363,13 +363,13 @@ namespace ctrviewer
 
 
             foreach (Scene s in scn)
-                foreach (LODModel m in s.dynamics)
+                foreach (Dyn m in s.dynamics)
                 {
-                    if (!instTris.ContainsKey(m.name))
+                    if (!instTris.ContainsKey(m.Name))
                     {
                         List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
-                        foreach (var x in m.lh[0].verts)
+                        foreach (var x in m.headers[0].verts)
                             li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0)));
 
                         TriList t = new TriList();
@@ -379,7 +379,7 @@ namespace ctrviewer
                         t.PushTri(li);
                         t.Seal();
 
-                        instTris.Add(m.name, t);
+                        instTris.Add(m.Name, t);
                     }
 
                 }

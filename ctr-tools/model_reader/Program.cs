@@ -75,7 +75,7 @@ namespace model_reader
                 case ".mpk":
                     {
                         ModelPack mpk = new ModelPack(s);
-                        mpk.Extract(basepath + "\\" + name, CtrVrm.FromFile("shared.vrm"));
+                        mpk.Extract(basepath + "\\" + name, CtrVrm.FromFile(basepath + "\\" + "shared.vrm"));
 
                         break;
                     }

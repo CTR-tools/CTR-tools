@@ -98,10 +98,10 @@
   <ItemGroup>
     <Compile Include="CTRFramework.Code\big\BigFile.cs" />
     <Compile Include="CTRFramework.Code\big\BigEntry.cs" />
-    <Compile Include="CTRFramework.Code\ctr\CTRAnim.cs" />
-    <Compile Include="CTRFramework.Code\ctr\LODHeader.cs" />
-    <Compile Include="CTRFramework.Code\ctr\LODModel.cs" />
-    <Compile Include="CTRFramework.Code\ctr\MshCommand.cs" />
+    <Compile Include="CTRFramework.Code\dyn\DynAnim.cs" />
+    <Compile Include="CTRFramework.Code\dyn\DynHeader.cs" />
+    <Compile Include="CTRFramework.Code\dyn\Dyn.cs" />
+    <Compile Include="CTRFramework.Code\dyn\DynDraw.cs" />
     <Compile Include="CTRFramework.Code\Enums.cs" />
     <Compile Include="CTRFramework.Code\lev\CtrTex.cs" />
     <Compile Include="CTRFramework.Code\lev\nav\Nav.cs" />
@@ -170,9 +170,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CTRFramework.Data\big_usa_release_alt.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="CTRFramework.Data\big_usa_beta_aug.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
