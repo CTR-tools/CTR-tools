@@ -266,7 +266,7 @@ namespace ctrviewer
             {
                 Scene karts = Scene.FromFile("karts.lev");
 
-                    foreach (Dyn m in karts.dynamics)
+                    foreach (DynamicModel m in karts.dynamics)
                     {
                         if (!instTris.ContainsKey(m.Name) && m.Name == "selectkart")
                         {
@@ -363,7 +363,7 @@ namespace ctrviewer
 
 
             foreach (Scene s in scn)
-                foreach (Dyn m in s.dynamics)
+                foreach (DynamicModel m in s.dynamics)
                 {
                     if (!instTris.ContainsKey(m.Name))
                     {

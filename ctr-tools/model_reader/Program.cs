@@ -67,7 +67,7 @@ namespace model_reader
                 case ".ctr":
                 case ".dyn":
                     {
-                        Dyn d = new Dyn(s);
+                        DynamicModel d = new DynamicModel(s);
                         d.Export(basepath);
 
                         break;

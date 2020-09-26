@@ -12,7 +12,8 @@ model {
 model header {
   char[16] - name
   int - unk0
-  int - unk1
+  short - lod distance
+  short - unk1
   Vector4s - model scale
   int - pointer to command list
   int - pointer to vertex data

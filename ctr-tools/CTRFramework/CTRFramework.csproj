@@ -100,10 +100,10 @@
   <ItemGroup>
     <Compile Include="CTRFramework.Code\big\BigFile.cs" />
     <Compile Include="CTRFramework.Code\big\BigEntry.cs" />
-    <Compile Include="CTRFramework.Code\dyn\DynAnim.cs" />
-    <Compile Include="CTRFramework.Code\dyn\DynHeader.cs" />
-    <Compile Include="CTRFramework.Code\dyn\Dyn.cs" />
-    <Compile Include="CTRFramework.Code\dyn\DynDraw.cs" />
+    <Compile Include="CTRFramework.Code\dyn\DynamicAnim.cs" />
+    <Compile Include="CTRFramework.Code\dyn\DynamicHeader.cs" />
+    <Compile Include="CTRFramework.Code\dyn\DynamicModel.cs" />
+    <Compile Include="CTRFramework.Code\dyn\DynamicDraw.cs" />
     <Compile Include="CTRFramework.Code\Enums.cs" />
     <Compile Include="CTRFramework.Code\lev\CtrTex.cs" />
     <Compile Include="CTRFramework.Code\lev\nav\Nav.cs" />

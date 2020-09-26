@@ -5,11 +5,12 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class DynHeader : IRead
+    public class DynamicHeader : IRead
     {
         public string name;
         int unk0; //0?
-        int unk1;
+        short lodDistance;
+        short unk1;
         Vector4s scale;
         int ptrCmd; //this is null if we have anims
         int ptrVerts; //0?
@@ -34,9 +35,9 @@ namespace CTRFramework
         private int maxTex = 0;
         private int maxClut = 0;
 
-        List<DynAnim> anims = new List<DynAnim>();
+        List<DynamicAnim> anims = new List<DynamicAnim>();
 
-        public List<DynDraw> defs = new List<DynDraw>();
+        public List<DynamicDraw> defs = new List<DynamicDraw>();
         public List<Vector3s> vtx = new List<Vector3s>();
         public List<TextureLayout> tl = new List<TextureLayout>();
         public List<Vector4b> cols = new List<Vector4b>();
@@ -47,12 +48,12 @@ namespace CTRFramework
             get { return ptrTex == ptrClut; }
         }
 
-        public DynHeader()
+        public DynamicHeader()
         {
 
         }
 
-        public DynHeader(BinaryReaderEx br)
+        public DynamicHeader(BinaryReaderEx br)
         {
             Read(br);
         }
@@ -65,7 +66,8 @@ namespace CTRFramework
             //Console.ReadKey();
 
             unk0 = br.ReadInt32(); //0?
-            unk1 = br.ReadInt32(); //probably flags
+            lodDistance = br.ReadInt16();
+            unk1 = br.ReadInt16(); //probably flags
             scale = new Vector4s(br);
 
             //ptr
@@ -89,7 +91,7 @@ namespace CTRFramework
             {
                 x = br.ReadUInt32Big();
                 if (x != 0xFFFFFFFF)
-                    defs.Add(new DynDraw(x));
+                    defs.Add(new DynamicDraw(x));
             }
             while (x != 0xFFFFFFFF);
 
@@ -126,7 +128,7 @@ namespace CTRFramework
             int maxc = 0;
             int maxt = 0;
 
-            foreach (DynDraw d in defs)
+            foreach (DynamicDraw d in defs)
             {
                 if (!d.flags.HasFlag(Flags.v))
                     maxv++;
@@ -177,7 +179,7 @@ namespace CTRFramework
 
             //br.Jump(ppos);
 
-            foreach (DynDraw d in defs)
+            foreach (DynamicDraw d in defs)
             {
                 if (d.flags.HasFlag(Flags.s))
                 {
@@ -267,24 +269,22 @@ namespace CTRFramework
 
         public override string ToString()
         {
-            /*
-            //Console.ReadKey(
-            Console.WriteLine(name);
-            Console.WriteLine((unk0).ToString("X8"));
-            Console.WriteLine((unk1).ToString("X8"));
-            Console.WriteLine(position.ToString(VecFormat.CommaSeparated));
+            StringBuilder sb = new StringBuilder();
 
-            Console.WriteLine((ptrFaces).ToString("X8"));
-            Console.WriteLine((ptrVerts).ToString("X8"));
-            Console.WriteLine((ptrTex).ToString("X8"));
-            Console.WriteLine((ptrClut).ToString("X8"));
-            Console.WriteLine((unk3).ToString("X8"));
+            sb.AppendLine($"name: {name}");
+            sb.AppendLine($"unk0: {unk0}");
+            sb.AppendLine($"lodDistance: {lodDistance}");
+            sb.AppendLine($"scale: {scale.ToString(VecFormat.CommaSeparated)}");
+            sb.AppendLine($"ptrCmd: {ptrCmd.ToString("X8")}");
+            sb.AppendLine($"ptrVerts: {ptrVerts.ToString("X8")}");
+            sb.AppendLine($"ptrTex: {ptrTex.ToString("X8")}");
+            sb.AppendLine($"ptrClut: {ptrClut.ToString("X8")}");
+            sb.AppendLine($"unk3: {unk3}");
+            sb.AppendLine($"numAnims: {numAnims}");
+            sb.AppendLine($"ptrAnims: {ptrAnims.ToString("X8")}");
+            sb.AppendLine($"unk4: {unk4.ToString("X8")}");
 
-            Console.WriteLine(numAnims);
-            Console.WriteLine((ptrAnims).ToString("X8"));
-            Console.WriteLine((unk4).ToString("X8"));
-            */
-            return "le me";
+            return sb.ToString();
         }
     }
 }

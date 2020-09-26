@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class Dyn
+    public class DynamicModel
     {
         public string path;
 
@@ -15,14 +15,14 @@ namespace CTRFramework
         public short numEntries;
         public int ptrHeaders;
 
-        public List<DynHeader> headers = new List<DynHeader>();
+        public List<DynamicHeader> headers = new List<DynamicHeader>();
 
-        public static Dyn FromFile(string s)
+        public static DynamicModel FromFile(string s)
         {
-            return new Dyn(s);
+            return new DynamicModel(s);
         }
 
-        public Dyn(string s)
+        public DynamicModel(string s)
         {
             path = s;
 
@@ -37,7 +37,7 @@ namespace CTRFramework
             Read(br);
         }
 
-        public Dyn(BinaryReaderEx br)
+        public DynamicModel(BinaryReaderEx br)
         {
             Read(br);
         }
@@ -56,7 +56,7 @@ namespace CTRFramework
 
             for (int i = 0; i < numEntries; i++)
             {
-                headers.Add(new DynHeader(br));
+                headers.Add(new DynamicHeader(br));
             }
 
             //Helpers.WriteToFile("test.obj", sb.ToString());
@@ -68,7 +68,7 @@ namespace CTRFramework
 
             sb.Append(Name + ": ");
 
-            foreach (DynHeader head in headers)
+            foreach (DynamicHeader head in headers)
                 sb.Append(head.name + ", ");
 
             sb.Append("\r\n");
@@ -79,7 +79,7 @@ namespace CTRFramework
 
         public void Export(string dir)
         {
-            foreach (DynHeader h in headers)
+            foreach (DynamicHeader h in headers)
             {
                 string fn = Path.Combine(dir, String.Format("{0}\\{1}.obj", Name, h.name));
                 Helpers.WriteToFile(fn, h.ToObj());

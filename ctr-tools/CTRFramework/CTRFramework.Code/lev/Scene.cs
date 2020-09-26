@@ -21,7 +21,7 @@ namespace CTRFramework
         public List<QuadBlock> quads = new List<QuadBlock>();
         public List<PickupHeader> pickups = new List<PickupHeader>();
         public List<VisData> visdata = new List<VisData>();
-        public List<Dyn> dynamics = new List<Dyn>();
+        public List<DynamicModel> dynamics = new List<DynamicModel>();
         public SkyBox skybox;
         public Nav nav;
 
@@ -168,7 +168,7 @@ namespace CTRFramework
                 br.BaseStream.Position = x + 4 * i;
                 br.BaseStream.Position = br.ReadUInt32();
 
-                dynamics.Add(new Dyn(br));
+                dynamics.Add(new DynamicModel(br));
             }
         }
 
@@ -225,7 +225,7 @@ namespace CTRFramework
 
         public void ExportModels(string dir)
         {
-            foreach (Dyn d in dynamics)
+            foreach (DynamicModel d in dynamics)
                 d.Export(Path.Combine(dir, "\\models"));
 
             Console.WriteLine("Models done!");
