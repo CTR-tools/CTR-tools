@@ -17,7 +17,7 @@ Project dependencies:
 * MonoGame - https://github.com/MonoGame/MonoGame (used for viewer)
 
 ## Contribution
-Game research is welcome, for the starter, please check:
+Game research is welcome, for starters please check:
 * Current tasks and goals: https://github.com/DCxDemo/CTR-tools/projects/1
 * CTR-tools wiki: https://github.com/DCxDemo/CTR-tools/wiki
 
