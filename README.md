@@ -9,8 +9,7 @@ Join the CTR-tools Discord server: https://discord.gg/56xm9Aj
 
 ## Building
 CTR-tools is being developed in Visual Studio Community 2019, target platform is .NET 4.5. \
-It should be enough to install VS and make sure you add dependencies via NuGet. \
-You'll have to additionally install latest MonoGame to build the viewer.
+It should be enough to install VS and add dependencies via NuGet.
 
 Project dependencies:
 * NAudio - https://github.com/naudio/NAudio (used to export MIDI files)
