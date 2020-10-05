@@ -78,6 +78,7 @@ namespace CTRFramework
         {
             //data that seems to be present in every level
             header = Instance<SceneHeader>.FromStream(br, 0);
+
             meshinfo = Instance<MeshInfo>.FromStream(br, header.ptrMeshInfo);
             verts = InstanceList<Vertex>.FromStream(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
             restartPts = InstanceList<PosAng>.FromStream(br, header.ptrRestartPts, header.cntRestartPts);

@@ -30,8 +30,8 @@ namespace bigtool
                     {
                         switch (ext)
                         {
-                            case ".big": big.Export(".\\" + name ); break;
-                            case ".txt": big.Build(".\\" + name + ".big"); break;
+                            case ".big": big.Extract(".\\" + name ); break;
+                            case ".txt": big.Save(".\\" + name + ".big"); break;
                             default: Console.WriteLine("{0}: {1}", "Unsupported file", ext); break;
                         }
                     }

@@ -33,19 +33,15 @@ namespace CTRFramework.Shared
         {
             using (var stream = File.OpenRead(filename))
             {
-                using (var md5 = System.Security.Cryptography.MD5.Create())
-                {
-                    var hash = md5.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                }
+                return CalculateMD5(stream);
             }
         }
 
-        public static string CalculateMD5(MemoryStream ms)
+        public static string CalculateMD5(Stream stream)
         {
             using (var md5 = System.Security.Cryptography.MD5.Create())
             {
-                var hash = md5.ComputeHash(ms);
+                var hash = md5.ComputeHash(stream);
                 return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
             }
         }

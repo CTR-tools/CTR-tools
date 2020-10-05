@@ -10,6 +10,7 @@ namespace CTRFramework.Big
         public string Name;
         public int Size;
         public int Offset;
+
         public int SizePadded
         {
             get
@@ -81,7 +82,7 @@ namespace CTRFramework.Big
 
         public override string ToString()
         {
-            return Name + " [" + ((Size / 1024) + 1) + "kb]";
+            return $"{Name} [{(Size / 1024) + 1} kb]";
         }
     }
 }

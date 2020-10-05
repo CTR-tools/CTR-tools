@@ -61,29 +61,28 @@ namespace CTRFramework.Big
         /// <param name="fn">Filename.</param>
         private void LoadFromBig(string fn)
         {
-            if (File.Exists(fn))
-            {
-                Console.WriteLine("Loading BIG from: " + fn);
-
-                using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(fn)))
-                {
-                    if (br.ReadUInt32() != 0)
-                        Console.WriteLine("Warning! Possibly modified or not a BIG file.");
-
-                    int totalFiles = br.ReadInt32();
-
-                    var names = Meta.GetProperBigList(fn, totalFiles);
-
-                    for (int i = 0; i < totalFiles; i++)
-                        Entries.Add(new BigEntry(br, (names.ContainsKey(i) ? names[i] : i.ToString("000")), i));
-                }
-
-                Console.WriteLine("BIG loaded.");
-            }
-            else
+            if (!File.Exists(fn))
             {
                 Console.WriteLine("File not found: " + fn);
+                return;
             }
+
+            Console.WriteLine("Loading BIG from: " + fn);
+
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(fn)))
+            {
+                if (br.ReadUInt32() != 0)
+                    Console.WriteLine("Warning! Possibly modified or not a BIG file.");
+
+                int totalFiles = br.ReadInt32();
+
+                var names = Meta.GetProperBigList(fn, totalFiles);
+
+                for (int i = 0; i < totalFiles; i++)
+                    Entries.Add(new BigEntry(br, (names.ContainsKey(i) ? names[i] : i.ToString("000")), i));
+            }
+
+            Console.WriteLine("BIG loaded.");
         }
 
         /// <summary>
@@ -108,7 +107,7 @@ namespace CTRFramework.Big
         /// Exports all BigFile entries to a given folder.
         /// </summary>
         /// <param name="path">Folder.</param>
-        public void Export(string path)
+        public void Extract(string path)
         {
             Console.WriteLine("Exporting BIG to: " + path);
 
@@ -150,13 +149,13 @@ namespace CTRFramework.Big
         /// <summary>
         /// Saves BigFile to a given location.
         /// </summary>
-        /// <param name="fn">Filename.</param>
-        public void Build(string fn)
+        /// <param name="filename">Filename.</param>
+        public void Save(string filename)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            Console.WriteLine("we'll need " + TotalSize / 1024.0f / 1024.0f + "MB for " + Entries.Count + " files:");
+            Console.WriteLine($"we'll need {TotalSize / 1024.0f / 1024.0f}MB for {Entries.Count} files:");
 
             byte[] final_big = new byte[TotalSize];
             using (BinaryWriterEx bw = new BinaryWriterEx(new MemoryStream(final_big)))
@@ -190,12 +189,12 @@ namespace CTRFramework.Big
 
                 Console.WriteLine("Dumping to disk...");
 
-                File.WriteAllBytes(fn, final_big);
+                File.WriteAllBytes(filename, final_big);
             }
 
             sw.Stop();
 
-            Console.WriteLine("BIG file created in " + sw.Elapsed.TotalSeconds);
+            Console.WriteLine($"BIG file created in {sw.Elapsed.TotalSeconds}");
         }
     }
 }

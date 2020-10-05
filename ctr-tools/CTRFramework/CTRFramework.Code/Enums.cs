@@ -2,6 +2,38 @@
 
 namespace CTRFramework
 {
+    public enum Level
+    {
+        DingoCanyon,
+        DragonMines,
+        BlizzardBluff,
+        CrashCove,
+        TinyTemple,
+        PapuPyramid,
+        RooTubes,
+        HotAirSkyway,
+        SewerSpeedway,
+        MysteryCaves,
+        CortexCastle,
+        NGinLabs,
+        PolarPass,
+        OxideStation,
+        Coliseum,
+        TurboTrack,
+        battle1,
+        battle2,
+        battle3,
+        battle4,
+        battle5,
+        battle6,
+        battle7,
+        hub1,
+        hub2,
+        hub3,
+        hub4,
+        hub5
+    }
+
     [Flags]
     public enum ExportFlags
     {

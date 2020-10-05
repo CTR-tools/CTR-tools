@@ -216,7 +216,6 @@ namespace CTRFramework
                 buf[i * 6 + 5].uv = new Vector2b(1, 0);
             }
 
-
             return buf;
         }
 

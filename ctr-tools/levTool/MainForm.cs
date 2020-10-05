@@ -766,7 +766,7 @@ namespace CTRTools
 
             if (fbd.ShowDialog() == DialogResult.OK)
             {
-                big.Export(fbd.SelectedPath);
+                big.Extract(fbd.SelectedPath);
             }
         }
 
