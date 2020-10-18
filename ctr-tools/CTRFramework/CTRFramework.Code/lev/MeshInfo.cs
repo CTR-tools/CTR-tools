@@ -13,7 +13,7 @@ namespace CTRFramework
         public uint ptrVertexArray;
         public uint ptrUnk;// and this supposed to be third pointer, but it's null?
 
-        public uint ptrColDataArray; //is it related to collision?
+        public uint ptrVisDataArray; //is it related to collision?
         public uint cntColData;
 
         public MeshInfo()
@@ -35,7 +35,7 @@ namespace CTRFramework
             ptrVertexArray = br.ReadUInt32();
             ptrUnk = br.ReadUInt32();
 
-            ptrColDataArray = br.ReadUInt32();
+            ptrVisDataArray = br.ReadUInt32();
             cntColData = br.ReadUInt32();
 
             if (ptrUnk != 0)
