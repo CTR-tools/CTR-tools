@@ -77,19 +77,19 @@ namespace CTRFramework
         public void Read(BinaryReaderEx br)
         {
             //data that seems to be present in every level
-            header = Instance<SceneHeader>.FromStream(br, 0);
+            header = Instance<SceneHeader>.FromReader(br, 0);
 
-            meshinfo = Instance<MeshInfo>.FromStream(br, header.ptrMeshInfo);
-            verts = InstanceList<Vertex>.FromStream(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
-            restartPts = InstanceList<PosAng>.FromStream(br, header.ptrRestartPts, header.cntRestartPts);
-            visdata = InstanceList<VisData>.FromStream(br, meshinfo.ptrColDataArray, meshinfo.cntColData);
-            quads = InstanceList<QuadBlock>.FromStream(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
+            meshinfo = Instance<MeshInfo>.FromReader(br, header.ptrMeshInfo);
+            verts = InstanceList<Vertex>.FromReader(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
+            restartPts = InstanceList<PosAng>.FromReader(br, header.ptrRestartPts, header.cntRestartPts);
+            visdata = InstanceList<VisData>.FromReader(br, meshinfo.ptrVisDataArray, meshinfo.cntColData);
+            quads = InstanceList<QuadBlock>.FromReader(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
 
             //optional stuff, can be missing
-            if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.FromStream(br, header.ptrSkybox);
-            if (header.ptrVcolAnim != 0) vertanims = InstanceList<VertexAnim>.FromStream(br, header.ptrVcolAnim, header.cntVcolAnim);
-            if (header.ptrAiNav != 0) nav = Instance<Nav>.FromStream(br, header.ptrAiNav);
-            if (header.ptrTrialData != 0) trial = Instance<TrialData>.FromStream(br, header.ptrTrialData);
+            if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.FromReader(br, header.ptrSkybox);
+            if (header.ptrVcolAnim != 0) vertanims = InstanceList<VertexAnim>.FromReader(br, header.ptrVcolAnim, header.cntVcolAnim);
+            if (header.ptrAiNav != 0) nav = Instance<Nav>.FromReader(br, header.ptrAiNav);
+            if (header.ptrTrialData != 0) trial = Instance<TrialData>.FromReader(br, header.ptrTrialData);
 
             if (header.cntSpawnPts != 0)
             {
