@@ -2,7 +2,7 @@
 
 namespace CTRFramework.Shared
 {
-    public class BoundingBox : IRead, IWrite
+    public class BoundingBox : IReadWrite
     {
         [CategoryAttribute("Values"), DescriptionAttribute("Mininum.")]
         public Vector3s Min

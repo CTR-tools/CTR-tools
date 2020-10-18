@@ -2,6 +2,10 @@
 
 namespace CTRFramework
 {
+    public interface IReadWrite : IRead, IWrite
+    {
+    }
+
     public interface IRead
     {
         /// <summary>Reads data from BinaryReader.</summary>

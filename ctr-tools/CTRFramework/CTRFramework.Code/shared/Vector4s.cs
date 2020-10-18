@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace CTRFramework.Shared
 {
-    public class Vector4s : IRead, IWrite
+    public class Vector4s : IReadWrite
     {
         private short x;
         private short y;

@@ -2,7 +2,7 @@
 
 namespace CTRFramework
 {
-    public class VertexAnim : IRead, IWrite
+    public class VertexAnim : IReadWrite
     {
         public uint ptrVertex;
         public uint unk1;

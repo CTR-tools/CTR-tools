@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class AIPath : IRead, IWrite
+    public class AIPath : IReadWrite
     {
         public ushort unk1;
         public ushort numFrames;

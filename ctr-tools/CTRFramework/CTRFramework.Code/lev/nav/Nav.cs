@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class Nav : IRead, IWrite
+    public class Nav : IReadWrite
     {
         public List<uint> ptrs = new List<uint>();
         public List<AIPath> paths = new List<AIPath>();

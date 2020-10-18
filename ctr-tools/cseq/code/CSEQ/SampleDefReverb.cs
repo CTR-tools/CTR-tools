@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace cseq
 {
-    public class SampleDefReverb : SampleDef, IRead, IWrite
+    public class SampleDefReverb : SampleDef, IReadWrite
     {
         [CategoryAttribute("General"), DescriptionAttribute("Unknown FF80.")]
         public short UnknownFF80

@@ -3,7 +3,7 @@ using System;
 
 namespace CTRFramework
 {
-    public class Vertex : IRead, IWrite
+    public class Vertex : IReadWrite
     {
         public Vector4s coord;
         public Vector4b color;

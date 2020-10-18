@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace CTRFramework.Shared
 {
-    public class Vector4b : IWrite
+    public class Vector4b : IReadWrite
     {
         public byte X;
         public byte Y;
@@ -53,6 +53,11 @@ namespace CTRFramework.Shared
         }
 
         public Vector4b(BinaryReaderEx br)
+        {
+            Read(br);
+        }
+
+        public void Read(BinaryReaderEx br)
         {
             X = br.ReadByte();
             Y = br.ReadByte();

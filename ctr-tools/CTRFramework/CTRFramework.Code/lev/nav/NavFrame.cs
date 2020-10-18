@@ -3,7 +3,7 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class NavFrame : IRead, IWrite
+    public class NavFrame : IReadWrite
     {
         public Vector3s position;
         public Vector3s angle;

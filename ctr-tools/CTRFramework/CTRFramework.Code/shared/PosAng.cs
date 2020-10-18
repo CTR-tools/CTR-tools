@@ -1,6 +1,6 @@
 ﻿namespace CTRFramework.Shared
 {
-    public class PosAng : IRead, IWrite
+    public class PosAng : IReadWrite
     {
         public Vector3s Position;
         public Vector3s Angle;

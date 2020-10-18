@@ -3,7 +3,7 @@ using System;
 
 namespace CTRFramework.Sound
 {
-    public class HowlHeader : IRead, IWrite
+    public class HowlHeader : IReadWrite
     {
         public char[] magic;    //HOWL char[]
 

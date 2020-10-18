@@ -19,7 +19,7 @@ namespace CTRFramework
 
 
 
-    public class QuadBlock : IRead, IWrite
+    public class QuadBlock : IReadWrite
     {
         /*
          * 0--4--1

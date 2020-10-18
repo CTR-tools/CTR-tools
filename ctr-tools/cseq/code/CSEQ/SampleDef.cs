@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace cseq
 {
-    public class SampleDef : IRead, IWrite
+    public class SampleDef : IReadWrite
     {
         [CategoryAttribute("Meta info"), DescriptionAttribute("Instrument title.")]
         public string Title

@@ -2,7 +2,7 @@
 
 namespace CTRFramework.Shared
 {
-    public class SomeData : IRead, IWrite
+    public class SomeData : IReadWrite
     {
         short s1;
         short s2;

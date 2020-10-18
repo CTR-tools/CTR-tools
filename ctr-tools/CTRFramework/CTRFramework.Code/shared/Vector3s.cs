@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace CTRFramework.Shared
 {
-    public class Vector3s : IRead, IWrite
+    public class Vector3s : IReadWrite
     {
 
         [CategoryAttribute("Values"), DescriptionAttribute("Position of the model.")]
