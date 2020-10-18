@@ -115,17 +115,13 @@ namespace CTRFramework.Big
 
             Console.Write(Entries.Count + " files:\r\n");
 
-            string filename;
-            string dirname;
-
             foreach (BigEntry cf in Entries)
             {
-                filename = Path.Combine(path, cf.Name);
-                dirname = Path.GetDirectoryName(filename);
+                string filename = Path.Combine(path, cf.Name);
 
                 try
                 {
-                    Directory.CreateDirectory(dirname);
+                    Directory.CreateDirectory(Path.GetDirectoryName(filename));
                 }
                 catch
                 {
