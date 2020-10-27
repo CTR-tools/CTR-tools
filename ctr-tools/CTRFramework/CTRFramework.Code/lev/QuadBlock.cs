@@ -62,7 +62,7 @@ namespace CTRFramework
         public int ptrTexLow;                 //offset to LOD texture definition
         public int offset2;
 
-        public ushort[] unk3 = new ushort[10];  //unknown
+        public List<Vector2s> unk3 = new List<Vector2s>();  //unknown
 
         //additional data
         public TextureLayout texlow;
@@ -129,8 +129,8 @@ namespace CTRFramework
             ptrTexLow = br.ReadInt32();
             offset2 = br.ReadInt32();
 
-            for (int i = 0; i < 10; i++)
-                unk3[i] = br.ReadUInt16();
+            for (int i = 0; i < 5; i++)
+                unk3.Add(new Vector2s(br));
 
             //struct done
 
@@ -550,8 +550,8 @@ namespace CTRFramework
             bw.Write(ptrTexLow);
             bw.Write(offset2);
 
-            for (int i = 0; i < 10; i++)
-                bw.Write(unk3[i]);
+            foreach (Vector2s v in unk3)
+                v.Write(bw);
         }
     }
 }
