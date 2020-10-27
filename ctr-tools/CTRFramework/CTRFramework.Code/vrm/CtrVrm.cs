@@ -47,6 +47,10 @@ namespace CTRFramework.Vram
                         Console.WriteLine(tim.ToString());
                     }
                 }
+
+                //use this to dump whole vram as a single grayscale image
+                //buffer.SaveBMP("vram.png", BMPHeader.GrayScalePalette(16));
+                //buffer.Write("vram.tim");
             }
             return buffer;
         }

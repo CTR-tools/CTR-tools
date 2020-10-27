@@ -164,6 +164,15 @@ namespace CTRFramework
             uv.Add(new Vector2b(br));
 
             NormalizeUV();
+
+            /*
+            //apparently some textures uses 8 bit mode, or even 16 bit color. must be a flag somewhere.
+            if (offset == 0x0004B5B8 || offset == 0x0004B5E8 || offset == 0x0004B6A8 || offset == 0x0004B3D8)
+            {
+                Console.WriteLine(ToString());
+                Console.ReadKey();
+            }
+            */
         }
 
         //meant to be unique
@@ -179,13 +188,7 @@ namespace CTRFramework
 
         public override string ToString()
         {
-            return
-                uv[0].ToString() + "|\t" +
-                uv[1].ToString() + "|\t" +
-                uv[2].ToString() + "|\t" +
-                uv[3].ToString() + "|\t" +
-                PalX + ", " + PalY + "|\t" +
-                PageX + ", " + PageY;
+            return $"offset: {offset.ToString("X8")}\r\n\tUV: ({uv[0].ToString()}, {uv[1].ToString()}, {uv[2].ToString()}, {uv[3].ToString()})\r\n\tpalette: ({PalX}, {PalY})\r\n\tpage: ({PageX}, {PageY})";
         }
 
         public string ToObj()
