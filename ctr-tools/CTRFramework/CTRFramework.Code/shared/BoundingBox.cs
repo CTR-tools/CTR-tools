@@ -14,8 +14,8 @@ namespace CTRFramework.Shared
         [CategoryAttribute("Values"), DescriptionAttribute("Maximum.")]
         public Vector3s Max
         {
-            get { return min; }
-            set { Min = value; }
+            get { return max; }
+            set { Max = value; }
         }
 
 

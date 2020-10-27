@@ -1,6 +1,7 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.IO;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -35,14 +36,6 @@ namespace CTRFramework
             v3 = new Vector3s(br);
             v4 = new Vector3s(br);
             ptrQuadBlock = br.ReadUInt32();
-
-            /*
-            File.AppendAllText("test1.obj",
-                $"v {v1.ToString(VecFormat.Numbers)}\r\n");
-            File.AppendAllText("test2.obj",
-                $"v {v2.ToString(VecFormat.Numbers)}\r\n");
-            */
-            //Console.WriteLine(ToString());
         }
 
         public void Write(BinaryWriterEx bw)
@@ -54,6 +47,17 @@ namespace CTRFramework
             bw.Write(ptrQuadBlock);
         }
 
+
+        public string ToObj()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"o vis_{id}");
+            sb.AppendLine($"v {bbox.Min.ToString(VecFormat.Numbers)}");
+            sb.AppendLine($"v {bbox.Max.ToString(VecFormat.Numbers)}");
+
+            return sb.ToString();
+        }
 
         public override string ToString()
         {
