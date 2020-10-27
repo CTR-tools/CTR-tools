@@ -113,6 +113,7 @@
     <Compile Include="CTRFramework.Code\lev\VertexAnim.cs" />
     <Compile Include="CTRFramework.Code\lang\LNG.cs" />
     <Compile Include="CTRFramework.Code\shared\Vector2b.cs" />
+    <Compile Include="CTRFramework.Code\shared\Vector2s.cs" />
     <Compile Include="CTRFramework.Code\sound\Bank.cs" />
     <Compile Include="CTRFramework.Code\shared\BinaryReaderEx.cs" />
     <Compile Include="CTRFramework.Code\shared\BinaryWriterEx.cs" />
