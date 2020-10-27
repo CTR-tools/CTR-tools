@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Globalization;
 
 namespace CTRFramework.Shared
 {
@@ -76,6 +77,13 @@ namespace CTRFramework.Shared
                     sw.Write(data);
                 }
             }
+        }
+
+        public static DateTime ParseDate(string s)
+        {
+            DateTime result = DateTime.ParseExact(s.Replace("  ", " "), "ddd MMM d HH:mm:ss yyyy", CultureInfo.InvariantCulture);
+            Console.WriteLine(result.ToString());
+            return result;
         }
     }
 }

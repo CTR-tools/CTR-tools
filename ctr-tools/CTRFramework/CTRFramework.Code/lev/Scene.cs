@@ -126,6 +126,17 @@ namespace CTRFramework
                     posu2.Add(new Vector3s(br));
             }
 
+
+            /*
+            for (int i = 0; i < visdata.Count; i++)
+            {
+                if (File.Exists($"visdata_{i}.obj"))
+                    File.Delete($"visdata_{i}.obj");
+
+                File.AppendAllText($"visdata_{i}.obj", visdata[i].ToObj());
+            }
+            */
+
             /*
              //water texture
             br.BaseStream.Position = header.ptrWater;
@@ -312,11 +323,14 @@ namespace CTRFramework
             sb.AppendFormat("{0}: {1}\r\n", "hi tris", quads.Count * 4 * 2);
             sb.AppendFormat("{0}: {1}\r\n", "skybox verts", (skybox != null ? skybox.verts.Count : 0));
             sb.AppendFormat("{0}: {1}\r\n", "skybox tris", (skybox != null ? skybox.faces.Count : 0));
+            sb.AppendLine($"begin: {header.compilationBegins}");
+            sb.AppendLine($"end: {header.compilationEnds}");
+            sb.AppendLine($"File was compiled in: {Math.Round((header.compilationEnds - header.compilationBegins).TotalMinutes)} minutes");
 
             return sb.ToString();
         }
 
-        public string InfoCsv()
+        public string Statistics()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -328,6 +342,9 @@ namespace CTRFramework
             sb.AppendFormat("{0},", quads.Count * 4 * 2);
             sb.AppendFormat("{0},", (skybox != null ? skybox.verts.Count : 0));
             sb.AppendFormat("{0},", (skybox != null ? skybox.faces.Count : 0));
+            sb.AppendLine($"begin: {header.compilationBegins}");
+            sb.AppendLine($"end: {header.compilationEnds}");
+            sb.AppendLine($"File was compiled in: {Math.Round((header.compilationEnds - header.compilationBegins).TotalMinutes)} minutes");
 
             return sb.ToString();
         }

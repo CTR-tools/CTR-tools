@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Shared;
 using System;
+using System.Globalization;
 
 namespace CTRFramework
 {
@@ -171,15 +172,20 @@ namespace CTRFramework
             long posx = br.BaseStream.Position;
 
             br.Jump(ptrBuildStart);
-            Console.WriteLine(br.ReadStringNT());
+            compilationBegins = Helpers.ParseDate(br.ReadStringNT());
+
             br.Jump(ptrBuildEnd);
-            Console.WriteLine(br.ReadStringNT());
+            compilationEnds = Helpers.ParseDate(br.ReadStringNT());
+
             br.Jump(ptrBuildType);
             Console.WriteLine(br.ReadStringNT());
 
             br.Jump(posx);
             //Console.ReadKey();
         }
+
+        public DateTime compilationBegins;
+        public DateTime compilationEnds;
 
 
         public void Write(BinaryWriterEx bw)

@@ -585,6 +585,7 @@ namespace CTRTools
             }
 
             treeView1.Nodes.Add(tn);
+            treeView1.ExpandAll();
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -947,7 +948,7 @@ namespace CTRTools
                 {
                     using (Scene s = Scene.FromFile(str))
                     { 
-                        sb.AppendLine(Path.GetFileNameWithoutExtension(str) + "," + s.InfoCsv());
+                        sb.AppendLine(Path.GetFileNameWithoutExtension(str) + "," + s.Statistics());
                     }
             
                 }
