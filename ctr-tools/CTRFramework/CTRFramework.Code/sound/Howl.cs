@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using CTRFramework.Sound.CSeq;
 
 namespace CTRFramework.Sound
 {
@@ -19,10 +20,11 @@ namespace CTRFramework.Sound
         public static List<SampleDecl> samples1 = new List<SampleDecl>();
         List<SampleDecl> samples2 = new List<SampleDecl>();
 
-        List<int> offbanks = new List<int>();
-        List<int> offseqs = new List<int>();
+        List<int> ptrBanks = new List<int>();
+        List<int> ptrSeqs = new List<int>();
 
-        List<Bank> banks = new List<Bank>();
+        public List<Bank> banks = new List<Bank>();
+        //public List<CSEQ> sequences = new List<CSEQ>();
 
         public static int GetFreq(int sampleId)
         {
@@ -36,6 +38,11 @@ namespace CTRFramework.Sound
 
         public Howl(string fn)
         {
+            DetectHowl(fn);
+        }
+
+        public void DetectHowl(string fn)
+        {
             name = fn;
             reg = Meta.Detect(fn, "howls", 0);
 
@@ -48,7 +55,6 @@ namespace CTRFramework.Sound
                 Console.WriteLine("Unknown HWL.");
             }
         }
-
 
 
 
@@ -101,6 +107,17 @@ namespace CTRFramework.Sound
             }
         }
 
+        public Howl(BinaryReaderEx br)
+        {
+            Read(br);
+        }
+
+
+        public static Howl FromReader(BinaryReaderEx br)
+        {
+            return new Howl(br);
+        }
+
 
         public bool Read(BinaryReaderEx br)
         {
@@ -136,13 +153,13 @@ namespace CTRFramework.Sound
                 samples2.Add(new SampleDecl(br));
 
             for (int i = 0; i < header.cntBank; i++)
-                offbanks.Add(br.ReadUInt16() * (int)0x800);
+                ptrBanks.Add(br.ReadUInt16() * (int)0x800);
 
             for (int i = 0; i < header.cntSeq; i++)
-                offseqs.Add(br.ReadUInt16() * (int)0x800);
+                ptrSeqs.Add(br.ReadUInt16() * (int)0x800);
 
 
-            foreach (int i in offbanks)
+            foreach (int i in ptrBanks)
             {
                 br.BaseStream.Position = i;
                 Bank x = new Bank();
@@ -188,23 +205,23 @@ namespace CTRFramework.Sound
             string bankdir = String.Format("{0}_bank\\", name);
             Directory.CreateDirectory(bankdir);
 
-            for (int i = 0; i < offbanks.Count - 1; i++)
+            for (int i = 0; i < ptrBanks.Count - 1; i++)
             {
-                br.BaseStream.Position = offbanks[i];
+                br.BaseStream.Position = ptrBanks[i];
 
                 string fn = String.Format("{0}.bnk", i.ToString("00"));
                 Console.WriteLine("Extracting " + fn);
 
                 fn = bankdir + fn;
 
-                File.WriteAllBytes(fn, br.ReadBytes(offbanks[i + 1] - offbanks[i]));
+                File.WriteAllBytes(fn, br.ReadBytes(ptrBanks[i + 1] - ptrBanks[i]));
             }
 
             Console.WriteLine("---");
 
             int j = 0;
 
-            foreach (int i in offseqs)
+            foreach (int i in ptrSeqs)
             {
                 string fn = "";
 

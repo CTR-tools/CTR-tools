@@ -117,25 +117,14 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="code\CSEQ\SampleDefReverb.cs" />
-    <Compile Include="code\CSEQ\SampleDef.cs" />
-    <Compile Include="code\Helpers\CTRJson.cs" />
-    <Compile Include="code\CSEQ\CHeader.cs" />
-    <Compile Include="code\CSEQ\Sequence\Command.cs" />
-    <Compile Include="code\CSEQ\CSEQ.cs" />
-    <Compile Include="code\CSEQ\Sequence\CSeqHeader.cs" />
-    <Compile Include="code\CSEQ\Sequence\CTrack.cs" />
-    <Compile Include="code\CSEQ\Instrument.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="code\Helpers\Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="code\CSEQ\Sequence\Sequence.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -151,9 +140,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="ctrdata.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

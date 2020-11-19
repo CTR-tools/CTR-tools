@@ -3,7 +3,7 @@ using CTRFramework.Shared;
 using System;
 using System.ComponentModel;
 
-namespace cseq
+namespace CTRFramework.Sound.CSeq
 {
     public class SampleDefReverb : SampleDef, IReadWrite
     {

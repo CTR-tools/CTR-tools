@@ -1,7 +1,7 @@
-# SAMPLER.BIG master file list 
+# Crash Team Racing SAMPLER.BIG master file list 
 # Matches demos in all regions
 
-# ===========TRACKS SECTION=================
+# ===========0 = TRACKS SECTION=================
 
 000=levels\tracks\canyon\1P\data.lev
 001=levels\tracks\canyon\1P\data.vram
@@ -24,12 +24,12 @@
 034=levels\tracks\bluff\4P\data.lev
 035=levels\tracks\bluff\4P\data.vram
 
-# ==========ADDITIONAL CODE SECTION============
+# ==========221 = OVERLAYS SECTION===============
 
-150=lib\0150.dll
-151=lib\0151.dll
-152=lib\0152.dll
-153=lib\0153.dll
+150=overlays\0150.bin
+151=overlays\0151.bin
+152=overlays\0152.bin
+153=overlays\0153.bin
 
 # ===========MODEL PACKS SECTION===============
 

@@ -23,6 +23,10 @@ namespace CTRFramework
         public byte check;
 
 
+        public byte f1;
+        public byte f2;
+        public byte f3;
+
         public Point min
         {
             get
@@ -151,6 +155,9 @@ namespace CTRFramework
             PageX = (ushort)(buf & 0xF);
             PageY = (ushort)((buf >> 4) & 1);
 
+            f1 = (byte)((buf >> 5) & 1);
+            f2 = (byte)((buf >> 6) & 1);
+            f3 = (byte)((buf >> 7) & 1);
             check = br.ReadByte();
 
             //checking page byte 2 if it's ever not 0
@@ -165,14 +172,16 @@ namespace CTRFramework
 
             NormalizeUV();
 
-            /*
+            Console.WriteLine($"{Tag()}: f1 f2 f3 {f1} {f2} {f3}");
+
             //apparently some textures uses 8 bit mode, or even 16 bit color. must be a flag somewhere.
             if (offset == 0x0004B5B8 || offset == 0x0004B5E8 || offset == 0x0004B6A8 || offset == 0x0004B3D8)
             {
+
                 Console.WriteLine(ToString());
                 Console.ReadKey();
             }
-            */
+            
         }
 
         //meant to be unique

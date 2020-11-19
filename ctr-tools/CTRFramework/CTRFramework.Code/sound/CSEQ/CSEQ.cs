@@ -1,11 +1,10 @@
-﻿using cseq.Helpers;
-using CTRFramework.Shared;
-using CTRFramework.Sound;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using CTRFramework.Shared;
 
-namespace cseq
+namespace CTRFramework.Sound.CSeq
 {
     public class CSEQ
     {
@@ -117,7 +116,7 @@ namespace cseq
             //checking whether it's 0 or not
             for (int i = 0; i < p; i++)
                 if (br.ReadByte() != 0)
-                    Log.WriteLine("unknown 3 bytes block - not null at " + br.HexPos());
+                    Console.WriteLine("unknown 3 bytes block - not null at " + br.HexPos());
 
             //saving sequence data offset
             int seqStart = (int)br.BaseStream.Position;

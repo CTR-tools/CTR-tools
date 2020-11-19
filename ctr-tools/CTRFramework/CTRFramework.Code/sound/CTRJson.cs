@@ -2,8 +2,9 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using CTRFramework.Shared;
 
-namespace cseq.Helpers
+namespace CTRFramework.Sound.CSeq
 {
 
     //move this to Meta
@@ -16,9 +17,9 @@ namespace cseq.Helpers
         public string Title;
     }
 
-    class CTRJson
+    public class CTRJson
     {
-        static string jsonpath = "ctrdata.json";
+        static string jsonpath = Meta.CseqPath;
 
         //public static JArray levels;
         public static JObject midi;

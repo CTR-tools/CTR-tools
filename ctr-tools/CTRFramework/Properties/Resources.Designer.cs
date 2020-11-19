@@ -61,12 +61,23 @@ namespace CTRFramework.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на 09.05.2020 14:53:01,68 
+        ///   Ищет локализованную строку, похожую на 17.11.2020 21:43:37,22 
         ///.
         /// </summary>
         public static string BuildDate {
             get {
                 return ResourceManager.GetString("BuildDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на (C) 1999, Mutato Muzika: Mark Mothersbaugh, Josh Mancell.
+        ///
+        ///Converted to MIDI using CTR-Tools by DCxDemo*..
+        /// </summary>
+        public static string midi_copyright {
+            get {
+                return ResourceManager.GetString("midi_copyright", resourceCulture);
             }
         }
         

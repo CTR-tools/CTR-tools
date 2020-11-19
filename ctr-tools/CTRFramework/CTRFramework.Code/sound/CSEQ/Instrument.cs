@@ -1,10 +1,9 @@
-﻿using cseq.Helpers;
-using CTRFramework;
+﻿using CTRFramework;
 using CTRFramework.Shared;
 using System;
 using System.Text;
 
-namespace cseq
+namespace CTRFramework.Sound.CSeq
 {
     public class Instrument
     {

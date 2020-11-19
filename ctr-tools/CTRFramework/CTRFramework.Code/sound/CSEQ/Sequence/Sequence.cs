@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace cseq
+namespace CTRFramework.Sound.CSeq
 {
     public class Sequence
     {

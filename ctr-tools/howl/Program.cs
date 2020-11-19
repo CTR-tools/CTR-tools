@@ -1,7 +1,7 @@
-﻿using CTRFramework.Shared;
-using CTRFramework.Sound;
-using System;
+﻿using System;
 using System.IO;
+using CTRFramework.Sound;
+using CTRFramework.Shared;
 
 namespace howl
 {
@@ -15,25 +15,23 @@ namespace howl
             {
                 string fn = args[0];
 
-                if (File.Exists(fn))
+                if (!File.Exists(fn))
                 {
-                    byte[] data = File.ReadAllBytes(fn);
-                    MemoryStream ms = new MemoryStream(data);
-                    BinaryReaderEx br = new BinaryReaderEx(ms);
+                    Console.WriteLine("{0} doesn't exist.", fn);
+                    return;
+                }
 
-                    Howl hwl = new Howl(fn);
-                    hwl.Read(br);
-
+                using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(fn)))
+                {
+                    Howl hwl = Howl.FromReader(br);
+                    hwl.DetectHowl(fn);
                     Console.Write(hwl.ToString());
 
                     hwl.ExportCSEQ(br);
                     hwl.ExportAllSamples();
 
                     Console.WriteLine("Done!");
-                }
-                else
-                {
-                    Console.WriteLine("{0} doesn't exist.", fn);
+                    return;
                 }
 
             }
@@ -41,8 +39,6 @@ namespace howl
             {
                 Console.WriteLine("Usage:\r\n\thowl.exe <path to KART.HWL>\r\n\r\nPress any key to quit...");
             }
-
-            //Console.ReadKey();
         }
     }
 }

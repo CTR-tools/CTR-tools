@@ -214,11 +214,17 @@ namespace CTRFramework.Vram
 
         public void GetTexture(TextureLayout tl, string path, string name = "")
         {
+            int bpp = 4;
+
+            if (tl.f1 > 0 && tl.f2 > 0 && tl.f3 > 0)
+                bpp = 8;
+
             try
             {
                 Directory.CreateDirectory(path);
 
-                int width = (tl.width / 4) * 2;
+                //int width = (tl.width / 4) * 2;
+                int width = (int)(tl.width * (bpp / 8.0f));
                 int height = tl.height;
 
                 ushort[] buf = new ushort[(width / 2) * height];
@@ -263,7 +269,7 @@ namespace CTRFramework.Vram
 
                 if (x.region.Width > 0 && x.region.Height > 0)
                 {
-                    string n = path + "\\" + (name == "" ? tl.Tag() : name);
+                    string n = path + "\\" + (name == "" ? tl.Tag() : name);;
 
                     //if (!File.Exists(n + ".tim"))
                     x.Write(n + ".tim");

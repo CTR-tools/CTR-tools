@@ -1,5 +1,5 @@
-# BIGFILE.BIG master file list 
-# Matches NTSC-U (SCUS_944.26) and NTSC-J (SCPS_101.18) versions
+# Crash Team Racing BIGFILE.BIG master file list 
+# Matches NTSC-U (SCUS_944.26), NTSC-J (SCPS_101.18) and NTSC-J Standalone extended demo
 
 # ===========0 = TRACKS SECTION===============
 

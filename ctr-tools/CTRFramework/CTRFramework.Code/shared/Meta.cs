@@ -14,6 +14,7 @@ namespace CTRFramework.Shared
         public static string DataPath = Path.Combine(BasePath, "CTRFramework.Data");
         public static string JsonPath = Path.Combine(DataPath, "versions.json");
         public static string HowlPath = Path.Combine(DataPath, "howlnames.txt");
+        public static string CseqPath = Path.Combine(DataPath, "cseq.json");
 
         static JObject json;
 

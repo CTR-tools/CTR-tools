@@ -1,11 +1,10 @@
-﻿using cseq.Helpers;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 using NAudio.Midi;
 using System;
 using System.Collections.Generic;
 
 
-namespace cseq
+namespace CTRFramework.Sound.CSeq
 {
     public enum CSEQEvent
     {
@@ -44,7 +43,7 @@ namespace cseq
                 case CSEQEvent.Unknown8:
                     {
                         pitch = br.ReadByte();
-                        Log.Write(op.ToString("X2") + " found at " + br.HexPos() + "\r\n");
+                        Console.Write(op.ToString("X2") + " found at " + br.HexPos() + "\r\n");
                         break;
                     }
 
@@ -72,7 +71,7 @@ namespace cseq
                 default:
                     {
                         evt = CSEQEvent.Error;
-                        Log.Write(op.ToString("X2") + " not recognized at " + br.HexPos() + "\r\n");
+                        Console.Write(op.ToString("X2") + " not recognized at " + br.HexPos() + "\r\n");
                         break;
                     }
             }

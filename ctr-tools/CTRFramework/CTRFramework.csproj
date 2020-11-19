@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -142,6 +142,16 @@
     <Compile Include="CTRFramework.Code\shared\Vector3s.cs" />
     <Compile Include="CTRFramework.Code\shared\Vector4b.cs" />
     <Compile Include="CTRFramework.Code\shared\Vector4s.cs" />
+    <Compile Include="CTRFramework.Code\sound\CSEQ\CHeader.cs" />
+    <Compile Include="CTRFramework.Code\sound\CSEQ\CSEQ.cs" />
+    <Compile Include="CTRFramework.Code\sound\CSEQ\Instrument.cs" />
+    <Compile Include="CTRFramework.Code\sound\CSEQ\SampleDef.cs" />
+    <Compile Include="CTRFramework.Code\sound\CSEQ\SampleDefReverb.cs" />
+    <Compile Include="CTRFramework.Code\sound\CSEQ\Sequence\Command.cs" />
+    <Compile Include="CTRFramework.Code\sound\CSEQ\Sequence\CSeqHeader.cs" />
+    <Compile Include="CTRFramework.Code\sound\CSEQ\Sequence\CTrack.cs" />
+    <Compile Include="CTRFramework.Code\sound\CSEQ\Sequence\Sequence.cs" />
+    <Compile Include="CTRFramework.Code\sound\CTRJson.cs" />
     <Compile Include="CTRFramework.Code\sound\Howl.cs" />
     <Compile Include="CTRFramework.Code\sound\HowlHeader.cs" />
     <Compile Include="CTRFramework.Code\sound\SampleDecl.cs" />
@@ -165,9 +175,13 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CTRFramework.Data\cseq.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="CTRFramework.Data\versions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

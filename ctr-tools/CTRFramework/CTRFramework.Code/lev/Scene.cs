@@ -182,6 +182,37 @@ namespace CTRFramework
 
                 dynamics.Add(new DynamicModel(br));
             }
+
+            /*
+            foreach (QuadBlock qb in quads)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    List<CTRFramework.Vertex> list = qb.GetVertexListq(verts, i);
+
+                    foreach (CTRFramework.Vertex v in list)
+                        Console.WriteLine(v.ToString());
+
+                    Console.WriteLine(qb.unk3[i].ToString());
+
+                    /*
+                    //requires 4.6
+                    System.Numerics.Vector3 a = new Vector3(list[3].coord.X - list[0].coord.X, list[3].coord.Y - list[0].coord.Y, list[3].coord.Z - list[0].coord.Z);
+                    System.Numerics.Vector3 b = new Vector3(list[2].coord.X - list[0].coord.X, list[2].coord.Y - list[0].coord.Y, list[2].coord.Z - list[0].coord.Z);
+
+                    Vector3 cross = Vector3.Cross(a, b);
+
+                    Console.WriteLine(cross.Length()); 
+                    */
+
+            /*
+                }
+
+                Console.WriteLine();
+                Console.ReadKey();
+            }
+            */
+
         }
 
 

@@ -2,7 +2,7 @@
 using CTRFramework.Shared;
 using System;
 
-namespace cseq
+namespace CTRFramework.Sound.CSeq
 {
     public struct CHeader : IRead
     {

@@ -1,10 +1,11 @@
-﻿using cseq.Helpers;
+﻿using CTRFramework.Sound;
 using CTRFramework.Shared;
 using NAudio.Midi;
 using System.Collections.Generic;
 using System.Text;
+using System;
 
-namespace cseq
+namespace CTRFramework.Sound.CSeq
 {
     public class CTrack
     {
@@ -38,7 +39,7 @@ namespace cseq
             {
                 case 0: isDrumTrack = false; break;
                 case 1: isDrumTrack = true; break;
-                default: Log.WriteLine("drum value not boolean at " + br.HexPos()); break;
+                default: Console.WriteLine("drum value not boolean at " + br.HexPos()); break;
             }
 
             Command cx;
