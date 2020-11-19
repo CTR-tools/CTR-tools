@@ -1,5 +1,4 @@
-﻿using CTRFramework;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 using System;
 using System.Text;
 

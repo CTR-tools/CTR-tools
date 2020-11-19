@@ -2,9 +2,9 @@
 using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text;
-using System.Drawing;
 
 namespace CTRFramework
 {
@@ -226,7 +226,7 @@ namespace CTRFramework
                 StringBuilder sb = new StringBuilder();
 
                 sb.Append("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.\r\n");
-                sb.Append("#" + Meta.GetVersion()+"\r\n");
+                sb.Append("#" + Meta.GetVersion() + "\r\n");
                 sb.Append("#(C) 1999, Activision, Naughty Dog.\r\n\r\n");
                 sb.Append("mtllib " + Path.GetFileName(fname + ".mtl") + "\r\n\r\n");
 
@@ -369,7 +369,7 @@ namespace CTRFramework
             sb.AppendFormat("{0},", quads.Count);
             sb.AppendFormat("{0},", quads.Count);
             sb.AppendFormat("{0},", quads.Count * 2);
-            sb.AppendFormat("{0},",  quads.Count * 4);
+            sb.AppendFormat("{0},", quads.Count * 4);
             sb.AppendFormat("{0},", quads.Count * 4 * 2);
             sb.AppendFormat("{0},", (skybox != null ? skybox.verts.Count : 0));
             sb.AppendFormat("{0},", (skybox != null ? skybox.faces.Count : 0));

@@ -258,7 +258,7 @@ namespace ctrviewer
                 else Console.WriteLine("Missing texture: " + s);
             }
         }
-    
+
 
         private void LoadLevel()
         {
@@ -266,26 +266,26 @@ namespace ctrviewer
             {
                 Scene karts = Scene.FromFile("karts.lev");
 
-                    foreach (DynamicModel m in karts.dynamics)
+                foreach (DynamicModel m in karts.dynamics)
+                {
+                    if (!instTris.ContainsKey(m.Name) && m.Name == "selectkart")
                     {
-                        if (!instTris.ContainsKey(m.Name) && m.Name == "selectkart")
-                        {
-                            List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
+                        List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
-                            foreach (var x in m.headers[0].verts)
-                                li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0)));
+                        foreach (var x in m.headers[0].verts)
+                            li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0)));
 
-                            TriList t = new TriList();
-                            t.textureEnabled = false;
-                            t.textureName = "test";
-                            t.scrollingEnabled = false;
-                            t.PushTri(li);
-                            t.Seal();
+                        TriList t = new TriList();
+                        t.textureEnabled = false;
+                        t.textureName = "test";
+                        t.scrollingEnabled = false;
+                        t.PushTri(li);
+                        t.Seal();
 
-                            instTris.Add(m.Name, t);
-                        }
-
+                        instTris.Add(m.Name, t);
                     }
+
+                }
             }
 
             RenderEnabled = false;
@@ -346,7 +346,7 @@ namespace ctrviewer
 
                 if (s.header.ptru2 != 0)
                 {
-                    foreach(Vector3s v in s.posu2)
+                    foreach (Vector3s v in s.posu2)
                     {
                         instanced.Add(new InstancedModel("goldcone", new Vector3(v.X, v.Y, v.Z), Vector3.Zero, 3));
                     }
@@ -481,7 +481,7 @@ namespace ctrviewer
 
 
             foreach (Kart k in karts)
-              k.Update(gameTime);
+                k.Update(gameTime);
 
             //x += 0.01f ;
             //if (x > Math.PI * 2)
@@ -708,10 +708,10 @@ namespace ctrviewer
 
                     foreach (MGLevel qb in levels)
                         qb.Render(graphics, effect);
-                  
+
                     foreach (Kart k in karts)
                         k.Render(graphics, instanceEffect, camera);
-                        
+
                 }
             }
         }
@@ -771,7 +771,7 @@ namespace ctrviewer
                 spriteBatch.DrawString(font, String.Format("FOV {0}", camera.ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", camera.ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
 
             //spriteBatch.DrawString(font, IsActive ? "Active" : "Not active", new Vector2(20, 20), Color.Yellow);
-            
+
             //spriteBatch.DrawString(font, String.Format("sp: {0}\r\nac:{1}", karts[0].Speed, karts[0].Accel), new Vector2(20, 20), Color.Yellow);
 
             spriteBatch.End();

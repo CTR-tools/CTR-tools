@@ -1,16 +1,13 @@
-﻿using System;
+﻿using CTRFramework.Shared;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using CTRFramework.Shared;
 
 namespace CTRFramework
 {
     public class TrialData : IRead
     {
         public int cntArrays;
-        public List<uint> ptrs = new List<uint>(); 
+        public List<uint> ptrs = new List<uint>();
 
         public TrialData()
         {

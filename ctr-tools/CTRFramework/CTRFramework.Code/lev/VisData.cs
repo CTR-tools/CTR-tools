@@ -1,6 +1,4 @@
 ﻿using CTRFramework.Shared;
-using System;
-using System.IO;
 using System.Text;
 
 namespace CTRFramework
@@ -61,7 +59,7 @@ namespace CTRFramework
 
         public override string ToString()
         {
-            return  $"id = {id} | flag = {flag} | ptr = {ptrQuadBlock.ToString("X8")}\r\n\t{bbox.ToString()}\r\n\t{v3.ToString(VecFormat.Braced)} {v4.ToString(VecFormat.Braced)}";
+            return $"id = {id} | flag = {flag} | ptr = {ptrQuadBlock.ToString("X8")}\r\n\t{bbox.ToString()}\r\n\t{v3.ToString(VecFormat.Braced)} {v4.ToString(VecFormat.Braced)}";
         }
     }
 }

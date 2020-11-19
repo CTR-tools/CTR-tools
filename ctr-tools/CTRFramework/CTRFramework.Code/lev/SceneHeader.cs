@@ -1,6 +1,5 @@
 ﻿using CTRFramework.Shared;
 using System;
-using System.Globalization;
 
 namespace CTRFramework
 {

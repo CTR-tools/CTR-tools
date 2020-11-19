@@ -1,13 +1,13 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Sound;
 using CTRFramework.Sound.CSeq;
+using NAudio.Wave;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using NAudio.Wave;
-using Newtonsoft.Json.Linq;
 
 namespace cseq
 {
@@ -90,7 +90,7 @@ namespace cseq
                 i++;
             }
 
-           //textBox1.Text = Log.Read();
+            //textBox1.Text = Log.Read();
             treeView1.Nodes.Clear();
 
             TreeNode tn = new TreeNode("SampleDef");

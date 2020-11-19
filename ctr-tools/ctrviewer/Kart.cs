@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace ctrviewer
 {
@@ -59,11 +59,11 @@ namespace ctrviewer
                 Speed -= 0.1f;
             }
 
-                if (Speed > MaxSpeed)
-                    Speed = MaxSpeed;
+            if (Speed > MaxSpeed)
+                Speed = MaxSpeed;
 
-                if (Speed < 0)
-                    Speed = 0;
+            if (Speed < 0)
+                Speed = 0;
 
             Position += Vector3.Left * Speed;
 

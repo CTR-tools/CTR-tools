@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using CTRFramework.Shared;
 
 namespace CTRFramework.Sound.CSeq
 {

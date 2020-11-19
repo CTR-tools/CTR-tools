@@ -10,8 +10,8 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CTRTools
 {
@@ -40,9 +40,9 @@ namespace CTRTools
 
             comboBox1.SelectedIndex = 0xF;
 
-           // _writer = new ConsoleHook(txtConsole);
+            // _writer = new ConsoleHook(txtConsole);
             // Redirect the out Console stream
-           // Console.SetOut(_writer);
+            // Console.SetOut(_writer);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -947,13 +947,13 @@ namespace CTRTools
                 foreach (string str in files)
                 {
                     using (Scene s = Scene.FromFile(str))
-                    { 
+                    {
                         sb.AppendLine(Path.GetFileNameWithoutExtension(str) + "," + s.Statistics());
                     }
-            
+
                 }
 
-                Helpers.WriteToFile(fbd.SelectedPath+"\\stats.csv", sb.ToString());
+                Helpers.WriteToFile(fbd.SelectedPath + "\\stats.csv", sb.ToString());
             }
         }
 

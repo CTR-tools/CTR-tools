@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using CTRFramework.Shared;
 using CTRFramework.Sound;
-using CTRFramework.Shared;
+using System;
+using System.IO;
 
 namespace howl
 {

@@ -130,9 +130,9 @@ namespace CTRFramework
     public enum CTREvent
     {
         Nothing = -1,
-        
+
         SingleFruit = 0x02,
-        
+
         CrateNitro = 0x06,
         CrateFruit = 0x07,
         CrateWeapon = 0x08,

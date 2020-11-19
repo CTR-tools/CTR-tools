@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using CTRFramework.Shared;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
-using CTRFramework.Shared;
 
 namespace CTRFramework.Sound.CSeq
 {

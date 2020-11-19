@@ -269,7 +269,7 @@ namespace CTRFramework.Vram
 
                 if (x.region.Width > 0 && x.region.Height > 0)
                 {
-                    string n = path + "\\" + (name == "" ? tl.Tag() : name);;
+                    string n = path + "\\" + (name == "" ? tl.Tag() : name); ;
 
                     //if (!File.Exists(n + ".tim"))
                     x.Write(n + ".tim");
@@ -293,7 +293,7 @@ namespace CTRFramework.Vram
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, "GetTexture fails: " +path + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
+                Helpers.Panic(this, "GetTexture fails: " + path + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
             }
         }
 

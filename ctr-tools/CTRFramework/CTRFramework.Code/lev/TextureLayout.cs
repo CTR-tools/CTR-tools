@@ -181,7 +181,7 @@ namespace CTRFramework
                 Console.WriteLine(ToString());
                 Console.ReadKey();
             }
-            
+
         }
 
         //meant to be unique
