@@ -32,7 +32,7 @@ namespace CTRFramework.Sound
         private byte midi;
         private string pitchshift;
 
-        public string Tag => SampleID.ToString("X4") + "_" + frequency;
+        public string Tag => SampleID.ToString("X4") + "_" + Frequency;
 
 
         [CategoryAttribute("General"), DescriptionAttribute("Sample volume.")]
@@ -63,7 +63,7 @@ namespace CTRFramework.Sound
         private ushort sampleID;
         private short always0;
 
-        public int frequency
+        public int Frequency
         {
             //cents needed?
             get { return (int)Math.Round(pitch * 44100.0f / 4096.0f); }
@@ -87,7 +87,7 @@ namespace CTRFramework.Sound
             always0 = br.ReadInt16();
 
             if (magic1 != 1)
-                throw new Exception(String.Format("SampleDef magic1 = {0}", magic1));
+                Helpers.Panic(this, $"SampleDef magic1 = {magic1}");
 
             if (always0 != 0)
                 throw new Exception(String.Format("SampleDef always0 = {0} ", always0));

@@ -73,7 +73,7 @@ namespace CTRFramework.Sound.CSeq
 
         #endregion
 
-        
+
 
         /// <summary>Reads CSEQ from the file path given.</summary>
         /// <param name="fileName">CSEQ file name.</param>
@@ -257,12 +257,12 @@ namespace CTRFramework.Sound.CSeq
             {
                 foreach (SampleDef s in samples)
                 {
-                    bank.Export(s.SampleID, s.frequency, path, name, s.Tag);
+                    bank.Export(s.SampleID, s.Frequency, path, name, s.Tag);
                 }
 
                 foreach (SampleDefReverb s in samplesReverb)
                 {
-                    bank.Export(s.SampleID, s.frequency, path, name, s.Tag);
+                    bank.Export(s.SampleID, s.Frequency, path, name, s.Tag);
                 }
             }
         }

@@ -30,7 +30,7 @@ namespace CTRFramework.Sound
         {
             foreach (SampleDef sd in samples1)
             {
-                if (sd.SampleID == sampleId) return sd.frequency;
+                if (sd.SampleID == sampleId) return sd.Frequency;
             }
 
             return -1;

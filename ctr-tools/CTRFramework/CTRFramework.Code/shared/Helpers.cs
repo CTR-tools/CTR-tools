@@ -4,22 +4,38 @@ using System.IO;
 
 namespace CTRFramework.Shared
 {
+    public enum PanicLevel
+    {
+        Silent,
+        Warn,
+        Pause,
+        Exception
+    }
+
     public class Helpers
     {
-        public static bool panicEnabled = true;
-        public static bool panicIntense = false;
+        public static PanicLevel panic = PanicLevel.Warn;
+        public static Random Random = new Random();
 
         /// <summary>
-        /// 
+        /// Call this if something unexpected happened.
         /// </summary>
         /// <param name="x">the object that wants to panic</param>
         /// <param name="msg">the message it wants to send</param>
         public static void Panic(object x, string msg)
         {
-            if (panicEnabled)
+            if (panic != PanicLevel.Silent)
             {
-                Console.WriteLine(String.Format("{0}:\t{1}", x.GetType().Name, msg));
-                if (panicIntense) Console.ReadKey();
+                if (panic == PanicLevel.Warn || panic == PanicLevel.Pause)
+                {
+                    Console.WriteLine($"{x.GetType().Name}:\t{msg}");
+
+                    if (panic == PanicLevel.Pause)
+                        Console.ReadKey();
+                }
+
+                if (panic == PanicLevel.Exception)
+                    throw new Exception($"{x.GetType().Name}:\t{msg}");
             }
         }
 
@@ -27,8 +43,6 @@ namespace CTRFramework.Shared
         {
             return ((float)val - (float)min) / ((float)max - (float)min);
         }
-
-        public static Random Random = new Random();
 
         public static string CalculateMD5(string filename)
         {
