@@ -15,6 +15,7 @@ namespace CTRFramework.Shared
         public static string JsonPath = Path.Combine(DataPath, "versions.json");
         public static string HowlPath = Path.Combine(DataPath, "howlnames.txt");
         public static string CseqPath = Path.Combine(DataPath, "cseq.json");
+        public static string SmplPath = Path.Combine(DataPath, "samplenames.txt");
 
         static JObject json;
 
@@ -128,7 +129,7 @@ namespace CTRFramework.Shared
 
         }
 
-        public static string GetVersion()
+        public static string GetVersionInfo()
         {
             return "CTRFramework " + p.Version + " (" + p.BuildDate.Split(',')[0] + ")";
         }

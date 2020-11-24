@@ -64,7 +64,7 @@ namespace cseq
 
             seq = new CSEQ();
 
-            if (seq.Read(fn, textBox1))
+            if (seq.Read(fn))
             {
                 FillUI(fn);
             }
@@ -275,7 +275,7 @@ namespace cseq
 
                 foreach (string s in files)
                 {
-                    CSEQ c = new CSEQ(s, textBox1);
+                    CSEQ c = CSEQ.FromFile(s);
                     foreach (SampleDef sd in c.samples) if (!x.Contains(sd.Tag)) x.Add(sd.Tag);
                     foreach (SampleDefReverb sd in c.samplesReverb) if (!x.Contains(sd.Tag)) x.Add(sd.Tag);
                 }

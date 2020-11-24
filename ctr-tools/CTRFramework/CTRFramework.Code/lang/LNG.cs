@@ -88,7 +88,6 @@ namespace CTRFramework.Lang
                 bw.BaseStream.Position = 4;
                 bw.Write(lastoff);
             }
-
         }
     }
 }

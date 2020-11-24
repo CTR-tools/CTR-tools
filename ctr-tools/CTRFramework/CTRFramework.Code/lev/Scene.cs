@@ -226,7 +226,7 @@ namespace CTRFramework
                 StringBuilder sb = new StringBuilder();
 
                 sb.Append("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.\r\n");
-                sb.Append("#" + Meta.GetVersion() + "\r\n");
+                sb.Append("#" + Meta.GetVersionInfo() + "\r\n");
                 sb.Append("#(C) 1999, Activision, Naughty Dog.\r\n\r\n");
                 sb.Append("mtllib " + Path.GetFileName(fname + ".mtl") + "\r\n\r\n");
 

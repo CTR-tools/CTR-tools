@@ -56,7 +56,7 @@ namespace ctrviewer
         //meh
         public static int currentflag = 1;
 
-        public static string version = Meta.GetVersion();
+        public static string version = Meta.GetVersionInfo();
 
 
         public Game1()

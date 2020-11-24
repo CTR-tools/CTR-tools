@@ -13,7 +13,7 @@ namespace bigtool
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 "CTR-tools: bigtool by DCxDemo*",
                 "Builds and extracts Crash Team Racing BIG files",
-                Meta.GetVersion());
+                Meta.GetVersionInfo());
 
             if (args.Length > 0)
             {

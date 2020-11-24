@@ -17,7 +17,7 @@ namespace CTRFramework.Big
             {
                 //let's hardcode it as you can't add files anyway.
                 //ideally you should calculate the amount of sectors used for size/offset array
-                int to_alloc = 2048 * 3;
+                int to_alloc = Meta.SectorSize * 3;
 
                 foreach (BigEntry c in Entries)
                     to_alloc += c.SizePadded;
