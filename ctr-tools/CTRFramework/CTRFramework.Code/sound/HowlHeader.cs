@@ -7,17 +7,17 @@ namespace CTRFramework.Sound
     {
         public char[] magic;    //HOWL char[]
 
-        public int u1;          //freezes the game if changed
+        public int u1;          //freezes the game if changed, game code tests against fixed number for some reason. maybe like version.
         public int reserved1;   //no effect
         public int reserved2;   //no effect
 
-        public int cnt4;        //number of entries in an unknown array, messes up all samples if anything is modified
-        public int cnt81;       //number of sample declarations, contains all sfx entries (not instruments)
-        public int cnt82;       //number of engine sound array entries
+        public int cntUnk;      //number of entries in an unknown array, messes up all samples if anything is modified
+        public int cntSfx;      //number of sample declarations, contains all sfx entries (not instruments)
+        public int cntEngineSfx;//number of engine sound array entries
         public int cntBank;     //number of banks
         public int cntSeq;      //number of sequences
 
-        public int sampleDataSize;    //whole header to the last seq pointer size
+        public int sampleDataSize;    //whole sample data size to the last seq pointer
 
         public HowlHeader(BinaryReaderEx br)
         {
@@ -30,8 +30,8 @@ namespace CTRFramework.Sound
 
             if (new string(magic) != "HOWL")
             {
-                Console.WriteLine("Not a CTR HOWL file.");
-                return;
+                Helpers.Panic(this, "Not a CTR HOWL file.");
+                throw new Exception("Not a CTR HOWL file.");
             }
 
             u1 = br.ReadInt32();
@@ -43,9 +43,9 @@ namespace CTRFramework.Sound
                 Console.WriteLine("reserved is not null. Possible error.");
             }
 
-            cnt4 = br.ReadInt32();
-            cnt81 = br.ReadInt32();
-            cnt82 = br.ReadInt32();
+            cntUnk = br.ReadInt32();
+            cntSfx = br.ReadInt32();
+            cntEngineSfx = br.ReadInt32();
 
             cntBank = br.ReadInt32();
             cntSeq = br.ReadInt32();
@@ -66,9 +66,9 @@ namespace CTRFramework.Sound
             bw.Write(reserved1);
             bw.Write(reserved2);
 
-            bw.Write(cnt4);
-            bw.Write(cnt81);
-            bw.Write(cnt82);
+            bw.Write(cntUnk);
+            bw.Write(cntSfx);
+            bw.Write(cntEngineSfx);
 
             bw.Write(cntBank);
             bw.Write(cntSeq);

@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using CTRFramework.Sound.CSeq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,20 +17,20 @@ namespace CTRFramework.Sound
         public HowlHeader header;
 
         List<ushort> unk = new List<ushort>();
-        public static List<SampleDecl> samples1 = new List<SampleDecl>();
-        List<SampleDecl> samples2 = new List<SampleDecl>();
+        public static List<SampleDef> samples1 = new List<SampleDef>();
+        List<SampleDef> samples2 = new List<SampleDef>();
 
         List<int> ptrBanks = new List<int>();
         List<int> ptrSeqs = new List<int>();
 
         public List<Bank> banks = new List<Bank>();
-        //public List<CSEQ> sequences = new List<CSEQ>();
+        public List<CSEQ> sequences = new List<CSEQ>();
 
         public static int GetFreq(int sampleId)
         {
-            foreach (SampleDecl sd in samples1)
+            foreach (SampleDef sd in samples1)
             {
-                if (sd.sampleID == sampleId) return sd.frequency;
+                if (sd.SampleID == sampleId) return sd.frequency;
             }
 
             return -1;
@@ -120,12 +121,12 @@ namespace CTRFramework.Sound
 
         public bool Read(BinaryReaderEx br)
         {
-            if (File.Exists(Meta.BasePath + "CTRFramework.Data\\samplenames.txt"))
-                ReadSampleNames(Meta.BasePath + "CTRFramework.Data\\samplenames.txt");
+            if (File.Exists(Meta.SmplPath))
+                ReadSampleNames(Meta.SmplPath);
 
             header = new HowlHeader(br);
 
-            for (int i = 0; i < header.cnt4; i++)
+            for (int i = 0; i < header.cntUnk; i++)
             {
                 if (br.ReadUInt16() != 0)
                 {
@@ -136,8 +137,8 @@ namespace CTRFramework.Sound
                 unk.Add(br.ReadUInt16());
             }
 
-            for (int i = 0; i < header.cnt81; i++)
-                samples1.Add(new SampleDecl(br));
+            for (int i = 0; i < header.cntSfx; i++)
+                samples1.Add(new SampleDef(br));
             /*
              * 
              * dump whole header to sql later
@@ -148,8 +149,8 @@ namespace CTRFramework.Sound
             }
             */
 
-            for (int i = 0; i < header.cnt82; i++)
-                samples2.Add(new SampleDecl(br));
+            for (int i = 0; i < header.cntEngineSfx; i++)
+                samples2.Add(new SampleDef(br));
 
             for (int i = 0; i < header.cntBank; i++)
                 ptrBanks.Add(br.ReadUInt16() * (int)0x800);
@@ -158,13 +159,20 @@ namespace CTRFramework.Sound
                 ptrSeqs.Add(br.ReadUInt16() * (int)0x800);
 
 
-            foreach (int i in ptrBanks)
+            foreach (int ptr in ptrBanks)
             {
-                br.BaseStream.Position = i;
+                br.Jump(ptr);
                 Bank x = new Bank();
                 x.Read(br);
                 banks.Add(x);
             }
+
+            foreach (int ptr in ptrSeqs)
+            {
+                br.Jump(ptr);
+                sequences.Add(CSEQ.FromReader(br));
+            }
+
 
             Bank sfx = new Bank();
 

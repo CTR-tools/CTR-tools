@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel;
 
-namespace CTRFramework.Sound.CSeq
+namespace CTRFramework.Sound
 {
     public class SampleDefReverb : SampleDef, IReadWrite
     {
@@ -33,6 +33,14 @@ namespace CTRFramework.Sound.CSeq
         private byte reverb;     //maybe reverb is 2 bytes? mostly 193
         private byte reverb2;    //unknown value, mostly 31
 
+        public SampleDefReverb()
+        {
+        }
+
+        public SampleDefReverb(BinaryReaderEx br)
+        {
+            Read(br);
+        }
 
         public override void Read(BinaryReaderEx br)
         {

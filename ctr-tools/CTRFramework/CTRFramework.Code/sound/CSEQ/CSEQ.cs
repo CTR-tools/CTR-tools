@@ -47,10 +47,14 @@ namespace CTRFramework.Sound.CSeq
 
         /// <summary>CSEQ constructor.</summary>
         /// <param name="fileName">CSEQ file name.</param>
-        public CSEQ(string fileName, System.Windows.Forms.TextBox textBox1)
+        public CSEQ(string fileName)
         {
-            Init();
-            Read(fileName, textBox1);
+            Read(fileName);
+        }
+
+        public CSEQ(BinaryReaderEx br)
+        {
+            Read(br);
         }
 
         #endregion
@@ -69,33 +73,42 @@ namespace CTRFramework.Sound.CSeq
 
         #endregion
 
+        
+
         /// <summary>Reads CSEQ from the file path given.</summary>
         /// <param name="fileName">CSEQ file name.</param>
-        /// <param name="textBox1">to be removed</param>
-        public bool Read(string fileName, System.Windows.Forms.TextBox textBox1)
+        public bool Read(string fileName)
         {
             path = Path.GetDirectoryName(fileName);
             name = Path.GetFileNameWithoutExtension(fileName);
-            BinaryReaderEx br = BinaryReaderEx.FromFile(fileName);
+
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(fileName)))
+            {
+                return Read(br);
+            }
+        }
+
+
+
+        public bool Read(BinaryReaderEx br)
+        {
+            Init();
 
             header.Read(br);
 
-            if (header.size != br.BaseStream.Length) return false;
+            if (header.size != br.BaseStream.Length)
+                return false;
 
             long pos = br.BaseStream.Position;
 
             for (int i = 0; i < header.longCnt; i++)
             {
-                SampleDefReverb sd = new SampleDefReverb();
-                sd.Read(br);
-                samplesReverb.Add(sd);
+                samplesReverb.Add(new SampleDefReverb(br));
             }
 
             for (int i = 0; i < header.shortCnt; i++)
             {
-                SampleDef sd = new SampleDef();
-                sd.Read(br);
-                samples.Add(sd);
+                samples.Add(new SampleDef(br));
             }
 
             br.BaseStream.Position = pos;
@@ -136,6 +149,18 @@ namespace CTRFramework.Sound.CSeq
 
             return true;
         }
+
+
+        public static CSEQ FromFile(string filename)
+        {
+            return new CSEQ(filename);
+        }
+
+        public static CSEQ FromReader(BinaryReaderEx br)
+        {
+            return new CSEQ(br);
+        }
+
 
         public void LoadMetaInstruments(string song)
         {

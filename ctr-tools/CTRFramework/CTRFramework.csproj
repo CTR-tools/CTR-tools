@@ -126,8 +126,8 @@
     <Compile Include="CTRFramework.Code\sound\CSEQ\CHeader.cs" />
     <Compile Include="CTRFramework.Code\sound\CSEQ\CSEQ.cs" />
     <Compile Include="CTRFramework.Code\sound\CSEQ\Instrument.cs" />
-    <Compile Include="CTRFramework.Code\sound\CSEQ\SampleDef.cs" />
-    <Compile Include="CTRFramework.Code\sound\CSEQ\SampleDefReverb.cs" />
+    <Compile Include="CTRFramework.Code\sound\SampleDef.cs" />
+    <Compile Include="CTRFramework.Code\sound\SampleDefReverb.cs" />
     <Compile Include="CTRFramework.Code\sound\CSEQ\Sequence\Command.cs" />
     <Compile Include="CTRFramework.Code\sound\CSEQ\Sequence\CSeqHeader.cs" />
     <Compile Include="CTRFramework.Code\sound\CSEQ\Sequence\CTrack.cs" />
@@ -135,7 +135,6 @@
     <Compile Include="CTRFramework.Code\sound\CTRJson.cs" />
     <Compile Include="CTRFramework.Code\sound\Howl.cs" />
     <Compile Include="CTRFramework.Code\sound\HowlHeader.cs" />
-    <Compile Include="CTRFramework.Code\sound\SampleDecl.cs" />
     <Compile Include="CTRFramework.Code\sound\VagHeader.cs" />
     <Compile Include="CTRFramework.Code\vrm\BMPHeader.cs" />
     <Compile Include="CTRFramework.Code\vrm\Tim.cs" />

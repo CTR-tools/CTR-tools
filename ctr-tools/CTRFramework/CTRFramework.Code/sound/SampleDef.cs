@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel;
 
-namespace CTRFramework.Sound.CSeq
+namespace CTRFramework.Sound
 {
     public class SampleDef : IReadWrite
     {
@@ -69,6 +69,14 @@ namespace CTRFramework.Sound.CSeq
             get { return (int)Math.Round(pitch * 44100.0f / 4096.0f); }
         }
 
+        public SampleDef()
+        {
+        }
+
+        public SampleDef(BinaryReaderEx br)
+        {
+            Read(br);
+        }
 
         public virtual void Read(BinaryReaderEx br)
         {
