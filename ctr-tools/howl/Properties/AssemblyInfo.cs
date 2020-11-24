@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("howl")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Extract data from HOWL sound engine file found in Crash Team Racing (PS1)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("howl")]
