@@ -29,9 +29,9 @@ Notes:
 - BAT script is designed to generate ctr_source.xml only if it doesn't exist. This allows to keep manual changes in place, so you can control the way the iso is built.
 
 - BAT script is meant for NTSC-U version. You'll have to slightly edit the script for other versions. This includes:
-- update region variable (not really that important)
-- update big_name variable (like sampler instead of bigfile)
-- optionally remove/rename ctr_source.xml file to generate a new one
+  - update region variable (not really that important)
+  - update big_name variable (like sampler instead of bigfile)
+  - optionally remove/rename ctr_source.xml file to generate a new one
 
 - You can safely remove STR files from bigfile folder to make it even smaller (simply rename movies to movies1 or such). Those are track previews on level selection screen and they take away like half of the BIG file.
 
