@@ -292,25 +292,25 @@
 249=japfont.vrm
 250=japfont.mpk
 
-# ==========221 = ADDITIONAL CODE SECTION===============
+# =================221 = OVERLAY SECTION===================
 
-251=lib\251_05.dll
-252=lib\252_06.dll
-253=lib\253_07.dll
-254=lib\254_08.dll
+251=overlays\251_05.bin
+252=overlays\252_06.bin
+253=overlays\253_07.bin
+254=overlays\254_08.bin
 
-255=lib\255_09.dll
-256=lib\256_0B.dll
-257=lib\257_0C.dll
-258=lib\258_0D.dll
-259=lib\259_0E.dll
+255=overlays\255_09.bin
+256=overlays\256_0B.bin
+257=overlays\257_0C.bin
+258=overlays\258_0D.bin
+259=overlays\259_0E.bin
 
-260=lib\260_10.dll
-261=lib\261_11.dll
-262=lib\262_12.dll
-263=lib\263_13.dll
+260=overlays\260_10.bin
+261=overlays\261_11.bin
+262=overlays\262_12.bin
+263=overlays\263_13.bin
 
-# ========234 = LOCALIZATION SECTION===============
+# ===========234 = LOCALIZATION SECTION=================
 
 264=lang\ja.lng
 265=lang\en.lng
