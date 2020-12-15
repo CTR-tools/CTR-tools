@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="CTRFramework.Code\big\BigFile.cs" />
     <Compile Include="CTRFramework.Code\big\BigEntry.cs" />
+    <Compile Include="CTRFramework.Code\big\BigFileReader.cs" />
     <Compile Include="CTRFramework.Code\dyn\DynamicAnim.cs" />
     <Compile Include="CTRFramework.Code\dyn\DynamicHeader.cs" />
     <Compile Include="CTRFramework.Code\dyn\DynamicModel.cs" />
@@ -157,6 +158,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CTRFramework.Data\cseq.json">
@@ -187,6 +189,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CTRFramework.Data\samplenames.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTRFramework.Data\versions.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Properties\BuildDate.txt" />

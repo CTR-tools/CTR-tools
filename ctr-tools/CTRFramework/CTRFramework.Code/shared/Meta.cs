@@ -13,9 +13,11 @@ namespace CTRFramework.Shared
         public static string BasePath = System.AppDomain.CurrentDomain.BaseDirectory;
         public static string DataPath = Path.Combine(BasePath, "CTRFramework.Data");
         public static string JsonPath = Path.Combine(DataPath, "versions.json");
+        public static string XmlPath = Path.Combine(DataPath, "versions.xml");
         public static string HowlPath = Path.Combine(DataPath, "howlnames.txt");
         public static string CseqPath = Path.Combine(DataPath, "cseq.json");
         public static string SmplPath = Path.Combine(DataPath, "samplenames.txt");
+
 
         static JObject json;
 
@@ -82,6 +84,10 @@ namespace CTRFramework.Shared
         {
             string s = Meta.Detect(fn, "bigs", fc);
             return Meta.LoadNumberedList(Path.Combine(Meta.DataPath, s + ".txt"));
+        }
+        public static Dictionary<int, string> GetBigList(string fn)
+        {
+            return Meta.LoadNumberedList(Path.Combine(Meta.DataPath, fn));
         }
 
         public static Dictionary<int, string> LoadNumberedList(string path)

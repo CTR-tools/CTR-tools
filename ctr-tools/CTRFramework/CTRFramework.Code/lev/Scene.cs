@@ -36,6 +36,7 @@ namespace CTRFramework
         {
             return new Scene(fn);
         }
+
         public Scene(string s)
         {
             path = s;
