@@ -7,11 +7,7 @@ namespace CTRFramework.Shared
 {
     public class BinaryReaderEx : BinaryReader
     {
-        public BinaryReaderEx(MemoryStream ms) : base(ms)
-        {
-        }
-
-        public BinaryReaderEx(FileStream ms) : base(ms)
+        public BinaryReaderEx(Stream stream) : base(stream)
         {
         }
 
