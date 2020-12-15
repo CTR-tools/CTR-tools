@@ -62,24 +62,16 @@ namespace CTRFramework.Big
         private void LoadFromBig(string fn)
         {
             if (!File.Exists(fn))
+                throw new Exception($"File doesn't exist: {fn}");
+
+            Console.WriteLine($"Loading BIG from: {fn}");
+
+            using (BigFileReader b = new BigFileReader(File.OpenRead(fn)))
             {
-                Console.WriteLine("File not found: " + fn);
-                return;
-            }
-
-            Console.WriteLine("Loading BIG from: " + fn);
-
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(fn)))
-            {
-                if (br.ReadUInt32() != 0)
-                    Console.WriteLine("Warning! Possibly modified or not a BIG file.");
-
-                int totalFiles = br.ReadInt32();
-
-                var names = Meta.GetProperBigList(fn, totalFiles);
-
-                for (int i = 0; i < totalFiles; i++)
-                    Entries.Add(new BigEntry(br, (names.ContainsKey(i) ? names[i] : i.ToString("000")), i));
+                while (b.NextFile())
+                {
+                    Entries.Add(new BigEntry(b.GetFilename(), b.ReadFile()));
+                }
             }
 
             Console.WriteLine("BIG loaded.");

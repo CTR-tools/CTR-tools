@@ -21,9 +21,12 @@ namespace bigtool
 
                 string name = Path.GetFileNameWithoutExtension(args[0]).ToLower();
                 string ext = Path.GetExtension(args[0]).ToLower();
+                string bigpath = Path.GetDirectoryName(args[0]);
 
                 try
                 {
+                    string path = Path.Combine(bigpath, name);
+
                     BigFile big = BigFile.FromFile(args[0]);
 
                     if (big.Entries.Count > 0)

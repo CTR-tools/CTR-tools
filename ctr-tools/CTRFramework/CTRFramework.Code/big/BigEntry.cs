@@ -1,5 +1,4 @@
-﻿using CTRFramework.Shared;
-using System;
+﻿using System;
 using System.IO;
 
 namespace CTRFramework.Big
@@ -8,8 +7,11 @@ namespace CTRFramework.Big
     {
         public int Index;
         public string Name;
-        public int Size;
         public int Offset;
+        public int Size
+        {
+            get { return Data != null ? Data.Length : 0; }
+        }
 
         public int SizePadded
         {
@@ -27,33 +29,10 @@ namespace CTRFramework.Big
         {
         }
 
-        /// <summary>
-        /// Reads indexed Big Entry from BigFile
-        /// </summary>
-        /// <param name="br">Source stream</param>
-        /// <param name="name">Entry name</param>
-        /// <param name="i">Entry index</param>
-        public BigEntry(BinaryReaderEx br, string name, int i)
+        public BigEntry(string name, byte[] data)
         {
-            Index = i;
             Name = name;
-            br.Jump(4);
-
-            if (Index >= br.ReadInt32() || Index < 0)
-                throw new ArgumentOutOfRangeException("Big entry index out of range.");
-
-            br.Skip(i * 8);
-
-            Offset = br.ReadInt32() * Meta.SectorSize;
-            Size = br.ReadInt32();
-
-            if (Offset + Size > br.BaseStream.Length)
-            {
-                throw new ArgumentOutOfRangeException("Attempt to read data beyond binary stream.");
-            }
-
-            br.Jump(Offset);
-            Data = br.ReadBytes(Size);
+            Data = data;
         }
 
         /// <summary>
@@ -64,14 +43,12 @@ namespace CTRFramework.Big
         {
             Name = name != null ? name : path;
             Data = new byte[0];
-            Size = 0;
 
             if (File.Exists(path))
             {
                 try
                 {
                     Data = File.ReadAllBytes(path);
-                    Size = Data.Length;
                 }
                 catch
                 {
