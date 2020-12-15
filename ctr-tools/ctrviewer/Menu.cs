@@ -17,6 +17,7 @@ namespace ctrviewer
         public string Title;
         public string Action;
         public string Param;
+        public int Value;
         public bool Enabled;
         public float Width;
         public SwitchType sType;
@@ -24,7 +25,7 @@ namespace ctrviewer
         public int rangeval;
         public int rangemax;
 
-        public MenuItem(string t, string a, string p, bool e, SwitchType st = SwitchType.None, int rmax = 0)
+        public MenuItem(string t, string a, string p, bool e, SwitchType st = SwitchType.None, int rmax = 0, int intValue = 0)
         {
             Title = t;
             Action = a;
@@ -33,6 +34,7 @@ namespace ctrviewer
             sType = st;
             rangeval = 0;
             rangemax = rmax;
+            Value = intValue;
         }
 
         public void CalcWidth(SpriteFont font)
@@ -118,9 +120,52 @@ namespace ctrviewer
             video.Add(new MenuItem("back".ToUpper(), "link", "main", true));
             menus.Add("video", video);
 
+            List<MenuItem> cupmenu = new List<MenuItem>();
+            cupmenu.Add(new MenuItem("wumpa cup".ToUpper(), "link", "cup_wumpa", true));
+            cupmenu.Add(new MenuItem("crystal cup".ToUpper(), "link", "cup_cryst", true));
+            cupmenu.Add(new MenuItem("nitro cup".ToUpper(), "link", "cup_nitro", true));
+            cupmenu.Add(new MenuItem("crash cup".ToUpper(), "link", "cup_crash", true));
+            cupmenu.Add(new MenuItem("back".ToUpper(), "link", "main", true));
+            menus.Add("cupmenu", cupmenu);
+
+
+            List<MenuItem> cup_wumpa = new List<MenuItem>();
+            cup_wumpa.Add(new MenuItem("Crash Cove".ToUpper(), "loadbig", "", true, intValue: 3));
+            cup_wumpa.Add(new MenuItem("Tiger Temple".ToUpper(), "loadbig", "", true, intValue: 4));
+            cup_wumpa.Add(new MenuItem("Blizzard Bluff".ToUpper(), "loadbig", "", true, intValue: 2));
+            cup_wumpa.Add(new MenuItem("Coco Park".ToUpper(), "loadbig", "", true, intValue: 14));
+            cup_wumpa.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
+            menus.Add("cup_wumpa", cup_wumpa);
+
+
+            List<MenuItem> cup_cryst = new List<MenuItem>();
+            cup_cryst.Add(new MenuItem("Roo's Tubes".ToUpper(), "loadbig", "", true, intValue: 6));
+            cup_cryst.Add(new MenuItem("Dingo Canyon".ToUpper(), "loadbig", "", true, intValue: 0));
+            cup_cryst.Add(new MenuItem("Dragon Mines".ToUpper(), "loadbig", "", true, intValue: 1));
+            cup_cryst.Add(new MenuItem("Sewer Speedway".ToUpper(), "loadbig", "", true, intValue: 8));
+            cup_cryst.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
+            menus.Add("cup_cryst", cup_cryst);
+
+            List<MenuItem> cup_nitro = new List<MenuItem>();
+            cup_nitro.Add(new MenuItem("Mystery Caves".ToUpper(), "loadbig", "", true, intValue: 9));
+            cup_nitro.Add(new MenuItem("Papu's Pyramid".ToUpper(), "loadbig", "", true, intValue: 5));
+            cup_nitro.Add(new MenuItem("Cortex Castle".ToUpper(), "loadbig", "", true, intValue: 10));
+            cup_nitro.Add(new MenuItem("Tiny Arena".ToUpper(), "loadbig", "", true, intValue: 15));
+            cup_nitro.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
+            menus.Add("cup_nitro", cup_nitro);
+
+            List<MenuItem> cup_crash = new List<MenuItem>();
+            cup_crash.Add(new MenuItem("Polar Pass".ToUpper(), "loadbig", "", true, intValue: 12));
+            cup_crash.Add(new MenuItem("N. Gin Labs".ToUpper(), "loadbig", "", true, intValue: 11));
+            cup_crash.Add(new MenuItem("Hot Air Skyway".ToUpper(), "loadbig", "", true, intValue: 7));
+            cup_crash.Add(new MenuItem("Slide Colliseum".ToUpper(), "loadbig", "", true, intValue: 16));
+            cup_crash.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
+            menus.Add("cup_crash", cup_crash);
+
             List<MenuItem> main = new List<MenuItem>();
             main.Add(new MenuItem("resume".ToUpper(), "close", "", true));
-            main.Add(new MenuItem("reload level".ToUpper(), "load", "", true));
+            //main.Add(new MenuItem("reload level".ToUpper(), "load", "", true));
+            main.Add(new MenuItem("load level".ToUpper(), "link", "cupmenu", true));
             main.Add(new MenuItem("level options".ToUpper(), "link", "level", true));
             main.Add(new MenuItem("video options".ToUpper(), "link", "video", true));
             main.Add(new MenuItem("quit".ToUpper(), "exit", "", true));

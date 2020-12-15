@@ -1,4 +1,5 @@
 ﻿using CTRFramework;
+using CTRFramework.Big;
 using CTRFramework.Shared;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+
 
 namespace ctrviewer
 {
@@ -63,6 +65,7 @@ namespace ctrviewer
         {
             Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
+            graphics.HardwareModeSwitch = false;
         }
 
         public void GoFullScreen()
@@ -71,6 +74,7 @@ namespace ctrviewer
             graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
+
         }
 
         public void GoWindowed()
@@ -229,11 +233,11 @@ namespace ctrviewer
 
         bool gameLoaded = false;
 
-        private void LoadStuff()
+        private void LoadStuff(string lev = "")
         {
             gameLoaded = false;
 
-            LoadLevel();
+            LoadLevel(lev);
             ResetCamera();
 
             gameLoaded = true;
@@ -260,8 +264,19 @@ namespace ctrviewer
         }
 
 
-        private void LoadLevel()
+        private void LoadLevel(string lev = "")
         {
+            paths.Clear();
+
+            textures.Clear();
+            textures.Add("test", Content.Load<Texture2D>("test"));
+            textures.Add("flag", Content.Load<Texture2D>("flag"));
+            textures.Add("logo", Content.Load<Texture2D>("logo"));
+
+            sky = null;
+
+            GC.Collect();
+
             if (File.Exists("karts.lev"))
             {
                 Scene karts = Scene.FromFile("karts.lev");
@@ -305,8 +320,15 @@ namespace ctrviewer
 
             string[] files = new string[] { };
 
-            if (Directory.Exists(@"levels\"))
-                files = Directory.GetFiles(@"levels\", "*.lev");
+            if (lev == "")
+            {
+                if (Directory.Exists(@"levels\"))
+                    files = Directory.GetFiles(@"levels\", "*.lev");
+            }
+            else
+            {
+                files = new string[] { lev };
+            }
 
             if (files.Length == 0)
             {
@@ -389,8 +411,6 @@ namespace ctrviewer
 
             Console.WriteLine("extracted dynamics at: " + sw.Elapsed.TotalSeconds);
 
-
-
             foreach (Scene s in scn)
             {
                 foreach (PosAng pa in s.header.startGrid)
@@ -445,6 +465,8 @@ namespace ctrviewer
                 camera.SetRotation((float)(scn[0].header.startGrid[0].Angle.Y / 1024 * Math.PI * 2), scn[0].header.startGrid[0].Angle.X / 1024);
                 lowcamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.Y / 1024 * Math.PI * 2), scn[0].header.startGrid[0].Angle.X / 1024);
                 skycamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.Y / 1024 * Math.PI * 2), scn[0].header.startGrid[0].Angle.X / 1024);
+
+                UpdateCameras(new GameTime());
 
                 Console.WriteLine(scn[0].header.startGrid[0].Angle.ToString());
             }
@@ -542,6 +564,9 @@ namespace ctrviewer
                         case "load":
                             LoadGame();
                             InMenu = false;
+                            break;
+                        case "loadbig":
+                            LoadLevelFromBig(menu.SelectedItem.Value, 0);
                             break;
                         case "link":
                             menu.SetMenu(font);
@@ -727,7 +752,35 @@ namespace ctrviewer
             //loading.Wait();
         }
 
+        BigFileReader big;
 
+        private void LoadLevelFromBig(int levelId = 0, int mode = 0)
+        {
+            if (big == null)
+            {
+                if (File.Exists("bigfile.big"))
+                {
+                    big = new BigFileReader(File.OpenRead("bigfile.big"));
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+
+            big.FileCursor = levelId * 8 + mode * 2;
+
+            Directory.CreateDirectory(Path.Combine(Meta.BasePath, Directory.GetParent(big.GetFilename()).FullName));
+
+            File.WriteAllBytes(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+
+            big.NextFile();
+            File.WriteAllBytes(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+
+            LoadStuff(Path.Combine(Meta.BasePath, big.GetFilename()));
+
+        }
 
         protected override void Draw(GameTime gameTime)
         {
@@ -735,8 +788,7 @@ namespace ctrviewer
 
             GraphicsDevice.Clear(backColor);
 
-            if (RenderEnabled)
-                DrawLevel();
+            DrawLevel();
 
             if (InMenu)
                 menu.Render(GraphicsDevice, spriteBatch, font, tint);
@@ -765,7 +817,7 @@ namespace ctrviewer
                 spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
             if (scn.Count == 0 && gameLoaded)
-                spriteBatch.DrawString(font, "No levels loaded. Put LEV files in levels folder.".ToString(), new Vector2(20, 60), Color.Yellow);
+                spriteBatch.DrawString(font, "No levels loaded.\r\nPut LEV/VRM files in levels folder.\r\n...or put BIGFILE.BIG in root folder\r\nand use load level menu.".ToString(), new Vector2(20, 60), Color.Yellow);
 
             if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Keyboard.GetState().IsKeyDown(Keys.OemPlus))
                 spriteBatch.DrawString(font, String.Format("FOV {0}", camera.ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", camera.ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
