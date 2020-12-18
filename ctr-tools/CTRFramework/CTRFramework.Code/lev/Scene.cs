@@ -37,37 +37,28 @@ namespace CTRFramework
             return new Scene(fn);
         }
 
+
         public Scene(string s)
         {
             path = s;
             name = Path.GetFileNameWithoutExtension(s);
 
-            MemoryStream ms = new MemoryStream(File.ReadAllBytes(s));
-            BinaryReaderEx br = new BinaryReaderEx(ms);
+            byte[] data = File.ReadAllBytes(s);
 
-            int size = br.ReadInt32();
-
-            //this is for files with external offs file
-            if ((size & 0xFF) == 0x80)
+            using (MemoryStream ms = new MemoryStream(data, 4, data.Length - 4))
             {
-                ms = new MemoryStream(br.ReadBytes(size));
-                br = new BinaryReaderEx(ms);
-            }
-            else
-            {
-                ms = new MemoryStream(br.ReadBytes((int)br.BaseStream.Length - 4));
-                br = new BinaryReaderEx(ms);
-            }
+                using (BinaryReaderEx br = new BinaryReaderEx(ms))
+                {
+                    Read(br);
 
-            Read(br);
+                    string vrmpath = Path.ChangeExtension(s, ".vrm");
 
-
-            string vrmpath = Path.ChangeExtension(s, ".vrm");
-
-            if (File.Exists(vrmpath))
-            {
-                Console.WriteLine("VRAM found!");
-                ctrvram = CtrVrm.FromFile(vrmpath);
+                    if (File.Exists(vrmpath))
+                    {
+                        Console.WriteLine("VRAM found!");
+                        ctrvram = CtrVrm.FromFile(vrmpath);
+                    }
+                }
             }
         }
 
