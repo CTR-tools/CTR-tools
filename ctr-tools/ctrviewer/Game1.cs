@@ -9,7 +9,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-
+using Microsoft.Xna.Framework.Content.Pipeline;
+using MonoGame.Framework.Content.Pipeline.Builder;
 
 namespace ctrviewer
 {
@@ -74,7 +75,6 @@ namespace ctrviewer
             graphics.PreferredBackBufferHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
-
         }
 
         public void GoWindowed()
@@ -246,6 +246,8 @@ namespace ctrviewer
 
         private void LoadTextures(MGLevel qb)
         {
+
+
             foreach (string s in qb.textureList)
             {
                 string path = String.Format("levels\\tex\\{0}.png", s);
@@ -257,7 +259,10 @@ namespace ctrviewer
                 if (File.Exists(path))
                 {
                     if (!textures.ContainsKey(s))
-                        textures.Add(s, Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path)));
+                    {
+                        Texture2D t = Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path));
+                        textures.Add(s, t);
+                    }
                 }
                 else Console.WriteLine("Missing texture: " + s);
             }
@@ -566,7 +571,10 @@ namespace ctrviewer
                             InMenu = false;
                             break;
                         case "loadbig":
-                            LoadLevelFromBig(menu.SelectedItem.Value, 0);
+                            LoadLevelFromBig(menu.SelectedItem.Value, 0, 2);
+                            break;
+                        case "loadbigadv":
+                            LoadLevelFromBig(menu.SelectedItem.Value, 0, 3);
                             break;
                         case "link":
                             menu.SetMenu(font);
@@ -754,7 +762,7 @@ namespace ctrviewer
 
         BigFileReader big;
 
-        private void LoadLevelFromBig(int levelId = 0, int mode = 0)
+        private void LoadLevelFromBig(int levelId = 0, int mode = 0, int files = 2)
         {
             if (big == null)
             {
@@ -769,7 +777,7 @@ namespace ctrviewer
             }
 
 
-            big.FileCursor = levelId * 8 + mode * 2;
+            big.FileCursor = (files == 3 ? 200 + levelId * 3 : levelId * 8) + mode * files ;
 
             Directory.CreateDirectory(Path.Combine(Meta.BasePath, Directory.GetParent(big.GetFilename()).FullName));
 

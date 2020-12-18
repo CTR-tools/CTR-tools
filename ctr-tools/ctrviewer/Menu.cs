@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ctrviewer
 {
@@ -125,6 +126,9 @@ namespace ctrviewer
             cupmenu.Add(new MenuItem("crystal cup".ToUpper(), "link", "cup_cryst", true));
             cupmenu.Add(new MenuItem("nitro cup".ToUpper(), "link", "cup_nitro", true));
             cupmenu.Add(new MenuItem("crash cup".ToUpper(), "link", "cup_crash", true));
+            cupmenu.Add(new MenuItem("bonus tracks".ToUpper(), "link", "bonus_levels", true));
+            cupmenu.Add(new MenuItem("battle arenas".ToUpper(), "link", "battle_arenas", true));
+            cupmenu.Add(new MenuItem("adventure".ToUpper(), "link", "adventure", true));
             cupmenu.Add(new MenuItem("back".ToUpper(), "link", "main", true));
             menus.Add("cupmenu", cupmenu);
 
@@ -162,10 +166,36 @@ namespace ctrviewer
             cup_crash.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
             menus.Add("cup_crash", cup_crash);
 
+            List<MenuItem> bonus_levels = new List<MenuItem>();
+            bonus_levels.Add(new MenuItem("Oxide Station".ToUpper(), "loadbig", "", true, intValue: 13));
+            bonus_levels.Add(new MenuItem("Turbo Track".ToUpper(), "loadbig", "", true, intValue: 17));
+            bonus_levels.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
+            menus.Add("bonus_levels", bonus_levels);
+
+            List<MenuItem> battle_arenas = new List<MenuItem>();
+            battle_arenas.Add(new MenuItem("Nitro Court".ToUpper(), "loadbig", "", true, intValue: 18));
+            battle_arenas.Add(new MenuItem("Rampage Ruins".ToUpper(), "loadbig", "", true, intValue: 19));
+            battle_arenas.Add(new MenuItem("Parking Lot".ToUpper(), "loadbig", "", true, intValue: 20));
+            battle_arenas.Add(new MenuItem("Skull Rock".ToUpper(), "loadbig", "", true, intValue: 21));
+            battle_arenas.Add(new MenuItem("North Bowl".ToUpper(), "loadbig", "", true, intValue: 22));
+            battle_arenas.Add(new MenuItem("Rocky Road".ToUpper(), "loadbig", "", true, intValue: 23));
+            battle_arenas.Add(new MenuItem("Lab Basement".ToUpper(), "loadbig", "", true, intValue: 24));
+            battle_arenas.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
+            menus.Add("battle_arenas", battle_arenas);
+
+            List<MenuItem> adventure = new List<MenuItem>();
+            adventure.Add(new MenuItem("Gem Valley".ToUpper(), "loadbigadv", "", true, intValue: 0));
+            adventure.Add(new MenuItem("N. Sanity Beach".ToUpper(), "loadbigadv", "", true, intValue: 1));
+            adventure.Add(new MenuItem("Lost Ruins".ToUpper(), "loadbigadv", "", true, intValue: 2));
+            adventure.Add(new MenuItem("Glacier Park".ToUpper(), "loadbigadv", "", true, intValue: 3));
+            adventure.Add(new MenuItem("Citadel City".ToUpper(), "loadbigadv", "", true, intValue: 4));
+            adventure.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
+            menus.Add("adventure", adventure);
+
             List<MenuItem> main = new List<MenuItem>();
             main.Add(new MenuItem("resume".ToUpper(), "close", "", true));
             //main.Add(new MenuItem("reload level".ToUpper(), "load", "", true));
-            main.Add(new MenuItem("load level".ToUpper(), "link", "cupmenu", true));
+            main.Add(new MenuItem("load level".ToUpper(), "link", "cupmenu", File.Exists("bigfile.big")));
             main.Add(new MenuItem("level options".ToUpper(), "link", "level", true));
             main.Add(new MenuItem("video options".ToUpper(), "link", "video", true));
             main.Add(new MenuItem("quit".ToUpper(), "exit", "", true));
@@ -183,7 +213,7 @@ namespace ctrviewer
             {
                 Selection++;
             }
-            while (items[Selection].Action == "");
+            while (items[Selection].Action == "" && items[Selection].Enabled);
         }
 
         public void Previous()
@@ -192,7 +222,7 @@ namespace ctrviewer
             {
                 Selection--;
             }
-            while (items[Selection].Action == "");
+            while (items[Selection].Action == "" && items[Selection].Enabled);
         }
 
 
@@ -228,14 +258,15 @@ namespace ctrviewer
                     Game1.currentflag = SelectedItem.rangeval;
                 }
             }
-            if ((newstate.Buttons.A == ButtonState.Pressed && newstate.Buttons.A != oldstate.Buttons.A) || IsPressed(Keys.Enter, oldkb, newkb) || IsPressed(Keys.Space, oldkb, newkb)) Exec = true;
+            if ((newstate.Buttons.A == ButtonState.Pressed && newstate.Buttons.A != oldstate.Buttons.A) || IsPressed(Keys.Enter, oldkb, newkb) || IsPressed(Keys.Space, oldkb, newkb))
+                if (SelectedItem.Enabled)
+                    Exec = true;
         }
 
         Vector2 shadow_offset = new Vector2(2, 4);
 
         public void Render(GraphicsDevice gd, SpriteBatch g, SpriteFont fnt, Texture2D background)
         {
-
             float scale = gd.Viewport.Height / 1080f;
 
             g.Begin(depthStencilState: DepthStencilState.None);
