@@ -99,5 +99,13 @@ namespace CTRFramework.Shared
             Console.WriteLine(result.ToString());
             return result;
         }
+
+        public static void CheckFolder(string fileName)
+        {
+            string path = Path.GetDirectoryName(fileName);
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+        }
     }
 }
