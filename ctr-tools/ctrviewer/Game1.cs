@@ -9,13 +9,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Content.Pipeline;
-using MonoGame.Framework.Content.Pipeline.Builder;
+using CTRFramework.Sound;
+using CTRFramework.Sound.CSeq;
 
 namespace ctrviewer
 {
+
     public class Game1 : Game
     {
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont font;
@@ -516,126 +518,131 @@ namespace ctrviewer
             //camera.SetRotation(x, y);
             //Console.WriteLine(x);
 
-            if (newstate.Buttons.Start == ButtonState.Pressed && newstate.Buttons.Back == ButtonState.Pressed)
-                Exit();
-
-            if (Keyboard.GetState().IsKeyDown(Keys.RightAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
+            if (IsActive)
             {
-                if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen();
-            }
 
+                if (newstate.Buttons.Start == ButtonState.Pressed && newstate.Buttons.Back == ButtonState.Pressed)
+                    Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus))
-            {
-                float x = camera.ViewAngle;
-                x--;
-                if (x < 20) x = 20;
-
-                camera.ViewAngle = x;
-                lowcamera.ViewAngle = x;
-                skycamera.ViewAngle = x;
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.OemPlus))
-            {
-                float x = camera.ViewAngle;
-                x++;
-                if (x > 150) x = 150;
-
-                camera.ViewAngle = x;
-                lowcamera.ViewAngle = x;
-                skycamera.ViewAngle = x;
-            }
-
-            if ((newstate.Buttons.Start == ButtonState.Pressed && oldstate.Buttons.Start != newstate.Buttons.Start) ||
-                (newkb.IsKeyDown(Keys.Escape) && newkb.IsKeyDown(Keys.Escape) != oldkb.IsKeyDown(Keys.Escape)))
-            {
-                InMenu = !InMenu;
-            }
-
-            if (InMenu)
-            {
-                menu.Update(oldstate, newstate, oldkb, newkb);
-
-                //currentflag = menu.items.Find(x => x.Title == "current flag: {0}").rangeval;
-
-                if (menu.Exec)
+                if (Keyboard.GetState().IsKeyDown(Keys.RightAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
-                    switch (menu.SelectedItem.Action)
-                    {
-                        case "close":
-                            InMenu = false;
-                            break;
-                        case "load":
-                            LoadGame();
-                            InMenu = false;
-                            break;
-                        case "loadbig":
-                            LoadLevelFromBig(menu.SelectedItem.Value, 0, 2);
-                            break;
-                        case "loadbigadv":
-                            LoadLevelFromBig(menu.SelectedItem.Value, 0, 3);
-                            break;
-                        case "link":
-                            menu.SetMenu(font);
-                            break;
-                        case "toggle":
-                            switch (menu.SelectedItem.Param)
-                            {
-                                case "inst": show_inst = !show_inst; break;
-                                case "paths": show_paths = !show_paths; break;
-                                case "lod": lodEnabled = !lodEnabled; if (lodEnabled) EnableLodCamera(); else DisableLodCamera(); break;
-                                case "antialias": graphics.PreferMultiSampling = !graphics.PreferMultiSampling; break;
-                                case "invis": HideInvisible = !HideInvisible; break;
-                                case "filter": Samplers.EnableBilinear = !Samplers.EnableBilinear; Samplers.Refresh(); break;
-                                case "wire": Samplers.EnableWireframe = !Samplers.EnableWireframe; break;
-                                case "window": if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen(); break;
-                                case "lockfps":
-                                    lock_fps = !lock_fps;
-                                    graphics.SynchronizeWithVerticalRetrace = lock_fps;
-                                    IsFixedTimeStep = lock_fps;
-                                    graphics.ApplyChanges();
-                                    break;
-                                default: Console.WriteLine("unimplemented toggle: " + menu.SelectedItem.Param); break;
-                            }
-                            break;
-
-                        case "exit":
-                            Exit();
-                            break;
-                    }
-
-                    menu.Exec = !menu.Exec;
+                    if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen();
                 }
 
-                if (newstate.Buttons.B == ButtonState.Pressed && newstate.Buttons.B != oldstate.Buttons.B)
-                {
-                    bool togglemenu = true;
 
-                    foreach (MenuItem m in menu.items)
+                if (Keyboard.GetState().IsKeyDown(Keys.OemMinus))
+                {
+                    float x = camera.ViewAngle;
+                    x--;
+                    if (x < 20) x = 20;
+
+                    camera.ViewAngle = x;
+                    lowcamera.ViewAngle = x;
+                    skycamera.ViewAngle = x;
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.OemPlus))
+                {
+                    float x = camera.ViewAngle;
+                    x++;
+                    if (x > 150) x = 150;
+
+                    camera.ViewAngle = x;
+                    lowcamera.ViewAngle = x;
+                    skycamera.ViewAngle = x;
+                }
+
+                if ((newstate.Buttons.Start == ButtonState.Pressed && oldstate.Buttons.Start != newstate.Buttons.Start) ||
+                    (newkb.IsKeyDown(Keys.Escape) && newkb.IsKeyDown(Keys.Escape) != oldkb.IsKeyDown(Keys.Escape)))
+                {
+                    InMenu = !InMenu;
+                }
+
+                if (InMenu)
+                {
+                    menu.Update(oldstate, newstate, oldkb, newkb);
+
+                    //currentflag = menu.items.Find(x => x.Title == "current flag: {0}").rangeval;
+
+                    if (menu.Exec)
                     {
-                        Console.WriteLine(m.Action + " " + m.Title);
-                        if (m.Action == "link" && m.Title == "BACK")
+                        switch (menu.SelectedItem.Action)
                         {
-                            menu.SetMenu(font, m.Param);
-                            togglemenu = false;
+                            case "close":
+                                InMenu = false;
+                                break;
+                            case "load":
+                                LoadGame();
+                                InMenu = false;
+                                break;
+                            case "loadbig":
+                                LoadLevelFromBig(menu.SelectedItem.Value, 0, 2);
+                                break;
+                            case "loadbigadv":
+                                LoadLevelFromBig(menu.SelectedItem.Value, 0, 3);
+                                break;
+                            case "link":
+                                menu.SetMenu(font);
+                                break;
+                            case "toggle":
+                                switch (menu.SelectedItem.Param)
+                                {
+                                    case "inst": show_inst = !show_inst; break;
+                                    case "paths": show_paths = !show_paths; break;
+                                    case "lod": lodEnabled = !lodEnabled; if (lodEnabled) EnableLodCamera(); else DisableLodCamera(); break;
+                                    case "antialias": graphics.PreferMultiSampling = !graphics.PreferMultiSampling; break;
+                                    case "invis": HideInvisible = !HideInvisible; break;
+                                    case "filter": Samplers.EnableBilinear = !Samplers.EnableBilinear; Samplers.Refresh(); break;
+                                    case "wire": Samplers.EnableWireframe = !Samplers.EnableWireframe; break;
+                                    case "window": if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen(); break;
+                                    case "lockfps":
+                                        lock_fps = !lock_fps;
+                                        graphics.SynchronizeWithVerticalRetrace = lock_fps;
+                                        IsFixedTimeStep = lock_fps;
+                                        graphics.ApplyChanges();
+                                        break;
+                                    default: Console.WriteLine("unimplemented toggle: " + menu.SelectedItem.Param); break;
+                                }
+                                break;
+
+                            case "exit":
+                                Exit();
+                                break;
                         }
+
+                        menu.Exec = !menu.Exec;
                     }
 
-                    if (togglemenu) InMenu = !InMenu;
+                    if (newstate.Buttons.B == ButtonState.Pressed && newstate.Buttons.B != oldstate.Buttons.B)
+                    {
+                        bool togglemenu = true;
+
+                        foreach (MenuItem m in menu.items)
+                        {
+                            Console.WriteLine(m.Action + " " + m.Title);
+                            if (m.Action == "link" && m.Title == "BACK")
+                            {
+                                menu.SetMenu(font, m.Param);
+                                togglemenu = false;
+                            }
+                        }
+
+                        if (togglemenu) InMenu = !InMenu;
+                    }
                 }
-            }
-            else
-            {
-                foreach (MGLevel mg in levels)
-                    mg.Update(gameTime);
+                else
+                {
+                    foreach (MGLevel mg in levels)
+                        mg.Update(gameTime);
 
-                if (ControlsEnabled)
-                    UpdateCameras(gameTime);
-            }
+                    if (ControlsEnabled)
+                        UpdateCameras(gameTime);
+                }
 
-            oldstate = newstate;
-            oldkb = newkb;
+                oldstate = newstate;
+                oldkb = newkb;
+
+            }
 
             base.Update(gameTime);
         }
@@ -761,6 +768,7 @@ namespace ctrviewer
         }
 
         BigFileReader big;
+        Howl howl;
 
         private void LoadLevelFromBig(int levelId = 0, int mode = 0, int files = 2)
         {
@@ -776,7 +784,6 @@ namespace ctrviewer
                 }
             }
 
-
             big.FileCursor = (files == 3 ? 200 + levelId * 3 : levelId * 8) + mode * files ;
 
             Directory.CreateDirectory(Path.Combine(Meta.BasePath, Directory.GetParent(big.GetFilename()).FullName));
@@ -788,7 +795,22 @@ namespace ctrviewer
 
             LoadStuff(Path.Combine(Meta.BasePath, big.GetFilename()));
 
+            if (howl == null)
+            {
+                if (File.Exists("kart.hwl"))
+                {
+                    howl = Howl.FromFile("kart.hwl");
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            //howl.ExportAllSamples();
         }
+
+        
 
         protected override void Draw(GameTime gameTime)
         {
