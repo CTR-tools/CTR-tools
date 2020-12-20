@@ -202,6 +202,8 @@ namespace CTRFramework.Sound.CSeq
         /// <param name="fileName">Target file name.</param>
         public void Export(string fileName)
         {
+            Helpers.CheckFolder(fileName);
+
             using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(fileName)))
             {
                 header.Write(bw);
@@ -246,8 +248,6 @@ namespace CTRFramework.Sound.CSeq
                 bw.Close();
 
             }
-
-            System.Windows.Forms.MessageBox.Show("done");
         }
 
 

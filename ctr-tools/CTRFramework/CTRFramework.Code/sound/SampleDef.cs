@@ -90,7 +90,8 @@ namespace CTRFramework.Sound
                 Helpers.Panic(this, $"SampleDef magic1 = {magic1}");
 
             if (always0 != 0)
-                throw new Exception(String.Format("SampleDef always0 = {0} ", always0));
+                return;
+                //throw new Exception(String.Format("SampleDef always0 = {0} ", always0));
         }
 
         public virtual void Write(BinaryWriterEx bw)

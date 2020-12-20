@@ -25,7 +25,7 @@ namespace CTRFramework.Sound
 
         public List<Bank> banks = new List<Bank>();
         public List<CSEQ> sequences = new List<CSEQ>();
-
+        
         public static int GetFreq(int sampleId)
         {
             foreach (SampleDef sd in samples1)
@@ -110,6 +110,15 @@ namespace CTRFramework.Sound
         public Howl(BinaryReaderEx br)
         {
             Read(br);
+        }
+
+
+        public static Howl FromFile(string filename)
+        {
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            {
+                return Howl.FromReader(br);
+            }
         }
 
 
@@ -203,6 +212,16 @@ namespace CTRFramework.Sound
         }
 
 
+
+        public void ExportCSEQ()
+        {
+            int i = 0;
+            foreach (var c in sequences)
+            {
+                c.Export($".\\seqs\\{i}.cseq");
+                i++;
+            }
+        }
 
         public void ExportCSEQ(BinaryReaderEx br)
         {
