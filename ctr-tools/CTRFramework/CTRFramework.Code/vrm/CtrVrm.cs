@@ -17,6 +17,8 @@ namespace CTRFramework.Vram
 
         public static Tim FromStream(Stream str)
         {
+            buffer = new Tim(new Rectangle(0, 0, Width, Height));
+
             using (BinaryReaderEx br = new BinaryReaderEx(str))
             {
                 if (br.ReadInt32() == 0x20)
