@@ -297,8 +297,7 @@ namespace CTRFramework
                 Console.WriteLine(ctrvram.ToString());
                 Console.WriteLine("Exporting textures...");
 
-                if (!Directory.Exists(dir))
-                    Directory.CreateDirectory(dir);
+                Helpers.CheckFolder(dir);
 
                 foreach (TextureLayout tl in GetTexturesList(lod).Values)
                     ctrvram.GetTexture(tl, dir);
@@ -320,8 +319,7 @@ namespace CTRFramework
                 Console.WriteLine(ctrvram.ToString());
                 Console.WriteLine("Exporting textures...");
 
-                if (!Directory.Exists(dir))
-                    Directory.CreateDirectory(dir);
+                Helpers.CheckFolder(dir);
 
                 foreach (TextureLayout tl in GetTexturesList().Values)
                     ctrvram.GetTexture(tl, dir);

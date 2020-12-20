@@ -235,7 +235,7 @@ namespace ctrviewer
 
         bool gameLoaded = false;
 
-        private void LoadStuff(string lev = "")
+        private void LoadStuff(string[] lev)
         {
             gameLoaded = false;
 
@@ -271,14 +271,22 @@ namespace ctrviewer
         }
 
 
-        private void LoadLevel(string lev = "")
+        private void LoadLevel(string[] lev)
         {
+            if (lev == null)
+                lev = new string[] { };
+
             paths.Clear();
 
             textures.Clear();
             textures.Add("test", Content.Load<Texture2D>("test"));
             textures.Add("flag", Content.Load<Texture2D>("flag"));
             textures.Add("logo", Content.Load<Texture2D>("logo"));
+
+            scn.Clear();
+            levels.Clear();
+            quads_low.Clear();
+            instanced.Clear();
 
             sky = null;
 
@@ -320,21 +328,16 @@ namespace ctrviewer
 
             Console.WriteLine("LoadLevel()");
 
-            scn.Clear();
-            levels.Clear();
-            quads_low.Clear();
-            instanced.Clear();
-
             string[] files = new string[] { };
 
-            if (lev == "")
+            if (lev.Length == 0)
             {
                 if (Directory.Exists(@"levels\"))
                     files = Directory.GetFiles(@"levels\", "*.lev");
             }
             else
             {
-                files = new string[] { lev };
+                files = lev;
             }
 
             if (files.Length == 0)
@@ -344,7 +347,10 @@ namespace ctrviewer
             }
 
             foreach (string s in files)
+            {
                 scn.Add(Scene.FromFile(s));
+            }
+
 
             Console.WriteLine("scenes parsed at: " + sw.Elapsed.TotalSeconds);
 
@@ -445,8 +451,10 @@ namespace ctrviewer
             }
 
 
+            
             foreach (Scene s in scn)
-                s.ExportTexturesAll("levels\\tex");
+                s.ExportTexturesAll(Path.Combine(Meta.BasePath, "levels\\tex"));
+            
 
             Console.WriteLine("textures extracted at: " + sw.Elapsed.TotalSeconds);
 
@@ -505,13 +513,6 @@ namespace ctrviewer
             if (loading == null)
                 LoadGame();
 
-            newstate = GamePad.GetState(activeGamePad);
-            newkb = Keyboard.GetState();
-
-
-            foreach (Kart k in karts)
-                k.Update(gameTime);
-
             //x += 0.01f ;
             //if (x > Math.PI * 2)
             //    x = 0;
@@ -520,6 +521,12 @@ namespace ctrviewer
 
             if (IsActive)
             {
+                newstate = GamePad.GetState(activeGamePad);
+                newkb = Keyboard.GetState();
+
+
+                foreach (Kart k in karts)
+                    k.Update(gameTime);
 
                 if (newstate.Buttons.Start == ButtonState.Pressed && newstate.Buttons.Back == ButtonState.Pressed)
                     Exit();
@@ -761,7 +768,7 @@ namespace ctrviewer
 
         private void LoadGame()
         {
-            LoadStuff();
+            LoadStuff(null);
             loading = Task.Run(() => { });
             //loading = Task.Run(() => LoadStuff());
             //loading.Wait();
@@ -784,16 +791,38 @@ namespace ctrviewer
                 }
             }
 
-            big.FileCursor = (files == 3 ? 200 + levelId * 3 : levelId * 8) + mode * files ;
+            if (levelId == -1 && files == 3)
+            {
+                string[] levels = new string[5];
 
-            Directory.CreateDirectory(Path.Combine(Meta.BasePath, Directory.GetParent(big.GetFilename()).FullName));
+                for (int i = 0; i < 5; i++)
+                {
+                    big.FileCursor = 200 + i * 3;
 
-            File.WriteAllBytes(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+                    Directory.CreateDirectory(Path.Combine(Meta.BasePath, Directory.GetParent(big.GetFilename()).FullName));
+                    File.WriteAllBytes(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
 
-            big.NextFile();
-            File.WriteAllBytes(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+                    big.NextFile();
 
-            LoadStuff(Path.Combine(Meta.BasePath, big.GetFilename()));
+                    levels[i] = Path.Combine(Meta.BasePath, big.GetFilename());
+                    File.WriteAllBytes(levels[i], big.ReadFile());
+                }
+
+                LoadStuff(levels);
+            }
+            else
+            {
+                big.FileCursor = (files == 3 ? 200 + levelId * 3 : levelId * 8) + mode * files;
+
+                Directory.CreateDirectory(Path.Combine(Meta.BasePath, Directory.GetParent(big.GetFilename()).FullName));
+
+                File.WriteAllBytes(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+
+                big.NextFile();
+                File.WriteAllBytes(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+
+                LoadStuff(new string[] { Path.Combine(Meta.BasePath, big.GetFilename()) } );
+            }
 
             if (howl == null)
             {
@@ -806,7 +835,7 @@ namespace ctrviewer
                     return;
                 }
             }
-
+            
             //howl.ExportAllSamples();
         }
 

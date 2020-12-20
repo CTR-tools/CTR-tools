@@ -189,6 +189,7 @@ namespace ctrviewer
             adventure.Add(new MenuItem("Lost Ruins".ToUpper(), "loadbigadv", "", true, intValue: 2));
             adventure.Add(new MenuItem("Glacier Park".ToUpper(), "loadbigadv", "", true, intValue: 3));
             adventure.Add(new MenuItem("Citadel City".ToUpper(), "loadbigadv", "", true, intValue: 4));
+            adventure.Add(new MenuItem("All at once".ToUpper(), "loadbigadv", "", true, intValue: -1));
             adventure.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
             menus.Add("adventure", adventure);
 
