@@ -107,6 +107,7 @@ namespace ctrviewer
             level.Add(new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true));
             level.Add(new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true));
             level.Add(new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true));
+            level.Add(new MenuItem("toggle visdata".ToUpper(), "toggle", "visbox", true));
             level.Add(new MenuItem("toggle game objects".ToUpper(), "toggle", "inst", true));
             level.Add(new MenuItem("toggle paths".ToUpper(), "toggle", "paths", true));
             level.Add(new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true));

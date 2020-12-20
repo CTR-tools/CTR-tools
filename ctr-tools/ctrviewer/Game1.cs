@@ -1,6 +1,7 @@
 ﻿using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Shared;
+using CTRFramework.Sound;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -9,8 +10,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using CTRFramework.Sound;
-using CTRFramework.Sound.CSeq;
 
 namespace ctrviewer
 {
@@ -31,6 +30,9 @@ namespace ctrviewer
         List<InstancedModel> paths = new List<InstancedModel>();
 
         List<Kart> karts = new List<Kart>();
+
+
+        List<VertexPositionColorTexture[]> bbox = new List<VertexPositionColorTexture[]>();
 
         Menu menu;
 
@@ -288,6 +290,8 @@ namespace ctrviewer
             quads_low.Clear();
             instanced.Clear();
 
+            bbox.Clear();
+
             sky = null;
 
             GC.Collect();
@@ -451,10 +455,10 @@ namespace ctrviewer
             }
 
 
-            
+
             foreach (Scene s in scn)
                 s.ExportTexturesAll(Path.Combine(Meta.BasePath, "levels\\tex"));
-            
+
 
             Console.WriteLine("textures extracted at: " + sw.Elapsed.TotalSeconds);
 
@@ -462,6 +466,14 @@ namespace ctrviewer
 
             foreach (MGLevel q in levels) LoadTextures(q);
             foreach (MGLevel q in quads_low) LoadTextures(q);
+
+            foreach (Scene s in scn)
+            {
+                foreach (var b in s.visdata)
+                {
+                    bbox.Add(MGConverter.ToLineList(b.bbox));
+                }
+            }
 
             sw.Stop();
 
@@ -491,6 +503,7 @@ namespace ctrviewer
         {
         }
 
+        public bool renderVisBoxes = false;
         public bool updatemouse = false;
         public bool InMenu = false;
         public static bool HideInvisible = true;
@@ -599,6 +612,7 @@ namespace ctrviewer
                                     case "lod": lodEnabled = !lodEnabled; if (lodEnabled) EnableLodCamera(); else DisableLodCamera(); break;
                                     case "antialias": graphics.PreferMultiSampling = !graphics.PreferMultiSampling; break;
                                     case "invis": HideInvisible = !HideInvisible; break;
+                                    case "visbox": renderVisBoxes = !renderVisBoxes; break;
                                     case "filter": Samplers.EnableBilinear = !Samplers.EnableBilinear; Samplers.Refresh(); break;
                                     case "wire": Samplers.EnableWireframe = !Samplers.EnableWireframe; break;
                                     case "window": if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen(); break;
@@ -760,6 +774,20 @@ namespace ctrviewer
                         k.Render(graphics, instanceEffect, camera);
 
                 }
+
+                if (renderVisBoxes)
+                {
+                    //GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
+
+                    foreach (var x in bbox)
+                    {
+                        foreach (var pass in effect.CurrentTechnique.Passes)
+                        {
+                            pass.Apply();
+                            graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, x, 0, x.Length / 2);
+                        }
+                    }
+                }
             }
         }
 
@@ -821,7 +849,7 @@ namespace ctrviewer
                 big.NextFile();
                 File.WriteAllBytes(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
 
-                LoadStuff(new string[] { Path.Combine(Meta.BasePath, big.GetFilename()) } );
+                LoadStuff(new string[] { Path.Combine(Meta.BasePath, big.GetFilename()) });
             }
 
             if (howl == null)
@@ -835,11 +863,11 @@ namespace ctrviewer
                     return;
                 }
             }
-            
+
             //howl.ExportAllSamples();
         }
 
-        
+
 
         protected override void Draw(GameTime gameTime)
         {

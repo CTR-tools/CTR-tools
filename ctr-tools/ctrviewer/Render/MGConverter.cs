@@ -15,6 +15,53 @@ namespace ctrviewer
             return new Color(s.X, s.Y, s.Z, s.W);
         }
 
+        public static VertexPositionColorTexture[] ToLineList(CTRFramework.Shared.BoundingBox bbox)
+        {
+            Vector3 min = ToVector3(bbox.Min);
+            Vector3 max = ToVector3(bbox.Max);
+
+            return new VertexPositionColorTexture[]
+            {
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
+
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
+
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
+
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
+
+
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
+
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
+
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
+
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
+
+
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
+
+                                new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
+                                                new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
+
+                                                                new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
+                                                                                new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
+                            new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), Color.White, new Vector2(0,0))
+
+            };
+        }
+
         public static VertexPositionColorTexture ToVptc(CTRFramework.Vertex v, CTRFramework.Shared.Vector2b uv)
         {
             VertexPositionColorTexture mono_v = new VertexPositionColorTexture();

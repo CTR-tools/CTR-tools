@@ -25,7 +25,7 @@ namespace CTRFramework.Sound
 
         public List<Bank> banks = new List<Bank>();
         public List<CSEQ> sequences = new List<CSEQ>();
-        
+
         public static int GetFreq(int sampleId)
         {
             foreach (SampleDef sd in samples1)

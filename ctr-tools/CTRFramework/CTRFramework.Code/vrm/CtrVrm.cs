@@ -55,7 +55,7 @@ namespace CTRFramework.Vram
             }
 
         }
-    
+
 
         public static Tim FromFile(string fn)
         {

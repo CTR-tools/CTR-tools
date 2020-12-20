@@ -13,6 +13,7 @@ namespace model_reader
     {
         static void Main(string[] args)
         {
+            //this code should be moved to framework i guess
             //this is here to force dots in floats.
             CultureInfo customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
