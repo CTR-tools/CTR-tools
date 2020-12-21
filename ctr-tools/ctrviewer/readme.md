@@ -24,15 +24,15 @@ you can of course use larger images, but if you want to make it look like in-gam
 Notice: XInput gamepad is strongly recommended, but mouse+keyboards is supported too.
 You can also use x360ce for DirectInput devices.
 
-move: left stick/wasd
-rotate: right stick/arrow keys/hold left mouse click and move mouse
-speed up: right trigger/left shift
-menu: start/esc
-confirm/cancel: A/B or enter
-menu navigation: dpad/wasd/arrows
-force quit: select+start (back+start on xbox)/alt-f4
-fov change: +/-
-alt+enter: fullscreen toggle
+* move: left stick/wasd
+* rotate: right stick/arrow keys/hold left mouse click and move mouse
+* speed up: right trigger/left shift
+* menu: start/esc
+* confirm/cancel: A/B or enter
+* menu navigation: dpad/wasd/arrows
+* force quit: select+start (back+start on xbox)/alt-f4
+* fov change: +/-
+* alt+enter: fullscreen toggle
 
 
 2016-2020, DCxDemo*.
