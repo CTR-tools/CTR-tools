@@ -88,7 +88,9 @@ types:
       - id: bbox_max
         type: vector3s      
       - id: skip_somedata
-        size: 12
+        size: 8
+	  - id: num_quad_block
+        type: u4
       - id: ptr_quad_block
         type: u4
       
