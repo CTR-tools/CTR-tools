@@ -264,6 +264,8 @@ namespace ctrviewer
                 {
                     if (!textures.ContainsKey(s))
                     {
+
+
                         Texture2D t = Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path));
                         textures.Add(s, t);
                     }
@@ -612,6 +614,7 @@ namespace ctrviewer
                                     case "lod": lodEnabled = !lodEnabled; if (lodEnabled) EnableLodCamera(); else DisableLodCamera(); break;
                                     case "antialias": graphics.PreferMultiSampling = !graphics.PreferMultiSampling; break;
                                     case "invis": HideInvisible = !HideInvisible; break;
+                                    case "campos": showCamPos = !showCamPos; break;
                                     case "visbox": renderVisBoxes = !renderVisBoxes; break;
                                     case "filter": Samplers.EnableBilinear = !Samplers.EnableBilinear; Samplers.Refresh(); break;
                                     case "wire": Samplers.EnableWireframe = !Samplers.EnableWireframe; break;
@@ -868,6 +871,7 @@ namespace ctrviewer
         }
 
 
+        bool showCamPos = false;
 
         protected override void Draw(GameTime gameTime)
         {
@@ -908,6 +912,12 @@ namespace ctrviewer
 
             if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Keyboard.GetState().IsKeyDown(Keys.OemPlus))
                 spriteBatch.DrawString(font, String.Format("FOV {0}", camera.ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", camera.ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
+
+            if (showCamPos)
+                spriteBatch.DrawString(font, $"({(int)camera.Position.X}, {(int)camera.Position.Y}, {(int)camera.Position.Z})", new Vector2(20, 20), Color.Yellow);
+
+
+
 
             //spriteBatch.DrawString(font, IsActive ? "Active" : "Not active", new Vector2(20, 20), Color.Yellow);
 

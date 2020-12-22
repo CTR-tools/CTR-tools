@@ -180,6 +180,7 @@ namespace CTRFramework.Vram
             }
         }
 
+
         /// <summary>
         /// This function is necessary to fix pixel order in 4-bit BMPs.
         /// </summary>
@@ -269,10 +270,10 @@ namespace CTRFramework.Vram
 
                 if (x.region.Width > 0 && x.region.Height > 0)
                 {
-                    string n = path + "\\" + (name == "" ? tl.Tag() : name); ;
+                    string n = path + "\\" + (name == "" ? tl.Tag() : name);
 
                     //if (!File.Exists(n + ".tim"))
-                    x.Write(n + ".tim");
+                    //x.Write(n + ".tim");
 
                     //if (!File.Exists(n + ".bmp"))
                     x.SaveBMP(n + ".bmp", CtrClutToBmpPalette(x.clutdata));
@@ -283,6 +284,8 @@ namespace CTRFramework.Vram
                     {
                         newBmp.Save(n + ".png", System.Drawing.Imaging.ImageFormat.Png);
                     }
+
+                    File.Delete(n + ".bmp");
                 }
                 else
                 {
@@ -385,7 +388,6 @@ namespace CTRFramework.Vram
                 g = 0;
                 b = 255;
             }
-
 
             return Color.FromArgb((useAlpha ? a : 255), r, g, b);
         }

@@ -26,11 +26,11 @@
   <ItemGroup>
     <None Remove="Content\Content.mgcb" />
     <None Remove="Icon.ico" />
-    <None Remove="readme.txt" />
+    <None Remove="readme.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon.ico" />
-    <Content Include="readme.txt">
+    <Content Include="readme.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
