@@ -91,7 +91,7 @@ namespace ctrviewer
                                         Push(flagq, fl.ToString(), monolist, "flag");
                                 }
 
-                                if (qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers) || qb.quadFlags.HasFlag(QuadFlags.Invisible))
+                                if (qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                 {
                                     Push(flagq, "invis", monolist);
                                     continue;
@@ -136,7 +136,7 @@ namespace ctrviewer
                                             Push(flagq, fl.ToString(), monolist, "flag");
                                     }
 
-                                    if (qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers) || qb.quadFlags.HasFlag(QuadFlags.Invisible))
+                                    if (qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                     {
                                         Push(flagq, "invis", monolist);
                                         continue;
