@@ -175,11 +175,24 @@ namespace ctrviewer
 
         Texture2D tint;
 
-        protected override void LoadContent()
+        void LoadGenericTextures()
         {
             textures.Add("test", Content.Load<Texture2D>("test"));
             textures.Add("flag", Content.Load<Texture2D>("flag"));
-            textures.Add("logo", Content.Load<Texture2D>("logo"));
+
+            if ((DateTime.Now.Month == 12 && DateTime.Now.Day > 15) || (DateTime.Now.Month == 1 && DateTime.Now.Day < 15))
+            {
+                textures.Add("logo", Content.Load<Texture2D>("logo_xmas"));
+            }
+            else
+            {
+                textures.Add("logo", Content.Load<Texture2D>("logo"));
+            }
+        }
+
+        protected override void LoadContent()
+        {
+            LoadGenericTextures();
 
             effect.Texture = textures["test"];
             effect.TextureEnabled = true;
@@ -264,8 +277,6 @@ namespace ctrviewer
                 {
                     if (!textures.ContainsKey(s))
                     {
-
-
                         Texture2D t = Texture2D.FromStream(graphics.GraphicsDevice, File.OpenRead(path));
                         textures.Add(s, t);
                     }
@@ -283,9 +294,7 @@ namespace ctrviewer
             paths.Clear();
 
             textures.Clear();
-            textures.Add("test", Content.Load<Texture2D>("test"));
-            textures.Add("flag", Content.Load<Texture2D>("flag"));
-            textures.Add("logo", Content.Load<Texture2D>("logo"));
+            LoadGenericTextures();
 
             scn.Clear();
             levels.Clear();
