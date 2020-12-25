@@ -31,9 +31,8 @@ namespace CTRFramework.Big
         public string GetFilename()
         {
             if (FileCursor != -1)
-                if (names.Count > FileCursor)
-                    if (names.ContainsKey(FileCursor))
-                        return names[FileCursor];
+                if (names.ContainsKey(FileCursor))
+                    return names[FileCursor];
 
             return $"file_{FileCursor.ToString("0000")}.bin";
         }
@@ -89,11 +88,21 @@ namespace CTRFramework.Big
                 var hash = MD5.Create().ComputeHash(BaseStream);
                 string md5 = BitConverter.ToString(hash).Replace("-", "");
 
-                foreach (XmlElement el in doc.SelectNodes("/entries/entry"))
+                foreach (XmlElement el in doc.SelectNodes("/data/versions/entry"))
                 {
                     if (md5.ToLower() == el["md5"].InnerText.ToLower())
                     {
                         Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.\r\nUsing {el["list"].InnerText}");
+                        names = Meta.GetBigList(el["list"].InnerText);
+                        return;
+                    }
+                }
+
+                foreach (XmlElement el in doc.SelectNodes("/data/filenums/entry"))
+                {
+                    if (TotalFiles == Int32.Parse(el["num"].InnerText))
+                    {
+                        Console.WriteLine($"Using {el["list"].InnerText}");
                         names = Meta.GetBigList(el["list"].InnerText);
                         return;
                     }
@@ -135,7 +144,7 @@ namespace CTRFramework.Big
         public bool NextFile()
         {
             FileCursor++;
-            return FileCursor <= TotalFiles;
+            return FileCursor < TotalFiles;
         }
     }
 }
