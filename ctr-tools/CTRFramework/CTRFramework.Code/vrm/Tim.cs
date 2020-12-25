@@ -290,8 +290,8 @@ namespace CTRFramework.Vram
                 else
                 {
                     throw new Exception("negative or null size");
-                    Console.WriteLine("failed!" + tl.ToString());
-                    Console.ReadKey();
+                    //Console.WriteLine("failed!" + tl.ToString());
+                    //Console.ReadKey();
                 }
             }
             catch (Exception ex)

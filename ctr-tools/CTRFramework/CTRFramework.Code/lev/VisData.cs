@@ -25,7 +25,7 @@ namespace CTRFramework
 
         //if leaf
         public uint u1;     //assumed to be 0
-        public uint ptrUnkData;
+        public uint ptrUnkData; //data goes right after visdata, relatively low amounts (20-30) or 0 links
         public uint numQuadBlock;
         public uint ptrQuadBlock;
 

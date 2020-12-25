@@ -32,8 +32,8 @@ namespace CTRFramework
         }
 
 
-        private int maxTex = 0;
-        private int maxClut = 0;
+        //private int maxTex = 0;
+        //private int maxClut = 0;
 
         List<DynamicAnim> anims = new List<DynamicAnim>();
 
@@ -115,14 +115,8 @@ namespace CTRFramework
             Vector3s[] stack = new Vector3s[256];
             Vector3s curvert;
 
-            bool invert = false;
-
             int i = 0;
             int cur_i = 0;
-
-            int ttl_faces = 0;
-
-
 
             int maxv = 0;
             int maxc = 0;

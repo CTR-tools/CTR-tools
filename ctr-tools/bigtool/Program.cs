@@ -33,11 +33,12 @@ namespace bigtool
                     {
                         switch (ext)
                         {
-                            case ".big": big.Extract(".\\" + name); break;
-                            case ".txt": big.Save(".\\" + name + ".big"); break;
+                            case ".big": big.Extract(path); break;
+                            case ".txt": big.Save(Path.Combine(path, name, ".big")); break;
                             default: Console.WriteLine("{0}: {1}", "Unsupported file", ext); break;
                         }
                     }
+
                 }
                 catch (Exception ex)
                 {

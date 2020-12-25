@@ -22,7 +22,6 @@ namespace CTRFramework.Shared
 
         private short x = 0;
         private short y = 0;
-        private short z = 0;
 
         public Vector2s(short xx)
         {

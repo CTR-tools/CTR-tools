@@ -28,7 +28,7 @@ namespace ctrviewer
                 }
             }
         }
-        private MouseState originalMouseState;
+        //private MouseState originalMouseState;
         #endregion
 
         #region Глобальные свойства
