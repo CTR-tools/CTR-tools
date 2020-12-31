@@ -23,22 +23,40 @@ namespace bigtool
                 string ext = Path.GetExtension(args[0]).ToLower();
                 string bigpath = Path.GetDirectoryName(args[0]);
 
-                try
+                if (!Path.IsPathRooted(args[0]))
                 {
-                    string path = Path.Combine(bigpath, name);
+                    bigpath = Environment.CurrentDirectory;
 
-                    BigFile big = BigFile.FromFile(args[0]);
-
-                    if (big.Entries.Count > 0)
+                    if (!File.Exists(Path.Combine(bigpath, args[0])))
                     {
-                        switch (ext)
+                        bigpath = bigpath = Meta.BasePath;
+
+                        if (!File.Exists(Path.Combine(bigpath, args[0])))
                         {
-                            case ".big": big.Extract(path); break;
-                            case ".txt": big.Save(Path.Combine(path, name, ".big")); break;
-                            default: Console.WriteLine("{0}: {1}", "Unsupported file", ext); break;
+                            Console.WriteLine("Check filename.");
+                            return;
                         }
                     }
+                }
 
+                string path = Path.Combine(bigpath, name);
+
+                try
+                {
+                    BigFile big = BigFile.FromFile(Path.Combine(bigpath, $"{name}{ext}"));
+
+                    if (big.Entries.Count == 0)
+                    {
+                        Console.WriteLine("No files to process.");
+                        return;
+                    }
+
+                    switch (ext)
+                    {
+                        case ".big": big.Extract(path); break;
+                        case ".txt": big.Save(Path.Combine(bigpath, $"{name}.big")); break;
+                        default: Console.WriteLine($"Unsupported file type: {ext}"); break;
+                    }
                 }
                 catch (Exception ex)
                 {
