@@ -9,7 +9,6 @@ doc: |
   there is an extra uint in the beginning.
   it is omitted to simplify pointer usage.
   remember to remove 1st 4 bytes in hex for this definition.
-
 seq:
   - id: header
     type: scene_header
@@ -74,7 +73,13 @@ instances:
   ai_nav:
     pos: header.ptr_ai_nav
     type: ai_paths
-
+    
+  water_data:
+    pos: header.ptr_water
+    type: water_packet
+    repeat: expr
+    repeat-expr: header.cnt_water
+  
 types:
 
   vis_data:
@@ -89,7 +94,7 @@ types:
         type: vector3s      
       - id: skip_somedata
         size: 8
-	  - id: num_quad_block
+      - id: num_quad_block
         type: u4
       - id: ptr_quad_block
         type: u4
@@ -530,7 +535,13 @@ types:
         type: vector2b
       - id: uv4
         type: vector2b
-      
+        
+  water_packet:   
+    seq:
+      - id: ptr_vertex
+        type: u4
+      - id: ptr_anim
+        type: u4
         
   build_info:
     seq:
