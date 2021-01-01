@@ -9,6 +9,7 @@ doc: |
   there is an extra uint in the beginning.
   it is omitted to simplify pointer usage.
   remember to remove 1st 4 bytes in hex for this definition.
+
 seq:
   - id: header
     type: scene_header
@@ -21,7 +22,6 @@ seq:
     type: posang
     repeat: expr
     repeat-expr: header.cnt_restart_pts
-    doc: wtf with +1
         
   - id: pickup_headers
     type: pickup_header
