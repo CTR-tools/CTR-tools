@@ -92,13 +92,41 @@ types:
         type: vector3s
       - id: bbox_max
         type: vector3s      
-      - id: skip_somedata
-        size: 8
-      - id: num_quad_block
+      - id: branch_data
+        type: vis_data_branch
+        if: flag & 1 == 0
+      - id: leaf_data
+        type: vis_data_leaf
+        if: flag & 1 == 1   
+
+  vis_data_branch:
+    seq:
+      - id: axis_x
+        type: u2
+      - id: axis_y
+        type: u2
+      - id: axis_z
+        type: u2
+      - id: unk
+        type: u2
+      - id: left_child_id
+        type: u2
+      - id: right_child_id
+        type: u2
+      - id: unk0
+        type: u4      
+
+  vis_data_leaf:
+    seq:
+      - id: unk
         type: u4
-      - id: ptr_quad_block
+      - id: ptr_some_data
         type: u4
-      
+      - id: num_quads
+        type: u4
+      - id: ptr_quads
+        type: u4
+        
   skybox:
     seq:
       - id: num_vertex
