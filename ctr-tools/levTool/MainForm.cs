@@ -106,7 +106,7 @@ namespace CTRTools
                 foreach (PosAng pa in scn.restartPts)
                     pa.Write(bw);
 
-                bw.BaseStream.Position = scn.header.ptrPickupHeaders + 4;
+                bw.BaseStream.Position = scn.header.ptrInstances + 4;
 
                 foreach (PickupHeader ph in scn.pickups)
                     ph.Write(bw);
@@ -585,7 +585,7 @@ namespace CTRTools
             }
 
             treeView1.Nodes.Add(tn);
-            treeView1.ExpandAll();
+            //treeView1.ExpandAll();
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
