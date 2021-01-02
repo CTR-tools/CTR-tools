@@ -22,7 +22,7 @@ seq:
     type: posang
     repeat: expr
     repeat-expr: header.cnt_restart_pts
-        
+
   - id: pickup_headers
     type: pickup_header
     repeat: expr
@@ -56,7 +56,6 @@ instances:
 
   skybox:
     pos: header.ptr_skybox
-    size: 1
     type: skybox
     if: header.ptr_skybox != 0
     
@@ -91,13 +90,13 @@ types:
       - id: bbox_min
         type: vector3s
       - id: bbox_max
-        type: vector3s      
-      - id: branch_data
-        type: vis_data_branch
-        if: flag & 1 == 0
-      - id: leaf_data
-        type: vis_data_leaf
-        if: flag & 1 == 1   
+        type: vector3s 
+      - id: data
+        type:
+          switch-on: flag & 1
+          cases:
+            0: vis_data_branch
+            1: vis_data_leaf
 
   vis_data_branch:
     seq:
