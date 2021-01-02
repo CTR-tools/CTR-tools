@@ -25,6 +25,8 @@ namespace CTRFramework
         public SkyBox skybox;
         public Nav nav;
 
+        public List<TexMap> texmaps = new List<TexMap>();
+
         public UnkAdv unkadv;
         public TrialData trial;
 
@@ -57,6 +59,15 @@ namespace CTRFramework
                     {
                         Console.WriteLine("VRAM found!");
                         ctrvram = CtrVrm.FromFile(vrmpath);
+                        /*
+                        if (ctrvram != null)
+                            foreach (var m in texmaps)
+                            {
+                                ctrvram.GetTexture(m.tl, ".\\textures\\", m.name);
+                                Console.WriteLine(m.name);
+                                Console.ReadKey();
+                            }
+                        */
                     }
                 }
             }
@@ -120,6 +131,37 @@ namespace CTRFramework
 
 
             /*
+            //texture defs
+            br.Jump(header.ptrTexArray);
+            br.Skip(8);
+            int ptrTexList = br.ReadInt32();
+            br.Jump(ptrTexList);
+
+            Console.WriteLine(ptrTexList.ToString("X8"));
+            Console.ReadKey();
+
+            texmaps = new List<TexMap>();
+
+            TexMap mp;
+
+            do
+            {
+                mp = new TexMap(br, "none");
+
+                Console.WriteLine(mp.name);
+                Console.ReadKey();
+
+                if (mp.name != "")
+                {
+                    texmaps.Add(mp);
+                }
+
+            }
+            while (mp.name != "");
+            */
+
+
+            /*
             for (int i = 0; i < visdata.Count; i++)
             {
                 if (File.Exists($"visdata_{i}.obj"))
@@ -153,7 +195,7 @@ namespace CTRFramework
             */
 
             //read pickups
-            for (int i = 0; i < header.numPickupHeaders; i++)
+            for (int i = 0; i < header.numInstances; i++)
             {
                 br.Jump(header.ptrPickupHeadersPtrArray + 4 * i);
                 br.Jump(br.ReadUInt32());
@@ -164,16 +206,24 @@ namespace CTRFramework
             //read pickup models
             //starts out right, but anims ruin it
 
-            br.Jump(header.ptrPickupModelsPtr);
+            br.Jump(header.ptrModelsPtr);
             int x = (int)br.BaseStream.Position;
 
-            for (int i = 0; i < header.numPickupModels; i++)
+            for (int i = 0; i < header.numModels; i++)
             {
                 br.BaseStream.Position = x + 4 * i;
                 br.BaseStream.Position = br.ReadUInt32();
 
                 dynamics.Add(new DynamicModel(br));
             }
+
+            /*
+            //check why itdoesn't work in export function
+            foreach (var d in dynamics)
+            {
+                d.Export(".\\models\\");
+            }
+            */
 
             /*
             foreach (QuadBlock qb in quads)
