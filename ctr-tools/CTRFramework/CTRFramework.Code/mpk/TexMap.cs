@@ -2,7 +2,7 @@
 
 namespace CTRFramework
 {
-    class TexMap : IRead
+    public class TexMap : IRead
     {
         public string name; //16 bytes
         public string group;
