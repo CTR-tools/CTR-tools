@@ -9,10 +9,10 @@ namespace CTRFramework
         public uint ptrSkybox;  //leads to a small aray of vertices?
         public uint ptrTexArray;  //facegroup //leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
 
-        public int numPickupHeaders;
-        public uint ptrPickupHeaders;
-        public int numPickupModels;
-        public uint ptrPickupModelsPtr;
+        public int numInstances;
+        public uint ptrInstances;
+        public int numModels;
+        public uint ptrModelsPtr; //points to the array of pointers
 
         public uint unkptr3;
         public uint unkptr4;
@@ -83,10 +83,10 @@ namespace CTRFramework
             ptrSkybox = br.ReadUInt32();
             ptrTexArray = br.ReadUInt32();
 
-            numPickupHeaders = br.ReadInt32();
-            ptrPickupHeaders = br.ReadUInt32();
-            numPickupModels = br.ReadInt32();
-            ptrPickupModelsPtr = br.ReadUInt32();
+            numInstances = br.ReadInt32();
+            ptrInstances = br.ReadUInt32();
+            numModels = br.ReadInt32();
+            ptrModelsPtr = br.ReadUInt32();
 
             unkptr3 = br.ReadUInt32();
             unkptr4 = br.ReadUInt32();
@@ -193,10 +193,10 @@ namespace CTRFramework
             bw.Write(ptrSkybox);
             bw.Write(ptrTexArray);
 
-            bw.Write(numPickupHeaders);
-            bw.Write(ptrPickupHeaders);
-            bw.Write(numPickupModels);
-            bw.Write(ptrPickupModelsPtr);
+            bw.Write(numInstances);
+            bw.Write(ptrInstances);
+            bw.Write(numModels);
+            bw.Write(ptrModelsPtr);
 
             bw.Write(unkptr3);
             bw.Write(unkptr4);
