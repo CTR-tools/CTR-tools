@@ -9,7 +9,7 @@ doc: |
   there is an extra uint in the beginning.
   it is omitted to simplify pointer usage.
   remember to remove 1st 4 bytes in hex for this definition.
-
+  
 seq:
   - id: header
     type: scene_header
@@ -22,16 +22,16 @@ seq:
     type: posang
     repeat: expr
     repeat-expr: header.cnt_restart_pts
-
-  - id: pickup_headers
-    type: pickup_header
+        
+  - id: instances
+    type: instance
     repeat: expr
-    repeat-expr: header.num_pickup_headers
+    repeat-expr: header.num_instances
     
-  - id: pickup_model_pointers
+  - id: model_pointers
     type: u4
     repeat: expr
-    repeat-expr: header.num_pickup_models
+    repeat-expr: header.num_models
     
   - id: mesh_info_header
     type: mesh_info
@@ -153,19 +153,19 @@ types:
         type: u4
       - id: ptr_tex_array
         type: u4
-      - id: num_pickup_headers
+      - id: num_instances
         type: u4
-      - id: ptr_pickup_headers
+      - id: ptr_instances
         type: u4
-      - id: num_pickup_models
+      - id: num_models
         type: u4
-      - id: ptr_pickup_models_ptr
+      - id: ptr_models_ptr
         type: u4     
       - id: unk_ptr3
         type: u4
       - id: unk_ptr4
         type: u4
-      - id: ptr_pickup_headers_ptr_array
+      - id: ptr_instances_ptr_array
         type: u4
       - id: unk_ptr5
         type: u4
@@ -325,7 +325,7 @@ types:
       - id: y
         type: u1
       
-  pickup_header:
+  instance:
     seq:
       - id: name
         size: 0x10
