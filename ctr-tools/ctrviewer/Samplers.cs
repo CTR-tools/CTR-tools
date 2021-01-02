@@ -49,16 +49,14 @@ namespace ctrviewer
             DefaultSampler = new SamplerState();
             DefaultSampler.Filter = EnableBilinear ? TextureFilter.Anisotropic : TextureFilter.Point;
             DefaultSampler.MaxAnisotropy = 16;
-            DefaultSampler.MaxMipLevel = 8;
-            DefaultSampler.MipMapLevelOfDetailBias = 0;
+
             DefaultSampler.AddressU = TextureAddressMode.Clamp;
             DefaultSampler.AddressV = TextureAddressMode.Clamp;
 
             AnimatedSampler = new SamplerState();
             AnimatedSampler.Filter = EnableBilinear ? TextureFilter.Anisotropic : TextureFilter.Point;
             AnimatedSampler.MaxAnisotropy = 16;
-            AnimatedSampler.MaxMipLevel = 8;
-            AnimatedSampler.MipMapLevelOfDetailBias = 0;
+
             AnimatedSampler.AddressU = TextureAddressMode.Clamp;
             AnimatedSampler.AddressV = TextureAddressMode.Wrap;
         }
