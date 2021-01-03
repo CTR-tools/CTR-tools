@@ -24,41 +24,34 @@ namespace ctrviewer
             {
                 new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
                 new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
-
                 new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
                 new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
 
                 new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
                 new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
-
                 new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
                 new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
 
-
                 new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
                 new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
-
                 new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
                 new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
 
                 new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
                 new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
-
                 new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
                 new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
 
 
                 new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
                 new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
 
-                                new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
-                                                new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
-
-                                                                new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
-                                                                                new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
-                            new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
                 new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), Color.White, new Vector2(0,0))
-
             };
         }
 

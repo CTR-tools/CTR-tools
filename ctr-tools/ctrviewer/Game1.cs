@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using System.Runtime.InteropServices;
 
 namespace ctrviewer
 {
@@ -261,15 +260,12 @@ namespace ctrviewer
             gameLoaded = true;
         }
 
-
         private void LoadTextures(MGLevel qb)
         {
-
-
             foreach (string s in qb.textureList)
             {
-                string path = String.Format("levels\\tex\\{0}.png", s);
-                string path_new = String.Format("levels\\newtex\\{0}.png", s);
+                string path = $"levels\\tex\\{s}.png";
+                string path_new = $"levels\\newtex\\{s}.png";
 
                 if (File.Exists(path_new))
                     path = path_new;
@@ -277,88 +273,9 @@ namespace ctrviewer
                 if (File.Exists(path))
                 {
                     if (!textures.ContainsKey(s))
-                    {
-
-                        System.Drawing.Bitmap bmp = (System.Drawing.Bitmap)System.Drawing.Bitmap.FromFile(path);
-                        Texture2D t = GetTexture2DFromBitmap(graphics.GraphicsDevice, bmp);
-
-                        //prepare to generate mips. why isn't it a default monogame feature tho.
-
-                        int i = 1;
-
-                        int width = bmp.Width;
-                        int height = bmp.Height;
-
-                        do
-                        {
-                            width /= 2;
-                            height /= 2;
-
-                            System.Drawing.Bitmap mip = new System.Drawing.Bitmap(width, height);
-                            System.Drawing.Graphics gr = System.Drawing.Graphics.FromImage(mip);
-
-                            var attributes = new System.Drawing.Imaging.ImageAttributes();
-                            attributes.SetWrapMode(System.Drawing.Drawing2D.WrapMode.TileFlipXY);
-
-                            gr.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                            gr.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                            gr.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-                            gr.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
-
-                            gr.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, mip.Width, mip.Height), 0, 0, bmp.Width, bmp.Height, System.Drawing.GraphicsUnit.Pixel, attributes);
-
-                            t = GetTexture2DFromBitmap(GraphicsDevice, mip, t, i);
-
-                            i++;
-                        }
-                        while (width >= 2 && height >= 2);
-
-                        
-                        textures.Add(s, t);
-                    }
+                        textures.Add(s, GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path) : Texture2D.FromFile(GraphicsDevice, path));
                 }
                 else Console.WriteLine("Missing texture: " + s);
-            }
-        }
-
-        //https://stackoverflow.com/questions/2869801/is-there-a-fast-alternative-to-creating-a-texture2d-from-a-bitmap-object-in-xna
-        public static Texture2D GetTexture2DFromBitmap(GraphicsDevice device, System.Drawing.Bitmap bitmap, Texture2D tex = null, int level = -1)
-        {
-            System.Drawing.Imaging.BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            int bufferSize = data.Height * data.Stride;
-
-            //create data buffer 
-            byte[] bytes = new byte[bufferSize];
-
-            // copy bitmap data into buffer
-            Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
-
-            // unlock the bitmap data
-            bitmap.UnlockBits(data);
-
-            //BGRA -> RGBA
-            for (int i = 0; i < bytes.Length / 4; i++)
-            {
-                byte x = bytes[i * 4 + 0];
-                bytes[i * 4 + 0] = bytes[i * 4 + 2];
-                bytes[i * 4 + 2] = x;
-            }
-
-            if (tex == null)
-            {
-                Texture2D tex2 = new Texture2D(device, bitmap.Width, bitmap.Height, true, SurfaceFormat.Color);
-
-                // copy our buffer to the texture
-                tex2.SetData<byte>(bytes, 0, bytes.Length);
-
-                return tex2;
-            }
-            else
-            {
-                tex.SetData<byte>(level, new Rectangle(0, 0, bitmap.Width, bitmap.Height), bytes, 0, bytes.Length);
-
-                return tex;
             }
         }
 
@@ -598,6 +515,7 @@ namespace ctrviewer
         public static bool RenderEnabled = true;
         public static bool ControlsEnabled = true;
         public static bool IsDrawing = false;
+        bool GenerateMips = true;
         public bool lodEnabled = false;
         public bool show_inst = false;
         public bool show_paths = false;
@@ -704,6 +622,7 @@ namespace ctrviewer
                                     case "visbox": renderVisBoxes = !renderVisBoxes; break;
                                     case "filter": Samplers.EnableBilinear = !Samplers.EnableBilinear; Samplers.Refresh(); break;
                                     case "wire": Samplers.EnableWireframe = !Samplers.EnableWireframe; break;
+                                    case "genmips": GenerateMips = !GenerateMips; break;
                                     case "window": if (graphics.IsFullScreen) GoWindowed(); else GoFullScreen(); break;
                                     case "lockfps":
                                         lock_fps = !lock_fps;

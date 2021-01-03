@@ -9,30 +9,30 @@ doc: |
   there is an extra uint in the beginning.
   it is omitted to simplify pointer usage.
   remember to remove 1st 4 bytes in hex for this definition.
-  
+
 seq:
   - id: header
     type: scene_header
-    
+
   - id: restart_main
     type: posang
     if: header.ptr_restart_main != 0
-    
+
   - id: restart_pts
     type: posang
     repeat: expr
     repeat-expr: header.cnt_restart_pts
-        
+
   - id: instances
     type: instance
     repeat: expr
     repeat-expr: header.num_instances
-    
+
   - id: model_pointers
     type: u4
     repeat: expr
     repeat-expr: header.num_models
-    
+
   - id: mesh_info_header
     type: mesh_info
 
@@ -46,9 +46,7 @@ seq:
     repeat: expr
     repeat-expr: mesh_info_header.vertexnum
 
-    
 instances:
-  
   trial:
     pos: header.ptr_trial_data
     type: trial_data
@@ -58,7 +56,7 @@ instances:
     pos: header.ptr_skybox
     type: skybox
     if: header.ptr_skybox != 0
-    
+
   vis_data_array:
     pos: mesh_info_header.ptr_vis_data_array
     type: vis_data
@@ -68,19 +66,18 @@ instances:
   unk_struct1_array:
     pos: header.ptr_tex_array
     type: unk_struct
-  
+
   ai_nav:
     pos: header.ptr_ai_nav
     type: ai_paths
-    
+
   water_data:
     pos: header.ptr_water
     type: water_packet
     repeat: expr
     repeat-expr: header.cnt_water
-  
-types:
 
+types:
   vis_data:
     seq:
       - id: flag
@@ -113,7 +110,7 @@ types:
       - id: right_child_id
         type: u2
       - id: unk0
-        type: u4      
+        type: u4
 
   vis_data_leaf:
     seq:
@@ -125,13 +122,13 @@ types:
         type: u4
       - id: ptr_quads
         type: u4
-        
+
   skybox:
     seq:
       - id: num_vertex
         type : u4
       - id: ptr_vertex
-        type : u4   
+        type : u4 
       - id: num8
         type: u2
         repeat: expr
@@ -160,7 +157,7 @@ types:
       - id: num_models
         type: u4
       - id: ptr_models_ptr
-        type: u4     
+        type: u4 
       - id: unk_ptr3
         type: u4
       - id: unk_ptr4
@@ -172,28 +169,28 @@ types:
       - id: null1
         type: u4
       - id: null2
-        type: u4   
+        type: u4 
       - id: cnt_water
         type: u4
       - id: ptr_water
-        type: u4     
+        type: u4 
       - id: ptr_named_tex
         type: u4
       - id: ptr_named_tex_array
         type: u4
       - id: ptr_restart_main
         type: u4
-        
+
       - id: some_data
         type: somedata
         repeat: expr
         repeat-expr: 3
-        
+
       - id: start_grid
         type: posang
         repeat: expr
         repeat-expr: 8
-        
+
       - id: unkptr1
         type: u4
       - id: unkptr2
@@ -203,36 +200,36 @@ types:
 
       - id: back_color
         type: color 
-        
+
       - id: bg_mode
         type: u4
-        
+
       - id: build
         type: build_info
-        
+
       - id: skip
         size: 0x44
-       
+ 
       - id: cnt_trial_data
         type: u4 
       - id: ptr_trial_data
-        type: u4   
-        
+        type: u4 
+
       - id: cnt_spawn_arrays2
         type: u4 
       - id: ptr_spawn_arrays2
-        type: u4   
-        
+        type: u4 
+
       - id: cnt_spawn_arrays
         type: u4 
       - id: ptr_spawn_arrays
-        type: u4   
-        
+        type: u4 
+
       - id: cnt_restart_pts
         type: u4 
       - id: ptr_restart_pts
         type: u4 
-        
+
       - id: skip2
         size: 16
       - id: bg_color
@@ -250,10 +247,10 @@ types:
 
       - id: ptr_ai_nav
         type: u4 
-        
+
       - id: skip3
         size: 0x24
-        
+
   trial_data:
     seq:
       - id: cnt_pointers
@@ -270,7 +267,7 @@ types:
         type: u4
       - id: ptr_oxide_ghost
         type: u4
-        
+
   somedata:
     seq:
       - id: s1
@@ -306,7 +303,7 @@ types:
         type: s2
       - id: z
         type: s2
-        
+
   vector4s:
     seq:
       - id: x
@@ -324,7 +321,7 @@ types:
         type: u1
       - id: y
         type: u1
-      
+
   instance:
     seq:
       - id: name
@@ -349,7 +346,7 @@ types:
         type: vector3s
       - id: event
         type: u4
-        
+
   mesh_info:
     seq:
       - id: cnt_quad_block
@@ -368,14 +365,14 @@ types:
         type: u4
       - id: cnt_vis_data
         type: u4
-        
+
   bounding_box:
     seq:
       - id: min
         type: vector3s
       - id: max
         type: vector3s
-   
+ 
   ctr_tex:
     seq:
       - id: mid_tex
@@ -384,7 +381,7 @@ types:
         repeat-expr: 3
       - id: ptr_hi
         type: u4
-    
+
   quad_block:
     seq:
       - id: indices
@@ -444,7 +441,7 @@ types:
       midtex4:
         pos: ptr_texture_mid[3]
         type: ctr_tex
-        
+
   vertex:
     seq: 
       - id: coord
@@ -462,7 +459,7 @@ types:
         type: vector4s
       - id: colorz
         type: color
-        
+
   color:
     seq:
       - id: r
@@ -473,8 +470,8 @@ types:
         type: u1
       - id: a
         type: u1
-        
-        
+
+
   unk_struct:
     seq:
       - id: self_ptr
@@ -491,7 +488,7 @@ types:
         type: unk_entry
         repeat: expr
         repeat-expr: cnt_entries
-      
+
   unk_entry:
     seq:
       - id: name
@@ -503,7 +500,7 @@ types:
       - id: layout
         type: texture_layout
         if: entry_type != 0x86
-        
+
   ai_frame_header:
     seq:
       - id: unk1
@@ -512,14 +509,14 @@ types:
         type: u2
       - id: skip
         size: 0x48
-        
+
   nav_frame:
     seq:
       - id: point
         type: posang
       - id: data
         size: 8
-        
+
   ai_path:
     seq:
       - id: header
@@ -530,7 +527,7 @@ types:
         type: nav_frame
         repeat: expr
         repeat-expr: header.num_frames
-    
+
   ai_paths:
     seq:
       - id: ptr
@@ -543,7 +540,7 @@ types:
         repeat-expr: 3
         doc: rewrite it.
         if: ptr[0] != 0 and ptr[1] != 0 and ptr[2] != 0
-        
+
   texture_layout:
     seq:
       - id: uv1
@@ -562,14 +559,14 @@ types:
         type: vector2b
       - id: uv4
         type: vector2b
-        
-  water_packet:   
+
+  water_packet: 
     seq:
       - id: ptr_vertex
         type: u4
       - id: ptr_anim
         type: u4
-        
+
   build_info:
     seq:
       - id: ptr_build_start
