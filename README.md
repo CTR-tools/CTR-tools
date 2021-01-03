@@ -1,5 +1,8 @@
 ![CTR-tools](ctr-tools-logo.png)
 
+[![GPLv2 License](https://img.shields.io/badge/License-GPL%20v2-green.svg)](https://opensource.org/licenses/)
+[![Discord Chat](https://img.shields.io/discord/527135227546435584.svg)](https://discord.gg/56xm9Aj)
+
 Various tools to operate Crash Team Racing (PS1) game files.
 
 Download latest release here: https://github.com/DCxDemo/CTR-tools/releases/latest \
@@ -18,8 +21,7 @@ Project dependencies:
 
 ## Contribution
 Game research is welcome, for starters please check:
-* Current tasks and goals: https://github.com/DCxDemo/CTR-tools/projects/1
 * CTR-tools wiki: https://github.com/DCxDemo/CTR-tools/wiki
-
+* Open issues: https://github.com/DCxDemo/CTR-tools/issues
 
 2016-2020, DCxDemo*.
