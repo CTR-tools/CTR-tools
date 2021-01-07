@@ -132,6 +132,14 @@ namespace CTRFramework
             for (int i = 0; i < 5; i++)
                 unk3.Add(new Vector2s(br));
 
+            /*
+            //this is some value per tirangle
+            foreach(var val in unk3)
+            {
+                Console.WriteLine(val.X / 4096f + " " + val.Y / 4096f);
+            }
+            */
+
             //struct done
 
             //read texture layouts

@@ -155,6 +155,7 @@ namespace CTRFramework
             PageX = (ushort)(buf & 0xF);
             PageY = (ushort)((buf >> 4) & 1);
 
+            //i guess 2 bits here define bpp
             f1 = (byte)((buf >> 5) & 1);
             f2 = (byte)((buf >> 6) & 1);
             f3 = (byte)((buf >> 7) & 1);
@@ -179,9 +180,8 @@ namespace CTRFramework
             {
 
                 Console.WriteLine(ToString());
-                Console.ReadKey();
+                //Console.ReadKey();
             }
-
         }
 
         //meant to be unique

@@ -128,7 +128,7 @@ namespace CTRFramework.Sound
         }
 
 
-        public bool Read(BinaryReaderEx br)
+        public void Read(BinaryReaderEx br)
         {
             if (File.Exists(Meta.SmplPath))
                 ReadSampleNames(Meta.SmplPath);
@@ -138,77 +138,34 @@ namespace CTRFramework.Sound
             for (int i = 0; i < header.cntUnk; i++)
             {
                 if (br.ReadUInt16() != 0)
-                {
                     Console.WriteLine("HOWL Read: upper word not 0.");
-                    Console.ReadKey();
-                }
 
                 unk.Add(br.ReadUInt16());
             }
 
             for (int i = 0; i < header.cntSfx; i++)
                 samples1.Add(new SampleDef(br));
-            /*
-             * 
-             * dump whole header to sql later
-            StringBuilder sb = new StringBuilder();
-            foreach (SampleDecl sd in samples1)
-            {
-                sb.Append(sd.)
-            }
-            */
 
             for (int i = 0; i < header.cntEngineSfx; i++)
                 samples2.Add(new SampleDef(br));
 
             for (int i = 0; i < header.cntBank; i++)
-                ptrBanks.Add(br.ReadUInt16() * (int)0x800);
+                ptrBanks.Add(br.ReadUInt16() * Meta.SectorSize);
 
             for (int i = 0; i < header.cntSeq; i++)
-                ptrSeqs.Add(br.ReadUInt16() * (int)0x800);
+                ptrSeqs.Add(br.ReadUInt16() * Meta.SectorSize);
 
-
-            foreach (int ptr in ptrBanks)
+            foreach (var ptr in ptrBanks)
             {
                 br.Jump(ptr);
-                Bank x = new Bank();
-                x.Read(br);
-                banks.Add(x);
+                banks.Add(new Bank(br));
             }
 
-            foreach (int ptr in ptrSeqs)
+            foreach (var ptr in ptrSeqs)
             {
                 br.Jump(ptr);
                 sequences.Add(CSEQ.FromReader(br));
             }
-
-
-            Bank sfx = new Bank();
-
-            foreach (Bank b in banks)
-            {
-                foreach (var x in b.samples)
-                {
-                    int id = x.Key;
-
-                    if (!sfx.samples.ContainsKey(id))
-                    {
-                        sfx.samples.Add(x.Key, x.Value);
-                    }
-                    else
-                    {
-                        string xx = Helpers.CalculateMD5(new MemoryStream(sfx.samples[id]));
-                        string yy = Helpers.CalculateMD5(new MemoryStream(b.samples[id]));
-                        if (xx != yy)
-                        {
-                            //Console.WriteLine("MD5 differs for same ID!!! " + id + "\r\n" + xx + "\r\n" + yy);
-                        }
-                    }
-                }
-            }
-
-
-            return true;
         }
 
 

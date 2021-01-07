@@ -17,7 +17,7 @@ namespace ctrviewer
     class Samplers
     {
         public static bool EnableWireframe = false;
-        public static bool EnableBilinear = true;
+        public static bool EnableFiltering = true;
 
 
 
@@ -47,15 +47,13 @@ namespace ctrviewer
         public static void Refresh()
         {
             DefaultSampler = new SamplerState();
-            DefaultSampler.Filter = EnableBilinear ? TextureFilter.Anisotropic : TextureFilter.Point;
-            DefaultSampler.MaxAnisotropy = 16;
+            DefaultSampler.Filter = EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear;
 
             DefaultSampler.AddressU = TextureAddressMode.Clamp;
             DefaultSampler.AddressV = TextureAddressMode.Clamp;
 
             AnimatedSampler = new SamplerState();
-            AnimatedSampler.Filter = EnableBilinear ? TextureFilter.Anisotropic : TextureFilter.Point;
-            AnimatedSampler.MaxAnisotropy = 16;
+            AnimatedSampler.Filter = EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear;
 
             AnimatedSampler.AddressU = TextureAddressMode.Clamp;
             AnimatedSampler.AddressV = TextureAddressMode.Wrap;

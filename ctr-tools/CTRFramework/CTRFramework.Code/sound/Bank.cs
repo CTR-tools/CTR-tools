@@ -23,6 +23,15 @@ namespace CTRFramework.Sound
             }
         }
 
+        public Bank(BinaryReaderEx br)
+        {
+            Read(br);
+        }
+
+        public static Bank FromReader(BinaryReaderEx br)
+        {
+            return new Bank(br);
+        }
 
 
         public void Read(BinaryReaderEx br)

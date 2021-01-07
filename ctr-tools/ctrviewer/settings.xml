@@ -1,0 +1,13 @@
+﻿<settings>
+  <GenerateMips>true</GenerateMips>
+  <AntiAlias>true</AntiAlias>
+  <AntiAliasLevel>4</AntiAliasLevel>
+  <Windowed>true</Windowed>
+  <TextureFiltering>true</TextureFiltering>
+  <VerticalSync>true</VerticalSync>
+  <VertexLighting>true</VertexLighting>
+  <VisData>false</VisData>
+  <Sky>true</Sky>
+  <BotsPath>false</BotsPath>
+  <Models>false</Models>
+</settings>

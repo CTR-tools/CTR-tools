@@ -1,6 +1,0 @@
-﻿namespace ctrviewer
-{
-    class EngineSettings
-    {
-    }
-}

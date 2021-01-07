@@ -78,11 +78,9 @@ namespace CTRFramework.Shared
             return String.Format(fmt, x + inc, y + inc);
         }
 
-
         public override string ToString()
         {
             return ToString(VecFormat.Braced);
         }
-
     }
 }

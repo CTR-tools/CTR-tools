@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
@@ -14,6 +14,7 @@
     <StartupObject>ctrviewer.Program</StartupObject>
     <AssemblyName>ctrviewer</AssemblyName>
     <SignAssembly>false</SignAssembly>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Content\bin\**" />
@@ -46,5 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CTRFramework\CTRFramework.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="settings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

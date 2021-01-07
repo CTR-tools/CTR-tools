@@ -255,6 +255,42 @@ namespace CTRFramework
             }
             */
 
+            StringBuilder sb = new StringBuilder();
+
+            int max = 0;
+            int min = 99999999;
+
+            foreach (QuadBlock qb in quads)
+            {
+                foreach (Vector2s v in qb.unk3)
+                {
+                    if (v.X > max) max = v.X;
+                    if (v.Y > max) max = v.Y;
+                    if (v.X < min && v.X != 0) min = v.X;
+                    if (v.Y < min && v.Y != 0) min = v.Y;
+                }
+
+                /*
+                sb.AppendLine($"quadblock id = {qb.id}");
+
+                foreach (int i in qb.ind)
+                {
+                    sb.AppendLine(verts[i].coord.ToString(VecFormat.CommaSeparated));
+                }
+
+                foreach (Vector2s v in qb.unk3)
+                {
+                    sb.AppendLine(v.ToString(VecFormat.CommaSeparated));
+                }
+
+                sb.AppendLine();
+                */
+            }
+
+            Console.WriteLine($"{min}, {max}");
+           // Console.ReadKey();
+
+            //Helpers.WriteToFile(".\\normals_test.txt", sb.ToString());
         }
 
 
