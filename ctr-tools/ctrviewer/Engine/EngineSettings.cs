@@ -21,6 +21,8 @@ namespace ctrviewer
         public bool StereoPair { get; set; } = false;
         public int StereoPairSeparation { get; set; } = 20;
 
+
+
         private bool _windowed = true;
         public bool Windowed { 
             get { 
@@ -78,12 +80,30 @@ namespace ctrviewer
             }
         }
 
+        private int _fieldOfView = 80;
+        public int FieldOfView
+        {
+            get
+            {
+                if (_fieldOfView < 20) _fieldOfView = 20;
+                if (_fieldOfView > 150) _fieldOfView = 150;
+                return _fieldOfView;
+            }
+            set
+            {
+                _fieldOfView = value;
+                if (onFieldOfViewChanged != null)
+                    onFieldOfViewChanged();
+            }
+        }
+
         public delegate void DelegateNoArgs();
 
         public DelegateNoArgs onWindowedChanged = null;
         public DelegateNoArgs onVertexLightingChanged = null;
         public DelegateNoArgs onAntiAliasChanged = null;
         public DelegateNoArgs onVerticalSyncChanged = null;
+        public DelegateNoArgs onFieldOfViewChanged = null;
 
         public EngineSettings()
         {
@@ -114,6 +134,7 @@ namespace ctrviewer
                 BotsPath = Boolean.Parse(vid["BotsPath"].InnerText),
                 StereoPair = Boolean.Parse(vid["StereoPair"].InnerText),
                 StereoPairSeparation = Int32.Parse(vid["StereoPairSeparation"].InnerText),
+                FieldOfView = Int32.Parse(vid["FieldOfView"].InnerText)
             };
         }
 

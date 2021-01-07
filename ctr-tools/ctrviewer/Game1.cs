@@ -79,6 +79,7 @@ namespace ctrviewer
             settings.onVertexLightingChanged = UpdateEffects;
             settings.onAntiAliasChanged = UpdateAntiAlias;
             settings.onVerticalSyncChanged = UpdateVSync;
+            settings.onFieldOfViewChanged = UpdateFOV;
         }
 
         public void SwitchDisplayMode()
@@ -171,6 +172,14 @@ namespace ctrviewer
         {
             graphics.PreferMultiSampling = !graphics.PreferMultiSampling;
             graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = settings.AntiAliasLevel;
+        }
+
+        public void UpdateFOV()
+        {
+            camera.ViewAngle = settings.FieldOfView;
+            lowcamera.ViewAngle = settings.FieldOfView;
+            skycamera.ViewAngle = settings.FieldOfView;
+            rightCamera.ViewAngle = settings.FieldOfView;
         }
 
         protected override void Initialize()
@@ -638,27 +647,8 @@ namespace ctrviewer
                 }
 
 
-                if (Keyboard.GetState().IsKeyDown(Keys.OemMinus))
-                {
-                    float x = camera.ViewAngle;
-                    x--;
-                    if (x < 20) x = 20;
-
-                    camera.ViewAngle = x;
-                    lowcamera.ViewAngle = x;
-                    skycamera.ViewAngle = x;
-                }
-
-                if (Keyboard.GetState().IsKeyDown(Keys.OemPlus))
-                {
-                    float x = camera.ViewAngle;
-                    x++;
-                    if (x > 150) x = 150;
-
-                    camera.ViewAngle = x;
-                    lowcamera.ViewAngle = x;
-                    skycamera.ViewAngle = x;
-                }
+                if (Keyboard.GetState().IsKeyDown(Keys.OemMinus)) settings.FieldOfView--;
+                if (Keyboard.GetState().IsKeyDown(Keys.OemPlus)) settings.FieldOfView++;
 
                 if ((newstate.Buttons.Start == ButtonState.Pressed && oldstate.Buttons.Start != newstate.Buttons.Start) ||
                     (newkb.IsKeyDown(Keys.Escape) && newkb.IsKeyDown(Keys.Escape) != oldkb.IsKeyDown(Keys.Escape)))

@@ -12,4 +12,5 @@
   <Models>false</Models>
   <StereoPair>false</StereoPair>
   <StereoPairSeparation>-100</StereoPairSeparation>
+  <FieldOfView>80</FieldOfView>
 </settings>
