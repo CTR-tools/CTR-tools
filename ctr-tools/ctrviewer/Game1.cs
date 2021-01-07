@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace ctrviewer
 {
-
     public class Game1 : Game
     {
         EngineSettings settings;
@@ -43,6 +42,7 @@ namespace ctrviewer
 
         //cameras
         FirstPersonCamera camera;
+        FirstPersonCamera rightCamera;
         FirstPersonCamera lowcamera;
         FirstPersonCamera skycamera;
 
@@ -50,8 +50,8 @@ namespace ctrviewer
         List<Scene> scn = new List<Scene>();
 
         //hi and low scenes converted to monogame
-        List<MGLevel> levels = new List<MGLevel>();
-        List<MGLevel> quads_low = new List<MGLevel>();
+        List<MGLevel> MeshHigh = new List<MGLevel>();
+        List<MGLevel> MeshLow = new List<MGLevel>();
 
         //sky
         MGLevel sky;
@@ -78,6 +78,7 @@ namespace ctrviewer
             settings.onWindowedChanged = SwitchDisplayMode;
             settings.onVertexLightingChanged = UpdateEffects;
             settings.onAntiAliasChanged = UpdateAntiAlias;
+            settings.onVerticalSyncChanged = UpdateVSync;
         }
 
         public void SwitchDisplayMode()
@@ -91,9 +92,56 @@ namespace ctrviewer
                 graphics.PreferredBackBufferHeight = graphics.PreferredBackBufferHeight / 4 * 3;
             }
 
+            UpdateSplitscreenViewports();
+
             graphics.IsFullScreen = !settings.Windowed;
             graphics.ApplyChanges();
         }
+
+        public Viewport vpFull;
+        public Viewport vpLeft;
+        public Viewport vpRight;
+        public Viewport vpTop;
+        public Viewport vpBottom;
+
+        public void UpdateSplitscreenViewports()
+        {
+            vpFull.MaxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
+            vpFull.MinDepth = graphics.GraphicsDevice.Viewport.MinDepth;
+            vpFull.Width = graphics.PreferredBackBufferWidth;
+            vpFull.Height = graphics.PreferredBackBufferHeight;
+            vpFull.X = 0;
+            vpFull.Y = 0;
+
+            vpLeft.MaxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
+            vpLeft.MinDepth = graphics.GraphicsDevice.Viewport.MinDepth;
+            vpLeft.Width = graphics.PreferredBackBufferWidth / 2;
+            vpLeft.Height = graphics.PreferredBackBufferHeight;
+            vpLeft.X = 0;
+            vpLeft.Y = 0;
+
+            vpRight.MaxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
+            vpRight.MinDepth = graphics.GraphicsDevice.Viewport.MinDepth;
+            vpRight.Width = graphics.PreferredBackBufferWidth / 2;
+            vpRight.Height = graphics.PreferredBackBufferHeight;
+            vpRight.X = graphics.PreferredBackBufferWidth / 2;
+            vpRight.Y = 0;
+
+            vpTop.MaxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
+            vpTop.MinDepth = graphics.GraphicsDevice.Viewport.MinDepth;
+            vpTop.Width = graphics.PreferredBackBufferWidth;
+            vpTop.Height = graphics.PreferredBackBufferHeight / 2;
+            vpTop.X = 0;
+            vpTop.Y = 0;
+
+            vpBottom.MaxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
+            vpBottom.MinDepth = graphics.GraphicsDevice.Viewport.MinDepth;
+            vpBottom.Width = graphics.PreferredBackBufferWidth;
+            vpBottom.Height = graphics.PreferredBackBufferHeight / 2;
+            vpBottom.X = 0;
+            vpBottom.Y = graphics.PreferredBackBufferHeight / 2;
+        }
+
 
         public void UpdateEffects()
         {
@@ -116,6 +164,7 @@ namespace ctrviewer
         {
             graphics.SynchronizeWithVerticalRetrace = settings.VerticalSync;
             IsFixedTimeStep = settings.VerticalSync;
+            graphics.ApplyChanges();
         }
 
         public void UpdateAntiAlias()
@@ -136,6 +185,7 @@ namespace ctrviewer
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             camera = new FirstPersonCamera(this);
+            rightCamera = new FirstPersonCamera(this);
             lowcamera = new FirstPersonCamera(this);
             skycamera = new FirstPersonCamera(this);
 
@@ -192,11 +242,6 @@ namespace ctrviewer
         }
 
 
-
-        // int currentCameraPosIndex = 0;
-
-        Texture2D tint;
-
         void LoadGenericTextures()
         {
             textures.Add("test", Content.Load<Texture2D>("test"));
@@ -212,6 +257,9 @@ namespace ctrviewer
             }
         }
 
+
+        Texture2D tint;
+
         protected override void LoadContent()
         {
             LoadGenericTextures();
@@ -225,7 +273,9 @@ namespace ctrviewer
             tint.SetData(new Color[] { Color.Black });
 
             menu = new Menu(font);
-            //graphics.GraphicsDevice.Viewport.Height / 2));
+            //graphics.GraphicsDevice.Viewport.Height = 2;
+
+            UpdateSplitscreenViewports();
 
             AddCone("greencone", Color.Green);
             AddCone("yellowcone", Color.Yellow);
@@ -314,21 +364,8 @@ namespace ctrviewer
             if (lev == null)
                 lev = new string[] { };
 
-            paths.Clear();
-
-            textures.Clear();
-            LoadGenericTextures();
-
-            scn.Clear();
-            levels.Clear();
-            quads_low.Clear();
-            instanced.Clear();
-
-            bbox.Clear();
-
-            sky = null;
-
-            GC.Collect();
+            Dispose();
+            LoadGenericTextures(); //making sure we have default textures loaded. maybe should just allocate statically?
 
             if (File.Exists("karts.lev"))
             {
@@ -358,7 +395,7 @@ namespace ctrviewer
 
             RenderEnabled = false;
 
-            //wait for the end of frame
+            //wait for the end of frame, in case we are still rendering.
             while (IsDrawing) { };
 
             Stopwatch sw = new Stopwatch();
@@ -395,8 +432,8 @@ namespace ctrviewer
 
             foreach (Scene s in scn)
             {
-                levels.Add(new MGLevel(s, Detail.Med));
-                quads_low.Add(new MGLevel(s, Detail.Low));
+                MeshHigh.Add(new MGLevel(s, Detail.Med));
+                MeshLow.Add(new MGLevel(s, Detail.Low));
             }
 
             Console.WriteLine("converted scenes to monogame render at: " + sw.Elapsed.TotalSeconds);
@@ -498,8 +535,8 @@ namespace ctrviewer
 
             //files = Directory.GetFiles("tex", "*.png");
 
-            foreach (MGLevel q in levels) LoadTextures(q);
-            foreach (MGLevel q in quads_low) LoadTextures(q);
+            foreach (MGLevel q in MeshHigh) LoadTextures(q);
+            foreach (MGLevel q in MeshLow) LoadTextures(q);
 
             foreach (Scene s in scn)
             {
@@ -524,8 +561,10 @@ namespace ctrviewer
             {
                 camera.Position = MGConverter.ToVector3(scn[0].header.startGrid[0].Position);
                 lowcamera.Position = camera.Position;
+                rightCamera.Position = camera.Position;
 
                 camera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096 * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
+                rightCamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096 * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
                 lowcamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096 * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
                 skycamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096 * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
 
@@ -541,10 +580,12 @@ namespace ctrviewer
 
         public bool updatemouse = false;
         public bool InMenu = false;
+
         public static bool HideInvisible = true;
         public static bool RenderEnabled = true;
         public static bool ControlsEnabled = true;
         public static bool IsDrawing = false;
+
         public bool lodEnabled = false;
         public bool lock_fps = true;
 
@@ -576,6 +617,20 @@ namespace ctrviewer
 
                 if (newstate.Buttons.Start == ButtonState.Pressed && newstate.Buttons.Back == ButtonState.Pressed)
                     Exit();
+
+                if (settings.StereoPair)
+                {
+                    if (newstate.IsButtonDown(Buttons.RightShoulder))
+                        settings.StereoPairSeparation += 10;
+
+                    if (newstate.IsButtonDown(Buttons.LeftShoulder))
+                        settings.StereoPairSeparation -= 10;
+
+                    if (newstate.IsButtonDown(Buttons.RightShoulder) && newstate.IsButtonDown(Buttons.LeftShoulder))
+                    {
+                        settings.StereoPairSeparation = 20;
+                    }
+                }
 
                 if (Keyboard.GetState().IsKeyDown(Keys.RightAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
@@ -652,13 +707,9 @@ namespace ctrviewer
                                     case "genmips": settings.GenerateMips = !settings.GenerateMips; break;
                                     case "window": settings.Windowed = !settings.Windowed; break;
                                     case "vcolor": settings.VertexLighting = !settings.VertexLighting; break;
+                                    case "stereo": settings.StereoPair = !settings.StereoPair; break;
                                     case "sky": settings.Sky = !settings.Sky; break;
-                                    case "lockfps":
-                                        lock_fps = !lock_fps;
-                                        graphics.SynchronizeWithVerticalRetrace = lock_fps;
-                                        IsFixedTimeStep = lock_fps;
-                                        graphics.ApplyChanges();
-                                        break;
+                                    case "vsync": settings.VerticalSync = !settings.VerticalSync;  break;
                                     default: Console.WriteLine("unimplemented toggle: " + menu.SelectedItem.Param); break;
                                 }
                                 break;
@@ -690,7 +741,7 @@ namespace ctrviewer
                 }
                 else
                 {
-                    foreach (MGLevel mg in levels)
+                    foreach (MGLevel mg in MeshHigh)
                         mg.Update(gameTime);
 
                     if (ControlsEnabled)
@@ -724,17 +775,28 @@ namespace ctrviewer
                 IsMouseVisible = true;
                 updatemouse = false;
             }
-
             skycamera.Update(gameTime, updatemouse, false, newms, oldms);
             camera.Update(gameTime, updatemouse, true, newms, oldms);
+            rightCamera.Position = camera.Position + Vector3.Transform(Vector3.Right * settings.StereoPairSeparation, Matrix.CreateFromYawPitchRoll(camera.leftRightRot, camera._upDownRot, 0));
+            rightCamera.rotationSpeed = camera.rotationSpeed;
+            rightCamera.Target = camera.Target;
+            rightCamera.Update(gameTime, updatemouse, true, newms, oldms);
             lowcamera.Copy(gameTime, camera);
 
             newms = Mouse.GetState();
         }
 
+        private void UpdateProjectionMatrices()
+        {
+            camera.UpdateProjectionMatrix();
+            rightCamera.UpdateProjectionMatrix();
+            lowcamera.UpdateProjectionMatrix();
+            skycamera.UpdateProjectionMatrix();
+        }
+
         //public static bool twoSided = false;
 
-        private void DrawLevel()
+        private void DrawLevel(FirstPersonCamera cam = null)
         {
             if (RenderEnabled)
             {
@@ -778,7 +840,7 @@ namespace ctrviewer
 
                     Samplers.SetToDevice(graphics, EngineRasterizer.Default);
 
-                    foreach (MGLevel qb in quads_low)
+                    foreach (MGLevel qb in MeshLow)
                         qb.Render(graphics, effect);
 
                     foreach (Kart k in karts)
@@ -803,10 +865,10 @@ namespace ctrviewer
 
                     Samplers.SetToDevice(graphics, EngineRasterizer.Default);
 
-                    effect.View = camera.ViewMatrix;
+                    effect.View = (cam != null ? cam.ViewMatrix : camera.ViewMatrix);
                     effect.Projection = camera.ProjectionMatrix;
 
-                    foreach (MGLevel qb in levels)
+                    foreach (MGLevel qb in MeshHigh)
                         qb.Render(graphics, effect);
 
                     foreach (Kart k in karts)
@@ -915,7 +977,27 @@ namespace ctrviewer
 
             GraphicsDevice.Clear(backColor);
 
-            DrawLevel();
+            //graphics.GraphicsDevice.Viewport = vpFull;
+            //DrawLevel();
+
+            if (settings.StereoPair)
+            {
+                graphics.GraphicsDevice.Viewport = vpLeft;
+                UpdateProjectionMatrices();
+                DrawLevel();
+
+                graphics.GraphicsDevice.Viewport = vpRight;
+                UpdateProjectionMatrices();
+                DrawLevel(rightCamera);
+
+                graphics.GraphicsDevice.Viewport = vpFull;
+                UpdateProjectionMatrices();
+            }
+            else
+            {
+                graphics.GraphicsDevice.Viewport = vpFull;
+                DrawLevel();
+            }
 
             if (InMenu)
                 menu.Render(GraphicsDevice, spriteBatch, font, tint);
@@ -967,6 +1049,18 @@ namespace ctrviewer
             IsDrawing = false;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            paths.Clear();
+            textures.Clear();
+            scn.Clear();
+            MeshHigh.Clear();
+            MeshLow.Clear();
+            instanced.Clear();
+            bbox.Clear();
+
+            sky = null;
+        }
 
     }
 }

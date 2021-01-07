@@ -119,8 +119,9 @@ namespace ctrviewer
 
             List<MenuItem> video = new List<MenuItem>();
             video.Add(new MenuItem("toggle fullscreen".ToUpper(), "toggle", "window", true));
-            video.Add(new MenuItem("toggle vsync/fps lock".ToUpper(), "toggle", "lockfps", true));
+            video.Add(new MenuItem("toggle vsync/fps lock".ToUpper(), "toggle", "vsync", true));
             video.Add(new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true));
+            video.Add(new MenuItem("toggle 3D stereopair mode".ToUpper(), "toggle", "stereo", true));
             video.Add(new MenuItem("toggle mipmap generation on load".ToUpper(), "toggle", "genmips", true));
             video.Add(new MenuItem("show camera position".ToUpper(), "toggle", "campos", true));
             video.Add(new MenuItem("back".ToUpper(), "link", "main", true));

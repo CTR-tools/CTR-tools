@@ -10,4 +10,6 @@
   <Sky>true</Sky>
   <BotsPath>false</BotsPath>
   <Models>false</Models>
+  <StereoPair>false</StereoPair>
+  <StereoPairSeparation>-100</StereoPairSeparation>
 </settings>

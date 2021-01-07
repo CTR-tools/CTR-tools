@@ -15,8 +15,8 @@ namespace ctrviewer
             upDownRot = y;
         }
 
-        private float leftRightRot = 0;       // Угол поворота по оси Y
-        private float _upDownRot = 0;
+        public float leftRightRot = 0;       // Угол поворота по оси Y
+        public float _upDownRot = 0;
         private float upDownRot           // Угол поворота по оси X
         {
             get { return _upDownRot; }
@@ -161,7 +161,7 @@ namespace ctrviewer
         #endregion
 
         #region Обновление матрицы вида
-        private void UpdateViewMatrix()
+        public void UpdateViewMatrix(float x = 0, float y = 0, float z = 0)
         {
             Matrix cameraRotation = Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
 

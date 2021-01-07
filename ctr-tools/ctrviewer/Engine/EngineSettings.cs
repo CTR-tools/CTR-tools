@@ -13,12 +13,13 @@ namespace ctrviewer
 
         public byte AntiAliasLevel { get; set; } = 4;
         public bool TextureFiltering { get; set; } = true;
-        public bool VerticalSync { get; set; } = true;
         public bool VisData { get; set; } = false;
         public bool GenerateMips { get; set; } = true;
         public bool Sky { get; set; } = true;
         public bool BotsPath { get; set; } = false;
         public bool Models { get; set; } = false;
+        public bool StereoPair { get; set; } = false;
+        public int StereoPairSeparation { get; set; } = 20;
 
         private bool _windowed = true;
         public bool Windowed { 
@@ -61,13 +62,28 @@ namespace ctrviewer
                     onAntiAliasChanged();
             }
         }
-        
+
+        private bool _verticalSync = true;
+        public bool VerticalSync
+        {
+            get
+            {
+                return _verticalSync;
+            }
+            set
+            {
+                _verticalSync = value;
+                if (onVerticalSyncChanged != null)
+                    onVerticalSyncChanged();
+            }
+        }
 
         public delegate void DelegateNoArgs();
 
         public DelegateNoArgs onWindowedChanged = null;
         public DelegateNoArgs onVertexLightingChanged = null;
         public DelegateNoArgs onAntiAliasChanged = null;
+        public DelegateNoArgs onVerticalSyncChanged = null;
 
         public EngineSettings()
         {
@@ -95,7 +111,9 @@ namespace ctrviewer
                 GenerateMips = Boolean.Parse(vid["GenerateMips"].InnerText),
                 Sky = Boolean.Parse(vid["Sky"].InnerText),
                 Models = Boolean.Parse(vid["Models"].InnerText),
-                BotsPath = Boolean.Parse(vid["BotsPath"].InnerText)
+                BotsPath = Boolean.Parse(vid["BotsPath"].InnerText),
+                StereoPair = Boolean.Parse(vid["StereoPair"].InnerText),
+                StereoPairSeparation = Int32.Parse(vid["StereoPairSeparation"].InnerText),
             };
         }
 

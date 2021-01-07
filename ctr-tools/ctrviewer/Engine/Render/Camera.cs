@@ -41,14 +41,20 @@ namespace ctrviewer
         #endregion
         #endregion
 
+        public void UpdateProjectionMatrix()
+        {
+            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(ViewAngle), AspectRatio, NearClip, FarClip);
+        }
+
         #region Обновление состояния объекта
         public override void Update(GameTime gameTime)
         {
             ViewMatrix = Matrix.CreateLookAt(Position, Target, Vector3.Up);
-            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(ViewAngle), AspectRatio, NearClip, FarClip);
+            UpdateProjectionMatrix();
 
             base.Update(gameTime);
         }
+
         #endregion
     }
 
