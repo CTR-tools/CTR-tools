@@ -636,9 +636,7 @@ namespace ctrviewer
                         settings.StereoPairSeparation -= 10;
 
                     if (newstate.IsButtonDown(Buttons.RightShoulder) && newstate.IsButtonDown(Buttons.LeftShoulder))
-                    {
-                        settings.StereoPairSeparation = 20;
-                    }
+                        settings.StereoPairSeparation = -260;
                 }
 
                 if (Keyboard.GetState().IsKeyDown(Keys.RightAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))

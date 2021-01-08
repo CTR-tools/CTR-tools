@@ -56,7 +56,7 @@ namespace ctrviewer
             float amount = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
             //float amount = 0.01f;
 
-            if (usemouse)
+            if (usemouse && Game.IsActive)
             {
                 #region Изменение направления цели камера при помощи мыши
 
@@ -81,7 +81,7 @@ namespace ctrviewer
             #region Изменение пространственного положения камеры при помощи клавиатуры
             Vector3 moveVector = new Vector3(0, 0, 0);
 
-            if (move)
+            if (move && Game.IsActive)
             {
 
                 KeyboardState keyState = Keyboard.GetState();
