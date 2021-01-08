@@ -346,6 +346,16 @@ namespace ctrviewer
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
+            foreach (Scene s in scn)
+            {
+                foreach (var t in s.ctrvram.textures)
+                {
+                    if (!textures.ContainsKey(t.Key))
+                        textures.Add(t.Key, MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value));
+                }
+            }
+
+                /*
             foreach (string s in qb.textureList)
             {
                 string path = $"levels\\tex\\{s}.png";
@@ -361,6 +371,7 @@ namespace ctrviewer
                 }
                 else Console.WriteLine("Missing texture: " + s);
             }
+            */
 
             sw.Stop();
 
@@ -536,8 +547,8 @@ namespace ctrviewer
 
 
 
-            foreach (Scene s in scn)
-                s.ExportTexturesAll(Path.Combine(Meta.BasePath, "levels\\tex"));
+            //foreach (Scene s in scn)
+            //    s.ExportTexturesAll(Path.Combine(Meta.BasePath, "levels\\tex"));
 
 
             Console.WriteLine("textures extracted at: " + sw.Elapsed.TotalSeconds);

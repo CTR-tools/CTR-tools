@@ -59,6 +59,7 @@ namespace CTRFramework
                     {
                         Console.WriteLine("VRAM found!");
                         ctrvram = CtrVrm.FromFile(vrmpath);
+                        LoadTextures();
                         /*
                         if (ctrvram != null)
                             foreach (var m in texmaps)
@@ -374,6 +375,19 @@ namespace CTRFramework
             if (flags.HasFlag(ExportFlags.SkyBox)) ExportSkyBox(dir);
         }
 
+
+        public void LoadTextures()
+        {
+            if (ctrvram != null)
+            {
+                foreach (TextureLayout tl in GetTexturesList().Values)
+                {
+                    ctrvram.GetTexture(tl, "empty");
+                }
+            }
+        }
+
+
         public void ExportTextures(string dir, Detail lod)
         {
             if (ctrvram != null)
@@ -386,7 +400,14 @@ namespace CTRFramework
                 Helpers.CheckFolder(dir);
 
                 foreach (TextureLayout tl in GetTexturesList(lod).Values)
-                    ctrvram.GetTexture(tl, dir);
+                {
+                    Bitmap bmp = ctrvram.GetTexture(tl, dir);
+                    Bitmap bb = new Bitmap(bmp.Width, bmp.Height);
+                    Graphics g = Graphics.FromImage(bb);
+                    g.DrawImage(bmp, new Point(0, 0));
+                    //System.Windows.Forms.MessageBox.Show(bb.Width + " " + bb.Height);
+                    bb.Save(Path.Combine(dir, $"{tl.Tag()}.png"), System.Drawing.Imaging.ImageFormat.Png);
+                }
 
                 Console.WriteLine("Textures done!");
             }
@@ -408,7 +429,14 @@ namespace CTRFramework
                 Helpers.CheckFolder(dir);
 
                 foreach (TextureLayout tl in GetTexturesList().Values)
-                    ctrvram.GetTexture(tl, dir);
+                {
+                    Bitmap bmp = ctrvram.GetTexture(tl, dir);
+                    Bitmap bb = new Bitmap(bmp.Width, bmp.Height);
+                    Graphics g = Graphics.FromImage(bb);
+                    g.DrawImage(bmp, new Point(0, 0));
+                    //System.Windows.Forms.MessageBox.Show(bb.Width + " " + bb.Height);
+                    bb.Save(Path.Combine(dir, $"{tl.Tag()}.png"), System.Drawing.Imaging.ImageFormat.Png);
+                }
 
                 Console.WriteLine("Textures done!");
             }

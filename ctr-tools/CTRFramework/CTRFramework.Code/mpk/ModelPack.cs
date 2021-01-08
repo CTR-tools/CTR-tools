@@ -64,7 +64,7 @@ namespace CTRFramework
 
         public void Extract(string dir, Tim tim)
         {
-            map.Extract(tim);
+            map.Extract(tim, ".\\textures\\");
 
             foreach (DynamicModel d in dynamics)
                 d.Export(dir);

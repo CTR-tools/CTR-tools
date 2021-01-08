@@ -836,9 +836,7 @@ namespace CTRTools
 
                     foreach (TexMap map in list)
                     {
-                        buf.GetTexture(map.tl, "tex", map.name);
-
-                        Bitmap b = (Bitmap)Bitmap.FromFile("tex" + "\\" + map.name + ".png");
+                        Bitmap b = buf.GetTexture(map.tl, "tex", map.name);
 
                         g.DrawImage(b, x * 16, y * 16);
 

@@ -1,6 +1,7 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
 using System.Collections.Generic;
+using System.IO;
 
 namespace CTRFramework
 {
@@ -58,11 +59,11 @@ namespace CTRFramework
         }
 
 
-        public void Extract(Tim tim)
+        public void Extract(Tim tim, string dir)
         {
             if (tim != null)
                 foreach (TexMap tm in maps)
-                    tim.GetTexture(tm.tl, "textures", tm.name);
+                    tim.GetTexture(tm.tl, "textures", tm.name).Save(Path.Combine(dir, $"{tm.tl.Tag()}.png"), System.Drawing.Imaging.ImageFormat.Png); ;
         }
     }
 }

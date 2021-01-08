@@ -180,6 +180,21 @@ namespace CTRFramework.Vram
             }
         }
 
+        public byte[] SaveBMPToStream(byte[] pal)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (BinaryWriterEx bw = new BinaryWriterEx(ms))
+                {
+                    BMPHeader bh = new BMPHeader();
+                    bh.Update(region.Width * 4, region.Height, 16, 4);
+                    bh.UpdateData(pal, FixBitmapData(FixPixelOrder(data), region.Width * 2, region.Height));
+                    bh.Write(bw);
+
+                    return ms.ToArray();
+                }
+            }
+        }
 
         /// <summary>
         /// This function is necessary to fix pixel order in 4-bit BMPs.
@@ -213,7 +228,7 @@ namespace CTRFramework.Vram
             return y;
         }
 
-        public void GetTexture(TextureLayout tl, string path, string name = "")
+        public Bitmap GetTexture(TextureLayout tl, string path, string name = "")
         {
             int bpp = 4;
 
@@ -276,16 +291,24 @@ namespace CTRFramework.Vram
                     //x.Write(n + ".tim");
 
                     //if (!File.Exists(n + ".bmp"))
-                    x.SaveBMP(n + ".bmp", CtrClutToBmpPalette(x.clutdata));
+                    //x.SaveBMP(n + ".bmp", CtrClutToBmpPalette(x.clutdata));
 
                     //if (!File.Exists(n + ".png"))
-                    using (Bitmap oldBmp = new Bitmap(n + ".bmp"))
-                    using (Bitmap newBmp = new Bitmap(oldBmp))
+
+                    using (MemoryStream stream = new MemoryStream(x.SaveBMPToStream(CtrClutToBmpPalette(x.clutdata))))
                     {
-                        newBmp.Save(n + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                        Bitmap oldBmp = (Bitmap)Bitmap.FromStream(stream);
+                        Bitmap newBmp = new Bitmap(oldBmp);
+
+                        if (!CtrVrm.textures.ContainsKey(tl.Tag()))
+                        {
+                            textures.Add(tl.Tag(), newBmp);
+                        } 
+
+                        return newBmp;
                     }
 
-                    File.Delete(n + ".bmp");
+                    //File.Delete(n + ".bmp");
                 }
                 else
                 {
@@ -297,6 +320,7 @@ namespace CTRFramework.Vram
             catch (Exception ex)
             {
                 Helpers.Panic(this, "GetTexture fails: " + path + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
+                return null;
             }
         }
 

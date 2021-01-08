@@ -15,6 +15,8 @@ namespace CTRFramework.Vram
 
         private static Tim buffer = new Tim(new Rectangle(0, 0, Width, Height));
 
+        public static Dictionary<string, Bitmap> textures = new Dictionary<string, Bitmap>();
+
         public static Tim FromStream(Stream str)
         {
             buffer = new Tim(new Rectangle(0, 0, Width, Height));

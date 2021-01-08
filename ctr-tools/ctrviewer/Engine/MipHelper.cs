@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace ctrviewer
 {
@@ -19,39 +20,44 @@ namespace ctrviewer
         {
             using (Bitmap bmp = (Bitmap)Bitmap.FromFile(path))
             {
-                Texture2D t = GetTexture2DFromBitmap(device, bmp);
-
-                int i = 1;
-
-                int width = bmp.Width;
-                int height = bmp.Height;
-
-                do
-                {
-                    width /= 2;
-                    height /= 2;
-
-                    using (Bitmap mip = new Bitmap(width, height))
-                    {
-                        Graphics gr = Graphics.FromImage(mip);
-                        gr.SmoothingMode = SmoothingMode.AntiAlias;
-                        gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                        gr.CompositingMode = CompositingMode.SourceOver;
-
-                        var attributes = new ImageAttributes();
-                        attributes.SetWrapMode(WrapMode.TileFlipXY);
-
-                        gr.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, mip.Width, mip.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, attributes);
-                        t = GetTexture2DFromBitmap(device, mip, t, i);
-                    }
-
-                    i++;
-                }
-                while (width >= 2 && height >= 2);
-
-                return t;
+                return LoadTextureFromBitmap(device, bmp);
             }
+        }
+
+        public static Texture2D LoadTextureFromBitmap(GraphicsDevice device, Bitmap bmp)
+        {
+            Texture2D t = GetTexture2DFromBitmap(device, bmp);
+
+            int i = 1;
+
+            int width = bmp.Width;
+            int height = bmp.Height;
+
+            do
+            {
+                width /= 2;
+                height /= 2;
+
+                using (Bitmap mip = new Bitmap(width, height))
+                {
+                    Graphics gr = Graphics.FromImage(mip);
+                    gr.SmoothingMode = SmoothingMode.AntiAlias;
+                    gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    gr.CompositingMode = CompositingMode.SourceOver;
+
+                    var attributes = new ImageAttributes();
+                    attributes.SetWrapMode(WrapMode.TileFlipXY);
+
+                    gr.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, mip.Width, mip.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, attributes);
+                    t = GetTexture2DFromBitmap(device, mip, t, i);
+                }
+
+                i++;
+            }
+            while (width >= 2 && height >= 2);
+
+            return t;
         }
 
         /// <summary>
