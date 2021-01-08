@@ -341,7 +341,7 @@ namespace ctrviewer
             gameLoaded = true;
         }
 
-        private void LoadTextures(MGLevel qb)
+        private void LoadTextures()
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -350,10 +350,24 @@ namespace ctrviewer
             {
                 foreach (var t in s.ctrvram.textures)
                 {
+                    //first look for texture replacement
+                    string path = $".\\levels\\newtex\\{t.Key}.png";
+
+                    if (File.Exists(path))
+                    {
+                        if (!textures.ContainsKey(t.Key))
+                        {
+                            textures.Add(t.Key, MipHelper.LoadTextureFromFile(GraphicsDevice, path));
+                            continue;
+                        }
+                    }
+
                     if (!textures.ContainsKey(t.Key))
                         textures.Add(t.Key, MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value));
                 }
             }
+
+
 
                 /*
             foreach (string s in qb.textureList)
@@ -555,8 +569,7 @@ namespace ctrviewer
 
             //files = Directory.GetFiles("tex", "*.png");
 
-            foreach (MGLevel q in MeshHigh) LoadTextures(q);
-            foreach (MGLevel q in MeshLow) LoadTextures(q);
+            LoadTextures();
 
             foreach (Scene s in scn)
             {

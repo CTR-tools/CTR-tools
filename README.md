@@ -24,4 +24,4 @@ Game research is welcome, for starters please check:
 * CTR-tools wiki: https://github.com/DCxDemo/CTR-tools/wiki
 * Open issues: https://github.com/DCxDemo/CTR-tools/issues
 
-2016-2020, DCxDemo*.
+2016-2021, DCxDemo*.

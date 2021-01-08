@@ -382,7 +382,7 @@ namespace CTRFramework
             {
                 foreach (TextureLayout tl in GetTexturesList().Values)
                 {
-                    ctrvram.GetTexture(tl, "empty");
+                    ctrvram.GetTexture(tl);
                 }
             }
         }

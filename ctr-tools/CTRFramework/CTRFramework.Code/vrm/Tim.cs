@@ -228,7 +228,7 @@ namespace CTRFramework.Vram
             return y;
         }
 
-        public Bitmap GetTexture(TextureLayout tl, string path, string name = "")
+        public Bitmap GetTexture(TextureLayout tl, string path = "", string name = "")
         {
             int bpp = 4;
 
@@ -237,7 +237,7 @@ namespace CTRFramework.Vram
 
             try
             {
-                Directory.CreateDirectory(path);
+                //Directory.CreateDirectory(path);
 
                 //int width = (tl.width / 4) * 2;
                 int width = (int)(tl.width * (bpp / 8.0f));
