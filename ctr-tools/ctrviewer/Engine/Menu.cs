@@ -47,7 +47,6 @@ namespace ctrviewer
 
     class Menu
     {
-
         public static Dictionary<string, List<MenuItem>> menus = new Dictionary<string, List<MenuItem>>();
 
 
@@ -103,29 +102,31 @@ namespace ctrviewer
 
         public void LoadMenuItems()
         {
-            List<MenuItem> level = new List<MenuItem>();
-            level.Add(new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true));
-            level.Add(new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true));
-            level.Add(new MenuItem("toggle vertex colors".ToUpper(), "toggle", "vcolor", true));
-            level.Add(new MenuItem("toggle sky".ToUpper(), "toggle", "sky", true));
-            level.Add(new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true));
-            level.Add(new MenuItem("toggle visdata".ToUpper(), "toggle", "visbox", true));
-            level.Add(new MenuItem("toggle game objects".ToUpper(), "toggle", "inst", true));
-            level.Add(new MenuItem("toggle paths".ToUpper(), "toggle", "paths", true));
-            level.Add(new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true));
-            level.Add(new MenuItem("<< quadflag: {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15));
-            level.Add(new MenuItem("back".ToUpper(), "link", "main", true));
-            menus.Add("level", level);
+            menus.Add("level", new List<MenuItem>()
+            {
+                new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true),
+                new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true),
+                new MenuItem("toggle vertex lighting".ToUpper(), "toggle", "vcolor", true),
+                new MenuItem("toggle skybox".ToUpper(), "toggle", "sky", true),
+                new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true),
+                new MenuItem("toggle visdata".ToUpper(), "toggle", "visbox", true),
+                new MenuItem("toggle game objects".ToUpper(), "toggle", "inst", true),
+                new MenuItem("toggle paths".ToUpper(), "toggle", "paths", true),
+                new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true),
+                new MenuItem("<< quadflag: {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15),
+                new MenuItem("back".ToUpper(), "link", "main", true)
+            });
 
-            List<MenuItem> video = new List<MenuItem>();
-            video.Add(new MenuItem("toggle fullscreen".ToUpper(), "toggle", "window", true));
-            video.Add(new MenuItem("toggle vsync/fps lock".ToUpper(), "toggle", "vsync", true));
-            video.Add(new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true));
-            video.Add(new MenuItem("toggle 3D stereopair mode".ToUpper(), "toggle", "stereo", true));
-            video.Add(new MenuItem("toggle mipmap generation on load".ToUpper(), "toggle", "genmips", true));
-            video.Add(new MenuItem("show camera position".ToUpper(), "toggle", "campos", true));
-            video.Add(new MenuItem("back".ToUpper(), "link", "main", true));
-            menus.Add("video", video);
+            menus.Add("video", new List<MenuItem>()
+            {
+                new MenuItem("toggle fullscreen".ToUpper(), "toggle", "window", true),
+                new MenuItem("toggle vsync/fps lock".ToUpper(), "toggle", "vsync", true),
+                new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true),
+                new MenuItem("toggle stereoscopic 3D mode".ToUpper(), "toggle", "stereo", true),
+                new MenuItem("toggle mipmap generation on load".ToUpper(), "toggle", "genmips", true),
+                new MenuItem("show camera position".ToUpper(), "toggle", "campos", true),
+                new MenuItem("back".ToUpper(), "link", "main", true)
+            });
 
             List<MenuItem> cupmenu = new List<MenuItem>();
             cupmenu.Add(new MenuItem("wumpa cup".ToUpper(), "link", "cup_wumpa", true));
@@ -139,30 +140,32 @@ namespace ctrviewer
             menus.Add("cupmenu", cupmenu);
 
 
-            List<MenuItem> cup_wumpa = new List<MenuItem>();
-            cup_wumpa.Add(new MenuItem("Crash Cove".ToUpper(), "loadbig", "", true, intValue: 3));
-            cup_wumpa.Add(new MenuItem("Tiger Temple".ToUpper(), "loadbig", "", true, intValue: 4));
-            cup_wumpa.Add(new MenuItem("Blizzard Bluff".ToUpper(), "loadbig", "", true, intValue: 2));
-            cup_wumpa.Add(new MenuItem("Coco Park".ToUpper(), "loadbig", "", true, intValue: 14));
-            cup_wumpa.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
-            menus.Add("cup_wumpa", cup_wumpa);
+            menus.Add("cup_wumpa", new List<MenuItem>()
+            {
+                new MenuItem("Crash Cove".ToUpper(), "loadbig", "", true, intValue: 3),
+                new MenuItem("Tiger Temple".ToUpper(), "loadbig", "", true, intValue: 4),
+                new MenuItem("Blizzard Bluff".ToUpper(), "loadbig", "", true, intValue: 2),
+                new MenuItem("Coco Park".ToUpper(), "loadbig", "", true, intValue: 14),
+                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+            });
 
+            menus.Add("cup_cryst", new List<MenuItem>()
+            {
+                new MenuItem("Roo's Tubes".ToUpper(), "loadbig", "", true, intValue: 6),
+                new MenuItem("Dingo Canyon".ToUpper(), "loadbig", "", true, intValue: 0),
+                new MenuItem("Dragon Mines".ToUpper(), "loadbig", "", true, intValue: 1),
+                new MenuItem("Sewer Speedway".ToUpper(), "loadbig", "", true, intValue: 8),
+                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+            });
 
-            List<MenuItem> cup_cryst = new List<MenuItem>();
-            cup_cryst.Add(new MenuItem("Roo's Tubes".ToUpper(), "loadbig", "", true, intValue: 6));
-            cup_cryst.Add(new MenuItem("Dingo Canyon".ToUpper(), "loadbig", "", true, intValue: 0));
-            cup_cryst.Add(new MenuItem("Dragon Mines".ToUpper(), "loadbig", "", true, intValue: 1));
-            cup_cryst.Add(new MenuItem("Sewer Speedway".ToUpper(), "loadbig", "", true, intValue: 8));
-            cup_cryst.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
-            menus.Add("cup_cryst", cup_cryst);
-
-            List<MenuItem> cup_nitro = new List<MenuItem>();
-            cup_nitro.Add(new MenuItem("Mystery Caves".ToUpper(), "loadbig", "", true, intValue: 9));
-            cup_nitro.Add(new MenuItem("Papu's Pyramid".ToUpper(), "loadbig", "", true, intValue: 5));
-            cup_nitro.Add(new MenuItem("Cortex Castle".ToUpper(), "loadbig", "", true, intValue: 10));
-            cup_nitro.Add(new MenuItem("Tiny Arena".ToUpper(), "loadbig", "", true, intValue: 15));
-            cup_nitro.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
-            menus.Add("cup_nitro", cup_nitro);
+            menus.Add("cup_nitro", new List<MenuItem>()
+            {
+                new MenuItem("Mystery Caves".ToUpper(), "loadbig", "", true, intValue: 9),
+                new MenuItem("Papu's Pyramid".ToUpper(), "loadbig", "", true, intValue: 5),
+                new MenuItem("Cortex Castle".ToUpper(), "loadbig", "", true, intValue: 10),
+                new MenuItem("Tiny Arena".ToUpper(), "loadbig", "", true, intValue: 15),
+                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+            });
 
             List<MenuItem> cup_crash = new List<MenuItem>();
             cup_crash.Add(new MenuItem("Polar Pass".ToUpper(), "loadbig", "", true, intValue: 12));

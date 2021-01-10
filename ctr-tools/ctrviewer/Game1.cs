@@ -23,8 +23,8 @@ namespace ctrviewer
 
         public static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
-        public static Dictionary<string, TriList> instTris = new System.Collections.Generic.Dictionary<string, TriList>();
-        public static Dictionary<string, QuadList> instmodels = new System.Collections.Generic.Dictionary<string, QuadList>();
+        public static Dictionary<string, TriList> instTris = new Dictionary<string, TriList>();
+        public static Dictionary<string, QuadList> instmodels = new Dictionary<string, QuadList>();
 
         List<InstancedModel> instanced = new List<InstancedModel>();
         List<InstancedModel> paths = new List<InstancedModel>();
@@ -89,8 +89,8 @@ namespace ctrviewer
 
             if (settings.Windowed)
             {
-                graphics.PreferredBackBufferWidth = graphics.PreferredBackBufferWidth / 4 * 3;
-                graphics.PreferredBackBufferHeight = graphics.PreferredBackBufferHeight / 4 * 3;
+                graphics.PreferredBackBufferWidth = graphics.PreferredBackBufferWidth * settings.WindowScale / 100;
+                graphics.PreferredBackBufferHeight = graphics.PreferredBackBufferHeight * settings.WindowScale / 100;
             }
 
             UpdateSplitscreenViewports();
@@ -357,13 +357,13 @@ namespace ctrviewer
                     {
                         if (!textures.ContainsKey(t.Key))
                         {
-                            textures.Add(t.Key, MipHelper.LoadTextureFromFile(GraphicsDevice, path));
+                            textures.Add(t.Key, settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path) : Texture2D.FromFile(GraphicsDevice, path));
                             continue;
                         }
                     }
 
                     if (!textures.ContainsKey(t.Key))
-                        textures.Add(t.Key, MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value));
+                        textures.Add(t.Key, settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, mipmaps: false));
                 }
             }
 
@@ -612,15 +612,13 @@ namespace ctrviewer
         }
 
         public bool updatemouse = false;
-        public bool InMenu = false;
-
+        public static bool InMenu = false;
         public static bool HideInvisible = true;
         public static bool RenderEnabled = true;
         public static bool ControlsEnabled = true;
         public static bool IsDrawing = false;
 
         public bool lodEnabled = false;
-        public bool lock_fps = true;
 
         GamePadState oldstate = GamePad.GetState(activeGamePad);
         GamePadState newstate = GamePad.GetState(activeGamePad);
@@ -663,7 +661,7 @@ namespace ctrviewer
                         settings.StereoPairSeparation = -260;
                 }
 
-                if (Keyboard.GetState().IsKeyDown(Keys.RightAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
+                if ((newkb.IsKeyDown(Keys.Enter) && newkb.IsKeyDown(Keys.RightAlt)) && !(oldkb.IsKeyDown(Keys.Enter) && newkb.IsKeyDown(Keys.RightAlt)))
                 {
                     settings.Windowed = !settings.Windowed;
                 }
@@ -712,7 +710,7 @@ namespace ctrviewer
                                     case "lod": lodEnabled = !lodEnabled; if (lodEnabled) EnableLodCamera(); else DisableLodCamera(); break;
                                     case "antialias": settings.AntiAlias = !settings.AntiAlias; break;
                                     case "invis": HideInvisible = !HideInvisible; break;
-                                    case "campos": showCamPos = !showCamPos; break;
+                                    case "campos": settings.ShowCamPos = !settings.ShowCamPos; break;
                                     case "visbox": settings.VisData = !settings.VisData; break;
                                     case "filter": Samplers.EnableFiltering = !Samplers.EnableFiltering; Samplers.Refresh(); break;
                                     case "wire": Samplers.EnableWireframe = !Samplers.EnableWireframe; break;
@@ -981,8 +979,6 @@ namespace ctrviewer
         }
 
 
-        bool showCamPos = false;
-
         protected override void Draw(GameTime gameTime)
         {
             IsDrawing = true;
@@ -1019,12 +1015,22 @@ namespace ctrviewer
 
             if (InMenu)
             {
-                spriteBatch.Draw(textures["logo"], new Vector2(graphics.GraphicsDevice.Viewport.Width / 2 - textures["logo"].Width / 2, 50), Color.White);
+                spriteBatch.Draw(
+                    textures["logo"],
+                    new Vector2((graphics.GraphicsDevice.Viewport.Width - textures["logo"].Width * (graphics.GraphicsDevice.Viewport.Height / 1080f)) / 2, 50 * graphics.GraphicsDevice.Viewport.Height / 1080f),
+                    new Rectangle(0,0, textures["logo"].Width, textures["logo"].Height),
+                    Color.White,
+                    0,
+                    new Vector2(textures["logo"].Width / 2, 0),
+                    graphics.GraphicsDevice.Viewport.Height / 1080f,
+                    SpriteEffects.None,
+                    0.5f
+                    );
 
                 spriteBatch.DrawString(
                     font,
                     version,
-                    new Vector2(((graphics.PreferredBackBufferWidth - font.MeasureString(version).X * graphics.GraphicsDevice.Viewport.Height / 1080f) / 2), graphics.PreferredBackBufferHeight - 60),
+                    new Vector2(((graphics.PreferredBackBufferWidth - font.MeasureString(version).X * graphics.GraphicsDevice.Viewport.Height / 1080f) / 2), graphics.PreferredBackBufferHeight - 60 * graphics.GraphicsDevice.Viewport.Height / 1080f),
                     Color.Aquamarine,
                     0,
                     new Vector2(0, 0),
@@ -1043,7 +1049,7 @@ namespace ctrviewer
             if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Keyboard.GetState().IsKeyDown(Keys.OemPlus))
                 spriteBatch.DrawString(font, String.Format("FOV {0}", camera.ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", camera.ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
 
-            if (showCamPos)
+            if (settings.ShowCamPos)
                 spriteBatch.DrawString(font, $"({(int)camera.Position.X}, {(int)camera.Position.Y}, {(int)camera.Position.Z})", new Vector2(20, 20), Color.Yellow);
 
 

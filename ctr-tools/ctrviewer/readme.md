@@ -1,7 +1,5 @@
 # CTR-tools: ctrviewer r11 [WIP]
-
-A MonoGame Crash Team Racing level viewer using CTRFramework.
-
+Crash Team Racing (PS1) scene viewer powered by CTRFramework and MonoGame.
 
 ## How to use
 - put bigfile.big in root folder *or* put lev/vrm files in "levels" folder
@@ -9,7 +7,7 @@ A MonoGame Crash Team Racing level viewer using CTRFramework.
 
 ## Texture replacement
 Viewer supports texture replacements.
-It checks levels\newtex folder for existing PNG files before loading the texture from ps1 vram.
+It checks "\levels\newtex" folder for existing PNG files before loading the texture from ps1 vram.
 If texture found, PNG image is used instead. It also supports mip map generation, which may take some time if you load many textures.
 
 !outdated instruction!
@@ -35,13 +33,12 @@ You can also use x360ce for DirectInput devices.
 * fov change: +/-
 * fullscreen toggle: alt+enter
 
-## 3D stereopair mode
+## Stereoscopic 3D mode
 You can enable side-by-side steropair mode in video settings.
 
 If this mode is enabled:
 * increase eye distance: LB/L1
 * decrease eye distance: RB/R2
 * press both to reset to default
-
 
 2016-2021, DCxDemo*.

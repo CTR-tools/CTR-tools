@@ -13,4 +13,6 @@
   <StereoPair>false</StereoPair>
   <StereoPairSeparation>-260</StereoPairSeparation>
   <FieldOfView>80</FieldOfView>
+  <ShowCamPos>false</ShowCamPos>
+  <WindowScale>75</WindowScale>
 </settings>

@@ -4,14 +4,13 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
-using System.IO;
 
 namespace ctrviewer
 {
     public class MipHelper
     {
         /// <summary>
-        /// Loads Mipmapped Texture2D object from image file using GDI+ Bitmap.
+        /// Loads Mipmapped Texture2D object from disk using GDI+ Bitmap.
         /// </summary>
         /// <param name="device">MonoGame GraphicsDevice.</param>
         /// <param name="path">Path to image.</param>
@@ -24,6 +23,12 @@ namespace ctrviewer
             }
         }
 
+        /// <summary>
+        /// Loads Mipmapped Texture2D object from GDI+ Bitmap object.
+        /// </summary>
+        /// <param name="device">MonoGame GraphicsDevice.</param>
+        /// <param name="bmp">Bitmap object.</param>
+        /// <returns>Texture2D object.</returns>
         public static Texture2D LoadTextureFromBitmap(GraphicsDevice device, Bitmap bmp)
         {
             Texture2D t = GetTexture2DFromBitmap(device, bmp);
@@ -50,7 +55,7 @@ namespace ctrviewer
                     attributes.SetWrapMode(WrapMode.TileFlipXY);
 
                     gr.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, mip.Width, mip.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, attributes);
-                    t = GetTexture2DFromBitmap(device, mip, t, i);
+                    t = GetTexture2DFromBitmap(device, mip, true, t, i);
                 }
 
                 i++;
@@ -70,7 +75,7 @@ namespace ctrviewer
         /// <param name="tex">Optional. Texture to update.</param>
         /// <param name="level">Optional. Mip level to update.</param>
         /// <returns>Texture2D object.</returns>
-        private static Texture2D GetTexture2DFromBitmap(GraphicsDevice device, Bitmap bitmap, Texture2D tex = null, int level = -1)
+        public static Texture2D GetTexture2DFromBitmap(GraphicsDevice device, Bitmap bitmap, bool mipmaps = true, Texture2D tex = null, int level = -1)
         {
             BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
@@ -93,7 +98,7 @@ namespace ctrviewer
 
             if (tex == null)
             {
-                tex = new Texture2D(device, bitmap.Width, bitmap.Height, true, SurfaceFormat.Color);
+                tex = new Texture2D(device, bitmap.Width, bitmap.Height, mipmaps, SurfaceFormat.Color);
                 tex.SetData<byte>(bytes, 0, bytes.Length);
             }
             else
