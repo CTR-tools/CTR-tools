@@ -14,6 +14,7 @@ namespace ctrviewer
         public TriList wire = new TriList();
 
         Dictionary<string, QuadList> normalq = new Dictionary<string, QuadList>();
+        Dictionary<string, QuadList> alphaq = new Dictionary<string, QuadList>();
         Dictionary<string, QuadList> animatedq = new Dictionary<string, QuadList>();
         QuadList wireq = new QuadList();
 
@@ -26,6 +27,10 @@ namespace ctrviewer
                 List<string> list = new List<string>();
 
                 foreach (var n in normalq)
+                    if (!list.Contains(n.Key))
+                        list.Add(n.Key);
+
+                foreach (var n in alphaq)
                     if (!list.Contains(n.Key))
                         list.Add(n.Key);
 
@@ -97,7 +102,14 @@ namespace ctrviewer
                                     continue;
                                 }
 
-                                Push(normalq, texTag, monolist);
+                                if (Game1.alphalist.Contains(texTag))
+                                {
+                                    Push(alphaq, texTag, monolist);
+                                }
+                                else
+                                {
+                                    Push(normalq, texTag, monolist);
+                                }
                             }
                         }
 
@@ -142,7 +154,7 @@ namespace ctrviewer
                                         continue;
                                     }
 
-                                    Push((isAnimated ? animatedq : normalq), texTag, monolist);
+                                    Push((isAnimated ? animatedq : (Game1.alphalist.Contains(texTag) ? alphaq : normalq)), texTag, monolist);
 
                                     if (isAnimated)
                                         animatedq[texTag].scrollingEnabled = true;
@@ -155,6 +167,9 @@ namespace ctrviewer
             }
 
             foreach (var ql in normalq)
+                ql.Value.Seal();
+
+            foreach (var ql in alphaq)
                 ql.Value.Seal();
 
             foreach (var ql in animatedq)
@@ -185,37 +200,40 @@ namespace ctrviewer
                 ql.Value.Update(gameTime);
         }
 
-        public void Render(GraphicsDeviceManager graphics, BasicEffect effect)
+        public void Render(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
             Samplers.SetToDevice(graphics, EngineSampler.Default);
 
             foreach (var ql in normalq)
-                ql.Value.Render(graphics, effect);
+                ql.Value.Render(graphics, effect, null);
 
             Samplers.SetToDevice(graphics, EngineSampler.Animated);
 
             foreach (var ql in animatedq)
-                ql.Value.Render(graphics, effect);
+                ql.Value.Render(graphics, effect, null);
 
             Samplers.SetToDevice(graphics, EngineSampler.Default);
 
             if (flagq.ContainsKey(((QuadFlags)(1 << Game1.currentflag)).ToString()))
-                flagq[((QuadFlags)(1 << Game1.currentflag)).ToString()].Render(graphics, effect);
+                flagq[((QuadFlags)(1 << Game1.currentflag)).ToString()].Render(graphics, effect, null);
+
+            foreach (var ql in alphaq)
+                ql.Value.Render(graphics, effect, alpha);
 
             if (!Game1.HideInvisible)
             {
                 effect.Alpha = 0.25f;
 
                 if (flagq.ContainsKey("invis"))
-                    flagq["invis"].Render(graphics, effect);
+                    flagq["invis"].Render(graphics, effect, null);
 
                 effect.Alpha = 1f;
             }
         }
 
-        public void RenderSky(GraphicsDeviceManager graphics, BasicEffect effect)
+        public void RenderSky(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
-            normal.Render(graphics, effect);
+            normal.Render(graphics, effect, alpha);
         }
     }
 }

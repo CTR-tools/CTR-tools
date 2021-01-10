@@ -23,15 +23,15 @@ namespace ctrviewer
         public bool ShowCamPos { get; set; } = false;
 
         private bool _windowed = true;
-        public bool Windowed { 
-            get { 
-                return _windowed; 
-            } 
-            set { 
+        public bool Windowed {
+            get {
+                return _windowed;
+            }
+            set {
                 _windowed = value;
                 if (onWindowedChanged != null)
                     onWindowedChanged();
-            } 
+            }
         }
 
         private bool _vertexLighting = true;
@@ -155,7 +155,6 @@ namespace ctrviewer
                 WindowScale = Int32.Parse(vid["WindowScale"].InnerText)
             };
         }
-
         public static void Save(string path)
         {
             throw new NotImplementedException();

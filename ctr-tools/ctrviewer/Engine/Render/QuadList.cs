@@ -97,7 +97,7 @@ namespace ctrviewer
             return x;
         }
 
-        public void Render(GraphicsDeviceManager graphics, BasicEffect effect)
+        public void Render(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
             if (indices != null && verts != null)
             {
@@ -109,14 +109,19 @@ namespace ctrviewer
                         if (Game1.textures.ContainsKey(textureName))
                         {
                             effect.Texture = Game1.textures[textureName];
+                            if (alpha != null)
+                                alpha.Texture = effect.Texture;
                         }
                         else
                         {
                             //Console.WriteLine("missing texture: " + textureName);
                             effect.Texture = Game1.textures["test"];
+                            if (alpha != null)
+                                alpha.Texture = effect.Texture;
                         }
 
-                    foreach (var pass in effect.CurrentTechnique.Passes)
+
+                    foreach (var pass in (alpha != null ? alpha.CurrentTechnique.Passes : effect.CurrentTechnique.Passes))
                     {
                         pass.Apply();
 
@@ -127,6 +132,7 @@ namespace ctrviewer
                             VertexPositionColorTexture.VertexDeclaration
                         );
                     }
+                    
 
                     if (Samplers.EnableWireframe)
                     {

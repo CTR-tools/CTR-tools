@@ -15,11 +15,11 @@ namespace ctrviewer
         /// <param name="device">MonoGame GraphicsDevice.</param>
         /// <param name="path">Path to image.</param>
         /// <returns>Texture2D object.</returns>
-        public static Texture2D LoadTextureFromFile(GraphicsDevice device, string path)
+        public static Texture2D LoadTextureFromFile(GraphicsDevice device, string path, out bool alpha)
         {
             using (Bitmap bmp = (Bitmap)Bitmap.FromFile(path))
             {
-                return LoadTextureFromBitmap(device, bmp);
+                return LoadTextureFromBitmap(device, bmp, out alpha);
             }
         }
 
@@ -29,9 +29,11 @@ namespace ctrviewer
         /// <param name="device">MonoGame GraphicsDevice.</param>
         /// <param name="bmp">Bitmap object.</param>
         /// <returns>Texture2D object.</returns>
-        public static Texture2D LoadTextureFromBitmap(GraphicsDevice device, Bitmap bmp)
+        public static Texture2D LoadTextureFromBitmap(GraphicsDevice device, Bitmap bmp, out bool alpha)
         {
-            Texture2D t = GetTexture2DFromBitmap(device, bmp);
+            Texture2D t = GetTexture2DFromBitmap(device, bmp, out alpha);
+
+            bool x = alpha;
 
             int i = 1;
 
@@ -55,12 +57,14 @@ namespace ctrviewer
                     attributes.SetWrapMode(WrapMode.TileFlipXY);
 
                     gr.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, mip.Width, mip.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, attributes);
-                    t = GetTexture2DFromBitmap(device, mip, true, t, i);
+                    t = GetTexture2DFromBitmap(device, mip, out alpha, true, t, i);
                 }
 
                 i++;
             }
             while (width >= 2 && height >= 2);
+
+            alpha = x;
 
             return t;
         }
@@ -75,7 +79,7 @@ namespace ctrviewer
         /// <param name="tex">Optional. Texture to update.</param>
         /// <param name="level">Optional. Mip level to update.</param>
         /// <returns>Texture2D object.</returns>
-        public static Texture2D GetTexture2DFromBitmap(GraphicsDevice device, Bitmap bitmap, bool mipmaps = true, Texture2D tex = null, int level = -1)
+        public static Texture2D GetTexture2DFromBitmap(GraphicsDevice device, Bitmap bitmap, out bool alpha, bool mipmaps = true, Texture2D tex = null, int level = -1)
         {
             BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
@@ -88,12 +92,29 @@ namespace ctrviewer
             // unlock the bitmap data
             bitmap.UnlockBits(data);
 
+            alpha = false;
+
             //BGRA -> RGBA
             for (int i = 0; i < bytes.Length / 4; i++)
             {
-                byte x = bytes[i * 4 + 0];
-                bytes[i * 4 + 0] = bytes[i * 4 + 2];
-                bytes[i * 4 + 2] = x;
+                byte B = bytes[i * 4 + 0];
+                byte G = bytes[i * 4 + 1];
+                byte R = bytes[i * 4 + 2];
+                byte A = bytes[i * 4 + 3];
+
+                if (B == 255 && R == 255)
+                {
+                    B = 0;
+                    R = 0;
+                    A = 0;
+
+                    alpha = true;
+                }
+
+                bytes[i * 4 + 0] = R;
+                bytes[i * 4 + 1] = G;
+                bytes[i * 4 + 2] = B;
+                bytes[i * 4 + 3] = A;
             }
 
             if (tex == null)

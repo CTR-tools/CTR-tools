@@ -15,6 +15,8 @@ namespace ctrviewer
 {
     public class Game1 : Game
     {
+        public static List<string> alphalist = new List<string>();
+
         EngineSettings settings;
 
         GraphicsDeviceManager graphics;
@@ -143,6 +145,7 @@ namespace ctrviewer
             vpBottom.Y = graphics.PreferredBackBufferHeight / 2;
         }
 
+        AlphaTestEffect alphaTestEffect;
 
         public void UpdateEffects()
         {
@@ -151,10 +154,19 @@ namespace ctrviewer
             effect.TextureEnabled = true;
             effect.DiffuseColor = new Vector3(settings.VertexLighting ? 2 : 1);
 
+            alphaTestEffect = new AlphaTestEffect(GraphicsDevice);
+            alphaTestEffect.AlphaFunction = CompareFunction.Greater;
+            alphaTestEffect.ReferenceAlpha = 0;
+            alphaTestEffect.VertexColorEnabled = settings.VertexLighting;
+            alphaTestEffect.DiffuseColor = effect.DiffuseColor;
+
+
             effect.FogEnabled = true;
             effect.FogColor = new Vector3(backColor.R / 255f, backColor.G / 255f, backColor.B / 255f);
             effect.FogStart = camera.FarClip / 4 * 3;
             effect.FogEnd = camera.FarClip;
+
+            //effect.DiffuseColor = new Vector3(0.5f, 1.0f, 1.5f);
 
             instanceEffect = new BasicEffect(graphics.GraphicsDevice);
             instanceEffect.VertexColorEnabled = true;
@@ -353,17 +365,23 @@ namespace ctrviewer
                     //first look for texture replacement
                     string path = $".\\levels\\newtex\\{t.Key}.png";
 
+                    bool alpha = false;
+
                     if (File.Exists(path))
                     {
                         if (!textures.ContainsKey(t.Key))
                         {
-                            textures.Add(t.Key, settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path) : Texture2D.FromFile(GraphicsDevice, path));
+                            textures.Add(t.Key, settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path, out alpha) : Texture2D.FromFile(GraphicsDevice, path));
                             continue;
                         }
                     }
 
                     if (!textures.ContainsKey(t.Key))
-                        textures.Add(t.Key, settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, mipmaps: false));
+                        textures.Add(t.Key, settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
+
+                    if (alpha)
+                        if (!alphalist.Contains(t.Key))
+                            alphalist.Add(t.Key);
                 }
             }
 
@@ -460,9 +478,10 @@ namespace ctrviewer
                 scn.Add(Scene.FromFile(s));
             }
 
-
             Console.WriteLine("scenes parsed at: " + sw.Elapsed.TotalSeconds);
 
+            //loading textures between scenes and conversion to monogame for alpha textures info
+            LoadTextures();
 
             foreach (Scene s in scn)
             {
@@ -568,8 +587,6 @@ namespace ctrviewer
             Console.WriteLine("textures extracted at: " + sw.Elapsed.TotalSeconds);
 
             //files = Directory.GetFiles("tex", "*.png");
-
-            LoadTextures();
 
             foreach (Scene s in scn)
             {
@@ -758,6 +775,9 @@ namespace ctrviewer
                         UpdateCameras(gameTime);
                 }
 
+                oldms = newms;
+                newms = Mouse.GetState();
+                
                 oldstate = newstate;
                 oldkb = newkb;
 
@@ -793,7 +813,6 @@ namespace ctrviewer
             rightCamera.Update(gameTime, updatemouse, true, newms, oldms);
             lowcamera.Copy(gameTime, camera);
 
-            newms = Mouse.GetState();
         }
 
         private void UpdateProjectionMatrices()
@@ -821,7 +840,7 @@ namespace ctrviewer
                     Vector3 x = effect.DiffuseColor;
 
                     effect.DiffuseColor = new Vector3(1, 1, 1);
-                    sky.RenderSky(graphics, effect);
+                    sky.RenderSky(graphics, effect, alphaTestEffect);
                     effect.DiffuseColor = x;
 
                     //clear z buffer
@@ -838,23 +857,23 @@ namespace ctrviewer
                     {
                         Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
                         foreach (var v in instanced)
-                            v.Render(graphics, instanceEffect, lowcamera);
+                            v.Render(graphics, instanceEffect, alphaTestEffect, lowcamera);
                     }
 
                     if (settings.BotsPath)
                     {
                         Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
                         foreach (var v in paths)
-                            v.Render(graphics, instanceEffect, lowcamera);
+                            v.Render(graphics, instanceEffect, alphaTestEffect, lowcamera);
                     }
 
                     Samplers.SetToDevice(graphics, EngineRasterizer.Default);
 
                     foreach (MGLevel qb in MeshLow)
-                        qb.Render(graphics, effect);
+                        qb.Render(graphics, effect, alphaTestEffect);
 
                     foreach (Kart k in karts)
-                        k.Render(graphics, instanceEffect, lowcamera);
+                        k.Render(graphics, instanceEffect, alphaTestEffect, lowcamera);
 
                 }
                 else
@@ -863,14 +882,14 @@ namespace ctrviewer
                     {
                         Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
                         foreach (var v in instanced)
-                            v.Render(graphics, instanceEffect, camera);
+                            v.Render(graphics, instanceEffect, alphaTestEffect, camera);
                     }
 
                     if (settings.BotsPath)
                     {
                         Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
                         foreach (var v in paths)
-                            v.Render(graphics, instanceEffect, camera);
+                            v.Render(graphics, instanceEffect, alphaTestEffect, camera);
                     }
 
                     Samplers.SetToDevice(graphics, EngineRasterizer.Default);
@@ -878,11 +897,14 @@ namespace ctrviewer
                     effect.View = (cam != null ? cam.ViewMatrix : camera.ViewMatrix);
                     effect.Projection = camera.ProjectionMatrix;
 
+                    alphaTestEffect.View = camera.ViewMatrix;
+                    alphaTestEffect.Projection = camera.ProjectionMatrix;
+
                     foreach (MGLevel qb in MeshHigh)
-                        qb.Render(graphics, effect);
+                        qb.Render(graphics, effect, alphaTestEffect);
 
                     foreach (Kart k in karts)
-                        k.Render(graphics, instanceEffect, camera);
+                        k.Render(graphics, instanceEffect, alphaTestEffect, camera);
 
                 }
 
@@ -1069,6 +1091,7 @@ namespace ctrviewer
 
         protected override void Dispose(bool disposing)
         {
+            alphalist.Clear();
             paths.Clear();
             textures.Clear();
             scn.Clear();

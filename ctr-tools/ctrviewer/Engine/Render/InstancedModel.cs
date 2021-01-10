@@ -28,7 +28,7 @@ namespace ctrviewer
             Position += new Vector3(0, 1f, 0f);
         }
 
-        public void Render(GraphicsDeviceManager graphics, BasicEffect effect, FirstPersonCamera camera)
+        public void Render(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha, FirstPersonCamera camera)
         {
             effect.World = Matrix.CreateScale(Scale) * Matrix.CreateTranslation(Position);
             effect.View = camera.ViewMatrix;
@@ -36,11 +36,11 @@ namespace ctrviewer
 
             if (Game1.instmodels.ContainsKey(ModelName))
             {
-                Game1.instmodels[ModelName].Render(graphics, effect);
+                Game1.instmodels[ModelName].Render(graphics, effect, alpha);
             }
             else if (Game1.instTris.ContainsKey(ModelName))
             {
-                Game1.instTris[ModelName].Render(graphics, effect);
+                Game1.instTris[ModelName].Render(graphics, effect, alpha);
             }
             else
             {

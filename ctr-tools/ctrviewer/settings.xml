@@ -1,7 +1,7 @@
 ﻿<settings>
   <GenerateMips>true</GenerateMips>
   <AntiAlias>true</AntiAlias>
-  <AntiAliasLevel>4</AntiAliasLevel>
+  <AntiAliasLevel>0</AntiAliasLevel>
   <Windowed>true</Windowed>
   <TextureFiltering>true</TextureFiltering>
   <VerticalSync>true</VerticalSync>
