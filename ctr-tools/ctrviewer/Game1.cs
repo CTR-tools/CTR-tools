@@ -897,8 +897,8 @@ namespace ctrviewer
                     effect.View = (cam != null ? cam.ViewMatrix : camera.ViewMatrix);
                     effect.Projection = camera.ProjectionMatrix;
 
-                    alphaTestEffect.View = camera.ViewMatrix;
-                    alphaTestEffect.Projection = camera.ProjectionMatrix;
+                    alphaTestEffect.View = effect.View;
+                    alphaTestEffect.Projection = effect.Projection;
 
                     foreach (MGLevel qb in MeshHigh)
                         qb.Render(graphics, effect, alphaTestEffect);
