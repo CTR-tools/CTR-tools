@@ -805,6 +805,7 @@ namespace ctrviewer
                 IsMouseVisible = true;
                 updatemouse = false;
             }
+
             skycamera.Update(gameTime, updatemouse, false, newms, oldms);
             camera.Update(gameTime, updatemouse, true, newms, oldms);
             rightCamera.Position = camera.Position + Vector3.Transform(Vector3.Right * settings.StereoPairSeparation, Matrix.CreateFromYawPitchRoll(camera.leftRightRot, camera._upDownRot, 0));
@@ -812,7 +813,6 @@ namespace ctrviewer
             rightCamera.Target = camera.Target;
             rightCamera.Update(gameTime, updatemouse, true, newms, oldms);
             lowcamera.Copy(gameTime, camera);
-
         }
 
         private void UpdateProjectionMatrices()
@@ -911,6 +911,9 @@ namespace ctrviewer
                 if (settings.VisData)
                 {
                     //GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
+
+                    //texture enabled makes visdata invisible
+                    effect.TextureEnabled = false;
 
                     foreach (var x in bbox)
                     {
@@ -1073,11 +1076,6 @@ namespace ctrviewer
 
             if (settings.ShowCamPos)
                 spriteBatch.DrawString(font, $"({(int)camera.Position.X}, {(int)camera.Position.Y}, {(int)camera.Position.Z})", new Vector2(20, 20), Color.Yellow);
-
-
-
-
-            //spriteBatch.DrawString(font, IsActive ? "Active" : "Not active", new Vector2(20, 20), Color.Yellow);
 
             //spriteBatch.DrawString(font, String.Format("sp: {0}\r\nac:{1}", karts[0].Speed, karts[0].Accel), new Vector2(20, 20), Color.Yellow);
 
