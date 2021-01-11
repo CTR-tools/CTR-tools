@@ -387,23 +387,23 @@ namespace ctrviewer
 
 
 
-                /*
-            foreach (string s in qb.textureList)
+            /*
+        foreach (string s in qb.textureList)
+        {
+            string path = $"levels\\tex\\{s}.png";
+            string path_new = $"levels\\newtex\\{s}.png";
+
+            if (File.Exists(path_new))
+                path = path_new;
+
+            if (File.Exists(path))
             {
-                string path = $"levels\\tex\\{s}.png";
-                string path_new = $"levels\\newtex\\{s}.png";
-
-                if (File.Exists(path_new))
-                    path = path_new;
-
-                if (File.Exists(path))
-                {
-                    if (!textures.ContainsKey(s))
-                        textures.Add(s, settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path) : Texture2D.FromFile(GraphicsDevice, path));
-                }
-                else Console.WriteLine("Missing texture: " + s);
+                if (!textures.ContainsKey(s))
+                    textures.Add(s, settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path) : Texture2D.FromFile(GraphicsDevice, path));
             }
-            */
+            else Console.WriteLine("Missing texture: " + s);
+        }
+        */
 
             sw.Stop();
 
@@ -547,7 +547,7 @@ namespace ctrviewer
 
                 }
 
-            karts.Add(new Kart("selectkart", MGConverter.ToVector3(scn[0].header.startGrid[0].Position), Vector3.Left, 0.5f));
+            //karts.Add(new Kart("selectkart", MGConverter.ToVector3(scn[0].header.startGrid[0].Position), Vector3.Left, 0.5f));
 
 
             Console.WriteLine("extracted dynamics at: " + sw.Elapsed.TotalSeconds);
@@ -711,7 +711,7 @@ namespace ctrviewer
                                 InMenu = false;
                                 break;
                             case "loadbig":
-                                LoadLevelFromBig(menu.SelectedItem.Value, 0, 2);
+                                LoadLevelFromBig(menu.SelectedItem.Value);//, 0, 2);
                                 break;
                             case "loadbigadv":
                                 LoadLevelFromBig(menu.SelectedItem.Value, 0, 3);
@@ -736,7 +736,7 @@ namespace ctrviewer
                                     case "vcolor": settings.VertexLighting = !settings.VertexLighting; break;
                                     case "stereo": settings.StereoPair = !settings.StereoPair; break;
                                     case "sky": settings.Sky = !settings.Sky; break;
-                                    case "vsync": settings.VerticalSync = !settings.VerticalSync;  break;
+                                    case "vsync": settings.VerticalSync = !settings.VerticalSync; break;
                                     default: Console.WriteLine("unimplemented toggle: " + menu.SelectedItem.Param); break;
                                 }
                                 break;
@@ -777,7 +777,7 @@ namespace ctrviewer
 
                 oldms = newms;
                 newms = Mouse.GetState();
-                
+
                 oldstate = newstate;
                 oldkb = newkb;
 
@@ -941,7 +941,38 @@ namespace ctrviewer
         BigFileReader big;
         Howl howl;
 
-        private void LoadLevelFromBig(int levelId = 0, int mode = 0, int files = 2)
+        private void LoadLevelFromBig(int absId)
+        {
+            if (big == null)
+            {
+                if (File.Exists("bigfile.big"))
+                {
+                    big = new BigFileReader(File.OpenRead("bigfile.big"));
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            big.FileCursor = absId;
+
+            if (Path.GetExtension(big.GetFilename()) != ".vrm")
+                return;
+
+            Helpers.WriteToFile(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+
+            big.NextFile();
+
+            if (Path.GetExtension(big.GetFilename()) != ".lev")
+                return;
+
+            Helpers.WriteToFile(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+
+            LoadStuff(new string[] { Path.Combine(Meta.BasePath, big.GetFilename()) });
+        }
+
+        private void LoadLevelFromBig(int absId, int levelId = 0, int mode = 0, int files = 2)
         {
             if (big == null)
             {
@@ -1043,7 +1074,7 @@ namespace ctrviewer
                 spriteBatch.Draw(
                     textures["logo"],
                     new Vector2((graphics.GraphicsDevice.Viewport.Width - textures["logo"].Width * (graphics.GraphicsDevice.Viewport.Height / 1080f)) / 2, 50 * graphics.GraphicsDevice.Viewport.Height / 1080f),
-                    new Rectangle(0,0, textures["logo"].Width, textures["logo"].Height),
+                    new Rectangle(0, 0, textures["logo"].Width, textures["logo"].Height),
                     Color.White,
                     0,
                     new Vector2(textures["logo"].Width / 2, 0),

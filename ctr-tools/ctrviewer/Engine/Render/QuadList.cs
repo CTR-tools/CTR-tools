@@ -132,7 +132,7 @@ namespace ctrviewer
                             VertexPositionColorTexture.VertexDeclaration
                         );
                     }
-                    
+
 
                     if (Samplers.EnableWireframe)
                     {

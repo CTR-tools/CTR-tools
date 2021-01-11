@@ -136,68 +136,88 @@ namespace ctrviewer
             cupmenu.Add(new MenuItem("bonus tracks".ToUpper(), "link", "bonus_levels", true));
             cupmenu.Add(new MenuItem("battle arenas".ToUpper(), "link", "battle_arenas", true));
             cupmenu.Add(new MenuItem("adventure".ToUpper(), "link", "adventure", true));
+            cupmenu.Add(new MenuItem("cutscenes".ToUpper(), "link", "cutscenes", true));
             cupmenu.Add(new MenuItem("back".ToUpper(), "link", "main", true));
             menus.Add("cupmenu", cupmenu);
 
 
             menus.Add("cup_wumpa", new List<MenuItem>()
             {
-                new MenuItem("Crash Cove".ToUpper(), "loadbig", "", true, intValue: 3),
-                new MenuItem("Tiger Temple".ToUpper(), "loadbig", "", true, intValue: 4),
-                new MenuItem("Blizzard Bluff".ToUpper(), "loadbig", "", true, intValue: 2),
-                new MenuItem("Coco Park".ToUpper(), "loadbig", "", true, intValue: 14),
+                new MenuItem("Crash Cove".ToUpper(), "loadbig", "", true, intValue: 3 * 8),
+                new MenuItem("Tiger Temple".ToUpper(), "loadbig", "", true, intValue: 4 * 8),
+                new MenuItem("Blizzard Bluff".ToUpper(), "loadbig", "", true, intValue: 2 * 8),
+                new MenuItem("Coco Park".ToUpper(), "loadbig", "", true, intValue: 14 * 8),
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
             menus.Add("cup_cryst", new List<MenuItem>()
             {
-                new MenuItem("Roo's Tubes".ToUpper(), "loadbig", "", true, intValue: 6),
-                new MenuItem("Dingo Canyon".ToUpper(), "loadbig", "", true, intValue: 0),
-                new MenuItem("Dragon Mines".ToUpper(), "loadbig", "", true, intValue: 1),
-                new MenuItem("Sewer Speedway".ToUpper(), "loadbig", "", true, intValue: 8),
+                new MenuItem("Roo's Tubes".ToUpper(), "loadbig", "", true, intValue: 6 * 8),
+                new MenuItem("Dingo Canyon".ToUpper(), "loadbig", "", true, intValue: 0 * 8),
+                new MenuItem("Dragon Mines".ToUpper(), "loadbig", "", true, intValue: 1 * 8),
+                new MenuItem("Sewer Speedway".ToUpper(), "loadbig", "", true, intValue: 8 * 8),
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
             menus.Add("cup_nitro", new List<MenuItem>()
             {
-                new MenuItem("Mystery Caves".ToUpper(), "loadbig", "", true, intValue: 9),
-                new MenuItem("Papu's Pyramid".ToUpper(), "loadbig", "", true, intValue: 5),
-                new MenuItem("Cortex Castle".ToUpper(), "loadbig", "", true, intValue: 10),
-                new MenuItem("Tiny Arena".ToUpper(), "loadbig", "", true, intValue: 15),
+                new MenuItem("Mystery Caves".ToUpper(), "loadbig", "", true, intValue: 9 * 8),
+                new MenuItem("Papu's Pyramid".ToUpper(), "loadbig", "", true, intValue: 5 * 8),
+                new MenuItem("Cortex Castle".ToUpper(), "loadbig", "", true, intValue: 10 * 8),
+                new MenuItem("Tiny Arena".ToUpper(), "loadbig", "", true, intValue: 15 * 8),
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
-            List<MenuItem> cup_crash = new List<MenuItem>();
-            cup_crash.Add(new MenuItem("Polar Pass".ToUpper(), "loadbig", "", true, intValue: 12));
-            cup_crash.Add(new MenuItem("N. Gin Labs".ToUpper(), "loadbig", "", true, intValue: 11));
-            cup_crash.Add(new MenuItem("Hot Air Skyway".ToUpper(), "loadbig", "", true, intValue: 7));
-            cup_crash.Add(new MenuItem("Slide Colliseum".ToUpper(), "loadbig", "", true, intValue: 16));
-            cup_crash.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
-            menus.Add("cup_crash", cup_crash);
+            menus.Add("cup_crash", new List<MenuItem>()
+            {
+                new MenuItem("Polar Pass".ToUpper(), "loadbig", "", true, intValue: 12 * 8),
+                new MenuItem("N. Gin Labs".ToUpper(), "loadbig", "", true, intValue: 11 * 8),
+                new MenuItem("Hot Air Skyway".ToUpper(), "loadbig", "", true, intValue: 7 * 8),
+                new MenuItem("Slide Colliseum".ToUpper(), "loadbig", "", true, intValue: 16 * 8),
+                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+            });
+
+            menus.Add("cutscenes", new List<MenuItem>()
+            {
+                new MenuItem("Intro Box".ToUpper(), "loadbig", "", true, intValue: 513),
+                new MenuItem("Race Today".ToUpper(), "loadbig", "", true, intValue: 515),
+                new MenuItem("Canyon Coco".ToUpper(), "loadbig", "", true, intValue: 518),
+                new MenuItem("Pass Tiny".ToUpper(), "loadbig", "", true, intValue: 521),
+                new MenuItem("Temple Polar".ToUpper(), "loadbig", "", true, intValue: 524),
+                new MenuItem("Skyway Dingodile".ToUpper(), "loadbig", "", true, intValue: 527),
+                new MenuItem("Sewer Cortex".ToUpper(), "loadbig", "", true, intValue: 530),
+                new MenuItem("Oxide 1".ToUpper(), "loadbig", "", true, intValue: 533),
+                new MenuItem("Sleeping Crash".ToUpper(), "loadbig", "", true, intValue: 536),
+                new MenuItem("Oxide 2".ToUpper(), "loadbig", "", true, intValue: 539),
+                new MenuItem("Oxide 3".ToUpper(), "loadbig", "", true, intValue: 542),
+                new MenuItem("Oxide 4".ToUpper(), "loadbig", "", true, intValue: 544),
+                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+            });
 
             List<MenuItem> bonus_levels = new List<MenuItem>();
-            bonus_levels.Add(new MenuItem("Oxide Station".ToUpper(), "loadbig", "", true, intValue: 13));
-            bonus_levels.Add(new MenuItem("Turbo Track".ToUpper(), "loadbig", "", true, intValue: 17));
+            bonus_levels.Add(new MenuItem("Oxide Station".ToUpper(), "loadbig", "", true, intValue: 13 * 8));
+            bonus_levels.Add(new MenuItem("Turbo Track".ToUpper(), "loadbig", "", true, intValue: 17 * 8));
+            bonus_levels.Add(new MenuItem("Character selection".ToUpper(), "loadbig", "", true, intValue: 217));
             bonus_levels.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
             menus.Add("bonus_levels", bonus_levels);
 
             List<MenuItem> battle_arenas = new List<MenuItem>();
-            battle_arenas.Add(new MenuItem("Nitro Court".ToUpper(), "loadbig", "", true, intValue: 18));
-            battle_arenas.Add(new MenuItem("Rampage Ruins".ToUpper(), "loadbig", "", true, intValue: 19));
-            battle_arenas.Add(new MenuItem("Parking Lot".ToUpper(), "loadbig", "", true, intValue: 20));
-            battle_arenas.Add(new MenuItem("Skull Rock".ToUpper(), "loadbig", "", true, intValue: 21));
-            battle_arenas.Add(new MenuItem("North Bowl".ToUpper(), "loadbig", "", true, intValue: 22));
-            battle_arenas.Add(new MenuItem("Rocky Road".ToUpper(), "loadbig", "", true, intValue: 23));
-            battle_arenas.Add(new MenuItem("Lab Basement".ToUpper(), "loadbig", "", true, intValue: 24));
+            battle_arenas.Add(new MenuItem("Nitro Court".ToUpper(), "loadbig", "", true, intValue: 18 * 8));
+            battle_arenas.Add(new MenuItem("Rampage Ruins".ToUpper(), "loadbig", "", true, intValue: 19 * 8));
+            battle_arenas.Add(new MenuItem("Parking Lot".ToUpper(), "loadbig", "", true, intValue: 20 * 8));
+            battle_arenas.Add(new MenuItem("Skull Rock".ToUpper(), "loadbig", "", true, intValue: 21 * 8));
+            battle_arenas.Add(new MenuItem("North Bowl".ToUpper(), "loadbig", "", true, intValue: 22 * 8));
+            battle_arenas.Add(new MenuItem("Rocky Road".ToUpper(), "loadbig", "", true, intValue: 23 * 8));
+            battle_arenas.Add(new MenuItem("Lab Basement".ToUpper(), "loadbig", "", true, intValue: 24 * 8));
             battle_arenas.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
             menus.Add("battle_arenas", battle_arenas);
 
             List<MenuItem> adventure = new List<MenuItem>();
-            adventure.Add(new MenuItem("Gem Valley".ToUpper(), "loadbigadv", "", true, intValue: 0));
-            adventure.Add(new MenuItem("N. Sanity Beach".ToUpper(), "loadbigadv", "", true, intValue: 1));
-            adventure.Add(new MenuItem("Lost Ruins".ToUpper(), "loadbigadv", "", true, intValue: 2));
-            adventure.Add(new MenuItem("Glacier Park".ToUpper(), "loadbigadv", "", true, intValue: 3));
-            adventure.Add(new MenuItem("Citadel City".ToUpper(), "loadbigadv", "", true, intValue: 4));
+            adventure.Add(new MenuItem("Gem Valley".ToUpper(), "loadbig", "", true, intValue: 200));
+            adventure.Add(new MenuItem("N. Sanity Beach".ToUpper(), "loadbig", "", true, intValue: 203));
+            adventure.Add(new MenuItem("Lost Ruins".ToUpper(), "loadbig", "", true, intValue: 206));
+            adventure.Add(new MenuItem("Glacier Park".ToUpper(), "loadbig", "", true, intValue: 209));
+            adventure.Add(new MenuItem("Citadel City".ToUpper(), "loadbig", "", true, intValue: 212));
             adventure.Add(new MenuItem("All at once".ToUpper(), "loadbigadv", "", true, intValue: -1));
             adventure.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
             menus.Add("adventure", adventure);

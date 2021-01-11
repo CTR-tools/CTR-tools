@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using System.Xml;
-using System.IO;
 using System;
+using System.IO;
+using System.Xml;
 
 namespace ctrviewer
 {
@@ -23,11 +23,14 @@ namespace ctrviewer
         public bool ShowCamPos { get; set; } = false;
 
         private bool _windowed = true;
-        public bool Windowed {
-            get {
+        public bool Windowed
+        {
+            get
+            {
                 return _windowed;
             }
-            set {
+            set
+            {
                 _windowed = value;
                 if (onWindowedChanged != null)
                     onWindowedChanged();

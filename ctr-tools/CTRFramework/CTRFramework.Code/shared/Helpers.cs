@@ -63,12 +63,11 @@ namespace CTRFramework.Shared
 
 
         //avoids excessive fragmentation
-        public static void WriteToFile(string fname, string content)
+        public static void WriteToFile(string fileName, string content)
         {
-            if (!Directory.Exists(Path.GetDirectoryName(fname)))
-                Directory.CreateDirectory(Path.GetDirectoryName(fname));
+            CheckFolder(fileName);
 
-            using (FileStream fs = new FileStream(fname, FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
             {
                 using (StreamWriter sw = new StreamWriter(fs))
                 {
@@ -78,18 +77,14 @@ namespace CTRFramework.Shared
             }
         }
 
-        public static void WriteToFile(string fname, byte[] data)
+        public static void WriteToFile(string fileName, byte[] data)
         {
-            if (!Directory.Exists(Path.GetDirectoryName(fname)))
-                Directory.CreateDirectory(Path.GetDirectoryName(fname));
+            CheckFolder(fileName);
 
-            using (FileStream fs = new FileStream(fname, FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
             {
-                using (StreamWriter sw = new StreamWriter(fs))
-                {
-                    fs.SetLength(data.Length);
-                    sw.Write(data);
-                }
+                fs.SetLength(data.Length);
+                fs.Write(data, 0, data.Length);
             }
         }
 

@@ -289,7 +289,7 @@ namespace CTRFramework
             }
 
             Console.WriteLine($"{min}, {max}");
-           // Console.ReadKey();
+            // Console.ReadKey();
 
             //Helpers.WriteToFile(".\\normals_test.txt", sb.ToString());
         }

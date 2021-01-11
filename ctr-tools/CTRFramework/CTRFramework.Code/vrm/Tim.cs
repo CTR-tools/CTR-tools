@@ -303,7 +303,7 @@ namespace CTRFramework.Vram
                         if (!CtrVrm.textures.ContainsKey(tl.Tag()))
                         {
                             textures.Add(tl.Tag(), newBmp);
-                        } 
+                        }
 
                         return newBmp;
                     }
