@@ -9,7 +9,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace ctrviewer
 {
@@ -72,6 +74,10 @@ namespace ctrviewer
 
         public Game1()
         {
+            CultureInfo customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
+            Thread.CurrentThread.CurrentCulture = customCulture;
+
             Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
             graphics.HardwareModeSwitch = false;
@@ -212,8 +218,6 @@ namespace ctrviewer
 
             UpdateEffects();
 
-            DisableLodCamera();
-
             for (PlayerIndex i = PlayerIndex.One; i <= PlayerIndex.Four; i++)
             {
                 GamePadState state = GamePad.GetState(i);
@@ -230,30 +234,6 @@ namespace ctrviewer
             SwitchDisplayMode();
 
             base.Initialize();
-        }
-
-
-        private void EnableLodCamera()
-        {
-            lodEnabled = true;
-            /*
-            camera.NearClip = 1f;
-            camera.FarClip = 10000f;
-            lowcamera.NearClip = 9000f;
-            lowcamera.FarClip = 50000f;
-            */
-            camera.NearClip = 0.1f;
-            camera.FarClip = 1000f;
-
-            camera.Update(null);
-        }
-
-        private void DisableLodCamera()
-        {
-            lodEnabled = false;
-            camera.NearClip = 0.1f;
-            camera.FarClip = 1000f;
-            camera.Update(null);
         }
 
 
@@ -288,7 +268,6 @@ namespace ctrviewer
             tint.SetData(new Color[] { Color.Black });
 
             menu = new Menu(font);
-            //graphics.GraphicsDevice.Viewport.Height = 2;
 
             UpdateSplitscreenViewports();
 
@@ -424,7 +403,7 @@ namespace ctrviewer
                         List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
                         foreach (var x in m.headers[0].verts)
-                            li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0)));
+                            li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
 
                         TriList t = new TriList();
                         t.textureEnabled = false;
@@ -498,14 +477,14 @@ namespace ctrviewer
                 if (s.unkadv != null)
                 {
                     foreach (var pa in s.unkadv.smth)
-                        instanced.Add(new InstancedModel("limecone", MGConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, 3));
+                        instanced.Add(new InstancedModel("limecone", MGConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, 0.03f));
                 }
 
                 if (s.header.ptru2 != 0)
                 {
                     foreach (var v in s.posu2)
                     {
-                        instanced.Add(new InstancedModel("goldcone", MGConverter.ToVector3(v, 0.01f), Vector3.Zero, 3));
+                        instanced.Add(new InstancedModel("goldcone", MGConverter.ToVector3(v, 0.01f), Vector3.Zero, 0.03f));
                     }
                 }
 
@@ -513,7 +492,7 @@ namespace ctrviewer
                 {
                     foreach (var v in s.posu1)
                     {
-                        instanced.Add(new InstancedModel("browncone", MGConverter.ToVector3(v.Position, 0.01f), Vector3.Zero, 30));
+                        instanced.Add(new InstancedModel("browncone", MGConverter.ToVector3(v.Position, 0.01f), Vector3.Zero, 0.03f));
                     }
                 }
             }
@@ -527,7 +506,7 @@ namespace ctrviewer
                         List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
                         foreach (var x in m.headers[0].verts)
-                            li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0)));
+                            li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
 
                         TriList t = new TriList();
                         t.textureEnabled = false;
@@ -548,17 +527,17 @@ namespace ctrviewer
 
             foreach (Scene s in scn)
             {
-                foreach (PosAng pa in s.header.startGrid)
-                    instanced.Add(new InstancedModel("purplecone", new Vector3(pa.Position.X, pa.Position.Y, pa.Position.Z), Vector3.Zero, 3));
+                foreach (var pa in s.header.startGrid)
+                    instanced.Add(new InstancedModel("purplecone", MGConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, 0.03f));
 
-                foreach (PickupHeader ph in s.pickups)
+                foreach (var ph in s.pickups)
                     instanced.Add(new InstancedModel(
                         ph.ModelName,
-                        new Vector3(ph.Position.X, ph.Position.Y, ph.Position.Z),
-                        new Vector3((float)(ph.Angle.X / 4094f * Math.PI * 2), (float)(ph.Angle.Y / 4094f * Math.PI * 2), (float)(ph.Angle.Z / 4094f * Math.PI * 2)),
-                        1));
+                        MGConverter.ToVector3(ph.Position, 0.01f),
+                        Vector3.Zero,//new Vector3((float)(ph.Angle.X / 4094f * Math.PI * 2), (float)(ph.Angle.Y / 4094f * Math.PI * 2), (float)(ph.Angle.Z / 4094f * Math.PI * 2)),
+                        1f));
 
-                foreach (PosAng n in s.restartPts)
+                foreach (var n in s.restartPts)
                     paths.Add(new InstancedModel("cyancone", MGConverter.ToVector3(n.Position, 0.01f), Vector3.Zero, 0.03f));
 
                 if (s.nav.paths.Count == 3)
@@ -854,7 +833,8 @@ namespace ctrviewer
                 alphaTestEffect.View = effect.View;
                 alphaTestEffect.Projection = effect.Projection;
 
-                if (!(settings.Models && settings.BotsPath))
+
+                if (settings.Models || settings.BotsPath)
                 {
                     Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
 
@@ -1036,6 +1016,7 @@ namespace ctrviewer
             }
 
             graphics.GraphicsDevice.Viewport = vpFull;
+            UpdateProjectionMatrices();
 
             if (InMenu)
                 menu.Render(GraphicsDevice, spriteBatch, font, tint);
@@ -1047,7 +1028,7 @@ namespace ctrviewer
             {
                 spriteBatch.Draw(
                     textures["logo"],
-                    new Vector2((graphics.GraphicsDevice.Viewport.Width - textures["logo"].Width * (graphics.GraphicsDevice.Viewport.Height / 1080f)) / 2, 50 * graphics.GraphicsDevice.Viewport.Height / 1080f),
+                    new Vector2((graphics.GraphicsDevice.Viewport.Width / 2), 50 * graphics.GraphicsDevice.Viewport.Height / 1080f),
                     new Rectangle(0, 0, textures["logo"].Width, textures["logo"].Height),
                     Color.White,
                     0,
@@ -1074,7 +1055,15 @@ namespace ctrviewer
                 spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
             if (scn.Count == 0 && gameLoaded)
-                spriteBatch.DrawString(font, "No levels loaded.\r\nPut LEV/VRM files in levels folder.\r\n...or put BIGFILE.BIG in root folder\r\nand use load level menu.".ToString(), new Vector2(20, 60), Color.Yellow);
+                spriteBatch.DrawString(font, $"No levels loaded.\r\nPut LEV/VRM files in levels folder.\r\n...or put BIGFILE.BIG in root folder\r\nand use load level menu.".ToString(), 
+                    new Vector2(20 * graphics.GraphicsDevice.Viewport.Height / 1080f, 20 * graphics.GraphicsDevice.Viewport.Height / 1080f), 
+                    Color.Yellow,
+                    0,
+                    Vector2.Zero,
+                    graphics.GraphicsDevice.Viewport.Height / 1080f,
+                    SpriteEffects.None,
+                    0.5f);
+
 
             if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Keyboard.GetState().IsKeyDown(Keys.OemPlus))
                 spriteBatch.DrawString(font, String.Format("FOV {0}", camera.ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", camera.ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);

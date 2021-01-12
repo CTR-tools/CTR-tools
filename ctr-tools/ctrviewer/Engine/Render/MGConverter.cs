@@ -59,10 +59,10 @@ namespace ctrviewer
             };
         }
 
-        public static VertexPositionColorTexture ToVptc(CTRFramework.Vertex v, CTRFramework.Shared.Vector2b uv)
+        public static VertexPositionColorTexture ToVptc(CTRFramework.Vertex v, CTRFramework.Shared.Vector2b uv, float scale = 1.0f)
         {
             VertexPositionColorTexture mono_v = new VertexPositionColorTexture();
-            mono_v.Position = ToVector3(v.coord, 0.01f);
+            mono_v.Position = ToVector3(v.coord, scale);
             mono_v.Color = new Color(
                 v.color.X / 255f,
                 v.color.Y / 255f,

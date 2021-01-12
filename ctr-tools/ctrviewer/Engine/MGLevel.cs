@@ -50,9 +50,9 @@ namespace ctrviewer
             for (int i = 0; i < sb.faces.Count; i++)
             {
                 List<VertexPositionColorTexture> tri = new List<VertexPositionColorTexture>();
-                tri.Add(MGConverter.ToVptc(sb.verts[sb.faces[i].X], new CTRFramework.Shared.Vector2b(0, 0)));
-                tri.Add(MGConverter.ToVptc(sb.verts[sb.faces[i].Y], new CTRFramework.Shared.Vector2b(0, 0)));
-                tri.Add(MGConverter.ToVptc(sb.verts[sb.faces[i].Z], new CTRFramework.Shared.Vector2b(0, 0)));
+                tri.Add(MGConverter.ToVptc(sb.verts[sb.faces[i].X], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
+                tri.Add(MGConverter.ToVptc(sb.verts[sb.faces[i].Y], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
+                tri.Add(MGConverter.ToVptc(sb.verts[sb.faces[i].Z], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
 
                 normal.PushTri(tri);
             }
@@ -84,7 +84,7 @@ namespace ctrviewer
                             if (vts != null)
                             {
                                 foreach (Vertex cv in vts)
-                                    monolist.Add(MGConverter.ToVptc(cv, cv.uv));
+                                    monolist.Add(MGConverter.ToVptc(cv, cv.uv, 0.01f));
 
                                 TextureLayout t = qb.texlow;
 
@@ -130,7 +130,7 @@ namespace ctrviewer
                                 if (vts != null)
                                 {
                                     foreach (Vertex cv in vts)
-                                        monolist.Add(MGConverter.ToVptc(cv, cv.uv));
+                                        monolist.Add(MGConverter.ToVptc(cv, cv.uv, 0.01f));
 
                                     bool isAnimated = false;
                                     string texTag = "test";

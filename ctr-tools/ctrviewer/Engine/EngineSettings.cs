@@ -139,27 +139,27 @@ namespace ctrviewer
 
             XmlNode vid = xml.SelectNodes("/settings")[0];
 
-            //fix, this fails if node is missing
-            return new EngineSettings()
-            {
-                AntiAlias = Boolean.Parse(vid["AntiAlias"].InnerText),
-                AntiAliasLevel = Byte.Parse(vid["AntiAliasLevel"].InnerText),
-                Windowed = Boolean.Parse(vid["Windowed"].InnerText),
-                TextureFiltering = Boolean.Parse(vid["TextureFiltering"].InnerText),
-                VerticalSync = Boolean.Parse(vid["VerticalSync"].InnerText),
-                VertexLighting = Boolean.Parse(vid["VertexLighting"].InnerText),
-                VisData = Boolean.Parse(vid["VisData"].InnerText),
-                GenerateMips = Boolean.Parse(vid["GenerateMips"].InnerText),
-                Sky = Boolean.Parse(vid["Sky"].InnerText),
-                Models = Boolean.Parse(vid["Models"].InnerText),
-                BotsPath = Boolean.Parse(vid["BotsPath"].InnerText),
-                StereoPair = Boolean.Parse(vid["StereoPair"].InnerText),
-                StereoPairSeparation = Int32.Parse(vid["StereoPairSeparation"].InnerText),
-                FieldOfView = Int32.Parse(vid["FieldOfView"].InnerText),
-                ShowCamPos = Boolean.Parse(vid["ShowCamPos"].InnerText),
-                WindowScale = Int32.Parse(vid["WindowScale"].InnerText),
-                UseLowLod = Boolean.Parse(vid["UseLowLod"].InnerText)
-            };
+            EngineSettings settings = new EngineSettings();
+
+            if (vid["AntiAlias"] != null) settings.AntiAlias = Boolean.Parse(vid["AntiAlias"].InnerText);
+            if (vid["AntiAliasLevel"] != null) settings.AntiAliasLevel = Byte.Parse(vid["AntiAliasLevel"].InnerText);
+            if (vid["Windowed"] != null) settings.Windowed = Boolean.Parse(vid["Windowed"].InnerText);
+            if (vid["TextureFiltering"] != null) settings.TextureFiltering = Boolean.Parse(vid["TextureFiltering"].InnerText);
+            if (vid["VerticalSync"] != null) settings.VerticalSync = Boolean.Parse(vid["VerticalSync"].InnerText);
+            if (vid["VertexLighting"] != null) settings.VertexLighting = Boolean.Parse(vid["VertexLighting"].InnerText);
+            if (vid["VisData"] != null) settings.VisData = Boolean.Parse(vid["VisData"].InnerText);
+            if (vid["GenerateMips"] != null) settings.GenerateMips = Boolean.Parse(vid["GenerateMips"].InnerText);
+            if (vid["Sky"] != null) settings.Sky = Boolean.Parse(vid["Sky"].InnerText);
+            if (vid["Models"] != null) settings.Models = Boolean.Parse(vid["Models"].InnerText);
+            if (vid["BotsPath"] != null) settings.BotsPath = Boolean.Parse(vid["BotsPath"].InnerText);
+            if (vid["StereoPair"] != null) settings.StereoPair = Boolean.Parse(vid["StereoPair"].InnerText);
+            if (vid["StereoPairSeparation"] != null) settings.StereoPairSeparation = Int32.Parse(vid["StereoPairSeparation"].InnerText);
+            if (vid["FieldOfView"] != null) settings.FieldOfView = Int32.Parse(vid["FieldOfView"].InnerText);
+            if (vid["ShowCamPos"] != null) settings.ShowCamPos = Boolean.Parse(vid["ShowCamPos"].InnerText);
+            if (vid["WindowScale"] != null) settings.WindowScale = Int32.Parse(vid["WindowScale"].InnerText);
+            if (vid["UseLowLod"] != null) settings.UseLowLod = Boolean.Parse(vid["UseLowLod"].InnerText);
+
+            return settings;
         }
         public static void Save(string path)
         {

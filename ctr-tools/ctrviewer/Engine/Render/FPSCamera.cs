@@ -88,18 +88,18 @@ namespace ctrviewer
                 GamePadState padState = GamePad.GetState(Game1.activeGamePad);
 
                 if (keyState.IsKeyDown(Keys.W) || padState.DPad.Up == ButtonState.Pressed)
-                    moveVector += new Vector3(0, 0, -1);
+                    moveVector += new Vector3(0, 0, -1) * 100;
                 if (keyState.IsKeyDown(Keys.S) || padState.DPad.Down == ButtonState.Pressed)
-                    moveVector += new Vector3(0, 0, 1);
+                    moveVector += new Vector3(0, 0, 1) * 100;
                 if (keyState.IsKeyDown(Keys.D) || padState.DPad.Right == ButtonState.Pressed)
-                    moveVector += new Vector3(1, 0, 0);
+                    moveVector += new Vector3(1, 0, 0) * 100;
                 if (keyState.IsKeyDown(Keys.A) || padState.DPad.Left == ButtonState.Pressed)
-                    moveVector += new Vector3(-1, 0, 0);
+                    moveVector += new Vector3(-1, 0, 0) * 100;
 
                 if (keyState.IsKeyDown(Keys.Q))
-                    moveVector += new Vector3(0, 1, 0);
+                    moveVector += new Vector3(0, 1, 0) * 100;
                 if (keyState.IsKeyDown(Keys.Z))
-                    moveVector += new Vector3(0, -1, 0);
+                    moveVector += new Vector3(0, -1, 0) * 100;
 
                 moveVector *= (Keyboard.GetState().IsKeyDown(Keys.LeftShift) ? 0.9f : 0.3f);
                 moveVector *= 0.0001f;
