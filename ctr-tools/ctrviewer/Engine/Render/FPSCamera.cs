@@ -102,6 +102,7 @@ namespace ctrviewer
                     moveVector += new Vector3(0, -1, 0);
 
                 moveVector *= (Keyboard.GetState().IsKeyDown(Keys.LeftShift) ? 0.9f : 0.3f);
+                moveVector *= 0.0001f;
 
                 if (Math.Abs(moveVector.X) > Math.Abs(slowdown.X))
                     slowdown.X = moveVector.X;
@@ -117,7 +118,7 @@ namespace ctrviewer
                 slowdown *= 0.75f;
 
 
-                moveVector += new Vector3(padState.ThumbSticks.Left.X, 0, -padState.ThumbSticks.Left.Y);
+                moveVector += new Vector3(padState.ThumbSticks.Left.X / 100f, 0, -padState.ThumbSticks.Left.Y / 100f);
 
                 // if (keyState.IsKeyDown(Keys.LeftShift) || padState.Buttons.A == ButtonState.Pressed)
                 //     moveVector *= 2;

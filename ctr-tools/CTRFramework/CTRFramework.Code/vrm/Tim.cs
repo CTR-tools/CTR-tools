@@ -300,10 +300,8 @@ namespace CTRFramework.Vram
                         Bitmap oldBmp = (Bitmap)Bitmap.FromStream(stream);
                         Bitmap newBmp = new Bitmap(oldBmp);
 
-                        if (!CtrVrm.textures.ContainsKey(tl.Tag()))
-                        {
+                        if (!textures.ContainsKey(tl.Tag()))
                             textures.Add(tl.Tag(), newBmp);
-                        }
 
                         return newBmp;
                     }

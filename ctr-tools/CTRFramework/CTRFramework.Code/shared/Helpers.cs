@@ -95,9 +95,10 @@ namespace CTRFramework.Shared
             return result;
         }
 
-        public static void CheckFolder(string fileName)
+        public static void CheckFolder(string path)
         {
-            string path = Path.GetDirectoryName(fileName);
+            if (Path.HasExtension(path))
+                path = Path.GetDirectoryName(path);
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);

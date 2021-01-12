@@ -51,6 +51,8 @@ namespace CTRFramework
 
         public override string ToString()
         {
+            return $"v {coord.X / 100f} {coord.Y / 100f} {coord.Z / 100f}  {color.ToString(VecFormat.Numbers)}";
+
             string fmt = "v {0} {1}";
 
             return String.Format(fmt,
@@ -61,12 +63,12 @@ namespace CTRFramework
 
         public string ToString(uint b)
         {
-            string fmt = "v {0} {1}";
+            //string fmt = "v {0} {1}";
 
-            return String.Format(fmt,
-                coord.ToString(VecFormat.Numbers),
-                new Vector4b(b).ToString(VecFormat.Numbers)
-            );
+            return $"v {coord.X / 32f} {coord.Y / 32f} {coord.Z / 32f}  {new Vector4b(b).ToString(VecFormat.Numbers)}";
+                //coord.ToString(VecFormat.Numbers),
+                
+            
         }
     }
 }

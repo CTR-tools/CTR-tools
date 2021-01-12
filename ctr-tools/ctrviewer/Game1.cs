@@ -45,7 +45,7 @@ namespace ctrviewer
         //cameras
         FirstPersonCamera camera;
         FirstPersonCamera rightCamera;
-        FirstPersonCamera lowcamera;
+        FirstPersonCamera leftCamera;
         FirstPersonCamera skycamera;
 
         //ctr scenes
@@ -189,9 +189,9 @@ namespace ctrviewer
         public void UpdateFOV()
         {
             camera.ViewAngle = settings.FieldOfView;
-            lowcamera.ViewAngle = settings.FieldOfView;
             skycamera.ViewAngle = settings.FieldOfView;
             rightCamera.ViewAngle = settings.FieldOfView;
+            leftCamera.ViewAngle = settings.FieldOfView;
         }
 
         protected override void Initialize()
@@ -207,7 +207,7 @@ namespace ctrviewer
 
             camera = new FirstPersonCamera(this);
             rightCamera = new FirstPersonCamera(this);
-            lowcamera = new FirstPersonCamera(this);
+            leftCamera = new FirstPersonCamera(this);
             skycamera = new FirstPersonCamera(this);
 
             UpdateEffects();
@@ -242,24 +242,18 @@ namespace ctrviewer
             lowcamera.NearClip = 9000f;
             lowcamera.FarClip = 50000f;
             */
-            lowcamera.NearClip = 1f;
-            lowcamera.FarClip = 100000f;
-            camera.NearClip = 1f;
-            camera.FarClip = 2f;
+            camera.NearClip = 0.1f;
+            camera.FarClip = 1000f;
 
             camera.Update(null);
-            lowcamera.Update(null);
         }
 
         private void DisableLodCamera()
         {
             lodEnabled = false;
-            camera.NearClip = 1f;
-            camera.FarClip = 100000f;
-            lowcamera.NearClip = 1f;
-            lowcamera.FarClip = 2f;
+            camera.NearClip = 0.1f;
+            camera.FarClip = 1000f;
             camera.Update(null);
-            lowcamera.Update(null);
         }
 
 
@@ -503,23 +497,23 @@ namespace ctrviewer
             {
                 if (s.unkadv != null)
                 {
-                    foreach (PosAng pa in s.unkadv.smth)
-                        instanced.Add(new InstancedModel("limecone", new Vector3(pa.Position.X, pa.Position.Y, pa.Position.Z), Vector3.Zero, 3));
+                    foreach (var pa in s.unkadv.smth)
+                        instanced.Add(new InstancedModel("limecone", MGConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, 3));
                 }
 
                 if (s.header.ptru2 != 0)
                 {
-                    foreach (Vector3s v in s.posu2)
+                    foreach (var v in s.posu2)
                     {
-                        instanced.Add(new InstancedModel("goldcone", new Vector3(v.X, v.Y, v.Z), Vector3.Zero, 3));
+                        instanced.Add(new InstancedModel("goldcone", MGConverter.ToVector3(v, 0.01f), Vector3.Zero, 3));
                     }
                 }
 
                 if (s.header.ptrTrialData != 0)
                 {
-                    foreach (PosAng v in s.posu1)
+                    foreach (var v in s.posu1)
                     {
-                        instanced.Add(new InstancedModel("browncone", new Vector3(v.Position.X, v.Position.Y, v.Position.Z), Vector3.Zero, 30));
+                        instanced.Add(new InstancedModel("browncone", MGConverter.ToVector3(v.Position, 0.01f), Vector3.Zero, 30));
                     }
                 }
             }
@@ -565,16 +559,16 @@ namespace ctrviewer
                         1));
 
                 foreach (PosAng n in s.restartPts)
-                    paths.Add(new InstancedModel("cyancone", new Vector3(n.Position.X, n.Position.Y, n.Position.Z), Vector3.Zero, 3));
+                    paths.Add(new InstancedModel("cyancone", MGConverter.ToVector3(n.Position, 0.01f), Vector3.Zero, 0.03f));
 
                 if (s.nav.paths.Count == 3)
                 {
                     foreach (NavFrame n in s.nav.paths[0].frames)
-                        paths.Add(new InstancedModel("greencone", new Vector3(n.position.X, n.position.Y, n.position.Z), Vector3.Zero, 3));
+                        paths.Add(new InstancedModel("greencone", MGConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
                     foreach (NavFrame n in s.nav.paths[1].frames)
-                        paths.Add(new InstancedModel("yellowcone", new Vector3(n.position.X, n.position.Y, n.position.Z), Vector3.Zero, 3));
+                        paths.Add(new InstancedModel("yellowcone", MGConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
                     foreach (NavFrame n in s.nav.paths[2].frames)
-                        paths.Add(new InstancedModel("redcone", new Vector3(n.position.X, n.position.Y, n.position.Z), Vector3.Zero, 3));
+                        paths.Add(new InstancedModel("redcone", MGConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
                 }
             }
 
@@ -609,14 +603,14 @@ namespace ctrviewer
         {
             if (scn.Count > 0)
             {
-                camera.Position = MGConverter.ToVector3(scn[0].header.startGrid[0].Position);
-                lowcamera.Position = camera.Position;
+                camera.Position = MGConverter.ToVector3(scn[0].header.startGrid[0].Position, 0.01f);
                 rightCamera.Position = camera.Position;
+                leftCamera.Position = camera.Position;
 
-                camera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096 * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
-                rightCamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096 * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
-                lowcamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096 * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
-                skycamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096 * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
+                camera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
+                rightCamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
+                leftCamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
+                skycamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
 
                 UpdateCameras(new GameTime());
 
@@ -669,13 +663,15 @@ namespace ctrviewer
                 if (settings.StereoPair)
                 {
                     if (newstate.IsButtonDown(Buttons.RightShoulder))
-                        settings.StereoPairSeparation += 10;
+                        settings.StereoPairSeparation += 5;
 
                     if (newstate.IsButtonDown(Buttons.LeftShoulder))
-                        settings.StereoPairSeparation -= 10;
+                        settings.StereoPairSeparation -= 5;
+
+                    if (settings.StereoPairSeparation < 0) settings.StereoPairSeparation = 0;
 
                     if (newstate.IsButtonDown(Buttons.RightShoulder) && newstate.IsButtonDown(Buttons.LeftShoulder))
-                        settings.StereoPairSeparation = -260;
+                        settings.StereoPairSeparation = 130;
                 }
 
                 if ((newkb.IsKeyDown(Keys.Enter) && newkb.IsKeyDown(Keys.RightAlt)) && !(oldkb.IsKeyDown(Keys.Enter) && newkb.IsKeyDown(Keys.RightAlt)))
@@ -724,7 +720,7 @@ namespace ctrviewer
                                 {
                                     case "inst": settings.Models = !settings.Models; break;
                                     case "paths": settings.BotsPath = !settings.BotsPath; break;
-                                    case "lod": lodEnabled = !lodEnabled; if (lodEnabled) EnableLodCamera(); else DisableLodCamera(); break;
+                                    case "lod": settings.UseLowLod = !settings.UseLowLod; break;
                                     case "antialias": settings.AntiAlias = !settings.AntiAlias; break;
                                     case "invis": HideInvisible = !HideInvisible; break;
                                     case "campos": settings.ShowCamPos = !settings.ShowCamPos; break;
@@ -808,18 +804,23 @@ namespace ctrviewer
 
             skycamera.Update(gameTime, updatemouse, false, newms, oldms);
             camera.Update(gameTime, updatemouse, true, newms, oldms);
-            rightCamera.Position = camera.Position + Vector3.Transform(Vector3.Right * settings.StereoPairSeparation, Matrix.CreateFromYawPitchRoll(camera.leftRightRot, camera._upDownRot, 0));
+
+            rightCamera.Position = camera.Position + Vector3.Transform(Vector3.Left * settings.StereoPairSeparation / 100f, Matrix.CreateFromYawPitchRoll(camera.leftRightRot, camera._upDownRot, 0));
             rightCamera.rotationSpeed = camera.rotationSpeed;
             rightCamera.Target = camera.Target;
             rightCamera.Update(gameTime, updatemouse, true, newms, oldms);
-            lowcamera.Copy(gameTime, camera);
+
+            leftCamera.Position = camera.Position + Vector3.Transform(Vector3.Right * settings.StereoPairSeparation / 100f, Matrix.CreateFromYawPitchRoll(camera.leftRightRot, camera._upDownRot, 0));
+            leftCamera.rotationSpeed = camera.rotationSpeed;
+            leftCamera.Target = camera.Target;
+            leftCamera.Update(gameTime, updatemouse, true, newms, oldms);
         }
 
         private void UpdateProjectionMatrices()
         {
             camera.UpdateProjectionMatrix();
             rightCamera.UpdateProjectionMatrix();
-            lowcamera.UpdateProjectionMatrix();
+            leftCamera.UpdateProjectionMatrix();
             skycamera.UpdateProjectionMatrix();
         }
 
@@ -840,73 +841,48 @@ namespace ctrviewer
                     Vector3 x = effect.DiffuseColor;
 
                     effect.DiffuseColor = new Vector3(1, 1, 1);
-                    sky.RenderSky(graphics, effect, alphaTestEffect);
+                    sky.RenderSky(graphics, effect, null);
                     effect.DiffuseColor = x;
 
                     //clear z buffer
                     GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
                 }
 
+                effect.View = (cam != null ? cam.ViewMatrix : camera.ViewMatrix);
+                effect.Projection = (cam != null ? cam.ProjectionMatrix : camera.ProjectionMatrix);
+
+                alphaTestEffect.View = effect.View;
+                alphaTestEffect.Projection = effect.Projection;
+
+                if (!(settings.Models && settings.BotsPath))
+                {
+                    Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
+
+                    if (settings.Models)
+                    {
+                        foreach (var v in instanced)
+                            v.Render(graphics, instanceEffect, null, (cam != null ? cam : camera));
+
+                        //render karts
+                        foreach (Kart k in karts)
+                            k.Render(graphics, instanceEffect, null, (cam != null ? cam : camera));
+                    }
+
+                    if (settings.BotsPath)
+                    {
+                        foreach (var v in paths)
+                            v.Render(graphics, instanceEffect, null, (cam != null ? cam : camera));
+                    }
+
+                    Samplers.SetToDevice(graphics, EngineRasterizer.Default);
+                }
+
+                Samplers.SetToDevice(graphics, EngineRasterizer.Default);
+
                 //render depending on lod
-                if (lodEnabled)
-                {
-                    effect.View = lowcamera.ViewMatrix;
-                    effect.Projection = lowcamera.ProjectionMatrix;
+                foreach (MGLevel qb in (settings.UseLowLod ? MeshLow : MeshHigh))
+                    qb.Render(graphics, effect, alphaTestEffect);
 
-                    if (settings.Models)
-                    {
-                        Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
-                        foreach (var v in instanced)
-                            v.Render(graphics, instanceEffect, alphaTestEffect, lowcamera);
-                    }
-
-                    if (settings.BotsPath)
-                    {
-                        Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
-                        foreach (var v in paths)
-                            v.Render(graphics, instanceEffect, alphaTestEffect, lowcamera);
-                    }
-
-                    Samplers.SetToDevice(graphics, EngineRasterizer.Default);
-
-                    foreach (MGLevel qb in MeshLow)
-                        qb.Render(graphics, effect, alphaTestEffect);
-
-                    foreach (Kart k in karts)
-                        k.Render(graphics, instanceEffect, alphaTestEffect, lowcamera);
-
-                }
-                else
-                {
-                    if (settings.Models)
-                    {
-                        Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
-                        foreach (var v in instanced)
-                            v.Render(graphics, instanceEffect, alphaTestEffect, camera);
-                    }
-
-                    if (settings.BotsPath)
-                    {
-                        Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
-                        foreach (var v in paths)
-                            v.Render(graphics, instanceEffect, alphaTestEffect, camera);
-                    }
-
-                    Samplers.SetToDevice(graphics, EngineRasterizer.Default);
-
-                    effect.View = (cam != null ? cam.ViewMatrix : camera.ViewMatrix);
-                    effect.Projection = camera.ProjectionMatrix;
-
-                    alphaTestEffect.View = effect.View;
-                    alphaTestEffect.Projection = effect.Projection;
-
-                    foreach (MGLevel qb in MeshHigh)
-                        qb.Render(graphics, effect, alphaTestEffect);
-
-                    foreach (Kart k in karts)
-                        k.Render(graphics, instanceEffect, alphaTestEffect, camera);
-
-                }
 
                 if (settings.VisData)
                 {
@@ -1048,20 +1024,18 @@ namespace ctrviewer
             {
                 graphics.GraphicsDevice.Viewport = vpLeft;
                 UpdateProjectionMatrices();
-                DrawLevel();
+                DrawLevel(leftCamera);
 
                 graphics.GraphicsDevice.Viewport = vpRight;
                 UpdateProjectionMatrices();
                 DrawLevel(rightCamera);
-
-                graphics.GraphicsDevice.Viewport = vpFull;
-                UpdateProjectionMatrices();
             }
             else
             {
-                graphics.GraphicsDevice.Viewport = vpFull;
                 DrawLevel();
             }
+
+            graphics.GraphicsDevice.Viewport = vpFull;
 
             if (InMenu)
                 menu.Render(GraphicsDevice, spriteBatch, font, tint);
@@ -1106,7 +1080,12 @@ namespace ctrviewer
                 spriteBatch.DrawString(font, String.Format("FOV {0}", camera.ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", camera.ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
 
             if (settings.ShowCamPos)
-                spriteBatch.DrawString(font, $"({(int)camera.Position.X}, {(int)camera.Position.Y}, {(int)camera.Position.Z})", new Vector2(20, 20), Color.Yellow);
+                spriteBatch.DrawString(font, $"({camera.Position.X.ToString("0.00")}, {camera.Position.Y.ToString("0.00")}, {camera.Position.Z.ToString("0.00")})", new Vector2(20, 20), Color.Yellow, 
+                    0,
+                    Vector2.Zero,
+                    graphics.GraphicsDevice.Viewport.Height / 1080f,
+                    SpriteEffects.None,
+                    0.5f);
 
             //spriteBatch.DrawString(font, String.Format("sp: {0}\r\nac:{1}", karts[0].Speed, karts[0].Accel), new Vector2(20, 20), Color.Yellow);
 

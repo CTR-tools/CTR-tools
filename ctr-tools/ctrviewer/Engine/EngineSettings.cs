@@ -21,6 +21,7 @@ namespace ctrviewer
         public bool StereoPair { get; set; } = false;
         public int StereoPairSeparation { get; set; } = 20;
         public bool ShowCamPos { get; set; } = false;
+        public bool UseLowLod { get; set; } = false;
 
         private bool _windowed = true;
         public bool Windowed
@@ -138,6 +139,7 @@ namespace ctrviewer
 
             XmlNode vid = xml.SelectNodes("/settings")[0];
 
+            //fix, this fails if node is missing
             return new EngineSettings()
             {
                 AntiAlias = Boolean.Parse(vid["AntiAlias"].InnerText),
@@ -155,7 +157,8 @@ namespace ctrviewer
                 StereoPairSeparation = Int32.Parse(vid["StereoPairSeparation"].InnerText),
                 FieldOfView = Int32.Parse(vid["FieldOfView"].InnerText),
                 ShowCamPos = Boolean.Parse(vid["ShowCamPos"].InnerText),
-                WindowScale = Int32.Parse(vid["WindowScale"].InnerText)
+                WindowScale = Int32.Parse(vid["WindowScale"].InnerText),
+                UseLowLod = Boolean.Parse(vid["UseLowLod"].InnerText)
             };
         }
         public static void Save(string path)

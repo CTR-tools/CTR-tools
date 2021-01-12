@@ -405,7 +405,6 @@ namespace CTRFramework
                     Bitmap bb = new Bitmap(bmp.Width, bmp.Height);
                     Graphics g = Graphics.FromImage(bb);
                     g.DrawImage(bmp, new Point(0, 0));
-                    //System.Windows.Forms.MessageBox.Show(bb.Width + " " + bb.Height);
                     bb.Save(Path.Combine(dir, $"{tl.Tag()}.png"), System.Drawing.Imaging.ImageFormat.Png);
                 }
 
@@ -419,31 +418,8 @@ namespace CTRFramework
 
         public void ExportTexturesAll(string dir)
         {
-            if (ctrvram != null)
-            {
-                // ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
-
-                Console.WriteLine(ctrvram.ToString());
-                Console.WriteLine("Exporting textures...");
-
-                Helpers.CheckFolder(dir);
-
-                foreach (TextureLayout tl in GetTexturesList().Values)
-                {
-                    Bitmap bmp = ctrvram.GetTexture(tl, dir);
-                    Bitmap bb = new Bitmap(bmp.Width, bmp.Height);
-                    Graphics g = Graphics.FromImage(bb);
-                    g.DrawImage(bmp, new Point(0, 0));
-                    //System.Windows.Forms.MessageBox.Show(bb.Width + " " + bb.Height);
-                    bb.Save(Path.Combine(dir, $"{tl.Tag()}.png"), System.Drawing.Imaging.ImageFormat.Png);
-                }
-
-                Console.WriteLine("Textures done!");
-            }
-            else
-            {
-                Console.WriteLine("No vram found. Make sure to copy vram file along with lev.");
-            }
+            ExportTextures(dir, Detail.Low);
+            ExportTextures(dir, Detail.Med);
         }
 
         public string Info()

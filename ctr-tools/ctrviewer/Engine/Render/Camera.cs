@@ -17,8 +17,8 @@ namespace ctrviewer
                 return Game.GraphicsDevice.Viewport.AspectRatio;
             }
         }
-        public float NearClip = 1.0f;
-        public float FarClip = 75000.0f;
+        public float NearClip = 0.1f;
+        public float FarClip = 1000.0f;
         public float ViewAngle = 80.0f;
         #endregion
 

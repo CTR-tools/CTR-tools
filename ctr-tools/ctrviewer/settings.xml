@@ -11,8 +11,9 @@
   <BotsPath>false</BotsPath>
   <Models>false</Models>
   <StereoPair>false</StereoPair>
-  <StereoPairSeparation>-260</StereoPairSeparation>
+  <StereoPairSeparation>130</StereoPairSeparation>
   <FieldOfView>80</FieldOfView>
   <ShowCamPos>false</ShowCamPos>
   <WindowScale>75</WindowScale>
+  <UseLowLod>false</UseLowLod>
 </settings>

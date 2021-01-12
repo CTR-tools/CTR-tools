@@ -5,9 +5,13 @@ namespace ctrviewer
 {
     class MGConverter
     {
-        public static Vector3 ToVector3(CTRFramework.Shared.Vector3s s)
+        public static Vector3 ToVector3(CTRFramework.Shared.Vector3s s, float scale = 1.0f)
         {
-            return new Vector3(s.X, s.Y, s.Z);
+            return new Vector3(s.X * scale, s.Y * scale, s.Z * scale);
+        }
+        public static Vector3 ToVector3(CTRFramework.Shared.Vector4s s, float scale = 1.0f)
+        {
+            return new Vector3(s.X * scale, s.Y * scale, s.Z * scale);
         }
 
         public static Color ToColor(CTRFramework.Shared.Vector4b s)
@@ -17,8 +21,8 @@ namespace ctrviewer
 
         public static VertexPositionColorTexture[] ToLineList(CTRFramework.Shared.BoundingBox bbox)
         {
-            Vector3 min = ToVector3(bbox.Min);
-            Vector3 max = ToVector3(bbox.Max);
+            Vector3 min = ToVector3(bbox.Min, 0.01f);
+            Vector3 max = ToVector3(bbox.Max, 0.01f);
 
             return new VertexPositionColorTexture[]
             {
@@ -58,7 +62,7 @@ namespace ctrviewer
         public static VertexPositionColorTexture ToVptc(CTRFramework.Vertex v, CTRFramework.Shared.Vector2b uv)
         {
             VertexPositionColorTexture mono_v = new VertexPositionColorTexture();
-            mono_v.Position = new Microsoft.Xna.Framework.Vector3(v.coord.X, v.coord.Y, v.coord.Z);
+            mono_v.Position = ToVector3(v.coord, 0.01f);
             mono_v.Color = new Color(
                 v.color.X / 255f,
                 v.color.Y / 255f,
