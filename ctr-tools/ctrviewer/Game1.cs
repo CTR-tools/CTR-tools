@@ -158,7 +158,7 @@ namespace ctrviewer
             effect = new BasicEffect(graphics.GraphicsDevice);
             effect.VertexColorEnabled = settings.VertexLighting;
             effect.TextureEnabled = true;
-            effect.DiffuseColor = new Vector3(settings.VertexLighting ? 2 : 1);
+            effect.DiffuseColor = TimeOfDay;
 
             alphaTestEffect = new AlphaTestEffect(GraphicsDevice);
             alphaTestEffect.AlphaFunction = CompareFunction.Greater;
@@ -172,12 +172,14 @@ namespace ctrviewer
             effect.FogStart = camera.FarClip / 4 * 3;
             effect.FogEnd = camera.FarClip;
 
-            //effect.DiffuseColor = new Vector3(0.5f, 1.0f, 1.5f);
+            effect.DiffuseColor = TimeOfDay;
 
             instanceEffect = new BasicEffect(graphics.GraphicsDevice);
             instanceEffect.VertexColorEnabled = true;
             instanceEffect.TextureEnabled = false;
         }
+
+        public static Vector3 TimeOfDay = new Vector3(2f);
 
         public void UpdateVSync()
         {
@@ -691,6 +693,15 @@ namespace ctrviewer
                             case "loadbigadv":
                                 LoadLevelFromBig(menu.SelectedItem.Value, 0, 3);
                                 break;
+                            case "tod_day":
+                                TimeOfDay = new Vector3(2f);
+                                break;
+                            case "tod_evening":
+                                TimeOfDay = new Vector3(1.7f, 1.4f, 0.7f);
+                                break;
+                            case "tod_night":
+                                TimeOfDay = new Vector3(0.5f, 0.7f, 1.7f);
+                                break;
                             case "link":
                                 menu.SetMenu(font);
                                 break;
@@ -817,11 +828,11 @@ namespace ctrviewer
                     effect.View = skycamera.ViewMatrix;
                     effect.Projection = skycamera.ProjectionMatrix;
 
-                    Vector3 x = effect.DiffuseColor;
-
-                    effect.DiffuseColor = new Vector3(1, 1, 1);
+                    effect.DiffuseColor = TimeOfDay / 2;
                     sky.RenderSky(graphics, effect, null);
-                    effect.DiffuseColor = x;
+                    effect.DiffuseColor = TimeOfDay;
+
+                    alphaTestEffect.DiffuseColor = effect.DiffuseColor;
 
                     //clear z buffer
                     GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);

@@ -228,7 +228,15 @@ namespace ctrviewer
             main.Add(new MenuItem("load level".ToUpper(), "link", "cupmenu", File.Exists("bigfile.big")));
             main.Add(new MenuItem("level options".ToUpper(), "link", "level", true));
             main.Add(new MenuItem("video options".ToUpper(), "link", "video", true));
+            main.Add(new MenuItem("time of day".ToUpper(), "link", "tod", true));
             main.Add(new MenuItem("quit".ToUpper(), "exit", "", true));
+
+            List<MenuItem> tod = new List<MenuItem>();
+            tod.Add(new MenuItem("day".ToUpper(), "tod_day", "", true));
+            tod.Add(new MenuItem("evening".ToUpper(), "tod_evening", "", true));
+            tod.Add(new MenuItem("night".ToUpper(), "tod_night", "", true));
+            tod.Add(new MenuItem("back".ToUpper(), "link", "main", true));
+            menus.Add("tod", tod);
 
             menus.Add("main", main);
 
