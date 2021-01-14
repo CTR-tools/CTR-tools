@@ -86,7 +86,7 @@ namespace CTRFramework
         {
             get
             {
-                return PageX * 64 + min.X;
+                return PageX * 64 + min.X / 4;
             }
         }
         public int RealY
@@ -125,6 +125,11 @@ namespace CTRFramework
             }
         }
 
+
+        public TextureLayout()
+        {
+
+        }
 
         public static TextureLayout FromStream(BinaryReaderEx br)
         {
@@ -173,7 +178,7 @@ namespace CTRFramework
 
             NormalizeUV();
 
-            Console.WriteLine($"{Tag()}: f1 f2 f3 {f1} {f2} {f3}");
+            //Console.WriteLine($"{Tag()}: f1 f2 f3 {f1} {f2} {f3}");
 
             //apparently some textures uses 8 bit mode, or even 16 bit color. must be a flag somewhere.
             if (offset == 0x0004B5B8 || offset == 0x0004B5E8 || offset == 0x0004B6A8 || offset == 0x0004B3D8)

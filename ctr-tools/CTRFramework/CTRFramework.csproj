@@ -137,6 +137,7 @@
     <Compile Include="CTRFramework.Code\sound\Howl.cs" />
     <Compile Include="CTRFramework.Code\sound\HowlHeader.cs" />
     <Compile Include="CTRFramework.Code\sound\VagHeader.cs" />
+    <Compile Include="CTRFramework.Code\vrm\TimReader.cs" />
     <Compile Include="CTRFramework.Code\vrm\BMPHeader.cs" />
     <Compile Include="CTRFramework.Code\vrm\Tim.cs" />
     <Compile Include="CTRFramework.Code\vrm\CtrVrm.cs" />

@@ -158,7 +158,7 @@ namespace ctrviewer
             effect = new BasicEffect(graphics.GraphicsDevice);
             effect.VertexColorEnabled = settings.VertexLighting;
             effect.TextureEnabled = true;
-            effect.DiffuseColor = TimeOfDay;
+            effect.DiffuseColor = settings.VertexLighting ? TimeOfDay : new Vector3(1f);
 
             alphaTestEffect = new AlphaTestEffect(GraphicsDevice);
             alphaTestEffect.AlphaFunction = CompareFunction.Greater;
@@ -171,8 +171,6 @@ namespace ctrviewer
             effect.FogColor = new Vector3(backColor.R / 255f, backColor.G / 255f, backColor.B / 255f);
             effect.FogStart = camera.FarClip / 4 * 3;
             effect.FogEnd = camera.FarClip;
-
-            effect.DiffuseColor = TimeOfDay;
 
             instanceEffect = new BasicEffect(graphics.GraphicsDevice);
             instanceEffect.VertexColorEnabled = true;
@@ -695,12 +693,15 @@ namespace ctrviewer
                                 break;
                             case "tod_day":
                                 TimeOfDay = new Vector3(2f);
+                                UpdateEffects();
                                 break;
                             case "tod_evening":
                                 TimeOfDay = new Vector3(1.7f, 1.4f, 0.7f);
+                                UpdateEffects();
                                 break;
                             case "tod_night":
                                 TimeOfDay = new Vector3(0.5f, 0.7f, 1.7f);
+                                UpdateEffects();
                                 break;
                             case "link":
                                 menu.SetMenu(font);
@@ -828,9 +829,9 @@ namespace ctrviewer
                     effect.View = skycamera.ViewMatrix;
                     effect.Projection = skycamera.ProjectionMatrix;
 
-                    effect.DiffuseColor = TimeOfDay / 2;
+                    effect.DiffuseColor /= 2;
                     sky.RenderSky(graphics, effect, null);
-                    effect.DiffuseColor = TimeOfDay;
+                    effect.DiffuseColor *= 2;
 
                     alphaTestEffect.DiffuseColor = effect.DiffuseColor;
 

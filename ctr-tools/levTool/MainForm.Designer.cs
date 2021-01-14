@@ -41,9 +41,9 @@
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.label6 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.appLogo = new System.Windows.Forms.PictureBox();
+            this.discordLogo = new System.Windows.Forms.PictureBox();
+            this.githubLogo = new System.Windows.Forms.PictureBox();
             this.tabBig = new System.Windows.Forms.TabPage();
             this.button27 = new System.Windows.Forms.Button();
             this.textBox4 = new System.Windows.Forms.TextBox();
@@ -103,12 +103,14 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.button26 = new System.Windows.Forms.Button();
+            this.tabVram = new System.Windows.Forms.TabPage();
+            this.ctrToolsVramControl1 = new CTRTools.CtrToolsVramControl();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabAbout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.appLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.discordLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).BeginInit();
             this.tabBig.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.tabLev.SuspendLayout();
@@ -122,6 +124,7 @@
             this.tabVramz.SuspendLayout();
             this.tabEmu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            this.tabVram.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -132,7 +135,7 @@
             this.restoreToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(902, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(624, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -197,22 +200,23 @@
             this.tabControl1.Controls.Add(this.tabBig);
             this.tabControl1.Controls.Add(this.tabLev);
             this.tabControl1.Controls.Add(this.tabEmu);
+            this.tabControl1.Controls.Add(this.tabVram);
             this.tabControl1.Location = new System.Drawing.Point(4, 28);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(895, 460);
+            this.tabControl1.Size = new System.Drawing.Size(617, 410);
             this.tabControl1.TabIndex = 2;
             // 
             // tabAbout
             // 
             this.tabAbout.Controls.Add(this.label6);
             this.tabAbout.Controls.Add(this.label3);
-            this.tabAbout.Controls.Add(this.pictureBox1);
-            this.tabAbout.Controls.Add(this.pictureBox3);
-            this.tabAbout.Controls.Add(this.pictureBox2);
+            this.tabAbout.Controls.Add(this.appLogo);
+            this.tabAbout.Controls.Add(this.discordLogo);
+            this.tabAbout.Controls.Add(this.githubLogo);
             this.tabAbout.Location = new System.Drawing.Point(4, 22);
             this.tabAbout.Name = "tabAbout";
-            this.tabAbout.Size = new System.Drawing.Size(887, 434);
+            this.tabAbout.Size = new System.Drawing.Size(609, 384);
             this.tabAbout.TabIndex = 7;
             this.tabAbout.Text = "About";
             this.tabAbout.UseVisualStyleBackColor = true;
@@ -222,7 +226,7 @@
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(342, 304);
+            this.label6.Location = new System.Drawing.Point(213, 299);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(200, 24);
             this.label6.TabIndex = 9;
@@ -233,48 +237,48 @@
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label3.Location = new System.Drawing.Point(260, 168);
+            this.label3.Location = new System.Drawing.Point(131, 168);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(251, 24);
             this.label3.TabIndex = 6;
             this.label3.Text = "Framework version from DLL";
             // 
-            // pictureBox1
+            // appLogo
             // 
-            this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox1.ErrorImage = null;
-            this.pictureBox1.Image = global::CTRTools.Properties.Resources.ctr_tools_logo;
-            this.pictureBox1.Location = new System.Drawing.Point(259, 81);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(365, 84);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
+            this.appLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.appLogo.ErrorImage = null;
+            this.appLogo.Image = global::CTRTools.Properties.Resources.ctr_tools_logo;
+            this.appLogo.Location = new System.Drawing.Point(125, 81);
+            this.appLogo.Name = "appLogo";
+            this.appLogo.Size = new System.Drawing.Size(365, 84);
+            this.appLogo.TabIndex = 3;
+            this.appLogo.TabStop = false;
             // 
-            // pictureBox3
+            // discordLogo
             // 
-            this.pictureBox3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox3.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox3.Image = global::CTRTools.Properties.Resources.icon_discord;
-            this.pictureBox3.InitialImage = null;
-            this.pictureBox3.Location = new System.Drawing.Point(447, 224);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(64, 64);
-            this.pictureBox3.TabIndex = 5;
-            this.pictureBox3.TabStop = false;
-            this.pictureBox3.Click += new System.EventHandler(this.discordBox_Click);
+            this.discordLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.discordLogo.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.discordLogo.Image = global::CTRTools.Properties.Resources.icon_discord;
+            this.discordLogo.InitialImage = null;
+            this.discordLogo.Location = new System.Drawing.Point(318, 219);
+            this.discordLogo.Name = "discordLogo";
+            this.discordLogo.Size = new System.Drawing.Size(64, 64);
+            this.discordLogo.TabIndex = 5;
+            this.discordLogo.TabStop = false;
+            this.discordLogo.Click += new System.EventHandler(this.discordBox_Click);
             // 
-            // pictureBox2
+            // githubLogo
             // 
-            this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox2.ErrorImage = null;
-            this.pictureBox2.Image = global::CTRTools.Properties.Resources.icon_github;
-            this.pictureBox2.Location = new System.Drawing.Point(368, 224);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(64, 64);
-            this.pictureBox2.TabIndex = 4;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.gitHubBox_Click);
+            this.githubLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.githubLogo.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.githubLogo.ErrorImage = null;
+            this.githubLogo.Image = global::CTRTools.Properties.Resources.icon_github;
+            this.githubLogo.Location = new System.Drawing.Point(239, 219);
+            this.githubLogo.Name = "githubLogo";
+            this.githubLogo.Size = new System.Drawing.Size(64, 64);
+            this.githubLogo.TabIndex = 4;
+            this.githubLogo.TabStop = false;
+            this.githubLogo.Click += new System.EventHandler(this.gitHubBox_Click);
             // 
             // tabBig
             // 
@@ -284,7 +288,7 @@
             this.tabBig.Controls.Add(this.treeView1);
             this.tabBig.Location = new System.Drawing.Point(4, 22);
             this.tabBig.Name = "tabBig";
-            this.tabBig.Size = new System.Drawing.Size(887, 434);
+            this.tabBig.Size = new System.Drawing.Size(609, 384);
             this.tabBig.TabIndex = 5;
             this.tabBig.Text = "BIG";
             this.tabBig.UseVisualStyleBackColor = true;
@@ -334,7 +338,6 @@
             this.treeView1.Size = new System.Drawing.Size(257, 427);
             this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            this.treeView1.DoubleClick += new System.EventHandler(this.treeView1_DoubleClick);
             // 
             // contextMenuStrip1
             // 
@@ -364,7 +367,7 @@
             this.tabLev.Margin = new System.Windows.Forms.Padding(5);
             this.tabLev.Name = "tabLev";
             this.tabLev.Padding = new System.Windows.Forms.Padding(5);
-            this.tabLev.Size = new System.Drawing.Size(887, 434);
+            this.tabLev.Size = new System.Drawing.Size(609, 384);
             this.tabLev.TabIndex = 0;
             this.tabLev.Text = "LEV";
             this.tabLev.UseVisualStyleBackColor = true;
@@ -775,7 +778,6 @@
             this.button23.TabIndex = 24;
             this.button23.Text = "export mpk textures";
             this.button23.UseVisualStyleBackColor = true;
-            this.button23.Click += new System.EventHandler(this.button23_Click_1);
             // 
             // textBox2
             // 
@@ -828,7 +830,7 @@
             this.tabEmu.Controls.Add(this.button26);
             this.tabEmu.Location = new System.Drawing.Point(4, 22);
             this.tabEmu.Name = "tabEmu";
-            this.tabEmu.Size = new System.Drawing.Size(887, 434);
+            this.tabEmu.Size = new System.Drawing.Size(609, 384);
             this.tabEmu.TabIndex = 6;
             this.tabEmu.Text = "ePSXe";
             this.tabEmu.UseVisualStyleBackColor = true;
@@ -918,18 +920,39 @@
             this.button26.UseVisualStyleBackColor = true;
             this.button26.Click += new System.EventHandler(this.button26_Click);
             // 
+            // tabVram
+            // 
+            this.tabVram.Controls.Add(this.ctrToolsVramControl1);
+            this.tabVram.Location = new System.Drawing.Point(4, 22);
+            this.tabVram.Name = "tabVram";
+            this.tabVram.Size = new System.Drawing.Size(609, 384);
+            this.tabVram.TabIndex = 8;
+            this.tabVram.Text = "VRAM";
+            this.tabVram.UseVisualStyleBackColor = true;
+            // 
+            // ctrToolsVramControl1
+            // 
+            this.ctrToolsVramControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ctrToolsVramControl1.Location = new System.Drawing.Point(4, 3);
+            this.ctrToolsVramControl1.MinimumSize = new System.Drawing.Size(461, 218);
+            this.ctrToolsVramControl1.Name = "ctrToolsVramControl1";
+            this.ctrToolsVramControl1.Size = new System.Drawing.Size(600, 377);
+            this.ctrToolsVramControl1.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(902, 492);
+            this.ClientSize = new System.Drawing.Size(624, 442);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "MainForm";
             this.Text = "CTR-tools GUI";
-            this.Load += new System.EventHandler(this.MainForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
             this.menuStrip1.ResumeLayout(false);
@@ -937,9 +960,9 @@
             this.tabControl1.ResumeLayout(false);
             this.tabAbout.ResumeLayout(false);
             this.tabAbout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.appLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.discordLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).EndInit();
             this.tabBig.ResumeLayout(false);
             this.tabBig.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
@@ -960,6 +983,7 @@
             this.tabEmu.ResumeLayout(false);
             this.tabEmu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            this.tabVram.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -990,9 +1014,9 @@
         private System.Windows.Forms.PropertyGrid propertyGrid2;
         private System.Windows.Forms.Button button27;
         private System.Windows.Forms.TabPage tabAbout;
-        private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox discordLogo;
+        private System.Windows.Forms.PictureBox githubLogo;
+        private System.Windows.Forms.PictureBox appLogo;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPickups;
@@ -1041,6 +1065,8 @@
         private System.Windows.Forms.Button button29;
         private System.Windows.Forms.Button button30;
         private System.Windows.Forms.Button button31;
+        private System.Windows.Forms.TabPage tabVram;
+        private CtrToolsVramControl ctrToolsVramControl1;
     }
 }
 

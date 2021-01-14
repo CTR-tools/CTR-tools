@@ -46,7 +46,7 @@ namespace CTRFramework
                 }
                 while (br.BaseStream.Position < ptrs[5]);
 
-                Helpers.WriteToFile(".\\test.obj", sb.ToString());
+                //Helpers.WriteToFile(".\\test.obj", sb.ToString());
             }
         }
     }

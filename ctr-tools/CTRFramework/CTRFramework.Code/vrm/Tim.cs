@@ -2,7 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using System.IO;
+using System.Text;
+
 
 namespace CTRFramework.Vram
 {
@@ -146,10 +150,20 @@ namespace CTRFramework.Vram
         /// <param name="src">Source TIM to draw.</param>
         public void DrawTim(Tim src)
         {
-            int dstptr = (this.region.Width * src.region.Y + src.region.X) * 2;
+            if (src.data == null)
+            {
+                Helpers.Panic(this, "missing tim data.");
+                return;
+            }
+
+            //int dstptr = (this.region.Width * src.region.Y + src.region.X) * 2;
+
+
             int srcptr = 0;
+            int dstptr = this.region.Width * src.region.Y * 2 + src.region.X * 2;
 
             for (int i = 0; i < src.region.Height; i++)
+
             {
                 //Console.WriteLine(srcptr + "\t" + dstptr);
                 //Console.ReadKey();
@@ -162,6 +176,17 @@ namespace CTRFramework.Vram
                 dstptr += this.region.Width * 2;
                 srcptr += src.region.Width * 2;
             }
+
+            if (src.clutdata == null)
+            {
+                Helpers.Panic(this, "clutdata is missing");
+                return;
+            }
+
+            Buffer.BlockCopy(
+                src.clutdata, 0,
+                this.data, (this.region.Width * src.clutregion.Y + src.clutregion.X) * 2,
+                src.clutdata.Length * 2); //keep in mind there will be leftover garbage if palette is less than 16 colors.
         }
 
         /// <summary>
@@ -171,6 +196,8 @@ namespace CTRFramework.Vram
         /// <param name="pal">Palette.</param>
         public void SaveBMP(string s, byte[] pal)
         {
+            s = Path.ChangeExtension(s, ".bmp");
+
             using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(s)))
             {
                 BMPHeader bh = new BMPHeader();
@@ -199,9 +226,9 @@ namespace CTRFramework.Vram
         /// <summary>
         /// This function is necessary to fix pixel order in 4-bit BMPs.
         /// </summary>
-        /// <param name="data">4-bit pixel array.</param>
+        /// <param name="data">4-bit pixel array of bytes.</param>
         /// <returns></returns>
-        public byte[] FixPixelOrder(byte[] data)
+        private byte[] FixPixelOrder(byte[] data)
         {
             byte[] x = data;
 
@@ -211,8 +238,12 @@ namespace CTRFramework.Vram
             return x;
         }
 
-
-        public byte[] FixPixelOrder(ushort[] data)
+        /// <summary>
+        /// This function is necessary to fix pixel order in 4-bit BMPs.
+        /// </summary>
+        /// <param name="data">4-bit pixel array of ushorts</param>
+        /// <returns></returns>
+        private byte[] FixPixelOrder(ushort[] data)
         {
             byte[] y = new byte[data.Length * 2];
 
@@ -228,67 +259,114 @@ namespace CTRFramework.Vram
             return y;
         }
 
-        public Bitmap GetTexture(TextureLayout tl, string path = "", string name = "")
+        /// <summary>
+        /// Cuts a Tim subtexture from current Tim, based on TextureLayout data.
+        /// </summary>
+        /// <param name="tl">TextureLayout object.</param>
+        /// <returns>Tim object.</returns>
+        public Tim GetTimTexture(TextureLayout tl)
         {
             int bpp = 4;
 
             if (tl.f1 > 0 && tl.f2 > 0 && tl.f3 > 0)
                 bpp = 8;
 
+            //Directory.CreateDirectory(path);
+
+            //int width = (tl.width / 4) * 2;
+            int width = (int)(tl.width * (bpp / 8.0f));
+            int height = tl.height;
+
+            ushort[] buf = new ushort[(width / 2) * height];
+
+            //Console.WriteLine(width + "x" + height);
+
+            int ptr = tl.Position * 2; // tl.PageY * 1024 * (1024 * 2 / 16) + tl.frame.Y * 1024 + tl.PageX * (1024 * 2 / 16) + tl.frame.X;
+
+            for (int i = 0; i < height; i++)
+            {
+                Buffer.BlockCopy(
+                    this.data, ptr,
+                    buf, i * width,
+                    width);
+
+                ptr += CtrVrm.Width * 2;
+            }
+
+
+            Tim x = new Tim(tl.frame);
+
+            x.data = buf;
+
+            x.region = new Rectangle(tl.RealX, tl.RealY, tl.width / 4, tl.height);
+
+            x.clutregion = new Rectangle(tl.PalX * 16, tl.PalY, 16, 1);
+            x.clutdata = GetCtrClut(tl);
+            x.clutsize = (uint)(x.clutregion.Width * 2 + 12);
+            x.flags = 8; //4 bit + pal = 8
+
+            /*
+            Rectangle r = x.clutregion;
+
+            if (r.Width % 4 != 0)
+                r.Width += 16;
+
+            Tim x2 = new Tim(r);
+            x2.DrawTim(x);
+            */
+
+            //Console.WriteLine(x.clutdata.Length);
+
+            return x;
+        }
+
+
+        public Tim GetTrueColorTexture(int x, int y, int w, int h)
+        {
+            ushort[] buf = new ushort[w * h];
+
+            //Console.WriteLine(width + "x" + height);
+
+            int ptr = 1024 * y + x; // tl.PageY * 1024 * (1024 * 2 / 16) + tl.frame.Y * 1024 + tl.PageX * (1024 * 2 / 16) + tl.frame.X;
+
+            for (int i = 0; i < h; i++)
+            {
+                Buffer.BlockCopy(
+                    this.data, ptr * 2,
+                    buf, i * w * 2,
+                    w * 2);
+
+                ptr += 1024;
+            }
+
+
+            Tim tim = new Tim(new Rectangle(x, y, w, h));
+            tim.data = buf;
+            tim.flags = 2; //4 bit + pal = 8
+
+            return tim;
+        }
+
+
+        /// <summary>
+        /// Returns bitmap object.
+        /// </summary>
+        /// <param name="tl"></param>
+        /// <param name="path"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public Bitmap GetTexture(TextureLayout tl, string path = "", string name = "")
+        {
             try
             {
-                //Directory.CreateDirectory(path);
-
-                //int width = (tl.width / 4) * 2;
-                int width = (int)(tl.width * (bpp / 8.0f));
-                int height = tl.height;
-
-                ushort[] buf = new ushort[(width / 2) * height];
-
-                //Console.WriteLine(width + "x" + height);
-
-                int ptr = tl.Position * 2; // tl.PageY * 1024 * (1024 * 2 / 16) + tl.frame.Y * 1024 + tl.PageX * (1024 * 2 / 16) + tl.frame.X;
-
-                for (int i = 0; i < height; i++)
-                {
-                    Buffer.BlockCopy(
-                        this.data, ptr,
-                        buf, i * width,
-                        width);
-
-                    ptr += CtrVrm.Width * 2;
-                }
-
-
-                Tim x = new Tim(tl.frame);
-
-                x.data = buf;
-
-                x.region = new Rectangle(tl.RealX, tl.RealY, tl.width / 4, tl.height);
-
-                x.clutregion = new Rectangle(tl.PalX * 16, tl.PalY, 16, 1);
-                x.clutdata = GetCtrClut(tl);
-                x.clutsize = (uint)(x.clutregion.Width * 2 + 12);
-                x.flags = 8; //4 bit + pal = 8
-
-                /*
-                Rectangle r = x.clutregion;
-
-                if (r.Width % 4 != 0)
-                    r.Width += 16;
-
-                Tim x2 = new Tim(r);
-                x2.DrawTim(x);
-                */
-
-                //Console.WriteLine(x.clutdata.Length);
+                Tim x = GetTimTexture(tl);
 
                 if (x.region.Width > 0 && x.region.Height > 0)
                 {
                     string n = path + "\\" + (name == "" ? tl.Tag() : name);
 
-                    //if (!File.Exists(n + ".tim"))
-                    //x.Write(n + ".tim");
+                    if (!File.Exists(n + ".tim"))
+                    x.Write(n + ".tim");
 
                     //if (!File.Exists(n + ".bmp"))
                     //x.SaveBMP(n + ".bmp", CtrClutToBmpPalette(x.clutdata));
@@ -321,6 +399,72 @@ namespace CTRFramework.Vram
                 return null;
             }
         }
+
+        /// <summary>
+        /// Loads texture data from bitmap file. Make sure you're quantizing your textures to 4 bits beforehand.
+        /// </summary>
+        /// <param name="f"></param>
+        public void LoadDataFromBitmap(string f)
+        {
+            Bitmap bitmap = (Bitmap)Bitmap.FromFile(f);
+
+            if (bitmap.Width / 4 != region.Width || bitmap.Height != region.Height)
+            {
+                Helpers.Panic(this, "Bitmap size mismatch.");
+                return;
+            }
+
+            List<ushort> palette = new List<ushort>();
+
+            byte[] newdata = new byte[bitmap.Width * bitmap.Height / 2];
+
+            BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+            //create data buffer 
+            byte[] bytes = new byte[data.Height * data.Stride];
+
+            // copy bitmap data into buffer
+            Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
+
+            // unlock the bitmap data
+            bitmap.UnlockBits(data);
+
+            for (int i = 0; i < bytes.Length / 4; i++)
+            {
+                byte R = bytes[i * 4 + 0];
+                byte G = bytes[i * 4 + 1];
+                byte B = bytes[i * 4 + 2];
+                byte A = bytes[i * 4 + 3];
+
+                ushort col = ConvertTo16(R, G, B);
+
+                if (!palette.Contains(col))
+                {
+                    palette.Add(col);
+                    if (palette.Count > 16)
+                    {
+                        Helpers.Panic(this, "Too many colors.");
+                        return;
+                    }
+                }
+
+                if (i % 2 == 0)
+                {
+                    newdata[i / 2] |= (byte)(palette.IndexOf(col));
+                }
+                else
+                {
+                    newdata[i / 2] |= (byte)(palette.IndexOf(col) << 4);
+                }
+
+                for (int j = 0; j < i / 4; j++)
+                    this.data[j] = (ushort)(newdata[j * 2] | newdata[j * 2 + 1] << 8);
+
+                this.clutdata = palette.ToArray();
+            }
+        }
+        
+
 
 
         public byte[] FixBitmapData(byte[] b, int width, int height)
@@ -414,13 +558,21 @@ namespace CTRFramework.Vram
             return Color.FromArgb((useAlpha ? a : 255), r, g, b);
         }
 
+        public static ushort ConvertTo16(Color c)
+        {
+            return ConvertTo16(c.R, c.G, c.B);
+        }
+
+        public static ushort ConvertTo16(byte r, byte g, byte b)
+        {
+            return (ushort)((r >> 3 << 10) | (g >> 3 << 5) | (b >> 3 << 0));
+        }
 
         public static Color Convert16(byte[] b, bool useAlpha)
         {
             ushort val = BitConverter.ToUInt16(b, 0);
             return Convert16(val, useAlpha);
         }
-
     }
 
 }

@@ -923,15 +923,6 @@ namespace CTRTools
             }
         }
 
-        private void treeView1_DoubleClick(object sender, EventArgs e)
-        {
-
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void button31_Click(object sender, EventArgs e)
         {
@@ -956,10 +947,15 @@ namespace CTRTools
             }
         }
 
-        private void button23_Click_1(object sender, EventArgs e)
-        {
 
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;
+                return cp;
+            }
         }
     }
-
 }
