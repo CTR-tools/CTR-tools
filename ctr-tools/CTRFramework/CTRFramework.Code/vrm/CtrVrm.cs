@@ -19,6 +19,7 @@ namespace CTRFramework.Vram
 
         public static Tim FromStream(Stream str)
         {
+            frames.Clear();
             buffer = new Tim(new Rectangle(0, 0, Width, Height));
 
             using (BinaryReaderEx br = new BinaryReaderEx(str))

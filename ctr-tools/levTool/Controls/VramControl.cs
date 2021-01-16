@@ -9,12 +9,20 @@ using System.Diagnostics;
 
 namespace CTRTools
 {
-    public partial class CtrToolsVramControl : UserControl
+    public partial class VramControl : UserControl
     {
-        public CtrToolsVramControl()
+        public VramControl()
         {
             InitializeComponent();
             this.DoubleBuffered = true;
+        }
+
+        private string pathFileParent
+        {
+            get
+            {
+                return Path.GetDirectoryName(pathFile.Text);
+            }
         }
 
         private void actionPack_Click(object sender, EventArgs e)
@@ -29,10 +37,13 @@ namespace CTRTools
             {
                 Tim ctr = scn.ctrvram;
 
+                //dumping vram before the change
                 if (optionDebugVram.Checked)
-                    ctr.SaveBMP(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "test_old.bmp"), BMPHeader.GrayScalePalette(16));
+                    //only dump if file doesn't exist (to compare to earliest version of vram)
+                    if (!File.Exists(Path.Combine(pathFileParent, "test_old.bmp")))
+                        ctr.SaveBMP(Path.Combine(pathFileParent, "test_old.bmp"), BMPHeader.GrayScalePalette(16));
 
-                Dictionary<string, TextureLayout> list = scn.GetTexturesList(Detail.Med);
+                Dictionary<string, TextureLayout> list = scn.GetTexturesList();
 
                 foreach (string s in Directory.GetFiles(pathFolder.Text, "*.png"))
                 {
@@ -42,7 +53,7 @@ namespace CTRTools
 
                     if (!list.ContainsKey(tag))
                     {
-                        Helpers.Panic(ctr, "missing texture entry");
+                        Helpers.Panic(ctr, "unknown texture entry");
                         continue;
                     }
 
@@ -55,12 +66,47 @@ namespace CTRTools
                 }
 
                 if (optionDebugVram.Checked)
-                    ctr.SaveBMP(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "test_new.bmp"), BMPHeader.GrayScalePalette(16));
+                    ctr.SaveBMP(Path.Combine(pathFileParent, "test_new.bmp"), BMPHeader.GrayScalePalette(16));
 
-                ctr.GetTrueColorTexture(512, 0, 384, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x01.tim"));
-                ctr.GetTrueColorTexture(512, 256, 512, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x02.tim"));
+
+                List<Tim> tims = new List<Tim>();
+                foreach (var r in CtrVrm.frames)
+                {
+                    tims.Add(ctr.GetTrueColorTexture(r));
+                }
+
+                string tempFile = Path.Combine(pathFileParent, "temp.tim");
+                string vramFile = Path.ChangeExtension(pathFile.Text, ".vrm");
+
+                Helpers.BackupFile(vramFile);
+                File.Delete(vramFile);
+
+                using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(vramFile)))
+                {
+                    bw.Write((int)0x20);
+
+                    foreach (Tim tim in tims)
+                    {
+                        tim.Write(tempFile);
+                        byte[] x = File.ReadAllBytes(tempFile);
+
+                        bw.Write(x.Length);
+                        bw.Write(x);
+                    }
+
+                    bw.Write((int)0);
+
+                    bw.Flush();
+                    bw.Close();
+                }
+
+                File.Delete(tempFile);
+
+                //ctr.GetTrueColorTexture(512, 0, 384, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x01.tim"));
+                //ctr.GetTrueColorTexture(512, 256, 512, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x02.tim"));
             }
 
+            GC.Collect();
             MessageBox.Show("Done.");
         }
 
@@ -74,15 +120,12 @@ namespace CTRTools
 
             using (Scene s = Scene.FromFile(pathFile.Text))
             {
-                Helpers.CheckFolder(pathFolder.Text);
-
-                if (optionTextMid.Checked)
-                    s.ExportTextures(pathFolder.Text, Detail.Med);
-
-                if (optionTexLow.Checked)
-                    s.ExportTextures(pathFolder.Text, Detail.Low);
+                if (optionTexHigh.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texHigh"), Detail.High);
+                if (optionTexMed.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texMed"), Detail.Med);
+                if (optionTexLow.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texLow"), Detail.Low);
             }
 
+            GC.Collect();
             MessageBox.Show("Done!");
         }
 
@@ -92,13 +135,21 @@ namespace CTRTools
             ofd.Filter = "CTR scene file (*.lev)|*.lev";
 
             if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                pathFile.Text = ofd.FileName;
-                pathFolder.Text = Path.Combine(Path.GetDirectoryName(ofd.FileName), "textures");
+                MaybeLoadFile(ofd.FileName);
+        }
 
-                if (optionFolder.Checked)
-                    Helpers.CheckFolder(pathFolder.Text);
+
+        private void MaybeLoadFile(string path)
+        {
+            if (Path.GetExtension(path).ToLower() != ".lev")
+            {
+                MessageBox.Show("Not a CTR scene file.");
+                return;
             }
+
+            pathFile.Text = path;
+            pathFolder.Text = Path.Combine(Path.GetDirectoryName(path), "newtex");
+            Helpers.CheckFolder(pathFolder.Text);
         }
 
         private void actionBrowseFolder_Click(object sender, EventArgs e)
@@ -129,5 +180,75 @@ namespace CTRTools
                 }
         }
 
+        private void CtrToolsVramControl_DragDrop(object sender, DragEventArgs e)
+        {
+            string path = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
+            MaybeLoadFile(path);
+        }
+
+        private void CtrToolsVramControl_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Copy;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (!File.Exists(pathFile.Text))
+            {
+                MessageBox.Show($"File doesn't exist!\r\n{pathFile.Text}");
+                return;
+            }
+
+            using (Scene scn = Scene.FromFile(pathFile.Text))
+            {
+                Tim ctr = scn.ctrvram;
+
+                try
+                {
+                    using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(StringToByteArrayFastest(textBox1.Text))))
+                    {
+                        TextureLayout tl = new TextureLayout(br);
+                        pictureBox1.Image = ctr.GetTexture(tl);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Attempt failed.\r\n" + ex.Message);
+                }
+            }
+        }
+
+        public static byte[] StringToByteArrayFastest(string hex)
+        {
+            hex = hex.Replace(" ", "");
+
+            if (hex.Length % 2 == 1)
+                throw new Exception("The binary key cannot have an odd number of digits");
+
+            byte[] arr = new byte[hex.Length >> 1];
+
+            for (int i = 0; i < hex.Length >> 1; ++i)
+            {
+                arr[i] = (byte)((GetHexVal(hex[i << 1]) << 4) + (GetHexVal(hex[(i << 1) + 1])));
+            }
+
+            return arr;
+        }
+
+        public static int GetHexVal(char hex)
+        {
+            int val = (int)hex;
+            //For uppercase A-F letters:
+            //return val - (val < 58 ? 48 : 55);
+            //For lowercase a-f letters:
+            //return val - (val < 58 ? 48 : 87);
+            //Or the two combined, but a bit slower:
+            return val - (val < 58 ? 48 : (val < 97 ? 55 : 87));
+        }
+
+        private void actionRestore_Click(object sender, EventArgs e)
+        {
+            Helpers.RestoreFile(Path.ChangeExtension(pathFile.Text, ".vrm"));
+        }
     }
 }

@@ -45,13 +45,9 @@
             this.discordLogo = new System.Windows.Forms.PictureBox();
             this.githubLogo = new System.Windows.Forms.PictureBox();
             this.tabBig = new System.Windows.Forms.TabPage();
-            this.button27 = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.button24 = new System.Windows.Forms.Button();
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.exportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.replaceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bigFileControl1 = new CTRTools.Controls.BigFileControl();
+            this.tabVram = new System.Windows.Forms.TabPage();
+            this.ctrToolsVramControl1 = new CTRTools.VramControl();
             this.tabLev = new System.Windows.Forms.TabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
@@ -103,8 +99,9 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.button26 = new System.Windows.Forms.Button();
-            this.tabVram = new System.Windows.Forms.TabPage();
-            this.ctrToolsVramControl1 = new CTRTools.CtrToolsVramControl();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.replaceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabAbout.SuspendLayout();
@@ -112,7 +109,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.discordLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).BeginInit();
             this.tabBig.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
+            this.tabVram.SuspendLayout();
             this.tabLev.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPickups.SuspendLayout();
@@ -124,7 +121,7 @@
             this.tabVramz.SuspendLayout();
             this.tabEmu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            this.tabVram.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -198,9 +195,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabAbout);
             this.tabControl1.Controls.Add(this.tabBig);
+            this.tabControl1.Controls.Add(this.tabVram);
             this.tabControl1.Controls.Add(this.tabLev);
             this.tabControl1.Controls.Add(this.tabEmu);
-            this.tabControl1.Controls.Add(this.tabVram);
             this.tabControl1.Location = new System.Drawing.Point(4, 28);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -230,7 +227,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(200, 24);
             this.label6.TabIndex = 9;
-            this.label6.Text = "2016-2020, DCxDemo*";
+            this.label6.Text = "2016-2021, DCxDemo*";
             // 
             // label3
             // 
@@ -282,10 +279,7 @@
             // 
             // tabBig
             // 
-            this.tabBig.Controls.Add(this.button27);
-            this.tabBig.Controls.Add(this.textBox4);
-            this.tabBig.Controls.Add(this.button24);
-            this.tabBig.Controls.Add(this.treeView1);
+            this.tabBig.Controls.Add(this.bigFileControl1);
             this.tabBig.Location = new System.Drawing.Point(4, 22);
             this.tabBig.Name = "tabBig";
             this.tabBig.Size = new System.Drawing.Size(609, 384);
@@ -293,72 +287,36 @@
             this.tabBig.Text = "BIG";
             this.tabBig.UseVisualStyleBackColor = true;
             // 
-            // button27
+            // bigFileControl1
             // 
-            this.button27.Location = new System.Drawing.Point(348, 3);
-            this.button27.Name = "button27";
-            this.button27.Size = new System.Drawing.Size(75, 23);
-            this.button27.TabIndex = 4;
-            this.button27.Text = "Export";
-            this.button27.UseVisualStyleBackColor = true;
-            this.button27.Click += new System.EventHandler(this.button27_Click);
+            this.bigFileControl1.AllowDrop = true;
+            this.bigFileControl1.Location = new System.Drawing.Point(4, 3);
+            this.bigFileControl1.MinimumSize = new System.Drawing.Size(488, 223);
+            this.bigFileControl1.Name = "bigFileControl1";
+            this.bigFileControl1.Size = new System.Drawing.Size(600, 377);
+            this.bigFileControl1.TabIndex = 0;
             // 
-            // textBox4
+            // tabVram
             // 
-            this.textBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabVram.Controls.Add(this.ctrToolsVramControl1);
+            this.tabVram.Location = new System.Drawing.Point(4, 22);
+            this.tabVram.Name = "tabVram";
+            this.tabVram.Size = new System.Drawing.Size(609, 384);
+            this.tabVram.TabIndex = 8;
+            this.tabVram.Text = "VRAM";
+            this.tabVram.UseVisualStyleBackColor = true;
+            // 
+            // ctrToolsVramControl1
+            // 
+            this.ctrToolsVramControl1.AllowDrop = true;
+            this.ctrToolsVramControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox4.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox4.Location = new System.Drawing.Point(267, 32);
-            this.textBox4.Multiline = true;
-            this.textBox4.Name = "textBox4";
-            this.textBox4.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox4.Size = new System.Drawing.Size(615, 398);
-            this.textBox4.TabIndex = 2;
-            this.textBox4.WordWrap = false;
-            // 
-            // button24
-            // 
-            this.button24.Location = new System.Drawing.Point(267, 3);
-            this.button24.Name = "button24";
-            this.button24.Size = new System.Drawing.Size(75, 23);
-            this.button24.TabIndex = 1;
-            this.button24.Text = "Load BIG";
-            this.button24.UseVisualStyleBackColor = true;
-            this.button24.Click += new System.EventHandler(this.button24_Click);
-            // 
-            // treeView1
-            // 
-            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.treeView1.ContextMenuStrip = this.contextMenuStrip1;
-            this.treeView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.treeView1.Location = new System.Drawing.Point(4, 3);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(257, 427);
-            this.treeView1.TabIndex = 0;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exportFileToolStripMenuItem,
-            this.replaceFileToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(135, 48);
-            // 
-            // exportFileToolStripMenuItem
-            // 
-            this.exportFileToolStripMenuItem.Name = "exportFileToolStripMenuItem";
-            this.exportFileToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
-            this.exportFileToolStripMenuItem.Text = "Export file";
-            this.exportFileToolStripMenuItem.Click += new System.EventHandler(this.exportFileToolStripMenuItem_Click);
-            // 
-            // replaceFileToolStripMenuItem
-            // 
-            this.replaceFileToolStripMenuItem.Name = "replaceFileToolStripMenuItem";
-            this.replaceFileToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
-            this.replaceFileToolStripMenuItem.Text = "Replace file";
+            this.ctrToolsVramControl1.Location = new System.Drawing.Point(4, 3);
+            this.ctrToolsVramControl1.MinimumSize = new System.Drawing.Size(461, 218);
+            this.ctrToolsVramControl1.Name = "ctrToolsVramControl1";
+            this.ctrToolsVramControl1.Size = new System.Drawing.Size(600, 377);
+            this.ctrToolsVramControl1.TabIndex = 0;
             // 
             // tabLev
             // 
@@ -768,7 +726,6 @@
             this.button29.TabIndex = 25;
             this.button29.Text = "button29";
             this.button29.UseVisualStyleBackColor = true;
-            this.button29.Click += new System.EventHandler(this.button29_Click);
             // 
             // button23
             // 
@@ -843,7 +800,6 @@
             this.button28.TabIndex = 6;
             this.button28.Text = "button28";
             this.button28.UseVisualStyleBackColor = true;
-            this.button28.Click += new System.EventHandler(this.button28_Click);
             // 
             // propertyGrid2
             // 
@@ -920,26 +876,25 @@
             this.button26.UseVisualStyleBackColor = true;
             this.button26.Click += new System.EventHandler(this.button26_Click);
             // 
-            // tabVram
+            // contextMenuStrip1
             // 
-            this.tabVram.Controls.Add(this.ctrToolsVramControl1);
-            this.tabVram.Location = new System.Drawing.Point(4, 22);
-            this.tabVram.Name = "tabVram";
-            this.tabVram.Size = new System.Drawing.Size(609, 384);
-            this.tabVram.TabIndex = 8;
-            this.tabVram.Text = "VRAM";
-            this.tabVram.UseVisualStyleBackColor = true;
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportFileToolStripMenuItem,
+            this.replaceFileToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(135, 48);
             // 
-            // ctrToolsVramControl1
+            // exportFileToolStripMenuItem
             // 
-            this.ctrToolsVramControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ctrToolsVramControl1.Location = new System.Drawing.Point(4, 3);
-            this.ctrToolsVramControl1.MinimumSize = new System.Drawing.Size(461, 218);
-            this.ctrToolsVramControl1.Name = "ctrToolsVramControl1";
-            this.ctrToolsVramControl1.Size = new System.Drawing.Size(600, 377);
-            this.ctrToolsVramControl1.TabIndex = 0;
+            this.exportFileToolStripMenuItem.Name = "exportFileToolStripMenuItem";
+            this.exportFileToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.exportFileToolStripMenuItem.Text = "Export file";
+            // 
+            // replaceFileToolStripMenuItem
+            // 
+            this.replaceFileToolStripMenuItem.Name = "replaceFileToolStripMenuItem";
+            this.replaceFileToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
+            this.replaceFileToolStripMenuItem.Text = "Replace file";
             // 
             // MainForm
             // 
@@ -952,9 +907,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "MainForm";
-            this.Text = "CTR-tools GUI";
-            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
-            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
+            this.Text = "CTR-tools-gui";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -964,8 +917,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.discordLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).EndInit();
             this.tabBig.ResumeLayout(false);
-            this.tabBig.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.tabVram.ResumeLayout(false);
             this.tabLev.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.tabPickups.ResumeLayout(false);
@@ -983,7 +935,7 @@
             this.tabEmu.ResumeLayout(false);
             this.tabEmu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            this.tabVram.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1002,9 +954,6 @@
         private System.Windows.Forms.ToolStripMenuItem showConsoleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
         private System.Windows.Forms.TabPage tabBig;
-        private System.Windows.Forms.Button button24;
-        private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TabPage tabEmu;
         private System.Windows.Forms.Button button26;
         private System.Windows.Forms.TextBox textBox5;
@@ -1012,7 +961,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.PropertyGrid propertyGrid2;
-        private System.Windows.Forms.Button button27;
         private System.Windows.Forms.TabPage tabAbout;
         private System.Windows.Forms.PictureBox discordLogo;
         private System.Windows.Forms.PictureBox githubLogo;
@@ -1066,7 +1014,8 @@
         private System.Windows.Forms.Button button30;
         private System.Windows.Forms.Button button31;
         private System.Windows.Forms.TabPage tabVram;
-        private CtrToolsVramControl ctrToolsVramControl1;
+        private VramControl ctrToolsVramControl1;
+        private Controls.BigFileControl bigFileControl1;
     }
 }
 

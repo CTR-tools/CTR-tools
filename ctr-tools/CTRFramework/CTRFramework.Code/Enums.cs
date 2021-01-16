@@ -43,8 +43,10 @@ namespace CTRFramework
         TexLow = 1 << 1,
         MeshMed = 1 << 2,
         TexMed = 1 << 3,
-        Models = 1 << 4,
-        SkyBox = 1 << 5,
+        MeshHi = 1 << 4,
+        TexHigh = 1 << 5,
+        Models = 1 << 6,
+        SkyBox = 1 << 7,
         All = -1
     }
 
@@ -99,6 +101,7 @@ namespace CTRFramework
     [Flags]
     public enum QuadFlags
     {
+        None = 0,
         Invisible = 1 << 0,     //check
         MoonGravity = 1 << 1,   //triggers MG in Oxide Station
         Reflection = 1 << 2,    //used in snow levels

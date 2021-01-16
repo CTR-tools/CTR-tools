@@ -304,10 +304,10 @@ namespace CTRFramework
 
                 StringBuilder sb = new StringBuilder();
 
-                sb.Append("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.\r\n");
-                sb.Append("#" + Meta.GetVersionInfo() + "\r\n");
-                sb.Append("#(C) 1999, Activision, Naughty Dog.\r\n\r\n");
-                sb.Append("mtllib " + Path.GetFileName(fname + ".mtl") + "\r\n\r\n");
+                sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
+                sb.AppendLine($"#{Meta.GetVersionInfo()}");
+                sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
+                sb.AppendLine($"mtllib {Path.GetFileName(fname + ".mtl")}\r\n");
 
                 int a = 0;
                 int b = 0;
@@ -349,30 +349,41 @@ namespace CTRFramework
         {
             foreach (DynamicModel d in dynamics)
                 d.Export(Path.Combine(dir, "\\models"));
-
-            Console.WriteLine("Models done!");
         }
 
-        public void ExportSkyBox(string dir)
+        public void ExportSkyBox(string path)
         {
             if (skybox != null)
-                Helpers.WriteToFile(Path.Combine(dir, name + "_sky.obj"), skybox.ToObj());
+                Helpers.WriteToFile(Path.Combine(path, $"{name}_sky.obj"), skybox.ToObj());
         }
 
-        public void Export(string dir, ExportFlags flags)
+        public void Export(string path, ExportFlags flags)
         {
-            Console.WriteLine("Exporting to: " + dir);
-            if (dir.Contains(" "))
+            Console.WriteLine($"Exporting to: {path}");
+
+            if (path.Contains(" "))
                 Console.WriteLine("Warning, there are spaces in the path. This may affect material import.");
 
-            if (flags.HasFlag(ExportFlags.TexLow)) ExportTextures(Path.Combine(dir, "texLow"), Detail.Low);
-            if (flags.HasFlag(ExportFlags.MeshLow)) ExportMesh(dir, Detail.Low);
+            if (flags.HasFlag(ExportFlags.MeshLow)) ExportMesh(path, Detail.Low);
+            if (flags.HasFlag(ExportFlags.TexLow)) ExportTextures(Path.Combine(path, "texLow"), Detail.Low);
 
-            if (flags.HasFlag(ExportFlags.TexMed)) ExportTextures(Path.Combine(dir, "texMed"), Detail.Med);
-            if (flags.HasFlag(ExportFlags.MeshMed)) ExportMesh(dir, Detail.Med);
+            Console.WriteLine("Low mesh: done.");
 
-            if (flags.HasFlag(ExportFlags.Models)) ExportModels(dir);
-            if (flags.HasFlag(ExportFlags.SkyBox)) ExportSkyBox(dir);
+            if (flags.HasFlag(ExportFlags.MeshMed)) ExportMesh(path, Detail.Med);
+            if (flags.HasFlag(ExportFlags.TexMed)) ExportTextures(Path.Combine(path, "texMed"), Detail.Med);
+
+            Console.WriteLine("Mid mesh: done.");
+
+            //not implemented, should return subdivided mesh
+            //if (flags.HasFlag(ExportFlags.MeshMed)) ExportMesh(dir, Detail.High);
+            if (flags.HasFlag(ExportFlags.TexHigh)) ExportTextures(Path.Combine(path, "texHigh"), Detail.High);
+
+            Console.WriteLine("High mesh: done.");
+
+            if (flags.HasFlag(ExportFlags.Models)) ExportModels(path);
+            if (flags.HasFlag(ExportFlags.SkyBox)) ExportSkyBox(path);
+
+            Console.WriteLine("Additional models: done.");
         }
 
 
@@ -381,45 +392,57 @@ namespace CTRFramework
             if (ctrvram != null)
             {
                 foreach (TextureLayout tl in GetTexturesList().Values)
-                {
                     ctrvram.GetTexture(tl);
-                }
             }
         }
 
+        /// <summary>
+        /// Exports textures for all levels of detail.
+        /// </summary>
+        /// <param name="path"></param>
+        public void ExportTextures(string path)
+        {
+            Helpers.CheckFolder(path);
 
+            ExportTextures(Path.Combine(path, "texMed"), Detail.Med);
+            ExportTextures(Path.Combine(path, "texLow"), Detail.Low);
+            ExportTextures(Path.Combine(path, "texHigh"), Detail.High);
+        }
+
+        /// <summary>
+        /// Exports textures for a specific level of detail, defined by Detail enum.
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <param name="lod"></param>
         public void ExportTextures(string dir, Detail lod)
         {
-            if (ctrvram != null)
-            {
-                // ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
-
-                Console.WriteLine(ctrvram.ToString());
-                Console.WriteLine("Exporting textures...");
-
-                Helpers.CheckFolder(dir);
-
-                foreach (TextureLayout tl in GetTexturesList(lod).Values)
-                {
-                    Bitmap bmp = ctrvram.GetTexture(tl, dir);
-                    Bitmap bb = new Bitmap(bmp.Width, bmp.Height);
-                    Graphics g = Graphics.FromImage(bb);
-                    g.DrawImage(bmp, new Point(0, 0));
-                    bb.Save(Path.Combine(dir, $"{tl.Tag()}.png"), System.Drawing.Imaging.ImageFormat.Png);
-                }
-
-                Console.WriteLine("Textures done!");
-            }
-            else
+            if (ctrvram == null)
             {
                 Console.WriteLine("No vram found. Make sure to copy vram file along with lev.");
+                return;
             }
-        }
 
-        public void ExportTexturesAll(string dir)
-        {
-            ExportTextures(dir, Detail.Low);
-            ExportTextures(dir, Detail.Med);
+            // ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
+
+            Console.WriteLine(ctrvram.ToString());
+            Console.WriteLine("Exporting textures...");
+
+            Helpers.CheckFolder(dir);
+
+            foreach (TextureLayout tl in GetTexturesList(lod).Values)
+            {
+                Bitmap bmp = ctrvram.GetTexture(tl, dir);
+                if (bmp == null)
+                {
+                    Console.WriteLine("Missing texture.");
+                    continue;
+                }
+
+                Bitmap bb = new Bitmap(bmp.Width, bmp.Height);
+                Graphics g = Graphics.FromImage(bb);
+                g.DrawImage(bmp, new Point(0, 0));
+                bb.Save(Path.Combine(dir, $"{tl.Tag()}.png"), System.Drawing.Imaging.ImageFormat.Png);
+            }
         }
 
         public string Info()
@@ -480,6 +503,17 @@ namespace CTRFramework
                                 if (!tex.ContainsKey(t.midlods[2].Tag()))
                                     tex.Add(t.midlods[2].Tag(), t.midlods[2]);
                         break;
+                    case Detail.High:
+                        foreach (CtrTex t in qb.tex)
+                        {
+                            foreach (var x in t.hi)
+                            {
+                                if (x != null)
+                                    if (!tex.ContainsKey(x.Tag()))
+                                        tex.Add(x.Tag(), x);
+                            }
+                        }
+                        break;
                 }
             }
 
@@ -509,7 +543,7 @@ namespace CTRFramework
                             tex.Add(tl.Tag(), tl);
                         }
                     }
-                /*
+                
                 foreach (CtrTex t in qb.tex)
                 {
                     foreach (TextureLayout tl in t.hi)
@@ -521,19 +555,9 @@ namespace CTRFramework
                             }
                     }
                 }
-                */
+                
 
             }
-
-            /*
-            List<string> tt = new List<string>();
-            StringBuilder sb = new StringBuilder();
-
-            foreach (string s in tex.Keys) tt.Add(s);
-            tt.Sort();
-            foreach (string s in tt) sb.AppendLine(s);
-            */
-            //File.WriteAllText("texture.txt", sb.ToString());
 
             return tex;
         }

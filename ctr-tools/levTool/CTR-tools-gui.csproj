@@ -57,7 +57,6 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -65,6 +64,12 @@
   <ItemGroup>
     <Compile Include="Char.cs" />
     <Compile Include="ConsoleHook.cs" />
+    <Compile Include="Controls\BigFileControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BigFileControl.Designer.cs">
+      <DependentUpon>BigFileControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="LevelSlot.cs" />
     <Compile Include="Mcs.cs" />
     <Compile Include="Mem.cs" />
@@ -88,6 +93,15 @@
     <Compile Include="Controls\VramControl.Designer.cs">
       <DependentUpon>VramControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="VramForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VramForm.Designer.cs">
+      <DependentUpon>VramForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Controls\BigFileControl.resx">
+      <DependentUpon>BigFileControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -97,6 +111,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\VramControl.resx">
       <DependentUpon>VramControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VramForm.resx">
+      <DependentUpon>VramForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">

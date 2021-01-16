@@ -69,7 +69,7 @@ namespace CTRFramework
         {
             get
             {
-                return PageY * (CtrVrm.Height * CtrVrm.Width / 2) + uv[0].Y * CtrVrm.Width + PageX * 64 + uv[0].X / 4;
+                return PageY * (CtrVrm.Height * CtrVrm.Width / 2) + min.Y * CtrVrm.Width + PageX * 64 + min.X / 4;
             }
         }
 

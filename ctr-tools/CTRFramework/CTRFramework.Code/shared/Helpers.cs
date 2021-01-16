@@ -4,16 +4,20 @@ using System.IO;
 
 namespace CTRFramework.Shared
 {
+    [Flags]
     public enum PanicLevel
     {
-        Silent,
-        Warn,
-        Pause,
-        Exception
+        Silent = 1 << 0,        //silent level overrides other settings
+        Warn = 1 << 1,          //writes message to the console
+        Pause = 1 << 2,         //waits for user input
+        File = 1 << 3,          //writes to file
+        Exception = 1 << 4      //throws an exception
     }
 
     public class Helpers
     {
+        public static string logpath = Path.Combine(Meta.BasePath, "ctrframework.log");
+
         public static PanicLevel panic = PanicLevel.Warn;
         public static Random Random = new Random();
 
@@ -24,19 +28,24 @@ namespace CTRFramework.Shared
         /// <param name="msg">the message it wants to send</param>
         public static void Panic(object x, string msg)
         {
-            if (panic != PanicLevel.Silent)
+            if (panic.HasFlag(PanicLevel.Silent))
+                return;
+
+            string message = $"{x.GetType().Name}:\t{msg}";
+
+            if (panic.HasFlag(PanicLevel.File))
+                File.AppendAllText(logpath, DateTime.Now.ToString() + "\t" + message + "\r\n");
+
+            if (panic.HasFlag(PanicLevel.Warn))
             {
-                if (panic == PanicLevel.Warn || panic == PanicLevel.Pause)
-                {
-                    Console.WriteLine($"{x.GetType().Name}:\t{msg}");
+                Console.WriteLine(message);
 
-                    if (panic == PanicLevel.Pause)
-                        Console.ReadKey();
-                }
-
-                if (panic == PanicLevel.Exception)
-                    throw new Exception($"{x.GetType().Name}:\t{msg}");
+                if (panic.HasFlag(PanicLevel.Pause))
+                    Console.ReadKey();
             }
+
+            if (panic == PanicLevel.Exception)
+                throw new Exception(message);
         }
 
         public static float Normalize(int min, int max, int val)
@@ -102,6 +111,25 @@ namespace CTRFramework.Shared
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
+        }
+
+        public static void BackupFile(string fileName)
+        {
+            string backupName = $"{fileName}.bkp";
+
+            if (!File.Exists(backupName))
+                File.Copy(fileName, backupName);
+        }
+
+        public static void RestoreFile(string fileName)
+        {
+            string backupName = $"{fileName}.bkp";
+
+            if (File.Exists(backupName))
+            {
+                File.Delete(fileName);
+                File.Move(backupName, fileName);
+            }
         }
     }
 }

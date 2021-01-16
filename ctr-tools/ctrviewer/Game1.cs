@@ -1,4 +1,5 @@
-﻿using CTRFramework;
+﻿#define MEASURE
+using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Shared;
 using CTRFramework.Sound;
@@ -41,8 +42,9 @@ namespace ctrviewer
         Menu menu;
 
         //effects
-        BasicEffect effect;
-        BasicEffect instanceEffect;
+        BasicEffect effect;                 //used for static level mesh
+        BasicEffect instanceEffect;         //used for instanced mesh
+        AlphaTestEffect alphaTestEffect;    //used for alpha textures pass
 
         //cameras
         FirstPersonCamera camera;
@@ -150,8 +152,6 @@ namespace ctrviewer
             vpBottom.X = 0;
             vpBottom.Y = graphics.PreferredBackBufferHeight / 2;
         }
-
-        AlphaTestEffect alphaTestEffect;
 
         public void UpdateEffects()
         {
@@ -328,9 +328,6 @@ namespace ctrviewer
 
         private void LoadTextures()
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
             foreach (Scene s in scn)
             {
                 foreach (var t in s.ctrvram.textures)
@@ -357,30 +354,6 @@ namespace ctrviewer
                             alphalist.Add(t.Key);
                 }
             }
-
-
-
-            /*
-        foreach (string s in qb.textureList)
-        {
-            string path = $"levels\\tex\\{s}.png";
-            string path_new = $"levels\\newtex\\{s}.png";
-
-            if (File.Exists(path_new))
-                path = path_new;
-
-            if (File.Exists(path))
-            {
-                if (!textures.ContainsKey(s))
-                    textures.Add(s, settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path) : Texture2D.FromFile(GraphicsDevice, path));
-            }
-            else Console.WriteLine("Missing texture: " + s);
-        }
-        */
-
-            sw.Stop();
-
-            Console.WriteLine($"Loaded textures in {sw.Elapsed.TotalSeconds}");
         }
 
 
@@ -1005,6 +978,7 @@ namespace ctrviewer
 
         protected override void Draw(GameTime gameTime)
         {
+            //remember we're busy drawing stuff
             IsDrawing = true;
 
             GraphicsDevice.Clear(backColor);
@@ -1093,7 +1067,7 @@ namespace ctrviewer
             spriteBatch.End();
 
 
-            base.Draw(gameTime);
+            // base.Draw(gameTime);
 
             IsDrawing = false;
         }

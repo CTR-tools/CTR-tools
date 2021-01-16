@@ -7,9 +7,12 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Text;
 
-
 namespace CTRFramework.Vram
 {
+    /// <summary>
+    /// Please note this is super hacky implementation of PSX Tim format hardcoded for 4 bits used in Crash Team Racing.
+    /// You can load any tim files, but overall code will not work properly with anything other than 4 bits.
+    /// </summary>
     public class Tim : IRead
     {
 
@@ -321,6 +324,11 @@ namespace CTRFramework.Vram
         }
 
 
+        public Tim GetTrueColorTexture(Rectangle r)
+        {
+            return GetTrueColorTexture(r.X, r.Y, r.Width, r.Height);
+        }
+
         public Tim GetTrueColorTexture(int x, int y, int w, int h)
         {
             ushort[] buf = new ushort[w * h];
@@ -365,8 +373,8 @@ namespace CTRFramework.Vram
                 {
                     string n = path + "\\" + (name == "" ? tl.Tag() : name);
 
-                    if (!File.Exists(n + ".tim"))
-                    x.Write(n + ".tim");
+                    //if (!File.Exists(n + ".tim"))
+                    //x.Write(n + ".tim");
 
                     //if (!File.Exists(n + ".bmp"))
                     //x.SaveBMP(n + ".bmp", CtrClutToBmpPalette(x.clutdata));

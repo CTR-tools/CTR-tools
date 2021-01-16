@@ -7,7 +7,7 @@ namespace CTRFramework
     public class CtrTex : IRead
     {
         public TextureLayout[] midlods = new TextureLayout[3];
-        public TextureLayout[] hi = new TextureLayout[4];
+        public TextureLayout[] hi = new TextureLayout[16];
         public List<TextureLayout> animframes = new List<TextureLayout>();
 
         public uint ptrHi;
@@ -58,10 +58,21 @@ namespace CTRFramework
 
             //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
             //Console.ReadKey();
-            /*
+            
             ptrHi = br.ReadUInt32();
 
+            //loosely assume we got a valid pointer
+            if (ptrHi > 0x30000 && ptrHi < 0xB0000)
+            {
+                br.Jump(ptrHi);
 
+                for (int i = 0; i < 16; i++)
+                {
+                    hi[i] = TextureLayout.FromStream(br);
+                }
+            }
+
+            /*
             if (ptrHi != 0 && ptrHi < br.BaseStream.Position)
             {
                 br.Jump(ptrHi);
