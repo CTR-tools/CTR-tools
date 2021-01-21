@@ -97,7 +97,7 @@ namespace ctrviewer
             return x;
         }
 
-        public void Render(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
+        public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
             if (indices != null && verts != null)
             {

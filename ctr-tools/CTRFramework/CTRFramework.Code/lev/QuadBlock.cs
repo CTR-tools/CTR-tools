@@ -31,6 +31,8 @@ namespace CTRFramework
          * 2--8--3
          */
 
+        public long pos;
+
         //9 indices in vertex array, that form 4 quads, see above.
         public short[] ind = new short[9];
         public QuadFlags quadFlags;
@@ -40,7 +42,7 @@ namespace CTRFramework
         //these values are contained in bitvalue, mask is 8b5b5b5b5b4z where b is bit and z is empty. or is it?
         public byte drawOrderLow;
         public FaceFlags[] faceFlags = new FaceFlags[4];
-        public byte extradata;
+        public uint extradata;
 
         public byte[] drawOrderHigh = new byte[4];
 
@@ -82,7 +84,7 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            long pos = br.BaseStream.Position;
+            pos = br.BaseStream.Position;
 
             for (int i = 0; i < 9; i++)
                 ind[i] = br.ReadInt16();
@@ -95,11 +97,12 @@ namespace CTRFramework
 
                 for (int i = 0; i < 4; i++)
                 {
-                    byte val = (byte)(bitvalue >> 8 + 5 * i & 0x1F);
+                    byte val = (byte)((bitvalue >> 8 + 5 * i) & 0x1F);
                     faceFlags[i] = new FaceFlags(val);
                 }
 
-                extradata = (byte)(bitvalue & 0xF0000000 >> 28);
+                //extradata = (byte)(bitvalue & 0xF0000000 >> 28);
+                extradata = (bitvalue & 0xFFF);
             }
 
             drawOrderHigh = br.ReadBytes(4);
@@ -164,7 +167,6 @@ namespace CTRFramework
 
             br.BaseStream.Position = texpos;
         }
-
 
         public void RecalcBB(List<Vertex> vert)
         {
@@ -353,8 +355,8 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible"));
-            sb.AppendFormat("o piece_{0}\r\n\r\n", id.ToString("X4"));
+            //sb.AppendFormat("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible"));
+            //sb.AppendFormat("o piece_{0}\r\n\r\n", id.ToString("X4"));
 
             switch (detail)
             {

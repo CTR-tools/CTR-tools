@@ -13,7 +13,7 @@ namespace CTRTools
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new VramForm());
+            Application.Run(new MainForm());
         }
     }
 }

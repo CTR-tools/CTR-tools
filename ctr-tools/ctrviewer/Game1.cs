@@ -605,7 +605,6 @@ namespace ctrviewer
                 newstate = GamePad.GetState(activeGamePad);
                 newkb = Keyboard.GetState();
 
-
                 foreach (Kart k in karts)
                     k.Update(gameTime);
 
@@ -735,6 +734,12 @@ namespace ctrviewer
                         UpdateCameras(gameTime);
                 }
 
+                foreach (InstancedModel im in instanced)
+                    im.Update(gameTime);
+
+                foreach (InstancedModel im in paths)
+                    im.Update(gameTime);
+
                 oldms = newms;
                 newms = Mouse.GetState();
 
@@ -803,7 +808,7 @@ namespace ctrviewer
                     effect.Projection = skycamera.ProjectionMatrix;
 
                     effect.DiffuseColor /= 2;
-                    sky.RenderSky(graphics, effect, null);
+                    sky.DrawSky(graphics, effect, null);
                     effect.DiffuseColor *= 2;
 
                     alphaTestEffect.DiffuseColor = effect.DiffuseColor;
@@ -826,17 +831,17 @@ namespace ctrviewer
                     if (settings.Models)
                     {
                         foreach (var v in instanced)
-                            v.Render(graphics, instanceEffect, null, (cam != null ? cam : camera));
+                            v.Draw(graphics, instanceEffect, null, (cam != null ? cam : camera));
 
                         //render karts
                         foreach (Kart k in karts)
-                            k.Render(graphics, instanceEffect, null, (cam != null ? cam : camera));
+                            k.Draw(graphics, instanceEffect, null, (cam != null ? cam : camera));
                     }
 
                     if (settings.BotsPath)
                     {
                         foreach (var v in paths)
-                            v.Render(graphics, instanceEffect, null, (cam != null ? cam : camera));
+                            v.Draw(graphics, instanceEffect, null, (cam != null ? cam : camera));
                     }
 
                     Samplers.SetToDevice(graphics, EngineRasterizer.Default);
@@ -846,7 +851,7 @@ namespace ctrviewer
 
                 //render depending on lod
                 foreach (MGLevel qb in (settings.UseLowLod ? MeshLow : MeshHigh))
-                    qb.Render(graphics, effect, alphaTestEffect);
+                    qb.Draw(graphics, effect, alphaTestEffect);
 
 
                 if (settings.VisData)
@@ -1005,7 +1010,7 @@ namespace ctrviewer
             UpdateProjectionMatrices();
 
             if (InMenu)
-                menu.Render(GraphicsDevice, spriteBatch, font, tint);
+                menu.Draw(GraphicsDevice, spriteBatch, font, tint);
 
 
             spriteBatch.Begin(depthStencilState: DepthStencilState.Default);
@@ -1053,7 +1058,7 @@ namespace ctrviewer
 
             if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Keyboard.GetState().IsKeyDown(Keys.OemPlus))
                 spriteBatch.DrawString(font, String.Format("FOV {0}", camera.ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", camera.ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
-
+            
             if (settings.ShowCamPos)
                 spriteBatch.DrawString(font, $"({camera.Position.X.ToString("0.00")}, {camera.Position.Y.ToString("0.00")}, {camera.Position.Z.ToString("0.00")})", new Vector2(20, 20), Color.Yellow, 
                     0,
@@ -1061,6 +1066,7 @@ namespace ctrviewer
                     graphics.GraphicsDevice.Viewport.Height / 1080f,
                     SpriteEffects.None,
                     0.5f);
+            
 
             //spriteBatch.DrawString(font, String.Format("sp: {0}\r\nac:{1}", karts[0].Speed, karts[0].Accel), new Vector2(20, 20), Color.Yellow);
 
@@ -1070,6 +1076,47 @@ namespace ctrviewer
             // base.Draw(gameTime);
 
             IsDrawing = false;
+        }
+
+
+        enum TextAlign
+        {
+            Auto,
+            Left,
+            Center,
+            Right
+        }
+
+        private void DrawText(SpriteBatch spriteBatch, SpriteFont font, string text, Vector2 position, Color color, TextAlign align = TextAlign.Auto)
+        {
+            position.X *= GraphicsDevice.Viewport.Width;
+            position.Y *= GraphicsDevice.Viewport.Height;
+
+            if (position.X < 0)
+            {
+                if (align == TextAlign.Auto)
+                    align = TextAlign.Left;
+
+                position.X += GraphicsDevice.Viewport.Width;
+            }
+
+            if (position.Y < 0)
+                position.Y += GraphicsDevice.Viewport.Height;
+
+            switch (align)
+            {
+                case TextAlign.Center: position.X -= font.MeasureString(text).X / 2; break;
+                case TextAlign.Right: position.X -= font.MeasureString(text).X; break;
+                case TextAlign.Left: break;
+            }
+
+            spriteBatch.DrawString(font, text, position, color,
+                   0,
+                   Vector2.Zero,
+                   graphics.PreferredBackBufferHeight / 1080f,
+                   SpriteEffects.None,
+                   0.5f
+            );
         }
 
         protected override void Dispose(bool disposing)

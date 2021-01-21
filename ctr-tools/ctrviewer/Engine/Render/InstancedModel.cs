@@ -23,24 +23,24 @@ namespace ctrviewer
             Scale = scale;
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
-            Position += new Vector3(0, 1f, 0f);
+            Rotation += new Vector3((float)(-3.14f / 4 * gameTime.ElapsedGameTime.TotalSeconds), 0f, 0f);
         }
 
-        public void Render(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha, FirstPersonCamera camera)
+        public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha, FirstPersonCamera camera)
         {
-            effect.World = Matrix.CreateScale(Scale) * Matrix.CreateTranslation(Position);
+            effect.World = Matrix.CreateScale(Scale) * Matrix.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z) * Matrix.CreateTranslation(Position);
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ProjectionMatrix;
 
             if (Game1.instmodels.ContainsKey(ModelName))
             {
-                Game1.instmodels[ModelName].Render(graphics, effect, alpha);
+                Game1.instmodels[ModelName].Draw(graphics, effect, alpha);
             }
             else if (Game1.instTris.ContainsKey(ModelName))
             {
-                Game1.instTris[ModelName].Render(graphics, effect, alpha);
+                Game1.instTris[ModelName].Draw(graphics, effect, alpha);
             }
             else
             {

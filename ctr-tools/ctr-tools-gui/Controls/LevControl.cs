@@ -1,64 +1,38 @@
-﻿using CTRFramework;
-using CTRFramework.Big;
-using CTRFramework.Lang;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using System.IO;
+using CTRFramework;
 using CTRFramework.Shared;
 using CTRFramework.Vram;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using CTRTools.Controls;
+using CTRFramework.Lang;
 
 namespace CTRTools
 {
-    public partial class MainForm : Form
+    public partial class LevControl : UserControl
     {
-        string path;
         Scene scn;
-        ColorDialog cd;
 
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
-
-        TextWriter _writer = null;
-
-        public MainForm()
+        public LevControl()
         {
-            this.DoubleBuffered = true;
             InitializeComponent();
-            cd = new ColorDialog();
+            this.DoubleBuffered = true;
 
             checkedListBox1.Items.AddRange(Enum.GetNames(typeof(QuadFlags)));
-            this.Text += " - " + Meta.GetVersionInfo();
-            label3.Text = Meta.GetVersionInfo();
-
-            comboBox1.SelectedIndex = 0xF;
-
-            // _writer = new ConsoleHook(txtConsole);
-            // Redirect the out Console stream
-            // Console.SetOut(_writer);
+            checkedListBox2.Items.AddRange(Enum.GetNames(typeof(VisDataFlags)));
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LevControl_DragDrop(object sender, DragEventArgs e)
         {
-            Application.Exit();
+            string path = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
         }
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LevControl_DragEnter(object sender, DragEventArgs e)
         {
-            LoadLEV();
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveLEV();
+            e.Effect = DragDropEffects.Copy;
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -68,7 +42,7 @@ namespace CTRTools
                     propertyGrid1.SelectedObject = scn.pickups[trackBar1.Value];
         }
 
-        string bak;
+        string path = "";
 
         private void LoadLEV()
         {
@@ -78,11 +52,7 @@ namespace CTRTools
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 path = ofd.FileName;
-                bak = path + ".bak";
-
-                if (!File.Exists(bak))
-                    File.Copy(path, bak);
-
+                Helpers.BackupFile(path);
                 scn = Scene.FromFile(path);
 
                 Text = String.Format("levTool - {0}", path);
@@ -90,51 +60,6 @@ namespace CTRTools
                 trackBar1.Maximum = scn.pickups.Count - 1;
             }
         }
-
-
-
-        private void SaveLEV()
-        {
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(path)))
-            {
-
-                bw.BaseStream.Position = 4;
-
-                scn.header.Write(bw);
-
-                bw.BaseStream.Position = scn.header.ptrRestartPts + 4;
-
-                foreach (PosAng pa in scn.restartPts)
-                    pa.Write(bw);
-
-                bw.BaseStream.Position = scn.header.ptrInstances + 4;
-
-                foreach (PickupHeader ph in scn.pickups)
-                    ph.Write(bw);
-
-
-                bw.BaseStream.Position = scn.meshinfo.ptrVertexArray + 4;
-
-                foreach (Vertex v in scn.verts)
-                    v.Write(bw);
-
-
-                bw.BaseStream.Position = scn.meshinfo.ptrQuadBlockArray + 4;
-
-                foreach (QuadBlock qb in scn.quads)
-                    qb.Write(bw);
-
-                bw.BaseStream.Position = scn.header.ptrVcolAnim + 4;
-
-                foreach (VertexAnim vc in scn.vertanims)
-                    vc.Write(bw);
-
-                bw.BaseStream.Position = scn.header.ptrAiNav + 4;
-                scn.nav.Write(bw);
-
-            }
-        }
-
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -165,7 +90,6 @@ namespace CTRTools
         }
 
 
-
         Color vertexcolor1 = Color.Gray;
         Color vertexcolor2 = Color.Gray;
 
@@ -181,18 +105,21 @@ namespace CTRTools
             }
         }
 
-
-        private void button1_Click(object sender, EventArgs e)
+        private void button24_Click(object sender, EventArgs e)
         {
+            ColorDialog cd = new ColorDialog();
+
             if (cd.ShowDialog() == DialogResult.OK)
             {
                 vertexcolor1 = cd.Color;
-                button1.BackColor = vertexcolor1;
+                button24.BackColor = vertexcolor1;
             }
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
+            ColorDialog cd = new ColorDialog();
+
             if (cd.ShowDialog() == DialogResult.OK)
             {
                 vertexcolor2 = cd.Color;
@@ -211,24 +138,6 @@ namespace CTRTools
                 }
             }
         }
-
-        private void showConsoleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AllocConsole();
-        }
-
-
-        private void button7_Click_1(object sender, EventArgs e)
-        {
-            if (scn != null)
-            {
-                foreach (Vertex v in scn.verts)
-                {
-                    v.color_morph = v.color;
-                }
-            }
-        }
-
 
         private void button9_Click(object sender, EventArgs e)
         {
@@ -252,6 +161,19 @@ namespace CTRTools
             }
 
             return (QuadFlags)final;
+        }
+
+        private VisDataFlags GetVisDataFlags(CheckedListBox clb)
+        {
+            ushort final = 0;
+
+            for (int i = 0; i < 8; i++)
+            {
+                ushort x = (ushort)((clb.GetItemChecked(i) ? 1 : 0) << i);
+                final |= x;
+            }
+
+            return (VisDataFlags)final;
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -280,9 +202,7 @@ namespace CTRTools
             }
         }
 
-
-        Random r = new Random();
-        private void Button12_Click(object sender, EventArgs e)
+        private void button12_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -334,7 +254,9 @@ namespace CTRTools
             }
         }
 
-        private void Button13_Click(object sender, EventArgs e)
+        Random r = new Random();
+
+        private void button13_Click(object sender, EventArgs e)
         {
             if (scn != null)
             {
@@ -345,7 +267,7 @@ namespace CTRTools
             }
         }
 
-        private void Button14_Click(object sender, EventArgs e)
+        private void button14_Click(object sender, EventArgs e)
         {
             if (scn != null)
             {
@@ -356,7 +278,7 @@ namespace CTRTools
             }
         }
 
-        private void Button15_Click(object sender, EventArgs e)
+        private void button15_Click(object sender, EventArgs e)
         {
             if (scn != null)
             {
@@ -367,7 +289,7 @@ namespace CTRTools
             }
         }
 
-        private void Button16_Click(object sender, EventArgs e)
+        private void button16_Click(object sender, EventArgs e)
         {
             if (scn != null)
             {
@@ -378,7 +300,7 @@ namespace CTRTools
             }
         }
 
-        private void Button17_Click(object sender, EventArgs e)
+        private void button17_Click(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -393,8 +315,118 @@ namespace CTRTools
             //textBox1.Text = sb.ToString();
         }
 
+        private void button20_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+                if (scn.nav != null)
+                {
+                    foreach (AIPath ai in scn.nav.paths)
+                    {
+                        foreach (NavFrame f in ai.frames)
+                        {
+                            f.unk11 = 0;
+                            f.unk2 = 0;
+                            f.unk3 = 0;
+                        }
+                    }
 
-        private void Button8_Click_1(object sender, EventArgs e)
+                    textBox1.Text = scn.nav.ToString();
+                }
+            }
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+
+                StringBuilder sb = new StringBuilder();
+
+                foreach (VertexAnim vc in scn.vertanims)
+                {
+                    sb.Append(vc.ToString() + "\r\n");
+                    vc.RandomizeColors(scn.vertanims[0].unk1, scn.vertanims[0].unk2);
+                }
+
+                textBox3.Text = sb.ToString();
+            }
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd1 = new OpenFileDialog();
+
+            if (ofd1.ShowDialog() == DialogResult.OK)
+            {
+                using (BinaryReaderEx br = new BinaryReaderEx(File.Open(ofd1.FileName, FileMode.Open)))
+                {
+                    Mcs m = new Mcs(br);
+                }
+            }
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+                foreach (Vertex v in scn.verts)
+                {
+                    v.color_morph = v.color;
+                }
+            }
+        }
+
+
+
+        private void SaveLEV()
+        {
+            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(path)))
+            {
+
+                bw.BaseStream.Position = 4;
+
+                scn.header.Write(bw);
+
+                bw.BaseStream.Position = scn.header.ptrRestartPts + 4;
+
+                foreach (PosAng pa in scn.restartPts)
+                    pa.Write(bw);
+
+                bw.BaseStream.Position = scn.header.ptrInstances + 4;
+
+                foreach (PickupHeader ph in scn.pickups)
+                    ph.Write(bw);
+
+
+                bw.BaseStream.Position = scn.meshinfo.ptrVertexArray + 4;
+
+                foreach (Vertex v in scn.verts)
+                    v.Write(bw);
+
+
+                bw.BaseStream.Position = scn.meshinfo.ptrQuadBlockArray + 4;
+
+                foreach (QuadBlock qb in scn.quads)
+                    qb.Write(bw);
+
+                bw.BaseStream.Position = scn.header.ptrVcolAnim + 4;
+
+                foreach (VertexAnim vc in scn.vertanims)
+                    vc.Write(bw);
+
+                bw.BaseStream.Position = scn.meshinfo.ptrVisDataArray + 4;
+
+                foreach (VisData v in scn.visdata)
+                    v.Write(bw);
+
+                bw.BaseStream.Position = scn.header.ptrAiNav + 4;
+                scn.nav.Write(bw);
+
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CTR VRAM file|*.vrm";
@@ -423,268 +455,7 @@ namespace CTRTools
             }
         }
 
-        private void button19_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd1 = new OpenFileDialog();
-            OpenFileDialog ofd2 = new OpenFileDialog();
-
-            if (ofd1.ShowDialog() == DialogResult.OK)
-                if (ofd2.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        LNG lng = new LNG(ofd1.FileName);
-
-                        using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(ofd2.FileName)))
-                        {
-                            br.Jump(0x74280);
-
-                            List<LevelSlot> slots = new List<LevelSlot>();
-
-                            for (int i = 0; i < 64; i++)
-                                slots.Add(new LevelSlot(br));
-
-                            foreach (LevelSlot s in slots)
-                            {
-                                textBox2.Text += s.ToString() + lng.entries[s.title_index] + "\r\n";
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        MessageBox.Show("error");
-                    }
-                }
-        }
-
-        private void button20_Click(object sender, EventArgs e)
-        {
-            if (scn != null)
-            {
-                if (scn.nav != null)
-                {
-                    foreach (AIPath ai in scn.nav.paths)
-                    {
-                        foreach (NavFrame f in ai.frames)
-                        {
-                            f.unk11 = 0;
-                            f.unk2 = 0;
-                            f.unk3 = 0;
-                        }
-                    }
-
-                    textBox1.Text = scn.nav.ToString();
-                }
-            }
-        }
-
-        private void button21_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd1 = new OpenFileDialog();
-
-            if (ofd1.ShowDialog() == DialogResult.OK)
-            {
-                using (BinaryReaderEx br = new BinaryReaderEx(File.Open(ofd1.FileName, FileMode.Open)))
-                {
-                    Mcs m = new Mcs(br);
-                }
-            }
-        }
-
-        private void button22_Click(object sender, EventArgs e)
-        {
-            if (scn != null)
-            {
-
-                StringBuilder sb = new StringBuilder();
-
-                foreach (VertexAnim vc in scn.vertanims)
-                {
-                    sb.Append(vc.ToString() + "\r\n");
-                    vc.RandomizeColors(scn.vertanims[0].unk1, scn.vertanims[0].unk2);
-                }
-
-                textBox3.Text = sb.ToString();
-            }
-        }
-
-        private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void restoreToolStripMenuItem_Click_1(object sender, EventArgs e)
-        {
-            if (File.Exists(bak))
-            {
-                File.Delete(path);
-                File.Copy(bak, path);
-                File.Delete(bak);
-                File.Copy(path, bak);
-            }
-        }
-
-        private void button25_Click(object sender, EventArgs e)
-        {
-
-            int maxpos = 0;
-
-            if (scn != null)
-            {
-                foreach (PosAng pa in scn.header.startGrid)
-                {
-                    pa.Position.X -= 1000;
-                    pa.Angle.Y += 2048;
-                }
-
-                scn.restartPts.Reverse();
-
-                foreach (PosAng pa in scn.restartPts)
-                    pa.Angle.Y += 2048;
-
-
-                foreach (QuadBlock qb in scn.quads)
-                {
-                    if (qb.trackPos != 0xFF)
-                        if (qb.trackPos > maxpos)
-                            maxpos = qb.trackPos;
-                }
-
-                MessageBox.Show(maxpos + "");
-
-                foreach (QuadBlock qb in scn.quads)
-                {
-                    if (qb.trackPos != 0xFF)
-                        qb.trackPos = (byte)(maxpos - qb.trackPos);
-                }
-            }
-        }
-
-
-        Mem m;
-        Char c;
-
-        private void button26_Click(object sender, EventArgs e)
-        {
-            m = new Mem("ePSXe");
-
-            if (m.ready)
-            {
-
-                uint baseP1ptr = 0;
-                uint fpspatch = 0;
-                uint fpspatch2 = 0;
-
-                char[] vers1 = m.ReadCharArray(0x8008CFB8, 4);
-                char[] vers2 = m.ReadCharArray(0x8008D338, 4);
-                char[] vers3 = m.ReadCharArray(0x800903BC, 4);
-
-                if ("ENG\0" == new string(vers1))
-                {
-                    baseP1ptr = 0x8009900C;
-                    fpspatch = 0x80037930;
-                    fpspatch2 = 0x8008d2b4;
-                    textBox5.Text = "NTSC-U." + "\r\n" + textBox5.Text;
-                }
-                else if ("ENG\0" == new string(vers2))
-                {
-                    baseP1ptr = 0x800993CC;
-                    textBox5.Text = "PAL." + "\r\n" + textBox5.Text;
-                }
-                else if ("ENG\0" == new string(vers3))
-                {
-                    baseP1ptr = 0x8009C4CC;
-                    fpspatch = 0x800395f4;
-                    fpspatch2 = 0x800906c0;
-                    textBox5.Text = "NTSC-J." + "\r\n" + textBox5.Text;
-                }
-                else
-                {
-                    textBox5.Text = "Unsupported game/version." + "\r\n" + textBox5.Text;
-                    return;
-                }
-
-
-                m.WritePSXUInt16(fpspatch, (ushort)(checkBox1.Checked ? 1 : 2), textBox5);
-                m.WritePSXUInt16(fpspatch2, (ushort)(checkBox1.Checked ? 1 : 2), textBox5);
-
-                textBox5.Text = "ePSXe.exe base address: " + m.process.MainModule.BaseAddress.ToString("X8") + "\r\n" + textBox5.Text;
-
-                uint charPtr = m.ReadPSXUInt32(baseP1ptr);
-                textBox5.Text = baseP1ptr.ToString("X8") + "\r\n" + textBox5.Text;
-                textBox5.Text = charPtr.ToString("X8") + "\r\n" + textBox5.Text;
-
-                using (BinaryReader br = new BinaryReader(new MemoryStream(m.ReadArray(charPtr, 1024))))
-                {
-                    c = new Char(br);
-                    //c.wheelScale = 0x2000;
-                    c.curWeapon = (byte)comboBox1.SelectedIndex;
-                    c.numCharges = (byte)numericUpDown2.Value;
-
-                    byte[] b = new byte[14 * 4 + 2];
-                    using (BinaryWriter bw = new BinaryWriter(new MemoryStream(b)))
-                    {
-                        c.Write(bw);
-                        m.WriteArray(charPtr, b);
-                    }
-
-                }
-
-                propertyGrid2.SelectedObject = c;
-            }
-            else
-            {
-                textBox5.Text = "Failed to find ePSXe process." + "\r\n" + textBox5.Text;
-            }
-        }
-
-        private void MainForm_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.Copy;
-        }
-
-
-
-        private void gitHubBox_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://github.com/DCxDemo/CTR-tools");
-        }
-
-        private void discordBox_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://discord.gg/56xm9Aj");
-        }
-
-        private void button28_Click(object sender, EventArgs e)
-        {
-            m = new Mem("ePSXe");
-
-            uint levPtr = 0x80083a48;
-            uint lev = m.ReadPSXUInt32(levPtr);
-            uint size = m.ReadPSXUInt32(lev - 4);
-            uint ptrMeshInfo = m.ReadPSXUInt32(lev - 4);
-
-            byte[] meshinfodata = m.ReadArray(ptrMeshInfo, 8 * 4);
-
-            MeshInfo mi;
-
-            using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(meshinfodata)))
-            {
-                mi = new MeshInfo(br);
-            }
-
-            ushort ind = m.ReadPSXUInt16(mi.ptrQuadBlockArray);
-
-            textBox5.Text += ind.ToString("X8");
-
-            m.WritePSXUInt32((uint)(mi.ptrVertexArray + ind * 16 + 8), 0, textBox5);
-            m.WritePSXUInt32((uint)(mi.ptrVertexArray + ind * 16 + 12), 0, textBox5);
-
-
-            //m.WriteArray(lev, b);
-        }
-
-
-        private void button18_Click_1(object sender, EventArgs e)
+        private void button18_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "CTR VRAM file|*.vrm";
@@ -765,8 +536,6 @@ namespace CTRTools
             MessageBox.Show("done");
         }
 
-
-
         private void button31_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
@@ -790,15 +559,111 @@ namespace CTRTools
             }
         }
 
-
-        protected override CreateParams CreateParams
+        private void button25_Click(object sender, EventArgs e)
         {
-            get
+            int maxpos = 0;
+
+            if (scn != null)
             {
-                CreateParams cp = base.CreateParams;
-                cp.ExStyle |= 0x02000000;
-                return cp;
+                foreach (PosAng pa in scn.header.startGrid)
+                {
+                    pa.Position.X -= 1000;
+                    pa.Angle.Y += 2048;
+                }
+
+                scn.restartPts.Reverse();
+
+                foreach (PosAng pa in scn.restartPts)
+                    pa.Angle.Y += 2048;
+
+
+                foreach (QuadBlock qb in scn.quads)
+                {
+                    if (qb.trackPos != 0xFF)
+                        if (qb.trackPos > maxpos)
+                            maxpos = qb.trackPos;
+                }
+
+                MessageBox.Show(maxpos + "");
+
+                foreach (QuadBlock qb in scn.quads)
+                {
+                    if (qb.trackPos != 0xFF)
+                        qb.trackPos = (byte)(maxpos - qb.trackPos);
+                }
             }
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd1 = new OpenFileDialog();
+            OpenFileDialog ofd2 = new OpenFileDialog();
+
+            if (ofd1.ShowDialog() == DialogResult.OK)
+                if (ofd2.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        LNG lng = new LNG(ofd1.FileName);
+
+                        using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(ofd2.FileName)))
+                        {
+                            br.Jump(0x74280);
+
+                            List<LevelSlot> slots = new List<LevelSlot>();
+
+                            for (int i = 0; i < 64; i++)
+                                slots.Add(new LevelSlot(br));
+
+                            foreach (LevelSlot s in slots)
+                            {
+                                textBox2.Text += s.ToString() + lng.entries[s.title_index] + "\r\n";
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show("error");
+                    }
+                }
+        }
+
+        private void button26_Click(object sender, EventArgs e)
+        {
+            LoadLEV();
+        }
+
+        private void button27_Click(object sender, EventArgs e)
+        {
+            SaveLEV();
+        }
+
+        private void button28_Click(object sender, EventArgs e)
+        {
+            if (scn != null)
+            {
+                foreach (VisData v in scn.visdata)
+                {
+                    if (v.IsLeaf)
+                    {
+                        v.flag = GetVisDataFlags(checkedListBox2);
+                    }
+                }
+            }
+        }
+
+        private void button32_Click(object sender, EventArgs e)
+        {
+            if (path != "")
+            {
+                Helpers.RestoreFile(path);
+                scn = Scene.FromFile(path);
+            }
+        }
+
+        private void button28_Click_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

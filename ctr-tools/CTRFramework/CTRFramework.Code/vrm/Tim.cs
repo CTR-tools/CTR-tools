@@ -200,14 +200,7 @@ namespace CTRFramework.Vram
         public void SaveBMP(string s, byte[] pal)
         {
             s = Path.ChangeExtension(s, ".bmp");
-
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(s)))
-            {
-                BMPHeader bh = new BMPHeader();
-                bh.Update(region.Width * 4, region.Height, 16, 4);
-                bh.UpdateData(pal, FixBitmapData(FixPixelOrder(data), region.Width * 2, region.Height));
-                bh.Write(bw);
-            }
+            File.WriteAllBytes(s, SaveBMPToStream(pal));
         }
 
         public byte[] SaveBMPToStream(byte[] pal)
@@ -369,41 +362,26 @@ namespace CTRFramework.Vram
             {
                 Tim x = GetTimTexture(tl);
 
-                if (x.region.Width > 0 && x.region.Height > 0)
+                if (x.region.Width <= 0 || x.region.Height <= 0)
                 {
-                    string n = path + "\\" + (name == "" ? tl.Tag() : name);
-
-                    //if (!File.Exists(n + ".tim"))
-                    //x.Write(n + ".tim");
-
-                    //if (!File.Exists(n + ".bmp"))
-                    //x.SaveBMP(n + ".bmp", CtrClutToBmpPalette(x.clutdata));
-
-                    //if (!File.Exists(n + ".png"))
-
-                    using (MemoryStream stream = new MemoryStream(x.SaveBMPToStream(CtrClutToBmpPalette(x.clutdata))))
-                    {
-                        Bitmap oldBmp = (Bitmap)Bitmap.FromStream(stream);
-                        Bitmap newBmp = new Bitmap(oldBmp);
-
-                        if (!textures.ContainsKey(tl.Tag()))
-                            textures.Add(tl.Tag(), newBmp);
-
-                        return newBmp;
-                    }
-
-                    //File.Delete(n + ".bmp");
+                    Helpers.Panic(this, "negative or null size");
+                    return new Bitmap(1, 1);
                 }
-                else
+
+                using (MemoryStream stream = new MemoryStream(x.SaveBMPToStream(CtrClutToBmpPalette(x.clutdata))))
                 {
-                    throw new Exception("negative or null size");
-                    //Console.WriteLine("failed!" + tl.ToString());
-                    //Console.ReadKey();
+                    Bitmap oldBmp = (Bitmap)Bitmap.FromStream(stream);
+                    Bitmap newBmp = new Bitmap(oldBmp);
+
+                    if (!textures.ContainsKey(tl.Tag()))
+                        textures.Add(tl.Tag(), newBmp);
+
+                    return newBmp;
                 }
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, "GetTexture fails: " + path + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
+                Helpers.Panic(this, "GetTexture fails: " + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
                 return null;
             }
         }

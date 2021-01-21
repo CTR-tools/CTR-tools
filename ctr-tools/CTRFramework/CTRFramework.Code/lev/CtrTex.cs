@@ -39,6 +39,9 @@ namespace CTRFramework
                 int numFrames = br.ReadInt16();
                 int whatsthat = br.ReadInt16();
 
+                if (whatsthat != 0)
+                    Helpers.Panic(this, $"whatsthat is not null! {whatsthat}");
+
                 if (br.ReadUInt32() != 0)
                     Helpers.Panic(this, "not 0!");
 
@@ -67,59 +70,8 @@ namespace CTRFramework
                 br.Jump(ptrHi);
 
                 for (int i = 0; i < 16; i++)
-                {
                     hi[i] = TextureLayout.FromStream(br);
-                }
             }
-
-            /*
-            if (ptrHi != 0 && ptrHi < br.BaseStream.Position)
-            {
-                br.Jump(ptrHi);
-
-                ptrHi = br.ReadUInt32();
-                if (ptrHi != 0 && ptrHi < br.BaseStream.Position)
-                {
-
-                    for (int i = 0; i < 4; i++)
-                    {
-                        try
-                        {
-                            hi[i] = TextureLayout.FromStream(br);
-                        }
-                        catch
-                        {
-                            Console.WriteLine("fail");
-                            Console.ReadKey();
-                        }
-                    }
-                }
-                else
-                {
-                    ptrHi -= 4;
-
-                    for (int i = 0; i < 4; i++)
-                    {
-                        try
-                        {
-                            hi[i] = TextureLayout.FromStream(br);
-                        }
-                        catch
-                        {
-                            Console.WriteLine("fail");
-                            Console.ReadKey();
-                        }
-                    }
-
-                }
-            }
-            else
-            {
-                // Console.WriteLine("not a hi res texture");
-            }
-
-    */
-
         }
     }
 }

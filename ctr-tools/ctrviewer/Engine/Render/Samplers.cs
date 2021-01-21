@@ -48,6 +48,7 @@ namespace ctrviewer
         {
             DefaultSampler = new SamplerState();
             DefaultSampler.Filter = EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear;
+            DefaultSampler.MipMapLevelOfDetailBias = -10;
 
             DefaultSampler.AddressU = TextureAddressMode.Clamp;
             DefaultSampler.AddressV = TextureAddressMode.Clamp;

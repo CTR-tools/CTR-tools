@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "howl", "howl\howl.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cseq", "cseq\cseq.csproj", "{69BCF237-3D55-4A30-B3C8-8716C8EBF212}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTR-tools-gui", "levTool\CTR-tools-gui.csproj", "{36BC2F61-99A4-43E3-9246-28A1BE39D714}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTR-tools-gui", "ctr-tools-gui\CTR-tools-gui.csproj", "{36BC2F61-99A4-43E3-9246-28A1BE39D714}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0326F8B5-F788-4529-9F87-C725A5D13BC0} = {0326F8B5-F788-4529-9F87-C725A5D13BC0}
 	EndProjectSection

@@ -1,6 +1,7 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Text;
+using System.Collections.Generic;
 
 namespace CTRFramework
 {
@@ -8,9 +9,8 @@ namespace CTRFramework
     {
         public int pos;
 
-        //bit0 defines some changes in data.
-        //other bits can only present 1 at a time.
-        public ushort flag;
+        public VisDataFlags flag;
+        public byte unk0;
         public ushort id;
         public BoundingBox bbox;
 
@@ -24,16 +24,16 @@ namespace CTRFramework
         public uint unk1;   //assumed to be 0
 
         //if leaf
-        public uint u1;     //assumed to be 0
-        public uint ptrUnkData; //data goes right after visdata, relatively low amounts (20-30) or 0 links
+        public uint reserved;     //assumed to be 0
+        public uint ptrUnkData; //data goes right after visdata, relatively low amounts (20-30) or 0 links, seems to control trigger scripts somehow, can't shatter crates if 0
         public uint numQuadBlock;
         public uint ptrQuadBlock;
 
-        bool IsLeaf
+        public bool IsLeaf
         {
             get
             {
-                return (flag & 1) == 1;
+                return flag.HasFlag(VisDataFlags.Leaf);
             }
         }
 
@@ -51,11 +51,27 @@ namespace CTRFramework
             return new VisData(br);
         }
 
+        public static int[] counter = new int[8]; 
+
         public void Read(BinaryReaderEx br)
         {
             pos = (int)br.BaseStream.Position;
 
-            flag = br.ReadUInt16();
+            flag = (VisDataFlags)br.ReadByte();
+            unk0 = br.ReadByte();
+
+            if (unk0 != 0)
+                throw new Exception("unk0 is not null");
+
+            if (flag.HasFlag(VisDataFlags.Leaf)) counter[0]++;
+            if (flag.HasFlag(VisDataFlags.Water)) counter[1]++;
+            if (flag.HasFlag(VisDataFlags.Unk2)) counter[2]++;
+            if (flag.HasFlag(VisDataFlags.Unk3)) counter[3]++;
+            if (flag.HasFlag(VisDataFlags.Unk4)) counter[4]++;
+            if (flag.HasFlag(VisDataFlags.Unk5)) counter[5]++;
+            if (flag.HasFlag(VisDataFlags.Unk6)) counter[6]++;
+            if (flag.HasFlag(VisDataFlags.Unk7)) counter[7]++;
+
             id = br.ReadUInt16();
             bbox = new BoundingBox(br);
 
@@ -85,13 +101,13 @@ namespace CTRFramework
             }
             else
             {
-                u1 = br.ReadUInt32();
+                reserved = br.ReadUInt32();
                 ptrUnkData = br.ReadUInt32();
                 numQuadBlock = br.ReadUInt32();
                 ptrQuadBlock = br.ReadUInt32();
 
-                if (u1 != 0)
-                    throw new Exception(u1.ToString("X8"));
+                if (reserved != 0)
+                    Helpers.Panic(this, "reserved is not 0: " + reserved.ToString("X8"));
             }
 
 
@@ -101,7 +117,8 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw)
         {
-            bw.Write(flag);
+            bw.Write((byte)flag);
+            bw.Write(unk0);
             bw.Write(id);
             bbox.Write(bw);
 
@@ -117,7 +134,7 @@ namespace CTRFramework
             }
             else
             {
-                bw.Write(u1);
+                bw.Write(reserved);
                 bw.Write(ptrUnkData);
                 bw.Write(numQuadBlock);
                 bw.Write(ptrQuadBlock);
@@ -135,6 +152,29 @@ namespace CTRFramework
 
             return sb.ToString();
         }
+
+        public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b, List<QuadBlock> qb)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (IsLeaf)
+            {
+                sb.AppendFormat("g vis_{0}\r\n", id.ToString("X4"));
+                sb.AppendFormat("o vis_{0}\r\n\r\n", id.ToString("X4"));
+
+                foreach (QuadBlock q in qb)
+                {
+                    for (uint i = ptrQuadBlock; i <= ptrQuadBlock + numQuadBlock * 0x5C; i += 0x5C)
+                        if (q.pos == i)
+                        {
+                            sb.Append(q.ToObj(v, detail, ref a, ref b));
+                        }
+                }
+            }
+            
+            return sb.ToString();
+        }
+
 
         public override string ToString()
         {

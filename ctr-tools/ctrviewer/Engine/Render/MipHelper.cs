@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using CTRFramework.Shared;
 
 namespace ctrviewer
 {
@@ -38,30 +39,38 @@ namespace ctrviewer
 
             int width = bmp.Width;
             int height = bmp.Height;
-
-            do
+            try
             {
-                width /= 2;
-                height /= 2;
-
-                using (Bitmap mip = new Bitmap(width, height))
+                do
                 {
-                    Graphics gr = Graphics.FromImage(mip);
-                    gr.SmoothingMode = SmoothingMode.AntiAlias;
-                    gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    gr.CompositingMode = CompositingMode.SourceOver;
+                    width /= 2;
+                    height /= 2;
 
-                    var attributes = new ImageAttributes();
-                    attributes.SetWrapMode(WrapMode.TileFlipXY);
+                    using (Bitmap mip = new Bitmap(width, height))
+                    {
 
-                    gr.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, mip.Width, mip.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, attributes);
-                    t = GetTexture2DFromBitmap(device, mip, out alpha, true, t, i);
+                        Graphics gr = Graphics.FromImage(mip);
+                        gr.SmoothingMode = SmoothingMode.AntiAlias;
+                        gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                        gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                        gr.CompositingMode = CompositingMode.SourceOver;
+
+                        var attributes = new ImageAttributes();
+                        attributes.SetWrapMode(WrapMode.TileFlipXY);
+
+                        gr.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, mip.Width, mip.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, attributes);
+                        t = GetTexture2DFromBitmap(device, mip, out alpha, true, t, i);
+                    }
+
+                    i++;
                 }
-
-                i++;
+                while (width >= 2 && height >= 2);
             }
-            while (width >= 2 && height >= 2);
+            catch
+            {
+                Helpers.Panic(new string(""), "Failed to create Texture2D object.");
+                return new Texture2D(device, 1, 1);
+            }
 
             alpha = x;
 

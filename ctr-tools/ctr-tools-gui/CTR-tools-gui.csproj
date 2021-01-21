@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CTRTools</RootNamespace>
-    <AssemblyName>CTR-tools</AssemblyName>
+    <AssemblyName>CTR-tools-gui</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -70,6 +70,12 @@
     <Compile Include="Controls\BigFileControl.Designer.cs">
       <DependentUpon>BigFileControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LevControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\LevControl.Designer.cs">
+      <DependentUpon>LevControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="LevelSlot.cs" />
     <Compile Include="Mcs.cs" />
     <Compile Include="Mem.cs" />
@@ -101,6 +107,9 @@
     </Compile>
     <EmbeddedResource Include="Controls\BigFileControl.resx">
       <DependentUpon>BigFileControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\LevControl.resx">
+      <DependentUpon>LevControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

@@ -298,6 +298,8 @@ namespace CTRFramework
 
         public void ExportMesh(string dir, Detail lod)
         {
+            Helpers.CheckFolder(dir);
+
             if (quads.Count > 0)
             {
                 string fname = name + "_" + lod.ToString();
@@ -312,8 +314,13 @@ namespace CTRFramework
                 int a = 0;
                 int b = 0;
 
+                /*
                 foreach (QuadBlock g in quads)
                     sb.AppendLine(g.ToObj(verts, lod, ref a, ref b));
+                */
+
+                foreach (VisData v in visdata)
+                    sb.AppendLine(v.ToObj(verts, lod, ref a, ref b, quads));
 
                 Helpers.WriteToFile(Path.Combine(dir, fname + ".obj"), sb.ToString());
 
@@ -323,6 +330,8 @@ namespace CTRFramework
 
                 foreach (var s in tex.Values)
                 {
+                    Helpers.CheckFolder(Path.Combine(dir, ".\\tex" + lod.ToString()));
+
                     if (s.Position != 0)
                     {
                         sb.Append(String.Format("newmtl {0}\r\n", s.Tag()));
@@ -402,8 +411,6 @@ namespace CTRFramework
         /// <param name="path"></param>
         public void ExportTextures(string path)
         {
-            Helpers.CheckFolder(path);
-
             ExportTextures(Path.Combine(path, "texMed"), Detail.Med);
             ExportTextures(Path.Combine(path, "texLow"), Detail.Low);
             ExportTextures(Path.Combine(path, "texHigh"), Detail.High);
@@ -502,7 +509,14 @@ namespace CTRFramework
                             if (t.midlods[2].Position != 0)
                                 if (!tex.ContainsKey(t.midlods[2].Tag()))
                                     tex.Add(t.midlods[2].Tag(), t.midlods[2]);
+
+                        foreach (DynamicModel dyn in dynamics)
+                            foreach (DynamicHeader hdr in dyn.headers)
+                                foreach (TextureLayout tl in hdr.tl)
+                                    if (!tex.ContainsKey(tl.Tag()))
+                                        tex.Add(tl.Tag(), tl);
                         break;
+
                     case Detail.High:
                         foreach (CtrTex t in qb.tex)
                         {
@@ -513,6 +527,7 @@ namespace CTRFramework
                                         tex.Add(x.Tag(), x);
                             }
                         }
+
                         break;
                 }
             }
@@ -556,7 +571,19 @@ namespace CTRFramework
                     }
                 }
                 
-
+                foreach (DynamicModel dyn in dynamics)
+                {
+                    foreach(DynamicHeader hdr in dyn.headers)
+                    {
+                        foreach (TextureLayout tl in hdr.tl)
+                        {
+                            if (!tex.ContainsKey(tl.Tag()))
+                            {
+                                tex.Add(tl.Tag(), tl);
+                            }
+                        }
+                    }
+                }
             }
 
             return tex;

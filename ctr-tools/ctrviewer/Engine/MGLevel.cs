@@ -118,7 +118,7 @@ namespace ctrviewer
 
                 case Detail.Med:
                     {
-                        Console.WriteLine("doin hi");
+                        Console.WriteLine("doin med");
 
                         foreach (QuadBlock qb in s.quads)
                         {
@@ -200,40 +200,46 @@ namespace ctrviewer
                 ql.Value.Update(gameTime);
         }
 
-        public void Render(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
+        public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
             Samplers.SetToDevice(graphics, EngineSampler.Default);
 
             foreach (var ql in normalq)
-                ql.Value.Render(graphics, effect, null);
+                ql.Value.Draw(graphics, effect, null);
 
             Samplers.SetToDevice(graphics, EngineSampler.Animated);
 
+
+            graphics.GraphicsDevice.BlendState = BlendState.Additive;
             foreach (var ql in animatedq)
-                ql.Value.Render(graphics, effect, null);
+                ql.Value.Draw(graphics, effect, null);
 
             Samplers.SetToDevice(graphics, EngineSampler.Default);
 
             if (flagq.ContainsKey(((QuadFlags)(1 << Game1.currentflag)).ToString()))
-                flagq[((QuadFlags)(1 << Game1.currentflag)).ToString()].Render(graphics, effect, null);
+                flagq[((QuadFlags)(1 << Game1.currentflag)).ToString()].Draw(graphics, effect, null);
+
+
 
             foreach (var ql in alphaq)
-                ql.Value.Render(graphics, effect, alpha);
+                ql.Value.Draw(graphics, effect, alpha);
+
+            graphics.GraphicsDevice.BlendState = BlendState.NonPremultiplied;
 
             if (!Game1.HideInvisible)
             {
                 effect.Alpha = 0.25f;
 
                 if (flagq.ContainsKey("invis"))
-                    flagq["invis"].Render(graphics, effect, null);
+                    flagq["invis"].Draw(graphics, effect, null);
 
                 effect.Alpha = 1f;
             }
         }
 
-        public void RenderSky(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
+        public void DrawSky(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
-            normal.Render(graphics, effect, alpha);
+            normal.Draw(graphics, effect, alpha);
         }
     }
 }

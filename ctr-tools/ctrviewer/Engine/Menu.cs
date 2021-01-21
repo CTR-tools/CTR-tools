@@ -303,7 +303,7 @@ namespace ctrviewer
 
         Vector2 shadow_offset = new Vector2(2, 4);
 
-        public void Render(GraphicsDevice gd, SpriteBatch g, SpriteFont fnt, Texture2D background)
+        public void Draw(GraphicsDevice gd, SpriteBatch g, SpriteFont fnt, Texture2D background)
         {
             float scale = gd.Viewport.Height / 1080f;
 
