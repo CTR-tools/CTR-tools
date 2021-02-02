@@ -61,8 +61,13 @@ namespace CTRFramework
 
         //public byte[] midflags = new byte[2];
 
-        public int ptrTexLow;                 //offset to LOD texture definition
-        public int offset2;
+        public uint ptrTexLow;                 //offset to LOD texture definition
+        public uint mosaicStruct;
+
+        public uint mosaicPtr1;
+        public uint mosaicPtr2;
+        public uint mosaicPtr3;
+        public uint mosaicPtr4;
 
         public List<Vector2s> unk3 = new List<Vector2s>();  //unknown
 
@@ -71,6 +76,8 @@ namespace CTRFramework
 
         public List<CtrTex> tex = new List<CtrTex>();
 
+
+        public bool isWater = false;
 
         public QuadBlock()
         {
@@ -108,7 +115,17 @@ namespace CTRFramework
             drawOrderHigh = br.ReadBytes(4);
 
             for (int i = 0; i < 4; i++)
+            {
                 ptrTexMid[i] = br.ReadUInt32();
+
+                if (Helpers.TestPointer(ptrTexMid[i]) != 0)
+                {
+                    Console.WriteLine("mid " + Helpers.TestPointer(ptrTexMid[i]).ToString("x2"));
+                   // Console.ReadKey();
+                }
+            }
+
+
 
             bb = new BoundingBox(br);
 
@@ -129,11 +146,26 @@ namespace CTRFramework
 
             //midflags = br.ReadBytes(2);
 
-            ptrTexLow = br.ReadInt32();
-            offset2 = br.ReadInt32();
+            ptrTexLow = br.ReadUInt32();
+
+            if (Helpers.TestPointer(ptrTexLow) != 0)
+            {
+                Console.WriteLine("ptrTexLow " + Helpers.TestPointer(ptrTexLow).ToString("x2"));
+                //Console.ReadKey();
+            }
+
+            mosaicStruct = br.ReadUInt32();
+
+            if (Helpers.TestPointer(mosaicStruct) != 0)
+            {
+                Console.WriteLine("offset2 " + Helpers.TestPointer(mosaicStruct).ToString("x2"));
+                //Console.ReadKey();
+            }
 
             for (int i = 0; i < 5; i++)
                 unk3.Add(new Vector2s(br));
+
+
 
             /*
             //this is some value per tirangle
@@ -163,6 +195,16 @@ namespace CTRFramework
                 {
                     if (ptrTexLow != 0) Console.WriteLine("!");
                 }
+            }
+
+            if (mosaicStruct != 0)
+            {
+                br.BaseStream.Position = mosaicStruct;
+
+                mosaicPtr1 = br.ReadUInt32();
+                mosaicPtr2 = br.ReadUInt32();
+                mosaicPtr3 = br.ReadUInt32();
+                mosaicPtr4 = br.ReadUInt32();
             }
 
             br.BaseStream.Position = texpos;
@@ -355,8 +397,8 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            //sb.AppendFormat("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible"));
-            //sb.AppendFormat("o piece_{0}\r\n\r\n", id.ToString("X4"));
+            sb.AppendFormat("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible"));
+            sb.AppendFormat("o piece_{0}\r\n\r\n", id.ToString("X4"));
 
             switch (detail)
             {
@@ -558,7 +600,7 @@ namespace CTRFramework
             //bw.Write(midflags);
 
             bw.Write(ptrTexLow);
-            bw.Write(offset2);
+            bw.Write(mosaicStruct);
 
             foreach (Vector2s v in unk3)
                 v.Write(bw);

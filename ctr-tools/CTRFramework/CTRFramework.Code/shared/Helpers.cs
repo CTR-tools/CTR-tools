@@ -131,5 +131,10 @@ namespace CTRFramework.Shared
                 File.Move(backupName, fileName);
             }
         }
+
+        public static byte TestPointer(uint ptr)
+        {
+            return (byte)(ptr & 3);
+        }
     }
 }

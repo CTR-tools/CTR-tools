@@ -13,11 +13,11 @@ model header {
   char[16] - name
   int - unk0
   short - lod distance
-  short - unk1
+  short - assumed billboarding (check other bits)
   Vector4s - model scale
   int - pointer to command list
   int - pointer to vertex data
-  int - point to texture layout data (same as in lev)
+  int - pointer to texture layout data (same as in lev)
   int - pointer to colors (clut)
   int - unk3
   int - number of animations

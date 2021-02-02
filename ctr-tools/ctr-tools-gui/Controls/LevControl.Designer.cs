@@ -31,8 +31,6 @@ namespace CTRTools
         {
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
-            this.button27 = new System.Windows.Forms.Button();
-            this.button26 = new System.Windows.Forms.Button();
             this.button21 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
@@ -40,6 +38,7 @@ namespace CTRTools
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabVertexs = new System.Windows.Forms.TabPage();
+            this.button33 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.button22 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -72,10 +71,12 @@ namespace CTRTools
             this.button19 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.button32 = new System.Windows.Forms.Button();
             this.tabVisData = new System.Windows.Forms.TabPage();
-            this.button28 = new System.Windows.Forms.Button();
             this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
+            this.button28 = new System.Windows.Forms.Button();
+            this.button27 = new System.Windows.Forms.Button();
+            this.button26 = new System.Windows.Forms.Button();
+            this.button32 = new System.Windows.Forms.Button();
             this.tabControl2.SuspendLayout();
             this.tabPickups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -118,28 +119,6 @@ namespace CTRTools
             this.tabPickups.TabIndex = 0;
             this.tabPickups.Text = "Pickup headers";
             this.tabPickups.UseVisualStyleBackColor = true;
-            // 
-            // button27
-            // 
-            this.button27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button27.Location = new System.Drawing.Point(420, 314);
-            this.button27.Name = "button27";
-            this.button27.Size = new System.Drawing.Size(116, 26);
-            this.button27.TabIndex = 21;
-            this.button27.Text = "Save LEV";
-            this.button27.UseVisualStyleBackColor = true;
-            this.button27.Click += new System.EventHandler(this.button27_Click);
-            // 
-            // button26
-            // 
-            this.button26.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button26.Location = new System.Drawing.Point(298, 314);
-            this.button26.Name = "button26";
-            this.button26.Size = new System.Drawing.Size(116, 26);
-            this.button26.TabIndex = 20;
-            this.button26.Text = "Load LEV";
-            this.button26.UseVisualStyleBackColor = true;
-            this.button26.Click += new System.EventHandler(this.button26_Click);
             // 
             // button21
             // 
@@ -212,6 +191,7 @@ namespace CTRTools
             // 
             // tabVertexs
             // 
+            this.tabVertexs.Controls.Add(this.button33);
             this.tabVertexs.Controls.Add(this.textBox3);
             this.tabVertexs.Controls.Add(this.button22);
             this.tabVertexs.Controls.Add(this.groupBox1);
@@ -223,12 +203,25 @@ namespace CTRTools
             this.tabVertexs.Text = "Vertex array";
             this.tabVertexs.UseVisualStyleBackColor = true;
             // 
+            // button33
+            // 
+            this.button33.Location = new System.Drawing.Point(15, 214);
+            this.button33.Name = "button33";
+            this.button33.Size = new System.Drawing.Size(234, 23);
+            this.button33.TabIndex = 12;
+            this.button33.Text = "Mirror X";
+            this.button33.UseVisualStyleBackColor = true;
+            this.button33.Click += new System.EventHandler(this.button33_Click);
+            // 
             // textBox3
             // 
+            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox3.Location = new System.Drawing.Point(268, 6);
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(420, 358);
+            this.textBox3.Size = new System.Drawing.Size(255, 267);
             this.textBox3.TabIndex = 11;
             // 
             // button22
@@ -448,6 +441,7 @@ namespace CTRTools
             // 
             // button9
             // 
+            this.button9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button9.Location = new System.Drawing.Point(3, 208);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(120, 23);
@@ -563,17 +557,6 @@ namespace CTRTools
             this.button8.UseVisualStyleBackColor = true;
             this.button8.Click += new System.EventHandler(this.button8_Click);
             // 
-            // button32
-            // 
-            this.button32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button32.Location = new System.Drawing.Point(176, 314);
-            this.button32.Name = "button32";
-            this.button32.Size = new System.Drawing.Size(116, 26);
-            this.button32.TabIndex = 20;
-            this.button32.Text = "Restore LEV";
-            this.button32.UseVisualStyleBackColor = true;
-            this.button32.Click += new System.EventHandler(this.button32_Click);
-            // 
             // tabVisData
             // 
             this.tabVisData.Controls.Add(this.checkedListBox2);
@@ -585,17 +568,6 @@ namespace CTRTools
             this.tabVisData.Text = "VisData";
             this.tabVisData.UseVisualStyleBackColor = true;
             // 
-            // button28
-            // 
-            this.button28.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button28.Location = new System.Drawing.Point(3, 252);
-            this.button28.Name = "button28";
-            this.button28.Size = new System.Drawing.Size(120, 24);
-            this.button28.TabIndex = 28;
-            this.button28.Text = "set VisData Flags";
-            this.button28.UseVisualStyleBackColor = true;
-            this.button28.Click += new System.EventHandler(this.button28_Click_1);
-            // 
             // checkedListBox2
             // 
             this.checkedListBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -605,6 +577,50 @@ namespace CTRTools
             this.checkedListBox2.Name = "checkedListBox2";
             this.checkedListBox2.Size = new System.Drawing.Size(120, 244);
             this.checkedListBox2.TabIndex = 29;
+            // 
+            // button28
+            // 
+            this.button28.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button28.Location = new System.Drawing.Point(3, 252);
+            this.button28.Name = "button28";
+            this.button28.Size = new System.Drawing.Size(120, 24);
+            this.button28.TabIndex = 28;
+            this.button28.Text = "set VisData Flags";
+            this.button28.UseVisualStyleBackColor = true;
+            this.button28.Click += new System.EventHandler(this.button28_Click);
+            // 
+            // button27
+            // 
+            this.button27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button27.Location = new System.Drawing.Point(420, 314);
+            this.button27.Name = "button27";
+            this.button27.Size = new System.Drawing.Size(116, 26);
+            this.button27.TabIndex = 21;
+            this.button27.Text = "Save LEV";
+            this.button27.UseVisualStyleBackColor = true;
+            this.button27.Click += new System.EventHandler(this.button27_Click);
+            // 
+            // button26
+            // 
+            this.button26.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button26.Location = new System.Drawing.Point(298, 314);
+            this.button26.Name = "button26";
+            this.button26.Size = new System.Drawing.Size(116, 26);
+            this.button26.TabIndex = 20;
+            this.button26.Text = "Load LEV";
+            this.button26.UseVisualStyleBackColor = true;
+            this.button26.Click += new System.EventHandler(this.button26_Click);
+            // 
+            // button32
+            // 
+            this.button32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button32.Location = new System.Drawing.Point(176, 314);
+            this.button32.Name = "button32";
+            this.button32.Size = new System.Drawing.Size(116, 26);
+            this.button32.TabIndex = 20;
+            this.button32.Text = "Restore LEV";
+            this.button32.UseVisualStyleBackColor = true;
+            this.button32.Click += new System.EventHandler(this.button32_Click);
             // 
             // LevControl
             // 
@@ -702,5 +718,6 @@ namespace CTRTools
         private System.Windows.Forms.TabPage tabVisData;
         private System.Windows.Forms.CheckedListBox checkedListBox2;
         private System.Windows.Forms.Button button28;
+        private System.Windows.Forms.Button button33;
     }
 }

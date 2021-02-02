@@ -136,7 +136,10 @@ namespace CTRFramework
             int test = br.ReadInt32();
 
             if (test == 0)
+            {
+                Helpers.Panic("texturelayout", "test failed");
                 return null;
+            }
 
             br.BaseStream.Position -= 4;
             return new TextureLayout(br);
@@ -180,6 +183,7 @@ namespace CTRFramework
 
             //Console.WriteLine($"{Tag()}: f1 f2 f3 {f1} {f2} {f3}");
 
+            /*
             //apparently some textures uses 8 bit mode, or even 16 bit color. must be a flag somewhere.
             if (offset == 0x0004B5B8 || offset == 0x0004B5E8 || offset == 0x0004B6A8 || offset == 0x0004B3D8)
             {
@@ -187,6 +191,7 @@ namespace CTRFramework
                 Console.WriteLine(ToString());
                 //Console.ReadKey();
             }
+            */
         }
 
         //meant to be unique

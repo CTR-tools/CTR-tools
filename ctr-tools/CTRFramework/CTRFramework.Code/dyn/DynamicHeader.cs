@@ -10,7 +10,7 @@ namespace CTRFramework
         public string name;
         int unk0; //0?
         short lodDistance;
-        short unk1;
+        short billboard; //bit0 forces model to always face the camera, check other bits
         Vector4s scale;
         int ptrCmd; //this is null if we have anims
         int ptrVerts; //0?
@@ -67,7 +67,7 @@ namespace CTRFramework
 
             unk0 = br.ReadInt32(); //0?
             lodDistance = br.ReadInt16();
-            unk1 = br.ReadInt16(); //probably flags
+            billboard = br.ReadInt16(); //probably flags
             scale = new Vector4s(br);
 
             //ptr
@@ -268,6 +268,7 @@ namespace CTRFramework
             sb.AppendLine($"name: {name}");
             sb.AppendLine($"unk0: {unk0}");
             sb.AppendLine($"lodDistance: {lodDistance}");
+            sb.AppendLine($"billboard: {billboard}");
             sb.AppendLine($"scale: {scale.ToString(VecFormat.CommaSeparated)}");
             sb.AppendLine($"ptrCmd: {ptrCmd.ToString("X8")}");
             sb.AppendLine($"ptrVerts: {ptrVerts.ToString("X8")}");

@@ -14,6 +14,7 @@ namespace ctrviewer
         public TriList wire = new TriList();
 
         Dictionary<string, QuadList> normalq = new Dictionary<string, QuadList>();
+        Dictionary<string, QuadList> waterq = new Dictionary<string, QuadList>();
         Dictionary<string, QuadList> alphaq = new Dictionary<string, QuadList>();
         Dictionary<string, QuadList> animatedq = new Dictionary<string, QuadList>();
         QuadList wireq = new QuadList();
@@ -35,6 +36,10 @@ namespace ctrviewer
                         list.Add(n.Key);
 
                 foreach (var n in animatedq)
+                    if (!list.Contains(n.Key))
+                        list.Add(n.Key);
+
+                foreach (var n in waterq)
                     if (!list.Contains(n.Key))
                         list.Add(n.Key);
 
@@ -96,6 +101,12 @@ namespace ctrviewer
                                         Push(flagq, fl.ToString(), monolist, "flag");
                                 }
 
+                                if (qb.isWater)
+                                {
+                                    Push(waterq, "water", monolist);
+                                    continue;
+                                }
+
                                 if (qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                 {
                                     Push(flagq, "invis", monolist);
@@ -148,6 +159,12 @@ namespace ctrviewer
                                             Push(flagq, fl.ToString(), monolist, "flag");
                                     }
 
+                                    if (qb.isWater)
+                                    {
+                                        Push(waterq, "water", monolist);
+                                        continue;
+                                    }
+
                                     if (qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                     {
                                         Push(flagq, "invis", monolist);
@@ -167,6 +184,9 @@ namespace ctrviewer
             }
 
             foreach (var ql in normalq)
+                ql.Value.Seal();
+
+            foreach (var ql in waterq)
                 ql.Value.Seal();
 
             foreach (var ql in alphaq)
@@ -226,15 +246,22 @@ namespace ctrviewer
 
             graphics.GraphicsDevice.BlendState = BlendState.NonPremultiplied;
 
+            effect.Alpha = 0.25f;
+
+            if (!Game1.HideWater)
+            {
+                foreach (var ql in waterq)
+                ql.Value.Draw(graphics, effect, null);
+            }
+
             if (!Game1.HideInvisible)
             {
-                effect.Alpha = 0.25f;
-
                 if (flagq.ContainsKey("invis"))
                     flagq["invis"].Draw(graphics, effect, null);
-
-                effect.Alpha = 1f;
             }
+
+
+            effect.Alpha = 1f;
         }
 
         public void DrawSky(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)

@@ -19,43 +19,43 @@ namespace ctrviewer
             return new Color(s.X, s.Y, s.Z, s.W);
         }
 
-        public static VertexPositionColorTexture[] ToLineList(CTRFramework.Shared.BoundingBox bbox)
+        public static VertexPositionColorTexture[] ToLineList(CTRFramework.Shared.BoundingBox bbox, Color color)
         {
             Vector3 min = ToVector3(bbox.Min, 0.01f);
             Vector3 max = ToVector3(bbox.Max, 0.01f);
 
             return new VertexPositionColorTexture[]
             {
-                new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), color, new Vector2(0,0)),
 
-                new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), color, new Vector2(0,0)),
 
-                new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), color, new Vector2(0,0)),
 
-                new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), color, new Vector2(0,0)),
 
 
-                new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, min.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, min.Y, max.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, min.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(max.X, max.Y, max.Z), color, new Vector2(0,0)),
 
-                new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), Color.White, new Vector2(0,0)),
-                new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), Color.White, new Vector2(0,0))
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, min.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, max.Y, max.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, min.Z), color, new Vector2(0,0)),
+                new VertexPositionColorTexture(new Vector3(min.X, min.Y, max.Z), color, new Vector2(0,0))
             };
         }
 

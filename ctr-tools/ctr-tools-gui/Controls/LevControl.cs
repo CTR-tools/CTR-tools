@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using CTRFramework.Lang;
+using System.Linq;
 
 namespace CTRTools
 {
@@ -163,18 +164,6 @@ namespace CTRTools
             return (QuadFlags)final;
         }
 
-        private VisDataFlags GetVisDataFlags(CheckedListBox clb)
-        {
-            ushort final = 0;
-
-            for (int i = 0; i < 8; i++)
-            {
-                ushort x = (ushort)((clb.GetItemChecked(i) ? 1 : 0) << i);
-                final |= x;
-            }
-
-            return (VisDataFlags)final;
-        }
 
         private void button10_Click(object sender, EventArgs e)
         {
@@ -182,7 +171,7 @@ namespace CTRTools
             {
                 foreach (QuadBlock qb in scn.quads)
                 {
-                    qb.offset2 = 0;
+                    qb.mosaicStruct = 0;
                     qb.ptrTexMid = new uint[] { 0, 0, 0, 0 };
                 }
             }
@@ -652,6 +641,19 @@ namespace CTRTools
             }
         }
 
+        private VisDataFlags GetVisDataFlags(CheckedListBox clb)
+        {
+            ushort final = 0;
+
+            for (int i = 1; i < 9; i++)
+            {
+                ushort x = (ushort)((clb.GetItemChecked(i) ? 1 : 0) << (i-1));
+                final |= x;
+            }
+
+            return (VisDataFlags)final;
+        }
+
         private void button32_Click(object sender, EventArgs e)
         {
             if (path != "")
@@ -661,9 +663,42 @@ namespace CTRTools
             }
         }
 
-        private void button28_Click_1(object sender, EventArgs e)
+        private void button33_Click(object sender, EventArgs e)
         {
+            Random r = new Random();
 
+            /*
+            foreach (Vertex v in scn.verts)
+            {
+                v.coord.X = (short)-v.coord.X;
+            }
+
+            foreach (VisData v in scn.visdata)
+            {
+                v.bbox.Min.X = (short)-v.bbox.Min.X;
+                v.bbox.Max.X = (short)-v.bbox.Max.X;
+
+                if (v.bbox.Min.X > v.bbox.Max.X)
+                {
+                    short x = v.bbox.Min.X;
+                    v.bbox.Min.X = v.bbox.Max.X;
+                    v.bbox.Max.X = v.bbox.Min.X;
+                }
+            }
+
+            foreach (PosAng pa in scn.restartPts)
+            {
+                pa.Position.X = (short)-pa.Position.X;
+            }
+            */
+
+            foreach (QuadBlock qb in scn.quads)
+            {
+                if (qb.mosaicStruct != 0)
+                    qb.mosaicStruct = 0x3CE48;
+            }
+
+            MessageBox.Show("Done.");
         }
     }
 }

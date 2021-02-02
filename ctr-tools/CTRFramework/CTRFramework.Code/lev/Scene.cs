@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace CTRFramework
 {
@@ -128,6 +129,21 @@ namespace CTRFramework
 
                 for (int i = 0; i < cnt; i++)
                     posu2.Add(new Vector3s(br));
+            }
+
+
+            foreach (VisData v in visdata)
+            {
+                if (v.IsLeaf)
+                {
+                    if (v.flag.HasFlag(VisDataFlags.Water))
+                    {
+                        int z = (int)((v.ptrQuadBlock - meshinfo.ptrQuadBlockArray) / 0x5C);
+
+                        for (int i = z; i < z + v.numQuadBlock; i++)
+                            quads[i].isWater = true;
+                    }
+                }
             }
 
 
@@ -256,42 +272,23 @@ namespace CTRFramework
             }
             */
 
-            StringBuilder sb = new StringBuilder();
 
-            int max = 0;
-            int min = 99999999;
+            quads = quads.OrderBy(o => o.mosaicPtr1).ToList();
+
+            StringBuilder sb = new StringBuilder();
 
             foreach (QuadBlock qb in quads)
             {
-                foreach (Vector2s v in qb.unk3)
-                {
-                    if (v.X > max) max = v.X;
-                    if (v.Y > max) max = v.Y;
-                    if (v.X < min && v.X != 0) min = v.X;
-                    if (v.Y < min && v.Y != 0) min = v.Y;
-                }
-
-                /*
-                sb.AppendLine($"quadblock id = {qb.id}");
-
-                foreach (int i in qb.ind)
-                {
-                    sb.AppendLine(verts[i].coord.ToString(VecFormat.CommaSeparated));
-                }
-
-                foreach (Vector2s v in qb.unk3)
-                {
-                    sb.AppendLine(v.ToString(VecFormat.CommaSeparated));
-                }
-
-                sb.AppendLine();
-                */
+                sb.AppendLine(
+                    $"{qb.id.ToString("X4")}\t" +
+                    $"{(qb.mosaicPtr1 & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr1)})\t" +
+                    $"{(qb.mosaicPtr2 & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr2)})\t" +
+                    $"{(qb.mosaicPtr3 & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr3)})\t" +
+                    $"{(qb.mosaicPtr4 & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr4)})"
+                    );
             }
 
-            Console.WriteLine($"{min}, {max}");
-            // Console.ReadKey();
-
-            //Helpers.WriteToFile(".\\normals_test.txt", sb.ToString());
+            Helpers.WriteToFile(".\\mosaic_test.txt", sb.ToString());
         }
 
 
@@ -314,13 +311,13 @@ namespace CTRFramework
                 int a = 0;
                 int b = 0;
 
-                /*
                 foreach (QuadBlock g in quads)
                     sb.AppendLine(g.ToObj(verts, lod, ref a, ref b));
-                */
-
+                
+                /*
                 foreach (VisData v in visdata)
                     sb.AppendLine(v.ToObj(verts, lod, ref a, ref b, quads));
+                */
 
                 Helpers.WriteToFile(Path.Combine(dir, fname + ".obj"), sb.ToString());
 
@@ -335,10 +332,12 @@ namespace CTRFramework
                     if (s.Position != 0)
                     {
                         sb.Append(String.Format("newmtl {0}\r\n", s.Tag()));
-                        sb.Append(String.Format("map_Kd tex{0}\\{1}.png\r\n\r\n", lod.ToString(), s.Tag()));
+                        sb.Append(String.Format($"map_Kd tex{lod.ToString()}\\{s.Tag()}.png\r\n\r\n"));
 
                         if (!File.Exists(Path.Combine(dir, "tex" + lod.ToString() + "\\" + s.Tag() + ".png")))
                         {
+                            Helpers.Panic(this, "missing bitmap");
+
                             Bitmap bmp = new Bitmap(1, 1);
                             bmp.Save(Path.Combine(dir, "tex" + lod.ToString() + "\\" + s.Tag() + ".png"));
                         }
@@ -393,6 +392,48 @@ namespace CTRFramework
             if (flags.HasFlag(ExportFlags.SkyBox)) ExportSkyBox(path);
 
             Console.WriteLine("Additional models: done.");
+
+            /*
+            foreach (QuadBlock qb in quads)
+            {
+                string x = ".\\textures\\" + qb.id.ToString("X8") + "\\";
+
+                Helpers.CheckFolder(x);
+
+                ctrvram.GetTexture(qb.texlow).Save(x + "low_" + qb.texlow.Tag() + ".png");
+
+                foreach (CtrTex ct in qb.tex)
+                {
+                    foreach (TextureLayout tl in ct.midlods)
+                    {
+                        try
+                        {
+                            ctrvram.GetTexture(tl).Save(x + "med_" + tl.Tag() + ".png");
+                        }
+                        catch
+                        {
+                            File.WriteAllText(x + "error.txt", $"error med: quad - {qb.pos.ToString("X8")}, texlayout: {tl.Position.ToString("X8")}\r\n");
+                        }
+                    }
+
+                    int i = 0;
+
+                    foreach (TextureLayout tl in ct.hi)
+                    {
+                        try
+                        {
+                            ctrvram.GetTexture(tl).Save(x + "hi_" + i + "_" + tl.Tag() + ".png");
+                        }
+                        catch
+                        {
+                            File.WriteAllText(x + "error.txt", $"error med: quad - {qb.pos.ToString("X8")}, texlayout: {tl.Position.ToString("X8")}\r\n");
+                        }
+
+                        i++;
+                    }
+                }  
+            }
+            */
         }
 
 

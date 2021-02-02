@@ -8,10 +8,11 @@ namespace CTRFramework
     {
         public TextureLayout[] midlods = new TextureLayout[3];
         public TextureLayout[] hi = new TextureLayout[16];
-        public List<TextureLayout> animframes = new List<TextureLayout>();
+        public List<TextureLayout> animframes = new List<TextureLayout>(); //this actually has several lods too
 
         public uint ptrHi;
         public bool isAnimated = false;
+
 
         public CtrTex(BinaryReaderEx br)
         {

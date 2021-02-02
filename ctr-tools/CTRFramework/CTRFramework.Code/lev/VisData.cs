@@ -60,6 +60,7 @@ namespace CTRFramework
             flag = (VisDataFlags)br.ReadByte();
             unk0 = br.ReadByte();
 
+            //flag is likely ushort, just testing if upper byte has any data
             if (unk0 != 0)
                 throw new Exception("unk0 is not null");
 

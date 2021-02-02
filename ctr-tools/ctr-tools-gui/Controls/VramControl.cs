@@ -141,7 +141,7 @@ namespace CTRTools
                     }
                 }
 
-                bmp.Save("test.bmp");
+                bmp.Save(Path.Combine(pathFileParent, "test.bmp"));
                 
             }
 
