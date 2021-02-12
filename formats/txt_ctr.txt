@@ -2,7 +2,7 @@ model {
   char[16] - name
   short - event id, assumed to be
   short - number of models
-  short - pointer to model headers
+  int? - pointer to model headers
 
   model header[number of models] - headers
 
@@ -16,19 +16,37 @@ model header {
   short - assumed billboarding (check other bits)
   Vector4s - model scale
   int - pointer to command list
-  int - pointer to vertex data
+  int - pointer to vertex data - this is 0 if model is animated
   int - pointer to texture layout data (same as in lev)
   int - pointer to colors (clut)
   int - unk3
   int - number of animations
-  int - pointer to animation data
+  int - pointer to animations
   int - unk4
 }
 
-the format does not define any size, so you have to read all commands properly
+animation {
+  char[16] - anim name
+  short - num frames - negative value defines amount of render frames in 60fps (duplicated anim frames)
+  short - frame size
+  int - some pointer
+  animframe[num frames] - vertices for every frame
+}
+
+animframe {
+  //assumed to be same as vertex data
+  0x1C bytes - unknown
+  byte[] - array of vertices (numvertices = (framedata - 0x1C) / 3)
+}
+
+
+# command list
+there are no indices values per se, instead there is an array of drawing commands, it uses scratchpad to optimize model drawing on the original hardware.  
+the format does not define any sizes, so you have to read all commands properly.
 
 command - big endian dword
-bitmask according to horror's spec
+
+bitmask according to horror's spec:
 sl??kv?? iiiiiiii ccccccct tttttttt //8-8-7-9 bits
 
 t - tex coord index (0 = no texture)
@@ -40,12 +58,21 @@ s - new face block
 k - tells whether it should take color from scratchpad or ram (only affects real psx).
 ? - unknown
 
-if command is -1 (0xFFFFFFFF) 
+value of -1 (0xFFFFFFFF) is list terminator
 
-vertex - vector3b, a byte per coord. the final coord = vertex coord / 255 * scale coord.
+# vertices
+vector3b - a byte per coord.
+the final coord = vertex coord / 255 * scale coord.
 
-texture data - same as texturelayout from lev file
+the original model is normalized to a byte vector, which results in 256 possible values per axis, scaled back to the orignal size using scale vector.
 
-color data - just usual 4 bytes RGBA
+# texture data
+texturelayout struct from lev file
+basically defines texture page, quad UV coords and palette
 
-animation - simply an array of vertex data array that cycles through.
+# color data
+just usual 4 bytes RGBA
+
+# animation
+a set of vertex arrays that game cycles through.
+keep in mind that same command list is used for every frame, only vertices change their positions.

@@ -7,8 +7,7 @@ namespace CTRFramework
     class DynamicAnim
     {
         string name;
-        byte numFrames;
-        byte unk1;
+        short numFrames;
         short frameSize;
         int someOffset;//??
 
@@ -17,8 +16,7 @@ namespace CTRFramework
         public DynamicAnim(BinaryReaderEx br)
         {
             name = br.ReadStringFixed(16);
-            numFrames = br.ReadByte();
-            unk1 = br.ReadByte();
+            numFrames = br.ReadInt16(); //negative value defines amount of render frames in 60fps (duplicated anim frames)
             frameSize = br.ReadInt16();
             someOffset = br.ReadInt32();
 
