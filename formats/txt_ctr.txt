@@ -29,12 +29,13 @@ animation {
   char[16] - anim name
   short - num frames - negative value defines amount of render frames in 60fps (duplicated anim frames)
   short - frame size
-  int - some pointer
-  animframe[num frames] - vertices for every frame
+  int - points to some base anim data
+  animframe[num frames] - additional data per frame
 }
 
 animframe {
   //assumed to be same as vertex data
+  //must be controlled by header data, cause some animated models work, others don't
   0x1C bytes - unknown
   byte[] - array of vertices (numvertices = (framedata - 0x1C) / 3)
 }
@@ -76,3 +77,8 @@ just usual 4 bytes RGBA
 # animation
 a set of vertex arrays that game cycles through.
 keep in mind that same command list is used for every frame, only vertices change their positions.
+
+more complex models structure is unknown.
+there is some base data that affects whole animation and there is per frame data, which only affects individual frames.
+it's possibly combined somehow to generate the final vertices.
+i also observed that changing value before the vertex array completely trashes the whole model. only works if coincides with the original value.
