@@ -14,6 +14,11 @@ namespace CTRFramework
                     );
         }
 
+        public static string ASCIIQuad(string label, int totalv, int totalvt)
+        {
+            return $"{label} {totalv + 2}/{totalvt + 2} {totalv + 1}/{totalvt + 1} {totalv + 3}/{totalvt + 3} {totalv + 4}/{totalvt + 4}";
+        }
+
         public static string ASCIIFace(string label, int totalv, int totalvt, int x, int y, int z, float xuv, float yuv, float zuv)
         {
             return String.Format(

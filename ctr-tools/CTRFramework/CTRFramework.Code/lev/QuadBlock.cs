@@ -392,6 +392,7 @@ namespace CTRFramework
             };
         }
 
+        bool objSaveQuads = false;
 
         public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b)
         {
@@ -414,8 +415,15 @@ namespace CTRFramework
 
                         sb.AppendLine("\r\nusemtl " + (ptrTexLow != 0 ? texlow.Tag() : "default"));
 
-                        sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
-                        sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
+                        if (objSaveQuads)
+                        {
+                            sb.Append(OBJ.ASCIIQuad("f", a, b));
+                        }
+                        else
+                        {
+                            sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
+                            sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
+                        }
 
                         a += 4;
                         b += 4;
@@ -437,8 +445,15 @@ namespace CTRFramework
 
                             sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != 0 ? tex[i].midlods[2].Tag() : "default"));
 
-                            sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
-                            sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
+                            if (objSaveQuads)
+                            {
+                                sb.Append(OBJ.ASCIIQuad("f", a, b));
+                            }
+                            else
+                            {
+                                sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
+                                sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
+                            }
 
                             sb.AppendLine();
 
