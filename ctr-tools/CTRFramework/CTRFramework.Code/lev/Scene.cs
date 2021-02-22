@@ -635,6 +635,51 @@ namespace CTRFramework
             return tex;
         }
 
+        /// <summary>
+        /// Returns VisData children
+        /// </summary>
+        /// <param name="visData"></param>
+        public List<VisData> GetVisDataChildren(VisData visData)
+        {
+            List<VisData> childVisData = new List<VisData>();
+            if (visData.leftChild != 0 && !visData.IsLeaf) // in the future: handle leaves different. Draw them?
+            {
+                ushort uLeftChild = (ushort) (visData.leftChild & 0x3fff);
+                VisData leftChild = visdata.Find(cc => cc.id == uLeftChild);
+                childVisData.Add(leftChild);
+            }
+            if (visData.rightChild != 0 && !visData.IsLeaf) // in the future: handle leaves different. Draw them?
+            {
+                ushort uRightChild = (ushort) (visData.rightChild & 0x3fff);
+                VisData rightChild = visdata.Find(cc => cc.id == uRightChild);
+                childVisData.Add(rightChild);
+            } 
+
+            return childVisData;
+        }
+
+        private int levelShiftOffset = -52; // offset (found in Unity)
+        private int levelShiftDivide = 92; // one step width
+        
+        /// <summary>
+        /// Return QuadBlocks associated with the leaf, make sure you pass a leaf and not a branch.
+        /// </summary>
+        /// <param name="leaf"></param>
+        public List<QuadBlock> GetListOfLeafQuadBlocks(VisData leaf)
+        {
+            List<QuadBlock> leafQuadBlocks = new List<QuadBlock>();
+            uint ptrQuadBlock = (uint) (((leaf.ptrQuadBlock) / levelShiftDivide) + levelShiftOffset);
+            uint numQuadBlock = leaf.numQuadBlock;
+            for (int i = 0; i < numQuadBlock; i++)
+            {
+                long index = ptrQuadBlock + i;
+                QuadBlock quad = quads[(int) Math.Min(Math.Max(index, 0), quads.Count - 1)];
+                leafQuadBlocks.Add(quad);
+            }
+
+            return leafQuadBlocks;
+        }
+
         public void Dispose()
         {
             header = null;
