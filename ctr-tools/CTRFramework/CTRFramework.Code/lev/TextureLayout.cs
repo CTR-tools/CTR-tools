@@ -241,5 +241,15 @@ namespace CTRFramework
 
             return sb.ToString();
         }
+
+        public void Write(BinaryWriterEx bw)
+        {
+            uv[0].Write(bw);
+            bw.Write((ushort)0);
+            uv[1].Write(bw);
+            bw.Write((ushort)0);
+            uv[2].Write(bw);
+            uv[3].Write(bw);
+        }
     }
 }

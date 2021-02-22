@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CTRFramework
 {
-    class DynamicAnim
+    class CtrAnim
     {
         string name;
         short numFrames;
@@ -13,7 +13,7 @@ namespace CTRFramework
 
         List<byte[]> frames = new List<byte[]>();
 
-        public DynamicAnim(BinaryReaderEx br)
+        public CtrAnim(BinaryReaderEx br)
         {
             name = br.ReadStringFixed(16);
             numFrames = br.ReadInt16(); //negative value defines amount of render frames in 60fps (duplicated anim frames)

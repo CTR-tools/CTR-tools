@@ -2,26 +2,34 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace CTRFramework
 {
-    public class DynamicHeader : IRead
+    public class CtrHeader : IRead
     {
         public string name;
         int unk0; //0?
         short lodDistance;
         short billboard; //bit0 forces model to always face the camera, check other bits
         Vector4s scale;
-        int ptrCmd; //this is null if we have anims
-        int ptrVerts; //0?
+
+        public int ptrCmd; //this is null if we have anims
+        public int ptrVerts; //0?
         public int ptrTex;
         public int ptrClut;
-        int unk3; //?
+
+        public int unk3; //?
         public int numAnims;
-        int ptrAnims;
-        int unk4; //?
+        public int ptrAnims;
+        public int unk4; //?
+
+        Vector4s posOffset;
 
         public List<Vertex> verts = new List<Vertex>();
+
+        int cmdNum;
+        int vrenderMode;
 
         public bool IsAnimated
         {
@@ -35,10 +43,10 @@ namespace CTRFramework
         //private int maxTex = 0;
         //private int maxClut = 0;
 
-        List<DynamicAnim> anims = new List<DynamicAnim>();
+        List<CtrAnim> anims = new List<CtrAnim>();
 
-        public List<DynamicDraw> defs = new List<DynamicDraw>();
-        public List<Vector3s> vtx = new List<Vector3s>();
+        public List<CtrDraw> defs = new List<CtrDraw>();
+        public List<Vector3b> vtx = new List<Vector3b>();
         public List<TextureLayout> tl = new List<TextureLayout>();
         public List<Vector4b> cols = new List<Vector4b>();
 
@@ -48,12 +56,12 @@ namespace CTRFramework
             get { return ptrTex == ptrClut; }
         }
 
-        public DynamicHeader()
+        public CtrHeader()
         {
 
         }
 
-        public DynamicHeader(BinaryReaderEx br)
+        public CtrHeader(BinaryReaderEx br)
         {
             Read(br);
         }
@@ -83,7 +91,9 @@ namespace CTRFramework
 
             long pos = br.BaseStream.Position;
 
-            br.Jump(ptrCmd + 4);
+            br.Jump(ptrCmd);
+
+            cmdNum = br.ReadInt32();
 
             uint x;
 
@@ -91,7 +101,7 @@ namespace CTRFramework
             {
                 x = br.ReadUInt32Big();
                 if (x != 0xFFFFFFFF)
-                    defs.Add(new DynamicDraw(x));
+                    defs.Add(new CtrDraw(x));
             }
             while (x != 0xFFFFFFFF);
 
@@ -122,7 +132,7 @@ namespace CTRFramework
             int maxc = 0;
             int maxt = 0;
 
-            foreach (DynamicDraw d in defs)
+            foreach (CtrDraw d in defs)
             {
                 if (!d.flags.HasFlag(Flags.v))
                     maxv++;
@@ -148,19 +158,40 @@ namespace CTRFramework
 
             if (!IsAnimated)
             {
-                br.Jump(ptrVerts + 0x1C);
+                br.Jump(ptrVerts);
+
+                posOffset = new Vector4s(br);
+
+                Console.WriteLine(posOffset);
+
+                br.Skip(16);
+
+                vrenderMode = br.ReadInt32();
+
+                if (vrenderMode != 0x1C)
+                {
+                    Helpers.Panic(this, $"{vrenderMode.ToString("X8")}");
+                   // Console.ReadKey();
+                }
             }
             else
             {
                 br.Jump(ptrAnims);
                 br.Jump(br.ReadInt32() + 0x1C + 0x18);
+
+                posOffset = new Vector4s(0,0,0,0);
             }
 
 
-            for (int k = 0; k <= maxv; k++)
-                vtx.Add(new Vector3s(br.ReadByte(), br.ReadByte(), br.ReadByte()));
+            for (int k = 0; k < maxv; k++)
+                vtx.Add(new Vector3b(br));
 
-            foreach (Vector3s v in vtx)
+            List<Vector3s> vfixed = new List<Vector3s>();
+
+            foreach (var v in vtx)
+                vfixed.Add(new Vector3s(v.X, v.Y, v.Z));
+
+            foreach (Vector3s v in vfixed)
             {
                 v.X = (short)(((int)v.X / 255.0f - 0.5) * (scale.X / 16f));
                 v.Y = (short)(((int)v.Y / 255.0f - 0.5) * (scale.Z / 16f));
@@ -173,7 +204,7 @@ namespace CTRFramework
 
             //br.Jump(ppos);
 
-            foreach (DynamicDraw d in defs)
+            foreach (CtrDraw d in defs)
             {
                 if (d.flags.HasFlag(Flags.s))
                 {
@@ -187,7 +218,7 @@ namespace CTRFramework
                 }
                 else
                 {
-                    curvert = vtx[i];//ReadVertex(br, i);
+                    curvert = vfixed[i];//ReadVertex(br, i);
                     stack[d.value >> 16 & 0xFF] = curvert;
                     i++;
                 }
@@ -280,6 +311,120 @@ namespace CTRFramework
             sb.AppendLine($"unk4: {unk4.ToString("X8")}");
 
             return sb.ToString();
+        }
+
+        public void Write(BinaryWriterEx bw, CtrWriteMode mode)
+        {
+            int pos = 0;
+
+            switch (mode)
+            {
+                case CtrWriteMode.Header:
+
+                    pos = (int)bw.BaseStream.Position;
+
+                    bw.Write(name.ToCharArray());
+                    bw.BaseStream.Position = pos + 16;
+
+                    bw.Write(unk0);
+                    bw.Write(lodDistance);
+                    bw.Write(billboard);
+                    scale.Write(bw);
+
+                    if (ptrCmd != 0) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
+                    bw.Write(ptrCmd);
+
+                    if (ptrVerts != 0) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
+                    bw.Write(ptrVerts);
+
+                    if (ptrTex != 0) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
+                    bw.Write(ptrTex);
+
+                    if (ptrClut != 0) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
+                    bw.Write(ptrClut);
+
+                    if (unk3 != 0) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
+                    bw.Write(unk3);
+
+                    bw.Write(numAnims);
+                    
+                    if (ptrAnims != 0) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
+                    bw.Write(ptrAnims);
+
+                    if (unk4 != 0) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
+                    bw.Write(unk4);
+
+                    break;
+                case CtrWriteMode.Data:
+
+                    //write commands
+
+                    bw.BaseStream.Position = ptrCmd + 4;
+
+                    bw.Write(cmdNum);
+                   
+                    foreach (var c in defs)
+                    {
+                        bw.Write(c.value);
+                    }
+
+                    bw.Write(0xFFFFFFFF);
+
+                    //write vertices
+
+                    bw.BaseStream.Position = ptrVerts + 4;
+
+                    posOffset.Write(bw);
+
+                    bw.BaseStream.Position += 16;
+
+                    bw.Write(vrenderMode);
+
+                    Console.WriteLine(name);
+
+                    foreach (var x in vtx)
+                    {
+                        x.Write(bw);
+                        Console.WriteLine(x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2"));
+                    }
+
+                    Console.WriteLine("---");
+
+                    //write texturelayouts
+
+                    if (tl.Count > 0)
+                    {
+                        bw.BaseStream.Position = ptrTex + 4;
+
+                        pos = (int)bw.BaseStream.Position;
+
+                        for (int i = 0; i < tl.Count; i++)
+                        {
+                            CtrModel.ptrs.Add((int)bw.BaseStream.Position - 4);
+                            bw.Write(pos + 4 * tl.Count + i * 12);
+                        }
+
+                        foreach (var t in tl)
+                            t.Write(bw);
+                    }
+
+                    //write clut
+
+                    bw.BaseStream.Position = ptrClut + 4;
+
+                    foreach (var x in cols)
+                    {
+                        x.Write(bw);
+                        Console.WriteLine(x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2") + x.W.ToString("X2"));
+                    }
+
+                    //Console.ReadKey();
+
+
+                    break;
+
+                default: Helpers.Panic(this, "unknown mode"); break;
+            }
         }
     }
 }

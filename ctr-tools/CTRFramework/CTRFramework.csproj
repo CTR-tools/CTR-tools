@@ -82,10 +82,10 @@
     <Compile Include="CTRFramework.Code\big\BigFile.cs" />
     <Compile Include="CTRFramework.Code\big\BigEntry.cs" />
     <Compile Include="CTRFramework.Code\big\BigFileReader.cs" />
-    <Compile Include="CTRFramework.Code\dyn\DynamicAnim.cs" />
-    <Compile Include="CTRFramework.Code\dyn\DynamicHeader.cs" />
-    <Compile Include="CTRFramework.Code\dyn\DynamicModel.cs" />
-    <Compile Include="CTRFramework.Code\dyn\DynamicDraw.cs" />
+    <Compile Include="CTRFramework.Code\ctr\CtrAnim.cs" />
+    <Compile Include="CTRFramework.Code\ctr\CtrHeader.cs" />
+    <Compile Include="CTRFramework.Code\ctr\CtrModel.cs" />
+    <Compile Include="CTRFramework.Code\ctr\CtrDraw.cs" />
     <Compile Include="CTRFramework.Code\Enums.cs" />
     <Compile Include="CTRFramework.Code\lev\CtrTex.cs" />
     <Compile Include="CTRFramework.Code\lev\nav\Nav.cs" />
@@ -96,6 +96,7 @@
     <Compile Include="CTRFramework.Code\lang\LNG.cs" />
     <Compile Include="CTRFramework.Code\shared\Vector2b.cs" />
     <Compile Include="CTRFramework.Code\shared\Vector2s.cs" />
+    <Compile Include="CTRFramework.Code\shared\Vector3b.cs" />
     <Compile Include="CTRFramework.Code\sound\Bank.cs" />
     <Compile Include="CTRFramework.Code\shared\BinaryReaderEx.cs" />
     <Compile Include="CTRFramework.Code\shared\BinaryWriterEx.cs" />
@@ -181,6 +182,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CTRFramework.Data\big_usa_beta_sep.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CTRFramework.Data\big_usa_beta_14th.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CTRFramework.Data\big_usa_release.txt">

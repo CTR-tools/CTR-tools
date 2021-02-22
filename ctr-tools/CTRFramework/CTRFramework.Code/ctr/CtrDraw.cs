@@ -12,7 +12,7 @@
         b4 = 1 << 0
     }
 
-    public class DynamicDraw
+    public class CtrDraw
     {
         public uint value;
 
@@ -22,7 +22,7 @@
         public byte colorIndex => (byte)(value >> 9 & 0x7F);
         public byte texIndex => (byte)(value & 0x1FF);
 
-        public DynamicDraw(uint x)
+        public CtrDraw(uint x)
         {
             value = x;
             //Console.WriteLine(ToString());
