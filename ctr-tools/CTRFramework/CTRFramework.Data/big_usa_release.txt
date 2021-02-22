@@ -292,22 +292,22 @@
 
 # ==========242 = CHARS HI SECTION===============
 
-242=models\racers\hi\crash.dyn
-243=models\racers\hi\cortex.dyn
-244=models\racers\hi\tiny.dyn
-245=models\racers\hi\coco.dyn
-246=models\racers\hi\ngin.dyn
-247=models\racers\hi\dingo.dyn
-248=models\racers\hi\polar.dyn
-249=models\racers\hi\pura.dyn
-250=models\racers\hi\pinstripe.dyn
-251=models\racers\hi\papu.dyn
-252=models\racers\hi\roo.dyn
-253=models\racers\hi\joe.dyn
-254=models\racers\hi\ntropy.dyn
-255=models\racers\hi\pen.dyn
-256=models\racers\hi\fake.dyn
-257=models\racers\hi\oxide.dyn
+242=models\racers\hi\crash.ctr
+243=models\racers\hi\cortex.ctr
+244=models\racers\hi\tiny.ctr
+245=models\racers\hi\coco.ctr
+246=models\racers\hi\ngin.ctr
+247=models\racers\hi\dingo.ctr
+248=models\racers\hi\polar.ctr
+249=models\racers\hi\pura.ctr
+250=models\racers\hi\pinstripe.ctr
+251=models\racers\hi\papu.ctr
+252=models\racers\hi\roo.ctr
+253=models\racers\hi\joe.ctr
+254=models\racers\hi\ntropy.ctr
+255=models\racers\hi\pen.ctr
+256=models\racers\hi\fake.ctr
+257=models\racers\hi\oxide.ctr
 
 # ==========258 = UI AND GENERIC MODELS SECTION===============
 
@@ -369,22 +369,22 @@
 
 # ==========308 = CHARS MED SECTION===============
 
-308=models\racers\med\crash.dyn
-309=models\racers\med\cortex.dyn
-310=models\racers\med\tiny.dyn
-311=models\racers\med\coco.dyn
-312=models\racers\med\ngin.dyn
-313=models\racers\med\dingo.dyn
-314=models\racers\med\polar.dyn
-315=models\racers\med\pura.dyn
-316=models\racers\med\pinstripe.dyn
-317=models\racers\med\papu.dyn
-318=models\racers\med\roo.dyn
-319=models\racers\med\joe.dyn
-320=models\racers\med\ntropy.dyn
-321=models\racers\med\pen.dyn
-322=models\racers\med\fake.dyn
-323=models\racers\med\oxide.dyn
+308=models\racers\med\crash.ctr
+309=models\racers\med\cortex.ctr
+310=models\racers\med\tiny.ctr
+311=models\racers\med\coco.ctr
+312=models\racers\med\ngin.ctr
+313=models\racers\med\dingo.ctr
+314=models\racers\med\polar.ctr
+315=models\racers\med\pura.ctr
+316=models\racers\med\pinstripe.ctr
+317=models\racers\med\papu.ctr
+318=models\racers\med\roo.ctr
+319=models\racers\med\joe.ctr
+320=models\racers\med\ntropy.ctr
+321=models\racers\med\pen.ctr
+322=models\racers\med\fake.ctr
+323=models\racers\med\oxide.ctr
 
 # ========324 = MORE MODEL PACKS SECTION===============
 
@@ -399,22 +399,22 @@
 
 # ==========332 = CHARS LOW SECTION===============
 
-332=models\racers\low\crash.dyn
-333=models\racers\low\cortex.dyn
-334=models\racers\low\tiny.dyn
-335=models\racers\low\coco.dyn
-336=models\racers\low\ngin.dyn
-337=models\racers\low\dingo.dyn
-338=models\racers\low\polar.dyn
-339=models\racers\low\pura.dyn
-340=models\racers\low\pinstripe.dyn
-341=models\racers\low\papu.dyn
-342=models\racers\low\roo.dyn
-343=models\racers\low\joe.dyn
-344=models\racers\low\ntropy.dyn
-345=models\racers\low\pen.dyn
-346=models\racers\low\fake.dyn
-347=models\racers\low\oxide.dyn
+332=models\racers\low\crash.ctr
+333=models\racers\low\cortex.ctr
+334=models\racers\low\tiny.ctr
+335=models\racers\low\coco.ctr
+336=models\racers\low\ngin.ctr
+337=models\racers\low\dingo.ctr
+338=models\racers\low\polar.ctr
+339=models\racers\low\pura.ctr
+340=models\racers\low\pinstripe.ctr
+341=models\racers\low\papu.ctr
+342=models\racers\low\roo.ctr
+343=models\racers\low\joe.ctr
+344=models\racers\low\ntropy.ctr
+345=models\racers\low\pen.ctr
+346=models\racers\low\fake.ctr
+347=models\racers\low\oxide.ctr
 
 # ==========348 = EVEN MORE MODEL PACKS SECTION===============
 
@@ -439,134 +439,134 @@
 
 # =========366 = PODIUM WIN ANIMS SECTION===============
 
-366=models\trophy_win\crashdance.dyn
-367=models\trophy_win\crashdance2.dyn
-368=models\trophy_win\cortexdance.dyn
-369=models\trophy_win\cortexdance2.dyn
-370=models\trophy_win\tinydance.dyn
-371=models\trophy_win\tinydance2.dyn
-372=models\trophy_win\cocodance.dyn
-373=models\trophy_win\cocodance2.dyn
-374=models\trophy_win\ngindance.dyn
-375=models\trophy_win\ngindance2.dyn
-376=models\trophy_win\dingodance.dyn
-377=models\trophy_win\dingodance2.dyn
-378=models\trophy_win\polardance.dyn
-379=models\trophy_win\polardance2.dyn
-380=models\trophy_win\puradance.dyn
-381=models\trophy_win\puradance2.dyn
-382=models\trophy_win\pinstripedance.dyn
-383=models\trophy_win\pinstripedance2.dyn
-384=models\trophy_win\papudance.dyn
-385=models\trophy_win\papudance2.dyn
-386=models\trophy_win\roodance.dyn
-387=models\trophy_win\roodance2.dyn
-388=models\trophy_win\joedance.dyn
-389=models\trophy_win\joedance2.dyn
-390=models\trophy_win\ntropydance.dyn
-391=models\trophy_win\ntropydance2.dyn
-392=models\trophy_win\pendance.dyn
-393=models\trophy_win\pendance2.dyn
-394=models\trophy_win\fakedance.dyn
-395=models\trophy_win\fakedance2.dyn
-396=models\trophy_win\oxidedance.dyn
-397=models\trophy_win\oxidedance2.dyn
+366=models\trophy_win\crashdance.ctr
+367=models\trophy_win\crashdance2.ctr
+368=models\trophy_win\cortexdance.ctr
+369=models\trophy_win\cortexdance2.ctr
+370=models\trophy_win\tinydance.ctr
+371=models\trophy_win\tinydance2.ctr
+372=models\trophy_win\cocodance.ctr
+373=models\trophy_win\cocodance2.ctr
+374=models\trophy_win\ngindance.ctr
+375=models\trophy_win\ngindance2.ctr
+376=models\trophy_win\dingodance.ctr
+377=models\trophy_win\dingodance2.ctr
+378=models\trophy_win\polardance.ctr
+379=models\trophy_win\polardance2.ctr
+380=models\trophy_win\puradance.ctr
+381=models\trophy_win\puradance2.ctr
+382=models\trophy_win\pinstripedance.ctr
+383=models\trophy_win\pinstripedance2.ctr
+384=models\trophy_win\papudance.ctr
+385=models\trophy_win\papudance2.ctr
+386=models\trophy_win\roodance.ctr
+387=models\trophy_win\roodance2.ctr
+388=models\trophy_win\joedance.ctr
+389=models\trophy_win\joedance2.ctr
+390=models\trophy_win\ntropydance.ctr
+391=models\trophy_win\ntropydance2.ctr
+392=models\trophy_win\pendance.ctr
+393=models\trophy_win\pendance2.ctr
+394=models\trophy_win\fakedance.ctr
+395=models\trophy_win\fakedance2.ctr
+396=models\trophy_win\oxidedance.ctr
+397=models\trophy_win\oxidedance2.ctr
 
 # =========398 = PODIUM LOSE ANIMS SECTION===============
 
-398=models\trophy_lose\crashlose.dyn
-399=models\trophy_lose\crashlose2.dyn
-400=models\trophy_lose\cortexlose.dyn
-401=models\trophy_lose\cortexlose2.dyn
-402=models\trophy_lose\tinylose.dyn
-403=models\trophy_lose\tinylose2.dyn
-404=models\trophy_lose\cocolose.dyn
-405=models\trophy_lose\cocolose2.dyn
-406=models\trophy_lose\nginlose.dyn
-407=models\trophy_lose\nginlose2.dyn
-408=models\trophy_lose\dingolose.dyn
-409=models\trophy_lose\dingolose2.dyn
-410=models\trophy_lose\polarlose.dyn
-411=models\trophy_lose\polarlose2.dyn
-412=models\trophy_lose\puralose.dyn
-413=models\trophy_lose\puralose2.dyn
-414=models\trophy_lose\pinstripelose.dyn
-415=models\trophy_lose\pinstripelose2.dyn
-416=models\trophy_lose\papulose.dyn
-417=models\trophy_lose\papulose2.dyn
-418=models\trophy_lose\roolose.dyn
-419=models\trophy_lose\roolose2.dyn
-420=models\trophy_lose\joelose.dyn
-421=models\trophy_lose\joelose2.dyn
-422=models\trophy_lose\ntropylose.dyn
-423=models\trophy_lose\ntropylose2.dyn
-424=models\trophy_lose\penlose.dyn
-425=models\trophy_lose\penlose2.dyn
-426=models\trophy_lose\fakelose.dyn
-427=models\trophy_lose\fakelose2.dyn
-428=models\trophy_lose\oxidelose.dyn
-429=models\trophy_lose\oxidelose2.dyn
+398=models\trophy_lose\crashlose.ctr
+399=models\trophy_lose\crashlose2.ctr
+400=models\trophy_lose\cortexlose.ctr
+401=models\trophy_lose\cortexlose2.ctr
+402=models\trophy_lose\tinylose.ctr
+403=models\trophy_lose\tinylose2.ctr
+404=models\trophy_lose\cocolose.ctr
+405=models\trophy_lose\cocolose2.ctr
+406=models\trophy_lose\nginlose.ctr
+407=models\trophy_lose\nginlose2.ctr
+408=models\trophy_lose\dingolose.ctr
+409=models\trophy_lose\dingolose2.ctr
+410=models\trophy_lose\polarlose.ctr
+411=models\trophy_lose\polarlose2.ctr
+412=models\trophy_lose\puralose.ctr
+413=models\trophy_lose\puralose2.ctr
+414=models\trophy_lose\pinstripelose.ctr
+415=models\trophy_lose\pinstripelose2.ctr
+416=models\trophy_lose\papulose.ctr
+417=models\trophy_lose\papulose2.ctr
+418=models\trophy_lose\roolose.ctr
+419=models\trophy_lose\roolose2.ctr
+420=models\trophy_lose\joelose.ctr
+421=models\trophy_lose\joelose2.ctr
+422=models\trophy_lose\ntropylose.ctr
+423=models\trophy_lose\ntropylose2.ctr
+424=models\trophy_lose\penlose.ctr
+425=models\trophy_lose\penlose2.ctr
+426=models\trophy_lose\fakelose.ctr
+427=models\trophy_lose\fakelose2.ctr
+428=models\trophy_lose\oxidelose.ctr
+429=models\trophy_lose\oxidelose2.ctr
 
 # =========430 = PODIUM TROPHY GIRLS ANIMS SECTION===============
 
-430=models\trophy_girl\tawna1dance.dyn
-431=models\trophy_girl\tawna1dance2.dyn
-432=models\trophy_girl\tawna2dance.dyn
-433=models\trophy_girl\tawna2dance2.dyn
-434=models\trophy_girl\tawna3dance.dyn
-435=models\trophy_girl\tawna3dance2.dyn
-436=models\trophy_girl\tawna4dance.dyn
-437=models\trophy_girl\tawna4dance2.dyn
+430=models\trophy_girl\tawna1dance.ctr
+431=models\trophy_girl\tawna1dance2.ctr
+432=models\trophy_girl\tawna2dance.ctr
+433=models\trophy_girl\tawna2dance2.ctr
+434=models\trophy_girl\tawna3dance.ctr
+435=models\trophy_girl\tawna3dance2.ctr
+436=models\trophy_girl\tawna4dance.ctr
+437=models\trophy_girl\tawna4dance2.ctr
 
 # =========438 = ADDITIONAL MODELS SECTION===============
 
 438=models\misc\uka1.vrm
-439=models\misc\uka1.dyn
+439=models\misc\uka1.ctr
 440=models\misc\uka2.vrm
-441=models\misc\uka2.dyn
+441=models\misc\uka2.ctr
 442=models\misc\aku1.vrm
-443=models\misc\aku1.dyn
+443=models\misc\aku1.ctr
 444=models\misc\aku2.vrm
-445=models\misc\aku2.dyn
-446=models\misc\dingofire1.dyn
-447=models\misc\dingofire2.dyn
-448=models\misc\podium1.dyn
-449=models\misc\podium2.dyn
+445=models\misc\aku2.ctr
+446=models\misc\dingofire1.ctr
+447=models\misc\dingofire2.ctr
+448=models\misc\podium1.ctr
+449=models\misc\podium2.ctr
 
 # =========450 = BOSS CUTSCENE ANIMS SECTION===============
 
-450=models\boss_head\roohead1.dyn
-451=models\boss_head\roohead2.dyn
-452=models\boss_head\joehead1.dyn
-453=models\boss_head\joehead2.dyn
-454=models\boss_head\pinstripehead1.dyn
-455=models\boss_head\pinstripehead2.dyn
-456=models\boss_head\papuhead1.dyn
-457=models\boss_head\papuhead2.dyn
-458=models\boss_head\noxidehead1.dyn
-459=models\boss_head\noxidehead2.dyn
+450=models\boss_head\roohead1.ctr
+451=models\boss_head\roohead2.ctr
+452=models\boss_head\joehead1.ctr
+453=models\boss_head\joehead2.ctr
+454=models\boss_head\pinstripehead1.ctr
+455=models\boss_head\pinstripehead2.ctr
+456=models\boss_head\papuhead1.ctr
+457=models\boss_head\papuhead2.ctr
+458=models\boss_head\noxidehead1.ctr
+459=models\boss_head\noxidehead2.ctr
 
-460=models\boss_headlose\rooheadlose1.dyn
-461=models\boss_headlose\rooheadlose2.dyn
-462=models\boss_headlose\joeheadlose1.dyn
-463=models\boss_headlose\joeheadlose2.dyn
-464=models\boss_headlose\pinstripeheadlose1.dyn
-465=models\boss_headlose\pinstripeheadlose2.dyn
-466=models\boss_headlose\papuheadlose1.dyn
-467=models\boss_headlose\papuheadlose2.dyn
-468=models\boss_headlose\noxideheadlose1.dyn
-469=models\boss_headlose\noxideheadlose2.dyn
+460=models\boss_headlose\rooheadlose1.ctr
+461=models\boss_headlose\rooheadlose2.ctr
+462=models\boss_headlose\joeheadlose1.ctr
+463=models\boss_headlose\joeheadlose2.ctr
+464=models\boss_headlose\pinstripeheadlose1.ctr
+465=models\boss_headlose\pinstripeheadlose2.ctr
+466=models\boss_headlose\papuheadlose1.ctr
+467=models\boss_headlose\papuheadlose2.ctr
+468=models\boss_headlose\noxideheadlose1.ctr
+469=models\boss_headlose\noxideheadlose2.ctr
 
-470=models\boss_body\roobody1.dyn
-471=models\boss_body\roobody2.dyn
-472=models\boss_body\joebody1.dyn
-473=models\boss_body\joebody2.dyn
-474=models\boss_body\pinstripebody1.dyn
-475=models\boss_body\pinstripebody2.dyn
-476=models\boss_body\papubody1.dyn
-477=models\boss_body\papubody2.dyn
-478=models\boss_body\noxidebody1.dyn
-479=models\boss_body\noxidebody2.dyn
+470=models\boss_body\roobody1.ctr
+471=models\boss_body\roobody2.ctr
+472=models\boss_body\joebody1.ctr
+473=models\boss_body\joebody2.ctr
+474=models\boss_body\pinstripebody1.ctr
+475=models\boss_body\pinstripebody2.ctr
+476=models\boss_body\papubody1.ctr
+477=models\boss_body\papubody2.ctr
+478=models\boss_body\noxidebody1.ctr
+479=models\boss_body\noxidebody2.ctr
 
 # =========480 = STR PREVIEW THUMBNAILS SECTION===============
 

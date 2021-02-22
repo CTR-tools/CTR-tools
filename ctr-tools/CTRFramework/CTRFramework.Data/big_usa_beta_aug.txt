@@ -260,22 +260,22 @@
 245=lang\es.lng
 246=lang\ne.lng
 
-247=models\racers\crash_hi.dyn
-248=models\racers\cortex_hi.dyn
-249=models\racers\tiny_hi.dyn
-250=models\racers\coco_hi.dyn
-251=models\racers\ngin_hi.dyn
-252=models\racers\dingo_hi.dyn
-253=models\racers\polar_hi.dyn
-254=models\racers\pura_hi.dyn
-255=models\racers\pinstripe_hi.dyn
-256=models\racers\papu_hi.dyn
-257=models\racers\roo_hi.dyn
-258=models\racers\joe_hi.dyn
-259=models\racers\ntropy_hi.dyn
-260=models\racers\pen_hi.dyn
-261=models\racers\fake_hi.dyn
-262=models\racers\oxide_hi.dyn
+247=models\racers\crash_hi.ctr
+248=models\racers\cortex_hi.ctr
+249=models\racers\tiny_hi.ctr
+250=models\racers\coco_hi.ctr
+251=models\racers\ngin_hi.ctr
+252=models\racers\dingo_hi.ctr
+253=models\racers\polar_hi.ctr
+254=models\racers\pura_hi.ctr
+255=models\racers\pinstripe_hi.ctr
+256=models\racers\papu_hi.ctr
+257=models\racers\roo_hi.ctr
+258=models\racers\joe_hi.ctr
+259=models\racers\ntropy_hi.ctr
+260=models\racers\pen_hi.ctr
+261=models\racers\fake_hi.ctr
+262=models\racers\oxide_hi.ctr
 
 263=ui_textures.vrm
 264=packs\264.mpk
@@ -333,22 +333,22 @@
 311=packs\2P\fake.mpk
 312=packs\2P\oxide.mpk
 
-313=models\racers\crash_med.dyn
-314=models\racers\cortex_med.dyn
-315=models\racers\tiny_med.dyn
-316=models\racers\coco_med.dyn
-317=models\racers\ngin_med.dyn
-318=models\racers\dingo_med.dyn
-319=models\racers\polar_med.dyn
-320=models\racers\pura_med.dyn
-321=models\racers\pinstripe_med.dyn
-322=models\racers\papu_med.dyn
-323=models\racers\roo_med.dyn
-324=models\racers\joe_med.dyn
-325=models\racers\ntropy_med.dyn
-326=models\racers\pen_med.dyn
-327=models\racers\fake_med.dyn
-328=models\racers\oxide_med.dyn
+313=models\racers\crash_med.ctr
+314=models\racers\cortex_med.ctr
+315=models\racers\tiny_med.ctr
+316=models\racers\coco_med.ctr
+317=models\racers\ngin_med.ctr
+318=models\racers\dingo_med.ctr
+319=models\racers\polar_med.ctr
+320=models\racers\pura_med.ctr
+321=models\racers\pinstripe_med.ctr
+322=models\racers\papu_med.ctr
+323=models\racers\roo_med.ctr
+324=models\racers\joe_med.ctr
+325=models\racers\ntropy_med.ctr
+326=models\racers\pen_med.ctr
+327=models\racers\fake_med.ctr
+328=models\racers\oxide_med.ctr
 
 329=packs\unknown\324.mpk
 330=packs\unknown\325.mpk
@@ -359,22 +359,22 @@
 335=packs\unknown\330.mpk
 336=packs\unknown\331.mpk
 
-337=models\racers\crash_low.dyn
-338=models\racers\cortex_low.dyn
-339=models\racers\tiny_low.dyn
-340=models\racers\coco_low.dyn
-341=models\racers\ngin_low.dyn
-342=models\racers\dingo_low.dyn
-343=models\racers\polar_low.dyn
-344=models\racers\pura_low.dyn
-345=models\racers\pinstripe_low.dyn
-346=models\racers\papu_low.dyn
-347=models\racers\roo_low.dyn
-348=models\racers\joe_low.dyn
-349=models\racers\ntropy_low.dyn
-350=models\racers\pen_low.dyn
-351=models\racers\fake_low.dyn
-352=models\racers\oxide_low.dyn
+337=models\racers\crash_low.ctr
+338=models\racers\cortex_low.ctr
+339=models\racers\tiny_low.ctr
+340=models\racers\coco_low.ctr
+341=models\racers\ngin_low.ctr
+342=models\racers\dingo_low.ctr
+343=models\racers\polar_low.ctr
+344=models\racers\pura_low.ctr
+345=models\racers\pinstripe_low.ctr
+346=models\racers\papu_low.ctr
+347=models\racers\roo_low.ctr
+348=models\racers\joe_low.ctr
+349=models\racers\ntropy_low.ctr
+350=models\racers\pen_low.ctr
+351=models\racers\fake_low.ctr
+352=models\racers\oxide_low.ctr
 
 
 353=packs\unknown_long\crash.mpk
@@ -396,35 +396,35 @@
 
 
 
-371=models\podium1.dyn
-372=models\podium2.dyn
+371=models\podium1.ctr
+372=models\podium2.ctr
 
 
-373=models\trophy_win\crashdance.dyn
-375=models\trophy_win\tinydance.dyn
-376=models\trophy_win\cocodance.dyn
-378=models\trophy_win\dingodance.dyn
-382=models\trophy_win\papudance.dyn
-384=models\trophy_win\joedance.dyn
-387=models\trophy_win\fakedance.dyn
+373=models\trophy_win\crashdance.ctr
+375=models\trophy_win\tinydance.ctr
+376=models\trophy_win\cocodance.ctr
+378=models\trophy_win\dingodance.ctr
+382=models\trophy_win\papudance.ctr
+384=models\trophy_win\joedance.ctr
+387=models\trophy_win\fakedance.ctr
 
-389=models\trophy_lose\crashdance.dyn
-391=models\trophy_lose\tinydance.dyn
-392=models\trophy_lose\cocodance.dyn
-394=models\trophy_lose\dingodance.dyn
-398=models\trophy_lose\papudance.dyn
-400=models\trophy_lose\joedance.dyn
-403=models\trophy_lose\fakedance.dyn
+389=models\trophy_lose\crashdance.ctr
+391=models\trophy_lose\tinydance.ctr
+392=models\trophy_lose\cocodance.ctr
+394=models\trophy_lose\dingodance.ctr
+398=models\trophy_lose\papudance.ctr
+400=models\trophy_lose\joedance.ctr
+403=models\trophy_lose\fakedance.ctr
 
 
-405=models\trophy_girl\tawna1dance.dyn
-406=models\trophy_girl\tawna2dance.dyn
-407=models\trophy_girl\tawna3dance.dyn
-408=models\trophy_girl\tawna4dance.dyn
-409=models\trophy_girl\tawna1dance2.dyn
-410=models\trophy_girl\tawna2dance2.dyn
-411=models\trophy_girl\tawna3dance2.dyn
-412=models\trophy_girl\tawna4dance2.dyn
+405=models\trophy_girl\tawna1dance.ctr
+406=models\trophy_girl\tawna2dance.ctr
+407=models\trophy_girl\tawna3dance.ctr
+408=models\trophy_girl\tawna4dance.ctr
+409=models\trophy_girl\tawna1dance2.ctr
+410=models\trophy_girl\tawna2dance2.ctr
+411=models\trophy_girl\tawna3dance2.ctr
+412=models\trophy_girl\tawna4dance2.ctr
 
 
 443=screens\scr01.tim

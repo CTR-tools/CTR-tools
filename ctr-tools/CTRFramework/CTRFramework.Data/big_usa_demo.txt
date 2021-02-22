@@ -4,25 +4,25 @@
 # ===========0 = TRACKS SECTION=================
 
 000=levels\tracks\canyon\1P\data.lev
-001=levels\tracks\canyon\1P\data.vram
+001=levels\tracks\canyon\1P\data.vrm
 002=levels\tracks\canyon\2P\data.lev
-003=levels\tracks\canyon\2P\data.vram
+003=levels\tracks\canyon\2P\data.vrm
 004=levels\tracks\canyon\4P\data.lev
-005=levels\tracks\canyon\4P\data.vram
+005=levels\tracks\canyon\4P\data.vrm
 
 012=levels\tracks\pyramid\1P\data.lev
-013=levels\tracks\pyramid\1P\data.vram
+013=levels\tracks\pyramid\1P\data.vrm
 014=levels\tracks\pyramid\2P\data.lev
-015=levels\tracks\pyramid\2P\data.vram
+015=levels\tracks\pyramid\2P\data.vrm
 016=levels\tracks\pyramid\4P\data.lev
-017=levels\tracks\pyramid\4P\data.vram
+017=levels\tracks\pyramid\4P\data.vrm
 
 030=levels\tracks\bluff\1P\data.lev
-031=levels\tracks\bluff\1P\data.vram
+031=levels\tracks\bluff\1P\data.vrm
 032=levels\tracks\bluff\2P\data.lev
-033=levels\tracks\bluff\2P\data.vram
+033=levels\tracks\bluff\2P\data.vrm
 034=levels\tracks\bluff\4P\data.lev
-035=levels\tracks\bluff\4P\data.vram
+035=levels\tracks\bluff\4P\data.vrm
 
 # ==========221 = OVERLAYS SECTION===============
 
@@ -34,11 +34,11 @@
 # ===========MODEL PACKS SECTION===============
 
 154=packs\1P\data.mpk
-155=packs\1P\data.vram
+155=packs\1P\data.vrm
 156=packs\2P\data.mpk
-157=packs\2P\data.vram
+157=packs\2P\data.vrm
 182=packs\4P\data.mpk
-183=packs\4P\data.vram
+183=packs\4P\data.vrm
 
 # ==========LOADING SCREENS SECTION============
 
@@ -57,4 +57,4 @@
 # ==========JAPFONT SECTION===============
 
 194=packs\japfont\data.mpk
-195=packs\japfont\data.vram
+195=packs\japfont\data.vrm
