@@ -1,3 +1,6 @@
+Crash Team Racing dynamic model format
+historically we refer to this format as .ctr
+
 model {
   char[16] - name
   short - event id, assumed to be
@@ -5,6 +8,9 @@ model {
   int? - pointer to model headers
 
   model header[number of models] - headers
+
+  <some models contain extra data here, about 0x20 bytes, however, no pointers to this data exists, it doesn't change the model visually and it works fine without it>
+  <it is unclear whether this is a part of the format, or just some garbage>
 
   byte[] model data
 }
@@ -17,68 +23,67 @@ model header {
   Vector4s - model scale
   int - pointer to command list
   int - pointer to vertex data - this is 0 if model is animated
-  int - pointer to texture layout data (same as in lev)
+  int - pointer to texture layout data (same as in lev) - if there are no textures, this is still a pointer, same as clut.
   int - pointer to colors (clut)
-  int - unk3
+  int - unk3 - ruins model if changed
   int - number of animations
   int - pointer to animations
-  int - unk4
+  int - unk4 - anything other than 0 freezes the game
 }
 
 animation {
   char[16] - anim name
   short - num frames - negative value defines amount of render frames in 60fps (duplicated anim frames)
   short - frame size
-  int - points to some base anim data
-  animframe[num frames] - additional data per frame
-}
-
-animframe {
-  //assumed to be same as vertex data
-  //must be controlled by header data, cause some animated models work, others don't
-  0x1C bytes - unknown
-  byte[] - array of vertices (numvertices = (framedata - 0x1C) / 3)
+  int - points to some base anim data that affects every frame
+  vertex data[num frames] - additional data per frame
+  byte[unknown length] - base anim data
 }
 
 
 # command list
-there are no indices values per se, instead there is an array of drawing commands, it uses scratchpad to optimize model drawing on the original hardware.  
-the format does not define any sizes, so you have to read all commands properly.
+there are no face indices values per se, instead there is an array of drawing commands, it uses scratchpad to optimize model drawing on the original hardware.  
+the format does not define sizes for its arrays, so you have to read all commands properly. failing to do so will cause it to read junk data from other arrays.
 
 command - big endian dword
 
 bitmask according to horror's spec:
 sl??kv?? iiiiiiii ccccccct tttttttt //8-8-7-9 bits
 
-t - tex coord index (0 = no texture)
-c - color coord index
-i - index of write location in stack (multiplied by 8 makes it a pointer)
+t - tex coord index (0 = no texture), max = 511
+c - color coord index, max = 127
+i - index of write location in stack (multiplied by 8 makes it a pointer), max = 255
 v - don't read next vertex from array, but read from stack index 
 l - swap 1st vertex of the new face with the 1st from the last one (could be quad maybe?)
 s - new face block
 k - tells whether it should take color from scratchpad or ram (only affects real psx).
 ? - unknown
 
-value of -1 (0xFFFFFFFF) is list terminator
+value of -1 (0xFFFFFFFF) is the list terminator
 
-# vertices
+# vertices data
+ushort - posX
+ushort - posY
+ushort - posZ
+16 bytes - unknown, nothing changes visually
+int - unknown, values other than the original often ruin the model. maybe some drawing mode.
 vector3b - a byte per coord.
-the final coord = vertex coord / 255 * scale coord.
 
-the original model is normalized to a byte vector, which results in 256 possible values per axis, scaled back to the orignal size using scale vector.
+the original model is normalized to a byte vector, which results in 256 possible values per axis, scaled back to the orignal size using scale vector and moved around using the position offset.
+
+the final coord = vertex coord / 255 * scale coord + offset?
 
 # texture data
-texturelayout struct from lev file
-basically defines texture page, quad UV coords and palette
+array of uint - pointers to texture data
+array of texturelayout - struct from lev file
+
+basically defines texture page, quad UV coords and palette.
 
 # color data
-just usual 4 bytes RGBA
+just usual 4 bytes RGBX
+X is bitwise flag value - defines rendering mode
 
 # animation
-a set of vertex arrays that game cycles through.
+there is some base data for each animation and an array for each frame.
+this data is somehow combined to retrieve final vertex positions.
 keep in mind that same command list is used for every frame, only vertices change their positions.
-
-more complex models structure is unknown.
-there is some base data that affects whole animation and there is per frame data, which only affects individual frames.
-it's possibly combined somehow to generate the final vertices.
-i also observed that changing value before the vertex array completely trashes the whole model. only works if coincides with the original value.
