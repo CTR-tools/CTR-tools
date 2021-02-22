@@ -38,7 +38,7 @@ namespace ctrviewer
 
 
         List<VertexPositionColorTexture[]> bbox = new List<VertexPositionColorTexture[]>();
-        List<VertexPositionColorTexture[]> bbox2 = new List<VertexPositionColorTexture[]>();
+        Dictionary<int, List<VertexPositionColorTexture[]>> bbox2 = new Dictionary<int, List<VertexPositionColorTexture[]>>();
 
         Menu menu;
 
@@ -581,9 +581,12 @@ namespace ctrviewer
                         }
                         else
                         {
-                            BspDraw(b, scene, level + 1);
                             // show those children in different color than the parent
-                            bbox2.Add(MGConverter.ToLineList(b.bbox, colorLevelsOfBsp[level % colorLevelsOfBsp.Length]));
+                            if (!bbox2.ContainsKey(level))
+                                bbox2.Add(level, new List<VertexPositionColorTexture[]>());
+
+                            bbox2[level].Add(MGConverter.ToLineList(b.bbox, colorLevelsOfBsp[level % colorLevelsOfBsp.Length]));
+                            BspDraw(b, scene, level + 1);
                         }
                     }
                 }
@@ -913,8 +916,8 @@ namespace ctrviewer
                     }
 
                     if (settings.VisDataLeaves)
-
-                        foreach (var x in bbox2)
+                        foreach (var key in bbox2.Keys)
+                        foreach (var x in bbox2[key])
                         {
                             foreach (var pass in effect.CurrentTechnique.Passes)
                             {
