@@ -184,9 +184,6 @@
     <Content Include="CTRFramework.Data\big_usa_beta_sep.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CTRFramework.Data\big_usa_beta_14th.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="CTRFramework.Data\big_usa_release.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
