@@ -10,19 +10,19 @@
 004=levels\tracks\proto8\4P\data.lev
 005=levels\tracks\proto8\4P\data.vrm
 
-012=levels\tracks\temple2\1P\data.lev
-013=levels\tracks\temple2\1P\data.vrm
-014=levels\tracks\temple2\2P\data.lev
-015=levels\tracks\temple2\2P\data.vrm
-016=levels\tracks\temple2\4P\data.lev
-017=levels\tracks\temple2\4P\data.vrm
+012=levels\tracks\desert2\1P\data.lev
+013=levels\tracks\desert2\1P\data.vrm
+014=levels\tracks\desert2\2P\data.lev
+015=levels\tracks\desert2\2P\data.vrm
+016=levels\tracks\desert2\4P\data.lev
+017=levels\tracks\desert2\4P\data.vrm
 
-030=levels\tracks\desert2\1P\data.lev
-031=levels\tracks\desert2\1P\data.vrm
-032=levels\tracks\desert2\2P\data.lev
-033=levels\tracks\desert2\2P\data.vrm
-034=levels\tracks\desert2\4P\data.lev
-035=levels\tracks\desert2\4P\data.vrm
+030=levels\tracks\temple2\1P\data.lev
+031=levels\tracks\temple2\1P\data.vrm
+032=levels\tracks\temple2\2P\data.lev
+033=levels\tracks\temple2\2P\data.vrm
+034=levels\tracks\temple2\4P\data.lev
+035=levels\tracks\temple2\4P\data.vrm
 
 # ==========150 = OVERLAYS SECTION===============
 
