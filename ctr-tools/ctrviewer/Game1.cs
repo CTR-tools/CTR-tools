@@ -565,7 +565,6 @@ namespace ctrviewer
             new Color(0.3f,0.0f,0.0f,1.0f),
             new Color(0.0f,0.0f,0.0f,1.0f)
         };
-
         private void BspDraw(VisData visDat, Scene scene, int level)
         {
             List<VisData> childVisData = scene.GetVisDataChildren(visDat); // if node has children get those children
@@ -573,19 +572,16 @@ namespace ctrviewer
             {
                 foreach (var b in childVisData)
                 {
-                    if (b != null)
+                    if (b.IsLeaf) // leaves don't have children
                     {
-                        if (b.IsLeaf) // leaves don't have children
-                        {
-                            bbox.Add(MGConverter.ToLineList(b.bbox, Color.Magenta));
-                        }
-                        else
-                        {
-                            BspDraw(b, scene, level + 1);
-                            // show those children in different color than the parent
-                            bbox2.Add(MGConverter.ToLineList(b.bbox, colorLevelsOfBsp[level % colorLevelsOfBsp.Length]));
-                        }
+                        bbox2.Add(MGConverter.ToLineList(b.bbox, Color.Magenta));
                     }
+                    else
+                    {
+                        BspDraw(b, scene, level + 1);
+                        // show those children in different color than the parent
+                        bbox.Add(MGConverter.ToLineList(b.bbox, colorLevelsOfBsp[level % colorLevelsOfBsp.Length]));
+                    }    
                 }
             }
         }
@@ -914,14 +910,14 @@ namespace ctrviewer
 
                     if (settings.VisDataLeaves)
 
-                        foreach (var x in bbox2)
+                    foreach (var x in bbox2)
+                    {
+                        foreach (var pass in effect.CurrentTechnique.Passes)
                         {
-                            foreach (var pass in effect.CurrentTechnique.Passes)
-                            {
-                                pass.Apply();
-                                graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, x, 0, x.Length / 2);
-                            }
+                            pass.Apply();
+                            graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, x, 0, x.Length / 2);
                         }
+                    }
                 }
             }
         }
@@ -1099,8 +1095,8 @@ namespace ctrviewer
                 spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
             if (scn.Count == 0 && gameLoaded)
-                spriteBatch.DrawString(font, $"No levels loaded.\r\nPut LEV/VRM files in levels folder.\r\n...or put BIGFILE.BIG in root folder\r\nand use load level menu.".ToString(),
-                    new Vector2(20 * graphics.GraphicsDevice.Viewport.Height / 1080f, 20 * graphics.GraphicsDevice.Viewport.Height / 1080f),
+                spriteBatch.DrawString(font, $"No levels loaded.\r\nPut LEV/VRM files in levels folder.\r\n...or put BIGFILE.BIG in root folder\r\nand use load level menu.".ToString(), 
+                    new Vector2(20 * graphics.GraphicsDevice.Viewport.Height / 1080f, 20 * graphics.GraphicsDevice.Viewport.Height / 1080f), 
                     Color.Yellow,
                     0,
                     Vector2.Zero,
@@ -1111,15 +1107,15 @@ namespace ctrviewer
 
             if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Keyboard.GetState().IsKeyDown(Keys.OemPlus))
                 spriteBatch.DrawString(font, String.Format("FOV {0}", camera.ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", camera.ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
-
+            
             if (settings.ShowCamPos)
-                spriteBatch.DrawString(font, $"({camera.Position.X.ToString("0.00")}, {camera.Position.Y.ToString("0.00")}, {camera.Position.Z.ToString("0.00")})", new Vector2(20, 20), Color.Yellow,
+                spriteBatch.DrawString(font, $"({camera.Position.X.ToString("0.00")}, {camera.Position.Y.ToString("0.00")}, {camera.Position.Z.ToString("0.00")})", new Vector2(20, 20), Color.Yellow, 
                     0,
                     Vector2.Zero,
                     graphics.GraphicsDevice.Viewport.Height / 1080f,
                     SpriteEffects.None,
                     0.5f);
-
+            
 
             //spriteBatch.DrawString(font, String.Format("sp: {0}\r\nac:{1}", karts[0].Speed, karts[0].Accel), new Vector2(20, 20), Color.Yellow);
 
