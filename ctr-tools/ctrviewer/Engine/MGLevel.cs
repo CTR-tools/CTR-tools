@@ -229,24 +229,22 @@ namespace ctrviewer
 
             Samplers.SetToDevice(graphics, EngineSampler.Animated);
 
-
-            graphics.GraphicsDevice.BlendState = BlendState.Additive;
             foreach (var ql in animatedq)
                 ql.Value.Draw(graphics, effect, null);
 
             Samplers.SetToDevice(graphics, EngineSampler.Default);
 
+            graphics.GraphicsDevice.BlendState = BlendState.Additive;
+
             if (flagq.ContainsKey(((QuadFlags)(1 << Game1.currentflag)).ToString()))
-                flagq[((QuadFlags)(1 << Game1.currentflag)).ToString()].Draw(graphics, effect, null);
+                flagq[((QuadFlags)(1 << Game1.currentflag)).ToString()].Draw(graphics, effect, alpha);
 
-
+            graphics.GraphicsDevice.BlendState = BlendState.NonPremultiplied;
 
             foreach (var ql in alphaq)
                 ql.Value.Draw(graphics, effect, alpha);
 
-            graphics.GraphicsDevice.BlendState = BlendState.NonPremultiplied;
-
-            effect.Alpha = 0.25f;
+            effect.Alpha = 0.5f;
 
             if (!Game1.HideWater)
             {

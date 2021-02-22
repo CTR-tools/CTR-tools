@@ -370,7 +370,7 @@ namespace ctrviewer
             {
                 Scene karts = Scene.FromFile("karts.lev");
 
-                foreach (DynamicModel m in karts.dynamics)
+                foreach (CtrModel m in karts.dynamics)
                 {
                     if (!instTris.ContainsKey(m.Name) && m.Name == "selectkart")
                     {
@@ -473,7 +473,7 @@ namespace ctrviewer
 
 
             foreach (Scene s in scn)
-                foreach (DynamicModel m in s.dynamics)
+                foreach (CtrModel m in s.dynamics)
                 {
                     if (!instTris.ContainsKey(m.Name))
                     {
@@ -585,7 +585,7 @@ namespace ctrviewer
         public bool updatemouse = false;
         public static bool InMenu = false;
         public static bool HideInvisible = true;
-        public static bool HideWater = true;
+        public static bool HideWater = false;
         public static bool RenderEnabled = true;
         public static bool ControlsEnabled = true;
         public static bool IsDrawing = false;
@@ -1151,6 +1151,7 @@ namespace ctrviewer
             MeshLow.Clear();
             instanced.Clear();
             bbox.Clear();
+            bbox2.Clear();
 
             sky = null;
         }
