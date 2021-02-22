@@ -1,5 +1,5 @@
-# BIGFILE.BIG master file list 
-# Matches September beta (review copy)
+# Crash Team Racing BIGFILE.BIG master file list 
+# Matches September 3 beta (known as review copy)
 
 # ===========0 = TRACKS SECTION===============
 
@@ -252,7 +252,7 @@
 213=levels\adventure\citadel_city\data.lev
 214=levels\adventure\citadel_city\data.ptr
 
-# ==========200 = INTRO CUTSCENES SECTION===============
+# ==========215 = INTRO CUTSCENES SECTION===============
 
 215=cutscenes\race_today\data.vrm
 216=cutscenes\race_today\data.lev
@@ -283,7 +283,7 @@
 241=cutscenes\last_oxide_intro\data.ptr
 
 
-# ==========215 = MAIN MENU/JAP FONT SECTION===============
+# ==========245 = MAIN MENU/JAP FONT SECTION===============
 
 245=menu_models.vrm
 246=menu_models.lev
@@ -292,7 +292,7 @@
 249=japfont.vrm
 250=japfont.mpk
 
-# =================221 = OVERLAY SECTION===================
+# =================251 = OVERLAY SECTION===================
 
 251=overlays\251_05.bin
 252=overlays\252_06.bin
@@ -310,42 +310,42 @@
 262=overlays\262_12.bin
 263=overlays\263_13.bin
 
-# ===========234 = LOCALIZATION SECTION=================
+# ===========264 = LOCALIZATION SECTION=================
 
 264=lang\ja.lng
 265=lang\en.lng
-266=lang\en2.lng
+266=lang\uk.lng
 267=lang\fr.lng
 268=lang\de.lng
 269=lang\it.lng
 270=lang\es.lng
 271=lang\ne.lng
 
-# ==========242 = CHARS HI SECTION===============
+# ==========272 = CHARS HI SECTION===============
 
-272=models\racers\crash_hi.ctr
-273=models\racers\cortex_hi.ctr
-274=models\racers\tiny_hi.ctr
-275=models\racers\coco_hi.ctr
-276=models\racers\ngin_hi.ctr
-277=models\racers\dingo_hi.ctr
-278=models\racers\polar_hi.ctr
-279=models\racers\pura_hi.ctr
-280=models\racers\pinstripe_hi.ctr
-281=models\racers\papu_hi.ctr
-282=models\racers\roo_hi.ctr
-283=models\racers\joe_hi.ctr
-284=models\racers\ntropy_hi.ctr
-285=models\racers\pen_hi.ctr
-286=models\racers\fake_hi.ctr
-287=models\racers\oxide_hi.ctr
+272=models\racers\hi\crash.ctr
+273=models\racers\hi\cortex.ctr
+274=models\racers\hi\tiny.ctr
+275=models\racers\hi\coco.ctr
+276=models\racers\hi\ngin.ctr
+277=models\racers\hi\dingo.ctr
+278=models\racers\hi\polar.ctr
+279=models\racers\hi\pura.ctr
+280=models\racers\hi\pinstripe.ctr
+281=models\racers\hi\papu.ctr
+282=models\racers\hi\roo.ctr
+283=models\racers\hi\joe.ctr
+284=models\racers\hi\ntropy.ctr
+285=models\racers\hi\pen.ctr
+286=models\racers\hi\fake.ctr
+287=models\racers\hi\oxide.ctr
 
-# ==========258 = UI AND GENERIC MODELS SECTION===============
+# ==========288 = UI AND GENERIC MODELS SECTION===============
 
-288=packs\ui_textures.vrm
-289=packs\259.mpk
+288=packs\shared.vrm
+289=packs\shared.mpk
 
-# =========260 = MODEL PACKS SECTION===============
+# =========290 = MODEL PACKS SECTION===============
 
 290=packs\1P_arcade\crash.mpk
 291=packs\1P_arcade\cortex.mpk
@@ -400,54 +400,54 @@
 
 # ==========308 = CHARS MED SECTION===============
 
-338=models\racers\crash_med.ctr
-339=models\racers\cortex_med.ctr
-340=models\racers\tiny_med.ctr
-341=models\racers\coco_med.ctr
-342=models\racers\ngin_med.ctr
-343=models\racers\dingo_med.ctr
-344=models\racers\polar_med.ctr
-345=models\racers\pura_med.ctr
-346=models\racers\pinstripe_med.ctr
-347=models\racers\papu_med.ctr
-348=models\racers\roo_med.ctr
-349=models\racers\joe_med.ctr
-350=models\racers\ntropy_med.ctr
-351=models\racers\pen_med.ctr
-352=models\racers\fake_med.ctr
-353=models\racers\oxide_med.ctr
+338=models\racers\med\crash.ctr
+339=models\racers\med\cortex.ctr
+340=models\racers\med\tiny.ctr
+341=models\racers\med\coco.ctr
+342=models\racers\med\ngin.ctr
+343=models\racers\med\dingo.ctr
+344=models\racers\med\polar.ctr
+345=models\racers\med\pura.ctr
+346=models\racers\med\pinstripe.ctr
+347=models\racers\med\papu.ctr
+348=models\racers\med\roo.ctr
+349=models\racers\med\joe.ctr
+350=models\racers\med\ntropy.ctr
+351=models\racers\med\pen.ctr
+352=models\racers\med\fake.ctr
+353=models\racers\med\oxide.ctr
 
-# ========324 = MORE MODEL PACKS SECTION===============
+# ========354 = MORE MODEL PACKS SECTION===============
 
-354=packs\1P_gem_cups\324.mpk
-355=packs\1P_gem_cups\325.mpk
-356=packs\1P_gem_cups\326.mpk
-357=packs\1P_gem_cups\327.mpk
-358=packs\1P_gem_cups\328.mpk
-359=packs\1P_gem_cups\329.mpk
-360=packs\1P_gem_cups\330.mpk
-361=packs\1P_gem_cups\331_bosses.mpk
+354=packs\1P_gem_cups\354.mpk
+355=packs\1P_gem_cups\355.mpk
+356=packs\1P_gem_cups\356.mpk
+357=packs\1P_gem_cups\357.mpk
+358=packs\1P_gem_cups\358.mpk
+359=packs\1P_gem_cups\359.mpk
+360=packs\1P_gem_cups\360.mpk
+361=packs\1P_gem_cups\361_bosses.mpk
 
 # ==========332 = CHARS LOW SECTION===============
 
-362=models\racers\crash_low.ctr
-363=models\racers\cortex_low.ctr
-364=models\racers\tiny_low.ctr
-365=models\racers\coco_low.ctr
-366=models\racers\ngin_low.ctr
-367=models\racers\dingo_low.ctr
-368=models\racers\polar_low.ctr
-369=models\racers\pura_low.ctr
-370=models\racers\pinstripe_low.ctr
-371=models\racers\papu_low.ctr
-372=models\racers\roo_low.ctr
-373=models\racers\joe_low.ctr
-374=models\racers\ntropy_low.ctr
-375=models\racers\pen_low.ctr
-376=models\racers\fake_low.ctr
-377=models\racers\oxide_low.ctr
+362=models\racers\low\crash.ctr
+363=models\racers\low\cortex.ctr
+364=models\racers\low\tiny.ctr
+365=models\racers\low\coco.ctr
+366=models\racers\low\ngin.ctr
+367=models\racers\low\dingo.ctr
+368=models\racers\low\polar.ctr
+369=models\racers\low\pura.ctr
+370=models\racers\low\pinstripe.ctr
+371=models\racers\low\papu.ctr
+372=models\racers\low\roo.ctr
+373=models\racers\low\joe.ctr
+374=models\racers\low\ntropy.ctr
+375=models\racers\low\pen.ctr
+376=models\racers\low\fake.ctr
+377=models\racers\low\oxide.ctr
 
-# ==========348 = EVEN MORE MODEL PACKS SECTION===============
+# ==========378 = EVEN MORE MODEL PACKS SECTION===============
 
 378=packs\unknown_long\crash.mpk
 379=packs\unknown_long\cortex.mpk
@@ -468,7 +468,7 @@
 
 # 394-395 - check
 
-# =========366 = PODIUM WIN ANIMS SECTION===============
+# =========396 = PODIUM WIN ANIMS SECTION===============
 
 396=models\trophy_win\crashdance.ctr
 397=models\trophy_win\crashdance2.ctr
@@ -503,7 +503,7 @@
 426=models\trophy_win\oxidedance.ctr
 427=models\trophy_win\oxidedance2.ctr
 
-# =========398 = PODIUM LOSE ANIMS SECTION===============
+# =========428 = PODIUM LOSE ANIMS SECTION===============
 
 428=models\trophy_lose\crashlose.ctr
 429=models\trophy_lose\crashlose2.ctr
@@ -538,7 +538,7 @@
 458=models\trophy_lose\oxidelose.ctr
 459=models\trophy_lose\oxidelose2.ctr
 
-# =========430 = PODIUM TROPHY GIRLS ANIMS SECTION===============
+# =========460 = PODIUM TROPHY GIRLS ANIMS SECTION===============
 
 460=models\trophy_girl\tawna1dance.ctr
 461=models\trophy_girl\tawna1dance2.ctr
@@ -549,7 +549,7 @@
 466=models\trophy_girl\tawna4dance.ctr
 467=models\trophy_girl\tawna4dance2.ctr
 
-# =========438 = ADDITIONAL MODELS SECTION===============
+# =========468 = ADDITIONAL MODELS SECTION===============
 
 468=models\misc\uka1.vrm
 469=models\misc\uka1.ctr
@@ -564,7 +564,7 @@
 478=models\misc\podium1.ctr
 479=models\misc\podium2.ctr
 
-# =========450 = BOSS CUTSCENE ANIMS SECTION===============
+# =========480 = BOSS CUTSCENE ANIMS SECTION===============
 
 480=models\boss_head\roohead1.ctr
 481=models\boss_head\roohead2.ctr
@@ -599,9 +599,11 @@
 508=models\boss_body\noxidebody1.ctr
 509=models\boss_body\noxidebody2.ctr
 
-# =========480 = STR PREVIEW THUMBNAILS SECTION===============
+# =========510 = STR PREVIEW THUMBNAILS SECTION===============
 
-510=movies\VlcTable.bin
+#VlcTable is not in thumbs folder to make it easier to dummy thumbnails
+510=VlcTable.bin
+
 511=movies\thumb00.str
 512=movies\thumb01.str
 513=movies\thumb02.str
@@ -629,7 +631,7 @@
 535=movies\thumb24_null.str
 536=movies\thumb25.str
 
-# ========507 = LOADING SCREENS SECTION===============
+# ========537 = LOADING SCREENS SECTION===============
 
 537=screen\title01_jap.tim
 538=screen\title01_pal.tim
@@ -638,7 +640,7 @@
 541=screen\title02_pal.tim
 542=screen\title02_jap.tim
 
-# ===========513 = CUTSCENES SECTION=================
+# ===========543 = CUTSCENES SECTION=================
 
 543=cutscenes\intro_box\data.vrm
 544=cutscenes\intro_box\data.lev
@@ -647,7 +649,7 @@
 547=cutscenes\oxide02\data.vrm
 548=cutscenes\oxide02\data.lev
 
-# ===========546 = CREDITS SECTION=================
+# ===========549 = CREDITS SECTION=================
 
 549=credits\crashdance\data.vrm
 550=credits\crashdance\data.lev

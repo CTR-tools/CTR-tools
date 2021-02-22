@@ -438,6 +438,7 @@
 # 364-365 - check
 
 # =========366 = PODIUM WIN ANIMS SECTION===============
+
 366=models\trophy_win\crashdance.ctr
 367=models\trophy_win\crashdance2.ctr
 368=models\trophy_win\cortexdance.ctr
@@ -698,7 +699,7 @@
 # ===========593 = CUTSCENES SECTION=================
 
 593=intro_box.vrm
-594=intro_box.lev	
+594=intro_box.lev
 
 # 595-660 here
 # i believe cutscenes are localized, but i didn't spend time figuring out exact languages.
