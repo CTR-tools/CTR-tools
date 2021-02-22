@@ -22,7 +22,7 @@ namespace CTRFramework
         public List<QuadBlock> quads = new List<QuadBlock>();
         public List<PickupHeader> pickups = new List<PickupHeader>();
         public List<VisData> visdata = new List<VisData>();
-        public List<DynamicModel> dynamics = new List<DynamicModel>();
+        public List<CtrModel> dynamics = new List<CtrModel>();
         public SkyBox skybox;
         public Nav nav;
 
@@ -231,7 +231,7 @@ namespace CTRFramework
                 br.BaseStream.Position = x + 4 * i;
                 br.BaseStream.Position = br.ReadUInt32();
 
-                dynamics.Add(new DynamicModel(br));
+                dynamics.Add(new CtrModel(br));
             }
 
             /*
@@ -355,8 +355,13 @@ namespace CTRFramework
 
         public void ExportModels(string dir)
         {
-            foreach (DynamicModel d in dynamics)
+            Helpers.CheckFolder(Path.Combine(dir, "\\models"));
+
+            foreach (CtrModel d in dynamics)
+            {
                 d.Export(Path.Combine(dir, "\\models"));
+                d.Write(Path.Combine(dir, "\\models"));
+            }
         }
 
         public void ExportSkyBox(string path)
@@ -551,8 +556,8 @@ namespace CTRFramework
                                 if (!tex.ContainsKey(t.midlods[2].Tag()))
                                     tex.Add(t.midlods[2].Tag(), t.midlods[2]);
 
-                        foreach (DynamicModel dyn in dynamics)
-                            foreach (DynamicHeader hdr in dyn.headers)
+                        foreach (CtrModel dyn in dynamics)
+                            foreach (CtrHeader hdr in dyn.headers)
                                 foreach (TextureLayout tl in hdr.tl)
                                     if (!tex.ContainsKey(tl.Tag()))
                                         tex.Add(tl.Tag(), tl);
@@ -612,9 +617,9 @@ namespace CTRFramework
                     }
                 }
                 
-                foreach (DynamicModel dyn in dynamics)
+                foreach (CtrModel dyn in dynamics)
                 {
-                    foreach(DynamicHeader hdr in dyn.headers)
+                    foreach(CtrHeader hdr in dyn.headers)
                     {
                         foreach (TextureLayout tl in hdr.tl)
                         {

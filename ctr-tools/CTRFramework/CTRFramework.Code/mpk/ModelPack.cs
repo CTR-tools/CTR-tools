@@ -12,7 +12,7 @@ namespace CTRFramework
         int texOff;
         UImap map;
 
-        public List<DynamicModel> dynamics = new List<DynamicModel>();
+        public List<CtrModel> dynamics = new List<CtrModel>();
 
         public ModelPack()
         {
@@ -57,7 +57,7 @@ namespace CTRFramework
             {
                 br.Jump(u);
 
-                DynamicModel lod = new DynamicModel(br);
+                CtrModel lod = new CtrModel(br);
                 dynamics.Add(lod);
             }
         }
@@ -66,8 +66,11 @@ namespace CTRFramework
         {
             map.Extract(tim, ".\\textures\\");
 
-            foreach (DynamicModel d in dynamics)
+            foreach (CtrModel d in dynamics)
+            {
                 d.Export(dir);
+                d.Write(dir);
+            }
 
             Console.WriteLine("Models done!");
         }

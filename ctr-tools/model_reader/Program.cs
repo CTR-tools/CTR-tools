@@ -68,7 +68,7 @@ namespace model_reader
                 case ".ctr":
                 case ".dyn":
                     {
-                        DynamicModel d = new DynamicModel(s);
+                        CtrModel d = new CtrModel(s);
                         d.Export(basepath);
 
                         break;
@@ -76,7 +76,7 @@ namespace model_reader
                 case ".mpk":
                     {
                         ModelPack mpk = new ModelPack(s);
-                        mpk.Extract(basepath + "\\" + name, CtrVrm.FromFile(basepath + "\\" + "shared.vrm"));
+                        mpk.Extract(Path.Combine(basepath, name), CtrVrm.FromFile(Path.Combine(basepath, "shared.vrm")));
 
                         break;
                     }
