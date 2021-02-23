@@ -97,6 +97,7 @@
     <Compile Include="CTRFramework.Code\shared\Vector2b.cs" />
     <Compile Include="CTRFramework.Code\shared\Vector2s.cs" />
     <Compile Include="CTRFramework.Code\shared\Vector3b.cs" />
+    <Compile Include="CTRFramework.Code\shared\Vector3f.cs" />
     <Compile Include="CTRFramework.Code\sound\Bank.cs" />
     <Compile Include="CTRFramework.Code\shared\BinaryReaderEx.cs" />
     <Compile Include="CTRFramework.Code\shared\BinaryWriterEx.cs" />

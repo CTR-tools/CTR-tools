@@ -93,6 +93,12 @@ namespace CTRFramework
                 return;
             }
 
+            if (words[0] == "vn")
+            {
+                Console.WriteLine("vertex normal, skip: " + s);
+                return;
+            }
+
             if (words[0] == "v")
             {
                 Console.WriteLine("it's a vertex! " + s);
@@ -124,7 +130,7 @@ namespace CTRFramework
                     short[] coord = new short[3];
 
                     for (int i = 0; i < 3; i++)
-                        Int16.TryParse(words[i + 1], out coord[i]);
+                        Int16.TryParse(words[i + 1].Split('\\')[0], out coord[i]);
 
                     faces.Add(new Vector3s((short)(coord[0]-1), (short)(coord[1] - 1), (short)(coord[2] - 1)));
                 }
@@ -147,13 +153,14 @@ namespace CTRFramework
             Console.WriteLine("error or unimplemented obj command " + s);
         }
 
-        public CtrModel ConvertToCtr()
+        public CtrModel ConvertToCtr(short modelOffset)
         {
             CtrModel ctr = new CtrModel();
             ctr.Name = ObjectName;
 
             CtrHeader model = new CtrHeader();
             model.name = ObjectName + "_hi";
+            model.lodDistance = -1;
 
             BoundingBox bb = new BoundingBox();
 
@@ -189,9 +196,9 @@ namespace CTRFramework
             Console.WriteLine(bb2.ToString());
 
             model.scale = new Vector4s(
-                (short)(bb2.Max.X / 256f * 1024),
-                (short)(bb2.Max.Y / 256f * 1024),
-                (short)(bb2.Max.Z / 256f * 1024),
+                (short)(bb2.Max.X * 10),
+                (short)(bb2.Max.Y * 10),
+                (short)(bb2.Max.Z * 10),
                 0);
 
 
@@ -214,12 +221,15 @@ namespace CTRFramework
 
             foreach (var f in faces)
             {
+                if (f.X > 255 || f.Y > 255 || f.Z > 255)
+                    throw new Exception("too many vertices. 255 is the limit. reduce vertex count and make sure you merged all vertices.");
+
                 CtrDraw cmd = new CtrDraw();
                 cmd.texIndex = 0;
                 cmd.colorIndex = 0;
                 cmd.stackIndex = (byte)(f.X);
                 Console.WriteLine(cmd.stackIndex);
-                cmd.flags = CtrDrawFlags.s | CtrDrawFlags.k;
+                cmd.flags = CtrDrawFlags.s;
 
                 if (accessed.Contains(cmd.stackIndex))
                 {
@@ -239,7 +249,7 @@ namespace CTRFramework
                 cmd.colorIndex = 1;
                 cmd.stackIndex = (byte)(f.Y);
                 Console.WriteLine(cmd.stackIndex);
-                cmd.flags = CtrDrawFlags.k;
+                cmd.flags = 0;
 
                 if (accessed.Contains(cmd.stackIndex))
                 {
@@ -259,7 +269,7 @@ namespace CTRFramework
                 cmd.colorIndex = 2;
                 cmd.stackIndex = (byte)(f.Z);
                 Console.WriteLine(cmd.stackIndex);
-                cmd.flags = CtrDrawFlags.k;
+                cmd.flags = 0;
 
                 if (accessed.Contains(cmd.stackIndex))
                 {
@@ -277,15 +287,17 @@ namespace CTRFramework
 
             model.vtx = newlist;
 
-            model.posOffset = new Vector4s((short)(-bb2.Max.X / 2), bb.Min.Y, (short)(-bb2.Max.X / 2), 0);
+            model.posOffset = new Vector4s(
+                (short)(-bb2.Max.X + 15),
+                30,//(short)(bb.Min.Y + modelOffset), 
+                (short)(-bb2.Max.Y), 
+                0);
 
-            model.cols.Add(new Vector4b(0x80, 0x00, 0x00, 0));
-            model.cols.Add(new Vector4b(0x00, 0x80, 0x00, 0));
-            model.cols.Add(new Vector4b(0x00, 0x00, 0x80, 0));
+            model.cols.Add(new Vector4b(0xFF, 0xFF, 0xFF, 0));
+            model.cols.Add(new Vector4b(0xCC, 0xCC, 0xCC, 0));
+            model.cols.Add(new Vector4b(0x80, 0x80, 0x80, 0));
 
             ctr.headers.Add(model);
-
-            Console.ReadKey();
 
             return ctr;
         }

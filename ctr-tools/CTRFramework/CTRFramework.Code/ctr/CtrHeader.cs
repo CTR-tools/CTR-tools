@@ -196,9 +196,9 @@ namespace CTRFramework
 
             foreach (Vector3s v in vfixed)
             {
-                v.X = (short)(((int)v.X / 255.0f - 0.5) * (scale.X / 16f));
-                v.Y = (short)(((int)v.Y / 255.0f - 0.5) * (scale.Z / 16f));
-                v.Z = (short)(((int)v.Z / 255.0f) * (scale.Y / 16f));
+                v.X = (short)((((float)v.X / 255.0f - 0.5) * scale.X));
+                v.Y = (short)((((float)v.Y / 255.0f - 0.5) * scale.Z));
+                v.Z = (short)((((float)v.Z / 255.0f) * scale.Y));
 
                 short zz = v.Z;
                 v.Z = (short)-v.Y;
@@ -207,8 +207,8 @@ namespace CTRFramework
 
             //br.Jump(ppos);
 
-            Console.WriteLine(defs.Count);
-            Console.ReadKey();
+            //Console.WriteLine(defs.Count);
+            //Console.ReadKey();
 
             foreach (CtrDraw d in defs)
             {
@@ -259,7 +259,7 @@ namespace CTRFramework
                 cur_i++;
             }
 
-            Console.ReadKey();
+            //Console.ReadKey();
 
             // Directory.CreateDirectory("mpk");
             // Helpers.WriteToFile("mpk\\" + name + ".obj", sb.ToString());
@@ -291,10 +291,13 @@ namespace CTRFramework
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("o " + name);
             foreach (Vertex v in verts)
-                sb.AppendLine("v " + v.coord.ToString(VecFormat.Numbers) + " " + v.color.ToString(VecFormat.Numbers));
+            {
+                //while the lev is scaled down by 100, ctr models are scaled down by 1000?
+                sb.AppendLine("v " + v.coord.X * 0.001f + " " + v.coord.Y * 0.001f  + " " + v.coord.Z * 0.001f + " " +  v.color.ToString(VecFormat.Numbers));
+            }
 
             for (int i = 0; i < verts.Count / 3; i++)
-                sb.AppendLine("f " + (i * 3 + 1) + " " + (i * 3 + 2) + " " + (i * 3 + 3));
+                sb.AppendLine("f " + (i * 3 + 1) + " " + (i * 3 + 3) + " " + (i * 3 + 2));
 
             return sb.ToString();
         }
