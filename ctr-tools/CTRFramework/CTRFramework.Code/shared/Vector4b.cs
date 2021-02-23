@@ -19,12 +19,13 @@ namespace CTRFramework.Shared
             W = (byte)(W * x);
         }
 
+
         public Vector4b(byte x, byte y, byte z, byte w)
         {
-            X = (byte)(X * x);
-            Y = (byte)(Y * y);
-            Z = (byte)(Z * z);
-            W = (byte)(W * w);
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
         }
 
         public void Scale(float x, float y, float z, float w)

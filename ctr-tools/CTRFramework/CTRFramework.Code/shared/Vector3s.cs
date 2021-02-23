@@ -98,5 +98,10 @@ namespace CTRFramework.Shared
             return ToString(VecFormat.Braced);
         }
 
+
+        public Vector3s Clone()
+        {
+            return new Vector3s(x, y, z);
+        }
     }
 }

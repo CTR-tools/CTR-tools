@@ -29,6 +29,12 @@ namespace CTRFramework.Shared
             max = new Vector3s(short.MinValue);
         }
 
+        public BoundingBox(Vector3s vmin, Vector3s vmax)
+        {
+            min = vmin.Clone();
+            max = vmax.Clone();
+        }
+
         public BoundingBox(BinaryReaderEx br)
         {
             Read(br);
@@ -49,6 +55,11 @@ namespace CTRFramework.Shared
         public override string ToString()
         {
             return "BB: min " + min.ToString() + " max " + max.ToString();
+        }
+
+        public BoundingBox Clone()
+        {
+            return new BoundingBox(Min, Max);
         }
 
 

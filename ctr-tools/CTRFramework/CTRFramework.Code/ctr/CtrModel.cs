@@ -10,12 +10,16 @@ namespace CTRFramework
     {
         public string path;
 
-        public string Name;
-        public ushort GameEvent;
+        public string Name = "defaultname";
+        public ushort GameEvent = 0;
         //public short numEntries;
-        public int ptrHeaders;
+        public int ptrHeaders = 0;
 
         public List<CtrHeader> headers = new List<CtrHeader>();
+
+        public CtrModel()
+        {
+        }
 
         public static CtrModel FromFile(string s)
         {

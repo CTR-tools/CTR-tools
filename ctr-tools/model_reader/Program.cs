@@ -49,18 +49,18 @@ namespace model_reader
         }
 
 
-        static void ConvertFile(string s)
+        static void ConvertFile(string filename)
         {
-            string basepath = Path.GetDirectoryName(s);
-            string name = Path.GetFileNameWithoutExtension(s);
-            string ext = Path.GetExtension(s).ToLower();
+            string basepath = Path.GetDirectoryName(filename);
+            string name = Path.GetFileNameWithoutExtension(filename);
+            string ext = Path.GetExtension(filename).ToLower();
 
             switch (ext)
             {
                 case ".lev":
                     {
-                        Scene scn = Scene.FromFile(s);
-                        scn.quads = scn.quads.OrderBy(o => o.id).ToList();
+                        Scene scn = Scene.FromFile(filename);
+                        //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
                         scn.Export(basepath, ExportFlags.All);
 
                         break;
@@ -68,19 +68,27 @@ namespace model_reader
                 case ".ctr":
                 case ".dyn":
                     {
-                        CtrModel d = new CtrModel(s);
+                        CtrModel d = CtrModel.FromFile(filename);
                         d.Export(basepath);
+
+                        break;
+                    }
+                case ".obj":
+                    {
+                        OBJ obj = OBJ.FromFile(filename);
+                        obj.ConvertToCtr().Write(basepath);
 
                         break;
                     }
                 case ".mpk":
                     {
-                        ModelPack mpk = new ModelPack(s);
+                        ModelPack mpk = ModelPack.FromFile(filename);
                         mpk.Extract(Path.Combine(basepath, name), CtrVrm.FromFile(Path.Combine(basepath, "shared.vrm")));
 
                         break;
                     }
             }
+
             Console.WriteLine("Done!");
         }
     }

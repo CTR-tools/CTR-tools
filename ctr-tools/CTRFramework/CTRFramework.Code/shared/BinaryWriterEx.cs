@@ -19,5 +19,11 @@ namespace CTRFramework.Shared
             for (int i = 0; i < 4; i++) Write(x[3 - i]);
         }
 
+        public void WriteBig(uint value)
+        {
+            byte[] x = BitConverter.GetBytes(value);
+            for (int i = 0; i < 4; i++) Write(x[3 - i]);
+        }
+
     }
 }

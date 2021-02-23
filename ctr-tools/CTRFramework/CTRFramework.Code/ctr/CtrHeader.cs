@@ -8,28 +8,28 @@ namespace CTRFramework
 {
     public class CtrHeader : IRead
     {
-        public string name;
-        int unk0; //0?
-        short lodDistance;
-        short billboard; //bit0 forces model to always face the camera, check other bits
-        Vector4s scale;
+        public string name = "defaultname";
+        public int unk0 = 0; //0?
+        public short lodDistance = 1000;
+        public short billboard = 0; //bit0 forces model to always face the camera, check other bits
+        public Vector4s scale = new Vector4s(1024, 1024, 1024, 0);
 
-        public int ptrCmd; //this is null if we have anims
-        public int ptrVerts; //0?
-        public int ptrTex;
-        public int ptrClut;
+        public int ptrCmd = 0; //this is null if we have anims
+        public int ptrVerts = 0; //0?
+        public int ptrTex = 0;
+        public int ptrClut = 0;
 
-        public int unk3; //?
-        public int numAnims;
-        public int ptrAnims;
-        public int unk4; //?
+        public int unk3 = 0; //?
+        public int numAnims = 0;
+        public int ptrAnims = 0;
+        public int unk4 = 0; //?
 
-        Vector4s posOffset;
+        public Vector4s posOffset = new Vector4s(0,0,0,0);
 
         public List<Vertex> verts = new List<Vertex>();
 
-        int cmdNum;
-        int vrenderMode;
+        public int cmdNum = 0x40;
+        public int vrenderMode = 0x1C;
 
         public bool IsAnimated
         {
@@ -105,6 +105,8 @@ namespace CTRFramework
             }
             while (x != 0xFFFFFFFF);
 
+            
+
             /*
             if (numAnims > 0)
             {
@@ -134,7 +136,7 @@ namespace CTRFramework
 
             foreach (CtrDraw d in defs)
             {
-                if (!d.flags.HasFlag(Flags.v))
+                if (!d.flags.HasFlag(CtrDrawFlags.v))
                     maxv++;
 
                 if (d.colorIndex > maxc)
@@ -143,13 +145,14 @@ namespace CTRFramework
                 if (d.texIndex > 0)
                     if (d.texIndex - 1 > maxt)
                         maxt = d.texIndex;
+
+                Console.WriteLine(d.ToString());
             }
 
             Console.WriteLine("maxv: " + maxv);
             Console.WriteLine("maxc: " + maxc);
             Console.WriteLine("maxt: " + maxt);
-
-
+           
             //int ppos = (int)br.BaseStream.Position;
 
             br.Jump(ptrClut);
@@ -204,22 +207,24 @@ namespace CTRFramework
 
             //br.Jump(ppos);
 
+            Console.WriteLine(defs.Count);
+            Console.ReadKey();
+
             foreach (CtrDraw d in defs)
             {
-                if (d.flags.HasFlag(Flags.s))
+                if (d.flags.HasFlag(CtrDrawFlags.s))
                 {
-                    Console.WriteLine(cur_i);
                     cur_i = 0;
                 }
 
-                if (d.flags.HasFlag(Flags.v))
+                if (d.flags.HasFlag(CtrDrawFlags.v))
                 {
-                    curvert = stack[d.value >> 16 & 0xFF];
+                    curvert = stack[d.stackIndex];
                 }
                 else
                 {
                     curvert = vfixed[i];//ReadVertex(br, i);
-                    stack[d.value >> 16 & 0xFF] = curvert;
+                    stack[d.stackIndex] = curvert;
                     i++;
                 }
 
@@ -228,10 +233,10 @@ namespace CTRFramework
                 crd[2] = crd[3];
                 crd[3] = curvert;
 
-                if (d.flags.HasFlag(Flags.l))
+                if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
                     crd[1] = crd[0];
-                }
+                } 
 
                 clr[0] = clr[1];
                 clr[1] = clr[2];
@@ -249,11 +254,12 @@ namespace CTRFramework
                     }
                 }
 
+                Console.WriteLine(cur_i);
+
                 cur_i++;
-
-                // Console.ReadKey();
-
             }
+
+            Console.ReadKey();
 
             // Directory.CreateDirectory("mpk");
             // Helpers.WriteToFile("mpk\\" + name + ".obj", sb.ToString());
@@ -276,6 +282,7 @@ namespace CTRFramework
             Console.WriteLine("tlcnt: " + tl.Count);
 
             br.BaseStream.Position = pos;
+
         }
 
 
@@ -365,7 +372,7 @@ namespace CTRFramework
                    
                     foreach (var c in defs)
                     {
-                        bw.Write(c.value);
+                        bw.Write(c.GetValue());
                     }
 
                     bw.Write(0xFFFFFFFF);

@@ -33,6 +33,11 @@ namespace CTRFramework
             Read(br);
         }
 
+        public static ModelPack FromFile(string filename)
+        {
+            return new ModelPack(filename);
+        }
+
         public void Read(BinaryReaderEx br)
         {
             texOff = br.ReadInt32();

@@ -18,9 +18,9 @@ namespace CTRFramework.Shared
 
         public Vector3b(byte x, byte y, byte z)
         {
-            X = (byte)(X * x);
-            Y = (byte)(Y * y);
-            Z = (byte)(Z * z);
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         public void Scale(float x, float y, float z)
