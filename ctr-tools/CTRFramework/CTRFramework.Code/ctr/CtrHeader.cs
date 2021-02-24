@@ -289,6 +289,27 @@ namespace CTRFramework
         public string ToObj()
         {
             StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
+            sb.AppendLine($"#{Meta.GetVersionInfo()}");
+            sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
+
+            sb.AppendLine("# textures used:");
+
+            List<string> uniquetags = new List<string>();
+
+            foreach (TextureLayout t in tl)
+            {
+                if (!uniquetags.Contains(t.Tag()))
+                    uniquetags.Add(t.Tag());
+            }
+
+            foreach (string t in uniquetags)
+            {
+                sb.AppendLine($"# {t}.png");
+            }
+
+
             sb.AppendLine("o " + name);
             foreach (Vertex v in verts)
             {

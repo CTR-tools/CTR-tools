@@ -84,11 +84,16 @@ namespace CTRFramework
             //data that seems to be present in every level
             header = Instance<SceneHeader>.FromReader(br, 0);
 
-            meshinfo = Instance<MeshInfo>.FromReader(br, header.ptrMeshInfo);
-            verts = InstanceList<Vertex>.FromReader(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
-            restartPts = InstanceList<PosAng>.FromReader(br, header.ptrRestartPts, header.cntRestartPts);
-            visdata = InstanceList<VisData>.FromReader(br, meshinfo.ptrVisDataArray, meshinfo.cntColData);
-            quads = InstanceList<QuadBlock>.FromReader(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
+            if (header.ptrRestartPts != 0) restartPts = InstanceList<PosAng>.FromReader(br, header.ptrRestartPts, header.cntRestartPts);
+
+            if (header.ptrMeshInfo != 0)
+            {
+                meshinfo = Instance<MeshInfo>.FromReader(br, header.ptrMeshInfo);
+
+                if (meshinfo.ptrVertexArray != 0) verts = InstanceList<Vertex>.FromReader(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
+                if (meshinfo.ptrVisDataArray != 0) visdata = InstanceList<VisData>.FromReader(br, meshinfo.ptrVisDataArray, meshinfo.cntColData);
+                if (meshinfo.ptrQuadBlockArray != 0) quads = InstanceList<QuadBlock>.FromReader(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
+            }
 
             //optional stuff, can be missing
             if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.FromReader(br, header.ptrSkybox);
@@ -272,7 +277,7 @@ namespace CTRFramework
             }
             */
 
-
+            /*
             quads = quads.OrderBy(o => o.mosaicPtr1).ToList();
 
             StringBuilder sb = new StringBuilder();
@@ -289,6 +294,8 @@ namespace CTRFramework
             }
 
             Helpers.WriteToFile(".\\mosaic_test.txt", sb.ToString());
+
+            */
         }
 
 
@@ -355,12 +362,12 @@ namespace CTRFramework
 
         public void ExportModels(string dir)
         {
-            Helpers.CheckFolder(Path.Combine(dir, "\\models"));
+            Helpers.CheckFolder(Path.Combine(dir, "models"));
 
             foreach (CtrModel d in dynamics)
             {
-                d.Export(Path.Combine(dir, "\\models"));
-                d.Write(Path.Combine(dir, "\\models"));
+                d.Export(Path.Combine(dir, "models"));
+                d.Write(Path.Combine(dir, "models"));
             }
         }
 
@@ -575,6 +582,20 @@ namespace CTRFramework
                         }
 
                         break;
+                }
+            }
+
+            foreach (CtrModel dyn in dynamics)
+            {
+                foreach (CtrHeader hdr in dyn.headers)
+                {
+                    foreach (TextureLayout tl in hdr.tl)
+                    {
+                        if (!tex.ContainsKey(tl.Tag()))
+                        {
+                            tex.Add(tl.Tag(), tl);
+                        }
+                    }
                 }
             }
 

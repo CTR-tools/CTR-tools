@@ -97,9 +97,7 @@ namespace CTRFramework
             null2 = br.ReadInt32();
 
             if (null1 != 0 || null2 != 0)
-            {
-                Console.WriteLine("WARNING header.null1 = " + null1 + "; header.null2 = " + null2);
-            }
+                Helpers.Panic(this, "WARNING header.null1 = " + null1 + "; header.null2 = " + null2);
 
             cntWater = br.ReadUInt32();
             ptrWater = br.ReadUInt32();

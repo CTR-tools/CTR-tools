@@ -99,6 +99,12 @@ namespace CTRFramework
                 return;
             }
 
+            if (words[0] == "vt")
+            {
+                Console.WriteLine("uv, skip: " + s);
+                return;
+            }
+
             if (words[0] == "v")
             {
                 Console.WriteLine("it's a vertex! " + s);
@@ -130,7 +136,7 @@ namespace CTRFramework
                     short[] coord = new short[3];
 
                     for (int i = 0; i < 3; i++)
-                        Int16.TryParse(words[i + 1].Split('\\')[0], out coord[i]);
+                        Int16.TryParse(words[i + 1].Split('/')[0], out coord[i]);
 
                     faces.Add(new Vector3s((short)(coord[0]-1), (short)(coord[1] - 1), (short)(coord[2] - 1)));
                 }
@@ -147,6 +153,12 @@ namespace CTRFramework
             if (words[0] == "usemtl")
             {
                 Console.WriteLine("material, don't need. " + s);
+                return;
+            }
+
+            if (words[0] == "mtllib")
+            {
+                Console.WriteLine("material lib, don't need. " + s);
                 return;
             }
 
