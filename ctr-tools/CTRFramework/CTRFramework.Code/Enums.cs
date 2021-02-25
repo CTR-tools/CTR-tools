@@ -37,6 +37,19 @@ namespace CTRFramework
     }
 
     [Flags]
+    public enum CtrDrawFlags
+    {
+        s = 1 << 7,     //starts a new tristrip
+        l = 1 << 6,     //swap 1st vertex of the new face with the 1st from the last one
+        n = 1 << 5,     //defines whether the face normal should be flipped
+        d = 1 << 4,     //single sided if set
+        k = 1 << 3,     //tells whether it should take color from scratchpad or ram. original models all use this, but custom result in random colors.
+        v = 1 << 2,     //takes vertex from stack instead of vertex array
+        b3 = 1 << 1,    //assumed never used
+        b4 = 1 << 0     //assumed never used
+    }
+
+    [Flags]
     public enum ExportFlags
     {
         MeshLow = 1 << 0,

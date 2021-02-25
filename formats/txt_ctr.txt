@@ -1,5 +1,5 @@
 Crash Team Racing dynamic model format
-historically we refer to this format as .ctr
+historically we refer to this format as .ctr.
 
 model {
   char[16] - name
@@ -48,7 +48,7 @@ the format does not define sizes for its arrays, so you have to read all command
 command - big endian dword
 
 bitmask according to horror's spec:
-sl??kv?? iiiiiiii ccccccct tttttttt //8-8-7-9 bits
+slndkv?? iiiiiiii ccccccct tttttttt //8-8-7-9 bits
 
 t - tex coord index (0 = no texture), max = 511
 c - color coord index, max = 127
@@ -58,6 +58,8 @@ l - swap 1st vertex of the new face with the 1st from the last one (could be qua
 s - new face block
 k - tells whether it should take color from scratchpad or ram (only affects real psx).
 ? - unknown
+n - defines whether the face normal should be flipped
+d - if set, cull backface, else double sided
 
 value of -1 (0xFFFFFFFF) is the list terminator
 

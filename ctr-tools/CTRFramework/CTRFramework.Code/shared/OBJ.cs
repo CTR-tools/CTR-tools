@@ -241,7 +241,7 @@ namespace CTRFramework
                 cmd.colorIndex = 0;
                 cmd.stackIndex = (byte)(f.X);
                 Console.WriteLine(cmd.stackIndex);
-                cmd.flags = CtrDrawFlags.s;
+                cmd.flags = CtrDrawFlags.s | CtrDrawFlags.d;
 
                 if (accessed.Contains(cmd.stackIndex))
                 {
@@ -259,9 +259,9 @@ namespace CTRFramework
                 cmd = new CtrDraw();
                 cmd.texIndex = 0;
                 cmd.colorIndex = 1;
-                cmd.stackIndex = (byte)(f.Y);
+                cmd.stackIndex = (byte)(f.Z);
                 Console.WriteLine(cmd.stackIndex);
-                cmd.flags = 0;
+                cmd.flags = CtrDrawFlags.d;
 
                 if (accessed.Contains(cmd.stackIndex))
                 {
@@ -279,9 +279,9 @@ namespace CTRFramework
                 cmd = new CtrDraw();
                 cmd.texIndex = 0;
                 cmd.colorIndex = 2;
-                cmd.stackIndex = (byte)(f.Z);
+                cmd.stackIndex = (byte)(f.Y);
                 Console.WriteLine(cmd.stackIndex);
-                cmd.flags = 0;
+                cmd.flags = CtrDrawFlags.d;
 
                 if (accessed.Contains(cmd.stackIndex))
                 {

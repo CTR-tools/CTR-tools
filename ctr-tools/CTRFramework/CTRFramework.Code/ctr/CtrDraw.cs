@@ -3,27 +3,14 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public enum CtrDrawFlags
-    {
-        s = 1 << 7,
-        l = 1 << 6,
-        b1 = 1 << 5,
-        b2 = 1 << 4,
-        k = 1 << 3,
-        v = 1 << 2,
-        b3 = 1 << 1,
-        b4 = 1 << 0
-    }
-
     public class CtrDraw
     {
         public uint value = 0;
 
-        //public byte flagsval => (byte)(value >> (8 * 3) & 0xFF);
-        public CtrDrawFlags flags;// => (Flags)flagsval;
-        public byte stackIndex; //=> (byte)(value >> 16 & 0xFF);
-        public byte colorIndex; // => (byte)(value >> 9 & 0x7F);
-        public byte texIndex; // => (byte)(value & 0x1FF);
+        public CtrDrawFlags flags;
+        public byte stackIndex;
+        public byte colorIndex;
+        public byte texIndex;
 
         public CtrDraw()
         {
@@ -49,22 +36,22 @@ namespace CTRFramework
             packbackvalue |= (uint)(stackIndex << 16);
             packbackvalue |= (uint)(colorIndex << 9);
             packbackvalue |= (uint)(texIndex);
-            
-            
-            /*
-            packbackvalue |= (uint)((byte)flags);
-            packbackvalue |= (uint)(stackIndex << 8);
-            packbackvalue |= (uint)(colorIndex << 16);
-            packbackvalue |= (uint)(texIndex << 23);
-            */
-
 
             return packbackvalue;
         }
 
         public override string ToString()
         {
-            return $"[{value.ToString("X8")}] f:{((byte)flags).ToString("X2")} s:{stackIndex} t:{texIndex} c:{colorIndex}";
+            return $"[{value.ToString("X8")}] " +
+                (flags.HasFlag(CtrDrawFlags.b4) ? "4" : "_") +
+                (flags.HasFlag(CtrDrawFlags.b3) ? "3" : "_") +
+                (flags.HasFlag(CtrDrawFlags.v) ? "v" : "_") +
+                (flags.HasFlag(CtrDrawFlags.k) ? "k" : "_") +
+                (flags.HasFlag(CtrDrawFlags.d) ? "d" : "_") +
+                (flags.HasFlag(CtrDrawFlags.n) ? "n" : "_") +
+                (flags.HasFlag(CtrDrawFlags.l) ? "l" : "_") +
+                (flags.HasFlag(CtrDrawFlags.s) ? "s" : "_") +
+                $" f: { ((byte)flags).ToString("X2")} s: {stackIndex} t: {texIndex} c: {colorIndex}";
         }
     }
 }

@@ -180,14 +180,28 @@ namespace CTRFramework
             else
             {
                 br.Jump(ptrAnims);
-                br.Jump(br.ReadInt32() + 0x1C + 0x18);
+                int ptr = br.ReadInt32();
+                br.Jump(ptr);
+
+                CtrAnim anim = CtrAnim.FromReader(br);
+
+                Console.WriteLine(anim.name + " " + anim.numFrames);
+
+                br.Skip(0x1C);
+
+                Console.WriteLine(br.HexPos());
 
                 posOffset = new Vector4s(0,0,0,0);
             }
 
 
             for (int k = 0; k < maxv; k++)
-                vtx.Add(new Vector3b(br));
+            {
+                Vector3b v = new Vector3b(br);
+                vtx.Add(v);
+                Console.WriteLine(v.X.ToString("X2") + v.Y.ToString("X2") + v.Z.ToString("X2"));
+                //Console.ReadKey();
+            }
 
             List<Vector3s> vfixed = new List<Vector3s>();
 
@@ -252,18 +266,19 @@ namespace CTRFramework
                         v.color_morph = v.color;
                         verts.Add(v);
                     }
+
+                    if (!d.flags.HasFlag(CtrDrawFlags.n))
+                    {
+                        Vertex v = verts[verts.Count - 1];
+                        verts[verts.Count - 1] = verts[verts.Count - 3];
+                        verts[verts.Count - 3] = v;
+                    }
                 }
 
                 Console.WriteLine(cur_i);
 
                 cur_i++;
             }
-
-            //Console.ReadKey();
-
-            // Directory.CreateDirectory("mpk");
-            // Helpers.WriteToFile("mpk\\" + name + ".obj", sb.ToString());
-
 
             br.Jump(ptrTex);
             uint[] texptrs = br.ReadArrayUInt32(maxt);
