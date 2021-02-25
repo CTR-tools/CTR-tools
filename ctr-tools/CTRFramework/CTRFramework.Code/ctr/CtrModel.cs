@@ -168,7 +168,7 @@ namespace CTRFramework
             foreach (var ctr in headers)
             {
                 ctr.ptrCmd = curPtr;
-                curPtr += (4 + ctr.defs.Count * 4 + 4);
+                curPtr += (4 + ctr.drawList.Count * 4 + 4);
 
                 if (curPtr % 4 != 0)
                     curPtr = ((curPtr / 4) + 1) * 4;

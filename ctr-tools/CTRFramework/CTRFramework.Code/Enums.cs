@@ -157,7 +157,7 @@ namespace CTRFramework
 
     public enum VecFormat
     {
-        Numbers, CommaSeparated, Braced
+        Numbers, CommaSeparated, Braced, Hex
     }
 
 

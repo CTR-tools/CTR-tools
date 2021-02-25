@@ -5,15 +5,19 @@ namespace CTRFramework.Shared
 {
     public class Vector3b : IReadWrite
     {
-        public byte X;
-        public byte Y;
-        public byte Z;
+        public byte X = 0;
+        public byte Y = 0;
+        public byte Z = 0;
 
-        public void Scale(float x)
+        public Vector3b()
         {
-            X = (byte)(X * x);
-            Y = (byte)(Y * x);
-            Z = (byte)(Z * x);
+        }
+
+        public Vector3b(byte x)
+        {
+            X = x;
+            Y = x;
+            Z = x;
         }
 
         public Vector3b(byte x, byte y, byte z)
@@ -21,6 +25,12 @@ namespace CTRFramework.Shared
             X = x;
             Y = y;
             Z = z;
+        }
+        public void Scale(float x)
+        {
+            X = (byte)(X * x);
+            Y = (byte)(Y * x);
+            Z = (byte)(Z * x);
         }
 
         public void Scale(float x, float y, float z)
@@ -30,14 +40,12 @@ namespace CTRFramework.Shared
             Z = (byte)(Z * z);
         }
 
-
         public Vector3b(Color c)
         {
             X = c.R;
             Y = c.G;
             Z = c.B;
         }
-
 
         public Vector3b(BinaryReaderEx br)
         {
@@ -60,15 +68,13 @@ namespace CTRFramework.Shared
 
         public string ToString(VecFormat format)
         {
-            string fmt = "{0} {1} {2}";
-
             switch (format)
             {
-                case VecFormat.CommaSeparated: fmt = "{0}, {1}, {2}"; break;
-                case VecFormat.Braced: fmt = "({0}, {1}, {2})"; break;
+                case VecFormat.CommaSeparated: return $"{X}, {Y}, {Z}"; 
+                case VecFormat.Braced: return $"({X}, {Y}, {Z})";
+                case VecFormat.Hex: return $"{X.ToString("X2")}, {Y.ToString("X2")}, {Z.ToString("X2")}";
+                default: throw new NotSupportedException("Unknown VecFormat.");
             }
-
-            return String.Format(fmt, X, Y, Z);
         }
 
         public override string ToString()

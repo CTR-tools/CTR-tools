@@ -228,21 +228,24 @@ namespace CTRFramework
             }
 
 
+
             List<short> accessed = new List<short>();
             List<Vector3b> newlist = new List<Vector3b>();
 
             foreach (var f in faces)
             {
-                if (f.X > 255 || f.Y > 255 || f.Z > 255)
-                    throw new Exception("too many vertices. 255 is the limit. reduce vertex count and make sure you merged all vertices.");
+                //if (f.X > 255 || f.Y > 255 || f.Z > 255)
+                //    throw new Exception("too many vertices. 255 is the limit. reduce vertex count and make sure you merged all vertices.");
 
                 CtrDraw cmd = new CtrDraw();
                 cmd.texIndex = 0;
                 cmd.colorIndex = 0;
                 cmd.stackIndex = (byte)(f.X);
                 Console.WriteLine(cmd.stackIndex);
-                cmd.flags = CtrDrawFlags.s | CtrDrawFlags.d;
+                cmd.flags = CtrDrawFlags.s;
 
+                newlist.Add(model.vtx[f.X]);
+                /*
                 if (accessed.Contains(cmd.stackIndex))
                 {
                     cmd.flags = cmd.flags | CtrDrawFlags.v;
@@ -252,8 +255,10 @@ namespace CTRFramework
                     accessed.Add(cmd.stackIndex);
                     newlist.Add(model.vtx[cmd.stackIndex]);
                 }
+                */
 
-                model.defs.Add(cmd);
+
+                model.drawList.Add(cmd);
 
 
                 cmd = new CtrDraw();
@@ -261,8 +266,10 @@ namespace CTRFramework
                 cmd.colorIndex = 1;
                 cmd.stackIndex = (byte)(f.Z);
                 Console.WriteLine(cmd.stackIndex);
-                cmd.flags = CtrDrawFlags.d;
+                cmd.flags = 0;
 
+                newlist.Add(model.vtx[f.Z]);
+                /*
                 if (accessed.Contains(cmd.stackIndex))
                 {
                     cmd.flags = cmd.flags | CtrDrawFlags.v;
@@ -272,8 +279,9 @@ namespace CTRFramework
                     accessed.Add(cmd.stackIndex);
                     newlist.Add(model.vtx[cmd.stackIndex]);
                 }
+                */
 
-                model.defs.Add(cmd);
+                model.drawList.Add(cmd);
 
 
                 cmd = new CtrDraw();
@@ -281,8 +289,10 @@ namespace CTRFramework
                 cmd.colorIndex = 2;
                 cmd.stackIndex = (byte)(f.Y);
                 Console.WriteLine(cmd.stackIndex);
-                cmd.flags = CtrDrawFlags.d;
+                cmd.flags = 0;
 
+                newlist.Add(model.vtx[f.Y]);
+                /*
                 if (accessed.Contains(cmd.stackIndex))
                 {
                     cmd.flags = cmd.flags | CtrDrawFlags.v;
@@ -292,9 +302,9 @@ namespace CTRFramework
                     accessed.Add(cmd.stackIndex);
                     newlist.Add(model.vtx[cmd.stackIndex]);
                 }
+                */
 
-                model.defs.Add(cmd);
-
+                model.drawList.Add(cmd);
             }
 
             model.vtx = newlist;

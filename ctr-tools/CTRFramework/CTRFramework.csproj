@@ -94,10 +94,10 @@
     <Compile Include="CTRFramework.Code\lev\UnkAdv.cs" />
     <Compile Include="CTRFramework.Code\lev\VertexAnim.cs" />
     <Compile Include="CTRFramework.Code\lang\LNG.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vector2b.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vector2s.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vector3b.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vector3f.cs" />
+    <Compile Include="CTRFramework.Code\shared\Vectors\Vector2b.cs" />
+    <Compile Include="CTRFramework.Code\shared\Vectors\Vector2s.cs" />
+    <Compile Include="CTRFramework.Code\shared\Vectors\Vector3b.cs" />
+    <Compile Include="CTRFramework.Code\shared\Vectors\Vector3f.cs" />
     <Compile Include="CTRFramework.Code\sound\Bank.cs" />
     <Compile Include="CTRFramework.Code\shared\BinaryReaderEx.cs" />
     <Compile Include="CTRFramework.Code\shared\BinaryWriterEx.cs" />
@@ -123,9 +123,9 @@
     <Compile Include="CTRFramework.Code\shared\OBJ.cs" />
     <Compile Include="CTRFramework.Code\shared\PosAng.cs" />
     <Compile Include="CTRFramework.Code\shared\SomeData.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vector3s.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vector4b.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vector4s.cs" />
+    <Compile Include="CTRFramework.Code\shared\Vectors\Vector3s.cs" />
+    <Compile Include="CTRFramework.Code\shared\Vectors\Vector4b.cs" />
+    <Compile Include="CTRFramework.Code\shared\Vectors\Vector4s.cs" />
     <Compile Include="CTRFramework.Code\sound\CSEQ\CHeader.cs" />
     <Compile Include="CTRFramework.Code\sound\CSEQ\CSEQ.cs" />
     <Compile Include="CTRFramework.Code\sound\CSEQ\Instrument.cs" />

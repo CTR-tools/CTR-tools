@@ -45,7 +45,7 @@ namespace CTRFramework
 
         List<CtrAnim> anims = new List<CtrAnim>();
 
-        public List<CtrDraw> defs = new List<CtrDraw>();
+        public List<CtrDraw> drawList = new List<CtrDraw>();
         public List<Vector3b> vtx = new List<Vector3b>();
         public List<TextureLayout> tl = new List<TextureLayout>();
         public List<Vector4b> cols = new List<Vector4b>();
@@ -69,27 +69,39 @@ namespace CTRFramework
         public void Read(BinaryReaderEx br)
         {
             name = br.ReadStringFixed(16);
-
-            Console.WriteLine(name);
-            //Console.ReadKey();
-
-            unk0 = br.ReadInt32(); //0?
+            unk0 = br.ReadInt32();
             lodDistance = br.ReadInt16();
-            billboard = br.ReadInt16(); //probably flags
+            billboard = br.ReadInt16();
+
+            Console.WriteLine($"CtrHeader: {name}");
+
+            if (unk0 != 0)
+                Helpers.Panic(this, $"check unusual unk0 value = {unk0}");
+
+            if (billboard > 1)
+                Helpers.Panic(this, $"check unusual billboard value = {billboard}");
+
             scale = new Vector4s(br);
 
-            //ptr
             ptrCmd = br.ReadInt32();
             ptrVerts = br.ReadInt32();
             ptrTex = br.ReadInt32();
             ptrClut = br.ReadInt32();
-            unk3 = br.ReadInt32(); //?
-
+            unk3 = br.ReadInt32();
             numAnims = br.ReadInt32();
             ptrAnims = br.ReadInt32();
-            unk4 = br.ReadInt32(); //?
+            unk4 = br.ReadInt32();
+
+            if (unk3 != 0)
+                Helpers.Panic(this, $"check unusual unk3 value = {unk3}");
+
+            if (unk4 != 0)
+                Helpers.Panic(this, $"check unusual unk4 value = {unk4}");
 
             long pos = br.BaseStream.Position;
+
+
+            //read all drawing commands
 
             br.Jump(ptrCmd);
 
@@ -101,11 +113,11 @@ namespace CTRFramework
             {
                 x = br.ReadUInt32Big();
                 if (x != 0xFFFFFFFF)
-                    defs.Add(new CtrDraw(x));
+                    drawList.Add(new CtrDraw(x));
             }
             while (x != 0xFFFFFFFF);
 
-            
+            //should read anims here
 
             /*
             if (numAnims > 0)
@@ -119,34 +131,32 @@ namespace CTRFramework
             }
             */
 
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("o {0}\r\n", name);
-
-            Vector4b[] clr = new Vector4b[3];
-            Vector3s[] crd = new Vector3s[4];
-            Vector3s[] stack = new Vector3s[256];
-            Vector3s curvert;
-
-            int i = 0;
-            int cur_i = 0;
+            //define temporary arrays
+            Vector4b[] clr = new Vector4b[3];       //color buffer
+            Vector3s[] crd = new Vector3s[4];       //face buffer
+            Vector3s[] stack = new Vector3s[256];   //vertex buffer
 
             int maxv = 0;
             int maxc = 0;
             int maxt = 0;
 
-            foreach (CtrDraw d in defs)
+            //one pass through all draw commands to get the array lengths
+            foreach (var draw in drawList)
             {
-                if (!d.flags.HasFlag(CtrDrawFlags.v))
+                //only increase vertex count for commands that don't take vertex from stack
+                if (!draw.flags.HasFlag(CtrDrawFlags.v))
                     maxv++;
 
-                if (d.colorIndex > maxc)
-                    maxc = d.colorIndex;
+                //simply find max color index
+                if (draw.colorIndex > maxc)
+                    maxc = draw.colorIndex;
 
-                if (d.texIndex > 0)
-                    if (d.texIndex - 1 > maxt)
-                        maxt = d.texIndex;
+                //find max index, but 0 means no texture.
+                if (draw.texIndex > 0)
+                    if (draw.texIndex - 1 > maxt)
+                        maxt = draw.texIndex;
 
-                Console.WriteLine(d.ToString());
+                Console.WriteLine(draw.ToString());
             }
 
             Console.WriteLine("maxv: " + maxv);
@@ -159,6 +169,7 @@ namespace CTRFramework
             for (int k = 0; k <= maxc; k++)
                 cols.Add(new Vector4b(br));
 
+            //if static model
             if (!IsAnimated)
             {
                 br.Jump(ptrVerts);
@@ -171,14 +182,14 @@ namespace CTRFramework
 
                 vrenderMode = br.ReadInt32();
 
-                if (vrenderMode != 0x1C)
+                if (!(new List<int> { 0x1C, 0x22 } ).Contains(vrenderMode))
                 {
-                    Helpers.Panic(this, $"{vrenderMode.ToString("X8")}");
-                   // Console.ReadKey();
+                    Helpers.Panic(this, $"check vrender {vrenderMode.ToString("X8")}");
                 }
             }
             else
             {
+                //jump to first animation, read header and jump to vertex garbage
                 br.Jump(ptrAnims);
                 int ptr = br.ReadInt32();
                 br.Jump(ptr);
@@ -194,14 +205,13 @@ namespace CTRFramework
                 posOffset = new Vector4s(0,0,0,0);
             }
 
-
+            //read vertices
             for (int k = 0; k < maxv; k++)
-            {
-                Vector3b v = new Vector3b(br);
-                vtx.Add(v);
-                Console.WriteLine(v.X.ToString("X2") + v.Y.ToString("X2") + v.Z.ToString("X2"));
-                //Console.ReadKey();
-            }
+                vtx.Add(new Vector3b(br));
+
+            foreach (var v in vtx)
+                Console.WriteLine(v.ToString(VecFormat.Hex));
+
 
             List<Vector3s> vfixed = new List<Vector3s>();
 
@@ -210,54 +220,58 @@ namespace CTRFramework
 
             foreach (Vector3s v in vfixed)
             {
+                //scale vertices
                 v.X = (short)((((float)v.X / 255.0f - 0.5) * scale.X));
                 v.Y = (short)((((float)v.Y / 255.0f - 0.5) * scale.Z));
                 v.Z = (short)((((float)v.Z / 255.0f) * scale.Y));
 
+                //flip axis
                 short zz = v.Z;
                 v.Z = (short)-v.Y;
                 v.Y = zz;
             }
 
-            //br.Jump(ppos);
+            int vertexIndex = 0;
+            int stripLength = 0;
 
-            //Console.WriteLine(defs.Count);
-            //Console.ReadKey();
-
-            foreach (CtrDraw d in defs)
+            //process all commands
+            foreach (CtrDraw d in drawList)
             {
-                if (d.flags.HasFlag(CtrDrawFlags.s))
+                //if we got no stack vertex flag
+                if (!d.flags.HasFlag(CtrDrawFlags.v))
                 {
-                    cur_i = 0;
+                    //push vertex from the array to the buffer
+                    stack[d.stackIndex] = vfixed[vertexIndex];
+                    vertexIndex++;
                 }
 
-                if (d.flags.HasFlag(CtrDrawFlags.v))
-                {
-                    curvert = stack[d.stackIndex];
-                }
-                else
-                {
-                    curvert = vfixed[i];//ReadVertex(br, i);
-                    stack[d.stackIndex] = curvert;
-                    i++;
-                }
-
+                //push new vertex from stack
                 crd[0] = crd[1];
                 crd[1] = crd[2];
                 crd[2] = crd[3];
-                crd[3] = curvert;
+                crd[3] = stack[d.stackIndex];
 
                 if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
                     crd[1] = crd[0];
                 } 
 
+                //push new color
                 clr[0] = clr[1];
                 clr[1] = clr[2];
-                clr[2] = cols[d.colorIndex];//ReadColor(br, d.colorIndex);
+                clr[2] = cols[d.colorIndex];
 
-                if (cur_i >= 2)
+
+                //if got reset flag, reset tristrip vertex counter
+                if (d.flags.HasFlag(CtrDrawFlags.s))
                 {
+                    stripLength = 0;
+                }
+
+                //if we got 3 indices in tristrip (0,1,2)
+                if (stripLength >= 2)
+                {
+                    //read 3 vertices and push to the array
                     for (int z = 1; z < 4; z++)
                     {
                         Vertex v = new Vertex();
@@ -267,6 +281,7 @@ namespace CTRFramework
                         verts.Add(v);
                     }
 
+                    //ig got normal flag, change vertex order to flip normals
                     if (!d.flags.HasFlag(CtrDrawFlags.n))
                     {
                         Vertex v = verts[verts.Count - 1];
@@ -275,11 +290,10 @@ namespace CTRFramework
                     }
                 }
 
-                Console.WriteLine(cur_i);
-
-                cur_i++;
+                stripLength++;
             }
 
+            //read texture layouts
             br.Jump(ptrTex);
             uint[] texptrs = br.ReadArrayUInt32(maxt);
 
@@ -297,7 +311,6 @@ namespace CTRFramework
             Console.WriteLine("tlcnt: " + tl.Count);
 
             br.BaseStream.Position = pos;
-
         }
 
 
@@ -409,7 +422,7 @@ namespace CTRFramework
 
                     bw.Write(cmdNum);
                    
-                    foreach (var c in defs)
+                    foreach (var c in drawList)
                     {
                         bw.Write(c.GetValue());
                     }
