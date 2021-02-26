@@ -143,6 +143,22 @@ namespace CTRTools
         private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+            if (files.Length > 0)
+            {
+                switch (Path.GetExtension(files[0]))
+                {
+                    case ".dyn":
+                    case ".ctr":
+                        tabControl1.SelectedTab = tabLev;
+                        break;
+                    case ".big":
+                        tabControl1.SelectedTab = tabBig;
+                        break;
+                }
+
+            }
         }
 
         private void gitHubBox_Click(object sender, EventArgs e)

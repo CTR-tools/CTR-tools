@@ -126,6 +126,5 @@ namespace CTRTools.Controls
                 MessageBox.Show(ex.Message);
             }
         }
-
     }
 }
