@@ -5,79 +5,88 @@ meta:
   file-extension: lev
   endian: le
 
-doc: |
-  there is an extra uint in the beginning.
-  it is omitted to simplify pointer usage.
-  remember to remove 1st 4 bytes in hex for this definition.
-
 seq:
-  - id: header
-    type: scene_header
-
-  - id: restart_main
-    type: posang
-    if: header.ptr_restart_main != 0
-
-  - id: restart_pts
-    type: posang
-    repeat: expr
-    repeat-expr: header.cnt_restart_pts
-
-  - id: instances
-    type: instance
-    repeat: expr
-    repeat-expr: header.num_instances
-
-  - id: model_pointers
+  - id: data_size
+    type: u4
+  - id: data
+    type: lev
+    size: data_size
+  - id: ptr_map_size
+    type: u4
+  - id: ptr_map
     type: u4
     repeat: expr
-    repeat-expr: header.num_models
-
-  - id: mesh_info_header
-    type: mesh_info
-
-  - id: quad_block_array
-    type: quad_block
-    repeat: expr
-    repeat-expr: mesh_info_header.cnt_quad_block
-
-  - id: vertex_array
-    type: vertex
-    repeat: expr
-    repeat-expr: mesh_info_header.vertexnum
-
-instances:
-  trial:
-    pos: header.ptr_trial_data
-    type: trial_data
-    if: header.cnt_trial_data > 0
-
-  skybox:
-    pos: header.ptr_skybox
-    type: skybox
-    if: header.ptr_skybox != 0
-
-  vis_data_array:
-    pos: mesh_info_header.ptr_vis_data_array
-    type: vis_data
-    repeat: expr
-    repeat-expr: mesh_info_header.cnt_vis_data
-
-  unk_struct1_array:
-    pos: header.ptr_tex_array
-    type: unk_struct
-
-  ai_nav:
-    pos: header.ptr_ai_nav
-    type: ai_paths
-
-  water_data:
-    pos: header.ptr_water
-    type: water_packet
-    repeat: expr
-    repeat-expr: header.cnt_water
+    repeat-expr: ptr_map_size / 4  
 
 types:
+  lev:
+    seq:
+      - id: header
+        type: scene_header
+    
+      - id: restart_main
+        type: posang
+        if: header.ptr_restart_main != 0
+    
+      - id: restart_pts
+        type: posang
+        repeat: expr
+        repeat-expr: header.cnt_restart_pts
+    
+      - id: instances
+        type: instance
+        repeat: expr
+        repeat-expr: header.num_instances
+    
+      - id: model_pointers
+        type: u4
+        repeat: expr
+        repeat-expr: header.num_models
+    
+      - id: mesh_info_header
+        type: mesh_info
+    
+      - id: quad_block_array
+        type: quad_block
+        repeat: expr
+        repeat-expr: mesh_info_header.cnt_quad_block
+    
+      - id: vertex_array
+        type: vertex
+        repeat: expr
+        repeat-expr: mesh_info_header.vertexnum
+    
+    instances:
+      trial:
+        pos: header.ptr_trial_data
+        type: trial_data
+        if: header.cnt_trial_data > 0
+    
+      skybox:
+        pos: header.ptr_skybox
+        type: skybox
+        if: header.ptr_skybox != 0
+    
+      vis_data_array:
+        pos: mesh_info_header.ptr_vis_data_array
+        type: vis_data
+        repeat: expr
+        repeat-expr: mesh_info_header.cnt_vis_data
+    
+      unk_struct1_array:
+        pos: header.ptr_tex_array
+        type: unk_struct
+    
+      ai_nav:
+        pos: header.ptr_ai_nav
+        type: ai_paths
+    
+      water_data:
+        pos: header.ptr_water
+        type: water_packet
+        repeat: expr
+        repeat-expr: header.cnt_water
+
   vis_data:
     seq:
       - id: flag
