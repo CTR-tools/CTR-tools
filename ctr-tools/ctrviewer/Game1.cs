@@ -376,7 +376,7 @@ namespace ctrviewer
                     {
                         List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
-                        foreach (var x in m.headers[0].verts)
+                        foreach (var x in m.Entries[0].verts)
                             li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
 
                         TriList t = new TriList();
@@ -479,7 +479,7 @@ namespace ctrviewer
                     {
                         List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
-                        foreach (var x in m.headers[0].verts)
+                        foreach (var x in m.Entries[0].verts)
                             li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
 
                         TriList t = new TriList();

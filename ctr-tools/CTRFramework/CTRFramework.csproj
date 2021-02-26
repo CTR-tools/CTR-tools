@@ -109,7 +109,6 @@
     <Compile Include="CTRFramework.Code\mpk\ModelPack.cs" />
     <Compile Include="CTRFramework.Code\mpk\TexMap.cs" />
     <Compile Include="CTRFramework.Code\shared\InstanceList.cs" />
-    <Compile Include="CTRFramework.Code\lev\FaceGroup.cs" />
     <Compile Include="CTRFramework.Code\lev\Scene.cs" />
     <Compile Include="CTRFramework.Code\lev\SceneHeader.cs" />
     <Compile Include="CTRFramework.Code\lev\MeshInfo.cs" />

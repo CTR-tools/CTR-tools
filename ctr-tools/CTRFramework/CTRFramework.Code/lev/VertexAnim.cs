@@ -36,6 +36,7 @@ namespace CTRFramework
             unk2 = br.ReadUInt32();
             color = new Vector4b(br);
         }
+
         public void Write(BinaryWriterEx bw)
         {
             bw.Write(ptrVertex);
@@ -44,11 +45,9 @@ namespace CTRFramework
             color.Write(bw);
         }
 
-
         public override string ToString()
         {
             return ptrVertex.ToString("X8") + " " + color.ToString() + " " + unk1.ToString("X8") + " " + unk2.ToString("X8");
         }
-
     }
 }

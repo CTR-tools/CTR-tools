@@ -3,8 +3,9 @@ using CTRFramework.Shared;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using System.Globalization;
+using System.Threading;
 
 namespace CTRTools
 {
@@ -18,6 +19,12 @@ namespace CTRTools
 
         public MainForm()
         {
+            //this code should be moved to framework i guess
+            //this is here to force dots in floats.
+            CultureInfo customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
+            Thread.CurrentThread.CurrentCulture = customCulture;
+
             this.DoubleBuffered = true;
             InitializeComponent();
 
@@ -146,6 +153,11 @@ namespace CTRTools
         private void discordBox_Click(object sender, EventArgs e)
         {
             Process.Start("https://discord.gg/56xm9Aj");
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
         }
 
         /*

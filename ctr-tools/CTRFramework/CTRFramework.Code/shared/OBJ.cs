@@ -204,6 +204,8 @@ namespace CTRFramework
             bb2.Max.Y -= bb.Min.Y;
             bb2.Max.Z -= bb.Min.Z;
 
+            System.Windows.Forms.MessageBox.Show(bb.ToString() + " " + bb2.ToString());
+
             Console.WriteLine(bb.ToString());
             Console.WriteLine(bb2.ToString());
 
@@ -212,7 +214,6 @@ namespace CTRFramework
                 (short)(bb2.Max.Y * 10),
                 (short)(bb2.Max.Z * 10),
                 0);
-
 
             model.vtx.Clear();
 
@@ -240,7 +241,7 @@ namespace CTRFramework
                 CtrDraw cmd = new CtrDraw();
                 cmd.texIndex = 0;
                 cmd.colorIndex = 0;
-                cmd.stackIndex = (byte)(f.X);
+                cmd.stackIndex = 87;
                 Console.WriteLine(cmd.stackIndex);
                 cmd.flags = CtrDrawFlags.s;
 
@@ -264,7 +265,7 @@ namespace CTRFramework
                 cmd = new CtrDraw();
                 cmd.texIndex = 0;
                 cmd.colorIndex = 1;
-                cmd.stackIndex = (byte)(f.Z);
+                cmd.stackIndex = 87;
                 Console.WriteLine(cmd.stackIndex);
                 cmd.flags = 0;
 
@@ -287,7 +288,7 @@ namespace CTRFramework
                 cmd = new CtrDraw();
                 cmd.texIndex = 0;
                 cmd.colorIndex = 2;
-                cmd.stackIndex = (byte)(f.Y);
+                cmd.stackIndex = 87;
                 Console.WriteLine(cmd.stackIndex);
                 cmd.flags = 0;
 
@@ -319,7 +320,7 @@ namespace CTRFramework
             model.cols.Add(new Vector4b(0xCC, 0xCC, 0xCC, 0));
             model.cols.Add(new Vector4b(0x80, 0x80, 0x80, 0));
 
-            ctr.headers.Add(model);
+            ctr.Entries.Add(model);
 
             return ctr;
         }

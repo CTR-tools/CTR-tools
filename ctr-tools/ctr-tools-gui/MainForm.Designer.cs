@@ -48,7 +48,9 @@
             this.bigFileControl1 = new CTRTools.Controls.BigFileControl();
             this.tabVram = new System.Windows.Forms.TabPage();
             this.ctrToolsVramControl1 = new CTRTools.VramControl();
-            this.tabLev = new System.Windows.Forms.TabPage();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.ctrControl1 = new CTRTools.Controls.CtrControl();
+            this.tabCtr = new System.Windows.Forms.TabPage();
             this.levControl1 = new CTRTools.LevControl();
             this.tabEmu = new System.Windows.Forms.TabPage();
             this.button28 = new System.Windows.Forms.Button();
@@ -69,7 +71,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).BeginInit();
             this.tabBig.SuspendLayout();
             this.tabVram.SuspendLayout();
-            this.tabLev.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabCtr.SuspendLayout();
             this.tabEmu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -143,7 +146,8 @@
             this.tabControl1.Controls.Add(this.tabAbout);
             this.tabControl1.Controls.Add(this.tabBig);
             this.tabControl1.Controls.Add(this.tabVram);
-            this.tabControl1.Controls.Add(this.tabLev);
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabCtr);
             this.tabControl1.Controls.Add(this.tabEmu);
             this.tabControl1.Location = new System.Drawing.Point(4, 28);
             this.tabControl1.Name = "tabControl1";
@@ -265,17 +269,38 @@
             this.ctrToolsVramControl1.Size = new System.Drawing.Size(600, 377);
             this.ctrToolsVramControl1.TabIndex = 0;
             // 
-            // tabLev
+            // tabPage1
             // 
-            this.tabLev.Controls.Add(this.levControl1);
-            this.tabLev.Location = new System.Drawing.Point(4, 22);
-            this.tabLev.Margin = new System.Windows.Forms.Padding(5);
-            this.tabLev.Name = "tabLev";
-            this.tabLev.Padding = new System.Windows.Forms.Padding(5);
-            this.tabLev.Size = new System.Drawing.Size(609, 384);
-            this.tabLev.TabIndex = 0;
-            this.tabLev.Text = "LEV";
-            this.tabLev.UseVisualStyleBackColor = true;
+            this.tabPage1.Controls.Add(this.ctrControl1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(609, 384);
+            this.tabPage1.TabIndex = 9;
+            this.tabPage1.Text = "CTR models";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // ctrControl1
+            // 
+            this.ctrControl1.AllowDrop = true;
+            this.ctrControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctrControl1.Location = new System.Drawing.Point(3, 3);
+            this.ctrControl1.MinimumSize = new System.Drawing.Size(488, 223);
+            this.ctrControl1.Name = "ctrControl1";
+            this.ctrControl1.Size = new System.Drawing.Size(603, 378);
+            this.ctrControl1.TabIndex = 0;
+            // 
+            // tabCtr
+            // 
+            this.tabCtr.Controls.Add(this.levControl1);
+            this.tabCtr.Location = new System.Drawing.Point(4, 22);
+            this.tabCtr.Margin = new System.Windows.Forms.Padding(5);
+            this.tabCtr.Name = "tabCtr";
+            this.tabCtr.Padding = new System.Windows.Forms.Padding(5);
+            this.tabCtr.Size = new System.Drawing.Size(609, 384);
+            this.tabCtr.TabIndex = 0;
+            this.tabCtr.Text = "LEV";
+            this.tabCtr.UseVisualStyleBackColor = true;
             // 
             // levControl1
             // 
@@ -419,6 +444,7 @@
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "MainForm";
             this.Text = "CTR-tools-gui";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -429,7 +455,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).EndInit();
             this.tabBig.ResumeLayout(false);
             this.tabVram.ResumeLayout(false);
-            this.tabLev.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabCtr.ResumeLayout(false);
             this.tabEmu.ResumeLayout(false);
             this.tabEmu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
@@ -448,7 +475,7 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabLev;
+        private System.Windows.Forms.TabPage tabCtr;
         private System.Windows.Forms.ToolStripMenuItem showConsoleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
         private System.Windows.Forms.TabPage tabBig;
@@ -473,6 +500,8 @@
         private VramControl ctrToolsVramControl1;
         private Controls.BigFileControl bigFileControl1;
         private LevControl levControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private Controls.CtrControl ctrControl1;
     }
 }
 

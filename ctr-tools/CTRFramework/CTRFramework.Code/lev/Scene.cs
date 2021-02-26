@@ -564,7 +564,7 @@ namespace CTRFramework
                                     tex.Add(t.midlods[2].Tag(), t.midlods[2]);
 
                         foreach (CtrModel dyn in dynamics)
-                            foreach (CtrHeader hdr in dyn.headers)
+                            foreach (CtrHeader hdr in dyn.Entries)
                                 foreach (TextureLayout tl in hdr.tl)
                                     if (!tex.ContainsKey(tl.Tag()))
                                         tex.Add(tl.Tag(), tl);
@@ -587,7 +587,7 @@ namespace CTRFramework
 
             foreach (CtrModel dyn in dynamics)
             {
-                foreach (CtrHeader hdr in dyn.headers)
+                foreach (CtrHeader hdr in dyn.Entries)
                 {
                     foreach (TextureLayout tl in hdr.tl)
                     {
@@ -640,7 +640,7 @@ namespace CTRFramework
                 
                 foreach (CtrModel dyn in dynamics)
                 {
-                    foreach(CtrHeader hdr in dyn.headers)
+                    foreach(CtrHeader hdr in dyn.Entries)
                     {
                         foreach (TextureLayout tl in hdr.tl)
                         {

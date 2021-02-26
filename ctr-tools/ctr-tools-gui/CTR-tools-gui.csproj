@@ -64,6 +64,12 @@
   <ItemGroup>
     <Compile Include="Char.cs" />
     <Compile Include="ConsoleHook.cs" />
+    <Compile Include="Controls\CtrControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CtrControl.Designer.cs">
+      <DependentUpon>CtrControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\BigFileControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -105,8 +111,12 @@
     <Compile Include="VramForm.Designer.cs">
       <DependentUpon>VramForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Controls\CtrControl.resx">
+      <DependentUpon>CtrControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\BigFileControl.resx">
       <DependentUpon>BigFileControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\LevControl.resx">
       <DependentUpon>LevControl.cs</DependentUpon>

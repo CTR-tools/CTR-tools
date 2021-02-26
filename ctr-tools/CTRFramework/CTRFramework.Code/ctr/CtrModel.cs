@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.ComponentModel;
 
 namespace CTRFramework
 {
@@ -10,20 +11,29 @@ namespace CTRFramework
     {
         public string path;
 
-        public string Name = "defaultname";
-        public ushort GameEvent = 0;
+        private string name = "defaultname";
+        [Browsable(true), DisplayName("Model name"), Description(""), Category("CTR Model")]
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        private CTREvent gameEvent = CTREvent.Nothing;
+        [Browsable(true), DisplayName("CTR event"), Description(""), Category("CTR Model")]
+        public CTREvent GameEvent
+        {
+            get { return gameEvent; }
+            set { gameEvent = value; }
+        }
+
         //public short numEntries;
         public int ptrHeaders = 0;
 
-        public List<CtrHeader> headers = new List<CtrHeader>();
+        public List<CtrHeader> Entries = new List<CtrHeader>();
 
         public CtrModel()
         {
-        }
-
-        public static CtrModel FromFile(string s)
-        {
-            return new CtrModel(s);
         }
 
         public CtrModel(string s)
@@ -46,21 +56,25 @@ namespace CTRFramework
             Read(br);
         }
 
+        public static CtrModel FromFile(string s)
+        {
+            return new CtrModel(s);
+        }
 
         public void Read(BinaryReaderEx br)
         {
             Console.WriteLine(br.BaseStream.Position.ToString("X8"));
 
-            Name = br.ReadStringFixed(16);
-            GameEvent = br.ReadUInt16();
+            name = br.ReadStringFixed(16);
+            gameEvent = (CTREvent)br.ReadInt16();
             int numEntries = br.ReadInt16();
             ptrHeaders = br.ReadInt32();
 
-            Console.WriteLine("LODModel: " + Name);
+            Console.WriteLine("LODModel: " + name);
 
             for (int i = 0; i < numEntries; i++)
             {
-                headers.Add(new CtrHeader(br));
+                Entries.Add(new CtrHeader(br));
             }
 
             //Helpers.WriteToFile("test.obj", sb.ToString());
@@ -70,9 +84,9 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append(Name + ": ");
+            sb.Append(name + ": ");
 
-            foreach (CtrHeader head in headers)
+            foreach (CtrHeader head in Entries)
                 sb.Append(head.name + ", ");
 
             sb.Append("\r\n");
@@ -83,9 +97,9 @@ namespace CTRFramework
 
         public void Export(string dir)
         {
-            foreach (CtrHeader h in headers)
+            foreach (CtrHeader h in Entries)
             {
-                string fn = Path.Combine(dir, String.Format("{0}\\{1}.obj", Name, h.name));
+                string fn = Path.Combine(dir, String.Format("{0}\\{1}.obj", name, h.name));
                 Helpers.WriteToFile(fn, h.ToObj());
                 try
                 {
@@ -102,11 +116,7 @@ namespace CTRFramework
 
         public void Write(string path)
         {
-            Write(path, Name + ".ctr");
-
-            //testing
-            //CtrModel ctr = CtrModel.FromFile(Path.Combine(path, Name + ".ctr"));
-            //ctr.Export(path);
+            Write(path, $"{name}.ctr");
         }
 
         public void Write(string path, string filename)
@@ -124,24 +134,24 @@ namespace CTRFramework
 
             bw.Write(FixPointers());
 
-            if (Name.Length > 15)
-                Helpers.Panic(this, $"Name too long: {Name}");
+            if (name.Length > 16)
+                Helpers.Panic(this, $"Name too long: {name}");
 
-            bw.Write(Name.ToCharArray());
+            bw.Write(name.ToCharArray());
             bw.BaseStream.Position = 20;
 
-            bw.Write(GameEvent);
-            bw.Write((ushort)headers.Count);
+            bw.Write((ushort)gameEvent);
+            bw.Write((ushort)Entries.Count);
 
             ptrs.Add((int)bw.BaseStream.Position);
             bw.Write(ptrHeaders);
 
-            foreach (var ctr in headers)
+            foreach (var ctr in Entries)
             {
                 ctr.Write(bw, CtrWriteMode.Header);
             }
 
-            foreach (var ctr in headers)
+            foreach (var ctr in Entries)
             {
                 ctr.Write(bw, CtrWriteMode.Data);
             }
@@ -160,12 +170,12 @@ namespace CTRFramework
             int curPtr = 0x18;
             ptrHeaders = curPtr;
 
-            curPtr += 64 * headers.Count;
+            curPtr += 64 * Entries.Count;
 
             if (curPtr % 4 != 0)
                 curPtr = ((curPtr / 4) + 1 ) * 4;
 
-            foreach (var ctr in headers)
+            foreach (var ctr in Entries)
             {
                 ctr.ptrCmd = curPtr;
                 curPtr += (4 + ctr.drawList.Count * 4 + 4);
