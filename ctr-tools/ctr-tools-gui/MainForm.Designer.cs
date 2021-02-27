@@ -45,9 +45,13 @@
             this.discordLogo = new System.Windows.Forms.PictureBox();
             this.githubLogo = new System.Windows.Forms.PictureBox();
             this.tabBig = new System.Windows.Forms.TabPage();
+            this.bigFileControl1 = new CTRTools.Controls.BigFileControl();
             this.tabVram = new System.Windows.Forms.TabPage();
+            this.ctrToolsVramControl1 = new CTRTools.VramControl();
             this.tabCtr = new System.Windows.Forms.TabPage();
+            this.ctrControl1 = new CTRTools.Controls.CtrControl();
             this.tabLev = new System.Windows.Forms.TabPage();
+            this.levControl1 = new CTRTools.LevControl();
             this.tabEmu = new System.Windows.Forms.TabPage();
             this.button28 = new System.Windows.Forms.Button();
             this.propertyGrid2 = new System.Windows.Forms.PropertyGrid();
@@ -56,13 +60,11 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.button26 = new System.Windows.Forms.Button();
+            this.tabCseq = new System.Windows.Forms.TabPage();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exportFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.replaceFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bigFileControl1 = new CTRTools.Controls.BigFileControl();
-            this.ctrToolsVramControl1 = new CTRTools.VramControl();
-            this.ctrControl1 = new CTRTools.Controls.CtrControl();
-            this.levControl1 = new CTRTools.LevControl();
+            this.cseqControl1 = new cseq.CseqControl();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabAbout.SuspendLayout();
@@ -75,6 +77,7 @@
             this.tabLev.SuspendLayout();
             this.tabEmu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            this.tabCseq.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -149,6 +152,7 @@
             this.tabControl1.Controls.Add(this.tabCtr);
             this.tabControl1.Controls.Add(this.tabLev);
             this.tabControl1.Controls.Add(this.tabEmu);
+            this.tabControl1.Controls.Add(this.tabCseq);
             this.tabControl1.Location = new System.Drawing.Point(4, 28);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -235,8 +239,17 @@
             this.tabBig.Name = "tabBig";
             this.tabBig.Size = new System.Drawing.Size(609, 384);
             this.tabBig.TabIndex = 5;
-            this.tabBig.Text = "BIG";
+            this.tabBig.Text = "BIG archive";
             this.tabBig.UseVisualStyleBackColor = true;
+            // 
+            // bigFileControl1
+            // 
+            this.bigFileControl1.AllowDrop = true;
+            this.bigFileControl1.Location = new System.Drawing.Point(4, 3);
+            this.bigFileControl1.MinimumSize = new System.Drawing.Size(488, 223);
+            this.bigFileControl1.Name = "bigFileControl1";
+            this.bigFileControl1.Size = new System.Drawing.Size(600, 377);
+            this.bigFileControl1.TabIndex = 0;
             // 
             // tabVram
             // 
@@ -245,8 +258,20 @@
             this.tabVram.Name = "tabVram";
             this.tabVram.Size = new System.Drawing.Size(609, 384);
             this.tabVram.TabIndex = 8;
-            this.tabVram.Text = "VRAM";
+            this.tabVram.Text = "VRAM textures";
             this.tabVram.UseVisualStyleBackColor = true;
+            // 
+            // ctrToolsVramControl1
+            // 
+            this.ctrToolsVramControl1.AllowDrop = true;
+            this.ctrToolsVramControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ctrToolsVramControl1.Location = new System.Drawing.Point(4, 3);
+            this.ctrToolsVramControl1.MinimumSize = new System.Drawing.Size(461, 218);
+            this.ctrToolsVramControl1.Name = "ctrToolsVramControl1";
+            this.ctrToolsVramControl1.Size = new System.Drawing.Size(600, 377);
+            this.ctrToolsVramControl1.TabIndex = 0;
             // 
             // tabCtr
             // 
@@ -259,6 +284,16 @@
             this.tabCtr.Text = "CTR models";
             this.tabCtr.UseVisualStyleBackColor = true;
             // 
+            // ctrControl1
+            // 
+            this.ctrControl1.AllowDrop = true;
+            this.ctrControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctrControl1.Location = new System.Drawing.Point(3, 3);
+            this.ctrControl1.MinimumSize = new System.Drawing.Size(488, 223);
+            this.ctrControl1.Name = "ctrControl1";
+            this.ctrControl1.Size = new System.Drawing.Size(603, 378);
+            this.ctrControl1.TabIndex = 0;
+            // 
             // tabLev
             // 
             this.tabLev.Controls.Add(this.levControl1);
@@ -268,8 +303,18 @@
             this.tabLev.Padding = new System.Windows.Forms.Padding(5);
             this.tabLev.Size = new System.Drawing.Size(609, 384);
             this.tabLev.TabIndex = 0;
-            this.tabLev.Text = "LEV";
+            this.tabLev.Text = "LEV scenes";
             this.tabLev.UseVisualStyleBackColor = true;
+            // 
+            // levControl1
+            // 
+            this.levControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.levControl1.Location = new System.Drawing.Point(8, 8);
+            this.levControl1.Name = "levControl1";
+            this.levControl1.Size = new System.Drawing.Size(593, 368);
+            this.levControl1.TabIndex = 0;
             // 
             // tabEmu
             // 
@@ -371,6 +416,16 @@
             this.button26.UseVisualStyleBackColor = true;
             this.button26.Click += new System.EventHandler(this.button26_Click);
             // 
+            // tabCseq
+            // 
+            this.tabCseq.Controls.Add(this.cseqControl1);
+            this.tabCseq.Location = new System.Drawing.Point(4, 22);
+            this.tabCseq.Name = "tabCseq";
+            this.tabCseq.Size = new System.Drawing.Size(609, 384);
+            this.tabCseq.TabIndex = 10;
+            this.tabCseq.Text = "CSEQ music";
+            this.tabCseq.UseVisualStyleBackColor = true;
+            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -391,46 +446,14 @@
             this.replaceFileToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.replaceFileToolStripMenuItem.Text = "Replace file";
             // 
-            // bigFileControl1
+            // cseqControl1
             // 
-            this.bigFileControl1.AllowDrop = true;
-            this.bigFileControl1.Location = new System.Drawing.Point(4, 3);
-            this.bigFileControl1.MinimumSize = new System.Drawing.Size(488, 223);
-            this.bigFileControl1.Name = "bigFileControl1";
-            this.bigFileControl1.Size = new System.Drawing.Size(600, 377);
-            this.bigFileControl1.TabIndex = 0;
-            // 
-            // ctrToolsVramControl1
-            // 
-            this.ctrToolsVramControl1.AllowDrop = true;
-            this.ctrToolsVramControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.ctrToolsVramControl1.Location = new System.Drawing.Point(4, 3);
-            this.ctrToolsVramControl1.MinimumSize = new System.Drawing.Size(461, 218);
-            this.ctrToolsVramControl1.Name = "ctrToolsVramControl1";
-            this.ctrToolsVramControl1.Size = new System.Drawing.Size(600, 377);
-            this.ctrToolsVramControl1.TabIndex = 0;
-            // 
-            // ctrControl1
-            // 
-            this.ctrControl1.AllowDrop = true;
-            this.ctrControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctrControl1.Location = new System.Drawing.Point(3, 3);
-            this.ctrControl1.MinimumSize = new System.Drawing.Size(488, 223);
-            this.ctrControl1.Name = "ctrControl1";
-            this.ctrControl1.Size = new System.Drawing.Size(603, 378);
-            this.ctrControl1.TabIndex = 0;
-            // 
-            // levControl1
-            // 
-            this.levControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.levControl1.Location = new System.Drawing.Point(8, 8);
-            this.levControl1.Name = "levControl1";
-            this.levControl1.Size = new System.Drawing.Size(593, 368);
-            this.levControl1.TabIndex = 0;
+            this.cseqControl1.AllowDrop = true;
+            this.cseqControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cseqControl1.Location = new System.Drawing.Point(0, 0);
+            this.cseqControl1.Name = "cseqControl1";
+            this.cseqControl1.Size = new System.Drawing.Size(609, 384);
+            this.cseqControl1.TabIndex = 11;
             // 
             // MainForm
             // 
@@ -461,6 +484,7 @@
             this.tabEmu.ResumeLayout(false);
             this.tabEmu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            this.tabCseq.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -503,6 +527,8 @@
         private LevControl levControl1;
         private System.Windows.Forms.TabPage tabCtr;
         private Controls.CtrControl ctrControl1;
+        private System.Windows.Forms.TabPage tabCseq;
+        private cseq.CseqControl cseqControl1;
     }
 }
 

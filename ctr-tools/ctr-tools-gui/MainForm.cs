@@ -151,13 +151,22 @@ namespace CTRTools
                 {
                     case ".dyn":
                     case ".ctr":
-                        tabControl1.SelectedTab = tabLev;
+                        tabControl1.SelectedTab = tabCtr;
+                        break;
+                    case ".vrm":
+                        tabControl1.SelectedTab = tabVram;
+                        break;
+                    case ".lev":
+                        if (tabControl1.SelectedTab != tabVram)
+                            tabControl1.SelectedTab = tabLev;
                         break;
                     case ".big":
                         tabControl1.SelectedTab = tabBig;
                         break;
+                    case ".cseq":
+                        tabControl1.SelectedTab = tabCseq;
+                        break;
                 }
-
             }
         }
 

@@ -1,8 +1,6 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Sound;
 using CTRFramework.Sound.CSeq;
-using NAudio.Wave;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +9,7 @@ using System.Windows.Forms;
 
 namespace cseq
 {
-    public partial class MainForm : Form
+    public partial class CseqControl : UserControl
     {
         public CSEQ seq;
 
@@ -19,7 +17,7 @@ namespace cseq
         string loadedfile = "";
 
 
-        public MainForm()
+        public CseqControl()
         {
             InitializeComponent();
             this.DoubleBuffered = true;
@@ -31,6 +29,7 @@ namespace cseq
 
         public void LoadMeta()
         {
+            /*
             if (!CTRJson.Load())
             {
                 MessageBox.Show("Couldn't load Json!");
@@ -46,6 +45,7 @@ namespace cseq
                     comboBox1.Items.Add(j.Key);
                 }
             }
+            */
         }
 
         private void LoadCseq(string fn)
@@ -232,7 +232,7 @@ namespace cseq
 
         private void tutorialToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            textBox1.Text = Properties.Resources.help;
+            textBox1.Text = "halp!";//Properties.Resources.help;
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
@@ -322,6 +322,7 @@ namespace cseq
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            /*
             AudioFileReader wave = null;
             WaveOut outputSound = null;
             string x = "";
@@ -364,6 +365,7 @@ namespace cseq
             {
                 propertyGrid1.SelectedObject = null;
             }
+            */
         }
 
         private void trackBox_DoubleClick(object sender, EventArgs e)
@@ -427,7 +429,7 @@ namespace cseq
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            textBox3.Text = CTRJson.midi[listBox1.SelectedItem].ToString();
+            //textBox3.Text = CTRJson.midi[listBox1.SelectedItem].ToString();
         }
 
         private void reloadMIDIMappingsToolStripMenuItem_Click(object sender, EventArgs e)

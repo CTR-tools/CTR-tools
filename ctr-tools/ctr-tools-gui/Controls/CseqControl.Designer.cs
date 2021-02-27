@@ -3,7 +3,7 @@
 namespace cseq
 {
 
-    partial class MainForm
+    partial class CseqControl
     {
         /// <summary>
         /// Требуется переменная конструктора.
@@ -523,7 +523,6 @@ namespace cseq
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "CTR CSEQ";
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
