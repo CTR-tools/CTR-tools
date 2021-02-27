@@ -101,16 +101,6 @@ namespace CTRFramework
             {
                 string fn = Path.Combine(dir, String.Format("{0}\\{1}.obj", name, h.name));
                 Helpers.WriteToFile(fn, h.ToObj());
-                try
-                {
-                    Write(dir);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(h.name);
-                    Console.WriteLine(ex.Message);
-                    Console.ReadKey();
-                }
             }
         }
 

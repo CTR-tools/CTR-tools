@@ -135,9 +135,14 @@ namespace CTRFramework.Shared
 
         }
 
-        public static string GetVersionInfo()
+        public static string GetVersion()
         {
             return "CTRFramework " + p.Version + " (" + p.BuildDate.Split(',')[0] + ")";
+        }
+
+        public static string GetSignature()
+        {
+            return p.signature;
         }
     }
 }

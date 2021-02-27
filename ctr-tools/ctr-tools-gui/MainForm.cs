@@ -22,8 +22,8 @@ namespace CTRTools
             this.DoubleBuffered = true;
             InitializeComponent();
 
-            this.Text += " - " + Meta.GetVersionInfo();
-            label3.Text = Meta.GetVersionInfo();
+            this.Text += " - " + Meta.GetVersion();
+            label3.Text = Meta.GetVersion();
             comboBox1.SelectedIndex = 0xF;
         }
 

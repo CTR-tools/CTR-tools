@@ -71,7 +71,7 @@ namespace ctrviewer
         public static int currentflag = 1;
 
         //get version only once, because we don't want this to be allocated every frame.
-        public static string version = Meta.GetVersionInfo();
+        public static string version = Meta.GetVersion();
 
 
         public Game1()

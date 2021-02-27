@@ -1,6 +1,6 @@
 ﻿using CTRFramework.Lang;
+using CTRFramework.Shared;
 using System;
-using p = lng2txt.Properties.Resources;
 
 namespace lng2txt
 {
@@ -10,19 +10,18 @@ namespace lng2txt
         {
             Console.WriteLine(
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
-                p.project_name,
-                p.app_desc,
-                p.copyright);
+                $"CTR-Tools: lng2txt - {Meta.GetSignature()}",
+                "Converts LNG localization files to TXT and back.",
+                Meta.GetVersion());
 
-            if (args.Length > 0)
-            {
-                LNG lng = new LNG(args[0]);
-                Console.WriteLine("Done!");
-            }
-            else
+            if (args.Length == 0)
             {
                 Console.WriteLine("No filename!");
+                return;
             }
+
+            LNG lng = new LNG(args[0]);
+            Console.WriteLine("Done!");
         }
     }
 }

@@ -61,7 +61,7 @@ namespace CTRFramework.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на 25.12.2020 17:25:45,11 
+        ///   Ищет локализованную строку, похожую на 27.02.2021 17:28:13,54 
         ///.
         /// </summary>
         public static string BuildDate {
@@ -78,6 +78,15 @@ namespace CTRFramework.Properties {
         public static string midi_copyright {
             get {
                 return ResourceManager.GetString("midi_copyright", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на 2016-2021, DCxDemo*..
+        /// </summary>
+        public static string signature {
+            get {
+                return ResourceManager.GetString("signature", resourceCulture);
             }
         }
         

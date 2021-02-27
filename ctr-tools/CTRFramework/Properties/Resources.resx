@@ -126,6 +126,9 @@
 
 Converted to MIDI using CTR-Tools by DCxDemo*.</value>
   </data>
+  <data name="signature" xml:space="preserve">
+    <value>2016-2021, DCxDemo*.</value>
+  </data>
   <data name="Version" xml:space="preserve">
     <value>r11</value>
   </data>

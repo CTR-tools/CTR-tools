@@ -59,32 +59,5 @@ namespace lng2txt.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на Converts LNG localization files to TXT and back..
-        /// </summary>
-        internal static string app_desc {
-            get {
-                return ResourceManager.GetString("app_desc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на 2016-2019, DCxDemo*..
-        /// </summary>
-        internal static string copyright {
-            get {
-                return ResourceManager.GetString("copyright", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Ищет локализованную строку, похожую на CTR-Tools: lng2txt.
-        /// </summary>
-        internal static string project_name {
-            get {
-                return ResourceManager.GetString("project_name", resourceCulture);
-            }
-        }
     }
 }

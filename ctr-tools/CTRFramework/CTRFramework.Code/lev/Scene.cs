@@ -311,7 +311,7 @@ namespace CTRFramework
                 StringBuilder sb = new StringBuilder();
 
                 sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
-                sb.AppendLine($"#{Meta.GetVersionInfo()}");
+                sb.AppendLine($"#{Meta.GetVersion()}");
                 sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
                 sb.AppendLine($"mtllib {Path.GetFileName(fname + ".mtl")}\r\n");
 

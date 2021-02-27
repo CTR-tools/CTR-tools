@@ -9,35 +9,37 @@ namespace howl
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Crash Team Racing HOWL Extractor by DCxDemo*.\r\n");
+            Console.WriteLine(
+                "{0}\r\n{1}\r\n\r\n{2}\r\n",
+                $"CTR-Tools: howl - {Meta.GetSignature()}",
+                "Extracts samples and music sequences from HOWL",
+                Meta.GetVersion());
 
-            if (args.Length == 1)
+            if (args.Length == 0)
             {
-                string fn = args[0];
-
-                if (!File.Exists(fn))
-                {
-                    Console.WriteLine("{0} doesn't exist.", fn);
-                    return;
-                }
-
-                using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(fn)))
-                {
-                    Howl hwl = Howl.FromReader(br);
-                    hwl.DetectHowl(fn);
-                    Console.Write(hwl.ToString());
-
-                    hwl.ExportCSEQ(br);
-                    hwl.ExportAllSamples();
-
-                    Console.WriteLine("Done!");
-                    return;
-                }
-
+                Console.WriteLine("Usage:\r\n\thowl.exe <path to KART.HWL>");
+                return;
             }
-            else
+
+            string filename = args[0];
+
+            if (!File.Exists(filename))
             {
-                Console.WriteLine("Usage:\r\n\thowl.exe <path to KART.HWL>\r\n\r\nPress any key to quit...");
+                Console.WriteLine("{0} doesn't exist.", filename);
+                return;
+            }
+
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            {
+                Howl hwl = Howl.FromReader(br);
+                hwl.DetectHowl(filename);
+                Console.Write(hwl.ToString());
+
+                hwl.ExportCSEQ(br);
+                hwl.ExportAllSamples();
+
+                Console.WriteLine("Done!");
+                return;
             }
         }
     }

@@ -117,13 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="app_desc" xml:space="preserve">
-    <value>Converts LNG localization files to TXT and back.</value>
-  </data>
-  <data name="copyright" xml:space="preserve">
-    <value>2016-2019, DCxDemo*.</value>
-  </data>
-  <data name="project_name" xml:space="preserve">
-    <value>CTR-Tools: lng2txt</value>
-  </data>
 </root>

@@ -14,9 +14,9 @@ namespace model_reader
 
             Console.WriteLine(
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
-                "CTR-Tools: model_reader by DCxDemo*.",
+                $"CTR-Tools: model_reader - {Meta.GetSignature()}",
                 "Converts LEV, CTR and MPK files to OBJ format.",
-                Meta.GetVersionInfo());
+                Meta.GetVersion());
 
             if (args.Length == 0)
             {
@@ -24,9 +24,17 @@ namespace model_reader
                 return;
             }
 
-            if ((File.GetAttributes(args[0]) & FileAttributes.Directory) == FileAttributes.Directory)
+            string filename = args[0];
+
+            if (!(File.Exists(filename) || Directory.Exists(filename)))
             {
-                foreach (string s in Directory.GetFiles(args[0], "*.lev"))
+                Console.WriteLine("{0} doesn't exist.", filename);
+                return;
+            }
+
+            if ((File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                foreach (string s in Directory.GetFiles(filename, "*.lev"))
                 {
                     Console.WriteLine(s + " " + Path.IsPathRooted(s));
                     ConvertFile(Path.IsPathRooted(s) ? s : ".\\" + s);
@@ -34,9 +42,8 @@ namespace model_reader
             }
             else
             {
-                string s = args[0];
-                s = (Path.IsPathRooted(s) ? s : ".\\" + s);
-                ConvertFile(s);
+                filename = (Path.IsPathRooted(filename) ? "" : ".\\") + filename;
+                ConvertFile(filename);
             }
         }
 
