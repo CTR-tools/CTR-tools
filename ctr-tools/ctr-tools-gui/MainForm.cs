@@ -4,8 +4,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using System.Globalization;
-using System.Threading;
 
 namespace CTRTools
 {
@@ -19,11 +17,7 @@ namespace CTRTools
 
         public MainForm()
         {
-            //this code should be moved to framework i guess
-            //this is here to force dots in floats.
-            CultureInfo customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
-            customCulture.NumberFormat.NumberDecimalSeparator = ".";
-            Thread.CurrentThread.CurrentCulture = customCulture;
+            OBJ.FixCulture();
 
             this.DoubleBuffered = true;
             InitializeComponent();

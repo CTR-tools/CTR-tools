@@ -2,11 +2,20 @@
 using CTRFramework.Shared;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Globalization;
 
 namespace CTRFramework
 {
     public class OBJ
     {
+        public static void FixCulture()
+        {
+            CultureInfo customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
+            customCulture.NumberFormat.NumberDecimalSeparator = ".";
+            Thread.CurrentThread.CurrentCulture = customCulture;
+        }
+
         public static string ASCIIFace(string label, int totalv, int x, int y, int z)
         {
             return

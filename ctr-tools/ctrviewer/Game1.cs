@@ -10,9 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Globalization;
+
 
 namespace ctrviewer
 {
@@ -77,9 +76,7 @@ namespace ctrviewer
 
         public Game1()
         {
-            CultureInfo customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
-            customCulture.NumberFormat.NumberDecimalSeparator = ".";
-            Thread.CurrentThread.CurrentCulture = customCulture;
+            OBJ.FixCulture();
 
             Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
