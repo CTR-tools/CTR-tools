@@ -80,32 +80,32 @@ namespace CTRFramework.Big
         {
             BaseStream.Position = 0;
 
-            if (File.Exists(Meta.XmlPath))
+            //Console.WriteLine(Meta.GetTextFromResource(Meta.XmlPath));
+            //Console.ReadKey();
+
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(Helpers.GetTextFromResource(Meta.XmlPath));
+
+            var hash = MD5.Create().ComputeHash(BaseStream);
+            string md5 = BitConverter.ToString(hash).Replace("-", "");
+
+            foreach (XmlElement el in doc.SelectNodes("/data/versions/entry"))
             {
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(File.ReadAllText(Meta.XmlPath));
-
-                var hash = MD5.Create().ComputeHash(BaseStream);
-                string md5 = BitConverter.ToString(hash).Replace("-", "");
-
-                foreach (XmlElement el in doc.SelectNodes("/data/versions/entry"))
+                if (md5.ToLower() == el["md5"].InnerText.ToLower())
                 {
-                    if (md5.ToLower() == el["md5"].InnerText.ToLower())
-                    {
-                        Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.\r\nUsing {el["list"].InnerText}");
-                        names = Meta.GetBigList(el["list"].InnerText);
-                        return;
-                    }
+                    Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.\r\nUsing {el["list"].InnerText}");
+                    names = Meta.GetBigList(el["list"].InnerText);
+                    return;
                 }
+            }
 
-                foreach (XmlElement el in doc.SelectNodes("/data/filenums/entry"))
+            foreach (XmlElement el in doc.SelectNodes("/data/filenums/entry"))
+            {
+                if (TotalFiles == Int32.Parse(el["num"].InnerText))
                 {
-                    if (TotalFiles == Int32.Parse(el["num"].InnerText))
-                    {
-                        Console.WriteLine($"Using {el["list"].InnerText}");
-                        names = Meta.GetBigList(el["list"].InnerText);
-                        return;
-                    }
+                    Console.WriteLine($"Using {el["list"].InnerText}");
+                    names = Meta.GetBigList(el["list"].InnerText);
+                    return;
                 }
             }
 

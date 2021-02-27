@@ -20,7 +20,14 @@ namespace model_reader
 
             if (args.Length == 0)
             {
-                Console.WriteLine("No filename given!");
+                Console.WriteLine(
+                    "{0}:\r\n\t{1}: {2}\r\n\t{3}: {4}\r\n\t{5}: {6}\r\n\t{7}: {8}",
+                    "Usage",
+                    "Extract level", "model_reader C:\\proto8.lev",
+                    "Extract model", "model_reader C:\\crash.ctr",
+                    "Convert OBJ to CTR", "model_reader C:\\crash.obj",
+                    "Extract model pack", "model_reader C:\\shared.mpk"
+                    );
                 return;
             }
 

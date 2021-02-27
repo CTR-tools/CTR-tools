@@ -44,6 +44,8 @@ namespace ctrviewer
         }
         #endregion
 
+        public float speedScale = 1.0f;
+
         Vector3 slowdown = new Vector3(0, 0, 0);
 
         #region Изменение объекта
@@ -123,7 +125,18 @@ namespace ctrviewer
                 // if (keyState.IsKeyDown(Keys.LeftShift) || padState.Buttons.A == ButtonState.Pressed)
                 //     moveVector *= 2;
 
-                moveVector *= (1 + padState.Triggers.Right * 3);
+
+                speedScale -= padState.Triggers.Left / 10f;
+                speedScale += padState.Triggers.Right / 10f;
+
+                if (speedScale < 0.1f)
+                    speedScale = 0.1f;
+
+                if (speedScale > 5)
+                    speedScale = 5;
+
+                moveVector *= speedScale * speedScale;
+                //moveVector *= (1 + padState.Triggers.Right * 3);
 
 
                 if (keyState.IsKeyDown(Keys.Left))

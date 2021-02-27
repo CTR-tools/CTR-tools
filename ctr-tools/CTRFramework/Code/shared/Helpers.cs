@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 
 namespace CTRFramework.Shared
 {
@@ -48,9 +49,9 @@ namespace CTRFramework.Shared
                 throw new Exception(message);
         }
 
-        public static float Normalize(int min, int max, int val)
+        public static float Normalize(float min, float max, float val)
         {
-            return ((float)val - (float)min) / ((float)max - (float)min);
+            return (val - min) / (max - min);
         }
 
         public static string CalculateMD5(string filename)
@@ -136,5 +137,26 @@ namespace CTRFramework.Shared
         {
             return (byte)(ptr & 3);
         }
+
+        public static string GetTextFromResource(string resource)
+        {
+            var thisAssembly = Assembly.GetExecutingAssembly();
+            using (var stream = thisAssembly.GetManifestResourceStream($"CTRFramework.Data.{resource}"))
+            {
+                if (stream == null)
+                    return "";
+
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
+        public static string[] GetLinesFromResource(string resource)
+        {
+            return GetTextFromResource(resource).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        }
+
     }
 }

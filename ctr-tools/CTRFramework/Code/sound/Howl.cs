@@ -130,8 +130,10 @@ namespace CTRFramework.Sound
 
         public void Read(BinaryReaderEx br)
         {
-            if (File.Exists(Meta.SmplPath))
-                ReadSampleNames(Meta.SmplPath);
+            sampledict = Meta.LoadNumberedList(Meta.SmplPath);
+
+            //if (File.Exists(Meta.SmplPath))
+            //    ReadSampleNames(Meta.SmplPath);
 
             header = new HowlHeader(br);
 
@@ -248,7 +250,7 @@ namespace CTRFramework.Sound
 
         public static string[] ReadNames(string listname)
         {
-            string[] lines = File.ReadAllLines(Meta.HowlPath);
+            string[] lines = Helpers.GetLinesFromResource(Meta.HowlPath);
 
             for (int i = 0; i < lines.Length; i++)
             {

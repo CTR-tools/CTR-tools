@@ -19,8 +19,6 @@ namespace CTRFramework.Sound.CSeq
 
     public class CTRJson
     {
-        static string jsonpath = Meta.CseqPath;
-
         //public static JArray levels;
         public static JObject midi;
 
@@ -28,7 +26,7 @@ namespace CTRFramework.Sound.CSeq
         {
             try
             {
-                JObject json = JObject.Parse(File.ReadAllText(jsonpath));
+                JObject json = JObject.Parse(Helpers.GetTextFromResource(Meta.CseqPath));
 
                 //levels = (JArray)json["levels"];
                 midi = (JObject)json["midi"];

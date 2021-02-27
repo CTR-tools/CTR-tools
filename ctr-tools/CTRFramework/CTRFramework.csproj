@@ -79,69 +79,69 @@
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CTRFramework.Code\big\BigFile.cs" />
-    <Compile Include="CTRFramework.Code\big\BigEntry.cs" />
-    <Compile Include="CTRFramework.Code\big\BigFileReader.cs" />
-    <Compile Include="CTRFramework.Code\ctr\CtrAnim.cs" />
-    <Compile Include="CTRFramework.Code\ctr\CtrHeader.cs" />
-    <Compile Include="CTRFramework.Code\ctr\CtrModel.cs" />
-    <Compile Include="CTRFramework.Code\ctr\CtrDraw.cs" />
-    <Compile Include="CTRFramework.Code\Enums.cs" />
-    <Compile Include="CTRFramework.Code\lev\CtrTex.cs" />
-    <Compile Include="CTRFramework.Code\lev\nav\Nav.cs" />
-    <Compile Include="CTRFramework.Code\lev\nav\AIPath.cs" />
-    <Compile Include="CTRFramework.Code\lev\TrialData.cs" />
-    <Compile Include="CTRFramework.Code\lev\UnkAdv.cs" />
-    <Compile Include="CTRFramework.Code\lev\VertexAnim.cs" />
-    <Compile Include="CTRFramework.Code\lang\LNG.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vectors\Vector2b.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vectors\Vector2s.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vectors\Vector3b.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vectors\Vector3f.cs" />
-    <Compile Include="CTRFramework.Code\sound\Bank.cs" />
-    <Compile Include="CTRFramework.Code\shared\BinaryReaderEx.cs" />
-    <Compile Include="CTRFramework.Code\shared\BinaryWriterEx.cs" />
-    <Compile Include="CTRFramework.Code\shared\Helpers.cs" />
-    <Compile Include="CTRFramework.Code\Interfaces.cs" />
-    <Compile Include="CTRFramework.Code\shared\Meta.cs" />
-    <Compile Include="CTRFramework.Code\lev\nav\NavFrame.cs" />
-    <Compile Include="CTRFramework.Code\mpk\UImap.cs" />
-    <Compile Include="CTRFramework.Code\mpk\ModelPack.cs" />
-    <Compile Include="CTRFramework.Code\mpk\TexMap.cs" />
-    <Compile Include="CTRFramework.Code\shared\InstanceList.cs" />
-    <Compile Include="CTRFramework.Code\lev\Scene.cs" />
-    <Compile Include="CTRFramework.Code\lev\SceneHeader.cs" />
-    <Compile Include="CTRFramework.Code\lev\MeshInfo.cs" />
-    <Compile Include="CTRFramework.Code\lev\PickupHeader.cs" />
-    <Compile Include="CTRFramework.Code\lev\QuadBlock.cs" />
-    <Compile Include="CTRFramework.Code\lev\SkyBox.cs" />
-    <Compile Include="CTRFramework.Code\lev\TextureLayout.cs" />
-    <Compile Include="CTRFramework.Code\lev\Vertex.cs" />
-    <Compile Include="CTRFramework.Code\lev\VisData.cs" />
-    <Compile Include="CTRFramework.Code\shared\BoundingBox.cs" />
-    <Compile Include="CTRFramework.Code\shared\OBJ.cs" />
-    <Compile Include="CTRFramework.Code\shared\PosAng.cs" />
-    <Compile Include="CTRFramework.Code\shared\SomeData.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vectors\Vector3s.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vectors\Vector4b.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vectors\Vector4s.cs" />
-    <Compile Include="CTRFramework.Code\sound\CSEQ\CHeader.cs" />
-    <Compile Include="CTRFramework.Code\sound\CSEQ\CSEQ.cs" />
-    <Compile Include="CTRFramework.Code\sound\CSEQ\Instrument.cs" />
-    <Compile Include="CTRFramework.Code\sound\SampleDef.cs" />
-    <Compile Include="CTRFramework.Code\sound\SampleDefReverb.cs" />
-    <Compile Include="CTRFramework.Code\sound\CSEQ\Sequence\Command.cs" />
-    <Compile Include="CTRFramework.Code\sound\CSEQ\Sequence\CSeqHeader.cs" />
-    <Compile Include="CTRFramework.Code\sound\CSEQ\Sequence\CTrack.cs" />
-    <Compile Include="CTRFramework.Code\sound\CSEQ\Sequence\Sequence.cs" />
-    <Compile Include="CTRFramework.Code\sound\CTRJson.cs" />
-    <Compile Include="CTRFramework.Code\sound\Howl.cs" />
-    <Compile Include="CTRFramework.Code\sound\HowlHeader.cs" />
-    <Compile Include="CTRFramework.Code\sound\VagHeader.cs" />
-    <Compile Include="CTRFramework.Code\vrm\TimReader.cs" />
-    <Compile Include="CTRFramework.Code\vrm\BMPHeader.cs" />
-    <Compile Include="CTRFramework.Code\vrm\Tim.cs" />
-    <Compile Include="CTRFramework.Code\vrm\CtrVrm.cs" />
+    <Compile Include="Code\big\BigFile.cs" />
+    <Compile Include="Code\big\BigEntry.cs" />
+    <Compile Include="Code\big\BigFileReader.cs" />
+    <Compile Include="Code\ctr\CtrAnim.cs" />
+    <Compile Include="Code\ctr\CtrHeader.cs" />
+    <Compile Include="Code\ctr\CtrModel.cs" />
+    <Compile Include="Code\ctr\CtrDraw.cs" />
+    <Compile Include="Code\Enums.cs" />
+    <Compile Include="Code\lev\CtrTex.cs" />
+    <Compile Include="Code\lev\nav\Nav.cs" />
+    <Compile Include="Code\lev\nav\AIPath.cs" />
+    <Compile Include="Code\lev\TrialData.cs" />
+    <Compile Include="Code\lev\UnkAdv.cs" />
+    <Compile Include="Code\lev\VertexAnim.cs" />
+    <Compile Include="Code\lang\LNG.cs" />
+    <Compile Include="Code\shared\Vectors\Vector2b.cs" />
+    <Compile Include="Code\shared\Vectors\Vector2s.cs" />
+    <Compile Include="Code\shared\Vectors\Vector3b.cs" />
+    <Compile Include="Code\shared\Vectors\Vector3f.cs" />
+    <Compile Include="Code\sound\Bank.cs" />
+    <Compile Include="Code\shared\BinaryReaderEx.cs" />
+    <Compile Include="Code\shared\BinaryWriterEx.cs" />
+    <Compile Include="Code\shared\Helpers.cs" />
+    <Compile Include="Code\Interfaces.cs" />
+    <Compile Include="Code\shared\Meta.cs" />
+    <Compile Include="Code\lev\nav\NavFrame.cs" />
+    <Compile Include="Code\mpk\UImap.cs" />
+    <Compile Include="Code\mpk\ModelPack.cs" />
+    <Compile Include="Code\mpk\TexMap.cs" />
+    <Compile Include="Code\shared\InstanceList.cs" />
+    <Compile Include="Code\lev\Scene.cs" />
+    <Compile Include="Code\lev\SceneHeader.cs" />
+    <Compile Include="Code\lev\MeshInfo.cs" />
+    <Compile Include="Code\lev\PickupHeader.cs" />
+    <Compile Include="Code\lev\QuadBlock.cs" />
+    <Compile Include="Code\lev\SkyBox.cs" />
+    <Compile Include="Code\lev\TextureLayout.cs" />
+    <Compile Include="Code\lev\Vertex.cs" />
+    <Compile Include="Code\lev\VisData.cs" />
+    <Compile Include="Code\shared\BoundingBox.cs" />
+    <Compile Include="Code\shared\OBJ.cs" />
+    <Compile Include="Code\shared\PosAng.cs" />
+    <Compile Include="Code\shared\SomeData.cs" />
+    <Compile Include="Code\shared\Vectors\Vector3s.cs" />
+    <Compile Include="Code\shared\Vectors\Vector4b.cs" />
+    <Compile Include="Code\shared\Vectors\Vector4s.cs" />
+    <Compile Include="Code\sound\CSEQ\CHeader.cs" />
+    <Compile Include="Code\sound\CSEQ\CSEQ.cs" />
+    <Compile Include="Code\sound\CSEQ\Instrument.cs" />
+    <Compile Include="Code\sound\SampleDef.cs" />
+    <Compile Include="Code\sound\SampleDefReverb.cs" />
+    <Compile Include="Code\sound\CSEQ\Sequence\Command.cs" />
+    <Compile Include="Code\sound\CSEQ\Sequence\CSeqHeader.cs" />
+    <Compile Include="Code\sound\CSEQ\Sequence\CTrack.cs" />
+    <Compile Include="Code\sound\CSEQ\Sequence\Sequence.cs" />
+    <Compile Include="Code\sound\CTRJson.cs" />
+    <Compile Include="Code\sound\Howl.cs" />
+    <Compile Include="Code\sound\HowlHeader.cs" />
+    <Compile Include="Code\sound\VagHeader.cs" />
+    <Compile Include="Code\vrm\TimReader.cs" />
+    <Compile Include="Code\vrm\BMPHeader.cs" />
+    <Compile Include="Code\vrm\Tim.cs" />
+    <Compile Include="Code\vrm\CtrVrm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -158,44 +158,23 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CTRFramework.Data\cseq.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="Data\cseq.json" />
     <None Include="packages.config" />
-    <None Include="CTRFramework.Data\versions.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="Data\versions.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CTRFramework.Data\big_usa_beta_aug.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\big_usa_demo.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\big_pal_release.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\big_usa_beta_sep.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\big_usa_release.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\howlnames.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\samplenames.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\versions.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="Data\big_usa_beta_aug.txt" />
+    <EmbeddedResource Include="Data\big_usa_demo.txt" />
+    <EmbeddedResource Include="Data\big_pal_release.txt" />
+    <EmbeddedResource Include="Data\big_usa_beta_sep.txt" />
+    <EmbeddedResource Include="Data\big_usa_release.txt" />
+    <EmbeddedResource Include="Data\howlnames.txt" />
+    <EmbeddedResource Include="Data\samplenames.txt" />
+    <EmbeddedResource Include="Data\versions.xml" />
     <Content Include="Properties\BuildDate.txt" />
   </ItemGroup>
   <ItemGroup>

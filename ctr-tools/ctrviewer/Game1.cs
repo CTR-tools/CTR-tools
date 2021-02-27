@@ -1,5 +1,4 @@
-﻿#define MEASURE
-using CTRFramework;
+﻿using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Shared;
 using CTRFramework.Sound;
@@ -1111,6 +1110,13 @@ namespace ctrviewer
 
             if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Keyboard.GetState().IsKeyDown(Keys.OemPlus))
                 spriteBatch.DrawString(font, String.Format("FOV {0}", camera.ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", camera.ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
+
+            if (GamePad.GetState(0).Triggers.Left > 0 || GamePad.GetState(0).Triggers.Right > 0)
+                spriteBatch.DrawString(
+                    font, 
+                    $"Speed scale: {camera.speedScale.ToString("0.##")}",
+                    new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString($"Speed scale: {camera.speedScale.ToString("0.##")}").X - 20, 20), 
+                    Color.Yellow);
 
             if (settings.ShowCamPos)
                 spriteBatch.DrawString(font, $"({camera.Position.X.ToString("0.00")}, {camera.Position.Y.ToString("0.00")}, {camera.Position.Z.ToString("0.00")})", new Vector2(20, 20), Color.Yellow,

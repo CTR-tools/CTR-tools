@@ -16,7 +16,12 @@ namespace lng2txt
 
             if (args.Length == 0)
             {
-                Console.WriteLine("No filename!");
+                Console.WriteLine(
+                    "{0}:\r\n\t{1}: {2}\r\n\t{3}: {4}",
+                    "Usage",
+                    "Convert to text", "lng2txt c:\\en.lng",
+                    "Convert to .lng", "lng2txt c:\\en.txt"
+                    );
                 return;
             }
 
