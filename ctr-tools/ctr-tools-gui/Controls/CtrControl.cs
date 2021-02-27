@@ -27,7 +27,8 @@ namespace CTRTools.Controls
 
         public void LoadObj(string filename)
         {
-            ctr = OBJ.FromFile(filename).ConvertToCtr(100);
+            OBJ obj = OBJ.FromFile(filename);
+            ctr = CtrModel.FromObj(obj);
             propertyGrid1.SelectedObject = ctr;
         }
 

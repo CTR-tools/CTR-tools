@@ -15,7 +15,7 @@ namespace CTRFramework
         public Vector4s scale = new Vector4s(1024, 1024, 1024, 0);
 
         public int ptrCmd = 0; //this is null if we have anims
-        public int ptrVerts = 0; //0?
+        public int ptrVerts = 0;
         public int ptrTex = 0;
         public int ptrClut = 0;
 

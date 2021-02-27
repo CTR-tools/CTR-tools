@@ -75,7 +75,8 @@ namespace model_reader
                 case ".obj":
                     {
                         OBJ obj = OBJ.FromFile(filename);
-                        obj.ConvertToCtr(100).Write(basepath);
+                        CtrModel ctr = CtrModel.FromObj(obj);
+                        ctr.Write(basepath);
 
                         break;
                     }
