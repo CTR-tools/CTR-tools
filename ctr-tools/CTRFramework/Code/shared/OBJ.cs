@@ -12,8 +12,9 @@ namespace CTRFramework
         public string ObjectName = "empty";
 
         public List<Vector3s> vertices = new List<Vector3s>();
+        public List<Vector4b> colors = new List<Vector4b>();
         public List<Vector3s> faces = new List<Vector3s>();
-
+        public List<Vector3s> colinds = new List<Vector3s>();
 
         public OBJ()
         {
@@ -30,6 +31,8 @@ namespace CTRFramework
             return new OBJ(filename);
         }
 
+        public List<Vector4b> unique = new List<Vector4b>();
+
         public void Read(string filename)
         {
             vertices.Clear();
@@ -39,6 +42,38 @@ namespace CTRFramework
 
             foreach (var line in lines)
                 ParseLine(line);
+
+
+
+            foreach (var c in colors)
+            {
+                Console.WriteLine(c.ToString());
+                if (!unique.Contains(c))
+                    unique.Add(c);
+            }
+
+            Console.WriteLine($"colors: {colors.Count}");
+            Console.WriteLine($"unique: {unique.Count}");
+
+            foreach (var f in faces)
+            {
+                colinds.Add(new Vector3s(
+                    (short)unique.IndexOf(colors[f.X]),
+                    (short)unique.IndexOf(colors[f.Y]),
+                    (short)unique.IndexOf(colors[f.Z])
+                    ));
+            }
+
+            colors = unique;
+
+            if (colinds.Count != faces.Count)
+                Helpers.Panic(this, "face and color array length mismatch!!!");
+
+            if (unique.Count > 127)
+                Helpers.Panic(this, "Too many colors in CLUT!!!");
+
+            Console.WriteLine("waiting key now...");
+            Console.ReadKey();
         }
 
         public void ParseLine(string s)
@@ -96,13 +131,25 @@ namespace CTRFramework
                             (short)Math.Round(coord[1] * 100),
                             (short)Math.Round(coord[2] * 100)
                             ));
+
+
+                    if (words.Length >= 7)
+                    {
+                        float[] color = new float[3];
+
+                        for (int i = 0; i < 3; i++)
+                            Single.TryParse(words[i + 3 + 1], out color[i]);
+
+                        Vector4b vv = new Vector4b((byte)(255 * color[0]), (byte)(255 * color[1]), (byte)(255 * color[2]), 0);
+                        colors.Add(vv);
+                    }
                 }
 
                 return;
             }
 
             if (words[0] == "f")
-            { 
+            {
                 Console.WriteLine("it's a face! " + s);
 
                 if (words.Length >= 4)
@@ -112,9 +159,8 @@ namespace CTRFramework
                     for (int i = 0; i < 3; i++)
                         Int16.TryParse(words[i + 1].Split('/')[0], out coord[i]);
 
-                    faces.Add(new Vector3s((short)(coord[0]-1), (short)(coord[1] - 1), (short)(coord[2] - 1)));
+                    faces.Add(new Vector3s((short)(coord[0] - 1), (short)(coord[1] - 1), (short)(coord[2] - 1)));
                 }
-
                 return;
             }
 

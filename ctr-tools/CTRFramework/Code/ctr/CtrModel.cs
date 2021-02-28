@@ -266,19 +266,20 @@ namespace CTRFramework
             List<short> accessed = new List<short>();
             List<Vector3b> newlist = new List<Vector3b>();
 
-            foreach (var f in obj.faces)
+            //foreach (var f in obj.faces)
+            for (int i = 0; i < obj.faces.Count; i++)
             {
                 //if (f.X > 255 || f.Y > 255 || f.Z > 255)
                 //    throw new Exception("too many vertices. 255 is the limit. reduce vertex count and make sure you merged all vertices.");
 
                 CtrDraw cmd = new CtrDraw();
                 cmd.texIndex = 0;
-                cmd.colorIndex = 0;
+                cmd.colorIndex = (byte)obj.colinds[i].X;
                 cmd.stackIndex = 87;
                 Console.WriteLine(cmd.stackIndex);
                 cmd.flags = CtrDrawFlags.s;
 
-                newlist.Add(model.vtx[f.X]);
+                newlist.Add(model.vtx[obj.faces[i].X]);
                 /*
                 if (accessed.Contains(cmd.stackIndex))
                 {
@@ -297,12 +298,12 @@ namespace CTRFramework
 
                 cmd = new CtrDraw();
                 cmd.texIndex = 0;
-                cmd.colorIndex = 1;
+                cmd.colorIndex = (byte)obj.colinds[i].Z;
                 cmd.stackIndex = 87;
                 Console.WriteLine(cmd.stackIndex);
                 cmd.flags = 0;
 
-                newlist.Add(model.vtx[f.Z]);
+                newlist.Add(model.vtx[obj.faces[i].Z]);
                 /*
                 if (accessed.Contains(cmd.stackIndex))
                 {
@@ -320,12 +321,12 @@ namespace CTRFramework
 
                 cmd = new CtrDraw();
                 cmd.texIndex = 0;
-                cmd.colorIndex = 2;
+                cmd.colorIndex = (byte)obj.colinds[i].Y;
                 cmd.stackIndex = 87;
                 Console.WriteLine(cmd.stackIndex);
                 cmd.flags = 0;
 
-                newlist.Add(model.vtx[f.Y]);
+                newlist.Add(model.vtx[obj.faces[i].Y]);
                 /*
                 if (accessed.Contains(cmd.stackIndex))
                 {
@@ -349,9 +350,10 @@ namespace CTRFramework
                 (short)(-bb2.Max.Y),
                 0);
 
-            model.cols.Add(new Vector4b(0xFF, 0xFF, 0xFF, 0));
-            model.cols.Add(new Vector4b(0xCC, 0xCC, 0xCC, 0));
-            model.cols.Add(new Vector4b(0x80, 0x80, 0x80, 0));
+            //model.cols.Add(new Vector4b(0x80, 0x80, 0x80, 0));
+
+            foreach (var c in obj.unique)
+                model.cols.Add(c);
 
             ctr.Entries.Add(model);
 

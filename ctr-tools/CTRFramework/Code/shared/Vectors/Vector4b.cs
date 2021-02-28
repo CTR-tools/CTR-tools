@@ -3,13 +3,12 @@ using System.Drawing;
 
 namespace CTRFramework.Shared
 {
-    public class Vector4b : IReadWrite
+    public class Vector4b : IReadWrite, IEquatable<Vector4b>
     {
         public byte X;
         public byte Y;
         public byte Z;
         public byte W;
-
 
         public void Scale(float x)
         {
@@ -85,6 +84,23 @@ namespace CTRFramework.Shared
             }
 
             return String.Format(fmt, X, Y, Z, W);
+        }
+
+        public bool Equals(Vector4b v)
+        {
+            if (v.X != X)
+                return false;
+
+            if (v.Y != Y)
+                return false;
+
+            if (v.Z != Z)
+                return false;
+
+            if (v.W != W)
+                return false;
+
+            return true;
         }
 
         public override string ToString()

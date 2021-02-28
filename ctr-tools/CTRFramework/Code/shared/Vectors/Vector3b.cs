@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace CTRFramework.Shared
 {
-    public class Vector3b : IReadWrite
+    public class Vector3b : IReadWrite, IEquatable<Vector3b>
     {
         public byte X = 0;
         public byte Y = 0;
@@ -64,6 +64,27 @@ namespace CTRFramework.Shared
             bw.Write(X);
             bw.Write(Y);
             bw.Write(Z);
+        }
+
+        public bool Equals(Vector3b v)
+        {
+            if (v.X != X)
+                return false;
+
+            if (v.Y != Y)
+                return false;
+
+            if (v.Z != Z)
+                return false;
+
+            return true;
+        }
+
+        public void BiteBits(byte mask)
+        {
+            X = (byte)(X & ~mask);
+            Y = (byte)(Y & ~mask);
+            Z = (byte)(Z & ~mask);
         }
 
         public string ToString(VecFormat format)
