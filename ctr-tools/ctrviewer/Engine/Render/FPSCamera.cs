@@ -126,8 +126,8 @@ namespace ctrviewer
                 //     moveVector *= 2;
 
 
-                speedScale -= padState.Triggers.Left / 10f;
-                speedScale += padState.Triggers.Right / 10f;
+                speedScale -= padState.Triggers.Left / 20f;
+                speedScale += padState.Triggers.Right / 20f;
 
                 if (speedScale < 0.1f)
                     speedScale = 0.1f;

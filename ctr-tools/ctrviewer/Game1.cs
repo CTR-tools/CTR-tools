@@ -505,7 +505,7 @@ namespace ctrviewer
                         ph.ModelName,
                         MGConverter.ToVector3(ph.Position, 0.01f),
                         Vector3.Zero,//new Vector3((float)(ph.Angle.X / 4094f * Math.PI * 2), (float)(ph.Angle.Y / 4094f * Math.PI * 2), (float)(ph.Angle.Z / 4094f * Math.PI * 2)),
-                        1f));
+                        0.05f));
 
                 foreach (var n in s.restartPts)
                     paths.Add(new InstancedModel("cyancone", MGConverter.ToVector3(n.Position, 0.01f), Vector3.Zero, 0.03f));

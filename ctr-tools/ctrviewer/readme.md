@@ -25,7 +25,8 @@ You can also use x360ce for DirectInput devices.
 
 * move: left stick/wasd
 * rotate: right stick/arrow keys/hold left mouse click and move mouse
-* speed up: right trigger/left shift
+* speed up: left shift
+* change speed: left/right trigger
 * menu: start/esc
 * confirm/cancel: A/B or enter
 * menu navigation: dpad/wasd/arrows
