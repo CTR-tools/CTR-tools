@@ -12,9 +12,14 @@ namespace CTRFramework
         public string ObjectName = "empty";
 
         public List<Vector3s> vertices = new List<Vector3s>();
+        public List<Vector3s> distinctVerts = new List<Vector3s>();
+
         public List<Vector4b> colors = new List<Vector4b>();
+        public List<Vector4b> distinctColors = new List<Vector4b>();
+
         public List<Vector3s> faces = new List<Vector3s>();
         public List<Vector3s> colinds = new List<Vector3s>();
+        public List<Vector3s> vertinds = new List<Vector3s>();
 
         public OBJ()
         {
@@ -31,7 +36,7 @@ namespace CTRFramework
             return new OBJ(filename);
         }
 
-        public List<Vector4b> unique = new List<Vector4b>();
+
 
         public void Read(string filename)
         {
@@ -43,37 +48,53 @@ namespace CTRFramework
             foreach (var line in lines)
                 ParseLine(line);
 
-
-
             foreach (var c in colors)
             {
-                Console.WriteLine(c.ToString());
-                if (!unique.Contains(c))
-                    unique.Add(c);
+                if (!distinctColors.Contains(c))
+                    distinctColors.Add(c);
+            }
+
+            foreach (var v in vertices)
+            {
+                if (!distinctVerts.Contains(v))
+                    distinctVerts.Add(v);
             }
 
             Console.WriteLine($"colors: {colors.Count}");
-            Console.WriteLine($"unique: {unique.Count}");
+            Console.WriteLine($"unique: {distinctColors.Count}");
 
             foreach (var f in faces)
             {
-                colinds.Add(new Vector3s(
-                    (short)unique.IndexOf(colors[f.X]),
-                    (short)unique.IndexOf(colors[f.Y]),
-                    (short)unique.IndexOf(colors[f.Z])
-                    ));
+                if (colors.Count > 0)
+                {
+                    colinds.Add(new Vector3s(
+                        (short)distinctColors.IndexOf(colors[f.X]),
+                        (short)distinctColors.IndexOf(colors[f.Y]),
+                        (short)distinctColors.IndexOf(colors[f.Z])
+                        ));
+                }
+
+                if (vertices.Count > 0)
+                {
+                    vertinds.Add(new Vector3s(
+                        (short)distinctVerts.IndexOf(vertices[f.X]),
+                        (short)distinctVerts.IndexOf(vertices[f.Y]),
+                        (short)distinctVerts.IndexOf(vertices[f.Z])
+                        ));
+                }
             }
 
-            colors = unique;
+            colors = distinctColors;
+            vertices = distinctVerts;
 
             if (colinds.Count != faces.Count)
                 Helpers.Panic(this, "face and color array length mismatch!!!");
 
-            if (unique.Count > 127)
-                Helpers.Panic(this, "Too many colors in CLUT!!!");
+            if (vertinds.Count != faces.Count)
+                Helpers.Panic(this, "face and color array length mismatch!!!");
 
-            Console.WriteLine("waiting key now...");
-            Console.ReadKey();
+            if (distinctColors.Count > 127)
+                Helpers.Panic(this, "Too many colors in CLUT!!!");
         }
 
         public void ParseLine(string s)

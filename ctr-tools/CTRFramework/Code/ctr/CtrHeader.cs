@@ -372,6 +372,193 @@ namespace CTRFramework
             return sb.ToString();
         }
 
+
+        public static CtrHeader FromObj(OBJ obj)
+        {
+            CtrHeader model = new CtrHeader();
+            model.name = obj.ObjectName + "_hi";
+            model.lodDistance = -1;
+
+            BoundingBox bb = new BoundingBox();
+
+            foreach (var v in obj.distinctVerts)
+            {
+                if (v.X > bb.Max.X) bb.Max.X = v.X;
+                if (v.Y > bb.Max.Y) bb.Max.Y = v.Y;
+                if (v.Z > bb.Max.Z) bb.Max.Z = v.Z;
+                if (v.X < bb.Min.X) bb.Min.X = v.X;
+                if (v.Y < bb.Min.Y) bb.Min.Y = v.Y;
+                if (v.Z < bb.Min.Z) bb.Min.Z = v.Z;
+            }
+
+            foreach (var v in obj.distinctVerts)
+            {
+                v.X -= bb.Min.X;
+                v.Y -= bb.Min.Y;
+                v.Z -= bb.Min.Z;
+            }
+
+
+
+            BoundingBox bb2 = bb.Clone();
+
+            bb2.Min.X -= bb.Min.X;
+            bb2.Min.Y -= bb.Min.Y;
+            bb2.Min.Z -= bb.Min.Z;
+            bb2.Max.X -= bb.Min.X;
+            bb2.Max.Y -= bb.Min.Y;
+            bb2.Max.Z -= bb.Min.Z;
+
+            Console.WriteLine(bb.ToString());
+            Console.WriteLine(bb2.ToString());
+
+            model.scale = new Vector4s(
+                (short)(bb2.Max.X * 10),
+                (short)(bb2.Max.Y * 10),
+                (short)(bb2.Max.Z * 10),
+                0);
+
+            model.vtx.Clear();
+
+
+
+            foreach (var v in obj.distinctVerts)
+            {
+                Vector3b vv = new Vector3b(
+                   (byte)((float)v.X / bb2.Max.X * 255),
+                   (byte)((float)v.Z / bb2.Max.Z * 255),
+                   (byte)((float)v.Y / bb2.Max.Y * 255)
+                    );
+
+                model.vtx.Add(vv);
+            }
+
+
+
+            List<Vector3b> unique = new List<Vector3b>();
+
+            foreach (var v in model.vtx)
+            {
+                Console.WriteLine(v.ToString());
+                if (!unique.Contains(v))
+                    unique.Add(v);
+            }
+
+            Console.WriteLine($"verts: {model.vtx.Count}");
+            Console.WriteLine($"unique: {unique.Count}");
+
+
+            List<short> accessed = new List<short>();
+            List<Vector3b> newlist = new List<Vector3b>();
+
+            for (int i = 0; i < obj.faces.Count; i++)
+            {
+                //if (f.X > 255 || f.Y > 255 || f.Z > 255)
+                //    throw new Exception("too many vertices. 255 is the limit. reduce vertex count and make sure you merged all vertices.");
+
+                CtrDraw cmd = new CtrDraw();
+                cmd.texIndex = 0;
+                cmd.colorIndex = 0;
+                if (obj.distinctColors.Count > 0)
+                    cmd.colorIndex = (byte)obj.colinds[i].X;
+                cmd.stackIndex = 87;
+                Console.WriteLine(cmd.stackIndex);
+                cmd.flags = CtrDrawFlags.s | CtrDrawFlags.d;
+
+                newlist.Add(model.vtx[obj.vertinds[i].X]);
+                /*
+                if (accessed.Contains(cmd.stackIndex))
+                {
+                    cmd.flags = cmd.flags | CtrDrawFlags.v;
+                }
+                else
+                {
+                    accessed.Add(cmd.stackIndex);
+                    newlist.Add(model.vtx[cmd.stackIndex]);
+                }
+                */
+
+
+                model.drawList.Add(cmd);
+
+
+                cmd = new CtrDraw();
+                cmd.texIndex = 0;
+                cmd.colorIndex = 1;
+                if (obj.distinctColors.Count > 0)
+                    cmd.colorIndex = (byte)obj.colinds[i].Z;
+                cmd.stackIndex = 87;
+                Console.WriteLine(cmd.stackIndex);
+                cmd.flags = CtrDrawFlags.d;
+
+                newlist.Add(model.vtx[obj.vertinds[i].Z]);
+                /*
+                if (accessed.Contains(cmd.stackIndex))
+                {
+                    cmd.flags = cmd.flags | CtrDrawFlags.v;
+                }
+                else
+                {
+                    accessed.Add(cmd.stackIndex);
+                    newlist.Add(model.vtx[cmd.stackIndex]);
+                }
+                */
+
+                model.drawList.Add(cmd);
+
+
+                cmd = new CtrDraw();
+                cmd.texIndex = 0;
+                cmd.colorIndex = 2;
+                if (obj.distinctColors.Count > 0)
+                    cmd.colorIndex = (byte)obj.colinds[i].Y;
+                cmd.stackIndex = 87;
+                Console.WriteLine(cmd.stackIndex);
+                cmd.flags = CtrDrawFlags.d;
+
+                newlist.Add(model.vtx[obj.vertinds[i].Y]);
+                /*
+                if (accessed.Contains(cmd.stackIndex))
+                {
+                    cmd.flags = cmd.flags | CtrDrawFlags.v;
+                }
+                else
+                {
+                    accessed.Add(cmd.stackIndex);
+                    newlist.Add(model.vtx[cmd.stackIndex]);
+                }
+                */
+
+                model.drawList.Add(cmd);
+            }
+
+            model.vtx = newlist;
+
+            model.posOffset = new Vector4s(
+                (short)(-bb2.Max.X + 15),
+                30,//(short)(bb.Min.Y + modelOffset), 
+                (short)(-bb2.Max.Y),
+                0);
+
+            //model.cols.Add(new Vector4b(0x80, 0x80, 0x80, 0));
+
+            if (obj.distinctColors.Count > 0)
+            {
+                foreach (var c in obj.distinctColors)
+                    model.cols.Add(c);
+            }
+            else
+            {
+                model.cols.Add(new Vector4b(0x40, 0x40, 0x40, 0));
+                model.cols.Add(new Vector4b(0x80, 0x80, 0x80, 0));
+                model.cols.Add(new Vector4b(0xC0, 0xC0, 0xC0, 0));
+            }
+
+            return model;
+        }
+
+
+
         public void Write(BinaryWriterEx bw, CtrWriteMode mode)
         {
             int pos = 0;
