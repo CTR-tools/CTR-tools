@@ -1,8 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace ctrviewer
+namespace ctrviewer.Engine.Render
 {
-
     public partial class Camera : GameComponent
     {
         #region Свойства

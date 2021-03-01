@@ -1,9 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ctrviewer.Engine.Render;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace ctrviewer
+namespace ctrviewer.Engine
 {
     class Kart : InstancedModel
     {

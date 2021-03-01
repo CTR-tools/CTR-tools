@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace ctrviewer
+namespace ctrviewer.Engine.Render
 {
     public partial class FirstPersonCamera : Camera
     {

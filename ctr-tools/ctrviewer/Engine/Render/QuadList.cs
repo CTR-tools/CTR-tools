@@ -1,9 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ctrviewer.Engine.Render;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace ctrviewer
+namespace ctrviewer.Engine
 {
     public class QuadList
     {

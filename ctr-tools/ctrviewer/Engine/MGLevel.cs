@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace ctrviewer
+namespace ctrviewer.Engine.Render
 {
     class MGLevel
     {
@@ -55,9 +55,9 @@ namespace ctrviewer
             for (int i = 0; i < sb.faces.Count; i++)
             {
                 List<VertexPositionColorTexture> tri = new List<VertexPositionColorTexture>();
-                tri.Add(MGConverter.ToVptc(sb.verts[sb.faces[i].X], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
-                tri.Add(MGConverter.ToVptc(sb.verts[sb.faces[i].Y], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
-                tri.Add(MGConverter.ToVptc(sb.verts[sb.faces[i].Z], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
+                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].X], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
+                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].Y], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
+                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].Z], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
 
                 normal.PushTri(tri);
             }
@@ -89,7 +89,7 @@ namespace ctrviewer
                             if (vts != null)
                             {
                                 foreach (Vertex cv in vts)
-                                    monolist.Add(MGConverter.ToVptc(cv, cv.uv, 0.01f));
+                                    monolist.Add(DataConverter.ToVptc(cv, cv.uv, 0.01f));
 
                                 TextureLayout t = qb.texlow;
 
@@ -141,7 +141,7 @@ namespace ctrviewer
                                 if (vts != null)
                                 {
                                     foreach (Vertex cv in vts)
-                                        monolist.Add(MGConverter.ToVptc(cv, cv.uv, 0.01f));
+                                        monolist.Add(DataConverter.ToVptc(cv, cv.uv, 0.01f));
 
                                     bool isAnimated = false;
                                     string texTag = "test";
@@ -249,7 +249,7 @@ namespace ctrviewer
             if (!Game1.HideWater)
             {
                 foreach (var ql in waterq)
-                ql.Value.Draw(graphics, effect, null);
+                    ql.Value.Draw(graphics, effect, null);
             }
 
             if (!Game1.HideInvisible)

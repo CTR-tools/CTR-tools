@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace ctrviewer
+namespace ctrviewer.Engine.Render
 {
     public class TriList
     {

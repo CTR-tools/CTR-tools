@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ctrviewer
+namespace ctrviewer.Engine
 {
-    class MGConverter
+    class DataConverter
     {
         public static Vector3 ToVector3(CTRFramework.Shared.Vector3s s, float scale = 1.0f)
         {

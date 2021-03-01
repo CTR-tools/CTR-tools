@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
-namespace ctrviewer
+namespace ctrviewer.Engine.Render
 {
     class InstancedModel
     {

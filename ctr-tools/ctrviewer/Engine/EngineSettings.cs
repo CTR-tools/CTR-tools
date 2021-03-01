@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Xml;
 
-namespace ctrviewer
+namespace ctrviewer.Engine
 {
     class EngineSettings
     {
@@ -14,7 +14,7 @@ namespace ctrviewer
         public byte AntiAliasLevel { get; set; } = 4;
         public bool TextureFiltering { get; set; } = true;
         public bool VisData { get; set; } = false;
-        public bool VisDataLeaves { get; set; } = false;      
+        public bool VisDataLeaves { get; set; } = false;
         public bool GenerateMips { get; set; } = true;
         public bool Sky { get; set; } = true;
         public bool BotsPath { get; set; } = false;

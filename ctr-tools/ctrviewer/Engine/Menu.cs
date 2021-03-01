@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ctrviewer
+namespace ctrviewer.Engine
 {
     public enum SwitchType
     {

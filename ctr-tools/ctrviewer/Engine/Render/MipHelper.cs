@@ -1,11 +1,11 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using CTRFramework.Shared;
+using Microsoft.Xna.Framework.Graphics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using CTRFramework.Shared;
 
-namespace ctrviewer
+namespace ctrviewer.Engine
 {
     public class MipHelper
     {

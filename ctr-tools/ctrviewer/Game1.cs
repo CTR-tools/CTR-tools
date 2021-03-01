@@ -2,6 +2,8 @@
 using CTRFramework.Big;
 using CTRFramework.Shared;
 using CTRFramework.Sound;
+using ctrviewer.Engine;
+using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,7 +12,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-
 
 namespace ctrviewer
 {
@@ -287,22 +288,22 @@ namespace ctrviewer
 
             List<VertexPositionColorTexture> vptc = new List<VertexPositionColorTexture>();
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), MGConverter.Blend(Color.Black, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), DataConverter.Blend(Color.Black, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
             modl.PushQuad(vptc);
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), MGConverter.Blend(Color.Black, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), DataConverter.Blend(Color.Black, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
             modl.PushQuad(vptc);
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), MGConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
             modl.PushQuad(vptc);
 
             modl.Seal();
@@ -373,7 +374,7 @@ namespace ctrviewer
                         List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
                         foreach (var x in m.Entries[0].verts)
-                            li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
+                            li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
 
                         TriList t = new TriList();
                         t.textureEnabled = false;
@@ -437,7 +438,7 @@ namespace ctrviewer
             //force 1st scene sky and back color
             if (scn.Count > 0)
             {
-                backColor = MGConverter.ToColor(scn[0].header.backColor);
+                backColor = DataConverter.ToColor(scn[0].header.backColor);
                 if (scn[0].skybox != null)
                     sky = new MGLevel(scn[0].skybox);
             }
@@ -447,14 +448,14 @@ namespace ctrviewer
                 if (s.unkadv != null)
                 {
                     foreach (var pa in s.unkadv.smth)
-                        instanced.Add(new InstancedModel("limecone", MGConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, 0.03f));
+                        instanced.Add(new InstancedModel("limecone", DataConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, 0.03f));
                 }
 
                 if (s.header.ptru2 != 0)
                 {
                     foreach (var v in s.posu2)
                     {
-                        instanced.Add(new InstancedModel("goldcone", MGConverter.ToVector3(v, 0.01f), Vector3.Zero, 0.03f));
+                        instanced.Add(new InstancedModel("goldcone", DataConverter.ToVector3(v, 0.01f), Vector3.Zero, 0.03f));
                     }
                 }
 
@@ -462,7 +463,7 @@ namespace ctrviewer
                 {
                     foreach (var v in s.posu1)
                     {
-                        instanced.Add(new InstancedModel("browncone", MGConverter.ToVector3(v.Position, 0.01f), Vector3.Zero, 0.03f));
+                        instanced.Add(new InstancedModel("browncone", DataConverter.ToVector3(v.Position, 0.01f), Vector3.Zero, 0.03f));
                     }
                 }
             }
@@ -476,7 +477,7 @@ namespace ctrviewer
                         List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
                         foreach (var x in m.Entries[0].verts)
-                            li.Add(MGConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
+                            li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
 
                         TriList t = new TriList();
                         t.textureEnabled = false;
@@ -498,26 +499,26 @@ namespace ctrviewer
             foreach (Scene s in scn)
             {
                 foreach (var pa in s.header.startGrid)
-                    instanced.Add(new InstancedModel("purplecone", MGConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, 0.03f));
+                    instanced.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, 0.03f));
 
                 foreach (var ph in s.pickups)
                     instanced.Add(new InstancedModel(
                         ph.ModelName,
-                        MGConverter.ToVector3(ph.Position, 0.01f),
+                        DataConverter.ToVector3(ph.Position, 0.01f),
                         Vector3.Zero,//new Vector3((float)(ph.Angle.X / 4094f * Math.PI * 2), (float)(ph.Angle.Y / 4094f * Math.PI * 2), (float)(ph.Angle.Z / 4094f * Math.PI * 2)),
                         0.05f));
 
                 foreach (var n in s.restartPts)
-                    paths.Add(new InstancedModel("cyancone", MGConverter.ToVector3(n.Position, 0.01f), Vector3.Zero, 0.03f));
+                    paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Position, 0.01f), Vector3.Zero, 0.03f));
 
                 if (s.nav.paths.Count == 3)
                 {
                     foreach (NavFrame n in s.nav.paths[0].frames)
-                        paths.Add(new InstancedModel("greencone", MGConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
+                        paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
                     foreach (NavFrame n in s.nav.paths[1].frames)
-                        paths.Add(new InstancedModel("yellowcone", MGConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
+                        paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
                     foreach (NavFrame n in s.nav.paths[2].frames)
-                        paths.Add(new InstancedModel("redcone", MGConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
+                        paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
                 }
             }
 
@@ -573,7 +574,7 @@ namespace ctrviewer
                     {
                         if (b.IsLeaf) // leaves don't have children
                         {
-                            bbox.Add(MGConverter.ToLineList(b.bbox, Color.Magenta));
+                            bbox.Add(DataConverter.ToLineList(b.bbox, Color.Magenta));
                         }
                         else
                         {
@@ -581,7 +582,7 @@ namespace ctrviewer
                             if (!bbox2.ContainsKey(level))
                                 bbox2.Add(level, new List<VertexPositionColorTexture[]>());
 
-                            bbox2[level].Add(MGConverter.ToLineList(b.bbox, colorLevelsOfBsp[level % colorLevelsOfBsp.Length]));
+                            bbox2[level].Add(DataConverter.ToLineList(b.bbox, colorLevelsOfBsp[level % colorLevelsOfBsp.Length]));
                             BspDraw(b, scene, level + 1);
                         }
                     }
@@ -593,7 +594,7 @@ namespace ctrviewer
         {
             if (scn.Count > 0)
             {
-                camera.Position = MGConverter.ToVector3(scn[0].header.startGrid[0].Position, 0.01f);
+                camera.Position = DataConverter.ToVector3(scn[0].header.startGrid[0].Position, 0.01f);
                 rightCamera.Position = camera.Position;
                 leftCamera.Position = camera.Position;
 
@@ -700,7 +701,11 @@ namespace ctrviewer
                                 LoadLevelFromBig(menu.SelectedItem.Value);//, 0, 2); 
                                 break;
                             case "loadbigadv":
-                                LoadLevelFromBig(menu.SelectedItem.Value, 0, 3);
+                                LoadLevelFromBig(200);
+                                LoadLevelFromBig(203);
+                                LoadLevelFromBig(206);
+                                LoadLevelFromBig(209);
+                                LoadLevelFromBig(212);
                                 break;
                             case "tod_day":
                                 TimeOfDay = new Vector3(2f);
@@ -802,7 +807,7 @@ namespace ctrviewer
             oldms = newms;
             newms = Mouse.GetState();
 
-            
+
             if (IsActive)
                 if (newms.LeftButton == ButtonState.Pressed)
                 {
@@ -826,7 +831,7 @@ namespace ctrviewer
 
                         if (newms.ScrollWheelValue > oldms.ScrollWheelValue)
                         {
-                            camera.speedScale += 0.1f; 
+                            camera.speedScale += 0.1f;
                         }
 
                         if (newms.ScrollWheelValue < oldms.ScrollWheelValue)
@@ -857,7 +862,7 @@ namespace ctrviewer
                     updatemouse = false;
                     captureMouse = false;
                 }
-            
+
 
             skycamera.Update(gameTime, updatemouse, false, newms, oldms);
             camera.Update(gameTime, updatemouse, true, newms, oldms);
@@ -960,14 +965,14 @@ namespace ctrviewer
 
                     if (settings.VisDataLeaves)
                         foreach (var key in bbox2.Keys)
-                        foreach (var x in bbox2[key])
-                        {
-                            foreach (var pass in effect.CurrentTechnique.Passes)
+                            foreach (var x in bbox2[key])
                             {
-                                pass.Apply();
-                                graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, x, 0, x.Length / 2);
+                                foreach (var pass in effect.CurrentTechnique.Passes)
+                                {
+                                    pass.Apply();
+                                    graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, x, 0, x.Length / 2);
+                                }
                             }
-                        }
                 }
             }
         }
@@ -1163,9 +1168,9 @@ namespace ctrviewer
 
             if (GamePad.GetState(0).Triggers.Left > 0 || GamePad.GetState(0).Triggers.Right > 0)
                 spriteBatch.DrawString(
-                    font, 
+                    font,
                     $"Speed scale: {camera.speedScale.ToString("0.##")}",
-                    new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString($"Speed scale: {camera.speedScale.ToString("0.##")}").X - 20, 20), 
+                    new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString($"Speed scale: {camera.speedScale.ToString("0.##")}").X - 20, 20),
                     Color.Yellow);
 
             if (settings.ShowCamPos)
