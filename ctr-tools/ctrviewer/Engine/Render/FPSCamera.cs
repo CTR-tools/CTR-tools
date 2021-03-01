@@ -89,6 +89,7 @@ namespace ctrviewer
                 KeyboardState keyState = Keyboard.GetState();
                 GamePadState padState = GamePad.GetState(Game1.activeGamePad);
 
+
                 if (keyState.IsKeyDown(Keys.W) || padState.DPad.Up == ButtonState.Pressed)
                     moveVector += new Vector3(0, 0, -1) * 100;
                 if (keyState.IsKeyDown(Keys.S) || padState.DPad.Down == ButtonState.Pressed)
@@ -98,12 +99,26 @@ namespace ctrviewer
                 if (keyState.IsKeyDown(Keys.A) || padState.DPad.Left == ButtonState.Pressed)
                     moveVector += new Vector3(-1, 0, 0) * 100;
 
+
+                if (keyState.IsKeyDown(Keys.W) && keyState.IsKeyDown(Keys.A))
+                    moveVector += new Vector3(0.25f, 0, 0.25f) * 100;
+
+                if (keyState.IsKeyDown(Keys.W) && keyState.IsKeyDown(Keys.D))
+                    moveVector += new Vector3(-0.25f, 0, 0.25f) * 100;
+
+                if (keyState.IsKeyDown(Keys.S) && keyState.IsKeyDown(Keys.A))
+                    moveVector += new Vector3(0.25f, 0, -0.25f) * 100;
+
+                if (keyState.IsKeyDown(Keys.S) && keyState.IsKeyDown(Keys.D))
+                    moveVector += new Vector3(-0.25f, 0, -0.25f) * 100;
+
+
                 if (keyState.IsKeyDown(Keys.Q))
                     moveVector += new Vector3(0, 1, 0) * 100;
                 if (keyState.IsKeyDown(Keys.Z))
                     moveVector += new Vector3(0, -1, 0) * 100;
 
-                moveVector *= (Keyboard.GetState().IsKeyDown(Keys.LeftShift) ? 0.9f : 0.3f);
+                moveVector *= 0.3f;
                 moveVector *= 0.0001f;
 
                 if (Math.Abs(moveVector.X) > Math.Abs(slowdown.X))

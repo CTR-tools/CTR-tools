@@ -795,22 +795,69 @@ namespace ctrviewer
         MouseState oldms = new MouseState();
         MouseState newms = new MouseState();
 
+        bool captureMouse = false;
+
         private void UpdateCameras(GameTime gameTime)
         {
             oldms = newms;
             newms = Mouse.GetState();
 
-            if (IsActive && newms.X >= 0 && newms.Y >= 0 && newms.LeftButton == ButtonState.Pressed)
-            {
-                IsMouseVisible = false;
-                updatemouse = true;
-                Mouse.SetPosition(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-            }
-            else
-            {
-                IsMouseVisible = true;
-                updatemouse = false;
-            }
+            
+            if (IsActive)
+                if (newms.LeftButton == ButtonState.Pressed)
+                {
+                    if (captureMouse)
+                    {
+                        IsMouseVisible = false;
+                        updatemouse = true;
+                        //Mouse.SetPosition(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+
+                        if (newms.X <= 0)
+                            Mouse.SetPosition(graphics.PreferredBackBufferWidth, newms.Y);
+
+                        if (newms.Y <= 0)
+                            Mouse.SetPosition(newms.X, graphics.PreferredBackBufferHeight);
+
+                        if (newms.X >= graphics.PreferredBackBufferWidth - 1)
+                            Mouse.SetPosition(0, newms.Y);
+
+                        if (newms.Y >= graphics.PreferredBackBufferHeight - 1)
+                            Mouse.SetPosition(newms.X, 0);
+
+                        if (newms.ScrollWheelValue > oldms.ScrollWheelValue)
+                        {
+                            camera.speedScale += 0.1f; 
+                        }
+
+                        if (newms.ScrollWheelValue < oldms.ScrollWheelValue)
+                        {
+                            camera.speedScale -= 0.1f;
+                        }
+
+
+                        if (camera.speedScale < 0.1f)
+                            camera.speedScale = 0.1f;
+
+                        if (camera.speedScale > 5)
+                            camera.speedScale = 5;
+                    }
+                    else
+                    {
+                        if (0 <= newms.X &&
+                            newms.X <= graphics.PreferredBackBufferWidth &&
+                            0 <= newms.Y &&
+                            newms.Y <= graphics.PreferredBackBufferHeight)
+                            captureMouse = true;
+
+                    }
+                }
+                else
+                {
+                    IsMouseVisible = true;
+                    updatemouse = false;
+                    captureMouse = false;
+                }
+            
 
             skycamera.Update(gameTime, updatemouse, false, newms, oldms);
             camera.Update(gameTime, updatemouse, true, newms, oldms);
@@ -1106,6 +1153,9 @@ namespace ctrviewer
                     graphics.GraphicsDevice.Viewport.Height / 1080f,
                     SpriteEffects.None,
                     0.5f);
+
+
+            //spriteBatch.DrawString(font, $"{newms.ToString()}", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString($"{newms.ToString()}").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Keyboard.GetState().IsKeyDown(Keys.OemPlus))
