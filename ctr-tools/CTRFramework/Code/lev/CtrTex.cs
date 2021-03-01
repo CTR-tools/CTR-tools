@@ -62,7 +62,7 @@ namespace CTRFramework
 
             //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
             //Console.ReadKey();
-            
+
             ptrHi = br.ReadUInt32();
 
             //loosely assume we got a valid pointer

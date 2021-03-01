@@ -198,7 +198,7 @@ namespace CTRFramework
         public string Tag()
         {
             return RealX + "_" + RealY + "_" + PalX + "_" + PalY + "_" + width + "_" + height;
-           // return offset.ToString("X8");
+            // return offset.ToString("X8");
 
             /*
             return PageX.ToString("X2") + PageY.ToString("X2") + "_" +

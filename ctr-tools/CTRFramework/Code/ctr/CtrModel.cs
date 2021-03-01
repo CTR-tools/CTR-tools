@@ -1,9 +1,9 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
-using System.ComponentModel;
 
 namespace CTRFramework
 {
@@ -163,7 +163,7 @@ namespace CTRFramework
             curPtr += 64 * Entries.Count;
 
             if (curPtr % 4 != 0)
-                curPtr = ((curPtr / 4) + 1 ) * 4;
+                curPtr = ((curPtr / 4) + 1) * 4;
 
             foreach (var ctr in Entries)
             {

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.IO;
 
 namespace CTRFramework
 {
@@ -24,7 +23,7 @@ namespace CTRFramework
         public int ptrAnims = 0;
         public int unk4 = 0; //?
 
-        public Vector4s posOffset = new Vector4s(0,0,0,0);
+        public Vector4s posOffset = new Vector4s(0, 0, 0, 0);
 
         public List<Vertex> verts = new List<Vertex>();
 
@@ -162,7 +161,7 @@ namespace CTRFramework
             Console.WriteLine("maxv: " + maxv);
             Console.WriteLine("maxc: " + maxc);
             Console.WriteLine("maxt: " + maxt);
-           
+
             //int ppos = (int)br.BaseStream.Position;
 
             br.Jump(ptrClut);
@@ -182,7 +181,7 @@ namespace CTRFramework
 
                 vrenderMode = br.ReadInt32();
 
-                if (!(new List<int> { 0x1C, 0x22 } ).Contains(vrenderMode))
+                if (!(new List<int> { 0x1C, 0x22 }).Contains(vrenderMode))
                 {
                     Helpers.Panic(this, $"check vrender {vrenderMode.ToString("X8")}");
                 }
@@ -202,7 +201,7 @@ namespace CTRFramework
 
                 Console.WriteLine(br.HexPos());
 
-                posOffset = new Vector4s(0,0,0,0);
+                posOffset = new Vector4s(0, 0, 0, 0);
             }
 
             //read vertices
@@ -254,7 +253,7 @@ namespace CTRFramework
                 if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
                     crd[1] = crd[0];
-                } 
+                }
 
                 //push new color
                 clr[0] = clr[1];
@@ -342,7 +341,7 @@ namespace CTRFramework
             foreach (Vertex v in verts)
             {
                 //while the lev is scaled down by 100, ctr models are scaled down by 1000?
-                sb.AppendLine("v " + v.coord.X * 0.001f + " " + v.coord.Y * 0.001f  + " " + v.coord.Z * 0.001f + " " +  v.color.ToString(VecFormat.Numbers));
+                sb.AppendLine("v " + v.coord.X * 0.001f + " " + v.coord.Y * 0.001f + " " + v.coord.Z * 0.001f + " " + v.color.ToString(VecFormat.Numbers));
             }
 
             for (int i = 0; i < verts.Count / 3; i++)
@@ -593,7 +592,7 @@ namespace CTRFramework
                     bw.Write(unk3);
 
                     bw.Write(numAnims);
-                    
+
                     if (ptrAnims != 0) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
                     bw.Write(ptrAnims);
 
@@ -608,7 +607,7 @@ namespace CTRFramework
                     bw.BaseStream.Position = ptrCmd + 4;
 
                     bw.Write(cmdNum);
-                   
+
                     foreach (var c in drawList)
                     {
                         bw.Write(c.GetValue());

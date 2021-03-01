@@ -91,7 +91,7 @@ namespace CTRFramework.Shared
         {
             switch (format)
             {
-                case VecFormat.CommaSeparated: return $"{X}, {Y}, {Z}"; 
+                case VecFormat.CommaSeparated: return $"{X}, {Y}, {Z}";
                 case VecFormat.Braced: return $"({X}, {Y}, {Z})";
                 case VecFormat.Hex: return $"{X.ToString("X2")}, {Y.ToString("X2")}, {Z.ToString("X2")}";
                 default: throw new NotSupportedException("Unknown VecFormat.");

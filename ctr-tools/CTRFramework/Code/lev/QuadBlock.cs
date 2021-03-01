@@ -121,7 +121,7 @@ namespace CTRFramework
                 if (Helpers.TestPointer(ptrTexMid[i]) != 0)
                 {
                     Console.WriteLine("mid " + Helpers.TestPointer(ptrTexMid[i]).ToString("x2"));
-                   // Console.ReadKey();
+                    // Console.ReadKey();
                 }
             }
 

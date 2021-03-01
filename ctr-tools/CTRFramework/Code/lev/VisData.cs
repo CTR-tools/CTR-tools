@@ -1,7 +1,7 @@
 ﻿using CTRFramework.Shared;
 using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -51,7 +51,7 @@ namespace CTRFramework
             return new VisData(br);
         }
 
-        public static int[] counter = new int[8]; 
+        public static int[] counter = new int[8];
 
         public void Read(BinaryReaderEx br)
         {
@@ -172,7 +172,7 @@ namespace CTRFramework
                         }
                 }
             }
-            
+
             return sb.ToString();
         }
 

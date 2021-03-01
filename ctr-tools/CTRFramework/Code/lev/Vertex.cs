@@ -66,9 +66,9 @@ namespace CTRFramework
             //string fmt = "v {0} {1}";
 
             return $"v {coord.X / 32f} {coord.Y / 32f} {coord.Z / 32f}  {new Vector4b(b).ToString(VecFormat.Numbers)}";
-                //coord.ToString(VecFormat.Numbers),
-                
-            
+            //coord.ToString(VecFormat.Numbers),
+
+
         }
     }
 }

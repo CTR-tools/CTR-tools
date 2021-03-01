@@ -13,7 +13,7 @@ namespace CTRFramework.Shared
 
         public static string BasePath = System.AppDomain.CurrentDomain.BaseDirectory;
         public static string JsonPath = "versions.json";
-        public static string XmlPath  = "versions.xml";
+        public static string XmlPath = "versions.xml";
         public static string HowlPath = "howlnames.txt";
         public static string CseqPath = "cseq.json";
         public static string SmplPath = "samplenames.txt";
@@ -23,7 +23,7 @@ namespace CTRFramework.Shared
 
         public static void Load()
         {
-                json = JObject.Parse(Helpers.GetTextFromResource(JsonPath));
+            json = JObject.Parse(Helpers.GetTextFromResource(JsonPath));
         }
 
         public List<string> LoadList(string fn)
