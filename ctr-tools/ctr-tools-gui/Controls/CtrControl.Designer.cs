@@ -132,6 +132,7 @@ namespace CTRTools.Controls
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.actionExportObj);
             this.Controls.Add(this.actionLoadObj);
+            this.DoubleBuffered = true;
             this.MinimumSize = new System.Drawing.Size(488, 223);
             this.Name = "CtrControl";
             this.Size = new System.Drawing.Size(583, 340);

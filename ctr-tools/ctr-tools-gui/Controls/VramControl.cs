@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.IO;
-using CTRFramework;
+﻿using CTRFramework;
 using CTRFramework.Shared;
 using CTRFramework.Vram;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 
 namespace CTRTools
 {
@@ -125,7 +125,7 @@ namespace CTRTools
                 if (optionTexMed.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texMed"), Detail.Med);
                 if (optionTexLow.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texLow"), Detail.Low);
 
-                
+
                 //generates colored vram, keep in mind same texture data may use different palettes
                 Bitmap bmp = new Bitmap(2048, 512);
                 Graphics g = Graphics.FromImage(bmp);
@@ -142,7 +142,7 @@ namespace CTRTools
                 }
 
                 bmp.Save(Path.Combine(pathFileParent, "test.bmp"));
-                
+
             }
 
 

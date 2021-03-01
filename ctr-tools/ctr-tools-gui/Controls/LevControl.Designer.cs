@@ -628,6 +628,7 @@ namespace CTRTools
             this.Controls.Add(this.button26);
             this.Controls.Add(this.button27);
             this.Controls.Add(this.tabControl2);
+            this.DoubleBuffered = true;
             this.Name = "LevControl";
             this.Size = new System.Drawing.Size(543, 343);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.LevControl_DragDrop);

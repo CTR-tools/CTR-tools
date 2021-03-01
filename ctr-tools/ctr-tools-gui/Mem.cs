@@ -6,8 +6,6 @@ using System.Runtime.InteropServices;
 
 namespace CTRTools
 {
-
-
     public class Mem
     {
         const int PROCESS_VM_READ = 0x0010;
@@ -15,8 +13,6 @@ namespace CTRTools
 
         const int PROCESS_VM_WRITE = 0x0020;
         const int PROCESS_VM_OPERATION = 0x0008;
-
-
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProccessId);
@@ -49,74 +45,41 @@ namespace CTRTools
             }
         }
 
-
-
-
-
-        public float ReadFloat(int where)
+        public byte[] GetBytes(int pointer, int length)
         {
             IntPtr processHandle = OpenProcess(PROCESS_VM_READ, false, process.Id);
-
-            int bytesRead = 4;
-            byte[] buffer = new byte[4];
-
-            ReadProcessMemory((int)processHandle, where, buffer, buffer.Length, ref bytesRead);
-
-            return BitConverter.ToSingle(buffer, 0);
+            byte[] buffer = new byte[length];
+            ReadProcessMemory((int)processHandle, pointer, buffer, buffer.Length, ref length);
+            return buffer;
         }
 
-        public int ReadInt(int where)
+        public float ReadFloat(int pointer)
         {
-            IntPtr processHandle = OpenProcess(PROCESS_VM_READ, false, process.Id);
+            return BitConverter.ToSingle(GetBytes(pointer, 4), 0);
+        }
 
-            int bytesRead = 4;
-            byte[] buffer = new byte[4];
-
-            ReadProcessMemory((int)processHandle, where, buffer, buffer.Length, ref bytesRead);
-
-            return BitConverter.ToInt32(buffer, 0);
+        public int ReadInt(int pointer)
+        {
+            return BitConverter.ToInt32(GetBytes(pointer, 4), 0);
         }
 
 
-        public byte ReadByte(int where)
+        public byte ReadByte(int pointer)
         {
-            IntPtr processHandle = OpenProcess(PROCESS_VM_READ, false, process.Id);
-
-            int bytesRead = 1;
-            byte[] buffer = new byte[1];
-
-            ReadProcessMemory((int)processHandle, where, buffer, buffer.Length, ref bytesRead);
-
-            return buffer[0];
+            return GetBytes(pointer, 1)[0];
         }
 
 
-        public uint ReadPSXUInt32(uint where)
+        public uint ReadPSXUInt32(uint pointer)
         {
-            where += (uint)process.MainModule.BaseAddress + 0xA82020 - 0x80000000;
-
-            IntPtr processHandle = OpenProcess(PROCESS_VM_READ, false, process.Id);
-
-            int bytesRead = 4;
-            byte[] buffer = new byte[4];
-
-            ReadProcessMemory((int)processHandle, (int)where, buffer, buffer.Length, ref bytesRead);
-
-            return BitConverter.ToUInt32(buffer, 0);
+            pointer += (uint)process.MainModule.BaseAddress + 0xA82020 - 0x80000000;
+            return BitConverter.ToUInt32(GetBytes((int)pointer, 4), 0);
         }
 
-        public ushort ReadPSXUInt16(uint where)
+        public ushort ReadPSXUInt16(uint pointer)
         {
-            where += (uint)process.MainModule.BaseAddress + 0xA82020 - 0x80000000;
-
-            IntPtr processHandle = OpenProcess(PROCESS_VM_READ, false, process.Id);
-
-            int bytesRead = 2;
-            byte[] buffer = new byte[2];
-
-            ReadProcessMemory((int)processHandle, (int)where, buffer, buffer.Length, ref bytesRead);
-
-            return BitConverter.ToUInt16(buffer, 0);
+            pointer += (uint)process.MainModule.BaseAddress + 0xA82020 - 0x80000000;
+            return BitConverter.ToUInt16(GetBytes((int)pointer, 2), 0);
         }
 
         public byte[] ReadArray(uint where, int cnt)

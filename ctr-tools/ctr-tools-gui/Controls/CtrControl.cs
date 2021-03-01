@@ -1,10 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using CTRFramework;
+using System;
 using System.IO;
-using CTRFramework;
-using CTRFramework.Big;
-using CTRFramework.Lang;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 
 namespace CTRTools.Controls
@@ -65,50 +62,50 @@ namespace CTRTools.Controls
             try
             {
                 OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Wavefront OBJ (*.obj)|*.obj";
+                ofd.Filter = "Wavefront OBJ (*.obj)|*.obj";
 
-            if (ofd.ShowDialog() == DialogResult.OK)
-                LoadObj(ofd.FileName);
-        } 
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    LoadObj(ofd.FileName);
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-}
+        }
 
         private void actionLoadCtr_Click(object sender, EventArgs e)
         {
-    try
-    {
-        OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Crash Team Racing CTR file|*.ctr";
+            try
+            {
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Filter = "Crash Team Racing CTR file|*.ctr";
 
-            if (ofd.ShowDialog() == DialogResult.OK)
-                LoadCtr(ofd.FileName);
-        } 
+                if (ofd.ShowDialog() == DialogResult.OK)
+                    LoadCtr(ofd.FileName);
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-}
+        }
 
         private void actionSaveCtr_Click(object sender, EventArgs e)
         {
-    try
-    {
-        if (ctr != null)
+            try
             {
-                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                if (ctr != null)
+                {
+                    FolderBrowserDialog fbd = new FolderBrowserDialog();
 
-                if (fbd.ShowDialog() == DialogResult.OK)
-                    ctr.Write(fbd.SelectedPath);
+                    if (fbd.ShowDialog() == DialogResult.OK)
+                        ctr.Write(fbd.SelectedPath);
+                }
             }
-        } 
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-}
+        }
 
         private void actionExportObj_Click(object sender, EventArgs e)
         {
@@ -121,7 +118,7 @@ namespace CTRTools.Controls
                     if (fbd.ShowDialog() == DialogResult.OK)
                         ctr.Export(fbd.SelectedPath);
                 }
-            } 
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

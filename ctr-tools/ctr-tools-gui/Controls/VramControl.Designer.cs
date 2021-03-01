@@ -292,6 +292,7 @@ namespace CTRTools
             this.Controls.Add(this.actionExtract);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.actionPack);
+            this.DoubleBuffered = true;
             this.MinimumSize = new System.Drawing.Size(488, 223);
             this.Name = "VramControl";
             this.Size = new System.Drawing.Size(488, 251);

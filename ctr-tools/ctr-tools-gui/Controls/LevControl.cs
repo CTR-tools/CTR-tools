@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.IO;
-using CTRFramework;
+﻿using CTRFramework;
+using CTRFramework.Lang;
 using CTRFramework.Shared;
 using CTRFramework.Vram;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Text;
-using CTRFramework.Lang;
-using System.Linq;
+using System.Windows.Forms;
 
 namespace CTRTools
 {
@@ -647,7 +646,7 @@ namespace CTRTools
 
             for (int i = 1; i < 9; i++)
             {
-                ushort x = (ushort)((clb.GetItemChecked(i) ? 1 : 0) << (i-1));
+                ushort x = (ushort)((clb.GetItemChecked(i) ? 1 : 0) << (i - 1));
                 final |= x;
             }
 

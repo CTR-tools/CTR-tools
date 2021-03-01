@@ -1,10 +1,10 @@
-﻿using System;
-using System.Windows.Forms;
-using System.IO;
-using CTRFramework;
+﻿using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Lang;
+using System;
+using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 
 namespace CTRTools.Controls
@@ -16,14 +16,6 @@ namespace CTRTools.Controls
             InitializeComponent();
             this.DoubleBuffered = true;
         }
-
-        private void CtrToolsVramControl_DragDrop(object sender, DragEventArgs e)
-        {
-            string path = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
-
-
-        }
-
 
         BigFile big;
 
