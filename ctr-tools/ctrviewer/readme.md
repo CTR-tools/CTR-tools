@@ -1,4 +1,4 @@
-# CTR-tools: ctrviewer r11 [WIP]
+# CTR-tools: ctrviewer
 Crash Team Racing (PS1) scene viewer powered by CTRFramework and MonoGame.
 
 ## How to use
@@ -8,16 +8,15 @@ Crash Team Racing (PS1) scene viewer powered by CTRFramework and MonoGame.
 ## Texture replacement
 Viewer supports texture replacements.
 It checks "\levels\newtex" folder for existing PNG files before loading the texture from ps1 vram.
-If texture found, PNG image is used instead. It also supports mip map generation, which may take some time if you load many textures.
+If replacement texture is found, it will be used instead the original. It also supports mip map generation, which may take some time if you load many textures.
 
-!outdated instruction!
-- load level
-- find your PNG texture in tex folder
-- copy to newtex folder
+- use model_reader command line tool to extract the data from lev/vram
+- find your PNG texture in one of tex folders
+- copy to viewer's newtex folder
 - edit texture in newtex folder
 - reload level
 
-you can of course use larger images, but if you want to make it look like in-game, keep the same size (usually 64x64) as well as convert it to 4 bit.
+No limitations apply to this process, but if you want to make it look more like in-game, keep the same size (usually 64x64) as well as convert it to 4 bit.
 
 ## Controls
 Notice: XInput gamepad is strongly recommended, but mouse+keyboards is supported too.
@@ -25,7 +24,7 @@ You can also use x360ce for DirectInput devices.
 
 * move: left stick/wasd
 * rotate: right stick/arrow keys/hold left mouse click and move mouse
-* change speed: left/right trigger or mouse wheel
+* change speed: left/right trigger or mouse wheel while left button is held
 * menu: start/esc
 * confirm/cancel: A/B or enter
 * menu navigation: dpad/wasd/arrows

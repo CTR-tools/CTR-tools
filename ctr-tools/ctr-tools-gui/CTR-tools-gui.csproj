@@ -55,6 +55,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -84,6 +85,12 @@
     </Compile>
     <Compile Include="Controls\EmuControl.Designer.cs">
       <DependentUpon>EmuControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HowlControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\HowlControl.Designer.cs">
+      <DependentUpon>HowlControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\LevControl.cs">
       <SubType>UserControl</SubType>
@@ -128,6 +135,9 @@
     <EmbeddedResource Include="Controls\EmuControl.resx">
       <DependentUpon>EmuControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\HowlControl.resx">
+      <DependentUpon>HowlControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\LevControl.resx">
       <DependentUpon>LevControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -151,6 +161,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="readme.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CTRFramework\CTRFramework.csproj">
