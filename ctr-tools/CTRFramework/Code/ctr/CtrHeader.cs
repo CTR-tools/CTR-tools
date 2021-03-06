@@ -226,9 +226,9 @@ namespace CTRFramework
             foreach (Vector3s v in vfixed)
             {
                 //scale vertices
-                v.X = (short)(-(((float)v.X / 255.0f) * scale.X + posOffset.X * 10));
-                v.Y = (short)(-(((float)v.Y / 255.0f) * scale.Z + posOffset.Y * 10));
-                v.Z = (short)((((float)v.Z / 255.0f) * scale.Y + posOffset.Z * 10));
+                v.X = (short)(-(((float)(v.X + posOffset.X) / 255.0f) * scale.X));
+                v.Y = (short)(-(((float)(v.Y + posOffset.Z) / 255.0f) * scale.Z));
+                v.Z = (short)((((float)(v.Z + posOffset.Y) / 255.0f) * scale.Y));
 
                 //flip axis
                 short zz = v.Z;
@@ -462,13 +462,14 @@ namespace CTRFramework
             for (int i = 0; i < dVerts.Count; i++)
                 dVerts[i] -= bb.minf;
 
+            /*
             //save offset to model
             model.posOffset = new Vector4s(
                 (short)((bb.minf.X - bb2.maxf.X / 2) / 10),
                 (short)((bb.minf.Z - bb2.maxf.Y / 2) / 10),
                 (short)((bb.minf.Y - bb2.maxf.Z / 2) / 10),
                 0);
-
+            */
             Console.WriteLine(bb2);
 
             //save scale to model
@@ -598,41 +599,25 @@ namespace CTRFramework
         /// <param name="mode">Write mode (writes wither header or data).</param>
         public void Write(BinaryWriterEx bw, CtrWriteMode mode)
         {
+            int pos = 0;
+
             switch (mode)
             {
                 case CtrWriteMode.Header:
-
-                    int pos = (int)bw.BaseStream.Position;
-
-                    bw.Write(name.ToCharArray());
-                    bw.BaseStream.Position = pos + 16;
-
+                    pos = (int)bw.BaseStream.Position;
+                    bw.Write(name.ToCharArray().Take(16).ToArray());
+                    bw.Jump(pos + 16);
                     bw.Write(unk0);
                     bw.Write(lodDistance);
                     bw.Write(billboard);
                     scale.Write(bw);
-
-                    if (ptrCmd != UIntPtr.Zero) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
                     bw.Write(ptrCmd);
-
-                    if (ptrVerts != UIntPtr.Zero) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
                     bw.Write(ptrVerts);
-
-                    if (ptrTex != UIntPtr.Zero) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
                     bw.Write(ptrTex);
-
-                    if (ptrClut != UIntPtr.Zero) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
                     bw.Write(ptrClut);
-
-                    if (unk3 != 0) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
                     bw.Write(unk3);
-
                     bw.Write(numAnims);
-
-                    if (ptrAnims != UIntPtr.Zero) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
                     bw.Write(ptrAnims);
-
-                    if (unk4 != 0) CtrModel.ptrs.Add((int)bw.BaseStream.Position);
                     bw.Write(unk4);
 
                     break;
@@ -682,7 +667,7 @@ namespace CTRFramework
 
                         for (int i = 0; i < tl.Count; i++)
                         {
-                            CtrModel.ptrs.Add((int)bw.BaseStream.Position - 4);
+                            //CtrModel.ptrs.Add((int)bw.BaseStream.Position - 4);
                             bw.Write(pos + 4 * tl.Count + i * 12);
                         }
 
@@ -696,6 +681,7 @@ namespace CTRFramework
 
                     foreach (var x in cols)
                     {
+                        x.W = 0;
                         x.Write(bw);
                         Console.WriteLine(x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2") + x.W.ToString("X2"));
                     }

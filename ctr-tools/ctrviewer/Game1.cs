@@ -30,6 +30,8 @@ namespace ctrviewer
         public static Dictionary<string, TriList> instTris = new Dictionary<string, TriList>();
         public static Dictionary<string, QuadList> instmodels = new Dictionary<string, QuadList>();
 
+
+        List<InstancedModel> external = new List<InstancedModel>();
         List<InstancedModel> instanced = new List<InstancedModel>();
         List<InstancedModel> paths = new List<InstancedModel>();
 
@@ -392,6 +394,33 @@ namespace ctrviewer
                 }
             }
 
+            string[] models = Directory.GetFiles(Path.Combine(Meta.BasePath, Meta.ModelsPath), "*.ctr");
+
+            foreach (var s in models)
+            {
+                CtrModel c = CtrModel.FromFile(s);
+
+                if (!instTris.ContainsKey(c.Name))
+                {
+                    List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
+
+                    foreach (var x in c.Entries[0].verts)
+                        li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
+
+                    TriList t = new TriList();
+                    t.textureEnabled = false;
+                    t.textureName = "test";
+                    t.scrollingEnabled = false;
+                    t.PushTri(li);
+                    t.Seal();
+
+                    instTris.Add(c.Name, t);
+
+                    external.Add(new InstancedModel(c.Name, Vector3.Zero, Vector3.Zero, 0.1f));
+                }
+            }
+
+
             RenderEnabled = false;
 
             //wait for the end of frame, in case we are still rendering.
@@ -495,6 +524,7 @@ namespace ctrviewer
                 }
 
             //karts.Add(new Kart("selectkart", MGConverter.ToVector3(scn[0].header.startGrid[0].Position), Vector3.Left, 0.5f));
+
 
 
             Console.WriteLine("extracted dynamics at: " + sw.Elapsed.TotalSeconds);
@@ -941,6 +971,8 @@ namespace ctrviewer
                 alphaTestEffect.View = effect.View;
                 alphaTestEffect.Projection = effect.Projection;
 
+                foreach (var v in external)
+                    v.Draw(graphics, instanceEffect, null, (cam != null ? cam : camera));
 
                 if (settings.Models || settings.BotsPath)
                 {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using System.Linq;
 using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework
@@ -31,7 +32,7 @@ namespace CTRFramework
         }
 
         //public short numEntries;
-        public int ptrHeaders = 0;
+        public UIntPtr ptrHeaders = (UIntPtr)0;
 
         public List<CtrHeader> Entries = new List<CtrHeader>();
 
@@ -73,7 +74,7 @@ namespace CTRFramework
             name = br.ReadStringFixed(16);
             gameEvent = (CTREvent)br.ReadInt16();
             int numEntries = br.ReadInt16();
-            ptrHeaders = br.ReadInt32();
+            ptrHeaders = br.ReadUIntPtr();
 
             for (int i = 0; i < numEntries; i++)
                 Entries.Add(new CtrHeader(br));
@@ -128,22 +129,26 @@ namespace CTRFramework
             }
         }
 
+        //public static List<int> ptrs = new List<int>();
+
         public void Write(BinaryWriterEx bw)
         {
-            ptrs.Clear();
+            PointerMap.Clear();
+            BinaryWriterEx.PointerMap.Clear();
+            //ptrs.Clear();
 
             bw.Write(FixPointers());
 
             if (name.Length > 16)
                 Helpers.Panic(this, $"Name too long: {name}");
 
-            bw.Write(name.ToCharArray());
+            bw.Write(name.ToCharArray().Take(16).ToArray());
             bw.BaseStream.Position = 20;
 
             bw.Write((ushort)gameEvent);
             bw.Write((ushort)Entries.Count);
 
-            ptrs.Add((int)bw.BaseStream.Position);
+            //ptrs.Add((int)bw.BaseStream.Position);
             bw.Write(ptrHeaders);
 
             foreach (var ctr in Entries)
@@ -156,20 +161,20 @@ namespace CTRFramework
                 ctr.Write(bw, CtrWriteMode.Data);
             }
 
-            bw.Write(ptrs.Count * 4);
+            PointerMap = BinaryWriterEx.PointerMap;
 
-            foreach (int x in ptrs)
+            bw.Write(PointerMap.Count * 4);
+
+            foreach (int x in PointerMap)
                 bw.Write(x - 4);
         }
 
-
-        public static List<int> ptrs = new List<int>();
 
 
         public int FixPointers()
         {
             int curPtr = 0x18;
-            ptrHeaders = curPtr;
+            ptrHeaders = (UIntPtr)curPtr;
 
             curPtr += 64 * Entries.Count;
 

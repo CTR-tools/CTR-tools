@@ -1,10 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace CTRFramework.Shared
 {
     public class BinaryWriterEx : BinaryWriter
     {
+        public static List<UIntPtr> PointerMap = new List<UIntPtr>();
+
         public BinaryWriterEx(MemoryStream ms) : base(ms)
         {
         }
@@ -41,6 +44,9 @@ namespace CTRFramework.Shared
 
         public void Write(UIntPtr value)
         {
+            if (value != UIntPtr.Zero)
+                PointerMap.Add((UIntPtr)BaseStream.Position);
+
             Write(value.ToUInt32());
         }
     }
