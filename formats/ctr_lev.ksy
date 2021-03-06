@@ -16,7 +16,7 @@ seq:
   - id: ptr_map
     type: u4
     repeat: expr
-    repeat-expr: ptr_map_size / 4  
+    repeat-expr: ptr_map_size / 4
 
 types:
   lev:
@@ -25,11 +25,11 @@ types:
         type: scene_header
     
       - id: restart_main
-        type: posang
+        type: pose
         if: header.ptr_restart_main != 0
     
       - id: restart_pts
-        type: posang
+        type: pose
         repeat: expr
         repeat-expr: header.cnt_restart_pts
     
@@ -196,7 +196,7 @@ types:
         repeat-expr: 3
 
       - id: start_grid
-        type: posang
+        type: pose
         repeat: expr
         repeat-expr: 8
 
@@ -274,9 +274,11 @@ types:
         type: u4
       - id: ptr_tropy_ghost
         type: u4
+        if: cnt_pointers == 6
       - id: ptr_oxide_ghost
         type: u4
-
+        if: cnt_pointers == 6
+        
   somedata:
     seq:
       - id: s1
@@ -288,7 +290,7 @@ types:
       - id: s4
         type: u4
 
-  posang:
+  pose:
     seq:
       - id: position
         type: vector3s
@@ -522,7 +524,7 @@ types:
   nav_frame:
     seq:
       - id: point
-        type: posang
+        type: pose
       - id: data
         size: 8
 

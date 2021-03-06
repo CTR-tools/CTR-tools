@@ -6,7 +6,7 @@ namespace CTRFramework
 {
     public class UnkAdv
     {
-        public List<PosAng> smth = new List<PosAng>();
+        public List<Pose> smth = new List<Pose>();
 
         public UnkAdv(BinaryReaderEx br, int cnt)
         {
@@ -16,7 +16,7 @@ namespace CTRFramework
             {
                 int c = br.ReadInt32();
                 ttl += c;
-                br.Skip(4);
+                br.Seek(4);
 
                 Console.WriteLine(c);
                 Console.WriteLine(br.BaseStream.Position.ToString("X8"));
@@ -27,7 +27,7 @@ namespace CTRFramework
 
             for (int i = 0; i < ttl; i++)
             {
-                smth.Add(new PosAng(br));
+                smth.Add(new Pose(br));
             }
         }
     }

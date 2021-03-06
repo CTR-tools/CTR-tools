@@ -11,14 +11,35 @@ namespace CTRFramework.Shared
         {
         }
 
-        public void Skip(long x)
+        public void Seek(long x)
         {
-            this.BaseStream.Position += x;
+            Seek(x, SeekOrigin.Current);
+        }
+
+        public void Seek(long x, SeekOrigin origin)
+        {
+            switch (origin)
+            {
+                case SeekOrigin.Begin:
+                    this.BaseStream.Position = x;
+                    return;
+                case SeekOrigin.Current:
+                    this.BaseStream.Position += x;
+                    return;
+                case SeekOrigin.End:
+                    this.BaseStream.Position = this.BaseStream.Length - x;
+                    return;
+            }
+        }
+
+        public void Jump(UIntPtr x)
+        {
+            Jump(x.ToUInt32());
         }
 
         public void Jump(long x)
         {
-            this.BaseStream.Position = x;
+            Seek(x, SeekOrigin.Begin);
         }
 
         public static BinaryReaderEx FromFile(string s)
@@ -129,6 +150,11 @@ namespace CTRFramework.Shared
             while (c != 0);
 
             return x;
+        }
+
+        public UIntPtr ReadUIntPtr()
+        {
+            return (UIntPtr)ReadUInt32();
         }
     }
 }

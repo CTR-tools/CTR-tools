@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CTRFramework
 {
-    public class CtrTex : IRead
+    public class CtrTex
     {
         public TextureLayout[] midlods = new TextureLayout[3];
         public TextureLayout[] hi = new TextureLayout[16];
@@ -14,12 +14,12 @@ namespace CTRFramework
         public bool isAnimated = false;
 
 
-        public CtrTex(BinaryReaderEx br)
+        public CtrTex(BinaryReaderEx br, int mosaic)
         {
-            Read(br);
+            Read(br, mosaic);
         }
 
-        public void Read(BinaryReaderEx br)
+        public void Read(BinaryReaderEx br, int mosaic)
         {
             int pos = (int)br.BaseStream.Position;
 
@@ -63,15 +63,18 @@ namespace CTRFramework
             //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
             //Console.ReadKey();
 
-            ptrHi = br.ReadUInt32();
-
-            //loosely assume we got a valid pointer
-            if (ptrHi > 0x30000 && ptrHi < 0xB0000)
+            //if (mosaic != 0)
             {
-                br.Jump(ptrHi);
+                ptrHi = br.ReadUInt32();
 
-                for (int i = 0; i < 16; i++)
-                    hi[i] = TextureLayout.FromStream(br);
+                //loosely assume we got a valid pointer
+                if (ptrHi > 0x30000 && ptrHi < 0xB0000)
+                {
+                    br.Jump(ptrHi);
+
+                    for (int i = 0; i < 16; i++)
+                        hi[i] = TextureLayout.FromStream(br);
+                }
             }
         }
     }

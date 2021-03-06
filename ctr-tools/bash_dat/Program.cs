@@ -64,7 +64,7 @@ namespace bash_dat
             numPals = br.ReadInt16();
             palDataSize = br.ReadUInt32();
 
-            br.Skip(0x10);
+            br.Seek(0x10);
 
             for (int i = 0; i < numPals; i++)
             {

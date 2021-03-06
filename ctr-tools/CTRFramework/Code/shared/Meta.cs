@@ -17,6 +17,7 @@ namespace CTRFramework.Shared
         public static string HowlPath = "howlnames.txt";
         public static string CseqPath = "cseq.json";
         public static string SmplPath = "samplenames.txt";
+        public static string ModelsPath = "models";
 
 
         static JObject json;

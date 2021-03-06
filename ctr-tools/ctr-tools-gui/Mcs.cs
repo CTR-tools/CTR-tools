@@ -21,7 +21,7 @@ namespace CTRTools
             br.Jump(256 + 2);
             int datasize = br.ReadInt16();
 
-            br.Skip(2 + 2 + 4 + 4 + 4 + 5 * 4);
+            br.Seek(2 + 2 + 4 + 4 + 4 + 5 * 4);
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < datasize / 6; i++)

@@ -22,15 +22,15 @@ Minimum files needed to run the game are:
 
 Notes:
 
-- you can alter the toolchain to use mkpsxiso build in licensing capabilities, if you want to provide license file. you can also replace psxlicense with any other licensing tool, or omit this step entirely.
+- you can alter the toolchain to use mkpsxiso built-in licensing capabilities, if you want to provide license file. you can also replace psxlicense with any other licensing tool, or omit this step entirely.
 
-- BAT script launches ePSXe by default, change epsxe_path to your correct path. if your emulator supports command line start, you can use change it.
+- BAT script launches ePSXe by default, change epsxe_path to your correct path. you can use any other emulator that supports launch from command line (at least DuckStation and BizHawk are confirmed to support it).
 
-- BAT script is designed to generate ctr_source.xml only if it doesn't exist. This allows to keep manual changes in place, so you can control the way the iso is built.
+- BAT script is designed to generate ctr_source.xml only if it doesn't exist. This allows to keep manual changes in place, so you can control the way the iso is built. if you need to apply changes made in the folder to the iso, you have to remove this xml layout file manually.
 
 - BAT script is meant for NTSC-U version. You'll have to slightly edit the script for other versions. This includes:
   - update region variable (not really that important)
-  - update big_name variable (like sampler instead of bigfile)
+  - update big_name variable, if differs (like sampler instead of bigfile)
   - optionally remove/rename ctr_source.xml file to generate a new one
 
 - You can safely remove STR files from bigfile folder to make it even smaller (simply rename movies to movies1 or such). Those are track previews on level selection screen and they take away like half of the BIG file.

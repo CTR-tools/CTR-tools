@@ -29,7 +29,7 @@ namespace CTRFramework
         public uint ptrRestartMain;
 
         public SomeData[] someData;
-        public PosAng[] startGrid;
+        public Pose[] startGrid;
 
         public uint somePtr4;
         public uint somePtr5;
@@ -115,11 +115,11 @@ namespace CTRFramework
                 someData[i] = sd;
             }
 
-            startGrid = new PosAng[8];
+            startGrid = new Pose[8];
 
             for (int i = 0; i < 8; i++)
             {
-                PosAng pos = new PosAng(br);
+                Pose pos = new Pose(br);
                 startGrid[i] = pos;
                 Console.WriteLine(startGrid[i].ToString());
             }

@@ -137,7 +137,7 @@ namespace CTRFramework
 
             if (test == 0)
             {
-                Helpers.Panic("texturelayout", "test failed");
+                Helpers.Panic("TextureLayout", "test failed");
                 return null;
             }
 
@@ -244,6 +244,7 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw)
         {
+            //filler, add valid value
             uv[0].Write(bw);
             bw.Write((ushort)0);
             uv[1].Write(bw);

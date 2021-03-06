@@ -74,7 +74,7 @@ namespace CTRFramework
             foreach (CtrModel d in dynamics)
             {
                 d.Export(dir);
-                d.Write(dir);
+                d.Save(dir);
             }
 
             Console.WriteLine("Models done!");

@@ -98,7 +98,7 @@ namespace CTRTools.Controls
                     FolderBrowserDialog fbd = new FolderBrowserDialog();
 
                     if (fbd.ShowDialog() == DialogResult.OK)
-                        ctr.Write(fbd.SelectedPath);
+                        ctr.Save(fbd.SelectedPath);
                 }
             }
             catch (Exception ex)

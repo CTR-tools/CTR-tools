@@ -189,7 +189,7 @@ namespace CTRFramework
                 if (u != 0)
                 {
                     br.Jump(u);
-                    tex.Add(new CtrTex(br));
+                    tex.Add(new CtrTex(br, (int)mosaicStruct));
                 }
                 else
                 {

@@ -13,17 +13,35 @@ namespace CTRFramework.Shared
         {
         }
 
+        public void Jump(UIntPtr x)
+        {
+            Jump(x.ToUInt32());
+        }
+
+        public void Jump(long x)
+        {
+            Seek((int)x, SeekOrigin.Begin);
+        }
+
         public void WriteBig(int value)
         {
             byte[] x = BitConverter.GetBytes(value);
-            for (int i = 0; i < 4; i++) Write(x[3 - i]);
+            Array.Reverse(x);
+            Write(x);
+            //for (int i = 0; i < 4; i++) Write(x[3 - i]);
         }
 
         public void WriteBig(uint value)
         {
             byte[] x = BitConverter.GetBytes(value);
-            for (int i = 0; i < 4; i++) Write(x[3 - i]);
+            Array.Reverse(x);
+            Write(x);
+            //for (int i = 0; i < 4; i++) Write(x[3 - i]);
         }
 
+        public void Write(UIntPtr value)
+        {
+            Write(value.ToUInt32());
+        }
     }
 }

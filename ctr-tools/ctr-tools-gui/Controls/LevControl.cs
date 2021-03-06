@@ -296,7 +296,7 @@ namespace CTRTools
             {
                 foreach (QuadBlock qb in scn.quads)
                 {
-                    qb.bitvalue = 0;
+                    qb.midunk = 0;
                 }
             }
 
@@ -378,7 +378,7 @@ namespace CTRTools
 
                 bw.BaseStream.Position = scn.header.ptrRestartPts + 4;
 
-                foreach (PosAng pa in scn.restartPts)
+                foreach (Pose pa in scn.restartPts)
                     pa.Write(bw);
 
                 bw.BaseStream.Position = scn.header.ptrInstances + 4;
@@ -553,16 +553,16 @@ namespace CTRTools
 
             if (scn != null)
             {
-                foreach (PosAng pa in scn.header.startGrid)
+                foreach (Pose pa in scn.header.startGrid)
                 {
                     pa.Position.X -= 1000;
-                    pa.Angle.Y += 2048;
+                    pa.Rotation.Y += 2048;
                 }
 
                 scn.restartPts.Reverse();
 
-                foreach (PosAng pa in scn.restartPts)
-                    pa.Angle.Y += 2048;
+                foreach (Pose pa in scn.restartPts)
+                    pa.Rotation.Y += 2048;
 
 
                 foreach (QuadBlock qb in scn.quads)

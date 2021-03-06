@@ -120,7 +120,7 @@
     <Compile Include="Code\lev\VisData.cs" />
     <Compile Include="Code\shared\BoundingBox.cs" />
     <Compile Include="Code\shared\OBJ.cs" />
-    <Compile Include="Code\shared\PosAng.cs" />
+    <Compile Include="Code\shared\Pose.cs" />
     <Compile Include="Code\shared\SomeData.cs" />
     <Compile Include="Code\shared\Vectors\Vector3s.cs" />
     <Compile Include="Code\shared\Vectors\Vector4b.cs" />
@@ -142,6 +142,10 @@
     <Compile Include="Code\vrm\BMPHeader.cs" />
     <Compile Include="Code\vrm\Tim.cs" />
     <Compile Include="Code\vrm\CtrVrm.cs" />
+    <Compile Include="ThirdParty\PlyImporter\Extensions\ArrayExtensions.cs" />
+    <Compile Include="ThirdParty\PlyImporter\Extensions\EnumerableExtensions.cs" />
+    <Compile Include="ThirdParty\PlyImporter\PlyHandler.cs" />
+    <Compile Include="ThirdParty\PlyImporter\PlyHeader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -165,6 +169,8 @@
     <EmbeddedResource Include="Data\cseq.json" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Data\versions.json" />
+    <None Include="ThirdParty\PlyImporter\LICENSE" />
+    <None Include="ThirdParty\PlyImporter\README.md" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\big_usa_beta_aug.txt" />

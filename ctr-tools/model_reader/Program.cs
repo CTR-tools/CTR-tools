@@ -41,7 +41,7 @@ namespace model_reader
 
             if ((File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
             {
-                foreach (string s in Directory.GetFiles(filename, "*.lev"))
+                foreach (string s in Directory.GetFiles(filename, "*.*"))
                 {
                     Console.WriteLine(s + " " + Path.IsPathRooted(s));
                     ConvertFile(Path.IsPathRooted(s) ? s : ".\\" + s);
@@ -83,7 +83,14 @@ namespace model_reader
                     {
                         OBJ obj = OBJ.FromFile(filename);
                         CtrModel ctr = CtrModel.FromObj(obj);
-                        ctr.Write(basepath);
+                        ctr.Save(basepath);
+
+                        break;
+                    }
+                case ".ply":
+                    {
+                        CtrModel ctr = CtrModel.FromPly(filename);
+                        ctr.Save(basepath);
 
                         break;
                     }
@@ -96,7 +103,7 @@ namespace model_reader
                     }
                 default:
                     {
-                        Console.WriteLine("Unsupported file.");
+                        Console.WriteLine($"Unsupported file: {filename}");
                         return;
                     }
 

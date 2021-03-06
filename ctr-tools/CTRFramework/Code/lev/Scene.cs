@@ -30,7 +30,7 @@ namespace CTRFramework
         public UnkAdv unkadv;
         public TrialData trial;
 
-        public List<PosAng> restartPts = new List<PosAng>();
+        public List<Pose> restartPts = new List<Pose>();
 
         public Tim ctrvram;
 
@@ -40,12 +40,12 @@ namespace CTRFramework
         }
 
 
-        public Scene(string s)
+        public Scene(string filename)
         {
-            path = s;
-            name = Path.GetFileNameWithoutExtension(s);
+            path = filename;
+            name = Path.GetFileNameWithoutExtension(filename);
 
-            byte[] data = File.ReadAllBytes(s);
+            byte[] data = File.ReadAllBytes(filename);
 
             using (MemoryStream ms = new MemoryStream(data, 4, data.Length - 4))
             {
@@ -53,7 +53,7 @@ namespace CTRFramework
                 {
                     Read(br);
 
-                    string vrmpath = Path.ChangeExtension(s, ".vrm");
+                    string vrmpath = Path.ChangeExtension(filename, ".vrm");
 
                     if (File.Exists(vrmpath))
                     {
@@ -76,14 +76,14 @@ namespace CTRFramework
 
 
         public List<Vector3s> posu2 = new List<Vector3s>();
-        public List<PosAng> posu1 = new List<PosAng>();
+        public List<Pose> posu1 = new List<Pose>();
 
         public void Read(BinaryReaderEx br)
         {
             //data that seems to be present in every level
             header = Instance<SceneHeader>.FromReader(br, 0);
 
-            if (header.ptrRestartPts != 0) restartPts = InstanceList<PosAng>.FromReader(br, header.ptrRestartPts, header.cntRestartPts);
+            if (header.ptrRestartPts != 0) restartPts = InstanceList<Pose>.FromReader(br, header.ptrRestartPts, header.cntRestartPts);
 
             if (header.ptrMeshInfo != 0)
             {
@@ -117,7 +117,7 @@ namespace CTRFramework
                 br.Jump(ptr);
 
                 for (int i = 0; i < cnt; i++)
-                    posu1.Add(new PosAng(br));
+                    posu1.Add(new Pose(br));
             }
 
 
@@ -136,6 +136,7 @@ namespace CTRFramework
             }
 
 
+            //find all water quads in visdata
             foreach (VisData v in visdata)
             {
                 if (v.IsLeaf)
@@ -183,16 +184,6 @@ namespace CTRFramework
 
 
             /*
-            for (int i = 0; i < visdata.Count; i++)
-            {
-                if (File.Exists($"visdata_{i}.obj"))
-                    File.Delete($"visdata_{i}.obj");
-
-                File.AppendAllText($"visdata_{i}.obj", visdata[i].ToObj());
-            }
-            */
-
-            /*
              //water texture
             br.BaseStream.Position = header.ptrWater;
 
@@ -238,43 +229,6 @@ namespace CTRFramework
                 dynamics.Add(new CtrModel(br));
             }
 
-            /*
-            //check why itdoesn't work in export function
-            foreach (var d in dynamics)
-            {
-                d.Export(".\\models\\");
-            }
-            */
-
-            /*
-            foreach (QuadBlock qb in quads)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    List<CTRFramework.Vertex> list = qb.GetVertexListq(verts, i);
-
-                    foreach (CTRFramework.Vertex v in list)
-                        Console.WriteLine(v.ToString());
-
-                    Console.WriteLine(qb.unk3[i].ToString());
-
-                    /*
-                    //requires 4.6
-                    System.Numerics.Vector3 a = new Vector3(list[3].coord.X - list[0].coord.X, list[3].coord.Y - list[0].coord.Y, list[3].coord.Z - list[0].coord.Z);
-                    System.Numerics.Vector3 b = new Vector3(list[2].coord.X - list[0].coord.X, list[2].coord.Y - list[0].coord.Y, list[2].coord.Z - list[0].coord.Z);
-
-                    Vector3 cross = Vector3.Cross(a, b);
-
-                    Console.WriteLine(cross.Length()); 
-                    */
-
-            /*
-                }
-
-                Console.WriteLine();
-                Console.ReadKey();
-            }
-            */
 
             /*
             quads = quads.OrderBy(o => o.mosaicPtr1).ToList();
@@ -297,80 +251,81 @@ namespace CTRFramework
             */
         }
 
-
-
-        public void ExportMesh(string dir, Detail lod)
+        /// <summary>
+        /// Generates OBJ file based on lod selection 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="lod">LOD level (Detail enum)</param>
+        private void ExportMesh(string path, Detail lod)
         {
-            Helpers.CheckFolder(dir);
+            Helpers.CheckFolder(path);
 
-            if (quads.Count > 0)
+            if (quads.Count == 0)
+                return;
+
+
+            string fname = $"{name}_{lod.ToString()}";
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
+            sb.AppendLine($"#{Meta.GetVersion()}");
+            sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
+            sb.AppendLine($"mtllib {Path.GetFileName(fname + ".mtl")}\r\n");
+
+            int a = 0;
+            int b = 0;
+
+            foreach (QuadBlock g in quads)
+                sb.AppendLine(g.ToObj(verts, lod, ref a, ref b));
+
+            Helpers.WriteToFile(Path.Combine(path, $"{fname}.obj"), sb.ToString());
+
+            sb.Clear();
+
+
+            Dictionary<string, TextureLayout> tex = GetTexturesList(lod);
+
+            foreach (var s in tex.Values)
             {
-                string fname = name + "_" + lod.ToString();
+                Helpers.CheckFolder(Path.Combine(path, ".\\tex" + lod.ToString()));
 
-                StringBuilder sb = new StringBuilder();
-
-                sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
-                sb.AppendLine($"#{Meta.GetVersion()}");
-                sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
-                sb.AppendLine($"mtllib {Path.GetFileName(fname + ".mtl")}\r\n");
-
-                int a = 0;
-                int b = 0;
-
-                foreach (QuadBlock g in quads)
-                    sb.AppendLine(g.ToObj(verts, lod, ref a, ref b));
-
-                /*
-                foreach (VisData v in visdata)
-                    sb.AppendLine(v.ToObj(verts, lod, ref a, ref b, quads));
-                */
-
-                Helpers.WriteToFile(Path.Combine(dir, fname + ".obj"), sb.ToString());
-
-                sb.Clear();
-
-                Dictionary<string, TextureLayout> tex = GetTexturesList(lod);
-
-                foreach (var s in tex.Values)
+                if (s.Position != 0)
                 {
-                    Helpers.CheckFolder(Path.Combine(dir, ".\\tex" + lod.ToString()));
+                    sb.Append(String.Format("newmtl {0}\r\n", s.Tag()));
+                    sb.Append(String.Format($"map_Kd tex{lod.ToString()}\\{s.Tag()}.png\r\n\r\n"));
 
-                    if (s.Position != 0)
+                    if (!File.Exists(Path.Combine(path, "tex" + lod.ToString() + "\\" + s.Tag() + ".png")))
                     {
-                        sb.Append(String.Format("newmtl {0}\r\n", s.Tag()));
-                        sb.Append(String.Format($"map_Kd tex{lod.ToString()}\\{s.Tag()}.png\r\n\r\n"));
+                        Helpers.Panic(this, "missing bitmap");
 
-                        if (!File.Exists(Path.Combine(dir, "tex" + lod.ToString() + "\\" + s.Tag() + ".png")))
-                        {
-                            Helpers.Panic(this, "missing bitmap");
-
-                            Bitmap bmp = new Bitmap(1, 1);
-                            bmp.Save(Path.Combine(dir, "tex" + lod.ToString() + "\\" + s.Tag() + ".png"));
-                        }
+                        Bitmap bmp = new Bitmap(1, 1);
+                        bmp.Save(Path.Combine(path, "tex" + lod.ToString() + "\\" + s.Tag() + ".png"));
                     }
                 }
-
-                sb.Append("newmtl default\r\n");
-                //sb.Append("map_kd tex\\default.png\r\n");
-
-                Helpers.WriteToFile(Path.Combine(dir, fname + ".mtl"), sb.ToString());
-
-                sb.Clear();
             }
+
+            sb.Append("newmtl default\r\n");
+
+            Helpers.WriteToFile(Path.Combine(path, $"{fname}.mtl"), sb.ToString());
+
+            sb.Clear();
         }
 
-        public void ExportModels(string dir)
+        private void ExportModels(string dir)
         {
-            Helpers.CheckFolder(Path.Combine(dir, "models"));
+            dir = Path.Combine(dir, Meta.ModelsPath);
 
-            foreach (CtrModel d in dynamics)
+            Helpers.CheckFolder(dir);
+
+            foreach (var d in dynamics)
             {
-                d.Export(Path.Combine(dir, "models"));
-                d.Write(Path.Combine(dir, "models"));
+                d.Export(dir);
+                d.Save(dir);
             }
         }
 
-        public void ExportSkyBox(string path)
+        private void ExportSkyBox(string path)
         {
             if (skybox != null)
                 Helpers.WriteToFile(Path.Combine(path, $"{name}_sky.obj"), skybox.ToObj());
@@ -381,21 +336,21 @@ namespace CTRFramework
             Console.WriteLine($"Exporting to: {path}");
 
             if (path.Contains(" "))
-                Console.WriteLine("Warning, there are spaces in the path. This may affect material import.");
+                Console.WriteLine("Warning, the selected path contains space in its name.\r\nThis may affect material import in certain applications.\r\n");
 
             if (flags.HasFlag(ExportFlags.MeshLow)) ExportMesh(path, Detail.Low);
-            if (flags.HasFlag(ExportFlags.TexLow)) ExportTextures(Path.Combine(path, "texLow"), Detail.Low);
+            if (flags.HasFlag(ExportFlags.TexLow)) ExportTextures(path, Detail.Low);
 
             Console.WriteLine("Low mesh: done.");
 
             if (flags.HasFlag(ExportFlags.MeshMed)) ExportMesh(path, Detail.Med);
-            if (flags.HasFlag(ExportFlags.TexMed)) ExportTextures(Path.Combine(path, "texMed"), Detail.Med);
+            if (flags.HasFlag(ExportFlags.TexMed)) ExportTextures(path, Detail.Med);
 
             Console.WriteLine("Mid mesh: done.");
 
-            //not implemented, should return subdivided mesh
-            //if (flags.HasFlag(ExportFlags.MeshMed)) ExportMesh(dir, Detail.High);
-            if (flags.HasFlag(ExportFlags.TexHigh)) ExportTextures(Path.Combine(path, "texHigh"), Detail.High);
+            //not implemented, should return subdivided mesh. not sure if needed.
+            //if (flags.HasFlag(ExportFlags.MeshHigh)) ExportMesh(path, Detail.High);
+            if (flags.HasFlag(ExportFlags.TexHigh)) ExportTextures(path, Detail.High);
 
             Console.WriteLine("High mesh: done.");
 
@@ -471,9 +426,9 @@ namespace CTRFramework
         /// <summary>
         /// Exports textures for a specific level of detail, defined by Detail enum.
         /// </summary>
-        /// <param name="dir"></param>
+        /// <param name="path"></param>
         /// <param name="lod"></param>
-        public void ExportTextures(string dir, Detail lod)
+        public void ExportTextures(string path, Detail lod)
         {
             if (ctrvram == null)
             {
@@ -486,11 +441,12 @@ namespace CTRFramework
             Console.WriteLine(ctrvram.ToString());
             Console.WriteLine("Exporting textures...");
 
-            Helpers.CheckFolder(dir);
+            path = Path.Combine(path, $"tex{lod.ToString()}");
+            Helpers.CheckFolder(path);
 
             foreach (TextureLayout tl in GetTexturesList(lod).Values)
             {
-                Bitmap bmp = ctrvram.GetTexture(tl, dir);
+                Bitmap bmp = ctrvram.GetTexture(tl, path);
                 if (bmp == null)
                 {
                     Console.WriteLine("Missing texture.");
@@ -500,7 +456,7 @@ namespace CTRFramework
                 Bitmap bb = new Bitmap(bmp.Width, bmp.Height);
                 Graphics g = Graphics.FromImage(bb);
                 g.DrawImage(bmp, new Point(0, 0));
-                bb.Save(Path.Combine(dir, $"{tl.Tag()}.png"), System.Drawing.Imaging.ImageFormat.Png);
+                bb.Save(Path.Combine(path, $"{tl.Tag()}.png"), System.Drawing.Imaging.ImageFormat.Png);
             }
         }
 
@@ -688,6 +644,10 @@ namespace CTRFramework
         public List<QuadBlock> GetListOfLeafQuadBlocks(VisData leaf)
         {
             List<QuadBlock> leafQuadBlocks = new List<QuadBlock>();
+
+            if (!leaf.IsLeaf)
+                return leafQuadBlocks;
+
             uint ptrQuadBlock = (uint)(((leaf.ptrQuadBlock) / levelShiftDivide) + levelShiftOffset);
             uint numQuadBlock = leaf.numQuadBlock;
             for (int i = 0; i < numQuadBlock; i++)

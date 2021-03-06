@@ -26,13 +26,13 @@ namespace CTRFramework
             for (int i = 0; i < cnt; i++)
                 ptrs.Add(br.ReadUInt32());
 
-            br.Skip(6);
+            br.Seek(6);
 
             if (cnt > 4)
             {
                 br.Jump(ptrs[4]);
 
-                br.Skip(1);
+                br.Seek(1);
 
                 StringBuilder sb = new StringBuilder();
                 do
@@ -40,7 +40,7 @@ namespace CTRFramework
                     Vertex v = new Vertex();
                     v.coord = new Vector4s(br);
 
-                    br.Skip(2);
+                    br.Seek(2);
 
                     sb.AppendFormat("v {0}\r\n", v.coord.ToString(VecFormat.Numbers));
                 }

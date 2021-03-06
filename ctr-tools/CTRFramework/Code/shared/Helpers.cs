@@ -29,10 +29,20 @@ namespace CTRFramework.Shared
         /// <param name="msg">the message it wants to send</param>
         public static void Panic(object x, string msg)
         {
+            Panic(x.GetType().Name, msg);
+        }
+
+        /// <summary>
+        /// Call this if something unexpected happened.
+        /// </summary>
+        /// <param name="x">summary text</param>
+        /// <param name="msg">message text</param>
+        public static void Panic(string sender, string msg)
+        {
             if (panic.HasFlag(PanicLevel.Silent))
                 return;
 
-            string message = $"{x.GetType().Name}:\t{msg}";
+            string message = $"{sender}:\t{msg}";
 
             if (panic.HasFlag(PanicLevel.File))
                 File.AppendAllText(logpath, DateTime.Now.ToString() + "\t" + message + "\r\n");
@@ -48,6 +58,7 @@ namespace CTRFramework.Shared
             if (panic == PanicLevel.Exception)
                 throw new Exception(message);
         }
+
 
         public static float Normalize(float min, float max, float val)
         {
