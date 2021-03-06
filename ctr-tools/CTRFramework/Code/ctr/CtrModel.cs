@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
+using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework
 {
     public class CtrModel
     {
+        public static List<UIntPtr> PointerMap = new List<UIntPtr>();
+
         public string path;
 
         private string name = "defaultname";
@@ -36,19 +39,24 @@ namespace CTRFramework
         {
         }
 
-        public CtrModel(string s)
+        public CtrModel(string filename)
         {
-            path = s;
+            path = filename;
 
-            MemoryStream ms = new MemoryStream(File.ReadAllBytes(s));
-            BinaryReaderEx br = new BinaryReaderEx(ms);
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            {
+                int dataSize = br.ReadInt32();
 
-            int size = br.ReadInt32();
+                using (BinaryReaderEx br2 = new BinaryReaderEx(new MemoryStream(br.ReadBytes(dataSize))))
+                {
+                    Read(br2);
+                }
 
-            ms = new MemoryStream(br.ReadBytes((int)size));
-            br = new BinaryReaderEx(ms);
+                int ptrMapSize = br.ReadInt32() / 4;
 
-            Read(br);
+                for (int i = 0; i < ptrMapSize; i++)
+                    PointerMap.Add((UIntPtr)br.ReadUInt32());
+            }
         }
 
         public CtrModel(BinaryReaderEx br)
@@ -56,28 +64,19 @@ namespace CTRFramework
             Read(br);
         }
 
-        public static CtrModel FromFile(string s)
-        {
-            return new CtrModel(s);
-        }
-
+        /// <summary>
+        /// Reads CTR model from BinaryReader.
+        /// </summary>
+        /// <param name="br">BinaryReader object.</param>
         public void Read(BinaryReaderEx br)
         {
-            Console.WriteLine(br.BaseStream.Position.ToString("X8"));
-
             name = br.ReadStringFixed(16);
             gameEvent = (CTREvent)br.ReadInt16();
             int numEntries = br.ReadInt16();
             ptrHeaders = br.ReadInt32();
 
-            Console.WriteLine("LODModel: " + name);
-
             for (int i = 0; i < numEntries; i++)
-            {
                 Entries.Add(new CtrHeader(br));
-            }
-
-            //Helpers.WriteToFile("test.obj", sb.ToString());
         }
 
         public override string ToString()
@@ -94,27 +93,38 @@ namespace CTRFramework
             return sb.ToString();
         }
 
-
-        public void Export(string dir)
+        /// <summary>
+        /// Exports all model lods to OBJ files.
+        /// </summary>
+        /// <param name="path">Path to export.</param>
+        public void Export(string path)
         {
-            foreach (CtrHeader h in Entries)
+            foreach (var en in Entries)
             {
-                string fn = Path.Combine(dir, String.Format("{0}\\{1}.obj", name, h.name));
-                Helpers.WriteToFile(fn, h.ToObj());
+                string fn = Path.Combine(path, $"{name}.{en.name}.obj");
+                Helpers.WriteToFile(fn, en.ToObj());
             }
         }
 
-        public void Write(string path)
+        /// <summary>
+        /// Saves CTR model to file using internal model name.
+        /// </summary>
+        /// <param name="path">Path to save.</param>
+        public void Save(string path)
         {
-            Write(path, $"{name}.ctr");
+            Save(path, $"{name}.ctr");
         }
 
-        public void Write(string path, string filename)
+        /// <summary>
+        /// Saves CTR model to specific file.
+        /// </summary>
+        /// <param name="path">Path to save.</param>
+        /// <param name="filename">Target file name.</param>
+        public void Save(string path, string filename)
         {
             using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(Path.Combine(path, filename))))
             {
                 Write(bw);
-                bw.Close();
             }
         }
 
@@ -155,6 +165,7 @@ namespace CTRFramework
 
         public static List<int> ptrs = new List<int>();
 
+
         public int FixPointers()
         {
             int curPtr = 0x18;
@@ -167,19 +178,19 @@ namespace CTRFramework
 
             foreach (var ctr in Entries)
             {
-                ctr.ptrCmd = curPtr;
+                ctr.ptrCmd = (UIntPtr)curPtr;
                 curPtr += (4 + ctr.drawList.Count * 4 + 4);
 
                 if (curPtr % 4 != 0)
                     curPtr = ((curPtr / 4) + 1) * 4;
 
-                ctr.ptrVerts = curPtr;
+                ctr.ptrVerts = (UIntPtr)curPtr;
                 curPtr += (8 + 16 + 4 + ctr.vtx.Count * 3);
 
                 if (curPtr % 4 != 0)
                     curPtr = ((curPtr / 4) + 1) * 4;
 
-                ctr.ptrTex = curPtr;
+                ctr.ptrTex = (UIntPtr)curPtr;
 
                 if (ctr.tl.Count > 0)
                 {
@@ -189,7 +200,7 @@ namespace CTRFramework
                         curPtr = ((curPtr / 4) + 1) * 4;
                 }
 
-                ctr.ptrClut = curPtr;
+                ctr.ptrClut = (UIntPtr)curPtr;
                 curPtr += (ctr.cols.Count * 4);
 
                 if (curPtr % 4 != 0)
@@ -199,30 +210,48 @@ namespace CTRFramework
             return curPtr;
         }
 
-        public static CtrModel FromObj(OBJ obj)
+        /// <summary>
+        /// Returns CtrModel object from file.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns>CtrModel object.</returns>
+        public static CtrModel FromFile(string filename)
         {
-            return FromObj(new List<OBJ> { obj });
+            return new CtrModel(filename);
         }
+
 
         public static CtrModel FromObj(List<OBJ> objlist)
         {
-            if (objlist.Count == 0)
-                return null;
-
             CtrModel ctr = new CtrModel();
 
             foreach (OBJ obj in objlist)
-                ctr.Entries.Add(CtrHeader.FromObj(obj));
+                ctr.Entries.Add(CtrHeader.FromObj(obj.ObjectName, obj));
 
             ctr.Name = objlist[0].ObjectName;
 
             return ctr;
         }
-    }
 
-    public enum CtrWriteMode
-    {
-        Header,
-        Data
+        public static CtrModel FromObj(OBJ obj)
+        {
+            return FromObj(new List<OBJ> { obj });
+        }
+
+        /// <summary>
+        /// Creates CtrModel object from PLY model.
+        /// </summary>
+        /// <param name="filename">PLY filename.</param>
+        /// <returns>CtrModel object.</returns>
+        public static CtrModel FromPly(string filename)
+        {
+            PlyResult ply = PlyHandler.FromFile(filename);
+
+            CtrModel ctr = new CtrModel();
+            ctr.Name = Path.GetFileNameWithoutExtension(filename);
+            ctr.Entries.Add(CtrHeader.FromPly(ctr.Name, ply));
+
+            return ctr;
+        }
     }
 }

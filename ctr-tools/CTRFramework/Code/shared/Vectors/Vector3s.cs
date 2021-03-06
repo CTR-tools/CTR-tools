@@ -3,34 +3,36 @@ using System.ComponentModel;
 
 namespace CTRFramework.Shared
 {
-    public class Vector3s : IReadWrite
+    public class Vector3s : IReadWrite, IEquatable<Vector3s>
     {
-
-        [CategoryAttribute("Values"), DescriptionAttribute("Position of the model.")]
+        #region ComponentModel
+        [CategoryAttribute("Values"), DescriptionAttribute("X axis.")]
         public short X
         {
             get { return x; }
             set { x = value; }
         }
 
-        [CategoryAttribute("Values"), DescriptionAttribute("Position of the model.")]
+        [CategoryAttribute("Values"), DescriptionAttribute("Y axis.")]
         public short Y
         {
             get { return y; }
             set { y = value; }
         }
 
-        [CategoryAttribute("Values"), DescriptionAttribute("Position of the model.")]
+        [CategoryAttribute("Values"), DescriptionAttribute("Z axis.")]
         public short Z
         {
             get { return z; }
             set { z = value; }
         }
+        #endregion
 
         private short x = 0;
         private short y = 0;
         private short z = 0;
 
+        public static Vector3s Zero = new Vector3s(0);
 
         public Vector3s(short xx)
         {
@@ -60,18 +62,14 @@ namespace CTRFramework.Shared
 
         public void Write(BinaryWriterEx bw)
         {
-            bw.Write(X);
-            bw.Write(Y);
-            bw.Write(Z);
+            bw.Write(x);
+            bw.Write(y);
+            bw.Write(z);
         }
 
-        public Vector3s Move(Vector3s v)
+        public override string ToString()
         {
-            x += v.X;
-            y += v.Y;
-            z += v.Z;
-
-            return this;
+            return ToString(VecFormat.Braced);
         }
 
         public string ToString(VecFormat format)
@@ -92,13 +90,23 @@ namespace CTRFramework.Shared
             return String.Format(fmt, x + inc, y + inc, z + inc);
         }
 
-
-        public override string ToString()
+        /// <summary>
+        /// Compares to another Vector3s. Implements IEquatable interface.
+        /// </summary>
+        /// <param name="v">Vector3s to compare with.</param>
+        /// <returns>True if equals.</returns>
+        public bool Equals(Vector3s v)
         {
-            return ToString(VecFormat.Braced);
+            if (v.X == X && v.Y == Y && v.Z == Z)
+                return true;
+
+            return false;
         }
 
-
+        /// <summary>
+        /// Returns new copy of Vector3s.
+        /// </summary>
+        /// <returns>Vector3s object.</returns>
         public Vector3s Clone()
         {
             return new Vector3s(x, y, z);

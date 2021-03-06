@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework
 {
@@ -11,15 +12,11 @@ namespace CTRFramework
     {
         public string ObjectName = "empty";
 
-        public List<Vector3s> vertices = new List<Vector3s>();
-        public List<Vector3s> distinctVerts = new List<Vector3s>();
-
+        public List<Vector3f> vertices = new List<Vector3f>();
         public List<Vector4b> colors = new List<Vector4b>();
-        public List<Vector4b> distinctColors = new List<Vector4b>();
+        public List<short> faces = new List<short>();
 
-        public List<Vector3s> faces = new List<Vector3s>();
-        public List<Vector3s> colinds = new List<Vector3s>();
-        public List<Vector3s> vertinds = new List<Vector3s>();
+        public PlyResult Result;
 
         public OBJ()
         {
@@ -47,6 +44,11 @@ namespace CTRFramework
 
             foreach (var line in lines)
                 ParseLine(line);
+
+
+            Result = new PlyResult(vertices, faces, colors);
+
+            /*
 
             foreach (var c in colors)
             {
@@ -95,23 +97,28 @@ namespace CTRFramework
 
             if (distinctColors.Count > 127)
                 Helpers.Panic(this, "Too many colors in CLUT!!!");
+            */
         }
 
-        public void ParseLine(string s)
+        /// <summary>
+        /// Parses single line of OBJ file.
+        /// </summary>
+        /// <param name="line">OBJ line.</param>
+        public void ParseLine(string line)
         {
-            if (s.Trim() == "")
+            if (line.Trim() == "")
             {
                 Console.WriteLine("empty line");
                 return;
             }
 
-            if (s.Contains("#"))
+            if (line.Contains("#"))
             {
-                Console.WriteLine("comment " + s);
+                Console.WriteLine("comment " + line);
                 return;
             }
 
-            string[] words = s.Split(' ');
+            string[] words = line.Split(' ');
 
             if (words.Length == 0)
                 return;
@@ -119,25 +126,25 @@ namespace CTRFramework
             if (words[0] == "o")
             {
                 ObjectName = words[1];
-                Console.WriteLine("object name: " + s);
+                Console.WriteLine("object name: " + line);
                 return;
             }
 
             if (words[0] == "vn")
             {
-                Console.WriteLine("vertex normal, skip: " + s);
+                Console.WriteLine("vertex normal, skip: " + line);
                 return;
             }
 
             if (words[0] == "vt")
             {
-                Console.WriteLine("uv, skip: " + s);
+                Console.WriteLine("uv, skip: " + line);
                 return;
             }
 
             if (words[0] == "v")
             {
-                Console.WriteLine("it's a vertex! " + s);
+                Console.WriteLine("it's a vertex! " + line);
 
                 if (words.Length >= 4)
                 {
@@ -146,13 +153,7 @@ namespace CTRFramework
                     for (int i = 0; i < 3; i++)
                         Single.TryParse(words[i + 1], out coord[i]);
 
-                    vertices.Add(
-                        new Vector3s(
-                            (short)Math.Round(coord[0] * 100),
-                            (short)Math.Round(coord[1] * 100),
-                            (short)Math.Round(coord[2] * 100)
-                            ));
-
+                    vertices.Add(new Vector3f(coord[0], coord[1], coord[2]));
 
                     if (words.Length >= 7)
                     {
@@ -171,7 +172,7 @@ namespace CTRFramework
 
             if (words[0] == "f")
             {
-                Console.WriteLine("it's a face! " + s);
+                Console.WriteLine("it's a face! " + line);
 
                 if (words.Length >= 4)
                 {
@@ -180,30 +181,32 @@ namespace CTRFramework
                     for (int i = 0; i < 3; i++)
                         Int16.TryParse(words[i + 1].Split('/')[0], out coord[i]);
 
-                    faces.Add(new Vector3s((short)(coord[0] - 1), (short)(coord[1] - 1), (short)(coord[2] - 1)));
+                    faces.Add((short)(coord[0] - 1));
+                    faces.Add((short)(coord[1] - 1));
+                    faces.Add((short)(coord[2] - 1));
                 }
                 return;
             }
 
             if (words[0] == "s")
             {
-                Console.WriteLine("smoothing group, don't need. " + s);
+                Console.WriteLine("smoothing group, don't need. " + line);
                 return;
             }
 
             if (words[0] == "usemtl")
             {
-                Console.WriteLine("material, don't need. " + s);
+                Console.WriteLine("material, don't need. " + line);
                 return;
             }
 
             if (words[0] == "mtllib")
             {
-                Console.WriteLine("material lib, don't need. " + s);
+                Console.WriteLine("material lib, don't need. " + line);
                 return;
             }
 
-            Console.WriteLine("error or unimplemented obj command " + s);
+            Console.WriteLine("error or unimplemented obj command " + line);
         }
 
         public static void FixCulture()

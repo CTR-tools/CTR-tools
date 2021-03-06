@@ -149,6 +149,13 @@ namespace CTRFramework
         Unk7 = 1 << 7
     }
 
+
+    public enum CtrWriteMode
+    {
+        Header,
+        Data
+    }
+
     //defines mesh quality while exporting to OBJ
     public enum Detail
     {

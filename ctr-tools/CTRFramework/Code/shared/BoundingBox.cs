@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace CTRFramework.Shared
 {
@@ -22,6 +23,8 @@ namespace CTRFramework.Shared
         private Vector3s min;
         private Vector3s max;
 
+        public Vector3f minf;
+        public Vector3f maxf;
 
         public BoundingBox()
         {
@@ -33,6 +36,24 @@ namespace CTRFramework.Shared
         {
             min = vmin.Clone();
             max = vmax.Clone();
+        }
+
+        public BoundingBox(Vector3f vf)
+        {
+            minf = vf.Clone();
+            maxf = vf.Clone();
+
+            min = minf.ToVector3s();
+            max = maxf.ToVector3s();
+        }
+
+        public BoundingBox(Vector3f vmin, Vector3f vmax)
+        {
+            minf = vmin.Clone();
+            maxf = vmax.Clone();
+
+            min = minf.ToVector3s();
+            max = maxf.ToVector3s();
         }
 
         public BoundingBox(BinaryReaderEx br)
@@ -52,9 +73,18 @@ namespace CTRFramework.Shared
             max.Write(bw);
         }
 
+        public static BoundingBox operator +(BoundingBox a, Vector3f b)
+        {
+            return new BoundingBox(a.minf + b, a.maxf + b);
+        }
+        public static BoundingBox operator -(BoundingBox a, Vector3f b)
+        {
+            return new BoundingBox(a.minf - b, a.maxf - b);
+        }
+
         public override string ToString()
         {
-            return "BB: min " + min.ToString() + " max " + max.ToString();
+            return "BB: min " + minf.ToString() + " max " + maxf.ToString();
         }
 
         public BoundingBox Clone()
@@ -62,6 +92,26 @@ namespace CTRFramework.Shared
             return new BoundingBox(Min, Max);
         }
 
+
+
+        public static BoundingBox GetBB(List<Vector3f> vertices)
+        {
+            if (vertices.Count == 0)
+                return null;
+
+            BoundingBox bb = new BoundingBox(vertices[0]);
+
+            foreach (var v in vertices)
+            {
+                bb.minf.Minimize(v);
+                bb.maxf.Maximize(v);
+            }
+
+            bb.min = bb.minf.ToVector3s();
+            bb.max = bb.maxf.ToVector3s();
+
+            return bb;
+        }
 
         /*
         public int Max(int x, int y, int z)
