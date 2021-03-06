@@ -69,11 +69,11 @@ ushort - posY
 ushort - posZ
 16 bytes - unknown, nothing changes visually
 int - unknown, values other than the original often ruin the model. maybe some drawing mode.
-vector3b - a byte per coord.
+vector3b[] - array of vertices, a byte per coord.
 
 the original model is normalized to a byte vector, which results in 256 possible values per axis, scaled back to the orignal size using scale vector and moved around using the position offset.
 
-the final coord = vertex coord / 255 * scale coord + offset?
+the final coord = (vertex coord + offset / 255) * scale coord / 1000
 
 # texture data
 array of uint - pointers to texture data
