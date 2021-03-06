@@ -71,15 +71,5 @@ namespace ctrviewer.Engine
             mono_v.TextureCoordinate = new Microsoft.Xna.Framework.Vector2(uv.X / 255.0f, uv.Y / 255.0f);
             return mono_v;
         }
-
-        public static Color Blend(Color c1, Color c2)
-        {
-            Color x = Color.White;
-            x.R = (byte)((c1.R + c2.R) / 2);
-            x.G = (byte)((c1.G + c2.G) / 2);
-            x.B = (byte)((c1.B + c2.B) / 2);
-            return x;
-        }
-
     }
 }

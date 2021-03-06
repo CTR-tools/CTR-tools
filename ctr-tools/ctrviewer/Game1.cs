@@ -288,22 +288,25 @@ namespace ctrviewer
 
             List<VertexPositionColorTexture> vptc = new List<VertexPositionColorTexture>();
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), DataConverter.Blend(Color.Black, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            Color c1 = Color.Lerp(Color.LightGray, c, 0.5f);
+            Color c2 = Color.Lerp(Color.Black, c, 0.5f);
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), c1, new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), c1, new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), c2, new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), c1, new Vector2(0, 0)));
             modl.PushQuad(vptc);
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), DataConverter.Blend(Color.Black, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), c1, new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), c1, new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), c2, new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), c1, new Vector2(0, 0)));
             modl.PushQuad(vptc);
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), DataConverter.Blend(Color.LightGray, c), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), c1, new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), c1, new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), c1, new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), c1, new Vector2(0, 0)));
             modl.PushQuad(vptc);
 
             modl.Seal();
@@ -570,21 +573,21 @@ namespace ctrviewer
             {
                 foreach (var b in childVisData)
                 {
-                    if (b != null)
-                    {
-                        if (b.IsLeaf) // leaves don't have children
-                        {
-                            bbox.Add(DataConverter.ToLineList(b.bbox, Color.Magenta));
-                        }
-                        else
-                        {
-                            // show those children in different color than the parent
-                            if (!bbox2.ContainsKey(level))
-                                bbox2.Add(level, new List<VertexPositionColorTexture[]>());
+                    if (b == null)
+                        continue;
 
-                            bbox2[level].Add(DataConverter.ToLineList(b.bbox, colorLevelsOfBsp[level % colorLevelsOfBsp.Length]));
-                            BspDraw(b, scene, level + 1);
-                        }
+                    if (b.IsLeaf) // leaves don't have children
+                    {
+                        bbox.Add(DataConverter.ToLineList(b.bbox, Color.Magenta));
+                    }
+                    else
+                    {
+                        // show those children in different color than the parent
+                        if (!bbox2.ContainsKey(level))
+                            bbox2.Add(level, new List<VertexPositionColorTexture[]>());
+
+                        bbox2[level].Add(DataConverter.ToLineList(b.bbox, colorLevelsOfBsp[level % colorLevelsOfBsp.Length]));
+                        BspDraw(b, scene, level + 1);
                     }
                 }
             }
@@ -598,14 +601,14 @@ namespace ctrviewer
                 rightCamera.Position = camera.Position;
                 leftCamera.Position = camera.Position;
 
-                camera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
-                rightCamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
-                leftCamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
-                skycamera.SetRotation((float)(scn[0].header.startGrid[0].Angle.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Angle.Z / 4096 * Math.PI * 2));
+                camera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Z / 4096 * Math.PI * 2));
+                rightCamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Z / 4096 * Math.PI * 2));
+                leftCamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Z / 4096 * Math.PI * 2));
+                skycamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Z / 4096 * Math.PI * 2));
 
                 UpdateCameras(new GameTime());
 
-                Console.WriteLine(scn[0].header.startGrid[0].Angle.ToString());
+                Console.WriteLine(scn[0].header.startGrid[0].Rotation.ToString());
             }
         }
 
@@ -633,6 +636,8 @@ namespace ctrviewer
         {
             if (loading == null)
                 LoadGame();
+
+            newms = Mouse.GetState();
 
             //x += 0.01f ;
             //if (x > Math.PI * 2)
@@ -698,14 +703,10 @@ namespace ctrviewer
                                 InMenu = false;
                                 break;
                             case "loadbig":
-                                LoadLevelFromBig(menu.SelectedItem.Value);//, 0, 2); 
+                                LoadLevelsFromBig(menu.SelectedItem.Value);//, 0, 2); 
                                 break;
                             case "loadbigadv":
-                                LoadLevelFromBig(200);
-                                LoadLevelFromBig(203);
-                                LoadLevelFromBig(206);
-                                LoadLevelFromBig(209);
-                                LoadLevelFromBig(212);
+                                LoadLevelsFromBig(200, 203, 206, 209, 212);
                                 break;
                             case "tod_day":
                                 TimeOfDay = new Vector3(2f);
@@ -777,7 +778,9 @@ namespace ctrviewer
                         mg.Update(gameTime);
 
                     if (ControlsEnabled)
+                    {
                         UpdateCameras(gameTime);
+                    }
                 }
 
                 foreach (InstancedModel im in instanced)
@@ -786,16 +789,15 @@ namespace ctrviewer
                 foreach (InstancedModel im in paths)
                     im.Update(gameTime);
 
-                oldms = newms;
-                newms = Mouse.GetState();
-
                 oldstate = newstate;
                 oldkb = newkb;
 
+                oldms = newms;
             }
 
             base.Update(gameTime);
         }
+
 
         MouseState oldms = new MouseState();
         MouseState newms = new MouseState();
@@ -804,30 +806,43 @@ namespace ctrviewer
 
         private void UpdateCameras(GameTime gameTime)
         {
-            oldms = newms;
-            newms = Mouse.GetState();
-
-
             if (IsActive)
+            {
                 if (newms.LeftButton == ButtonState.Pressed)
                 {
                     if (captureMouse)
                     {
                         IsMouseVisible = false;
-                        updatemouse = true;
                         //Mouse.SetPosition(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
 
+                        updatemouse = true;
+
                         if (newms.X <= 0)
-                            Mouse.SetPosition(graphics.PreferredBackBufferWidth, newms.Y);
+                        {
+                            Mouse.SetPosition(graphics.PreferredBackBufferWidth - 2, newms.Y);
+                            newms = Mouse.GetState();
+                            oldms = newms;
+                        }
+                        else if (newms.X >= graphics.PreferredBackBufferWidth - 1)
+                        {
+                            Mouse.SetPosition(1, newms.Y);
+                            newms = Mouse.GetState();
+                            oldms = newms;
+                        }
 
                         if (newms.Y <= 0)
-                            Mouse.SetPosition(newms.X, graphics.PreferredBackBufferHeight);
+                        {
+                            Mouse.SetPosition(newms.X, graphics.PreferredBackBufferHeight - 2);
+                            newms = Mouse.GetState();
+                            oldms = newms;
+                        }
+                        else if (newms.Y >= graphics.PreferredBackBufferHeight - 1)
+                        {
+                            Mouse.SetPosition(newms.X, 1);
+                            newms = Mouse.GetState();
+                            oldms = newms;
+                        }
 
-                        if (newms.X >= graphics.PreferredBackBufferWidth - 1)
-                            Mouse.SetPosition(0, newms.Y);
-
-                        if (newms.Y >= graphics.PreferredBackBufferHeight - 1)
-                            Mouse.SetPosition(newms.X, 0);
 
                         if (newms.ScrollWheelValue > oldms.ScrollWheelValue)
                         {
@@ -853,7 +868,7 @@ namespace ctrviewer
                             0 <= newms.Y &&
                             newms.Y <= graphics.PreferredBackBufferHeight)
                             captureMouse = true;
-
+                        updatemouse = true;
                     }
                 }
                 else
@@ -862,6 +877,14 @@ namespace ctrviewer
                     updatemouse = false;
                     captureMouse = false;
                 }
+            }
+            else
+            {
+                IsMouseVisible = true;
+                updatemouse = false;
+                captureMouse = false;
+            }
+
 
 
             skycamera.Update(gameTime, updatemouse, false, newms, oldms);
@@ -876,6 +899,8 @@ namespace ctrviewer
             leftCamera.rotationSpeed = camera.rotationSpeed;
             leftCamera.Target = camera.Target;
             leftCamera.Update(gameTime, updatemouse, true, newms, oldms);
+
+
         }
 
         private void UpdateProjectionMatrices()
@@ -991,7 +1016,7 @@ namespace ctrviewer
         BigFileReader big;
         Howl howl;
 
-        private void LoadLevelFromBig(int absId)
+        private void LoadLevelsFromBig(params int[] absId)
         {
             if (big == null)
             {
@@ -1005,85 +1030,29 @@ namespace ctrviewer
                 }
             }
 
-            big.FileCursor = absId;
+            List<string> files = new List<string>();
 
-            if (Path.GetExtension(big.GetFilename()) != ".vrm")
-                return;
-
-            Helpers.WriteToFile(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
-
-            big.NextFile();
-
-            if (Path.GetExtension(big.GetFilename()) != ".lev")
-                return;
-
-            Helpers.WriteToFile(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
-
-            LoadStuff(new string[] { Path.Combine(Meta.BasePath, big.GetFilename()) });
-        }
-
-        private void LoadLevelFromBig(int absId, int levelId = 0, int mode = 0, int files = 2)
-        {
-            if (big == null)
+            foreach (int i in absId)
             {
-                if (File.Exists("bigfile.big"))
-                {
-                    big = new BigFileReader(File.OpenRead("bigfile.big"));
-                }
-                else
-                {
+                big.FileCursor = i;
+
+                if (Path.GetExtension(big.GetFilename()) != ".vrm")
                     return;
-                }
-            }
 
-            if (levelId == -1 && files == 3)
-            {
-                string[] levels = new string[5];
-
-                for (int i = 0; i < 5; i++)
-                {
-                    big.FileCursor = 200 + i * 3;
-
-                    Directory.CreateDirectory(Path.Combine(Meta.BasePath, Directory.GetParent(big.GetFilename()).FullName));
-                    File.WriteAllBytes(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
-
-                    big.NextFile();
-
-                    levels[i] = Path.Combine(Meta.BasePath, big.GetFilename());
-                    File.WriteAllBytes(levels[i], big.ReadFile());
-                }
-
-                LoadStuff(levels);
-            }
-            else
-            {
-                big.FileCursor = (files == 3 ? 200 + levelId * 3 : levelId * 8) + mode * files;
-
-                Directory.CreateDirectory(Path.Combine(Meta.BasePath, Directory.GetParent(big.GetFilename()).FullName));
-
-                File.WriteAllBytes(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+                Helpers.WriteToFile(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
 
                 big.NextFile();
-                File.WriteAllBytes(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
 
-                LoadStuff(new string[] { Path.Combine(Meta.BasePath, big.GetFilename()) });
-            }
-
-            if (howl == null)
-            {
-                if (File.Exists("kart.hwl"))
-                {
-                    howl = Howl.FromFile("kart.hwl");
-                }
-                else
-                {
+                if (Path.GetExtension(big.GetFilename()) != ".lev")
                     return;
-                }
+
+                Helpers.WriteToFile(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+
+                files.Add(Path.Combine(Meta.BasePath, big.GetFilename()));
             }
 
-            //howl.ExportAllSamples();
+            LoadStuff(files.ToArray());
         }
-
 
         protected override void Draw(GameTime gameTime)
         {
@@ -1203,6 +1172,7 @@ namespace ctrviewer
 
         private void DrawText(SpriteBatch spriteBatch, SpriteFont font, string text, Vector2 position, Color color, TextAlign align = TextAlign.Auto)
         {
+
             position.X *= GraphicsDevice.Viewport.Width;
             position.Y *= GraphicsDevice.Viewport.Height;
 

@@ -45,6 +45,7 @@ namespace ctrviewer.Engine.Render
         #endregion
 
         public float speedScale = 1.0f;
+        public float mouseScale = 1.0f;
 
         Vector3 slowdown = new Vector3(0, 0, 0);
 
@@ -64,13 +65,13 @@ namespace ctrviewer.Engine.Render
 
                 if (oldms != newms)
                 {
-                    float xDifference = newms.X - oldms.X;
-                    float yDifference = newms.Y - oldms.Y;
+                    float xDifference = (newms.X - oldms.X) / 1000f;
+                    float yDifference = (newms.Y - oldms.Y) / 1000f;
 
-                    leftRightRot -= xDifference * 0.0025f;//rotationSpeed * xDifference * amount;
+                    leftRightRot -= xDifference * mouseScale;//rotationSpeed * xDifference * amount;
                     //System.Diagnostics.Debug.WriteLine("leftRightRot=" + leftRightRot);
 
-                    upDownRot -= yDifference * 0.0025f;// rotationSpeed * yDifference* amount;
+                    upDownRot -= yDifference * mouseScale;// rotationSpeed * yDifference* amount;
                     //System.Diagnostics.Debug.WriteLine("upDownRot=" + upDownRot);
                     UpdateViewMatrix();
                 }
