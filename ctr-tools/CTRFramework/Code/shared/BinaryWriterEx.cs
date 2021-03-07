@@ -6,7 +6,6 @@ namespace CTRFramework.Shared
 {
     public class BinaryWriterEx : BinaryWriter
     {
-        public static List<UIntPtr> PointerMap = new List<UIntPtr>();
 
         public BinaryWriterEx(MemoryStream ms) : base(ms)
         {
@@ -41,6 +40,8 @@ namespace CTRFramework.Shared
             Write(x);
             //for (int i = 0; i < 4; i++) Write(x[3 - i]);
         }
+
+        public static List<UIntPtr> PointerMap = new List<UIntPtr>();
 
         public void Write(UIntPtr value)
         {
