@@ -14,13 +14,12 @@ namespace CTRFramework
 
         public List<Vector3f> vertices = new List<Vector3f>();
         public List<Vector4b> colors = new List<Vector4b>();
-        public List<short> faces = new List<short>();
+        public List<int> faces = new List<int>();
 
         public PlyResult Result;
 
         public OBJ()
         {
-
         }
 
         public OBJ(string filename)
@@ -33,71 +32,18 @@ namespace CTRFramework
             return new OBJ(filename);
         }
 
-
-
         public void Read(string filename)
         {
             vertices.Clear();
             faces.Clear();
+            colors.Clear();
 
             string[] lines = File.ReadAllLines(filename);
 
             foreach (var line in lines)
                 ParseLine(line);
 
-
             Result = new PlyResult(vertices, faces, colors);
-
-            /*
-
-            foreach (var c in colors)
-            {
-                if (!distinctColors.Contains(c))
-                    distinctColors.Add(c);
-            }
-
-            foreach (var v in vertices)
-            {
-                if (!distinctVerts.Contains(v))
-                    distinctVerts.Add(v);
-            }
-
-            Console.WriteLine($"colors: {colors.Count}");
-            Console.WriteLine($"unique: {distinctColors.Count}");
-
-            foreach (var f in faces)
-            {
-                if (colors.Count > 0)
-                {
-                    colinds.Add(new Vector3s(
-                        (short)distinctColors.IndexOf(colors[f.X]),
-                        (short)distinctColors.IndexOf(colors[f.Y]),
-                        (short)distinctColors.IndexOf(colors[f.Z])
-                        ));
-                }
-
-                if (vertices.Count > 0)
-                {
-                    vertinds.Add(new Vector3s(
-                        (short)distinctVerts.IndexOf(vertices[f.X]),
-                        (short)distinctVerts.IndexOf(vertices[f.Y]),
-                        (short)distinctVerts.IndexOf(vertices[f.Z])
-                        ));
-                }
-            }
-
-            colors = distinctColors;
-            vertices = distinctVerts;
-
-            if (colinds.Count != faces.Count)
-                Helpers.Panic(this, "face and color array length mismatch!!!");
-
-            if (vertinds.Count != faces.Count)
-                Helpers.Panic(this, "face and color array length mismatch!!!");
-
-            if (distinctColors.Count > 127)
-                Helpers.Panic(this, "Too many colors in CLUT!!!");
-            */
         }
 
         /// <summary>
@@ -127,6 +73,12 @@ namespace CTRFramework
             {
                 ObjectName = words[1];
                 Console.WriteLine("object name: " + line);
+                return;
+            }
+
+            if (words[0] == "g")
+            { 
+                Console.WriteLine("group name: " + line);
                 return;
             }
 
@@ -161,6 +113,14 @@ namespace CTRFramework
 
                         for (int i = 0; i < 3; i++)
                             Single.TryParse(words[i + 3 + 1], out color[i]);
+
+                        //assume color between 0..1 is float and multiply by 255
+                        if ((color[0] > 1 ||  color[1] > 1 || color[2] > 1))
+                        {
+                            color[0] /= 255;
+                            color[1] /= 255;
+                            color[2] /= 255;
+                        }
 
                         Vector4b vv = new Vector4b((byte)(255 * color[0]), (byte)(255 * color[1]), (byte)(255 * color[2]), 0);
                         colors.Add(vv);
@@ -241,7 +201,5 @@ namespace CTRFramework
                 totalv + z, totalvt + zuv
                 );
         }
-
-
     }
 }

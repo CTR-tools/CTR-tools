@@ -395,7 +395,7 @@ namespace CTRFramework
         /// <param name="colors">Color array.</param>
         /// <param name="faces">Face index array.</param>
         /// <returns>CtrHeader object.</returns>
-        public static CtrHeader FromRawData(string name, List<Vector3f> vertices, List<Vector4b> colors, List<Vector3s> faces)
+        public static CtrHeader FromRawData(string name, List<Vector3f> vertices, List<Vector4b> colors, List<Vector3i> faces)
         {
             CtrHeader model = new CtrHeader();
             model.name = name + "_hi";
@@ -417,44 +417,54 @@ namespace CTRFramework
                     dColors.Add(c);
             }
 
-            dVerts = dVerts.OrderBy(x => x.X).ThenBy(x => x.Y).ThenBy(x => x.Z).ToList();
+            dVerts = dVerts.OrderBy(x => x.Z).ThenBy(x => x.X).ThenBy(x => x.Y).ToList();
 
             Console.WriteLine(dVerts.Count + "/" + vertices.Count);
             Console.WriteLine(dColors.Count + "/" + colors.Count);
 
             //get new face indices for distinct arrays
-            List<Vector3s> vfaces = new List<Vector3s>();
-            List<Vector3s> cfaces = new List<Vector3s>();
+            List<Vector3i> vfaces = new List<Vector3i>();
+            List<Vector3i> cfaces = new List<Vector3i>();
 
             if (dVerts.Count != vertices.Count)
             {
                 foreach (var f in faces)
-                    vfaces.Add(new Vector3s(
-                        (short)dVerts.IndexOf(vertices[f.X]),
-                        (short)dVerts.IndexOf(vertices[f.Y]),
-                        (short)dVerts.IndexOf(vertices[f.Z])
+                    vfaces.Add(new Vector3i(
+                        dVerts.IndexOf(vertices[f.X]),
+                        dVerts.IndexOf(vertices[f.Y]),
+                        dVerts.IndexOf(vertices[f.Z])
                         ));
             }
 
             if (dColors.Count != colors.Count)
             {
                 foreach (var f in faces)
-                    cfaces.Add(new Vector3s(
-                        (short)dColors.IndexOf(colors[f.X]),
-                        (short)dColors.IndexOf(colors[f.Y]),
-                        (short)dColors.IndexOf(colors[f.Z])
+                    cfaces.Add(new Vector3i(
+                        dColors.IndexOf(colors[f.X]),
+                        dColors.IndexOf(colors[f.Y]),
+                        dColors.IndexOf(colors[f.Z])
                         ));
             }
 
             if (vfaces.Count == 0) vfaces = faces;
             if (cfaces.Count == 0) cfaces = faces;
 
-            //scale all vertices
-            for (int i = 0; i < dVerts.Count; i++)
-                dVerts[i] *= 1000f;
+            if (dColors.Count > 127)
+            {
+                Helpers.Panic("CtrHeader", "More than 127 distinct colors! Truncating...");
+                dColors = dColors.GetRange(0, 128);
+
+                foreach (var x in cfaces)
+                {
+                    if (x.X > 127) x.X = 0;
+                    if (x.Y > 127) x.Y = 0;
+                    if (x.Z > 127) x.Z = 0;
+                }
+            }
 
             //get bbox
             BoundingBox bb = BoundingBox.GetBB(dVerts);
+
             //get bbox from origin
             BoundingBox bb2 = bb - bb.minf;
 
@@ -462,21 +472,22 @@ namespace CTRFramework
             for (int i = 0; i < dVerts.Count; i++)
                 dVerts[i] -= bb.minf;
 
-            /*
+            
             //save offset to model
             model.posOffset = new Vector4s(
-                (short)((bb.minf.X - bb2.maxf.X / 2) / 10),
-                (short)((bb.minf.Z - bb2.maxf.Y / 2) / 10),
-                (short)((bb.minf.Y - bb2.maxf.Z / 2) / 10),
+                (short)(bb.minf.X / bb2.maxf.X * 255),
+                (short)(bb.minf.Y / bb2.maxf.Y * 255),
+                (short)(bb.minf.Z / bb2.maxf.Z * 255),
                 0);
-            */
+
+            Console.WriteLine(model.posOffset);
             Console.WriteLine(bb2);
 
             //save scale to model
             model.scale = new Vector4s(
-                (short)(bb2.maxf.ToVector3s().X),
-                (short)(bb2.maxf.ToVector3s().Y),
-                (short)(bb2.maxf.ToVector3s().Z),
+                (short)(bb2.maxf.X * 1000f),
+                (short)(bb2.maxf.Y * 1000f),
+                (short)(bb2.maxf.Z * 1000f),
                 0);
 
             Console.WriteLine(model.scale);
@@ -488,9 +499,9 @@ namespace CTRFramework
             foreach (var v in dVerts)
             {
                 Vector3b vv = new Vector3b(
-                   (byte)(v.X / bb2.Max.X * 255),
-                   (byte)(v.Z / bb2.Max.Z * 255),
-                   (byte)(v.Y / bb2.Max.Y * 255)
+                   (byte)(v.X / bb2.maxf.X * 255),
+                   (byte)(v.Z / bb2.maxf.Z * 255),
+                   (byte)(v.Y / bb2.maxf.Y * 255)
                     );
 
                 model.vtx.Add(vv);
@@ -573,10 +584,10 @@ namespace CTRFramework
         /// <returns>CtrHeader object.</returns>
         public static CtrHeader FromPly(string name, PlyResult ply)
         {
-            List<Vector3s> faces = new List<Vector3s>();
+            List<Vector3i> faces = new List<Vector3i>();
 
             for (int i = 0; i < ply.Triangles.Count / 3; i++)
-                faces.Add(new Vector3s(ply.Triangles[i * 3], ply.Triangles[i * 3 + 1], ply.Triangles[i * 3 + 2]));
+                faces.Add(new Vector3i(ply.Triangles[i * 3], ply.Triangles[i * 3 + 1], ply.Triangles[i * 3 + 2]));
 
             return FromRawData(name, ply.Vertices, ply.Colors, faces);
         }

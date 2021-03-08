@@ -11,10 +11,10 @@ namespace ThreeDeeBear.Models.Ply
     public class PlyResult
     {
         public List<Vector3f> Vertices;
-        public List<short> Triangles;
+        public List<int> Triangles;
         public List<Vector4b> Colors;
 
-        public PlyResult(List<Vector3f> vertices, List<short> triangles, List<Vector4b> colors)
+        public PlyResult(List<Vector3f> vertices, List<int> triangles, List<Vector4b> colors)
         {
             Vertices = vertices;
             Triangles = triangles;
@@ -29,7 +29,7 @@ namespace ThreeDeeBear.Models.Ply
         private static PlyResult ParseAscii(List<string> plyFile, PlyHeader header)
         {
             var vertices = new List<Vector3f>();
-            var triangles = new List<short>();
+            var triangles = new List<int>();
             var colors = new List<Vector4b>();
             var headerEndIndex = plyFile.IndexOf("end_header");
             var vertexStartIndex = headerEndIndex + 1;
@@ -42,7 +42,7 @@ namespace ThreeDeeBear.Models.Ply
                 colors.Add(ParseColor(xyzrgb, header));
             });
 
-            List<string> lines = plyFile.GetRange(faceStartIndex - 1, header.FaceCount - 1); //???
+            List<string> lines = plyFile.GetRange(faceStartIndex - 1, header.FaceCount); //???
 
             lines.ForEach(face =>
             {
@@ -77,7 +77,7 @@ namespace ThreeDeeBear.Models.Ply
             return new Vector4b(r, g, b, a);
         }
 
-        private static List<short> GetTriangles(string faceVertexList, PlyHeader header)
+        private static List<int> GetTriangles(string faceVertexList, PlyHeader header)
         {
             switch (header.FaceParseMode)
             {
@@ -87,19 +87,19 @@ namespace ThreeDeeBear.Models.Ply
                     switch (count)
                     {
                         case 3: // triangle
-                            return split.ToList().GetRange(1, 3).Select(x => Convert.ToInt16(x)).ToList();
+                            return split.ToList().GetRange(1, 3).Select(x => Convert.ToInt32(x)).ToList();
                         case 4: // face
-                            var triangles = new List<short>();
-                            var indices = split.ToList().GetRange(1, 4).Select(x => Convert.ToInt16(x)).ToList();
+                            var triangles = new List<int>();
+                            var indices = split.ToList().GetRange(1, 4).Select(x => Convert.ToInt32(x)).ToList();
                             triangles.AddRange(QuadToTriangles(indices));
                             return triangles;
                         default:
                             Helpers.Panic("PlyHandler", "Warning: Found a face with more than 4 vertices, skipping...");
-                            return new List<short>();
+                            return new List<int>();
                     }
                 default:
                     Helpers.Panic("PlyHandler", "GetTriangles: Unknown parse mode");
-                    return new List<short>();
+                    return new List<int>();
             }
 
         }
@@ -152,10 +152,10 @@ namespace ThreeDeeBear.Models.Ply
             }
             return vertices;
         }
-        private static List<short> GetTriangles(byte[] bytes, PlyHeader header)
+        private static List<int> GetTriangles(byte[] bytes, PlyHeader header)
         {
             var toSkip = header.VertexCount * GetByteCountPerVertex(header);
-            var triangles = new List<short>();
+            var triangles = new List<int>();
             int facesRead = 0;
             int bytesRead = 0;
             int bytesPerTriangleIndex = 4;
@@ -167,16 +167,16 @@ namespace ThreeDeeBear.Models.Ply
                 {
                     for (int i = 0; i < indexCount; i++)
                     {
-                        triangles.Add(System.BitConverter.ToInt16(bytes.SubArray(faceIndex + 1 + i * bytesPerTriangleIndex, bytesPerTriangleIndex), 0));
+                        triangles.Add(System.BitConverter.ToInt32(bytes.SubArray(faceIndex + 1 + i * bytesPerTriangleIndex, bytesPerTriangleIndex), 0));
                     }
                     bytesRead += 1 + indexCount * bytesPerTriangleIndex;
                 }
                 else if (indexCount == 4)
                 {
-                    var tmp = new List<short>();
+                    var tmp = new List<int>();
                     for (int i = 0; i < indexCount; i++)
                     {
-                        tmp.Add(System.BitConverter.ToInt16(bytes.SubArray(faceIndex + 1 + i * bytesPerTriangleIndex, bytesPerTriangleIndex), 0));
+                        tmp.Add(System.BitConverter.ToInt32(bytes.SubArray(faceIndex + 1 + i * bytesPerTriangleIndex, bytesPerTriangleIndex), 0));
                     }
                     triangles.AddRange(QuadToTriangles(tmp));
                     bytesRead += 1 + indexCount * bytesPerTriangleIndex;
@@ -204,9 +204,9 @@ namespace ThreeDeeBear.Models.Ply
         }
         #endregion
 
-        private static List<short> QuadToTriangles(List<short> quad)
+        private static List<int> QuadToTriangles(List<int> quad)
         {
-            return new List<short>() { quad[0], quad[1], quad[2], quad[2], quad[3], quad[0] };
+            return new List<int>() { quad[0], quad[1], quad[2], quad[2], quad[3], quad[0] };
         }
 
         public static PlyResult FromFile(string path)

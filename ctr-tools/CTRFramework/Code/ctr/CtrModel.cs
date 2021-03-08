@@ -123,7 +123,7 @@ namespace CTRFramework
         /// <param name="filename">Target file name.</param>
         public void Save(string path, string filename)
         {
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(Path.Combine(path, filename))))
+            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(Path.Combine(path, filename))))
             {
                 Write(bw);
             }

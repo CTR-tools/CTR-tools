@@ -98,6 +98,7 @@
     <Compile Include="Code\shared\Vectors\Vector2s.cs" />
     <Compile Include="Code\shared\Vectors\Vector3b.cs" />
     <Compile Include="Code\shared\Vectors\Vector3f.cs" />
+    <Compile Include="Code\shared\Vectors\Vector3i.cs" />
     <Compile Include="Code\sound\Bank.cs" />
     <Compile Include="Code\shared\BinaryReaderEx.cs" />
     <Compile Include="Code\shared\BinaryWriterEx.cs" />
