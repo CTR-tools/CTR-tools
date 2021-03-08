@@ -401,6 +401,7 @@ namespace CTRFramework
             model.name = name + "_hi";
             model.lodDistance = -1;
 
+
             //get distinct values from input lists
             List<Vector3f> dVerts = new List<Vector3f>();
             List<Vector4b> dColors = new List<Vector4b>();
@@ -417,12 +418,8 @@ namespace CTRFramework
                     dColors.Add(c);
             }
 
-            dVerts = dVerts.OrderBy(x => x.Z).ThenBy(x => x.X).ThenBy(x => x.Y).ToList();
 
-            Console.WriteLine(dVerts.Count + "/" + vertices.Count);
-            Console.WriteLine(dColors.Count + "/" + colors.Count);
-
-            //get new face indices for distinct arrays
+            //recalculate indices for distinct arrays
             List<Vector3i> vfaces = new List<Vector3i>();
             List<Vector3i> cfaces = new List<Vector3i>();
 
@@ -449,6 +446,8 @@ namespace CTRFramework
             if (vfaces.Count == 0) vfaces = faces;
             if (cfaces.Count == 0) cfaces = faces;
 
+
+            //check for clut overflow
             if (dColors.Count > 127)
             {
                 Helpers.Panic("CtrHeader", "More than 127 distinct colors! Truncating...");
@@ -462,26 +461,23 @@ namespace CTRFramework
                 }
             }
 
+
             //get bbox
             BoundingBox bb = BoundingBox.GetBB(dVerts);
 
-            //get bbox from origin
+            //offset the bbox to world origin
             BoundingBox bb2 = bb - bb.minf;
 
-            //offset all vertices to origin
+            //offset all vertices to world origin
             for (int i = 0; i < dVerts.Count; i++)
                 dVerts[i] -= bb.minf;
 
-            
-            //save offset to model
+            //save converted offset to model
             model.posOffset = new Vector4s(
                 (short)(bb.minf.X / bb2.maxf.X * 255),
                 (short)(bb.minf.Y / bb2.maxf.Y * 255),
                 (short)(bb.minf.Z / bb2.maxf.Z * 255),
                 0);
-
-            Console.WriteLine(model.posOffset);
-            Console.WriteLine(bb2);
 
             //save scale to model
             model.scale = new Vector4s(
@@ -490,12 +486,10 @@ namespace CTRFramework
                 (short)(bb2.maxf.Z * 1000f),
                 0);
 
-            Console.WriteLine(model.scale);
-
-            model.vtx.Clear();
-
 
             //compress vertices to byte vector 
+            model.vtx.Clear();
+
             foreach (var v in dVerts)
             {
                 Vector3b vv = new Vector3b(
@@ -508,7 +502,7 @@ namespace CTRFramework
             }
 
 
-
+            //save colors
             if (dColors.Count > 0)
             {
                 model.cols = dColors;
@@ -521,10 +515,8 @@ namespace CTRFramework
             }
 
 
-
-
+            //create new vertex array and loop through all faces
             List<Vector3b> newlist = new List<Vector3b>();
-
 
             for (int i = 0; i < faces.Count; i++)
             {
@@ -535,7 +527,7 @@ namespace CTRFramework
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].X,
                     stackIndex = 87,
-                    flags = CtrDrawFlags.s | CtrDrawFlags.d
+                    flags = CtrDrawFlags.s | CtrDrawFlags.d | CtrDrawFlags.k
                 };
 
                 cmd[1] = new CtrDraw()
@@ -543,7 +535,7 @@ namespace CTRFramework
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].Z,
                     stackIndex = 88,
-                    flags = CtrDrawFlags.d
+                    flags = CtrDrawFlags.d | CtrDrawFlags.k
                 };
 
                 cmd[2] = new CtrDraw()
@@ -551,7 +543,7 @@ namespace CTRFramework
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].Y,
                     stackIndex = 89,
-                    flags = CtrDrawFlags.d
+                    flags = CtrDrawFlags.d | CtrDrawFlags.k
                 };
 
                 newlist.Add(model.vtx[vfaces[i].X]);
@@ -562,16 +554,6 @@ namespace CTRFramework
             }
 
             model.vtx = newlist;
-
-            /*
-            model.posOffset = new Vector4s(
-                (short)(-bb2.Max.X + 15),
-                30,//(short)(bb.Min.Y + modelOffset), 
-                (short)(-bb2.Max.Y),
-                0);
-            */
-
-            //model.cols.Add(new Vector4b(0x80, 0x80, 0x80, 0));
 
             return model;
         }
@@ -648,6 +630,28 @@ namespace CTRFramework
 
                     bw.Write(0xFFFFFFFF);
 
+
+                    //write texturelayouts
+
+                    if (tl.Count > 0)
+                    {
+                        bw.Jump(ptrTex + 4);
+
+                        pos = (int)bw.BaseStream.Position;
+
+                        for (int i = 0; i < tl.Count; i++)
+                        {
+                            //CtrModel.ptrs.Add((int)bw.BaseStream.Position - 4);
+
+                            UIntPtr ptr = (UIntPtr)(pos + 4 * tl.Count + i * 12);
+                            bw.Write(ptr);
+                        }
+
+                        foreach (var t in tl)
+                            t.Write(bw);
+                    }
+
+
                     //write vertices
 
                     bw.Jump(ptrVerts + 4);
@@ -668,23 +672,6 @@ namespace CTRFramework
 
                     Console.WriteLine("---");
 
-                    //write texturelayouts
-
-                    if (tl.Count > 0)
-                    {
-                        bw.Jump(ptrTex + 4);
-
-                        pos = (int)bw.BaseStream.Position;
-
-                        for (int i = 0; i < tl.Count; i++)
-                        {
-                            //CtrModel.ptrs.Add((int)bw.BaseStream.Position - 4);
-                            bw.Write(pos + 4 * tl.Count + i * 12);
-                        }
-
-                        foreach (var t in tl)
-                            t.Write(bw);
-                    }
 
                     //write clut
 

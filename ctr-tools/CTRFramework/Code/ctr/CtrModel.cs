@@ -164,7 +164,6 @@ namespace CTRFramework
             PointerMap = BinaryWriterEx.PointerMap;
 
             bw.Write(PointerMap.Count * 4);
-
             foreach (int x in PointerMap)
                 bw.Write(x - 4);
         }
@@ -189,12 +188,6 @@ namespace CTRFramework
                 if (curPtr % 4 != 0)
                     curPtr = ((curPtr / 4) + 1) * 4;
 
-                ctr.ptrVerts = (UIntPtr)curPtr;
-                curPtr += (8 + 16 + 4 + ctr.vtx.Count * 3);
-
-                if (curPtr % 4 != 0)
-                    curPtr = ((curPtr / 4) + 1) * 4;
-
                 ctr.ptrTex = (UIntPtr)curPtr;
 
                 if (ctr.tl.Count > 0)
@@ -204,6 +197,12 @@ namespace CTRFramework
                     if (curPtr % 4 != 0)
                         curPtr = ((curPtr / 4) + 1) * 4;
                 }
+
+                ctr.ptrVerts = (UIntPtr)curPtr;
+                curPtr += (8 + 16 + 4 + ctr.vtx.Count * 3);
+
+                if (curPtr % 4 != 0)
+                    curPtr = ((curPtr / 4) + 1) * 4;
 
                 ctr.ptrClut = (UIntPtr)curPtr;
                 curPtr += (ctr.cols.Count * 4);
