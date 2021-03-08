@@ -226,7 +226,7 @@ namespace CTRFramework
             foreach (Vector3s v in vfixed)
             {
                 //scale vertices
-                v.X = (short)(-(((float)(v.X + posOffset.X) / 255.0f) * scale.X));
+                v.X = (short)((((float)(v.X + posOffset.X) / 255.0f) * scale.X));
                 v.Y = (short)(-(((float)(v.Y + posOffset.Z) / 255.0f) * scale.Z));
                 v.Z = (short)((((float)(v.Z + posOffset.Y) / 255.0f) * scale.Y));
 
@@ -278,7 +278,7 @@ namespace CTRFramework
                 if (stripLength >= 2)
                 {
                     //read 3 vertices and push to the array
-                    for (int z = 0; z < 3; z++)
+                    for (int z = 3 - 1; z >= 0; z--)
                     {
                         Vertex v = new Vertex();
                         v.coord = new Vector4s(crd[1 + z].X, crd[z + 1].Y, crd[z + 1].Z, 0);
