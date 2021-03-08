@@ -372,43 +372,43 @@ namespace CTRTools
             using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(path)))
             {
 
-                bw.BaseStream.Position = 4;
+                bw.Jump(4);
 
                 scn.header.Write(bw);
 
-                bw.BaseStream.Position = scn.header.ptrRestartPts + 4;
+                bw.Jump(scn.header.ptrRestartPts + 4);
 
                 foreach (Pose pa in scn.restartPts)
                     pa.Write(bw);
 
-                bw.BaseStream.Position = scn.header.ptrInstances + 4;
+                bw.Jump(scn.header.ptrInstances + 4);
 
                 foreach (PickupHeader ph in scn.pickups)
                     ph.Write(bw);
 
 
-                bw.BaseStream.Position = scn.meshinfo.ptrVertexArray + 4;
+                bw.Jump(scn.meshinfo.ptrVertexArray + 4);
 
                 foreach (Vertex v in scn.verts)
                     v.Write(bw);
 
 
-                bw.BaseStream.Position = scn.meshinfo.ptrQuadBlockArray + 4;
+                bw.Jump(scn.meshinfo.ptrQuadBlockArray + 4);
 
                 foreach (QuadBlock qb in scn.quads)
                     qb.Write(bw);
 
-                bw.BaseStream.Position = scn.header.ptrVcolAnim + 4;
+                bw.Jump(scn.header.ptrVcolAnim + 4);
 
                 foreach (VertexAnim vc in scn.vertanims)
                     vc.Write(bw);
 
-                bw.BaseStream.Position = scn.meshinfo.ptrVisDataArray + 4;
+                bw.Jump(scn.meshinfo.ptrVisDataArray + 4);
 
                 foreach (VisData v in scn.visdata)
                     v.Write(bw);
 
-                bw.BaseStream.Position = scn.header.ptrAiNav + 4;
+                bw.Jump(scn.header.ptrAiNav + 4);
                 scn.nav.Write(bw);
 
             }

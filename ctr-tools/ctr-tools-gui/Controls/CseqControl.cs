@@ -20,7 +20,6 @@ namespace cseq
         public CseqControl()
         {
             InitializeComponent();
-            this.DoubleBuffered = true;
 
             LoadMeta();
         }

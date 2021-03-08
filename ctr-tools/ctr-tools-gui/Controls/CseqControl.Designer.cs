@@ -111,7 +111,7 @@ namespace cseq
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -119,20 +119,20 @@ namespace cseq
             // 
             this.exportSEQToolStripMenuItem.Enabled = false;
             this.exportSEQToolStripMenuItem.Name = "exportSEQToolStripMenuItem";
-            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exportSEQToolStripMenuItem.Text = "Export CSEQ";
             this.exportSEQToolStripMenuItem.Click += new System.EventHandler(this.exportSEQToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -292,9 +292,9 @@ namespace cseq
             this.groupBox1.Controls.Add(this.trackBox);
             this.groupBox1.Controls.Add(this.sequenceBox);
             this.groupBox1.Controls.Add(this.textBox2);
-            this.groupBox1.Location = new System.Drawing.Point(12, 27);
+            this.groupBox1.Location = new System.Drawing.Point(3, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(133, 448);
+            this.groupBox1.Size = new System.Drawing.Size(142, 457);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "SEQ Info";
@@ -304,9 +304,9 @@ namespace cseq
             this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(5, 420);
+            this.comboBox1.Location = new System.Drawing.Point(5, 429);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.Size = new System.Drawing.Size(131, 21);
             this.comboBox1.TabIndex = 5;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
@@ -317,7 +317,7 @@ namespace cseq
             this.trackBox.FormattingEnabled = true;
             this.trackBox.Location = new System.Drawing.Point(6, 199);
             this.trackBox.Name = "trackBox";
-            this.trackBox.Size = new System.Drawing.Size(120, 212);
+            this.trackBox.Size = new System.Drawing.Size(130, 225);
             this.trackBox.TabIndex = 4;
             this.trackBox.SelectedIndexChanged += new System.EventHandler(this.trackBox_SelectedIndexChanged);
             this.trackBox.DoubleClick += new System.EventHandler(this.trackBox_DoubleClick);
@@ -327,7 +327,7 @@ namespace cseq
             this.sequenceBox.FormattingEnabled = true;
             this.sequenceBox.Location = new System.Drawing.Point(6, 137);
             this.sequenceBox.Name = "sequenceBox";
-            this.sequenceBox.Size = new System.Drawing.Size(120, 56);
+            this.sequenceBox.Size = new System.Drawing.Size(130, 56);
             this.sequenceBox.TabIndex = 3;
             this.sequenceBox.SelectedIndexChanged += new System.EventHandler(this.sequenceBox_SelectedIndexChanged);
             this.sequenceBox.DoubleClick += new System.EventHandler(this.sequenceBox_DoubleClick);
@@ -339,7 +339,7 @@ namespace cseq
             this.textBox2.Location = new System.Drawing.Point(6, 19);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(121, 112);
+            this.textBox2.Size = new System.Drawing.Size(130, 112);
             this.textBox2.TabIndex = 0;
             // 
             // tabControl1
@@ -354,7 +354,7 @@ namespace cseq
             this.tabControl1.Location = new System.Drawing.Point(151, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(662, 448);
+            this.tabControl1.Size = new System.Drawing.Size(671, 457);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
@@ -363,7 +363,7 @@ namespace cseq
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(654, 422);
+            this.tabPage1.Size = new System.Drawing.Size(663, 431);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Track Info";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -376,7 +376,7 @@ namespace cseq
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(648, 416);
+            this.textBox1.Size = new System.Drawing.Size(657, 425);
             this.textBox1.TabIndex = 5;
             this.textBox1.Text = "  ";
             // 
@@ -514,17 +514,17 @@ namespace cseq
             this.listBox2.Size = new System.Drawing.Size(120, 407);
             this.listBox2.TabIndex = 0;
             // 
-            // MainForm
+            // CseqControl
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(825, 487);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
-            this.Name = "MainForm";
-            this.Text = "CTR CSEQ";
+            this.DoubleBuffered = true;
+            this.Name = "CseqControl";
+            this.Size = new System.Drawing.Size(825, 487);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
             this.menuStrip1.ResumeLayout(false);
