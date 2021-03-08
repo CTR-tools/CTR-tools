@@ -63,7 +63,8 @@ namespace CTRFramework.Vram
         public static Tim FromFile(string fn)
         {
             if (!File.Exists(fn))
-                throw new FileNotFoundException($"File not found: {fn}");
+                return new Tim(new Rectangle(0, 0, Width, Height));
+                //throw new FileNotFoundException($"File not found: {fn}");
 
             return FromStream(File.OpenRead(fn));
         }

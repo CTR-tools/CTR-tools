@@ -65,6 +65,11 @@ namespace CTRFramework
             Read(br);
         }
 
+        public static CtrModel FromReader(BinaryReaderEx br)
+        {
+            return new CtrModel(br);
+        }
+
         /// <summary>
         /// Reads CTR model from BinaryReader.
         /// </summary>

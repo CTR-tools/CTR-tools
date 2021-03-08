@@ -136,6 +136,8 @@ namespace CTRFramework
             }
             */
 
+            TextureLayout curtl;
+
             //define temporary arrays
             Vector4b[] clr = new Vector4b[4];       //color buffer
             Vector3s[] crd = new Vector3s[4];       //face buffer
@@ -242,6 +244,10 @@ namespace CTRFramework
             //process all commands
             foreach (CtrDraw d in drawList)
             {
+                //curtl = d.texIndex == 0 ? null : tl[d.texIndex - 1];
+                //Console.WriteLine(tl.Count + " " + d.texIndex);
+
+
                 //if we got no stack vertex flag
                 if (!d.flags.HasFlag(CtrDrawFlags.v))
                 {
@@ -316,7 +322,7 @@ namespace CTRFramework
 
             Console.WriteLine("tlcnt: " + tl.Count);
 
-            br.BaseStream.Position = pos;
+            br.Jump(pos);
         }
 
         /// <summary>
@@ -658,7 +664,7 @@ namespace CTRFramework
 
                     posOffset.Write(bw);
 
-                    bw.BaseStream.Position += 16;
+                    bw.Seek(16);
 
                     bw.Write(vrenderMode);
 

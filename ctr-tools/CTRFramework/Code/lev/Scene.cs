@@ -21,7 +21,7 @@ namespace CTRFramework
         public List<QuadBlock> quads = new List<QuadBlock>();
         public List<PickupHeader> pickups = new List<PickupHeader>();
         public List<VisData> visdata = new List<VisData>();
-        public List<CtrModel> dynamics = new List<CtrModel>();
+        public List<CtrModel> Models = new List<CtrModel>();
         public SkyBox skybox;
         public Nav nav;
 
@@ -215,8 +215,6 @@ namespace CTRFramework
                 pickups.Add(new PickupHeader(br));
             }
 
-            //read pickup models
-            //starts out right, but anims ruin it
 
             br.Jump(header.ptrModelsPtr);
             int x = (int)br.BaseStream.Position;
@@ -226,7 +224,7 @@ namespace CTRFramework
                 br.BaseStream.Position = x + 4 * i;
                 br.BaseStream.Position = br.ReadUInt32();
 
-                dynamics.Add(new CtrModel(br));
+                Models.Add(CtrModel.FromReader(br));
             }
 
 
@@ -318,10 +316,10 @@ namespace CTRFramework
 
             Helpers.CheckFolder(dir);
 
-            foreach (var d in dynamics)
+            foreach (var model in Models)
             {
-                d.Export(dir);
-                d.Save(dir);
+                model.Export(dir);
+                model.Save(dir);
             }
         }
 
@@ -355,6 +353,7 @@ namespace CTRFramework
             Console.WriteLine("High mesh: done.");
 
             if (flags.HasFlag(ExportFlags.Models)) ExportModels(path);
+            if (flags.HasFlag(ExportFlags.TexModels)) ExportTextures(path, Detail.Models);
             if (flags.HasFlag(ExportFlags.SkyBox)) ExportSkyBox(path);
 
             Console.WriteLine("Additional models: done.");
@@ -421,6 +420,7 @@ namespace CTRFramework
             ExportTextures(Path.Combine(path, "texMed"), Detail.Med);
             ExportTextures(Path.Combine(path, "texLow"), Detail.Low);
             ExportTextures(Path.Combine(path, "texHigh"), Detail.High);
+            ExportTextures(Path.Combine(path, "texModels"), Detail.Models);
         }
 
         /// <summary>
@@ -512,45 +512,29 @@ namespace CTRFramework
                             if (!tex.ContainsKey(qb.texlow.Tag()))
                                 tex.Add(qb.texlow.Tag(), qb.texlow);
                         break;
+
                     case Detail.Med:
                         foreach (CtrTex t in qb.tex)
                             if (t.midlods[2].Position != 0)
                                 if (!tex.ContainsKey(t.midlods[2].Tag()))
                                     tex.Add(t.midlods[2].Tag(), t.midlods[2]);
-
-                        foreach (CtrModel dyn in dynamics)
-                            foreach (CtrHeader hdr in dyn.Entries)
-                                foreach (TextureLayout tl in hdr.tl)
-                                    if (!tex.ContainsKey(tl.Tag()))
-                                        tex.Add(tl.Tag(), tl);
                         break;
 
                     case Detail.High:
                         foreach (CtrTex t in qb.tex)
-                        {
                             foreach (var x in t.hi)
-                            {
                                 if (x != null)
                                     if (!tex.ContainsKey(x.Tag()))
                                         tex.Add(x.Tag(), x);
-                            }
-                        }
-
                         break;
-                }
-            }
 
-            foreach (CtrModel dyn in dynamics)
-            {
-                foreach (CtrHeader hdr in dyn.Entries)
-                {
-                    foreach (TextureLayout tl in hdr.tl)
-                    {
-                        if (!tex.ContainsKey(tl.Tag()))
-                        {
-                            tex.Add(tl.Tag(), tl);
-                        }
-                    }
+                    case Detail.Models:
+                        foreach (var model in Models)
+                            foreach (var entry in model.Entries)
+                                foreach (TextureLayout tl in entry.tl)
+                                    if (!tex.ContainsKey(tl.Tag()))
+                                        tex.Add(tl.Tag(), tl);
+                        break;
                 }
             }
 
@@ -562,51 +546,17 @@ namespace CTRFramework
         {
             Dictionary<string, TextureLayout> tex = new Dictionary<string, TextureLayout>();
 
-            foreach (QuadBlock qb in quads)
-            {
-                if (qb.ptrTexLow != 0)
-                {
-                    if (!tex.ContainsKey(qb.texlow.Tag()))
-                    {
-                        tex.Add(qb.texlow.Tag(), qb.texlow);
-                    }
-                }
+            foreach (var t in GetTexturesList(Detail.Low))
+                tex.Add(t.Key, t.Value);
 
-                foreach (CtrTex t in qb.tex)
-                    foreach (TextureLayout tl in t.midlods)
-                    {
-                        if (!tex.ContainsKey(tl.Tag()))
-                        {
-                            tex.Add(tl.Tag(), tl);
-                        }
-                    }
+            foreach (var t in GetTexturesList(Detail.Med))
+                tex.Add(t.Key, t.Value);
 
-                foreach (CtrTex t in qb.tex)
-                {
-                    foreach (TextureLayout tl in t.hi)
-                    {
-                        if (tl != null)
-                            if (!tex.ContainsKey(tl.Tag()))
-                            {
-                                tex.Add(tl.Tag(), tl);
-                            }
-                    }
-                }
+            foreach (var t in GetTexturesList(Detail.High))
+                tex.Add(t.Key, t.Value);
 
-                foreach (CtrModel dyn in dynamics)
-                {
-                    foreach (CtrHeader hdr in dyn.Entries)
-                    {
-                        foreach (TextureLayout tl in hdr.tl)
-                        {
-                            if (!tex.ContainsKey(tl.Tag()))
-                            {
-                                tex.Add(tl.Tag(), tl);
-                            }
-                        }
-                    }
-                }
-            }
+            foreach (var t in GetTexturesList(Detail.Models))
+                tex.Add(t.Key, t.Value);
 
             return tex;
         }
@@ -669,7 +619,7 @@ namespace CTRFramework
             quads.Clear();
             pickups.Clear();
             visdata.Clear();
-            dynamics.Clear();
+            Models.Clear();
             skybox = null;
             nav = null;
             unkadv = null;

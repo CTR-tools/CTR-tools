@@ -151,7 +151,7 @@ namespace CTRFramework.Big
                 bw.Write((int)0);
                 bw.Write(Entries.Count);
 
-                bw.BaseStream.Position = 3 * 2048;
+                bw.Jump(3 * 2048);
 
                 foreach (BigEntry c in Entries)
                 {
@@ -162,12 +162,12 @@ namespace CTRFramework.Big
 
                     bw.Write(c.Data);
 
-                    bw.BaseStream.Position = pos + c.SizePadded;
+                    bw.Jump(pos + c.SizePadded);
                 }
 
                 Console.WriteLine();
 
-                bw.BaseStream.Position = 8;
+                bw.Jump(8);
 
                 foreach (BigEntry c in Entries)
                 {

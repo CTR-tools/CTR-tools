@@ -32,7 +32,7 @@ namespace CTRTools
 
             if (files.Length > 0)
             {
-                switch (Path.GetExtension(files[0]))
+                switch (Path.GetExtension(files[0]).ToLower())
                 {
                     case ".dyn":
                     case ".ctr":
@@ -47,6 +47,9 @@ namespace CTRTools
                         break;
                     case ".big":
                         tabControl1.SelectedTab = tabBig;
+                        break;
+                    case ".hwl":
+                        tabControl1.SelectedTab = tabHowl;
                         break;
                     case ".cseq":
                         tabControl1.SelectedTab = tabCseq;

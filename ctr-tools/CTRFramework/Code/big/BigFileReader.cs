@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace CTRFramework.Big
 {
-    public class BigFileReader : BinaryReader
+    public class BigFileReader : BinaryReaderEx
     {
         public int FileCursor = -1;
 
@@ -21,7 +21,7 @@ namespace CTRFramework.Big
         {
             get
             {
-                BaseStream.Position = FileCursor * 8 + 4;
+                Jump(FileCursor * 8 + 4);
                 return ReadInt32();
             }
         }
@@ -53,7 +53,7 @@ namespace CTRFramework.Big
         /// </summary>
         private void SanityCheck()
         {
-            BaseStream.Position = 0;
+            Jump(0);
 
             if (ReadInt32() != 0)
                 throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file.");
@@ -78,7 +78,7 @@ namespace CTRFramework.Big
         /// </summary>
         private void KnownFileCheck()
         {
-            BaseStream.Position = 0;
+            Jump(0);
 
             //Console.WriteLine(Meta.GetTextFromResource(Meta.XmlPath));
             //Console.ReadKey();
@@ -124,7 +124,7 @@ namespace CTRFramework.Big
             if (fileDefPtr > BaseStream.Length)
                 throw new IndexOutOfRangeException($"{this.GetType().Name}: out of bounds.");
 
-            BaseStream.Position = fileDefPtr;
+            Jump(fileDefPtr);
 
             int _ptr = ReadInt32() * Meta.SectorSize;
             int _size = ReadInt32();
@@ -132,7 +132,7 @@ namespace CTRFramework.Big
             if (_ptr + _size > BaseStream.Length)
                 throw new IndexOutOfRangeException($"{this.GetType().Name}: out of bounds.");
 
-            BaseStream.Position = _ptr;
+            Jump(_ptr);
 
             return ReadBytes(_size);
         }

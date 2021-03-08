@@ -25,6 +25,11 @@ namespace CTRFramework.Shared
             Seek((int)x, SeekOrigin.Begin);
         }
 
+        public void Seek(int x)
+        {
+            Seek(x, SeekOrigin.Current);
+        }
+
         public void WriteBig(int value)
         {
             byte[] x = BitConverter.GetBytes(value);

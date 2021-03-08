@@ -121,12 +121,12 @@ namespace CTRFramework.Sound
 
 
 
-        public void ExportCSEQ()
+        public void ExportCSEQ(string path)
         {
             int i = 0;
             foreach (var c in sequences)
             {
-                c.Export($".\\seqs\\{i}.cseq");
+                c.Export(Path.Combine(path, $"{i}.cseq"));
                 i++;
             }
         }
