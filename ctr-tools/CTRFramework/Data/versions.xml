@@ -1,6 +1,7 @@
 ﻿<data comment="versions.xml is used to identify known CTR files">
 
-  <versions comment="file meta data based on MD5 checksum">
+  <big comment="file meta data based on MD5 checksum">
+
     <entry comment="Empty entry sample">
       <format></format>
       <region></region>
@@ -8,10 +9,12 @@
       <list></list>
       <md5></md5>
     </entry>
+	
+	
     <entry>
       <format>big</format>
       <region>NTSC</region>
-      <name>August beta (earliest known)</name>
+      <name>August 5th beta (the earliest known so far)</name>
       <list>big_usa_beta_aug.txt</list>
       <md5>f90f62a304a53a9e21ade4c7573d4293</md5>
     </entry>
@@ -22,6 +25,8 @@
       <list>big_usa_beta_sep.txt</list>
       <md5>e73f0f3cade06dc5fc2719fe186cbe26</md5>
     </entry>
+	
+	
     <entry>
       <format>big</format>
       <region>NTSC</region>
@@ -36,6 +41,8 @@
       <list>big_usa_demo.txt</list>
       <md5>eb0b4551f3a4a374080c085dea1a8609</md5>
     </entry>
+	
+	
     <entry>
       <format>big</format>
       <region>NTSC</region>
@@ -43,6 +50,45 @@
       <list>big_usa_release.txt</list>
       <md5>c43eba5a20f0b4fc69a00c8d61a8ec10</md5>
     </entry>
+	
+	
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Release, russian Vector</name>
+      <list>big_usa_release.txt</list>
+      <md5>ead88f93cfb4f9ad53d93b1b93d1bd97</md5>
+    </entry>	
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Release, russian Golden Leon</name>
+      <list>big_usa_release.txt</list>
+      <md5>3e8fac9eb6dfacbba4ab793c7acb8661</md5>
+    </entry>	
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Release, russian Paradox</name>
+      <list>big_usa_release.txt</list>
+      <md5>2cbb119c607300afe6aa9db04bffe8c2</md5>
+    </entry>	
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Release, russian Neizvestnaya Kontora</name>
+      <list>big_usa_release.txt</list>
+      <md5>01c8b4db80f24e976b093097e5d4163d</md5>
+    </entry>
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Release, russian RGR</name>
+      <list>big_usa_release.txt</list>
+      <md5>8b39957aef7e4d80611933a30f783b37</md5>
+    </entry>
+
+
     <entry>
       <format>big</format>
       <region>PAL</region>
@@ -57,6 +103,8 @@
       <list>big_usa_demo.txt</list>
       <md5>efb66723fe589d9cd3321d109a34dfd9</md5>
     </entry>
+	
+	
     <entry>
       <format>big</format>
       <region>PAL</region>
@@ -64,6 +112,8 @@
       <list>big_pal_release.txt</list>
       <md5>03a005e2abc6022fd1e1e7405300ad77</md5>
     </entry>
+	
+
     <entry>
       <format>big</format>
       <region>NTSC-J</region>
@@ -78,6 +128,8 @@
       <list>big_usa_release.txt</list>
       <md5>f241501d880ee98112044236d7296d9c</md5>
     </entry>
+	
+	
     <entry>
       <format>big</format>
       <region>NTSC-J</region>
@@ -85,7 +137,8 @@
       <list>big_usa_release.txt</list>
       <md5>b22c894eff31539de853c83cf52a9025</md5>
     </entry>
-  </versions>
+	
+  </big>
 
   <filenums comment="File list assumption based on number of files (for modded bigs).">
     <entry>
@@ -95,11 +148,11 @@
     <entry>
       <num>723</num>
       <list>big_pal_release.txt</list>
-  </entry>
+    </entry>
     <entry>
       <num>453</num>
       <list>big_usa_beta_aug.txt</list>   
-  </entry>
+    </entry>
     <entry>
       <num>609</num>
       <list>big_usa_beta_sep.txt</list>

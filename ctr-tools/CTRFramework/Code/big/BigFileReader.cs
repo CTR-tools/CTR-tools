@@ -89,7 +89,7 @@ namespace CTRFramework.Big
             var hash = MD5.Create().ComputeHash(BaseStream);
             string md5 = BitConverter.ToString(hash).Replace("-", "");
 
-            foreach (XmlElement el in doc.SelectNodes("/data/versions/entry"))
+            foreach (XmlElement el in doc.SelectNodes("/data/big/entry"))
             {
                 if (md5.ToLower() == el["md5"].InnerText.ToLower())
                 {
@@ -122,15 +122,15 @@ namespace CTRFramework.Big
                 throw new ArgumentOutOfRangeException($"{this.GetType().Name}: Must use NextFile() first!");
 
             if (fileDefPtr > BaseStream.Length)
-                throw new OverflowException($"{this.GetType().Name}: out of bounds.");
+                throw new IndexOutOfRangeException($"{this.GetType().Name}: out of bounds.");
 
             BaseStream.Position = fileDefPtr;
 
-            int _ptr = ReadInt32() * 0x800;
+            int _ptr = ReadInt32() * Meta.SectorSize;
             int _size = ReadInt32();
 
             if (_ptr + _size > BaseStream.Length)
-                throw new OverflowException($"{this.GetType().Name}: out of bounds.");
+                throw new IndexOutOfRangeException($"{this.GetType().Name}: out of bounds.");
 
             BaseStream.Position = _ptr;
 
