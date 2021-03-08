@@ -23,14 +23,11 @@ namespace cseq
             this.DoubleBuffered = true;
 
             LoadMeta();
-
-            Howl.ReadSampleNames(Meta.BasePath + "CTRFramework.Data\\samplenames.txt");
         }
 
         public void LoadMeta()
         {
-            /*
-            if (!CTRJson.Load())
+            if (!Meta.LoadMidiJson())
             {
                 MessageBox.Show("Couldn't load Json!");
             }
@@ -39,13 +36,10 @@ namespace cseq
                 listBox1.Items.Clear();
                 comboBox1.Items.Clear();
 
-                foreach (KeyValuePair<string, JToken> j in CTRJson.midi)
-                {
-                    listBox1.Items.Add(j.Key);
-                    comboBox1.Items.Add(j.Key);
-                }
+                listBox1.Items.AddRange(Meta.GetPatchList().ToArray());
+                comboBox1.Items.AddRange(Meta.GetPatchList().ToArray());
             }
-            */
+
         }
 
         private void LoadCseq(string fn)

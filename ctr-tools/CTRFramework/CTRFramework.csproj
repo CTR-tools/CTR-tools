@@ -135,7 +135,6 @@
     <Compile Include="Code\sound\CSEQ\Sequence\CSeqHeader.cs" />
     <Compile Include="Code\sound\CSEQ\Sequence\CTrack.cs" />
     <Compile Include="Code\sound\CSEQ\Sequence\Sequence.cs" />
-    <Compile Include="Code\sound\CTRJson.cs" />
     <Compile Include="Code\sound\Howl.cs" />
     <Compile Include="Code\sound\HowlHeader.cs" />
     <Compile Include="Code\sound\VagHeader.cs" />

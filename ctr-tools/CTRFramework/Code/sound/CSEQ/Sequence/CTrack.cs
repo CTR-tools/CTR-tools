@@ -86,7 +86,7 @@ namespace CTRFramework.Sound.CSeq
             {
                 me.Add(new ControlChangeEvent(absTime, channel, MidiController.BankSelect, 120));
                 me.Add(new ControlChangeEvent(absTime, channel, MidiController.BankSelect, 0));
-                me.Add(new PatchChangeEvent(absTime, channel, CTRJson.GetBankIndex(CSEQ.PatchName)));
+                me.Add(new PatchChangeEvent(absTime, channel, Meta.GetBankIndex(CSEQ.PatchName)));
             }
 
             if (CSEQ.UseSampleVolumeForTracks && !CSEQ.IgnoreVolume)

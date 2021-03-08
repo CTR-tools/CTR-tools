@@ -166,12 +166,12 @@ namespace CTRFramework.Sound.CSeq
         {
             for (int i = 0; i < longSamples.Count; i++)
             {
-                longSamples[i].info = CTRJson.GetMetaInst(song, "long", i);
+                longSamples[i].info = Meta.GetMetaInst(song, "long", i);
             }
 
             for (int i = 0; i < shortSamples.Count; i++)
             {
-                shortSamples[i].info = CTRJson.GetMetaInst(song, "short", i);
+                shortSamples[i].info = Meta.GetMetaInst(song, "short", i);
             }
         }
 

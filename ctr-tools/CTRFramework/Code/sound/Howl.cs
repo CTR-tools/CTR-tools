@@ -56,56 +56,8 @@ namespace CTRFramework.Sound
             }
         }
 
-
-
         public static Dictionary<int, string> sampledict = new Dictionary<int, string>();
 
-        public static bool ReadSampleNames(string path)
-        {
-            try
-            {
-                if (File.Exists(path))
-                {
-                    sampledict.Clear();
-
-                    string[] buf = File.ReadAllLines(path);
-
-                    foreach (string b in buf)
-                    {
-                        if (b.Trim() != "")
-                        {
-                            if (b.ToCharArray()[0] != '#')
-                            {
-                                string[] bb = b.Replace(" ", "").Split('=');
-
-                                int x = -1;
-                                Int32.TryParse(bb[0], out x);
-
-                                if (x == -1)
-                                {
-                                    Console.WriteLine("List parsing error at: {0}", b);
-                                    continue;
-                                }
-
-                                Console.WriteLine(x + " " + bb[1]);
-                                sampledict.Add(x, bb[1]);
-                            }
-                        }
-                    }
-
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-        }
 
         public Howl(BinaryReaderEx br)
         {
@@ -132,24 +84,21 @@ namespace CTRFramework.Sound
         {
             sampledict = Meta.LoadNumberedList(Meta.SmplPath);
 
-            //if (File.Exists(Meta.SmplPath))
-            //    ReadSampleNames(Meta.SmplPath);
-
-            header = new HowlHeader(br);
+            header = HowlHeader.FromReader(br);
 
             for (int i = 0; i < header.cntUnk; i++)
             {
                 if (br.ReadUInt16() != 0)
-                    Console.WriteLine("HOWL Read: upper word not 0.");
+                    Helpers.Panic(this, "upper word is not 0.");
 
                 unk.Add(br.ReadUInt16());
             }
 
             for (int i = 0; i < header.cntSfx; i++)
-                samples1.Add(new SampleDef(br));
+                samples1.Add(SampleDef.FromReader(br));
 
             for (int i = 0; i < header.cntEngineSfx; i++)
-                samples2.Add(new SampleDef(br));
+                samples2.Add(SampleDef.FromReader(br));
 
             for (int i = 0; i < header.cntBank; i++)
                 ptrBanks.Add(br.ReadUInt16() * Meta.SectorSize);

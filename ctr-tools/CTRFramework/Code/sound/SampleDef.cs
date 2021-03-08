@@ -66,7 +66,7 @@ namespace CTRFramework.Sound
         public int Frequency
         {
             //cents needed?
-            get { return (int)Math.Round(pitch * 44100.0f / 4096.0f); }
+            get { return (int)Math.Round(pitch / 4096.0f * 44100.0f ); }
         }
 
         public SampleDef()
@@ -78,6 +78,11 @@ namespace CTRFramework.Sound
             Read(br);
         }
 
+        public static SampleDef FromReader(BinaryReaderEx br)
+        {
+            return new SampleDef(br);
+        }
+
         public virtual void Read(BinaryReaderEx br)
         {
             magic1 = br.ReadByte();
@@ -86,12 +91,12 @@ namespace CTRFramework.Sound
             sampleID = br.ReadUInt16();
             always0 = br.ReadInt16();
 
+            //sanity checks
             if (magic1 != 1)
-                Helpers.Panic(this, $"SampleDef magic1 = {magic1}");
+                Helpers.Panic(this, $"magic1 != 1: {magic1}");
 
             if (always0 != 0)
-                return;
-            //throw new Exception(String.Format("SampleDef always0 = {0} ", always0));
+                Helpers.Panic(this, $"always0 != 0: {always0}");
         }
 
         public virtual void Write(BinaryWriterEx bw)

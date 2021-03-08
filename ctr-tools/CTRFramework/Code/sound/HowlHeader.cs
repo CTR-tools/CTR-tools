@@ -24,24 +24,24 @@ namespace CTRFramework.Sound
             Read(br);
         }
 
+        public static HowlHeader FromReader(BinaryReaderEx br)
+        {
+            return new HowlHeader(br);
+        }
+
         public void Read(BinaryReaderEx br)
         {
-            magic = br.ReadChars(4); //System.Text.Encoding.ASCII.GetString(br.ReadBytes(4));
+            magic = br.ReadChars(4);
 
             if (new string(magic) != "HOWL")
-            {
-                Helpers.Panic(this, "Not a CTR HOWL file.");
                 throw new Exception("Not a CTR HOWL file.");
-            }
 
             u1 = br.ReadInt32();
             reserved1 = br.ReadInt32();
             reserved2 = br.ReadInt32();
 
             if (reserved1 != 0 || reserved2 != 0)
-            {
-                Console.WriteLine("reserved is not null. Possible error.");
-            }
+                Helpers.Panic(this, "reserved is not null. Possible error.");
 
             cntUnk = br.ReadInt32();
             cntSfx = br.ReadInt32();
@@ -74,7 +74,6 @@ namespace CTRFramework.Sound
             bw.Write(cntSeq);
 
             bw.Write(sampleDataSize);
-
         }
     }
 }
