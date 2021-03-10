@@ -36,6 +36,7 @@ namespace CTRTools
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.optionTexModels = new System.Windows.Forms.CheckBox();
             this.optionTexHigh = new System.Windows.Forms.CheckBox();
             this.optionTexMed = new System.Windows.Forms.CheckBox();
             this.optionTexLow = new System.Windows.Forms.CheckBox();
@@ -58,7 +59,7 @@ namespace CTRTools
             // actionPack
             // 
             this.actionPack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.actionPack.Location = new System.Drawing.Point(388, 224);
+            this.actionPack.Location = new System.Drawing.Point(540, 453);
             this.actionPack.Name = "actionPack";
             this.actionPack.Size = new System.Drawing.Size(96, 24);
             this.actionPack.TabIndex = 11;
@@ -69,7 +70,7 @@ namespace CTRTools
             // actionExtract
             // 
             this.actionExtract.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.actionExtract.Location = new System.Drawing.Point(286, 224);
+            this.actionExtract.Location = new System.Drawing.Point(438, 453);
             this.actionExtract.Name = "actionExtract";
             this.actionExtract.Size = new System.Drawing.Size(96, 24);
             this.actionExtract.TabIndex = 10;
@@ -87,28 +88,30 @@ namespace CTRTools
             this.groupBox2.Controls.Add(this.tableLayoutPanel1);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(481, 215);
+            this.groupBox2.Size = new System.Drawing.Size(633, 444);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Settings";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(6, 186);
+            this.button1.Location = new System.Drawing.Point(6, 208);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(145, 23);
             this.button1.TabIndex = 6;
             this.button1.Text = "try load texture layout";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(157, 188);
+            this.textBox1.Location = new System.Drawing.Point(157, 211);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(193, 20);
             this.textBox1.TabIndex = 5;
             this.textBox1.Text = "<place 12 bytes here>";
+            this.textBox1.Visible = false;
             // 
             // tableLayoutPanel1
             // 
@@ -136,19 +139,32 @@ namespace CTRTools
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(469, 158);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(621, 183);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.optionTexModels);
             this.panel1.Controls.Add(this.optionTexHigh);
             this.panel1.Controls.Add(this.optionTexMed);
             this.panel1.Controls.Add(this.optionTexLow);
             this.panel1.Controls.Add(this.optionDebugVram);
             this.panel1.Location = new System.Drawing.Point(119, 62);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(204, 91);
+            this.panel1.Size = new System.Drawing.Size(204, 116);
             this.panel1.TabIndex = 4;
+            // 
+            // optionTexModels
+            // 
+            this.optionTexModels.AutoSize = true;
+            this.optionTexModels.Checked = true;
+            this.optionTexModels.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.optionTexModels.Location = new System.Drawing.Point(3, 72);
+            this.optionTexModels.Name = "optionTexModels";
+            this.optionTexModels.Size = new System.Drawing.Size(127, 17);
+            this.optionTexModels.TabIndex = 7;
+            this.optionTexModels.Text = "Export model textures";
+            this.optionTexModels.UseVisualStyleBackColor = true;
             // 
             // optionTexHigh
             // 
@@ -189,7 +205,7 @@ namespace CTRTools
             // optionDebugVram
             // 
             this.optionDebugVram.AutoSize = true;
-            this.optionDebugVram.Location = new System.Drawing.Point(3, 72);
+            this.optionDebugVram.Location = new System.Drawing.Point(3, 95);
             this.optionDebugVram.Name = "optionDebugVram";
             this.optionDebugVram.Size = new System.Drawing.Size(126, 17);
             this.optionDebugVram.TabIndex = 9;
@@ -213,13 +229,14 @@ namespace CTRTools
             this.pictureBox1.Size = new System.Drawing.Size(110, 91);
             this.pictureBox1.TabIndex = 4;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Visible = false;
             // 
             // pathFile
             // 
             this.pathFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.pathFile.Location = new System.Drawing.Point(119, 5);
             this.pathFile.Name = "pathFile";
-            this.pathFile.Size = new System.Drawing.Size(205, 20);
+            this.pathFile.Size = new System.Drawing.Size(357, 20);
             this.pathFile.TabIndex = 1;
             // 
             // label4
@@ -237,13 +254,13 @@ namespace CTRTools
             this.pathFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.pathFolder.Location = new System.Drawing.Point(119, 34);
             this.pathFolder.Name = "pathFolder";
-            this.pathFolder.Size = new System.Drawing.Size(205, 20);
+            this.pathFolder.Size = new System.Drawing.Size(357, 20);
             this.pathFolder.TabIndex = 3;
             // 
             // actionBrowseFile
             // 
             this.actionBrowseFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.actionBrowseFile.Location = new System.Drawing.Point(330, 3);
+            this.actionBrowseFile.Location = new System.Drawing.Point(482, 3);
             this.actionBrowseFile.Name = "actionBrowseFile";
             this.actionBrowseFile.Size = new System.Drawing.Size(61, 23);
             this.actionBrowseFile.TabIndex = 4;
@@ -254,7 +271,7 @@ namespace CTRTools
             // actionBrowseFolder
             // 
             this.actionBrowseFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.actionBrowseFolder.Location = new System.Drawing.Point(330, 33);
+            this.actionBrowseFolder.Location = new System.Drawing.Point(482, 33);
             this.actionBrowseFolder.Name = "actionBrowseFolder";
             this.actionBrowseFolder.Size = new System.Drawing.Size(61, 23);
             this.actionBrowseFolder.TabIndex = 1;
@@ -264,7 +281,7 @@ namespace CTRTools
             // 
             // actionOpenFolder
             // 
-            this.actionOpenFolder.Location = new System.Drawing.Point(397, 33);
+            this.actionOpenFolder.Location = new System.Drawing.Point(549, 33);
             this.actionOpenFolder.Name = "actionOpenFolder";
             this.actionOpenFolder.Size = new System.Drawing.Size(69, 23);
             this.actionOpenFolder.TabIndex = 6;
@@ -275,7 +292,7 @@ namespace CTRTools
             // actionRestore
             // 
             this.actionRestore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.actionRestore.Location = new System.Drawing.Point(160, 224);
+            this.actionRestore.Location = new System.Drawing.Point(312, 453);
             this.actionRestore.Name = "actionRestore";
             this.actionRestore.Size = new System.Drawing.Size(120, 24);
             this.actionRestore.TabIndex = 7;
@@ -293,11 +310,11 @@ namespace CTRTools
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.actionPack);
             this.DoubleBuffered = true;
-            this.MinimumSize = new System.Drawing.Size(488, 223);
+            this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "VramControl";
-            this.Size = new System.Drawing.Size(488, 251);
-            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.CtrToolsVramControl_DragDrop);
-            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.CtrToolsVramControl_DragEnter);
+            this.Size = new System.Drawing.Size(640, 480);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.VramControl_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.VramControl_DragEnter);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -331,5 +348,6 @@ namespace CTRTools
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox optionTexHigh;
         private System.Windows.Forms.Button actionRestore;
+        private System.Windows.Forms.CheckBox optionTexModels;
     }
 }

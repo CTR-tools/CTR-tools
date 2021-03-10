@@ -92,6 +92,12 @@
     <Compile Include="Controls\HowlControl.Designer.cs">
       <DependentUpon>HowlControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LangControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\LangControl.Designer.cs">
+      <DependentUpon>LangControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LevControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -137,6 +143,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\HowlControl.resx">
       <DependentUpon>HowlControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\LangControl.resx">
+      <DependentUpon>LangControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\LevControl.resx">
       <DependentUpon>LevControl.cs</DependentUpon>

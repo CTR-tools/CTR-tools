@@ -55,13 +55,13 @@ namespace CTRFramework.Lang
         }
 
         /// <summary>
-        /// Loads LNG object from text file.
+        /// Loads LNG object from the array of strings.
         /// </summary>
-        /// <param name="filename">Source file name.</param>
-        public static LNG FromText(string filename)
+        /// <param name="lines">Array of strings.</param>
+        public static LNG FromText(string[] lines)
         {
             LNG lng = new LNG();
-            lng.Entries = File.ReadAllLines(filename).ToList();
+            lng.Entries = lines.ToList();
             foreach (var entry in lng.Entries)
                 entry.Trim();
             return lng;
@@ -72,6 +72,11 @@ namespace CTRFramework.Lang
         /// </summary>
         /// <param name="filename">Target file name.</param>
         public void Export(string filename)
+        {
+            Helpers.WriteToFile(filename, ToString());
+        }
+
+        public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -86,9 +91,7 @@ namespace CTRFramework.Lang
                 sb.Append(entry);
             }
 
-            File.WriteAllText(filename, sb.ToString());
-
-            sb.Clear();
+            return sb.ToString();
         }
 
         /// <summary>

@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("CTRTools")]
+[assembly: AssemblyTitle("CTR-tools-gui")]
 [assembly: AssemblyDescription("A GUI tool to operate Crash Team Racing (PS1) files.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CTRTools")]
+[assembly: AssemblyProduct("CTR-tools")]
 [assembly: AssemblyCopyright("dcxdemo")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -50,7 +50,7 @@ namespace CTRTools.Controls
             this.groupBox1.Controls.Add(this.splitContainer1);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(577, 304);
+            this.groupBox1.Size = new System.Drawing.Size(634, 444);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Ctr Model";
@@ -66,8 +66,8 @@ namespace CTRTools.Controls
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.propertyGrid1);
-            this.splitContainer1.Size = new System.Drawing.Size(565, 279);
-            this.splitContainer1.SplitterDistance = 233;
+            this.splitContainer1.Size = new System.Drawing.Size(622, 419);
+            this.splitContainer1.SplitterDistance = 256;
             this.splitContainer1.TabIndex = 0;
             // 
             // propertyGrid1
@@ -75,13 +75,13 @@ namespace CTRTools.Controls
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(328, 279);
+            this.propertyGrid1.Size = new System.Drawing.Size(362, 419);
             this.propertyGrid1.TabIndex = 0;
             // 
             // actionLoadObj
             // 
             this.actionLoadObj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.actionLoadObj.Location = new System.Drawing.Point(111, 313);
+            this.actionLoadObj.Location = new System.Drawing.Point(111, 453);
             this.actionLoadObj.Name = "actionLoadObj";
             this.actionLoadObj.Size = new System.Drawing.Size(96, 24);
             this.actionLoadObj.TabIndex = 6;
@@ -92,7 +92,7 @@ namespace CTRTools.Controls
             // actionExportObj
             // 
             this.actionExportObj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.actionExportObj.Location = new System.Drawing.Point(484, 313);
+            this.actionExportObj.Location = new System.Drawing.Point(541, 453);
             this.actionExportObj.Name = "actionExportObj";
             this.actionExportObj.Size = new System.Drawing.Size(96, 24);
             this.actionExportObj.TabIndex = 8;
@@ -103,7 +103,7 @@ namespace CTRTools.Controls
             // actionLoadCtr
             // 
             this.actionLoadCtr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.actionLoadCtr.Location = new System.Drawing.Point(9, 313);
+            this.actionLoadCtr.Location = new System.Drawing.Point(9, 453);
             this.actionLoadCtr.Name = "actionLoadCtr";
             this.actionLoadCtr.Size = new System.Drawing.Size(96, 24);
             this.actionLoadCtr.TabIndex = 10;
@@ -114,7 +114,7 @@ namespace CTRTools.Controls
             // actionSaveCtr
             // 
             this.actionSaveCtr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.actionSaveCtr.Location = new System.Drawing.Point(382, 313);
+            this.actionSaveCtr.Location = new System.Drawing.Point(439, 453);
             this.actionSaveCtr.Name = "actionSaveCtr";
             this.actionSaveCtr.Size = new System.Drawing.Size(96, 24);
             this.actionSaveCtr.TabIndex = 11;
@@ -133,9 +133,9 @@ namespace CTRTools.Controls
             this.Controls.Add(this.actionExportObj);
             this.Controls.Add(this.actionLoadObj);
             this.DoubleBuffered = true;
-            this.MinimumSize = new System.Drawing.Size(488, 223);
+            this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "CtrControl";
-            this.Size = new System.Drawing.Size(583, 340);
+            this.Size = new System.Drawing.Size(640, 480);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.CtrControl_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.CtrControl_DragEnter);
             this.groupBox1.ResumeLayout(false);

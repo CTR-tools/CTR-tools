@@ -124,7 +124,7 @@ namespace CTRTools
                 if (optionTexHigh.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texHigh"), Detail.High);
                 if (optionTexMed.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texMed"), Detail.Med);
                 if (optionTexLow.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texLow"), Detail.Low);
-
+                if (optionTexModels.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texModels"), Detail.Models);
 
                 //generates colored vram, keep in mind same texture data may use different palettes
                 Bitmap bmp = new Bitmap(2048, 512);
@@ -145,8 +145,6 @@ namespace CTRTools
 
             }
 
-
-
             GC.Collect();
             MessageBox.Show("Done!");
         }
@@ -159,7 +157,6 @@ namespace CTRTools
             if (ofd.ShowDialog() == DialogResult.OK)
                 MaybeLoadFile(ofd.FileName);
         }
-
 
         private void MaybeLoadFile(string path)
         {
@@ -202,13 +199,13 @@ namespace CTRTools
                 }
         }
 
-        private void CtrToolsVramControl_DragDrop(object sender, DragEventArgs e)
+        private void VramControl_DragDrop(object sender, DragEventArgs e)
         {
             string path = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
             MaybeLoadFile(path);
         }
 
-        private void CtrToolsVramControl_DragEnter(object sender, DragEventArgs e)
+        private void VramControl_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
         }

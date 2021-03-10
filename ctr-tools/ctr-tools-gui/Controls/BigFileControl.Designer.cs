@@ -35,6 +35,8 @@ namespace CTRTools.Controls
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.actionLoadBig = new System.Windows.Forms.Button();
             this.actionExportAll = new System.Windows.Forms.Button();
+            this.ofd = new System.Windows.Forms.OpenFileDialog();
+            this.fbd = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -50,7 +52,7 @@ namespace CTRTools.Controls
             this.groupBox1.Controls.Add(this.splitContainer1);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(482, 213);
+            this.groupBox1.Size = new System.Drawing.Size(634, 444);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Big File";
@@ -70,8 +72,8 @@ namespace CTRTools.Controls
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBox4);
-            this.splitContainer1.Size = new System.Drawing.Size(470, 188);
-            this.splitContainer1.SplitterDistance = 195;
+            this.splitContainer1.Size = new System.Drawing.Size(622, 419);
+            this.splitContainer1.SplitterDistance = 258;
             this.splitContainer1.TabIndex = 0;
             // 
             // treeView1
@@ -80,7 +82,7 @@ namespace CTRTools.Controls
             this.treeView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(195, 188);
+            this.treeView1.Size = new System.Drawing.Size(258, 419);
             this.treeView1.TabIndex = 5;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
@@ -92,14 +94,14 @@ namespace CTRTools.Controls
             this.textBox4.Multiline = true;
             this.textBox4.Name = "textBox4";
             this.textBox4.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox4.Size = new System.Drawing.Size(271, 188);
+            this.textBox4.Size = new System.Drawing.Size(360, 419);
             this.textBox4.TabIndex = 7;
             this.textBox4.WordWrap = false;
             // 
             // actionLoadBig
             // 
             this.actionLoadBig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.actionLoadBig.Location = new System.Drawing.Point(287, 222);
+            this.actionLoadBig.Location = new System.Drawing.Point(439, 453);
             this.actionLoadBig.Name = "actionLoadBig";
             this.actionLoadBig.Size = new System.Drawing.Size(96, 24);
             this.actionLoadBig.TabIndex = 6;
@@ -110,13 +112,17 @@ namespace CTRTools.Controls
             // actionExportAll
             // 
             this.actionExportAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.actionExportAll.Location = new System.Drawing.Point(389, 222);
+            this.actionExportAll.Location = new System.Drawing.Point(541, 453);
             this.actionExportAll.Name = "actionExportAll";
             this.actionExportAll.Size = new System.Drawing.Size(96, 24);
             this.actionExportAll.TabIndex = 8;
             this.actionExportAll.Text = "Export";
             this.actionExportAll.UseVisualStyleBackColor = true;
             this.actionExportAll.Click += new System.EventHandler(this.actionExportAll_Click);
+            // 
+            // ofd
+            // 
+            this.ofd.Filter = "Crash Team Racing BIG file (*.big)|*.big";
             // 
             // BigFileControl
             // 
@@ -126,9 +132,10 @@ namespace CTRTools.Controls
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.actionExportAll);
             this.Controls.Add(this.actionLoadBig);
-            this.MinimumSize = new System.Drawing.Size(488, 223);
+            this.DoubleBuffered = true;
+            this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "BigFileControl";
-            this.Size = new System.Drawing.Size(488, 249);
+            this.Size = new System.Drawing.Size(640, 480);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.BigFileControl_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.BigFileControl_DragEnter);
             this.groupBox1.ResumeLayout(false);
@@ -149,5 +156,7 @@ namespace CTRTools.Controls
         private System.Windows.Forms.Button actionLoadBig;
         private System.Windows.Forms.Button actionExportAll;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.OpenFileDialog ofd;
+        private System.Windows.Forms.FolderBrowserDialog fbd;
     }
 }

@@ -7,8 +7,6 @@ namespace CTRTools
 {
     class Mcs : IRead
     {
-
-
         public Mcs()
         {
         }

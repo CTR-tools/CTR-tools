@@ -136,7 +136,7 @@ namespace CTRTools.Controls
             this.Controls.Add(this.textBox5);
             this.Controls.Add(this.actionAttach);
             this.Name = "EmuControl";
-            this.Size = new System.Drawing.Size(611, 371);
+            this.Size = new System.Drawing.Size(640, 480);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

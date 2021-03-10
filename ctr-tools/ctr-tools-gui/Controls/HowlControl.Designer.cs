@@ -33,6 +33,8 @@ namespace CTRTools.Controls
             this.actionExport = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.fbd = new System.Windows.Forms.FolderBrowserDialog();
+            this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // actionLoad
@@ -73,6 +75,10 @@ namespace CTRTools.Controls
             this.label2.TabIndex = 3;
             this.label2.Text = "label2";
             // 
+            // ofd
+            // 
+            this.ofd.Filter = "Crash Team Racing HWL file (*.hwl)|*.hwl";
+            // 
             // HowlControl
             // 
             this.AllowDrop = true;
@@ -83,7 +89,7 @@ namespace CTRTools.Controls
             this.Controls.Add(this.actionExport);
             this.Controls.Add(this.actionLoad);
             this.Name = "HowlControl";
-            this.Size = new System.Drawing.Size(375, 184);
+            this.Size = new System.Drawing.Size(640, 480);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.HowlControl_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.HowlControl_DragEnter);
             this.ResumeLayout(false);
@@ -97,5 +103,7 @@ namespace CTRTools.Controls
         private System.Windows.Forms.Button actionExport;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.FolderBrowserDialog fbd;
+        private System.Windows.Forms.OpenFileDialog ofd;
     }
 }

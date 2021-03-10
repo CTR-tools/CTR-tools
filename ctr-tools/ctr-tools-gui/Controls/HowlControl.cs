@@ -23,8 +23,6 @@ namespace CTRTools.Controls
 
         private void actionLoad_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-
             if (ofd.ShowDialog() == DialogResult.OK)
                 LoadHowl(ofd.FileName);
         }
@@ -39,8 +37,6 @@ namespace CTRTools.Controls
         {
             if (howl == null)
                 return;
-
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
 
             if (fbd.ShowDialog() == DialogResult.OK)
             {

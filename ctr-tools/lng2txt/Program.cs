@@ -46,7 +46,7 @@ namespace lng2txt
                                 continue;
 
                             case ".txt":
-                                lng = LNG.FromText(filename);
+                                lng = LNG.FromText(File.ReadAllLines(filename));
                                 lng.Save(Path.ChangeExtension(filename, "lng"));
                                 continue;
 

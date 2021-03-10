@@ -91,7 +91,7 @@ namespace cseq
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(825, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(640, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
@@ -294,7 +294,7 @@ namespace cseq
             this.groupBox1.Controls.Add(this.textBox2);
             this.groupBox1.Location = new System.Drawing.Point(3, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(142, 457);
+            this.groupBox1.Size = new System.Drawing.Size(142, 450);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "SEQ Info";
@@ -304,7 +304,7 @@ namespace cseq
             this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(5, 429);
+            this.comboBox1.Location = new System.Drawing.Point(5, 422);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(131, 21);
             this.comboBox1.TabIndex = 5;
@@ -317,7 +317,7 @@ namespace cseq
             this.trackBox.FormattingEnabled = true;
             this.trackBox.Location = new System.Drawing.Point(6, 199);
             this.trackBox.Name = "trackBox";
-            this.trackBox.Size = new System.Drawing.Size(130, 225);
+            this.trackBox.Size = new System.Drawing.Size(130, 212);
             this.trackBox.TabIndex = 4;
             this.trackBox.SelectedIndexChanged += new System.EventHandler(this.trackBox_SelectedIndexChanged);
             this.trackBox.DoubleClick += new System.EventHandler(this.trackBox_DoubleClick);
@@ -354,7 +354,7 @@ namespace cseq
             this.tabControl1.Location = new System.Drawing.Point(151, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(671, 457);
+            this.tabControl1.Size = new System.Drawing.Size(486, 450);
             this.tabControl1.TabIndex = 5;
             // 
             // tabPage1
@@ -363,7 +363,7 @@ namespace cseq
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(663, 431);
+            this.tabPage1.Size = new System.Drawing.Size(478, 424);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Track Info";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -376,7 +376,7 @@ namespace cseq
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(657, 425);
+            this.textBox1.Size = new System.Drawing.Size(472, 418);
             this.textBox1.TabIndex = 5;
             this.textBox1.Text = "  ";
             // 
@@ -387,7 +387,7 @@ namespace cseq
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(654, 422);
+            this.tabPage2.Size = new System.Drawing.Size(478, 424);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Instruments / Samples";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -398,7 +398,7 @@ namespace cseq
             | System.Windows.Forms.AnchorStyles.Left)));
             this.treeView1.Location = new System.Drawing.Point(6, 14);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(302, 402);
+            this.treeView1.Size = new System.Drawing.Size(302, 395);
             this.treeView1.TabIndex = 3;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             this.treeView1.DoubleClick += new System.EventHandler(this.treeView1_DoubleClick);
@@ -410,7 +410,7 @@ namespace cseq
             | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid1.Location = new System.Drawing.Point(314, 14);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(334, 402);
+            this.propertyGrid1.Size = new System.Drawing.Size(149, 395);
             this.propertyGrid1.TabIndex = 2;
             // 
             // tabPage3
@@ -419,7 +419,7 @@ namespace cseq
             this.tabPage3.Controls.Add(this.listBox1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(654, 422);
+            this.tabPage3.Size = new System.Drawing.Size(478, 424);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Meta";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -434,7 +434,7 @@ namespace cseq
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
             this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox3.Size = new System.Drawing.Size(341, 416);
+            this.textBox3.Size = new System.Drawing.Size(156, 409);
             this.textBox3.TabIndex = 1;
             // 
             // listBox1
@@ -446,7 +446,7 @@ namespace cseq
             this.listBox1.ItemHeight = 15;
             this.listBox1.Location = new System.Drawing.Point(3, 3);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(120, 409);
+            this.listBox1.Size = new System.Drawing.Size(120, 394);
             this.listBox1.TabIndex = 0;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -460,7 +460,7 @@ namespace cseq
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(654, 422);
+            this.tabPage4.Size = new System.Drawing.Size(478, 424);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Bank";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -524,7 +524,7 @@ namespace cseq
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
             this.Name = "CseqControl";
-            this.Size = new System.Drawing.Size(825, 487);
+            this.Size = new System.Drawing.Size(640, 480);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
             this.menuStrip1.ResumeLayout(false);

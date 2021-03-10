@@ -54,6 +54,9 @@ namespace CTRTools
                     case ".cseq":
                         tabControl1.SelectedTab = tabCseq;
                         break;
+                    case ".lng":
+                        tabControl1.SelectedTab = tabLang;
+                        break;
                 }
             }
         }

@@ -105,9 +105,6 @@ namespace CTRTools.Controls
 
         private void actionLoadBig_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Crash Team Racing BIG file|*.big";
-
             if (ofd.ShowDialog() == DialogResult.OK)
                 LoadBigFull(ofd.FileName);
         }
@@ -123,6 +120,7 @@ namespace CTRTools.Controls
                     case ".big":
                         LoadBigFull(files[0]);
                         break;
+
                     default:
                         MessageBox.Show("Unsupported file.");
                         break;
@@ -132,8 +130,6 @@ namespace CTRTools.Controls
 
         private void actionExportAll_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 big.Extract(fbd.SelectedPath);
@@ -157,8 +153,7 @@ namespace CTRTools.Controls
                     {
                         File.WriteAllBytes("temp.lng", cf.Data);
                         LNG lng = LNG.FromFile("temp.lng");
-                        textBox4.Text = File.ReadAllText("temp.txt");
-                        File.Delete("temp.txt");
+                        textBox4.Lines = lng.Entries.ToArray();
                         File.Delete("temp.lng");
                     }
                     catch

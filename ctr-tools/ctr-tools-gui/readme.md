@@ -10,16 +10,16 @@ There are generally 2 ways to use the program:
 
 # Tabs
 ## Info
-Just a welcome tab with some info about framework version and links to github/discord
+Just a welcome tab with some info about framework version and links to github/discord.
 
 ## BIG archive
-BIG files processing.
+BIG file processing.
 
 ## VRAM textures
-Used to extract textures from VRAM and write new textures back.
+Extracts textures from VRAM and writes new textures back.
 
 ## CTR models
-Converts original CTR models to OBJ and back.
+Converts original CTR models to OBJ format and PLY/OBJ models to CTR.
 
 ## LEV scenes
 Various tools for LEV files mostly used as a debug playground now.
@@ -29,6 +29,9 @@ Reads HOWL sound file and extracts all banks, samples and cseq music.
 
 ## CSEQ music
 Reads cseq music sequences and exports to midi. Used to be a separate cseq.exe before.
+
+## LNG text
+Allow to edit localization files.
 
 ## ePSXe
 Emulation tab meant to read CTR data from emulator memory and apply patches on the fly.

@@ -32,35 +32,38 @@
             this.tabAbout = new System.Windows.Forms.TabPage();
             this.signLabel = new System.Windows.Forms.Label();
             this.labelVersion = new System.Windows.Forms.Label();
-            this.tabBig = new System.Windows.Forms.TabPage();
-            this.bigFileControl1 = new CTRTools.Controls.BigFileControl();
-            this.tabVram = new System.Windows.Forms.TabPage();
-            this.ctrToolsVramControl1 = new CTRTools.VramControl();
-            this.tabCtr = new System.Windows.Forms.TabPage();
-            this.ctrControl1 = new CTRTools.Controls.CtrControl();
-            this.tabLev = new System.Windows.Forms.TabPage();
-            this.levControl1 = new CTRTools.LevControl();
-            this.tabCseq = new System.Windows.Forms.TabPage();
-            this.cseqControl1 = new cseq.CseqControl();
-            this.tabEmu = new System.Windows.Forms.TabPage();
-            this.emuControl1 = new CTRTools.Controls.EmuControl();
-            this.tabHowl = new System.Windows.Forms.TabPage();
             this.appLogo = new System.Windows.Forms.PictureBox();
             this.discordLogo = new System.Windows.Forms.PictureBox();
             this.githubLogo = new System.Windows.Forms.PictureBox();
+            this.tabBig = new System.Windows.Forms.TabPage();
+            this.tabVram = new System.Windows.Forms.TabPage();
+            this.tabCtr = new System.Windows.Forms.TabPage();
+            this.tabLev = new System.Windows.Forms.TabPage();
+            this.tabHowl = new System.Windows.Forms.TabPage();
+            this.tabCseq = new System.Windows.Forms.TabPage();
+            this.tabLang = new System.Windows.Forms.TabPage();
+            this.tabEmu = new System.Windows.Forms.TabPage();
+            this.bigFileControl1 = new CTRTools.Controls.BigFileControl();
+            this.ctrToolsVramControl1 = new CTRTools.VramControl();
+            this.ctrControl1 = new CTRTools.Controls.CtrControl();
+            this.levControl1 = new CTRTools.LevControl();
             this.howlControl1 = new CTRTools.Controls.HowlControl();
+            this.cseqControl1 = new cseq.CseqControl();
+            this.langControl1 = new CTRTools.Controls.LangControl();
+            this.emuControl1 = new CTRTools.Controls.EmuControl();
             this.tabControl1.SuspendLayout();
             this.tabAbout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.appLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.discordLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).BeginInit();
             this.tabBig.SuspendLayout();
             this.tabVram.SuspendLayout();
             this.tabCtr.SuspendLayout();
             this.tabLev.SuspendLayout();
-            this.tabCseq.SuspendLayout();
-            this.tabEmu.SuspendLayout();
             this.tabHowl.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.appLogo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.discordLogo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).BeginInit();
+            this.tabCseq.SuspendLayout();
+            this.tabLang.SuspendLayout();
+            this.tabEmu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -75,6 +78,7 @@
             this.tabControl1.Controls.Add(this.tabLev);
             this.tabControl1.Controls.Add(this.tabHowl);
             this.tabControl1.Controls.Add(this.tabCseq);
+            this.tabControl1.Controls.Add(this.tabLang);
             this.tabControl1.Controls.Add(this.tabEmu);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tabControl1.Location = new System.Drawing.Point(7, 7);
@@ -119,134 +123,6 @@
             this.labelVersion.TabIndex = 6;
             this.labelVersion.Text = "Framework version from DLL";
             // 
-            // tabBig
-            // 
-            this.tabBig.Controls.Add(this.bigFileControl1);
-            this.tabBig.Location = new System.Drawing.Point(4, 22);
-            this.tabBig.Name = "tabBig";
-            this.tabBig.Size = new System.Drawing.Size(603, 403);
-            this.tabBig.TabIndex = 5;
-            this.tabBig.Text = "BIG archive";
-            this.tabBig.UseVisualStyleBackColor = true;
-            // 
-            // bigFileControl1
-            // 
-            this.bigFileControl1.AllowDrop = true;
-            this.bigFileControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bigFileControl1.Location = new System.Drawing.Point(0, 0);
-            this.bigFileControl1.MinimumSize = new System.Drawing.Size(488, 223);
-            this.bigFileControl1.Name = "bigFileControl1";
-            this.bigFileControl1.Size = new System.Drawing.Size(603, 403);
-            this.bigFileControl1.TabIndex = 0;
-            // 
-            // tabVram
-            // 
-            this.tabVram.Controls.Add(this.ctrToolsVramControl1);
-            this.tabVram.Location = new System.Drawing.Point(4, 22);
-            this.tabVram.Name = "tabVram";
-            this.tabVram.Size = new System.Drawing.Size(603, 403);
-            this.tabVram.TabIndex = 8;
-            this.tabVram.Text = "VRAM textures";
-            this.tabVram.UseVisualStyleBackColor = true;
-            // 
-            // ctrToolsVramControl1
-            // 
-            this.ctrToolsVramControl1.AllowDrop = true;
-            this.ctrToolsVramControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctrToolsVramControl1.Location = new System.Drawing.Point(0, 0);
-            this.ctrToolsVramControl1.MinimumSize = new System.Drawing.Size(461, 218);
-            this.ctrToolsVramControl1.Name = "ctrToolsVramControl1";
-            this.ctrToolsVramControl1.Size = new System.Drawing.Size(603, 403);
-            this.ctrToolsVramControl1.TabIndex = 0;
-            // 
-            // tabCtr
-            // 
-            this.tabCtr.Controls.Add(this.ctrControl1);
-            this.tabCtr.Location = new System.Drawing.Point(4, 22);
-            this.tabCtr.Name = "tabCtr";
-            this.tabCtr.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCtr.Size = new System.Drawing.Size(603, 403);
-            this.tabCtr.TabIndex = 9;
-            this.tabCtr.Text = "CTR models";
-            this.tabCtr.UseVisualStyleBackColor = true;
-            // 
-            // ctrControl1
-            // 
-            this.ctrControl1.AllowDrop = true;
-            this.ctrControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctrControl1.Location = new System.Drawing.Point(3, 3);
-            this.ctrControl1.MinimumSize = new System.Drawing.Size(488, 223);
-            this.ctrControl1.Name = "ctrControl1";
-            this.ctrControl1.Size = new System.Drawing.Size(597, 397);
-            this.ctrControl1.TabIndex = 0;
-            // 
-            // tabLev
-            // 
-            this.tabLev.Controls.Add(this.levControl1);
-            this.tabLev.Location = new System.Drawing.Point(4, 22);
-            this.tabLev.Margin = new System.Windows.Forms.Padding(5);
-            this.tabLev.Name = "tabLev";
-            this.tabLev.Padding = new System.Windows.Forms.Padding(5);
-            this.tabLev.Size = new System.Drawing.Size(603, 403);
-            this.tabLev.TabIndex = 0;
-            this.tabLev.Text = "LEV scenes";
-            this.tabLev.UseVisualStyleBackColor = true;
-            // 
-            // levControl1
-            // 
-            this.levControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.levControl1.Location = new System.Drawing.Point(5, 5);
-            this.levControl1.Name = "levControl1";
-            this.levControl1.Size = new System.Drawing.Size(593, 393);
-            this.levControl1.TabIndex = 0;
-            // 
-            // tabCseq
-            // 
-            this.tabCseq.Controls.Add(this.cseqControl1);
-            this.tabCseq.Location = new System.Drawing.Point(4, 22);
-            this.tabCseq.Name = "tabCseq";
-            this.tabCseq.Size = new System.Drawing.Size(603, 403);
-            this.tabCseq.TabIndex = 10;
-            this.tabCseq.Text = "CSEQ music";
-            this.tabCseq.UseVisualStyleBackColor = true;
-            // 
-            // cseqControl1
-            // 
-            this.cseqControl1.AllowDrop = true;
-            this.cseqControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cseqControl1.Location = new System.Drawing.Point(0, 0);
-            this.cseqControl1.Name = "cseqControl1";
-            this.cseqControl1.Size = new System.Drawing.Size(603, 403);
-            this.cseqControl1.TabIndex = 11;
-            // 
-            // tabEmu
-            // 
-            this.tabEmu.Controls.Add(this.emuControl1);
-            this.tabEmu.Location = new System.Drawing.Point(4, 22);
-            this.tabEmu.Name = "tabEmu";
-            this.tabEmu.Size = new System.Drawing.Size(603, 403);
-            this.tabEmu.TabIndex = 6;
-            this.tabEmu.Text = "ePSXe";
-            this.tabEmu.UseVisualStyleBackColor = true;
-            // 
-            // emuControl1
-            // 
-            this.emuControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.emuControl1.Location = new System.Drawing.Point(0, 0);
-            this.emuControl1.Name = "emuControl1";
-            this.emuControl1.Size = new System.Drawing.Size(603, 403);
-            this.emuControl1.TabIndex = 0;
-            // 
-            // tabHowl
-            // 
-            this.tabHowl.Controls.Add(this.howlControl1);
-            this.tabHowl.Location = new System.Drawing.Point(4, 22);
-            this.tabHowl.Name = "tabHowl";
-            this.tabHowl.Size = new System.Drawing.Size(603, 403);
-            this.tabHowl.TabIndex = 11;
-            this.tabHowl.Text = "HOWL sound";
-            this.tabHowl.UseVisualStyleBackColor = true;
-            // 
             // appLogo
             // 
             this.appLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -284,13 +160,161 @@
             this.githubLogo.TabStop = false;
             this.githubLogo.Click += new System.EventHandler(this.githubBox_Click);
             // 
+            // tabBig
+            // 
+            this.tabBig.Controls.Add(this.bigFileControl1);
+            this.tabBig.Location = new System.Drawing.Point(4, 22);
+            this.tabBig.Name = "tabBig";
+            this.tabBig.Size = new System.Drawing.Size(603, 403);
+            this.tabBig.TabIndex = 5;
+            this.tabBig.Text = "BIG archive";
+            this.tabBig.UseVisualStyleBackColor = true;
+            // 
+            // tabVram
+            // 
+            this.tabVram.Controls.Add(this.ctrToolsVramControl1);
+            this.tabVram.Location = new System.Drawing.Point(4, 22);
+            this.tabVram.Name = "tabVram";
+            this.tabVram.Size = new System.Drawing.Size(603, 403);
+            this.tabVram.TabIndex = 8;
+            this.tabVram.Text = "VRAM textures";
+            this.tabVram.UseVisualStyleBackColor = true;
+            // 
+            // tabCtr
+            // 
+            this.tabCtr.Controls.Add(this.ctrControl1);
+            this.tabCtr.Location = new System.Drawing.Point(4, 22);
+            this.tabCtr.Name = "tabCtr";
+            this.tabCtr.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCtr.Size = new System.Drawing.Size(603, 403);
+            this.tabCtr.TabIndex = 9;
+            this.tabCtr.Text = "CTR models";
+            this.tabCtr.UseVisualStyleBackColor = true;
+            // 
+            // tabLev
+            // 
+            this.tabLev.Controls.Add(this.levControl1);
+            this.tabLev.Location = new System.Drawing.Point(4, 22);
+            this.tabLev.Margin = new System.Windows.Forms.Padding(5);
+            this.tabLev.Name = "tabLev";
+            this.tabLev.Padding = new System.Windows.Forms.Padding(5);
+            this.tabLev.Size = new System.Drawing.Size(603, 403);
+            this.tabLev.TabIndex = 0;
+            this.tabLev.Text = "LEV scenes";
+            this.tabLev.UseVisualStyleBackColor = true;
+            // 
+            // tabHowl
+            // 
+            this.tabHowl.Controls.Add(this.howlControl1);
+            this.tabHowl.Location = new System.Drawing.Point(4, 22);
+            this.tabHowl.Name = "tabHowl";
+            this.tabHowl.Size = new System.Drawing.Size(603, 403);
+            this.tabHowl.TabIndex = 11;
+            this.tabHowl.Text = "HOWL sound";
+            this.tabHowl.UseVisualStyleBackColor = true;
+            // 
+            // tabCseq
+            // 
+            this.tabCseq.Controls.Add(this.cseqControl1);
+            this.tabCseq.Location = new System.Drawing.Point(4, 22);
+            this.tabCseq.Name = "tabCseq";
+            this.tabCseq.Size = new System.Drawing.Size(603, 403);
+            this.tabCseq.TabIndex = 10;
+            this.tabCseq.Text = "CSEQ music";
+            this.tabCseq.UseVisualStyleBackColor = true;
+            // 
+            // tabLang
+            // 
+            this.tabLang.Controls.Add(this.langControl1);
+            this.tabLang.Location = new System.Drawing.Point(4, 22);
+            this.tabLang.Name = "tabLang";
+            this.tabLang.Size = new System.Drawing.Size(603, 403);
+            this.tabLang.TabIndex = 12;
+            this.tabLang.Text = "LNG text";
+            this.tabLang.UseVisualStyleBackColor = true;
+            // 
+            // tabEmu
+            // 
+            this.tabEmu.Controls.Add(this.emuControl1);
+            this.tabEmu.Location = new System.Drawing.Point(4, 22);
+            this.tabEmu.Name = "tabEmu";
+            this.tabEmu.Size = new System.Drawing.Size(603, 403);
+            this.tabEmu.TabIndex = 6;
+            this.tabEmu.Text = "ePSXe";
+            this.tabEmu.UseVisualStyleBackColor = true;
+            // 
+            // bigFileControl1
+            // 
+            this.bigFileControl1.AllowDrop = true;
+            this.bigFileControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bigFileControl1.Location = new System.Drawing.Point(0, 0);
+            this.bigFileControl1.MinimumSize = new System.Drawing.Size(488, 223);
+            this.bigFileControl1.Name = "bigFileControl1";
+            this.bigFileControl1.Size = new System.Drawing.Size(603, 403);
+            this.bigFileControl1.TabIndex = 0;
+            // 
+            // ctrToolsVramControl1
+            // 
+            this.ctrToolsVramControl1.AllowDrop = true;
+            this.ctrToolsVramControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctrToolsVramControl1.Location = new System.Drawing.Point(0, 0);
+            this.ctrToolsVramControl1.MinimumSize = new System.Drawing.Size(461, 218);
+            this.ctrToolsVramControl1.Name = "ctrToolsVramControl1";
+            this.ctrToolsVramControl1.Size = new System.Drawing.Size(603, 403);
+            this.ctrToolsVramControl1.TabIndex = 0;
+            // 
+            // ctrControl1
+            // 
+            this.ctrControl1.AllowDrop = true;
+            this.ctrControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctrControl1.Location = new System.Drawing.Point(3, 3);
+            this.ctrControl1.MinimumSize = new System.Drawing.Size(488, 223);
+            this.ctrControl1.Name = "ctrControl1";
+            this.ctrControl1.Size = new System.Drawing.Size(597, 397);
+            this.ctrControl1.TabIndex = 0;
+            // 
+            // levControl1
+            // 
+            this.levControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.levControl1.Location = new System.Drawing.Point(5, 5);
+            this.levControl1.Name = "levControl1";
+            this.levControl1.Size = new System.Drawing.Size(593, 393);
+            this.levControl1.TabIndex = 0;
+            // 
             // howlControl1
             // 
+            this.howlControl1.AllowDrop = true;
             this.howlControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.howlControl1.Location = new System.Drawing.Point(0, 0);
             this.howlControl1.Name = "howlControl1";
             this.howlControl1.Size = new System.Drawing.Size(603, 403);
             this.howlControl1.TabIndex = 0;
+            // 
+            // cseqControl1
+            // 
+            this.cseqControl1.AllowDrop = true;
+            this.cseqControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cseqControl1.Location = new System.Drawing.Point(0, 0);
+            this.cseqControl1.Name = "cseqControl1";
+            this.cseqControl1.Size = new System.Drawing.Size(603, 403);
+            this.cseqControl1.TabIndex = 11;
+            // 
+            // langControl1
+            // 
+            this.langControl1.AllowDrop = true;
+            this.langControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.langControl1.Location = new System.Drawing.Point(0, 0);
+            this.langControl1.Name = "langControl1";
+            this.langControl1.Size = new System.Drawing.Size(603, 403);
+            this.langControl1.TabIndex = 0;
+            // 
+            // emuControl1
+            // 
+            this.emuControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.emuControl1.Location = new System.Drawing.Point(0, 0);
+            this.emuControl1.Name = "emuControl1";
+            this.emuControl1.Size = new System.Drawing.Size(603, 403);
+            this.emuControl1.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -307,16 +331,17 @@
             this.tabControl1.ResumeLayout(false);
             this.tabAbout.ResumeLayout(false);
             this.tabAbout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.appLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.discordLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).EndInit();
             this.tabBig.ResumeLayout(false);
             this.tabVram.ResumeLayout(false);
             this.tabCtr.ResumeLayout(false);
             this.tabLev.ResumeLayout(false);
-            this.tabCseq.ResumeLayout(false);
-            this.tabEmu.ResumeLayout(false);
             this.tabHowl.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.appLogo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.discordLogo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).EndInit();
+            this.tabCseq.ResumeLayout(false);
+            this.tabLang.ResumeLayout(false);
+            this.tabEmu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -343,6 +368,8 @@
         private Controls.EmuControl emuControl1;
         private System.Windows.Forms.TabPage tabHowl;
         private Controls.HowlControl howlControl1;
+        private System.Windows.Forms.TabPage tabLang;
+        private Controls.LangControl langControl1;
     }
 }
 
