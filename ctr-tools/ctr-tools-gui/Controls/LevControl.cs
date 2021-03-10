@@ -592,7 +592,7 @@ namespace CTRTools
                 {
                     try
                     {
-                        LNG lng = new LNG(ofd1.FileName);
+                        LNG lng = LNG.FromFile(ofd1.FileName);
 
                         using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(ofd2.FileName)))
                         {
@@ -605,7 +605,7 @@ namespace CTRTools
 
                             foreach (LevelSlot s in slots)
                             {
-                                textBox2.Text += s.ToString() + lng.entries[s.title_index] + "\r\n";
+                                textBox2.Text += s.ToString() + lng.Entries[s.title_index] + "\r\n";
                             }
                         }
                     }

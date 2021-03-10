@@ -1,6 +1,7 @@
 ﻿using CTRFramework.Lang;
 using CTRFramework.Shared;
 using System;
+using System.IO;
 
 namespace lng2txt
 {
@@ -8,6 +9,8 @@ namespace lng2txt
     {
         static void Main(string[] args)
         {
+            LNG lng;
+
             Console.WriteLine(
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 $"CTR-Tools: lng2txt - {Meta.GetSignature()}",
@@ -25,8 +28,42 @@ namespace lng2txt
                 return;
             }
 
-            LNG lng = new LNG(args[0]);
-            Console.WriteLine("Done!");
+            Console.WriteLine("Current path: " + Environment.CurrentDirectory);
+
+            foreach (string filename in args)
+            {
+                if (File.Exists(filename))
+                {
+                    string ext = Path.GetExtension(filename).ToLower();
+
+                    try
+                    {
+                        switch (ext)
+                        {
+                            case ".lng":
+                                lng = LNG.FromFile(filename);
+                                lng.Export(Path.ChangeExtension(filename, "txt"));
+                                continue;
+
+                            case ".txt":
+                                lng = LNG.FromText(filename);
+                                lng.Save(Path.ChangeExtension(filename, "lng"));
+                                continue;
+
+                            default:
+                                Console.WriteLine("Unsupported file.");
+                                continue;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                        continue;
+                    }
+                }
+            }
+            
+            Console.WriteLine("Done.");
         }
     }
 }

@@ -156,7 +156,7 @@ namespace CTRTools.Controls
                     try
                     {
                         File.WriteAllBytes("temp.lng", cf.Data);
-                        LNG lng = new LNG("temp.lng");
+                        LNG lng = LNG.FromFile("temp.lng");
                         textBox4.Text = File.ReadAllText("temp.txt");
                         File.Delete("temp.txt");
                         File.Delete("temp.lng");
