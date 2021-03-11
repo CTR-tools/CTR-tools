@@ -113,6 +113,26 @@ namespace CTRFramework.Shared
             return bb;
         }
 
+
+        public BoundingBox GetBB(List<Vertex> vertices)
+        {
+            BoundingBox bb_new = new BoundingBox();
+
+            foreach (var v in vertices)
+            {
+                if (v.coord.X < bb_new.Min.X) bb_new.Min.X = v.coord.X;
+                if (v.coord.X > bb_new.Max.X) bb_new.Max.X = v.coord.X;
+
+                if (v.coord.Y < bb_new.Min.Y) bb_new.Min.Y = v.coord.Y;
+                if (v.coord.Y > bb_new.Max.Y) bb_new.Max.Y = v.coord.Y;
+
+                if (v.coord.Z < bb_new.Min.Z) bb_new.Min.Z = v.coord.Z;
+                if (v.coord.Z > bb_new.Max.Z) bb_new.Max.Z = v.coord.Z;
+            }
+
+            return bb_new;
+        }
+
         /*
         public int Max(int x, int y, int z)
         {

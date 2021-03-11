@@ -62,7 +62,7 @@ namespace lng2txt
                     }
                 }
             }
-            
+
             Console.WriteLine("Done.");
         }
     }

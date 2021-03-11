@@ -29,7 +29,5 @@ namespace CTRFramework.Sound.CSeq
         {
             return String.Format("size: {0}\r\nlongCnt: {1}\r\nshortCnt: {2}\r\nseqCnt: {3}\r\n", size, longCnt, shortCnt, seqCnt);
         }
-
-
     }
 }

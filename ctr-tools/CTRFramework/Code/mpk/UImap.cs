@@ -2,7 +2,6 @@
 using CTRFramework.Vram;
 using System.Collections.Generic;
 using System.IO;
-using System;
 
 namespace CTRFramework
 {

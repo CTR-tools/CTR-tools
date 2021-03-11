@@ -62,8 +62,11 @@ namespace CTRFramework.Lang
         {
             LNG lng = new LNG();
             lng.Entries = lines.ToList();
+
+            //trim every string to avoid extra spaces.
             foreach (var entry in lng.Entries)
                 entry.Trim();
+
             return lng;
         }
 

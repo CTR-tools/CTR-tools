@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -399,7 +400,7 @@ namespace CTRFramework
         /// <param name="name">Model name.</param>
         /// <param name="vertices">Vertex array.</param>
         /// <param name="colors">Color array.</param>
-        /// <param name="faces">Face index array.</param>
+        /// <param name="faces">Face indices array.</param>
         /// <returns>CtrHeader object.</returns>
         public static CtrHeader FromRawData(string name, List<Vector3f> vertices, List<Vector4b> colors, List<Vector3i> faces)
         {
@@ -407,6 +408,19 @@ namespace CTRFramework
             model.name = name + "_hi";
             model.lodDistance = -1;
 
+            List<Vector4b> cc = new List<Vector4b>();
+
+            foreach (var c in colors)
+            {
+                System.Drawing.Color cl = Tim.Convert16(Tim.ConvertTo16(System.Drawing.Color.FromArgb(c.W, c.Z, c.Y, c.X)), false);
+
+                if (cl.R == 255 && cl.G == 0 && cl.B == 255)
+                    cl = System.Drawing.Color.Black;
+
+                cc.Add(new Vector4b(cl.R, cl.G, cl.B, 0));
+            }
+
+            colors = cc;
 
             //get distinct values from input lists
             List<Vector3f> dVerts = new List<Vector3f>();
@@ -452,18 +466,19 @@ namespace CTRFramework
             if (vfaces.Count == 0) vfaces = faces;
             if (cfaces.Count == 0) cfaces = faces;
 
+            int clutlimit = 128;
 
             //check for clut overflow
-            if (dColors.Count > 127)
+            if (dColors.Count > clutlimit)
             {
-                Helpers.Panic("CtrHeader", "More than 127 distinct colors! Truncating...");
-                dColors = dColors.GetRange(0, 128);
+                Helpers.Panic("CtrHeader", "More than 128 distinct colors! Truncating...");
+                dColors = dColors.GetRange(0, clutlimit);
 
                 foreach (var x in cfaces)
                 {
-                    if (x.X > 127) x.X = 0;
-                    if (x.Y > 127) x.Y = 0;
-                    if (x.Z > 127) x.Z = 0;
+                    if (x.X >= clutlimit) x.X = 0;
+                    if (x.Y >= clutlimit) x.Y = 0;
+                    if (x.Z >= clutlimit) x.Z = 0;
                 }
             }
 
@@ -533,7 +548,7 @@ namespace CTRFramework
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].X,
                     stackIndex = 87,
-                    flags = CtrDrawFlags.s | CtrDrawFlags.d | CtrDrawFlags.k
+                    flags = CtrDrawFlags.s | CtrDrawFlags.d //| CtrDrawFlags.k
                 };
 
                 cmd[1] = new CtrDraw()
@@ -541,7 +556,7 @@ namespace CTRFramework
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].Z,
                     stackIndex = 88,
-                    flags = CtrDrawFlags.d | CtrDrawFlags.k
+                    flags = CtrDrawFlags.d //| CtrDrawFlags.k
                 };
 
                 cmd[2] = new CtrDraw()
@@ -549,7 +564,7 @@ namespace CTRFramework
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].Y,
                     stackIndex = 89,
-                    flags = CtrDrawFlags.d | CtrDrawFlags.k
+                    flags = CtrDrawFlags.d //| CtrDrawFlags.k
                 };
 
                 newlist.Add(model.vtx[vfaces[i].X]);

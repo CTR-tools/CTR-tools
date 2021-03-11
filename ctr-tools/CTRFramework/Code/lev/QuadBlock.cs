@@ -210,22 +210,6 @@ namespace CTRFramework
             br.BaseStream.Position = texpos;
         }
 
-        public void RecalcBB(List<Vertex> vert)
-        {
-            BoundingBox bb_new = new BoundingBox();
-
-            foreach (int i in ind)
-            {
-                if (vert[i].coord.X < bb_new.Min.X) bb_new.Min.X = vert[i].coord.X;
-                if (vert[i].coord.X > bb_new.Max.X) bb_new.Max.X = vert[i].coord.X;
-
-                if (vert[i].coord.Y < bb_new.Min.Y) bb_new.Min.Y = vert[i].coord.Y;
-                if (vert[i].coord.Y > bb_new.Max.Y) bb_new.Max.Y = vert[i].coord.Y;
-
-                if (vert[i].coord.Z < bb_new.Min.Z) bb_new.Min.Z = vert[i].coord.Z;
-                if (vert[i].coord.Z > bb_new.Max.Z) bb_new.Max.Z = vert[i].coord.Z;
-            }
-        }
 
         //magic array of indices, each line contains 2 quads
         int[] inds = new int[]

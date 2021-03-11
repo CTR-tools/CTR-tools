@@ -66,7 +66,7 @@ namespace CTRFramework.Sound
         public int Frequency
         {
             //cents needed?
-            get { return (int)Math.Round(pitch / 4096.0f * 44100.0f ); }
+            get { return (int)Math.Round(pitch / 4096.0f * 44100.0f); }
         }
 
         public SampleDef()

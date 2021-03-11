@@ -28,12 +28,12 @@ namespace CTRFramework.Sound.CSeq
 
         public string path;
         public string name;
-        public CHeader header;
-        public List<Instrument> longSamples;
-        public List<Instrument> shortSamples;
-        public List<Sequence> sequences;
+        public CHeader header = new CHeader();
+        public List<Instrument> longSamples = new List<Instrument>();
+        public List<Instrument> shortSamples = new List<Instrument>();
+        public List<Sequence> sequences = new List<Sequence>();
 
-        public Bank bank;
+        public Bank bank = new Bank();
 
         #endregion
 
@@ -42,7 +42,6 @@ namespace CTRFramework.Sound.CSeq
         /// <summary>Empty CSEQ constructor.</summary>
         public CSEQ()
         {
-            Init();
         }
 
         /// <summary>CSEQ constructor.</summary>
@@ -58,21 +57,6 @@ namespace CTRFramework.Sound.CSeq
         }
 
         #endregion
-
-        #region [Private methods]
-
-        /// <summary>Initializes CSEQ properties.</summary>
-        private void Init()
-        {
-            header = new CHeader();
-            longSamples = new List<Instrument>();
-            shortSamples = new List<Instrument>();
-            sequences = new List<Sequence>();
-            bank = new Bank();
-        }
-
-        #endregion
-
 
 
         /// <summary>Reads CSEQ from the file path given.</summary>
@@ -92,12 +76,13 @@ namespace CTRFramework.Sound.CSeq
 
         public bool Read(BinaryReaderEx br)
         {
-            Init();
-
             header.Read(br);
 
-            if (header.size != br.BaseStream.Length)
-                return false;
+            //if we read from howl, it never equals
+            //if (header.size != br.BaseStream.Length)
+            //{
+            //    return false;
+            //}
 
             long pos = br.BaseStream.Position;
 
@@ -202,18 +187,19 @@ namespace CTRFramework.Sound.CSeq
         /// <param name="fileName">Target file name.</param>
         public void Export(string fileName)
         {
-            Helpers.CheckFolder(fileName);
+            Helpers.CheckFolder(Path.GetDirectoryName(fileName));
 
             using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(fileName)))
             {
                 header.Write(bw);
+
+                //System.Windows.Forms.MessageBox.Show(longSamples.Count + " " + shortSamples.Count);
 
                 foreach (Instrument ls in longSamples)
                     ls.Write(bw);
 
                 foreach (Instrument ss in shortSamples)
                     ss.Write(bw);
-
 
                 long offsetsarraypos = bw.BaseStream.Position;
 
@@ -244,9 +230,6 @@ namespace CTRFramework.Sound.CSeq
 
                 bw.BaseStream.Position = 0;
                 bw.Write((int)bw.BaseStream.Length);
-
-                bw.Close();
-
             }
         }
 

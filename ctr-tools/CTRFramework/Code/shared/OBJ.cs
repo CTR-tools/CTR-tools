@@ -77,7 +77,7 @@ namespace CTRFramework
             }
 
             if (words[0] == "g")
-            { 
+            {
                 Console.WriteLine("group name: " + line);
                 return;
             }
@@ -115,7 +115,7 @@ namespace CTRFramework
                             Single.TryParse(words[i + 3 + 1], out color[i]);
 
                         //assume color between 0..1 is float and multiply by 255
-                        if ((color[0] > 1 ||  color[1] > 1 || color[2] > 1))
+                        if ((color[0] > 1 || color[1] > 1 || color[2] > 1))
                         {
                             color[0] /= 255;
                             color[1] /= 255;
