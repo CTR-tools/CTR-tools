@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using CTRFramework.Lang;
+using System;
 using System.IO;
-using CTRFramework.Lang;
+using System.Windows.Forms;
 
 namespace CTRTools.Controls
 {
@@ -27,7 +27,7 @@ namespace CTRTools.Controls
 
         private void langBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.A) 
+            if (e.Control && e.KeyCode == Keys.A)
                 langBox.SelectAll();
         }
 

@@ -1,17 +1,18 @@
-﻿
+﻿using System.Windows.Forms;
+
 namespace CTRTools.Controls
 {
     partial class HowlControl
     {
         /// <summary> 
-        /// Обязательная переменная конструктора.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary> 
-        /// Освободить все используемые ресурсы.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -21,11 +22,11 @@ namespace CTRTools.Controls
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором компонентов
+        #region Component Designer generated code
 
         /// <summary> 
-        /// Требуемый метод для поддержки конструктора — не изменяйте 
-        /// содержимое этого метода с помощью редактора кода.
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -99,11 +100,11 @@ namespace CTRTools.Controls
 
         #endregion
 
-        private System.Windows.Forms.Button actionLoad;
-        private System.Windows.Forms.Button actionExport;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.FolderBrowserDialog fbd;
-        private System.Windows.Forms.OpenFileDialog ofd;
+        private Button actionLoad;
+        private Button actionExport;
+        private Label label1;
+        private Label label2;
+        private FolderBrowserDialog fbd;
+        private OpenFileDialog ofd;
     }
 }

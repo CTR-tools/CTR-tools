@@ -1,19 +1,18 @@
-﻿
+﻿using System.Windows.Forms;
 
-namespace cseq
+namespace CTRTools.Controls
 {
-
     partial class CseqControl
     {
-        /// <summary>
-        /// Требуется переменная конструктора.
+        /// <summary> 
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Освободить все используемые ресурсы.
+        /// <summary> 
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -23,11 +22,11 @@ namespace cseq
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором форм Windows
+        #region Component Designer generated code
 
-        /// <summary>
-        /// Обязательный метод для поддержки конструктора - не изменяйте
-        /// содержимое данного метода при помощи редактора кода.
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -545,49 +544,49 @@ namespace cseq
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.ListBox trackBox;
-        private System.Windows.Forms.ListBox sequenceBox;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exportSEQToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loadBankToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tutorialToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem defaultSampleRateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem patchMIDIInstrumentsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem testJsonToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exportSamplesToolStripMenuItem;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.ToolStripMenuItem ignoreOriginalVolumeToolStripMenuItem;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
-        private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.ToolStripMenuItem copyInstrumentVolumeToTracksToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem alistAlBankSamplesToolStripMenuItem;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.ToolStripMenuItem reloadMIDIMappingsToolStripMenuItem;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ListBox listBox2;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem openToolStripMenuItem;
+        private GroupBox groupBox1;
+        private TextBox textBox2;
+        private ToolStripMenuItem exitToolStripMenuItem;
+        private ListBox trackBox;
+        private ListBox sequenceBox;
+        private TabControl tabControl1;
+        private TabPage tabPage1;
+        private TextBox textBox1;
+        private TabPage tabPage2;
+        private ToolStripMenuItem optionsToolStripMenuItem;
+        private ToolStripMenuItem exportSEQToolStripMenuItem;
+        private ToolStripMenuItem loadBankToolStripMenuItem;
+        private ToolStripMenuItem helpToolStripMenuItem;
+        private ToolStripMenuItem tutorialToolStripMenuItem;
+        private ToolStripMenuItem defaultSampleRateToolStripMenuItem;
+        private ToolStripMenuItem toolStripMenuItem2;
+        private ToolStripMenuItem toolStripMenuItem3;
+        private ToolStripMenuItem toolStripMenuItem4;
+        private ToolStripMenuItem toolStripMenuItem5;
+        private ToolStripMenuItem patchMIDIInstrumentsToolStripMenuItem;
+        private ToolStripSeparator toolStripMenuItem6;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem testJsonToolStripMenuItem;
+        private ToolStripMenuItem exportSamplesToolStripMenuItem;
+        private ComboBox comboBox1;
+        private ToolStripMenuItem ignoreOriginalVolumeToolStripMenuItem;
+        private PropertyGrid propertyGrid1;
+        private TreeView treeView1;
+        private ToolStripMenuItem copyInstrumentVolumeToTracksToolStripMenuItem;
+        private ToolStripMenuItem alistAlBankSamplesToolStripMenuItem;
+        private TabPage tabPage3;
+        private TextBox textBox3;
+        private ListBox listBox1;
+        private ToolStripMenuItem reloadMIDIMappingsToolStripMenuItem;
+        private TabPage tabPage4;
+        private Button button4;
+        private Button button3;
+        private Button button2;
+        private Button button1;
+        private ListBox listBox2;
     }
 }
 

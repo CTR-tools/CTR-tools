@@ -7,7 +7,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace cseq
+namespace CTRTools.Controls
 {
     public partial class CseqControl : UserControl
     {

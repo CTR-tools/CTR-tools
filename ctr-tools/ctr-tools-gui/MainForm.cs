@@ -80,5 +80,10 @@ namespace CTRTools
         {
             Process.Start("https://discord.gg/56xm9Aj");
         }
+
+        private void levControl1_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

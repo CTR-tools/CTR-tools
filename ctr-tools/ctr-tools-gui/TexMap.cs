@@ -12,10 +12,12 @@ namespace CTRTools
         public TexMap()
         {
         }
+
         public TexMap(BinaryReaderEx br)
         {
             Read(br);
         }
+
         public void Read(BinaryReaderEx br)
         {
             name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Split('\0')[0];

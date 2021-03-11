@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 
-
 namespace CTRTools.Controls
 {
     public partial class CtrControl : UserControl

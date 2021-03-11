@@ -1,17 +1,18 @@
-﻿
+﻿using System.Windows.Forms;
+
 namespace CTRTools.Controls
 {
     partial class BigFileControl
     {
         /// <summary> 
-        /// Обязательная переменная конструктора.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary> 
-        /// Освободить все используемые ресурсы.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -21,11 +22,11 @@ namespace CTRTools.Controls
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором компонентов
+        #region Component Designer generated code
 
         /// <summary> 
-        /// Требуемый метод для поддержки конструктора — не изменяйте 
-        /// содержимое этого метода с помощью редактора кода.
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -150,13 +151,13 @@ namespace CTRTools.Controls
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TreeView treeView1;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.Button actionLoadBig;
-        private System.Windows.Forms.Button actionExportAll;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.OpenFileDialog ofd;
-        private System.Windows.Forms.FolderBrowserDialog fbd;
+        private GroupBox groupBox1;
+        private TreeView treeView1;
+        private TextBox textBox4;
+        private Button actionLoadBig;
+        private Button actionExportAll;
+        private SplitContainer splitContainer1;
+        private OpenFileDialog ofd;
+        private FolderBrowserDialog fbd;
     }
 }

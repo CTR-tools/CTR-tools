@@ -10,7 +10,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace CTRTools
+namespace CTRTools.Controls
 {
     public partial class LevControl : UserControl
     {
@@ -414,35 +414,6 @@ namespace CTRTools
             }
         }
 
-        private void button8_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CTR VRAM file|*.vrm";
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                Tim buf = CtrVrm.FromFile(ofd.FileName);
-
-                MessageBox.Show(buf.data.Length / 256 + "");
-
-                if (scn != null)
-                {
-                    Dictionary<string, TextureLayout> tex = scn.GetTexturesList();
-                    MessageBox.Show(tex.Count.ToString());
-
-                    foreach (TextureLayout tl in tex.Values)
-                    {
-                        //buf.GetTexturePage(tl, "");
-                    }
-                }
-
-                buf.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
-                //buf.palbmp.Save("palletes.png", System.Drawing.Imaging.ImageFormat.Png);
-
-                //Process.Start("palletes.png");
-            }
-        }
-
         private void button18_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -498,53 +469,10 @@ namespace CTRTools
 
         private void button30_Click(object sender, EventArgs e)
         {
-            Scene s = Scene.FromFile("test.lev");
-
-            s.ctrvram.SaveBMP("before.bmp", BMPHeader.GrayScalePalette(16));
-
-            s.ctrvram = new Tim(new Rectangle(0, 0, 1024, 512));
-
-            foreach (var t in s.GetTexturesList())
-            {
-                if (File.Exists("test\\" + t.Value.Tag() + ".tim"))
-                {
-                    try
-                    {
-                        s.ctrvram.DrawTim(Tim.FromFile("test\\" + t.Value.Tag() + ".tim"));
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                    }
-                }
-            }
-
-            s.ctrvram.SaveBMP("after.bmp", BMPHeader.GrayScalePalette(16));
-
-            MessageBox.Show("done");
         }
 
         private void button31_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-
-            if (fbd.ShowDialog() == DialogResult.OK)
-            {
-                string[] files = Directory.GetFiles(fbd.SelectedPath, "*.lev");
-
-                StringBuilder sb = new StringBuilder();
-
-                foreach (string str in files)
-                {
-                    using (Scene s = Scene.FromFile(str))
-                    {
-                        sb.AppendLine(Path.GetFileNameWithoutExtension(str) + "," + s.Statistics());
-                    }
-
-                }
-
-                Helpers.WriteToFile(fbd.SelectedPath + "\\stats.csv", sb.ToString());
-            }
         }
 
         private void button25_Click(object sender, EventArgs e)

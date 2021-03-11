@@ -3,14 +3,14 @@
     partial class MainForm
     {
         /// <summary>
-        /// Требуется переменная конструктора.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Освободить все используемые ресурсы.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -20,11 +20,11 @@
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором форм Windows
+        #region Windows Form Designer generated code
 
         /// <summary>
-        /// Обязательный метод для поддержки конструктора - не изменяйте
-        /// содержимое данного метода при помощи редактора кода.
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -36,20 +36,20 @@
             this.discordLogo = new System.Windows.Forms.PictureBox();
             this.githubLogo = new System.Windows.Forms.PictureBox();
             this.tabBig = new System.Windows.Forms.TabPage();
-            this.tabVram = new System.Windows.Forms.TabPage();
-            this.tabCtr = new System.Windows.Forms.TabPage();
-            this.tabLev = new System.Windows.Forms.TabPage();
-            this.tabHowl = new System.Windows.Forms.TabPage();
-            this.tabCseq = new System.Windows.Forms.TabPage();
-            this.tabLang = new System.Windows.Forms.TabPage();
-            this.tabEmu = new System.Windows.Forms.TabPage();
             this.bigFileControl1 = new CTRTools.Controls.BigFileControl();
-            this.ctrToolsVramControl1 = new CTRTools.VramControl();
+            this.tabVram = new System.Windows.Forms.TabPage();
+            this.ctrToolsVramControl1 = new CTRTools.Controls.VramControl();
+            this.tabCtr = new System.Windows.Forms.TabPage();
             this.ctrControl1 = new CTRTools.Controls.CtrControl();
-            this.levControl1 = new CTRTools.LevControl();
+            this.tabLev = new System.Windows.Forms.TabPage();
+            this.levControl1 = new CTRTools.Controls.LevControl();
+            this.tabHowl = new System.Windows.Forms.TabPage();
             this.howlControl1 = new CTRTools.Controls.HowlControl();
-            this.cseqControl1 = new cseq.CseqControl();
+            this.tabCseq = new System.Windows.Forms.TabPage();
+            this.cseqControl1 = new CTRTools.Controls.CseqControl();
+            this.tabLang = new System.Windows.Forms.TabPage();
             this.langControl1 = new CTRTools.Controls.LangControl();
+            this.tabEmu = new System.Windows.Forms.TabPage();
             this.emuControl1 = new CTRTools.Controls.EmuControl();
             this.tabControl1.SuspendLayout();
             this.tabAbout.SuspendLayout();
@@ -103,34 +103,35 @@
             // 
             // signLabel
             // 
-            this.signLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.signLabel.AutoSize = true;
+            this.signLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.signLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.signLabel.Location = new System.Drawing.Point(210, 308);
+            this.signLabel.Location = new System.Drawing.Point(3, 308);
             this.signLabel.Name = "signLabel";
-            this.signLabel.Size = new System.Drawing.Size(170, 24);
+            this.signLabel.Size = new System.Drawing.Size(597, 24);
             this.signLabel.TabIndex = 9;
             this.signLabel.Text = "Signature from DLL";
+            this.signLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelVersion
             // 
-            this.labelVersion.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.labelVersion.AutoSize = true;
+            this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.labelVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelVersion.Location = new System.Drawing.Point(128, 177);
+            this.labelVersion.Location = new System.Drawing.Point(3, 177);
             this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(251, 24);
+            this.labelVersion.Size = new System.Drawing.Size(597, 24);
             this.labelVersion.TabIndex = 6;
             this.labelVersion.Text = "Framework version from DLL";
+            this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // appLogo
             // 
-            this.appLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.appLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.appLogo.ErrorImage = null;
             this.appLogo.Image = global::CTRTools.Properties.Resources.ctr_tools_logo;
-            this.appLogo.Location = new System.Drawing.Point(122, 90);
+            this.appLogo.Location = new System.Drawing.Point(7, 90);
             this.appLogo.Name = "appLogo";
-            this.appLogo.Size = new System.Drawing.Size(365, 84);
+            this.appLogo.Size = new System.Drawing.Size(593, 84);
+            this.appLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.appLogo.TabIndex = 3;
             this.appLogo.TabStop = false;
             // 
@@ -170,6 +171,16 @@
             this.tabBig.Text = "BIG archive";
             this.tabBig.UseVisualStyleBackColor = true;
             // 
+            // bigFileControl1
+            // 
+            this.bigFileControl1.AllowDrop = true;
+            this.bigFileControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bigFileControl1.Location = new System.Drawing.Point(0, 0);
+            this.bigFileControl1.MinimumSize = new System.Drawing.Size(488, 223);
+            this.bigFileControl1.Name = "bigFileControl1";
+            this.bigFileControl1.Size = new System.Drawing.Size(603, 403);
+            this.bigFileControl1.TabIndex = 0;
+            // 
             // tabVram
             // 
             this.tabVram.Controls.Add(this.ctrToolsVramControl1);
@@ -179,6 +190,16 @@
             this.tabVram.TabIndex = 8;
             this.tabVram.Text = "VRAM textures";
             this.tabVram.UseVisualStyleBackColor = true;
+            // 
+            // ctrToolsVramControl1
+            // 
+            this.ctrToolsVramControl1.AllowDrop = true;
+            this.ctrToolsVramControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctrToolsVramControl1.Location = new System.Drawing.Point(0, 0);
+            this.ctrToolsVramControl1.MinimumSize = new System.Drawing.Size(461, 218);
+            this.ctrToolsVramControl1.Name = "ctrToolsVramControl1";
+            this.ctrToolsVramControl1.Size = new System.Drawing.Size(603, 403);
+            this.ctrToolsVramControl1.TabIndex = 0;
             // 
             // tabCtr
             // 
@@ -190,6 +211,16 @@
             this.tabCtr.TabIndex = 9;
             this.tabCtr.Text = "CTR models";
             this.tabCtr.UseVisualStyleBackColor = true;
+            // 
+            // ctrControl1
+            // 
+            this.ctrControl1.AllowDrop = true;
+            this.ctrControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ctrControl1.Location = new System.Drawing.Point(3, 3);
+            this.ctrControl1.MinimumSize = new System.Drawing.Size(488, 223);
+            this.ctrControl1.Name = "ctrControl1";
+            this.ctrControl1.Size = new System.Drawing.Size(597, 397);
+            this.ctrControl1.TabIndex = 0;
             // 
             // tabLev
             // 
@@ -203,6 +234,15 @@
             this.tabLev.Text = "LEV scenes";
             this.tabLev.UseVisualStyleBackColor = true;
             // 
+            // levControl1
+            // 
+            this.levControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.levControl1.Location = new System.Drawing.Point(5, 5);
+            this.levControl1.Name = "levControl1";
+            this.levControl1.Size = new System.Drawing.Size(593, 393);
+            this.levControl1.TabIndex = 0;
+            this.levControl1.Load += new System.EventHandler(this.levControl1_Load);
+            // 
             // tabHowl
             // 
             this.tabHowl.Controls.Add(this.howlControl1);
@@ -212,6 +252,15 @@
             this.tabHowl.TabIndex = 11;
             this.tabHowl.Text = "HOWL sound";
             this.tabHowl.UseVisualStyleBackColor = true;
+            // 
+            // howlControl1
+            // 
+            this.howlControl1.AllowDrop = true;
+            this.howlControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.howlControl1.Location = new System.Drawing.Point(0, 0);
+            this.howlControl1.Name = "howlControl1";
+            this.howlControl1.Size = new System.Drawing.Size(603, 403);
+            this.howlControl1.TabIndex = 0;
             // 
             // tabCseq
             // 
@@ -223,6 +272,15 @@
             this.tabCseq.Text = "CSEQ music";
             this.tabCseq.UseVisualStyleBackColor = true;
             // 
+            // cseqControl1
+            // 
+            this.cseqControl1.AllowDrop = true;
+            this.cseqControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cseqControl1.Location = new System.Drawing.Point(0, 0);
+            this.cseqControl1.Name = "cseqControl1";
+            this.cseqControl1.Size = new System.Drawing.Size(603, 403);
+            this.cseqControl1.TabIndex = 11;
+            // 
             // tabLang
             // 
             this.tabLang.Controls.Add(this.langControl1);
@@ -233,6 +291,15 @@
             this.tabLang.Text = "LNG text";
             this.tabLang.UseVisualStyleBackColor = true;
             // 
+            // langControl1
+            // 
+            this.langControl1.AllowDrop = true;
+            this.langControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.langControl1.Location = new System.Drawing.Point(0, 0);
+            this.langControl1.Name = "langControl1";
+            this.langControl1.Size = new System.Drawing.Size(603, 403);
+            this.langControl1.TabIndex = 0;
+            // 
             // tabEmu
             // 
             this.tabEmu.Controls.Add(this.emuControl1);
@@ -242,71 +309,6 @@
             this.tabEmu.TabIndex = 6;
             this.tabEmu.Text = "ePSXe";
             this.tabEmu.UseVisualStyleBackColor = true;
-            // 
-            // bigFileControl1
-            // 
-            this.bigFileControl1.AllowDrop = true;
-            this.bigFileControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bigFileControl1.Location = new System.Drawing.Point(0, 0);
-            this.bigFileControl1.MinimumSize = new System.Drawing.Size(488, 223);
-            this.bigFileControl1.Name = "bigFileControl1";
-            this.bigFileControl1.Size = new System.Drawing.Size(603, 403);
-            this.bigFileControl1.TabIndex = 0;
-            // 
-            // ctrToolsVramControl1
-            // 
-            this.ctrToolsVramControl1.AllowDrop = true;
-            this.ctrToolsVramControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctrToolsVramControl1.Location = new System.Drawing.Point(0, 0);
-            this.ctrToolsVramControl1.MinimumSize = new System.Drawing.Size(461, 218);
-            this.ctrToolsVramControl1.Name = "ctrToolsVramControl1";
-            this.ctrToolsVramControl1.Size = new System.Drawing.Size(603, 403);
-            this.ctrToolsVramControl1.TabIndex = 0;
-            // 
-            // ctrControl1
-            // 
-            this.ctrControl1.AllowDrop = true;
-            this.ctrControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctrControl1.Location = new System.Drawing.Point(3, 3);
-            this.ctrControl1.MinimumSize = new System.Drawing.Size(488, 223);
-            this.ctrControl1.Name = "ctrControl1";
-            this.ctrControl1.Size = new System.Drawing.Size(597, 397);
-            this.ctrControl1.TabIndex = 0;
-            // 
-            // levControl1
-            // 
-            this.levControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.levControl1.Location = new System.Drawing.Point(5, 5);
-            this.levControl1.Name = "levControl1";
-            this.levControl1.Size = new System.Drawing.Size(593, 393);
-            this.levControl1.TabIndex = 0;
-            // 
-            // howlControl1
-            // 
-            this.howlControl1.AllowDrop = true;
-            this.howlControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.howlControl1.Location = new System.Drawing.Point(0, 0);
-            this.howlControl1.Name = "howlControl1";
-            this.howlControl1.Size = new System.Drawing.Size(603, 403);
-            this.howlControl1.TabIndex = 0;
-            // 
-            // cseqControl1
-            // 
-            this.cseqControl1.AllowDrop = true;
-            this.cseqControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cseqControl1.Location = new System.Drawing.Point(0, 0);
-            this.cseqControl1.Name = "cseqControl1";
-            this.cseqControl1.Size = new System.Drawing.Size(603, 403);
-            this.cseqControl1.TabIndex = 11;
-            // 
-            // langControl1
-            // 
-            this.langControl1.AllowDrop = true;
-            this.langControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.langControl1.Location = new System.Drawing.Point(0, 0);
-            this.langControl1.Name = "langControl1";
-            this.langControl1.Size = new System.Drawing.Size(603, 403);
-            this.langControl1.TabIndex = 0;
             // 
             // emuControl1
             // 
@@ -330,7 +332,6 @@
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
             this.tabControl1.ResumeLayout(false);
             this.tabAbout.ResumeLayout(false);
-            this.tabAbout.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.discordLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.githubLogo)).EndInit();
@@ -345,31 +346,33 @@
             this.ResumeLayout(false);
 
         }
-
         #endregion
+
+        private System.Windows.Forms.PictureBox appLogo;
+        private System.Windows.Forms.PictureBox discordLogo;
+        private System.Windows.Forms.PictureBox githubLogo;
+
+        private System.Windows.Forms.Label labelVersion;
+        private System.Windows.Forms.Label signLabel;
+
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabLev;
         private System.Windows.Forms.TabPage tabBig;
         private System.Windows.Forms.TabPage tabEmu;
         private System.Windows.Forms.TabPage tabAbout;
-        private System.Windows.Forms.PictureBox discordLogo;
-        private System.Windows.Forms.PictureBox githubLogo;
-        private System.Windows.Forms.PictureBox appLogo;
-        private System.Windows.Forms.Label labelVersion;
-        private System.Windows.Forms.Label signLabel;
         private System.Windows.Forms.TabPage tabVram;
-        private VramControl ctrToolsVramControl1;
-        private Controls.BigFileControl bigFileControl1;
-        private LevControl levControl1;
         private System.Windows.Forms.TabPage tabCtr;
-        private Controls.CtrControl ctrControl1;
         private System.Windows.Forms.TabPage tabCseq;
-        private cseq.CseqControl cseqControl1;
-        private Controls.EmuControl emuControl1;
         private System.Windows.Forms.TabPage tabHowl;
-        private Controls.HowlControl howlControl1;
         private System.Windows.Forms.TabPage tabLang;
+
+        private Controls.VramControl ctrToolsVramControl1;
+        private Controls.BigFileControl bigFileControl1;
+        private Controls.LevControl levControl1;
+        private Controls.CtrControl ctrControl1;
+        private Controls.CseqControl cseqControl1;
+        private Controls.EmuControl emuControl1;
+        private Controls.HowlControl howlControl1;
         private Controls.LangControl langControl1;
     }
 }
-

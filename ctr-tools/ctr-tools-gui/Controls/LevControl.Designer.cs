@@ -1,17 +1,18 @@
-﻿
-namespace CTRTools
+﻿using System.Windows.Forms;
+
+namespace CTRTools.Controls
 {
     partial class LevControl
     {
         /// <summary> 
-        /// Обязательная переменная конструктора.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary> 
-        /// Освободить все используемые ресурсы.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -21,11 +22,11 @@ namespace CTRTools
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором компонентов
+        #region Component Designer generated code
 
         /// <summary> 
-        /// Требуемый метод для поддержки конструктора — не изменяйте 
-        /// содержимое этого метода с помощью редактора кода.
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -63,15 +64,10 @@ namespace CTRTools
             this.button9 = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabVramz = new System.Windows.Forms.TabPage();
-            this.button31 = new System.Windows.Forms.Button();
-            this.button30 = new System.Windows.Forms.Button();
-            this.button29 = new System.Windows.Forms.Button();
-            this.button23 = new System.Windows.Forms.Button();
+            this.tabVisData = new System.Windows.Forms.TabPage();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.button19 = new System.Windows.Forms.Button();
             this.button18 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.tabVisData = new System.Windows.Forms.TabPage();
             this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
             this.button28 = new System.Windows.Forms.Button();
             this.button27 = new System.Windows.Forms.Button();
@@ -84,7 +80,6 @@ namespace CTRTools
             this.tabVertexs.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabQuadz.SuspendLayout();
-            this.tabVramz.SuspendLayout();
             this.tabVisData.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -462,14 +457,6 @@ namespace CTRTools
             // 
             // tabVramz
             // 
-            this.tabVramz.Controls.Add(this.button31);
-            this.tabVramz.Controls.Add(this.button30);
-            this.tabVramz.Controls.Add(this.button29);
-            this.tabVramz.Controls.Add(this.button23);
-            this.tabVramz.Controls.Add(this.textBox2);
-            this.tabVramz.Controls.Add(this.button19);
-            this.tabVramz.Controls.Add(this.button18);
-            this.tabVramz.Controls.Add(this.button8);
             this.tabVramz.Location = new System.Drawing.Point(4, 22);
             this.tabVramz.Name = "tabVramz";
             this.tabVramz.Size = new System.Drawing.Size(626, 416);
@@ -477,88 +464,11 @@ namespace CTRTools
             this.tabVramz.Text = "VRAM";
             this.tabVramz.UseVisualStyleBackColor = true;
             // 
-            // button31
-            // 
-            this.button31.Location = new System.Drawing.Point(3, 234);
-            this.button31.Name = "button31";
-            this.button31.Size = new System.Drawing.Size(75, 23);
-            this.button31.TabIndex = 27;
-            this.button31.Text = "button31";
-            this.button31.UseVisualStyleBackColor = true;
-            this.button31.Click += new System.EventHandler(this.button31_Click);
-            // 
-            // button30
-            // 
-            this.button30.Location = new System.Drawing.Point(3, 205);
-            this.button30.Name = "button30";
-            this.button30.Size = new System.Drawing.Size(75, 23);
-            this.button30.TabIndex = 26;
-            this.button30.Text = "button30";
-            this.button30.UseVisualStyleBackColor = true;
-            this.button30.Click += new System.EventHandler(this.button30_Click);
-            // 
-            // button29
-            // 
-            this.button29.Location = new System.Drawing.Point(3, 176);
-            this.button29.Name = "button29";
-            this.button29.Size = new System.Drawing.Size(75, 23);
-            this.button29.TabIndex = 25;
-            this.button29.Text = "button29";
-            this.button29.UseVisualStyleBackColor = true;
-            // 
-            // button23
-            // 
-            this.button23.Location = new System.Drawing.Point(3, 106);
-            this.button23.Name = "button23";
-            this.button23.Size = new System.Drawing.Size(117, 23);
-            this.button23.TabIndex = 24;
-            this.button23.Text = "export mpk textures";
-            this.button23.UseVisualStyleBackColor = true;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(131, 5);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox2.Size = new System.Drawing.Size(511, 440);
-            this.textBox2.TabIndex = 23;
-            // 
-            // button19
-            // 
-            this.button19.Location = new System.Drawing.Point(3, 77);
-            this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(117, 23);
-            this.button19.TabIndex = 22;
-            this.button19.Text = "Load LNG and EXE";
-            this.button19.UseVisualStyleBackColor = true;
-            this.button19.Click += new System.EventHandler(this.button19_Click);
-            // 
-            // button18
-            // 
-            this.button18.Location = new System.Drawing.Point(3, 32);
-            this.button18.Name = "button18";
-            this.button18.Size = new System.Drawing.Size(117, 39);
-            this.button18.TabIndex = 21;
-            this.button18.Text = "export UI textures (requires ui_map file)";
-            this.button18.UseVisualStyleBackColor = true;
-            this.button18.Click += new System.EventHandler(this.button18_Click);
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(3, 3);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(117, 23);
-            this.button8.TabIndex = 20;
-            this.button8.Text = "convert vram";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
             // tabVisData
             // 
+            this.tabVisData.Controls.Add(this.textBox2);
+            this.tabVisData.Controls.Add(this.button19);
+            this.tabVisData.Controls.Add(this.button18);
             this.tabVisData.Controls.Add(this.checkedListBox2);
             this.tabVisData.Controls.Add(this.button28);
             this.tabVisData.Location = new System.Drawing.Point(4, 22);
@@ -567,6 +477,32 @@ namespace CTRTools
             this.tabVisData.TabIndex = 4;
             this.tabVisData.Text = "VisData";
             this.tabVisData.UseVisualStyleBackColor = true;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(129, 61);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(494, 352);
+            this.textBox2.TabIndex = 32;
+            // 
+            // button19
+            // 
+            this.button19.Location = new System.Drawing.Point(506, 32);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(117, 23);
+            this.button19.TabIndex = 31;
+            this.button19.Text = "Load LNG and EXE";
+            this.button19.UseVisualStyleBackColor = true;
+            // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(506, 3);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(117, 23);
+            this.button18.TabIndex = 30;
+            this.button18.Text = "export font";
+            this.button18.UseVisualStyleBackColor = true;
             // 
             // checkedListBox2
             // 
@@ -643,82 +579,76 @@ namespace CTRTools
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabQuadz.ResumeLayout(false);
-            this.tabVramz.ResumeLayout(false);
-            this.tabVramz.PerformLayout();
             this.tabVisData.ResumeLayout(false);
+            this.tabVisData.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button actionPack;
-        private System.Windows.Forms.Button actionExtract;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TextBox pathFile;
-        private System.Windows.Forms.TextBox pathFolder;
-        private System.Windows.Forms.Button actionBrowseFile;
-        private System.Windows.Forms.Button actionBrowseFolder;
-        private System.Windows.Forms.Button actionOpenFolder;
-        private System.Windows.Forms.CheckBox optionTexMed;
-        private System.Windows.Forms.CheckBox optionTexLow;
-        private System.Windows.Forms.CheckBox optionDebugVram;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.CheckBox optionTexHigh;
-        private System.Windows.Forms.Button actionRestore;
-        private System.Windows.Forms.TabControl tabControl2;
-        private System.Windows.Forms.TabPage tabPickups;
-        private System.Windows.Forms.Button button21;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TrackBar trackBar1;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
-        private System.Windows.Forms.TabPage tabVertexs;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button22;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TabPage tabQuadz;
-        private System.Windows.Forms.Button button25;
-        private System.Windows.Forms.Button button20;
-        private System.Windows.Forms.Button button17;
-        private System.Windows.Forms.Button button16;
-        private System.Windows.Forms.Button button15;
-        private System.Windows.Forms.Button button14;
-        private System.Windows.Forms.Button button13;
-        private System.Windows.Forms.Button button12;
-        private System.Windows.Forms.Button button11;
-        private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
-        private System.Windows.Forms.TabPage tabVramz;
-        private System.Windows.Forms.Button button31;
-        private System.Windows.Forms.Button button30;
-        private System.Windows.Forms.Button button29;
-        private System.Windows.Forms.Button button23;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button19;
-        private System.Windows.Forms.Button button18;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button24;
-        private System.Windows.Forms.Button button27;
-        private System.Windows.Forms.Button button26;
-        private System.Windows.Forms.Button button32;
-        private System.Windows.Forms.TabPage tabVisData;
-        private System.Windows.Forms.CheckedListBox checkedListBox2;
-        private System.Windows.Forms.Button button28;
-        private System.Windows.Forms.Button button33;
+        private Button actionPack;
+        private Button actionExtract;
+        private GroupBox groupBox2;
+        private TableLayoutPanel tableLayoutPanel1;
+        private TextBox pathFile;
+        private TextBox pathFolder;
+        private Button actionBrowseFile;
+        private Button actionBrowseFolder;
+        private Button actionOpenFolder;
+        private CheckBox optionTexMed;
+        private CheckBox optionTexLow;
+        private CheckBox optionDebugVram;
+        private Panel panel1;
+        private Label label5;
+        private Label label4;
+        private Button button1;
+        private TextBox textBox1;
+        private PictureBox pictureBox1;
+        private CheckBox optionTexHigh;
+        private Button actionRestore;
+        private TabControl tabControl2;
+        private TabPage tabPickups;
+        private Button button21;
+        private Button button4;
+        private NumericUpDown numericUpDown1;
+        private Button button3;
+        private TrackBar trackBar1;
+        private PropertyGrid propertyGrid1;
+        private TabPage tabVertexs;
+        private TextBox textBox3;
+        private Button button22;
+        private GroupBox groupBox1;
+        private Button button7;
+        private Label label2;
+        private Label label1;
+        private Button button6;
+        private Button button5;
+        private Button button2;
+        private TabPage tabQuadz;
+        private Button button25;
+        private Button button20;
+        private Button button17;
+        private Button button16;
+        private Button button15;
+        private Button button14;
+        private Button button13;
+        private Button button12;
+        private Button button11;
+        private Button button10;
+        private Button button9;
+        private CheckedListBox checkedListBox1;
+        private TabPage tabVramz;
+        private Button button24;
+        private Button button27;
+        private Button button26;
+        private Button button32;
+        private TabPage tabVisData;
+        private CheckedListBox checkedListBox2;
+        private Button button28;
+        private Button button33;
+        private Button button19;
+        private Button button18;
+        private TextBox textBox2;
     }
 }

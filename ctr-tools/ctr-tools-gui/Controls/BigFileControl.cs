@@ -6,7 +6,6 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-
 namespace CTRTools.Controls
 {
     public partial class BigFileControl : UserControl

@@ -1,17 +1,18 @@
-﻿
+﻿using System.Windows.Forms;
+
 namespace CTRTools.Controls
 {
     partial class LangControl
     {
         /// <summary> 
-        /// Обязательная переменная конструктора.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary> 
-        /// Освободить все используемые ресурсы.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -21,11 +22,11 @@ namespace CTRTools.Controls
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором компонентов
+        #region Component Designer generated code
 
         /// <summary> 
-        /// Требуемый метод для поддержки конструктора — не изменяйте 
-        /// содержимое этого метода с помощью редактора кода.
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -102,10 +103,10 @@ namespace CTRTools.Controls
 
         #endregion
 
-        private System.Windows.Forms.TextBox langBox;
-        private System.Windows.Forms.Button actionSave;
-        private System.Windows.Forms.Button actionLoad;
-        private System.Windows.Forms.SaveFileDialog sfd;
-        private System.Windows.Forms.OpenFileDialog ofd;
+        private TextBox langBox;
+        private Button actionSave;
+        private Button actionLoad;
+        private SaveFileDialog sfd;
+        private OpenFileDialog ofd;
     }
 }

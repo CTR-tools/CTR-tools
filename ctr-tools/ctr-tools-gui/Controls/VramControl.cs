@@ -8,7 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
-namespace CTRTools
+namespace CTRTools.Controls
 {
     public partial class VramControl : UserControl
     {

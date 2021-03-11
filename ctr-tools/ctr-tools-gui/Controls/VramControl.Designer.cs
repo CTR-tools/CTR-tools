@@ -1,17 +1,18 @@
-﻿
-namespace CTRTools
+﻿using System.Windows.Forms;
+
+namespace CTRTools.Controls
 {
     partial class VramControl
     {
         /// <summary> 
-        /// Обязательная переменная конструктора.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary> 
-        /// Освободить все используемые ресурсы.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -21,11 +22,11 @@ namespace CTRTools
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором компонентов
+        #region Component Designer generated code
 
         /// <summary> 
-        /// Требуемый метод для поддержки конструктора — не изменяйте 
-        /// содержимое этого метода с помощью редактора кода.
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -328,26 +329,26 @@ namespace CTRTools
 
         #endregion
 
-        private System.Windows.Forms.Button actionPack;
-        private System.Windows.Forms.Button actionExtract;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TextBox pathFile;
-        private System.Windows.Forms.TextBox pathFolder;
-        private System.Windows.Forms.Button actionBrowseFile;
-        private System.Windows.Forms.Button actionBrowseFolder;
-        private System.Windows.Forms.Button actionOpenFolder;
-        private System.Windows.Forms.CheckBox optionTexMed;
-        private System.Windows.Forms.CheckBox optionTexLow;
-        private System.Windows.Forms.CheckBox optionDebugVram;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.CheckBox optionTexHigh;
-        private System.Windows.Forms.Button actionRestore;
-        private System.Windows.Forms.CheckBox optionTexModels;
+        private Button actionPack;
+        private Button actionExtract;
+        private GroupBox groupBox2;
+        private TableLayoutPanel tableLayoutPanel1;
+        private TextBox pathFile;
+        private TextBox pathFolder;
+        private Button actionBrowseFile;
+        private Button actionBrowseFolder;
+        private Button actionOpenFolder;
+        private CheckBox optionTexMed;
+        private CheckBox optionTexLow;
+        private CheckBox optionDebugVram;
+        private Panel panel1;
+        private Label label5;
+        private Label label4;
+        private Button button1;
+        private TextBox textBox1;
+        private PictureBox pictureBox1;
+        private CheckBox optionTexHigh;
+        private Button actionRestore;
+        private CheckBox optionTexModels;
     }
 }

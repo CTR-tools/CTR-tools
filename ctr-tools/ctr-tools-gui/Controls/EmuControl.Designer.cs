@@ -1,17 +1,18 @@
-﻿
+﻿using System.Windows.Forms;
+
 namespace CTRTools.Controls
 {
     partial class EmuControl
     {
         /// <summary> 
-        /// Обязательная переменная конструктора.
+        /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary> 
-        /// Освободить все используемые ресурсы.
+        /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">истинно, если управляемый ресурс должен быть удален; иначе ложно.</param>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -21,11 +22,11 @@ namespace CTRTools.Controls
             base.Dispose(disposing);
         }
 
-        #region Код, автоматически созданный конструктором компонентов
+        #region Component Designer generated code
 
         /// <summary> 
-        /// Требуемый метод для поддержки конструктора — не изменяйте 
-        /// содержимое этого метода с помощью редактора кода.
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
         {
@@ -145,12 +146,12 @@ namespace CTRTools.Controls
 
         #endregion
 
-        private System.Windows.Forms.Button button28;
-        private System.Windows.Forms.PropertyGrid propertyGrid2;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.Button actionAttach;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private Button button28;
+        private PropertyGrid propertyGrid2;
+        private CheckBox checkBox1;
+        private ComboBox comboBox1;
+        private TextBox textBox5;
+        private Button actionAttach;
+        private NumericUpDown numericUpDown2;
     }
 }
