@@ -134,7 +134,6 @@ namespace CTRTools.Controls
             this.Controls.Add(this.actionExportAll);
             this.Controls.Add(this.actionLoadBig);
             this.DoubleBuffered = true;
-            this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "BigFileControl";
             this.Size = new System.Drawing.Size(640, 480);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.BigFileControl_DragDrop);

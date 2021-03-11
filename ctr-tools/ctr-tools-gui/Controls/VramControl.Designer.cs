@@ -311,7 +311,6 @@ namespace CTRTools.Controls
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.actionPack);
             this.DoubleBuffered = true;
-            this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "VramControl";
             this.Size = new System.Drawing.Size(640, 480);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.VramControl_DragDrop);

@@ -21,7 +21,7 @@ namespace CTRTools
         }
 
         /// <summary>
-        /// Checks file extension and opens switches to proper tab automatically
+        /// Checks file extension and switches to proper tab automatically.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -62,7 +62,7 @@ namespace CTRTools
         }
 
         /// <summary>
-        /// Link to CTR-tools Github repository
+        /// Link to CTR-tools Github repository.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -72,18 +72,13 @@ namespace CTRTools
         }
 
         /// <summary>
-        /// Link to CTR-tools Dircord
+        /// Link to CTR-tools Discord.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void discordBox_Click(object sender, EventArgs e)
         {
             Process.Start("https://discord.gg/56xm9Aj");
-        }
-
-        private void levControl1_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

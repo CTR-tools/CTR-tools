@@ -47,7 +47,7 @@ namespace CTRTools.Controls
             this.langBox.Multiline = true;
             this.langBox.Name = "langBox";
             this.langBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.langBox.Size = new System.Drawing.Size(634, 445);
+            this.langBox.Size = new System.Drawing.Size(634, 444);
             this.langBox.TabIndex = 0;
             this.langBox.WordWrap = false;
             this.langBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.langBox_KeyDown);
@@ -55,10 +55,10 @@ namespace CTRTools.Controls
             // actionSave
             // 
             this.actionSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.actionSave.Location = new System.Drawing.Point(562, 454);
+            this.actionSave.Location = new System.Drawing.Point(541, 453);
             this.actionSave.Name = "actionSave";
-            this.actionSave.Size = new System.Drawing.Size(75, 23);
-            this.actionSave.TabIndex = 1;
+            this.actionSave.Size = new System.Drawing.Size(96, 24);
+            this.actionSave.TabIndex = 2;
             this.actionSave.Text = "Save LNG";
             this.actionSave.UseVisualStyleBackColor = true;
             this.actionSave.Click += new System.EventHandler(this.actionSave_Click);
@@ -66,10 +66,10 @@ namespace CTRTools.Controls
             // actionLoad
             // 
             this.actionLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.actionLoad.Location = new System.Drawing.Point(3, 454);
+            this.actionLoad.Location = new System.Drawing.Point(3, 453);
             this.actionLoad.Name = "actionLoad";
-            this.actionLoad.Size = new System.Drawing.Size(75, 23);
-            this.actionLoad.TabIndex = 2;
+            this.actionLoad.Size = new System.Drawing.Size(96, 24);
+            this.actionLoad.TabIndex = 1;
             this.actionLoad.Text = "Load LNG";
             this.actionLoad.UseVisualStyleBackColor = true;
             this.actionLoad.Click += new System.EventHandler(this.actionLoad_Click);

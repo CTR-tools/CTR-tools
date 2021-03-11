@@ -547,16 +547,20 @@ namespace CTRFramework
             Dictionary<string, TextureLayout> tex = new Dictionary<string, TextureLayout>();
 
             foreach (var t in GetTexturesList(Detail.Low))
-                tex.Add(t.Key, t.Value);
+                if (!tex.ContainsKey(t.Key))
+                    tex.Add(t.Key, t.Value);
 
             foreach (var t in GetTexturesList(Detail.Med))
-                tex.Add(t.Key, t.Value);
+                if (!tex.ContainsKey(t.Key))
+                    tex.Add(t.Key, t.Value);
 
             foreach (var t in GetTexturesList(Detail.High))
-                tex.Add(t.Key, t.Value);
+                if (!tex.ContainsKey(t.Key))
+                    tex.Add(t.Key, t.Value);
 
             foreach (var t in GetTexturesList(Detail.Models))
-                tex.Add(t.Key, t.Value);
+                if (!tex.ContainsKey(t.Key))
+                    tex.Add(t.Key, t.Value);
 
             return tex;
         }

@@ -38,7 +38,7 @@
             this.tabBig = new System.Windows.Forms.TabPage();
             this.bigFileControl1 = new CTRTools.Controls.BigFileControl();
             this.tabVram = new System.Windows.Forms.TabPage();
-            this.ctrToolsVramControl1 = new CTRTools.Controls.VramControl();
+            this.vramControl1 = new CTRTools.Controls.VramControl();
             this.tabCtr = new System.Windows.Forms.TabPage();
             this.ctrControl1 = new CTRTools.Controls.CtrControl();
             this.tabLev = new System.Windows.Forms.TabPage();
@@ -85,7 +85,7 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(611, 429);
-            this.tabControl1.TabIndex = 2;
+            this.tabControl1.TabIndex = 1;
             // 
             // tabAbout
             // 
@@ -183,7 +183,7 @@
             // 
             // tabVram
             // 
-            this.tabVram.Controls.Add(this.ctrToolsVramControl1);
+            this.tabVram.Controls.Add(this.vramControl1);
             this.tabVram.Location = new System.Drawing.Point(4, 22);
             this.tabVram.Name = "tabVram";
             this.tabVram.Size = new System.Drawing.Size(603, 403);
@@ -191,22 +191,21 @@
             this.tabVram.Text = "VRAM textures";
             this.tabVram.UseVisualStyleBackColor = true;
             // 
-            // ctrToolsVramControl1
+            // vramControl1
             // 
-            this.ctrToolsVramControl1.AllowDrop = true;
-            this.ctrToolsVramControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctrToolsVramControl1.Location = new System.Drawing.Point(0, 0);
-            this.ctrToolsVramControl1.MinimumSize = new System.Drawing.Size(461, 218);
-            this.ctrToolsVramControl1.Name = "ctrToolsVramControl1";
-            this.ctrToolsVramControl1.Size = new System.Drawing.Size(603, 403);
-            this.ctrToolsVramControl1.TabIndex = 0;
+            this.vramControl1.AllowDrop = true;
+            this.vramControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.vramControl1.Location = new System.Drawing.Point(0, 0);
+            this.vramControl1.MinimumSize = new System.Drawing.Size(461, 218);
+            this.vramControl1.Name = "vramControl1";
+            this.vramControl1.Size = new System.Drawing.Size(603, 403);
+            this.vramControl1.TabIndex = 0;
             // 
             // tabCtr
             // 
             this.tabCtr.Controls.Add(this.ctrControl1);
             this.tabCtr.Location = new System.Drawing.Point(4, 22);
             this.tabCtr.Name = "tabCtr";
-            this.tabCtr.Padding = new System.Windows.Forms.Padding(3);
             this.tabCtr.Size = new System.Drawing.Size(603, 403);
             this.tabCtr.TabIndex = 9;
             this.tabCtr.Text = "CTR models";
@@ -216,19 +215,16 @@
             // 
             this.ctrControl1.AllowDrop = true;
             this.ctrControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ctrControl1.Location = new System.Drawing.Point(3, 3);
-            this.ctrControl1.MinimumSize = new System.Drawing.Size(488, 223);
+            this.ctrControl1.Location = new System.Drawing.Point(0, 0);
             this.ctrControl1.Name = "ctrControl1";
-            this.ctrControl1.Size = new System.Drawing.Size(597, 397);
+            this.ctrControl1.Size = new System.Drawing.Size(603, 403);
             this.ctrControl1.TabIndex = 0;
             // 
             // tabLev
             // 
             this.tabLev.Controls.Add(this.levControl1);
             this.tabLev.Location = new System.Drawing.Point(4, 22);
-            this.tabLev.Margin = new System.Windows.Forms.Padding(5);
             this.tabLev.Name = "tabLev";
-            this.tabLev.Padding = new System.Windows.Forms.Padding(5);
             this.tabLev.Size = new System.Drawing.Size(603, 403);
             this.tabLev.TabIndex = 0;
             this.tabLev.Text = "LEV scenes";
@@ -237,11 +233,10 @@
             // levControl1
             // 
             this.levControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.levControl1.Location = new System.Drawing.Point(5, 5);
+            this.levControl1.Location = new System.Drawing.Point(0, 0);
             this.levControl1.Name = "levControl1";
-            this.levControl1.Size = new System.Drawing.Size(593, 393);
+            this.levControl1.Size = new System.Drawing.Size(603, 403);
             this.levControl1.TabIndex = 0;
-            this.levControl1.Load += new System.EventHandler(this.levControl1_Load);
             // 
             // tabHowl
             // 
@@ -366,13 +361,13 @@
         private System.Windows.Forms.TabPage tabHowl;
         private System.Windows.Forms.TabPage tabLang;
 
-        private Controls.VramControl ctrToolsVramControl1;
+        private Controls.VramControl vramControl1;
         private Controls.BigFileControl bigFileControl1;
-        private Controls.LevControl levControl1;
-        private Controls.CtrControl ctrControl1;
         private Controls.CseqControl cseqControl1;
         private Controls.EmuControl emuControl1;
         private Controls.HowlControl howlControl1;
+        private Controls.CtrControl ctrControl1;
+        private Controls.LevControl levControl1;
         private Controls.LangControl langControl1;
     }
 }

@@ -12,20 +12,58 @@ namespace CTRTools.Controls
         public CtrControl()
         {
             InitializeComponent();
-            this.DoubleBuffered = true;
         }
 
         public void LoadCtr(string filename)
         {
-            ctr = CtrModel.FromFile(filename);
-            propertyGrid1.SelectedObject = ctr;
+            try
+            {
+                ctr = CtrModel.FromFile(filename);
+                UpdateUI();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
-        public void LoadObj(string filename)
+        public void LoadModel(string filename)
         {
-            OBJ obj = OBJ.FromFile(filename);
-            ctr = CtrModel.FromObj(obj);
-            propertyGrid1.SelectedObject = ctr;
+            try
+            {
+                switch (Path.GetExtension(filename).ToLower())
+                {
+                    case ".obj":
+                        OBJ obj = OBJ.FromFile(filename);
+                        ctr = CtrModel.FromObj(obj);
+                        break;
+                    case ".ply":
+                        ctr = CtrModel.FromPly(filename);
+                        break;
+                    default:
+                        MessageBox.Show("Unsupported model.");
+                        break;
+                }
+
+                UpdateUI();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        private void UpdateUI()
+        {
+            if (ctr != null)
+            {
+                listBox1.Items.Clear();
+                foreach (var c in ctr.Entries)
+                    listBox1.Items.Add(c.name);
+
+                propertyGrid1.SelectedObject = ctr;
+            }
         }
 
         private void CtrControl_DragDrop(object sender, DragEventArgs e)
@@ -42,7 +80,7 @@ namespace CTRTools.Controls
                         break;
 
                     case ".obj":
-                        LoadObj(files[0]);
+                        LoadModel(files[0]);
                         break;
 
                     default:
@@ -58,34 +96,14 @@ namespace CTRTools.Controls
 
         private void actionImportObj_Click(object sender, EventArgs e)
         {
-            try
-            {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.Filter = "Wavefront OBJ (*.obj)|*.obj";
-
-                if (ofd.ShowDialog() == DialogResult.OK)
-                    LoadObj(ofd.FileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            if (ofdmdl.ShowDialog() == DialogResult.OK)
+                LoadModel(ofdmdl.FileName);
         }
 
         private void actionLoadCtr_Click(object sender, EventArgs e)
         {
-            try
-            {
-                OpenFileDialog ofd = new OpenFileDialog();
-                ofd.Filter = "Crash Team Racing CTR file|*.ctr";
-
-                if (ofd.ShowDialog() == DialogResult.OK)
-                    LoadCtr(ofd.FileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            if (ofdctr.ShowDialog() == DialogResult.OK)
+                LoadCtr(ofdctr.FileName);
         }
 
         private void actionSaveCtr_Click(object sender, EventArgs e)
@@ -94,8 +112,6 @@ namespace CTRTools.Controls
             {
                 if (ctr != null)
                 {
-                    FolderBrowserDialog fbd = new FolderBrowserDialog();
-
                     if (fbd.ShowDialog() == DialogResult.OK)
                         ctr.Save(fbd.SelectedPath);
                 }
@@ -112,8 +128,6 @@ namespace CTRTools.Controls
             {
                 if (ctr != null)
                 {
-                    FolderBrowserDialog fbd = new FolderBrowserDialog();
-
                     if (fbd.ShowDialog() == DialogResult.OK)
                         ctr.Export(fbd.SelectedPath);
                 }

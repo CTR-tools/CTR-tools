@@ -186,7 +186,7 @@ namespace CTRTools.Controls
                     sb.Append(vi.ToString() + "\r\n");
                 }
 
-                textBox1.Text = sb.ToString();
+                textBox2.Text = sb.ToString();
             }
         }
 
@@ -238,7 +238,7 @@ namespace CTRTools.Controls
                 foreach (byte b in uniq4) sb.Append(b + " ");
                 sb.Append("\r\n");
 
-                textBox1.Text = sb.ToString();
+                textBox2.Text = sb.ToString();
             }
         }
 
@@ -319,7 +319,7 @@ namespace CTRTools.Controls
                         }
                     }
 
-                    textBox1.Text = scn.nav.ToString();
+                    textBox2.Text = scn.nav.ToString();
                 }
             }
         }
