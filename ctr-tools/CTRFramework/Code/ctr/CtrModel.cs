@@ -34,7 +34,7 @@ namespace CTRFramework
         //public short numEntries;
         public UIntPtr ptrHeaders = (UIntPtr)0;
 
-        public List<CtrHeader> Entries = new List<CtrHeader>();
+        public List<CtrMesh> Entries = new List<CtrMesh>();
 
         public CtrModel()
         {
@@ -82,7 +82,7 @@ namespace CTRFramework
             ptrHeaders = br.ReadUIntPtr();
 
             for (int i = 0; i < numEntries; i++)
-                Entries.Add(new CtrHeader(br));
+                Entries.Add(new CtrMesh(br));
         }
 
         public override string ToString()
@@ -91,7 +91,7 @@ namespace CTRFramework
 
             sb.Append(name + ": ");
 
-            foreach (CtrHeader head in Entries)
+            foreach (CtrMesh head in Entries)
                 sb.Append(head.name + ", ");
 
             sb.Append("\r\n");
@@ -105,10 +105,14 @@ namespace CTRFramework
         /// <param name="path">Path to export.</param>
         public void Export(string path)
         {
+            int i = 0;
+
             foreach (var en in Entries)
             {
-                string fn = Path.Combine(path, $"{name}.{en.name}.obj");
+                string fn = Path.Combine(path, $"{name}.{en.name}.{i.ToString("00")}{(en.IsAnimated ? ".Animated" : "")}.obj");
                 Helpers.WriteToFile(fn, en.ToObj());
+
+                i++;
             }
         }
 
@@ -235,7 +239,7 @@ namespace CTRFramework
             CtrModel ctr = new CtrModel();
 
             foreach (OBJ obj in objlist)
-                ctr.Entries.Add(CtrHeader.FromObj(obj.ObjectName, obj));
+                ctr.Entries.Add(CtrMesh.FromObj(obj.ObjectName, obj));
 
             ctr.Name = objlist[0].ObjectName;
 
@@ -258,7 +262,7 @@ namespace CTRFramework
 
             CtrModel ctr = new CtrModel();
             ctr.Name = Path.GetFileNameWithoutExtension(filename);
-            ctr.Entries.Add(CtrHeader.FromPly(ctr.Name, ply));
+            ctr.Entries.Add(CtrMesh.FromPly(ctr.Name, ply));
 
             return ctr;
         }

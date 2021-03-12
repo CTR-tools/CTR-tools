@@ -83,7 +83,7 @@
     <Compile Include="Code\big\BigEntry.cs" />
     <Compile Include="Code\big\BigFileReader.cs" />
     <Compile Include="Code\ctr\CtrAnim.cs" />
-    <Compile Include="Code\ctr\CtrHeader.cs" />
+    <Compile Include="Code\ctr\CtrMesh.cs" />
     <Compile Include="Code\ctr\CtrModel.cs" />
     <Compile Include="Code\ctr\CtrDraw.cs" />
     <Compile Include="Code\Enums.cs" />

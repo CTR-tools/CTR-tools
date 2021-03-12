@@ -19,6 +19,9 @@ namespace CTRFramework
             // Console.WriteLine(name + " woah");
             // Console.ReadKey();
             numFrames = br.ReadInt16(); //negative value defines amount of render frames in 60fps (duplicated anim frames)
+            if (numFrames < 0)
+                numFrames = (short)-(numFrames / 2);
+
             frameSize = br.ReadInt16();
             someOffset = br.ReadInt32();
 

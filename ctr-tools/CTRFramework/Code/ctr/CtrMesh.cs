@@ -8,7 +8,7 @@ using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework
 {
-    public class CtrHeader : IRead
+    public class CtrMesh : IRead
     {
         public string name = "default_name";
         public int unk0 = 0; //0?
@@ -52,18 +52,20 @@ namespace CTRFramework
         public List<TextureLayout> tl = new List<TextureLayout>();
         public List<Vector4b> cols = new List<Vector4b>();
 
+        public List<int> animPtrMap = new List<int>();
+
 
         public bool isTextured
         {
             get { return ptrTex == ptrClut; }
         }
 
-        public CtrHeader()
+        public CtrMesh()
         {
 
         }
 
-        public CtrHeader(BinaryReaderEx br)
+        public CtrMesh(BinaryReaderEx br)
         {
             Read(br);
         }
@@ -97,6 +99,13 @@ namespace CTRFramework
             numAnims = br.ReadInt32();
             ptrAnims = br.ReadUIntPtr();
             unk4 = br.ReadInt32();
+
+            int returnto = (int)br.BaseStream.Position;
+
+            br.Jump(ptrAnims);
+
+            for (int i = 0; i < numAnims; i++)
+                animPtrMap.Add(br.ReadInt32());
 
             if (unk3 != 0)
                 Helpers.Panic(this, $"check unusual unk3 value = {unk3}");
@@ -198,19 +207,20 @@ namespace CTRFramework
             else
             {
                 //jump to first animation, read header and jump to vertex garbage
-                br.Jump(ptrAnims);
-                int ptr = br.ReadInt32();
-                br.Jump(ptr);
+                br.Jump(animPtrMap[0]);
 
                 CtrAnim anim = CtrAnim.FromReader(br);
 
                 Console.WriteLine(anim.name + " " + anim.numFrames);
 
-                br.Seek(0x1C);
+                posOffset = new Vector4s(br);
 
-                Console.WriteLine(br.HexPos());
+                br.Seek(16);
 
-                posOffset = new Vector4s(0, 0, 0, 0);
+                vrenderMode = br.ReadInt32();
+
+                Console.WriteLine("anime!");
+                //Console.ReadKey();
             }
 
             //read vertices
@@ -269,11 +279,13 @@ namespace CTRFramework
                 clr[2] = clr[3];
                 clr[3] = cols[d.colorIndex];
 
+                
                 if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
                     crd[1] = crd[0];
                     clr[1] = clr[0];
                 }
+                
 
                 //if got reset flag, reset tristrip vertex counter
                 if (d.flags.HasFlag(CtrDrawFlags.s))
@@ -324,6 +336,7 @@ namespace CTRFramework
             Console.WriteLine("tlcnt: " + tl.Count);
 
             br.Jump(pos);
+            br.Jump(returnto);
         }
 
         /// <summary>
@@ -402,9 +415,9 @@ namespace CTRFramework
         /// <param name="colors">Color array.</param>
         /// <param name="faces">Face indices array.</param>
         /// <returns>CtrHeader object.</returns>
-        public static CtrHeader FromRawData(string name, List<Vector3f> vertices, List<Vector4b> colors, List<Vector3i> faces)
+        public static CtrMesh FromRawData(string name, List<Vector3f> vertices, List<Vector4b> colors, List<Vector3i> faces)
         {
-            CtrHeader model = new CtrHeader();
+            CtrMesh model = new CtrMesh();
             model.name = name + "_hi";
             model.lodDistance = -1;
 
@@ -585,7 +598,7 @@ namespace CTRFramework
         /// <param name="name">Model name.</param>
         /// <param name="ply">PlyResult object.</param>
         /// <returns>CtrHeader object.</returns>
-        public static CtrHeader FromPly(string name, PlyResult ply)
+        public static CtrMesh FromPly(string name, PlyResult ply)
         {
             List<Vector3i> faces = new List<Vector3i>();
 
@@ -601,9 +614,9 @@ namespace CTRFramework
         /// <param name="name">Model name.</param>
         /// <param name="obj">OBJ object.</param>
         /// <returns>CtrHeader object.</returns>
-        public static CtrHeader FromObj(string name, OBJ obj)
+        public static CtrMesh FromObj(string name, OBJ obj)
         {
-            return CtrHeader.FromPly(name, obj.Result);
+            return CtrMesh.FromPly(name, obj.Result);
         }
 
         /// <summary>
