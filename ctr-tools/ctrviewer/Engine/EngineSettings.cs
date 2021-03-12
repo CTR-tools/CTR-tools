@@ -23,6 +23,7 @@ namespace ctrviewer.Engine
         public int StereoPairSeparation { get; set; } = 20;
         public bool ShowCamPos { get; set; } = false;
         public bool UseLowLod { get; set; } = false;
+        public bool ShowConsole { get; set; } = false;
 
         private bool _windowed = true;
         public bool Windowed
@@ -162,6 +163,7 @@ namespace ctrviewer.Engine
 
             return settings;
         }
+
         public static void Save(string path)
         {
             throw new NotImplementedException();

@@ -78,6 +78,8 @@ namespace ctrviewer
 
         public Game1()
         {
+            GameConsole.Write($"ctrviewer - {version}");
+
             OBJ.FixCulture();
 
             Content.RootDirectory = "Content";
@@ -107,6 +109,8 @@ namespace ctrviewer
 
             graphics.IsFullScreen = !settings.Windowed;
             graphics.ApplyChanges();
+
+            GameConsole.Write($"SwitchDisplayMode(): {graphics.PreferredBackBufferWidth}x{graphics.PreferredBackBufferHeight}");
         }
 
         public Viewport vpFull;
@@ -117,6 +121,8 @@ namespace ctrviewer
 
         public void UpdateSplitscreenViewports()
         {
+            GameConsole.Write("UpdateSplitscreenViewports()");
+
             vpFull.MaxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
             vpFull.MinDepth = graphics.GraphicsDevice.Viewport.MinDepth;
             vpFull.Width = graphics.PreferredBackBufferWidth;
@@ -257,6 +263,9 @@ namespace ctrviewer
 
         protected override void LoadContent()
         {
+            GameConsole.Write("LoadContent()");
+            GameConsole.font = Content.Load<SpriteFont>("debug");
+
             LoadGenericTextures();
 
             effect.Texture = textures["test"];
@@ -286,6 +295,8 @@ namespace ctrviewer
 
         public void AddCone(string name, Color c)
         {
+            GameConsole.Write($"AddCone({name}, {c.ToString()})");
+
             QuadList modl = new QuadList();
 
             List<VertexPositionColorTexture> vptc = new List<VertexPositionColorTexture>();
@@ -331,6 +342,8 @@ namespace ctrviewer
 
         private void LoadTextures()
         {
+            GameConsole.Write("LoadTextures()");
+
             foreach (Scene s in scn)
             {
                 foreach (var t in s.ctrvram.textures)
@@ -362,6 +375,8 @@ namespace ctrviewer
 
         private void LoadLevel(string[] lev)
         {
+            GameConsole.Write("LoadLevel()");
+
             if (lev == null)
                 lev = new string[] { };
 
@@ -429,7 +444,7 @@ namespace ctrviewer
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            Console.WriteLine("LoadLevel()");
+            GameConsole.Write("LoadLevel()");
 
             string[] files = new string[] { };
 
@@ -445,7 +460,7 @@ namespace ctrviewer
 
             if (files.Length == 0)
             {
-                Console.WriteLine("no files");
+                GameConsole.Write("no files");
                 return;
             }
 
@@ -454,7 +469,7 @@ namespace ctrviewer
                 scn.Add(Scene.FromFile(s));
             }
 
-            Console.WriteLine("scenes parsed at: " + sw.Elapsed.TotalSeconds);
+            GameConsole.Write("scenes parsed at: " + sw.Elapsed.TotalSeconds);
 
             //loading textures between scenes and conversion to monogame for alpha textures info
             LoadTextures();
@@ -465,7 +480,7 @@ namespace ctrviewer
                 MeshLow.Add(new MGLevel(s, Detail.Low));
             }
 
-            Console.WriteLine("converted scenes to monogame render at: " + sw.Elapsed.TotalSeconds);
+            GameConsole.Write("converted scenes to monogame render at: " + sw.Elapsed.TotalSeconds);
 
             //force 1st scene sky and back color
             if (scn.Count > 0)
@@ -500,7 +515,7 @@ namespace ctrviewer
                 }
             }
 
-
+            
             foreach (Scene s in scn)
                 foreach (CtrModel m in s.Models)
                 {
@@ -523,11 +538,12 @@ namespace ctrviewer
 
                 }
 
+
             //karts.Add(new Kart("selectkart", MGConverter.ToVector3(scn[0].header.startGrid[0].Position), Vector3.Left, 0.5f));
 
 
 
-            Console.WriteLine("extracted dynamics at: " + sw.Elapsed.TotalSeconds);
+            GameConsole.Write("extracted dynamics at: " + sw.Elapsed.TotalSeconds);
 
             foreach (Scene s in scn)
             {
@@ -561,7 +577,7 @@ namespace ctrviewer
             //    s.ExportTexturesAll(Path.Combine(Meta.BasePath, "levels\\tex"));
 
 
-            Console.WriteLine("textures extracted at: " + sw.Elapsed.TotalSeconds);
+            GameConsole.Write("textures extracted at: " + sw.Elapsed.TotalSeconds);
 
             //files = Directory.GetFiles("tex", "*.png");
 
@@ -572,7 +588,7 @@ namespace ctrviewer
 
             sw.Stop();
 
-            Console.WriteLine("textures loaded. level done: " + sw.Elapsed.TotalSeconds);
+            GameConsole.Write("textures loaded. level done: " + sw.Elapsed.TotalSeconds);
 
             UpdateEffects();
 
@@ -631,19 +647,24 @@ namespace ctrviewer
                 rightCamera.Position = camera.Position;
                 leftCamera.Position = camera.Position;
 
-                camera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Z / 4096 * Math.PI * 2));
-                rightCamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Z / 4096 * Math.PI * 2));
-                leftCamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Z / 4096 * Math.PI * 2));
-                skycamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Z / 4096 * Math.PI * 2));
+                camera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Y / 4096 * Math.PI * 2));
+                rightCamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Y / 4096 * Math.PI * 2));
+                leftCamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Y / 4096 * Math.PI * 2));
+                skycamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Y / 4096 * Math.PI * 2));
 
                 UpdateCameras(new GameTime());
 
-                Console.WriteLine(scn[0].header.startGrid[0].Rotation.ToString());
+                GameConsole.Write(scn[0].header.startGrid[0].Rotation.ToString());
             }
         }
 
         protected override void UnloadContent()
         {
+            scn.Clear();
+            textures.Clear();
+            instanced.Clear();
+            instmodels.Clear();
+            instTris.Clear();
         }
 
         public bool updatemouse = false;
@@ -662,8 +683,14 @@ namespace ctrviewer
         KeyboardState oldkb = new KeyboardState();
         KeyboardState newkb = new KeyboardState();
 
+
+        public float rotation = 0;
+
         protected override void Update(GameTime gameTime)
         {
+            //rotation += 0.01f;
+            //camera.SetRotation(rotation, 0);
+
             if (loading == null)
                 LoadGame();
 
@@ -762,6 +789,7 @@ namespace ctrviewer
                                     case "antialias": settings.AntiAlias = !settings.AntiAlias; break;
                                     case "invis": HideInvisible = !HideInvisible; break;
                                     case "water": HideWater = !HideWater; break;
+                                    case "console": settings.ShowConsole = !settings.ShowConsole; break;
                                     case "campos": settings.ShowCamPos = !settings.ShowCamPos; break;
                                     case "visbox": settings.VisData = !settings.VisData; break;
                                     case "visboxleaf": settings.VisDataLeaves = !settings.VisDataLeaves; break;
@@ -773,7 +801,7 @@ namespace ctrviewer
                                     case "stereo": settings.StereoPair = !settings.StereoPair; break;
                                     case "sky": settings.Sky = !settings.Sky; break;
                                     case "vsync": settings.VerticalSync = !settings.VerticalSync; break;
-                                    default: Console.WriteLine("unimplemented toggle: " + menu.SelectedItem.Param); break;
+                                    default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
                                 }
                                 break;
 
@@ -791,7 +819,6 @@ namespace ctrviewer
 
                         foreach (MenuItem m in menu.items)
                         {
-                            Console.WriteLine(m.Action + " " + m.Title);
                             if (m.Action == "link" && m.Title == "BACK")
                             {
                                 menu.SetMenu(font, m.Param);
@@ -1185,7 +1212,12 @@ namespace ctrviewer
 
             //spriteBatch.DrawString(font, String.Format("sp: {0}\r\nac:{1}", karts[0].Speed, karts[0].Accel), new Vector2(20, 20), Color.Yellow);
 
+            if (settings.ShowConsole)
+                GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);
+
             spriteBatch.End();
+
+
 
 
             // base.Draw(gameTime);

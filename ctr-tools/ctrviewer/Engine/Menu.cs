@@ -127,6 +127,7 @@ namespace ctrviewer.Engine
                 new MenuItem("toggle stereoscopic 3D mode".ToUpper(), "toggle", "stereo", true),
                 new MenuItem("toggle mipmap generation on load".ToUpper(), "toggle", "genmips", true),
                 new MenuItem("show camera position".ToUpper(), "toggle", "campos", true),
+                new MenuItem("show console".ToUpper(), "toggle", "console", true),
                 new MenuItem("back".ToUpper(), "link", "main", true)
             });
 
@@ -175,7 +176,7 @@ namespace ctrviewer.Engine
                 new MenuItem("Polar Pass".ToUpper(), "loadbig", "", true, intValue: 12 * 8),
                 new MenuItem("N. Gin Labs".ToUpper(), "loadbig", "", true, intValue: 11 * 8),
                 new MenuItem("Hot Air Skyway".ToUpper(), "loadbig", "", true, intValue: 7 * 8),
-                new MenuItem("Slide Colliseum".ToUpper(), "loadbig", "", true, intValue: 16 * 8),
+                new MenuItem("Slide Coliseum".ToUpper(), "loadbig", "", true, intValue: 16 * 8),
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
