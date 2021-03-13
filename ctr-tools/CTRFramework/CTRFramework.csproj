@@ -137,7 +137,9 @@
     <Compile Include="Code\sound\CSEQ\Sequence\Sequence.cs" />
     <Compile Include="Code\sound\Howl.cs" />
     <Compile Include="Code\sound\HowlHeader.cs" />
+    <Compile Include="Code\sound\VagFrame.cs" />
     <Compile Include="Code\sound\VagHeader.cs" />
+    <Compile Include="Code\sound\VagSample.cs" />
     <Compile Include="Code\vrm\TimReader.cs" />
     <Compile Include="Code\vrm\BMPHeader.cs" />
     <Compile Include="Code\vrm\Tim.cs" />

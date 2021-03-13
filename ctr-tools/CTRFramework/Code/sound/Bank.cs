@@ -111,6 +111,8 @@ namespace CTRFramework.Sound
                     vh.Write(bw);
                     bw.Write(samples[id]);
                 }
+
+                VagSample.FromFile(vagname).ConvertToWav(Path.ChangeExtension(vagname, ".wav"));
             }
         }
 

@@ -151,6 +151,8 @@ namespace CTRFramework
             //define temporary arrays
             Vector4b[] clr = new Vector4b[4];       //color buffer
             Vector3s[] crd = new Vector3s[4];       //face buffer
+            TextureLayout[] tlb = new TextureLayout[4];       //face buffer
+
             Vector3s[] stack = new Vector3s[256];   //vertex buffer
 
             int maxv = 0;
@@ -185,6 +187,26 @@ namespace CTRFramework
             br.Jump(ptrClut);
             for (int k = 0; k <= maxc; k++)
                 cols.Add(new Vector4b(br));
+
+
+            //read texture layouts
+            br.Jump(ptrTex);
+            uint[] texptrs = br.ReadArrayUInt32(maxt);
+
+            Console.WriteLine("texptrs: " + texptrs.Length);
+
+            foreach (uint t in texptrs)
+            {
+                Console.WriteLine(t.ToString("X8"));
+                br.Jump(t);
+                TextureLayout tx = TextureLayout.FromStream(br);
+                tl.Add(tx);
+                Console.WriteLine(tx.ToString());
+            }
+
+            Console.WriteLine("tlcnt: " + tl.Count);
+
+
 
             //if static model
             if (!IsAnimated)
@@ -279,7 +301,11 @@ namespace CTRFramework
                 clr[2] = clr[3];
                 clr[3] = cols[d.colorIndex];
 
-                
+                tlb[0] = tlb[1];
+                tlb[1] = tlb[2];
+                tlb[2] = tlb[3];
+                tlb[3] = (d.texIndex == 0 ? null : tl[d.texIndex-1]);
+
                 if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
                     crd[1] = crd[0];
@@ -317,23 +343,6 @@ namespace CTRFramework
 
                 stripLength++;
             }
-
-            //read texture layouts
-            br.Jump(ptrTex);
-            uint[] texptrs = br.ReadArrayUInt32(maxt);
-
-            Console.WriteLine("texptrs: " + texptrs.Length);
-
-            foreach (uint t in texptrs)
-            {
-                Console.WriteLine(t.ToString("X8"));
-                br.Jump(t);
-                TextureLayout tx = TextureLayout.FromStream(br);
-                tl.Add(tx);
-                Console.WriteLine(tx.ToString());
-            }
-
-            Console.WriteLine("tlcnt: " + tl.Count);
 
             br.Jump(pos);
             br.Jump(returnto);

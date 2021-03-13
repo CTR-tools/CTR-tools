@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using NAudio.Wave;
 
 namespace CTRTools.Controls
 {
@@ -110,9 +111,6 @@ namespace CTRTools.Controls
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Crash Team Racing CSEQ (*.cseq)|*.cseq";
-
             if (ofd.ShowDialog() == DialogResult.OK)
                 LoadCseq(ofd.FileName);
         }
@@ -143,12 +141,8 @@ namespace CTRTools.Controls
             tabControl1.SelectedIndex = 0;
         }
 
-
-
         private void sequenceBox_DoubleClick(object sender, EventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "MIDI File (*.mid)|*.mid";
             sfd.FileName = Path.ChangeExtension(loadedfile, ".mid");
 
             if (sfd.ShowDialog() == DialogResult.OK)
@@ -315,7 +309,6 @@ namespace CTRTools.Controls
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            /*
             AudioFileReader wave = null;
             WaveOut outputSound = null;
             string x = "";
@@ -326,14 +319,14 @@ namespace CTRTools.Controls
                 {
                     SampleDef sd = seq.samples[treeView1.SelectedNode.Index];
                     propertyGrid1.SelectedObject = sd;
-                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : "") + ".vag.wav";
+                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : "") + ".wav";
                 }
 
                 if (treeView1.SelectedNode.Parent.Index == 0)
                 {
                     SampleDefReverb sd = seq.samplesReverb[treeView1.SelectedNode.Index];
                     propertyGrid1.SelectedObject = sd;
-                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : "") + ".vag.wav";
+                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : "") + ".wav";
                 }
 
 
@@ -358,7 +351,6 @@ namespace CTRTools.Controls
             {
                 propertyGrid1.SelectedObject = null;
             }
-            */
         }
 
         private void trackBox_DoubleClick(object sender, EventArgs e)

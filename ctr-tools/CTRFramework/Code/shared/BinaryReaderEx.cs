@@ -75,16 +75,17 @@ namespace CTRFramework.Shared
             return ttltime;
         }
 
+        //It probably was wrong all the time, make sure stuff still works.
         public int ReadInt32Big()
         {
             byte[] x = BitConverter.GetBytes(ReadInt32());
-            x.Reverse();
+            Array.Reverse(x);
             return BitConverter.ToInt32(x, 0);
         }
         public uint ReadUInt32Big()
         {
             byte[] x = BitConverter.GetBytes(ReadUInt32());
-            x.Reverse();
+            Array.Reverse(x);
             return BitConverter.ToUInt32(x, 0);
         }
 
