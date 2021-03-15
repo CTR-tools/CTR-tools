@@ -3,30 +3,30 @@ using NAudio.Midi;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace CTRFramework.Sound.CSeq
 {
     public class CTrack
     {
         //meta
-        public string name;
+        public string name = "default_name";
         public string address = "";
-        public int trackNum;
+        public int trackNum = 0;
 
         public int instrument = 0;
         public bool isDrumTrack = false;
 
-        List<Command> cmd;
+        public List<Command> cmd = new List<Command>();
 
         public CTrack()
         {
-            cmd = new List<Command>();
         }
 
-
-        public void Import(string s)
+        public void Import(string filename)
         {
-
+            MidiFile midi = new MidiFile(filename);
+            FromMidiEventList(midi.Events.GetTrackEvents(1).ToList());
         }
 
         public void Read(BinaryReaderEx br, int num)
@@ -69,6 +69,15 @@ namespace CTRFramework.Sound.CSeq
                 sb.Append(c.ToString());
 
             return sb.ToString();
+        }
+
+
+        public void FromMidiEventList(List<MidiEvent> events)
+        {
+            cmd.Clear();
+
+            foreach (var evt in events)
+                cmd.Add(Command.FromMidiEvent(evt));
         }
 
 

@@ -75,6 +75,7 @@ namespace CTRTools.Controls
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
+            this.importMIDIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -102,6 +103,7 @@ namespace CTRTools.Controls
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.exportSEQToolStripMenuItem,
+            this.importMIDIToolStripMenuItem,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -118,10 +120,9 @@ namespace CTRTools.Controls
             // 
             // exportSEQToolStripMenuItem
             // 
-            this.exportSEQToolStripMenuItem.Enabled = false;
             this.exportSEQToolStripMenuItem.Name = "exportSEQToolStripMenuItem";
             this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exportSEQToolStripMenuItem.Text = "Export CSEQ";
+            this.exportSEQToolStripMenuItem.Text = "Save";
             this.exportSEQToolStripMenuItem.Click += new System.EventHandler(this.exportSEQToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
@@ -222,28 +223,28 @@ namespace CTRTools.Controls
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(104, 22);
             this.toolStripMenuItem2.Text = "11025";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(104, 22);
             this.toolStripMenuItem3.Text = "22050";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(104, 22);
             this.toolStripMenuItem4.Text = "33075";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(104, 22);
             this.toolStripMenuItem5.Text = "44100";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
             // 
@@ -523,6 +524,13 @@ namespace CTRTools.Controls
             // 
             this.sfd.Filter = "MIDI File (*.mid)|*.mid";
             // 
+            // importMIDIToolStripMenuItem
+            // 
+            this.importMIDIToolStripMenuItem.Name = "importMIDIToolStripMenuItem";
+            this.importMIDIToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importMIDIToolStripMenuItem.Text = "Import MIDI";
+            this.importMIDIToolStripMenuItem.Click += new System.EventHandler(this.importMIDIToolStripMenuItem_Click);
+            // 
             // CseqControl
             // 
             this.AllowDrop = true;
@@ -599,6 +607,7 @@ namespace CTRTools.Controls
         private ListBox listBox2;
         private OpenFileDialog ofd;
         private SaveFileDialog sfd;
+        private ToolStripMenuItem importMIDIToolStripMenuItem;
     }
 }
 

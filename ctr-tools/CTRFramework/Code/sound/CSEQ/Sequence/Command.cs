@@ -24,10 +24,12 @@ namespace CTRFramework.Sound.CSeq
 
     public class Command
     {
-        public CSEQEvent evt;
-        public byte pitch;
-        public byte velocity;
-        public int wait;
+        public CSEQEvent evt = CSEQEvent.Error;
+        public byte pitch = 0;
+        public byte velocity = 0;
+        public int wait = 0;
+
+        public int absoluteTime = 0;
 
         public void Read(BinaryReaderEx br)
         {
@@ -121,11 +123,8 @@ namespace CTRFramework.Sound.CSeq
                         {
                         }
                     }
-
                 }
-
             }
-
 
             switch (evt)
             {
@@ -146,6 +145,69 @@ namespace CTRFramework.Sound.CSeq
             }
 
             return events;
+        }
+
+        public static Command FromMidiEvent(MidiEvent midi)
+        {
+            Command cmd = new Command();
+            cmd.absoluteTime = (int)midi.AbsoluteTime;
+
+            switch (midi.CommandCode)
+            {
+                case MidiCommandCode.NoteOn:
+                    {
+                        cmd.evt = CSEQEvent.NoteOn;
+
+                        var x = (NoteEvent)midi;
+
+                        if (x.NoteNumber > 255)
+                            throw new Exception("note too large!");
+
+                        cmd.pitch = (byte)x.NoteNumber;
+
+                        if (x.Velocity > 127)
+                        {
+                            cmd.velocity = 127;
+                        }
+                        else
+                        {
+                            cmd.velocity = (byte)x.Velocity;
+                        }
+
+                        cmd.wait = x.DeltaTime;
+
+                        break;
+                    }
+                case MidiCommandCode.NoteOff:
+                    {
+                        cmd.evt = CSEQEvent.NoteOff;
+
+                        var x = (NoteEvent)midi;
+
+                        if (x.NoteNumber > 255)
+                            throw new Exception("note too large!");
+
+                        cmd.pitch = (byte)x.NoteNumber;
+
+                        if (x.Velocity * 2 > 255)
+                        {
+                            cmd.velocity = 255;
+                        }
+                        else
+                        {
+                            cmd.velocity = (byte)(x.Velocity * 2);
+                        }
+
+                        cmd.wait = 0;
+
+                        break;
+                    }
+                default:
+                    Helpers.Panic("Command", $"Unimplemented MIDI event: {midi.CommandCode}");
+                    break;
+            }
+
+            return cmd;
         }
 
         public override string ToString()

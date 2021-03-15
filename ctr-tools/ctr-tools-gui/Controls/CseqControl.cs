@@ -7,6 +7,8 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using NAudio.Wave;
+using NAudio.Midi;
+using System.Linq;
 
 namespace CTRTools.Controls
 {
@@ -70,22 +72,23 @@ namespace CTRTools.Controls
 
         private void FillUI(string fn)
         {
+            treeView1.Nodes.Clear();
+            sequenceBox.Items.Clear();
+            trackBox.Items.Clear();
+            textBox2.Text = "";
+
             loadedfile = Path.GetFileName(fn);
             this.Text = "CTR CSEQ - " + loadedfile;
 
             textBox2.Text = seq.header.ToString();
 
             int i = 0;
-            sequenceBox.Items.Clear();
 
             foreach (Sequence s in seq.sequences)
             {
                 sequenceBox.Items.Add("Sequence_" + i.ToString("X2"));
                 i++;
             }
-
-            //textBox1.Text = Log.Read();
-            treeView1.Nodes.Clear();
 
             TreeNode tn = new TreeNode("SampleDef");
 
@@ -168,11 +171,10 @@ namespace CTRTools.Controls
             }
         }
 
-
         private void exportSEQToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (seq != null)
-                seq.Export("test.cseq");
+                seq.Export(Path.Combine(Meta.BasePath, "test.cseq"));
         }
 
         Bank bnk = new Bank();
@@ -224,22 +226,22 @@ namespace CTRTools.Controls
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            VagHeader.DefaultSampleRate = 11025;
+            VagSample.DefaultSampleRate = 11025;
         }
 
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
-            VagHeader.DefaultSampleRate = 22050;
+            VagSample.DefaultSampleRate = 22050;
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)
         {
-            VagHeader.DefaultSampleRate = 33075;
+            VagSample.DefaultSampleRate = 33075;
         }
 
         private void toolStripMenuItem5_Click(object sender, EventArgs e)
         {
-            VagHeader.DefaultSampleRate = 44100;
+            VagSample.DefaultSampleRate = 44100;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -445,6 +447,44 @@ namespace CTRTools.Controls
         private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
+        }
+
+        private void importMIDIToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (seq == null)
+                seq = new CSEQ();
+
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "MIDI File (*.mid)|*.mid";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                MidiFile midi = new MidiFile(ofd.FileName);
+
+                Sequence newMidi = new Sequence();
+
+                for (int i = 0; i < midi.Tracks; i++)
+                {
+                    CTrack track = new CTrack();
+                    track.trackNum = i;
+                    track.name = $"track_{i.ToString("00")}";
+                    track.FromMidiEventList(midi.Events.GetTrackEvents(i).ToList());
+                    newMidi.tracks.Add(track);
+                }
+
+                foreach (var x in newMidi.tracks)
+                {
+                    Command c = new Command();
+                    c.evt = CSEQEvent.ChangePatch;
+                    c.pitch = (byte)x.trackNum;
+                    c.wait = 0;
+                    x.cmd.Insert(0, c);
+                }
+
+                seq.sequences.Add(newMidi);
+
+                FillUI(loadedfile);
+            }
         }
     }
 }
