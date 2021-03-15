@@ -462,6 +462,15 @@ namespace CTRFramework
 
         public string Info()
         {
+            int numLeaves = 0;
+            int numBranches = 0;
+
+            foreach (var v in visdata)
+            {
+                if (v.IsLeaf) numLeaves++;
+                if (!v.IsLeaf) numBranches++;
+            }
+
             StringBuilder sb = new StringBuilder();
 
             sb.AppendFormat("{0}: {1}\r\n", "verts", verts.Count);
@@ -471,7 +480,9 @@ namespace CTRFramework
             sb.AppendFormat("{0}: {1}\r\n", "hi quads", quads.Count * 4);
             sb.AppendFormat("{0}: {1}\r\n", "hi tris", quads.Count * 4 * 2);
             sb.AppendFormat("{0}: {1}\r\n", "skybox verts", (skybox != null ? skybox.verts.Count : 0));
-            sb.AppendFormat("{0}: {1}\r\n", "skybox tris", (skybox != null ? skybox.faces.Count : 0));
+            sb.AppendFormat("{0}: {1}\r\n", "visdata total", (visdata != null ? visdata.Count : 0));
+            sb.AppendFormat("{0}: {1}\r\n", "visdata leaves", numLeaves);
+            sb.AppendFormat("{0}: {1}\r\n", "visdata branches", numBranches);
             sb.AppendLine($"begin: {header.compilationBegins}");
             sb.AppendLine($"end: {header.compilationEnds}");
             sb.AppendLine($"File was compiled in: {Math.Round((header.compilationEnds - header.compilationBegins).TotalMinutes)} minutes");
