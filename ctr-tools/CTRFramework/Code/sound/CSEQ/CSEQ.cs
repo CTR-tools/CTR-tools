@@ -309,7 +309,7 @@ namespace CTRFramework.Sound.CSeq
                 if (s.sampleID == id)
                     return s.frequency;
 
-            return VagHeader.DefaultSampleRate;
+            return VagSample.DefaultSampleRate;
         }
 
         public int GetLongSampleIDByTrack(CTrack ct)

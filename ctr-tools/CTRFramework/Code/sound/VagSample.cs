@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.IO;
 using CTRFramework.Shared;
 
@@ -10,15 +6,17 @@ namespace CTRFramework.Sound
 {
     public class VagSample
     {
-        public string magic;
-        public int version;
-        public int reserved;
-        public int dataSize;
-        public int sampleFreq;
-        public int unk1;
-        public int unk2;
-        public int unk3;
-        public string name;
+        public static int DefaultSampleRate = 11025;
+
+        private string magic = "VAGp";
+        private int version = 3;
+        private int reserved = 0;
+        public int dataSize => Frames.Count * 16;
+        public int sampleFreq = 11025;
+        private int unk1 = 0;
+        private int unk2 = 0;
+        private int unk3 = 0;
+        public string SampleName = "default_name";
 
         public List<VagFrame> Frames = new List<VagFrame>();
 
@@ -36,47 +34,102 @@ namespace CTRFramework.Sound
             return new VagSample(br);
         }
 
+        /// <summary>
+        /// Creates VagSample instance from file.
+        /// </summary>
+        /// <param name="filename">Source file name.</param>
+        /// <returns></returns>
         public static VagSample FromFile(string filename)
         {
             using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                return new VagSample(br);
+                return VagSample.FromReader(br);
             }
         }
 
+        /// <summary>
+        /// Read VAG data from stream using binary reader.
+        /// </summary>
+        /// <param name="br">BinaryReaderEx instance.</param>
         public void Read(BinaryReaderEx br)
         {
             magic = new string(br.ReadChars(4));
 
-            Console.WriteLine(magic);
-
+            //vagedit exports vags without magic string for some reason, so only warn
             if (magic != "VAGp")
-                throw new Exception("Not a VAG file.");
+                Helpers.Panic(this, $"No VAGp found. Possibly not a VAG file: magic = {magic}");
 
             version = br.ReadInt32Big();
+
+            if (version !=3)
+                Helpers.Panic(this, $"Version != 3: {version}.");
+
             reserved = br.ReadInt32Big();
 
             if (reserved != 0)
-                Console.WriteLine("reserved != 0...");
+                Helpers.Panic(this, "reserved != 0...");
 
-            dataSize = br.ReadInt32Big();
+            int dataSize = br.ReadInt32Big();
             sampleFreq = br.ReadInt32Big();
             unk1 = br.ReadInt32Big();
             unk2 = br.ReadInt32Big();
             unk3 = br.ReadInt32Big();
 
-            name = br.ReadStringFixed(16);
+            SampleName = br.ReadStringFixed(16);
 
+            ReadFrames(br, dataSize);
+        }
+
+        public void ReadFrames(BinaryReaderEx br, int dataSize)
+        {
             for (int i = 0; i < dataSize / 16; i++)
                 Frames.Add(VagFrame.FromReader(br));
         }
 
         /// <summary>
-        /// Converts VAG sample to WAV.
-        /// Converted from C++ source: https://github.com/ColdSauce/psxsdk/blob/master/tools/vag2wav.c
+        /// Saves VAG to file.
+        /// </summary>
+        /// <param name="filename">Target file name.</param>
+        public void Save(string filename)
+        {
+            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(filename)))
+            {
+                Write(bw);
+            }
+        }
+
+        /// <summary>
+        /// Writes VAG data to stream using binary writer.
+        /// </summary>
+        /// <param name="bw">BinaryWriterEx object.</param>
+        public void Write(BinaryWriterEx bw)
+        {
+            //make sure magic string and version are correct
+            magic = "VAGp";
+            version = 3;
+
+            bw.Write(magic.ToCharArray());
+            bw.WriteBig(version);
+            bw.WriteBig(reserved);
+            bw.WriteBig(dataSize);
+            bw.WriteBig(sampleFreq);
+            bw.WriteBig(unk1);
+            bw.WriteBig(unk2);
+            bw.WriteBig(unk3);
+
+            int pos = (int)bw.BaseStream.Position;
+            bw.Write(SampleName.ToCharArray());
+            bw.Jump(pos + 16);
+
+            foreach (var frame in Frames)
+                frame.Write(bw);
+        }
+
+        /// <summary>
+        /// Exports decompressed WAV sound.
         /// </summary>
         /// <param name="filename">Target WAV filename.</param>
-        public void ConvertToWav(string filename)
+        public void ExportWav(string filename)
         {
             using (BinaryWriterEx wav = new BinaryWriterEx(File.Create(filename)))
             {
@@ -94,53 +147,12 @@ namespace CTRFramework.Sound
                 wav.Write("data".ToCharArray());
                 wav.Write((int)0);
 
-                int d, s;
+                //every next frame uses these values from previous frame, hence passed as ref
                 double s_1 = 0.0;
                 double s_2 = 0.0;
 
-                double[] samples = new double[28];
-                double[,] f = {
-                        { 0.0, 0.0 },
-                        { 60.0 / 64.0,  0.0 },
-                        { 115.0 / 64.0, -52.0 / 64.0 },
-                        { 98.0 / 64.0, -55.0 / 64.0 },
-                        { 122.0 / 64.0, -60.0 / 64.0 }
-                    };
-
-
                 foreach (VagFrame frame in Frames)
-                {
-                    if (frame.flags == 7)
-                        break;
-
-                    for (int i = 0; i < 28; i += 2)
-                    {
-                        d = frame.data[i / 2];
-                        s = (d & 0xf) << 12;
-
-                        if ((s & 0x8000) > 0)
-                            s = (int)(s | 0xffff0000);
-
-                        samples[i] = (double)(s >> frame.shift_factor);
-
-                        s = (d & 0xf0) << 8;
-
-                        if ((s & 0x8000) > 0)
-                            s = (int)(s | 0xffff0000);
-
-                        samples[i + 1] = (double)(s >> frame.shift_factor);
-                    }
-
-                    for (int i = 0; i < 28; i++)
-                    {
-                        samples[i] = samples[i] + s_1 * f[frame.predict_nr, 0] + s_2 * f[frame.predict_nr, 1];
-                        s_2 = s_1;
-                        s_1 = samples[i];
-                        d = (int)Math.Round(samples[i] + 0.5f);
-
-                        wav.Write((short)d);
-                    }
-                }
+                    wav.Write(frame.GetRawData(ref s_1, ref s_2));
 
                 int streamSize = (int)wav.BaseStream.Position;
 

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CTRFramework.Shared;
 
 namespace CTRFramework.Sound
@@ -29,14 +26,86 @@ namespace CTRFramework.Sound
             return new VagFrame(br);
         }
 
+        /// <summary>
+        /// Reads Vag frame from stream using binary reader.
+        /// </summary>
+        /// <param name="br">BinaryReaderEx object.</param>
         public void Read(BinaryReaderEx br)
         {
             predict_nr = br.ReadByte();
             shift_factor = (byte)(predict_nr & 0xf);
             predict_nr >>= 4;
             flags = br.ReadByte();
-
             data = br.ReadBytes(14);
+        }
+
+        private static double[,] f = {
+                        { 0.0, 0.0 },
+                        { 60.0 / 64.0,  0.0 },
+                        { 115.0 / 64.0, -52.0 / 64.0 },
+                        { 98.0 / 64.0, -55.0 / 64.0 },
+                        { 122.0 / 64.0, -60.0 / 64.0 }
+        };
+
+        /// <summary>
+        /// Converts compressed VAG frame data to raw PCM data.
+        /// Converted from C++ source: https://github.com/ColdSauce/psxsdk/blob/master/tools/vag2wav.c
+        /// </summary>
+        /// <returns>Array of bytes.</returns>
+        public byte[] GetRawData(ref double s_1, ref double s_2)
+        {
+            if (flags == 7)
+                return new byte[0];
+
+            int d, s;
+            double[] samples = new double[28];
+
+            for (int i = 0; i < 28; i += 2)
+            {
+                d = data[i / 2];
+                s = (d & 0xf) << 12;
+
+                if ((s & 0x8000) > 0)
+                    s = (int)(s | 0xffff0000);
+
+                samples[i] = (double)(s >> shift_factor);
+
+                s = (d & 0xf0) << 8;
+
+                if ((s & 0x8000) > 0)
+                    s = (int)(s | 0xffff0000);
+
+                samples[i + 1] = (double)(s >> shift_factor);
+            }
+
+            List<byte> rawdata = new List<byte>();
+
+            for (int i = 0; i < 28; i++)
+            {
+                samples[i] = samples[i] + s_1 * f[predict_nr, 0] + s_2 * f[predict_nr, 1];
+                s_2 = s_1;
+                s_1 = samples[i];
+                d = (short)Math.Round(samples[i] + 0.5f);
+
+                rawdata.Add((byte)((short)d & 0xFF));
+                rawdata.Add((byte)(((short)d >> 8) & 0xFF));
+            }
+
+            return rawdata.ToArray();
+        }
+
+        /// <summary>
+        /// Writes VAG frame data to stream using binary writer.
+        /// </summary>
+        /// <param name="bw">Binary writer object.</param>
+        public void Write(BinaryWriterEx bw)
+        {
+            if (data.Length != 14)
+                throw new Exception("Wrong VAG frame data length.");
+
+            bw.Write((byte)((predict_nr << 4) | shift_factor));
+            bw.Write(flags);
+            bw.Write(data);
         }
     }
 }
