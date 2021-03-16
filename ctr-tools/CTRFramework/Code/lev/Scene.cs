@@ -209,7 +209,7 @@ namespace CTRFramework
             //read pickups
             for (int i = 0; i < header.numInstances; i++)
             {
-                br.Jump(header.ptrPickupHeadersPtrArray + 4 * i);
+                br.Jump(header.ptrInstancesPtr + 4 * i);
                 br.Jump(br.ReadUInt32());
 
                 pickups.Add(new PickupHeader(br));

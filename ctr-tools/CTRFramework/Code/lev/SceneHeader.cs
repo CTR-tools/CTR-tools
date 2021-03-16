@@ -5,52 +5,56 @@ namespace CTRFramework
 {
     public class SceneHeader : IRead
     {
-        public uint ptrMeshInfo;
-        public uint ptrSkybox;  //leads to a small aray of vertices?
-        public uint ptrTexArray;  //facegroup //leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
+        public uint ptrMeshInfo;    //pointer to MeshInfo
+        public uint ptrSkybox;      //pointer to SkyBox
+        public uint ptrTexArray;    //leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
 
-        public int numInstances;
-        public uint ptrInstances;
-        public int numModels;
-        public uint ptrModelsPtr; //points to the array of pointers
+        public int numInstances;    //number of model instances in the level (i.e. every single box, fruit, etc.)
+        public uint ptrInstances;   //points to the 1st entry of the array of model instances
+        public int numModels;       //number of actual models
+        public uint ptrModelsPtr;   //pointer to the array of pointers to models. easy in c++, messy in c# 
 
-        public uint unkptr3;
-        public uint unkptr4;
-        public uint ptrPickupHeadersPtrArray;
-        public uint unkptr5;
+        public uint unkPtr1;
+        public uint unkPtr2;
+        public uint ptrInstancesPtr;    //pointer to the array of pointers to model instances.
+        public uint unkPtr3;
 
-        public int null1;
-        public int null2;
+        public int null1;           //assumed reserved
+        public int null2;           //assumed reserved
 
-        public uint cntWater;
-        public uint ptrWater;
-        public uint ptrNamedTex; //lead to the header for the data below
+        public uint cntWater;       //number of vertices treated as water
+        public uint ptrWater;       //pointer to array of water entries
+        public uint ptrNamedTex;    //lead to the header for the data below
         public uint ptrNamedTexArray; //leads to some named data (drop, bubble, map-asphalt01) with an array of 0x0C bytes afterwards
         public uint ptrRestartMain;
 
-        public SomeData[] someData;
-        public Pose[] startGrid;
+        public SomeData[] someData; //???
+        public Pose[] startGrid;    //array of 8 starting locations
 
-        public uint somePtr4;
-        public uint somePtr5;
-        public uint ptrLowTexArray;
-        public Vector4b backColor;
-        public uint bgMode;
+        public uint unkPtr4;
+        public uint unkPtr5;
+        public uint ptrLowTexArray; //assumed to be a pointer to low textures array, there is no number of entries though
+        public Vector4b backColor;  //base background color, used to clear the screen
+        public uint bgMode;         //control background drawing mode, 1 color, 2 colors, 4 colors
 
-        public uint ptrBuildStart;
-        public uint ptrBuildEnd;
-        public uint ptrBuildType;
+        public uint ptrBuildStart;  //pointer to string, date, assumed visdata compilation start
+        public uint ptrBuildEnd;    //pointer to string, date, assumed visdata compilation end
+        public uint ptrBuildType;   //pointer to string, assumed build type
 
-        byte[] skip;
+        byte[] skip;    //assumed to be related to particles, contains particle gravity value
+
+        public Vector4b particleColorTop;       //controls bottom color of particles (i.e. snow)
+        public Vector4b particleColorBottom;    //controls bottom color of particles (i.e. snow)
+        public uint particleRenderMode; //assumed to control how particles are drawn
 
         public uint cntTrialData; //that's incorrect
-        public uint ptrTrialData;
+        public uint ptrTrialData; 
         public uint cntu2;
         public uint ptru2;
-        public uint cntSpawnPts;
-        public uint ptrSpawnPts;
-        public uint cntRestartPts;
-        public uint ptrRestartPts;
+        public uint cntSpawnPts;    
+        public uint ptrSpawnPts;    
+        public uint cntRestartPts;      //number of restarts points in the level
+        public uint ptrRestartPts;      //points to the 1st entry in restart points array
 
         byte[] skip2;
 
@@ -88,10 +92,10 @@ namespace CTRFramework
             numModels = br.ReadInt32();
             ptrModelsPtr = br.ReadUInt32();
 
-            unkptr3 = br.ReadUInt32();
-            unkptr4 = br.ReadUInt32();
-            ptrPickupHeadersPtrArray = br.ReadUInt32();
-            unkptr5 = br.ReadUInt32();
+            unkPtr1 = br.ReadUInt32();
+            unkPtr2 = br.ReadUInt32();
+            ptrInstancesPtr = br.ReadUInt32();
+            unkPtr3 = br.ReadUInt32();
 
             null1 = br.ReadInt32();
             null2 = br.ReadInt32();
@@ -124,8 +128,8 @@ namespace CTRFramework
                 Console.WriteLine(startGrid[i].ToString());
             }
 
-            somePtr4 = br.ReadUInt32();
-            somePtr5 = br.ReadUInt32();
+            unkPtr4 = br.ReadUInt32();
+            unkPtr5 = br.ReadUInt32();
             ptrLowTexArray = br.ReadUInt32();
             backColor = new Vector4b(br);
 
@@ -134,7 +138,11 @@ namespace CTRFramework
             ptrBuildEnd = br.ReadUInt32();
             ptrBuildType = br.ReadUInt32();
 
-            skip = br.ReadBytes(0x6C - 16 - 8 - 16);
+            skip = br.ReadBytes(0x38);
+
+            particleColorTop = new Vector4b(br);
+            particleColorBottom = new Vector4b(br);
+            particleRenderMode = br.ReadUInt32();
 
             cntTrialData = br.ReadUInt32();
             ptrTrialData = br.ReadUInt32();
@@ -157,8 +165,8 @@ namespace CTRFramework
                 bgColor[i] = new Vector4b(br);
 
             skip2_unkPtr = br.ReadUInt32();
-            cntVcolAnim = br.ReadUInt32(); ;
-            ptrVcolAnim = br.ReadUInt32(); ;
+            cntVcolAnim = br.ReadUInt32();
+            ptrVcolAnim = br.ReadUInt32();
 
             skip23 = br.ReadBytes(12);
 
@@ -205,10 +213,10 @@ namespace CTRFramework
             bw.Write(numModels);
             bw.Write(ptrModelsPtr);
 
-            bw.Write(unkptr3);
-            bw.Write(unkptr4);
-            bw.Write(ptrPickupHeadersPtrArray);
-            bw.Write(unkptr5);
+            bw.Write(unkPtr1);
+            bw.Write(unkPtr2);
+            bw.Write(ptrInstancesPtr);
+            bw.Write(unkPtr3);
 
             bw.Write(null1);
             bw.Write(null2);
@@ -225,8 +233,8 @@ namespace CTRFramework
             for (int i = 0; i < startGrid.Length; i++)
                 startGrid[i].Write(bw);
 
-            bw.Write(somePtr4);
-            bw.Write(somePtr5);
+            bw.Write(unkPtr4);
+            bw.Write(unkPtr5);
             bw.Write(ptrLowTexArray);
             backColor.Write(bw);
             bw.Write(bgMode);

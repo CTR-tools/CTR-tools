@@ -98,7 +98,7 @@ namespace CTRFramework
 
             quadFlags = (QuadFlags)br.ReadUInt16();
 
-            bitvalue = br.ReadUInt32Big();
+            bitvalue = br.ReadUInt32(); //big endian or little??
             {
                 drawOrderLow = (byte)(bitvalue & 0xFF);
 

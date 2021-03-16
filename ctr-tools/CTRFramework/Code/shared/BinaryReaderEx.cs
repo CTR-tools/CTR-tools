@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CTRFramework.Shared
 {
@@ -10,50 +11,59 @@ namespace CTRFramework.Shared
         {
         }
 
-        public void Seek(long x)
-        {
-            Seek(x, SeekOrigin.Current);
-        }
+        #region Stream position helpers
 
-        public void Seek(long x, SeekOrigin origin)
+        /// <summary>
+        /// Implements BinaryWriter-like Seek for BinaryReader.
+        /// If SeekOrigin is not passed, it's using the current position.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="origin"></param>
+        public void Seek(long x, SeekOrigin origin = SeekOrigin.Current)
         {
             switch (origin)
             {
                 case SeekOrigin.Begin:
                     this.BaseStream.Position = x;
-                    return;
+                    break;
+
                 case SeekOrigin.Current:
                     this.BaseStream.Position += x;
-                    return;
+                    break;
+
                 case SeekOrigin.End:
                     this.BaseStream.Position = this.BaseStream.Length - x;
-                    return;
+                    break;
             }
+
+            if (this.BaseStream.Position < 0 || this.BaseStream.Position > this.BaseStream.Length)
+                throw new IndexOutOfRangeException("Attempted to seek beyond stream.");
         }
 
-        public void Jump(UIntPtr x)
+        /// <summary>
+        /// Seek wrapper that always jump to given location from the beginning of the stream.
+        /// </summary>
+        /// <param name="position">Stream position to jump to.</param>
+        public void Jump(long position)
         {
-            Jump(x.ToUInt32());
+            Seek(position, SeekOrigin.Begin);
         }
 
-        public void Jump(long x)
+        /// <summary>
+        /// Jump overload that accepts UIntPtr as a param.
+        /// </summary>
+        /// <param name="pointer">Target pointer.</param>
+        public void Jump(UIntPtr pointer)
         {
-            Seek(x, SeekOrigin.Begin);
+            Jump(pointer.ToUInt32());
         }
 
-        public static BinaryReaderEx FromFile(string s)
-        {
-            byte[] data = File.ReadAllBytes(s);
-            MemoryStream ms = new MemoryStream(data);
+        #endregion
 
-            return new BinaryReaderEx(ms);
-        }
-
-        public string HexPos()
-        {
-            return "0x" + this.BaseStream.Position.ToString("x8");
-        }
-
+        /// <summary>
+        /// Reads time-delta value from stream as found in MIDI format.
+        /// </summary>
+        /// <returns></returns>
         public int ReadTimeDelta()
         {
             int time = 0;
@@ -74,6 +84,8 @@ namespace CTRFramework.Shared
             return ttltime;
         }
 
+        #region Big endian helpers
+
         //It probably was wrong all the time, make sure stuff still works.
         public int ReadInt32Big()
         {
@@ -81,6 +93,7 @@ namespace CTRFramework.Shared
             Array.Reverse(x);
             return BitConverter.ToInt32(x, 0);
         }
+
         public uint ReadUInt32Big()
         {
             byte[] x = BitConverter.GetBytes(ReadUInt32());
@@ -88,55 +101,72 @@ namespace CTRFramework.Shared
             return BitConverter.ToUInt32(x, 0);
         }
 
+        #endregion
+
+        #region Array helpers
+
         public short[] ReadArrayInt16(int num)
         {
-            short[] kek = new short[num];
+            short[] x = new short[num];
 
             for (int i = 0; i < num; i++)
-                kek[i] = ReadInt16();
+                x[i] = ReadInt16();
 
-            return kek;
+            return x;
         }
 
         public ushort[] ReadArrayUInt16(int num)
         {
-            ushort[] kek = new ushort[num];
+            ushort[] x = new ushort[num];
 
             for (int i = 0; i < num; i++)
-                kek[i] = ReadUInt16();
+                x[i] = ReadUInt16();
 
-            return kek;
+            return x;
         }
 
         public uint[] ReadArrayUInt32(int num)
         {
-            uint[] kek = new uint[num];
+            uint[] x = new uint[num];
 
             for (int i = 0; i < num; i++)
-                kek[i] = ReadUInt32();
+                x[i] = ReadUInt32();
 
-            return kek;
+            return x;
         }
+
+        #endregion
+
+        #region List helpers
 
         public List<short> ReadListInt16(int num)
         {
-            List<short> buf = new List<short>();
-            buf.AddRange(ReadArrayInt16(num));
-            return buf;
+            return ReadArrayInt16(num).ToList();
         }
 
         public List<uint> ReadListUInt32(int num)
         {
-            List<uint> buf = new List<uint>();
-            buf.AddRange(ReadArrayUInt32(num));
-            return buf;
+            return ReadArrayUInt32(num).ToList();
         }
 
+        #endregion
+
+        #region String helpers
+
+        /// <summary>
+        /// Reads fixed sized array of char and converts to a string.
+        /// </summary>
+        /// <param name="num">Number of chars to read.</param>
+        /// <returns></returns>
         public string ReadStringFixed(int num)
         {
             return new string(ReadChars(num)).Split('\0')[0];
         }
 
+        /// <summary>
+        /// Reads chars 1 by 1 until 0 is met.
+        /// </summary>
+        /// <returns></returns>
         public string ReadStringNT()
         {
             string x = "";
@@ -152,9 +182,16 @@ namespace CTRFramework.Shared
             return x;
         }
 
+        #endregion
+
         public UIntPtr ReadUIntPtr()
         {
             return (UIntPtr)ReadUInt32();
+        }
+
+        public string HexPos()
+        {
+            return "0x" + this.BaseStream.Position.ToString("x8");
         }
     }
 }

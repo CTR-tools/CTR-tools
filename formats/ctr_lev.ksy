@@ -6,11 +6,11 @@ meta:
   endian: le
 
 seq:
-  - id: data_size
+  - id: scene_data_size
     type: u4
-  - id: data
+  - id: scene
     type: lev
-    size: data_size
+    size: scene_data_size
   - id: ptr_map_size
     type: u4
   - id: ptr_map
@@ -167,13 +167,13 @@ types:
         type: u4
       - id: ptr_models_ptr
         type: u4 
+      - id: unk_ptr1
+        type: u4
+      - id: unk_ptr2
+        type: u4
+      - id: ptr_instances_ptr
+        type: u4
       - id: unk_ptr3
-        type: u4
-      - id: unk_ptr4
-        type: u4
-      - id: ptr_instances_ptr_array
-        type: u4
-      - id: unk_ptr5
         type: u4
       - id: null1
         type: u4
@@ -200,9 +200,9 @@ types:
         repeat: expr
         repeat-expr: 8
 
-      - id: unkptr1
+      - id: unk_ptr4
         type: u4
-      - id: unkptr2
+      - id: unk_ptr5
         type: u4
       - id: ptr_low_tex_array
         type: u4
