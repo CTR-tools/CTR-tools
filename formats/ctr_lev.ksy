@@ -216,8 +216,14 @@ types:
       - id: build
         type: build_info
 
-      - id: skip
-        size: 0x44
+      - id: skip_possibly_partice_related
+        size: 0x38
+      - id: particle_color_top
+        type: color
+      - id: particle_color_bottom
+        type: color
+      - id: particle_render_mode
+        type: u4
  
       - id: cnt_trial_data
         type: u4 
