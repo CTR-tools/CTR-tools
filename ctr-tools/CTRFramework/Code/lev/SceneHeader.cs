@@ -168,14 +168,23 @@ namespace CTRFramework
 
             long posx = br.BaseStream.Position;
 
-            br.Jump(ptrBuildStart);
-            compilationBegins = Helpers.ParseDate(br.ReadStringNT());
+            if (ptrBuildStart != 0)
+            {
+                br.Jump(ptrBuildStart);
+                compilationBegins = Helpers.ParseDate(br.ReadStringNT());
+            }
 
-            br.Jump(ptrBuildEnd);
-            compilationEnds = Helpers.ParseDate(br.ReadStringNT());
+            if (ptrBuildEnd != 0)
+            {
+                br.Jump(ptrBuildEnd);
+                compilationEnds = Helpers.ParseDate(br.ReadStringNT());
+            }
 
-            br.Jump(ptrBuildType);
-            Console.WriteLine(br.ReadStringNT());
+            if (ptrBuildType != 0)
+            {
+                br.Jump(ptrBuildType);
+                Console.WriteLine(br.ReadStringNT());
+            }
 
             br.Jump(posx);
             //Console.ReadKey();
