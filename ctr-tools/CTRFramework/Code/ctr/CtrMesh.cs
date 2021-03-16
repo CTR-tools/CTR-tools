@@ -126,7 +126,7 @@ namespace CTRFramework
 
             do
             {
-                x = br.ReadUInt32Big();
+                x = br.ReadUInt32(); //big endian or little endian?
                 if (x != 0xFFFFFFFF)
                     drawList.Add(new CtrDraw(x));
             }
@@ -242,6 +242,9 @@ namespace CTRFramework
                 vrenderMode = br.ReadInt32();
 
                 Console.WriteLine("anime!");
+
+                if (anim.someOffset != 0)
+                    return;
                 //Console.ReadKey();
             }
 
@@ -301,17 +304,19 @@ namespace CTRFramework
                 clr[2] = clr[3];
                 clr[3] = cols[d.colorIndex];
 
+                /*
                 tlb[0] = tlb[1];
                 tlb[1] = tlb[2];
                 tlb[2] = tlb[3];
-                tlb[3] = (d.texIndex == 0 ? null : tl[d.texIndex-1]);
+                tlb[3] = (d.texIndex == 0 ? null : tl[d.texIndex - 1]);
+                */
 
                 if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
                     crd[1] = crd[0];
                     clr[1] = clr[0];
                 }
-                
+
 
                 //if got reset flag, reset tristrip vertex counter
                 if (d.flags.HasFlag(CtrDrawFlags.s))

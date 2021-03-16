@@ -21,11 +21,11 @@ namespace CTRFramework
         public ushort unk;
         public ushort leftChild;
         public ushort rightChild;
-        public uint unk1;   //assumed to be 0
+        public uint unk1;           //assumed to be 0
 
         //if leaf
-        public uint reserved;     //assumed to be 0
-        public uint ptrUnkData; //data goes right after visdata, relatively low amounts (20-30) or 0 links, seems to control trigger scripts somehow, can't shatter crates if 0
+        public uint reserved;       //assumed to be 0
+        public uint ptrUnkData;     //data goes right after visdata, relatively low amounts (20-30) or 0 links, seems to control trigger scripts somehow, can't shatter crates if 0
         public uint numQuadBlock;
         public uint ptrQuadBlock;
 
@@ -62,7 +62,7 @@ namespace CTRFramework
 
             //flag is likely ushort, just testing if upper byte has any data
             if (unk0 != 0)
-                throw new Exception("unk0 is not null");
+                Helpers.Panic(this, "unk0 is not null");
 
             if (flag.HasFlag(VisDataFlags.Leaf)) counter[0]++;
             if (flag.HasFlag(VisDataFlags.Water)) counter[1]++;
@@ -89,16 +89,16 @@ namespace CTRFramework
                 //test leaf assumptions
 
                 if (!(divX == 4096 || divX == 0))
-                    throw new Exception($"{flag} {IsLeaf} {pos.ToString("X8")} divX = {divX.ToString("X8")}");
+                    Helpers.Panic(this, $"{flag} {IsLeaf} {pos.ToString("X8")} divX = {divX.ToString("X8")}");
 
                 if (!(divY == 4096 || divY == 0))
-                    throw new Exception($"{flag} {IsLeaf} {pos.ToString("X8")} divY = {divY.ToString("X8")}");
+                    Helpers.Panic(this, $"{flag} {IsLeaf} {pos.ToString("X8")} divY = {divY.ToString("X8")}");
 
                 if (!(divZ == 4096 || divZ == 0))
-                    throw new Exception($"{flag} {IsLeaf} {pos.ToString("X8")} divZ = {divZ.ToString("X8")}");
+                    Helpers.Panic(this, $"{flag} {IsLeaf} {pos.ToString("X8")} divZ = {divZ.ToString("X8")}");
 
                 if (unk1 != 0)
-                    throw new Exception($"{flag} {IsLeaf} {pos.ToString("X8")} unk1 = {unk1.ToString("X8")}");
+                    Helpers.Panic(this, $"{flag} {IsLeaf} {pos.ToString("X8")} unk1 = {unk1.ToString("X8")}");
             }
             else
             {

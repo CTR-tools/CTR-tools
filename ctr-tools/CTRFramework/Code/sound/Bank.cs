@@ -104,19 +104,17 @@ namespace CTRFramework.Sound
                     vagname += "sample_" + id.ToString("0000") + ".vag";
                 }
 
+                using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(samples[id])))
                 {
-                    using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(samples[id])))
-                    {
-                        VagSample vag = new VagSample();
-                        if (freq != -1) 
-                            vag.sampleFreq = freq;
-                        if (Howl.sampledict.ContainsKey(id)) 
-                            vag.SampleName = Howl.sampledict[id];
-                        vag.ReadFrames(br, samples[id].Length);
+                    VagSample vag = new VagSample();
+                    if (freq != -1)
+                        vag.sampleFreq = freq;
+                    if (Howl.sampledict.ContainsKey(id))
+                        vag.SampleName = Howl.sampledict[id];
+                    vag.ReadFrames(br, samples[id].Length);
 
-                        vag.Save(vagname);
-                        vag.ExportWav(Path.ChangeExtension(vagname, ".wav"));
-                    }
+                    vag.Save(vagname);
+                    vag.ExportWav(Path.ChangeExtension(vagname, ".wav"));
                 }
             }
         }

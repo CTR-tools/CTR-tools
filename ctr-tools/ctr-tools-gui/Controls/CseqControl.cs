@@ -1,14 +1,14 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Sound;
 using CTRFramework.Sound.CSeq;
+using NAudio.Midi;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using NAudio.Wave;
-using NAudio.Midi;
-using System.Linq;
 
 namespace CTRTools.Controls
 {

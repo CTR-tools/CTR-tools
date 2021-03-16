@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace ctrviewer.Engine
 {
@@ -40,16 +38,16 @@ namespace ctrviewer.Engine
 
             foreach (string msg in Lines)
             {
-                    g.DrawString(
-                    font, 
-                    msg, 
-                    loc,
-                    color,
-                    0, 
-                    new Vector2(0, 0), 
-                    scale, 
-                    SpriteEffects.None, 
-                    0.5f);
+                g.DrawString(
+                font,
+                msg,
+                loc,
+                color,
+                0,
+                new Vector2(0, 0),
+                scale,
+                SpriteEffects.None,
+                0.5f);
 
                 loc.Y += inc;
             }

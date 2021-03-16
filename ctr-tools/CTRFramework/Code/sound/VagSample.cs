@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using CTRFramework.Shared;
+using System.Collections.Generic;
 using System.IO;
-using CTRFramework.Shared;
 
 namespace CTRFramework.Sound
 {
@@ -61,7 +61,7 @@ namespace CTRFramework.Sound
 
             version = br.ReadInt32Big();
 
-            if (version !=3)
+            if (version != 3)
                 Helpers.Panic(this, $"Version != 3: {version}.");
 
             reserved = br.ReadInt32Big();

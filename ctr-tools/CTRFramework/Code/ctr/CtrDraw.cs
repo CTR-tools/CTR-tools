@@ -24,7 +24,7 @@ namespace CTRFramework
             colorIndex = (byte)(x >> 9 & 0x7F);
             texIndex = (byte)(x & 0x1FF);
 
-            Console.WriteLine(value.ToString("X8") + " " + GetValue().ToString("X8"));
+            Console.WriteLine(value.ToString("X8") + " " + GetValue().ToString("X8") + " " + ToString());
         }
 
         public uint GetValue()
