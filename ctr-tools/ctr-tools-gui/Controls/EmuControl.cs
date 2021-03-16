@@ -21,7 +21,12 @@ namespace CTRTools.Controls
 
             comboBox1.SelectedIndex = 0xF;
             this.DoubleBuffered = true;
+
+            if (File.Exists("mapping.xml"))
+                memstr = MemMapStruct.Load("mapping.xml");
         }
+
+        MemMapStruct memstr;
 
         private void actionAttach_Click(object sender, EventArgs e)
         {
@@ -62,7 +67,6 @@ namespace CTRTools.Controls
                     return;
                 }
 
-
                 m.WritePSXUInt16(fpspatch, (ushort)(checkBox1.Checked ? 1 : 2), textBox5);
                 m.WritePSXUInt16(fpspatch2, (ushort)(checkBox1.Checked ? 1 : 2), textBox5);
 
@@ -72,6 +76,14 @@ namespace CTRTools.Controls
                 textBox5.Text = baseP1ptr.ToString("X8") + "\r\n" + textBox5.Text;
                 textBox5.Text = charPtr.ToString("X8") + "\r\n" + textBox5.Text;
 
+                if (memstr != null)
+                {
+                    memstr.BasePointer = (int)charPtr;
+                    memstr.Write(m, "curWeapon", comboBox1.SelectedIndex.ToString());
+                    memstr.Write(m, "numCharges", numericUpDown2.Value.ToString());
+                }
+
+                /*
                 using (BinaryReader br = new BinaryReader(new MemoryStream(m.ReadArray(charPtr, 1024))))
                 {
                     c = new Char(br);
@@ -85,10 +97,11 @@ namespace CTRTools.Controls
                         c.Write(bw);
                         m.WriteArray(charPtr, b);
                     }
-
                 }
-
+                
                 propertyGrid2.SelectedObject = c;
+
+                */
             }
             else
             {
