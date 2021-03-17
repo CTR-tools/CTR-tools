@@ -185,6 +185,7 @@
     <EmbeddedResource Include="Data\howlnames.txt" />
     <EmbeddedResource Include="Data\samplenames.txt" />
     <EmbeddedResource Include="Data\versions.xml" />
+    <EmbeddedResource Include="Data\banknames.txt" />
     <Content Include="Properties\BuildDate.txt" />
   </ItemGroup>
   <ItemGroup>

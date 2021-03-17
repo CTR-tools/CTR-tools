@@ -167,4 +167,16 @@
     </entry>
   </filenums>
 
+  <howl>
+    <entry>
+      <region>NTSC-U</region>
+      <name>August 5th beta (the earliest known so far)</name>
+      <banks>banknames.txt</banks>
+      <samples>samplenames.txt</samples>
+      <sequences>howlnames.txt</sequences>
+      <md5>f241501d880ee98112044236d7296d9c</md5>
+    </entry>
+    
+  </howl>
+
 </data>

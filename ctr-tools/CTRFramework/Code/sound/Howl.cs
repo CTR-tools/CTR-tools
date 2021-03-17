@@ -26,19 +26,8 @@ namespace CTRFramework.Sound
         public List<Bank> banks = new List<Bank>();
         public List<CSEQ> sequences = new List<CSEQ>();
 
-        public static int GetFreq(int sampleId)
+        public Howl()
         {
-            foreach (SampleDef sd in samples1)
-            {
-                if (sd.SampleID == sampleId) return sd.Frequency;
-            }
-
-            return -1;
-        }
-
-        public Howl(string fn)
-        {
-            DetectHowl(fn);
         }
 
         public void DetectHowl(string fn)
@@ -79,10 +68,14 @@ namespace CTRFramework.Sound
             return new Howl(br);
         }
 
+        public static void ReadSampleNames()
+        {
+            sampledict = Meta.LoadNumberedList(Meta.SmplPath);
+        }
 
         public void Read(BinaryReaderEx br)
         {
-            sampledict = Meta.LoadNumberedList(Meta.SmplPath);
+            ReadSampleNames();
 
             header = HowlHeader.FromReader(br);
 
@@ -94,11 +87,16 @@ namespace CTRFramework.Sound
                 unk.Add(br.ReadUInt16());
             }
 
+            samples1 = InstanceList<SampleDef>.FromReader(br, (uint)br.BaseStream.Position, (uint)header.cntSfx);
+            samples2 = InstanceList<SampleDef>.FromReader(br, (uint)br.BaseStream.Position, (uint)header.cntEngineSfx);
+
+            /*
             for (int i = 0; i < header.cntSfx; i++)
                 samples1.Add(SampleDef.FromReader(br));
 
             for (int i = 0; i < header.cntEngineSfx; i++)
                 samples2.Add(SampleDef.FromReader(br));
+            */
 
             for (int i = 0; i < header.cntBank; i++)
                 ptrBanks.Add(br.ReadUInt16() * Meta.SectorSize);
@@ -120,38 +118,40 @@ namespace CTRFramework.Sound
         }
 
 
-
         public void ExportCSEQ(string path)
         {
             int i = 0;
+
             foreach (var c in sequences)
             {
-                c.Export(Path.Combine(path, $"{i}.cseq"));
+                c.Export(Path.Combine(path, $"{i.ToString("00")}.cseq"));
                 i++;
             }
         }
 
-        public void ExportCSEQ(BinaryReaderEx br)
+        public void ExportCSEQ(string path, BinaryReaderEx br)
         {
-            string seqdir = String.Format("{0}_cseq\\", name);
-            Directory.CreateDirectory(seqdir);
+            Bank.ReadNames();
 
-            string bankdir = String.Format("{0}_bank\\", name);
-            Directory.CreateDirectory(bankdir);
+            string pathBank = Path.Combine(path, "banks");
+            Helpers.CheckFolder(pathBank);
 
             for (int i = 0; i < ptrBanks.Count - 1; i++)
             {
                 br.BaseStream.Position = ptrBanks[i];
 
-                string fn = String.Format("{0}.bnk", i.ToString("00"));
+                string fn = String.Format($"{i.ToString("00")}_{(Bank.banknames.ContainsKey(i) ? Bank.banknames[i] : "bank")}.bnk");
                 Console.WriteLine("Extracting " + fn);
 
-                fn = bankdir + fn;
+                fn = Path.Combine(pathBank, fn);
 
                 File.WriteAllBytes(fn, br.ReadBytes(ptrBanks[i + 1] - ptrBanks[i]));
             }
 
             Console.WriteLine("---");
+
+            string pathSeq = Path.Combine(path, "sequences");
+            Helpers.CheckFolder(pathSeq);
 
             int j = 0;
 
@@ -174,7 +174,7 @@ namespace CTRFramework.Sound
 
                 Console.WriteLine("Extracting " + fn);
 
-                fn = seqdir + fn;
+                fn = Path.Combine(pathSeq, fn);
 
                 br.BaseStream.Position = i;
                 int size = br.ReadInt32();
@@ -187,12 +187,12 @@ namespace CTRFramework.Sound
             }
         }
 
-        public void ExportAllSamples()
+        public void ExportAllSamples(string path)
         {
             int i = 0;
             foreach (Bank b in banks)
             {
-                b.ExportAll(i, Path.GetDirectoryName(name));
+                b.ExportAll(i, Path.Combine(path, "samples"));
                 i++;
             }
         }
@@ -212,6 +212,15 @@ namespace CTRFramework.Sound
             return null;
         }
 
+        public static int GetFreq(int sampleId)
+        {
+            foreach (SampleDef sd in samples1)
+            {
+                if (sd.SampleID == sampleId) return sd.Frequency;
+            }
+
+            return -1;
+        }
 
         public override string ToString()
         {

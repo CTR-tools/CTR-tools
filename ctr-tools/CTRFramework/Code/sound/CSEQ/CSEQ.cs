@@ -160,9 +160,9 @@ namespace CTRFramework.Sound.CSeq
             }
         }
 
-        public void LoadBank(string s)
+        public void LoadBank(string filename)
         {
-            bank = new Bank(s);
+            bank = Bank.FromFile(filename);
         }
 
         /*

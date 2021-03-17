@@ -60,7 +60,7 @@
 64=weapon_tnt_buzz
 66=lap_cross
 67=weapon_beaker_hit
-69=weapon_time_click()
+69=weapon_time_click
 70=pickup_wumpa_crate
 71=pickup_wumpa_single
 72=weapon_time_deploy

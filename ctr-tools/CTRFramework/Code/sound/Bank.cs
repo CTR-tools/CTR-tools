@@ -9,17 +9,24 @@ namespace CTRFramework.Sound
 
     public class Bank
     {
+        public static Dictionary<int, string> banknames = new Dictionary<int, string>();
+
         public Dictionary<int, byte[]> samples = new Dictionary<int, byte[]>();
+
+        public static void ReadNames()
+        {
+            banknames = Meta.LoadNumberedList("banknames.txt");
+        }
 
         public Bank()
         {
         }
 
-        public Bank(string s)
+        public static Bank FromFile(string filename)
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(s)))
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                Read(br);
+                return new Bank(br);
             }
         }
 
@@ -32,7 +39,6 @@ namespace CTRFramework.Sound
         {
             return new Bank(br);
         }
-
 
         public void Read(BinaryReaderEx br)
         {
@@ -87,6 +93,12 @@ namespace CTRFramework.Sound
 
         public void Export(int id, int freq, string path, string path2 = null, string name = null)
         {
+            string pathSfxVag = Path.Combine(path, "wav");
+            string pathSfxWav = Path.Combine(path, "vag");
+
+            Helpers.CheckFolder(pathSfxVag);
+            Helpers.CheckFolder(pathSfxWav);
+
             if (Contains(id))
             {
                 string vagpath = Path.Combine(path, (path2 == null ? "vag" : path2));
@@ -104,6 +116,8 @@ namespace CTRFramework.Sound
                     vagname += "sample_" + id.ToString("0000") + ".vag";
                 }
 
+                Console.WriteLine(vagname);
+
                 using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(samples[id])))
                 {
                     VagSample vag = new VagSample();
@@ -114,7 +128,7 @@ namespace CTRFramework.Sound
                     vag.ReadFrames(br, samples[id].Length);
 
                     vag.Save(vagname);
-                    vag.ExportWav(Path.ChangeExtension(vagname, ".wav"));
+                    vag.ExportWav(vagname.Replace("vag", "wav")); //lmao
                 }
             }
         }

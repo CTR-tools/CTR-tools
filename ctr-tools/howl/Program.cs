@@ -29,17 +29,36 @@ namespace howl
                 return;
             }
 
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            string basepath = Path.GetDirectoryName(filename);
+            string name = Path.GetFileNameWithoutExtension(filename);
+            string ext = Path.GetExtension(filename).ToLower();
+
+            string path = Path.Combine(basepath, Path.GetFileNameWithoutExtension(filename));
+
+            switch (ext)
             {
-                Howl hwl = Howl.FromReader(br);
-                hwl.DetectHowl(filename);
-                Console.Write(hwl.ToString());
+                case ".hwl":
+                    using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+                    {
+                        Howl hwl = Howl.FromReader(br);
+                        hwl.DetectHowl(filename);
+                        Console.Write(hwl.ToString());
 
-                hwl.ExportCSEQ(br);
-                hwl.ExportAllSamples();
+                        hwl.ExportCSEQ(path, br);
+                        hwl.ExportAllSamples(path);
 
-                Console.WriteLine("Done!");
-                return;
+                        Console.WriteLine("Done!");
+                    }
+                    break;
+                case ".bnk":
+                    Howl.ReadSampleNames();
+                    Bank.ReadNames();
+                    Bank bnk = Bank.FromFile(filename);
+                    bnk.ExportAll(0, Path.Combine(basepath, name));
+                    break;
+                default:
+                    Console.WriteLine("Unsupported file.");
+                    break;
             }
         }
     }

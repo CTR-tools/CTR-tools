@@ -179,10 +179,10 @@ namespace CTRTools.Controls
 
         Bank bnk = new Bank();
 
-        public void LoadBank(string s)
+        public void LoadBank(string filename)
         {
-            bnk = new Bank(s);
-            bnk.ExportAll(1, Path.GetDirectoryName(s), Path.GetFileNameWithoutExtension(s));
+            bnk = Bank.FromFile(filename);
+            bnk.ExportAll(1, Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename));
 
             listBox2.Items.Clear();
             foreach (var samp in bnk.samples)
@@ -392,7 +392,7 @@ namespace CTRTools.Controls
 
                 foreach (string s in files)
                 {
-                    Bank b = new Bank(s);
+                    Bank b = Bank.FromFile(s);
 
                     foreach (var v in b.samples)
                     {

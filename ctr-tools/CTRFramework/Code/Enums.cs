@@ -37,6 +37,17 @@ namespace CTRFramework
     }
 
     [Flags]
+    enum HowlExportFlags
+    {
+        All = -1,
+        SamplesVag = 1 << 0,
+        SamplesWav = 1 << 1,
+        Sequences = 1 << 2,
+        Midis = 1 << 3,
+        Banks = 1 << 4,
+    }
+
+    [Flags]
     public enum CtrDrawFlags
     {
         s = 1 << 7,     //starts a new tristrip

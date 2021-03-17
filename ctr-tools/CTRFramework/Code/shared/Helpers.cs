@@ -149,6 +149,11 @@ namespace CTRFramework.Shared
             return (byte)(ptr & 3);
         }
 
+        /// <summary>
+        /// Retrieves text contents as a single string.
+        /// </summary>
+        /// <param name="resource">Filename, typically from Meta helper class.</param>
+        /// <returns></returns>
         public static string GetTextFromResource(string resource)
         {
             var thisAssembly = Assembly.GetExecutingAssembly();
@@ -164,6 +169,11 @@ namespace CTRFramework.Shared
             }
         }
 
+        /// <summary>
+        /// Retrieves array of lines from embedded resource.
+        /// </summary>
+        /// <param name="resource">Filename, typically from Meta helper class.</param>
+        /// <returns></returns>
         public static string[] GetLinesFromResource(string resource)
         {
             return GetTextFromResource(resource).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
