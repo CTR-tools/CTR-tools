@@ -12,12 +12,12 @@ namespace howl
             Console.WriteLine(
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 $"CTR-Tools: howl - {Meta.GetSignature()}",
-                "Extracts samples and music sequences from HOWL",
+                "Extracts samples and music sequences from HOWL and BNK",
                 Meta.GetVersion());
 
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage:\r\n\thowl.exe <path to KART.HWL>");
+                Console.WriteLine("Usage:\r\n\tExtract HWL:\thowl.exe C:\\example\\KART.HWL\r\n\tExtract BNK:\thowl.exe C:\\example\\01_canyon.bnk");
                 return;
             }
 
@@ -35,6 +35,9 @@ namespace howl
 
             string path = Path.Combine(basepath, Path.GetFileNameWithoutExtension(filename));
 
+            Howl.ReadSampleNames();
+            Bank.ReadNames();
+
             switch (ext)
             {
                 case ".hwl":
@@ -50,9 +53,8 @@ namespace howl
                         Console.WriteLine("Done!");
                     }
                     break;
+
                 case ".bnk":
-                    Howl.ReadSampleNames();
-                    Bank.ReadNames();
                     Bank bnk = Bank.FromFile(filename);
                     bnk.ExportAll(0, Path.Combine(basepath, name));
                     break;
