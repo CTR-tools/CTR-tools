@@ -42,11 +42,11 @@ namespace lng2txt
                         {
                             case ".lng":
                                 lng = LNG.FromFile(filename);
-                                lng.Export(Path.ChangeExtension(filename, "txt"));
+                                lng.Export(Path.ChangeExtension(filename, "txt"), true);
                                 continue;
 
                             case ".txt":
-                                lng = LNG.FromText(File.ReadAllLines(filename));
+                                lng = LNG.FromText(File.ReadAllLines(filename, System.Text.Encoding.Default), true);
                                 lng.Save(Path.ChangeExtension(filename, "lng"));
                                 continue;
 

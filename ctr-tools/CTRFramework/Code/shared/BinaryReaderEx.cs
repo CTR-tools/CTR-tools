@@ -169,17 +169,19 @@ namespace CTRFramework.Shared
         /// <returns></returns>
         public string ReadStringNT()
         {
-            string x = "";
-            char c;
+            byte c;
+            List<byte> bytes = new List<byte>();
 
             do
             {
-                c = ReadChar();
-                if (c != 0) x += c;
+                c = ReadByte();
+                if (c != 0) bytes.Add(c);
             }
             while (c != 0);
 
-            return x;
+            Console.WriteLine(System.Text.Encoding.Default.GetString(bytes.ToArray()));
+
+            return System.Text.Encoding.Default.GetString(bytes.ToArray());
         }
 
         #endregion

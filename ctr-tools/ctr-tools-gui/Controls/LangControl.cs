@@ -58,7 +58,7 @@ namespace CTRTools.Controls
                 switch (Path.GetExtension(files[0]).ToLower())
                 {
                     case ".lng": lng = LNG.FromFile(files[0]); break;
-                    case ".txt": lng = LNG.FromText(File.ReadAllLines(files[0])); break;
+                    case ".txt": lng = LNG.FromText(File.ReadAllLines(files[0], System.Text.Encoding.Default)); break;
                     default: MessageBox.Show("Unsupported file."); return;
                 }
 

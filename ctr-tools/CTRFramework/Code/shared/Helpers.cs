@@ -84,13 +84,16 @@ namespace CTRFramework.Shared
 
 
         //avoids excessive fragmentation
-        public static void WriteToFile(string fileName, string content)
+        public static void WriteToFile(string fileName, string content, System.Text.Encoding encoding = null)
         {
+            if (encoding == null)
+                encoding = System.Text.Encoding.Default;
+
             CheckFolder(fileName);
 
             using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
             {
-                using (StreamWriter sw = new StreamWriter(fs))
+                using (StreamWriter sw = new StreamWriter(fs, encoding))
                 {
                     fs.SetLength(content.Length);
                     sw.Write(content);

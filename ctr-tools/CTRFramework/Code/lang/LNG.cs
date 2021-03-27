@@ -58,14 +58,29 @@ namespace CTRFramework.Lang
         /// Loads LNG object from the array of strings.
         /// </summary>
         /// <param name="lines">Array of strings.</param>
-        public static LNG FromText(string[] lines)
+        public static LNG FromText(string[] lines, bool trySwap = false)
         {
             LNG lng = new LNG();
             lng.Entries = lines.ToList();
 
             //trim every string to avoid extra spaces.
-            foreach (var entry in lng.Entries)
-                entry.Trim();
+            for (int i = 0; i < lng.Entries.Count; i++)
+            {
+                lng.Entries[i] = lng.Entries[i].Split(';')[0].Trim();
+            }
+
+            if (trySwap)
+            {
+                string swapfile = Path.Combine(Meta.BasePath, "charswap.txt");
+
+                if (File.Exists(swapfile))
+                {
+                    CharSwap swap = new CharSwap(swapfile);
+
+                    for ( int i = 0; i < lng.Entries.Count; i++)
+                        lng.Entries[i] = swap.Parse(lng.Entries[i], SwapMode.ToEnglish);
+                }
+            }    
 
             return lng;
         }
@@ -74,8 +89,26 @@ namespace CTRFramework.Lang
         /// Exports CTR localization file to a list of strings 
         /// </summary>
         /// <param name="filename">Target file name.</param>
-        public void Export(string filename)
+        public void Export(string filename, bool trySwap = false)
         {
+            if (trySwap)
+            {
+                string swapfile = Path.Combine(Meta.BasePath, "charswap.txt");
+
+                if (File.Exists(swapfile))
+                {
+                    LNG swaplng = new LNG();
+                    CharSwap swap = new CharSwap(swapfile);
+
+                    foreach (string en in Entries)
+                        swaplng.Entries.Add(swap.Parse(en, SwapMode.ToLocal));
+
+                    swaplng.Export(filename, false);
+
+                    filename = filename + "_original.txt";
+                }
+            }
+
             Helpers.WriteToFile(filename, ToString());
         }
 
@@ -128,8 +161,9 @@ namespace CTRFramework.Lang
 
             foreach (string entry in dEntries)
             {
+                Console.WriteLine(entry);
                 list.Add(entry, (int)bw.BaseStream.Position);
-                bw.Write(entry.Replace("|", "" + (char)0xD).ToCharArray());
+                bw.Write(Encoding.Default.GetBytes(entry.Replace("|", "" + (char)0xD)));
                 bw.Write((byte)0);
             }
 
