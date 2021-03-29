@@ -85,7 +85,78 @@ seq:
     type: u1
   - id: num_bots
     type: u1
-    
+  - id: data_between_screens_and_timer
+    size: 0x30
+  - id: unk_flip_positive_negative
+    type: u4
+  - id: unk_0_1_2
+    type: u4
+  - id: frame_timer_no_exceptions
+    type: u4
+  - id: frame_timer_not_paused
+    type: u4
+  - id: timer
+    type: u4
+  - id: various_timers
+    type: u4
+    repeat: expr
+    repeat-expr: 7
+  - id: traffic_lights_timer
+    type: s2
+  - id: unk_short_traffic_might_be_int
+    type: s2
+  - id: elapsed_event_time
+    type: u4  
+  - id: data_1c_always0
+    size: 0x1C
+  - id: unk_1d30
+    type: u1
+  - id: hud_flags
+    type: u1
+  - id: bool_demo_mode
+    type: u1
+  - id: num_laps
+    type: u1
+  - id: unk_timer_cooldown_similar_to_1d36 
+    type: u2
+  - id: timer_end_of_race_vs
+    type: u2
+  - id: cooldown_from_pause_until_unpause  
+    type: u1
+  - id: cooldown_from_unpause_until_pause
+    type: u1
+  - id: adv_pause_page
+    type: u2
+  - id: unk_related_to_relic_race
+    type: u4
+  - id: lap_index_new_best
+    type: u4
+  - id: unknown_flags_1d44
+    type: u4
+  - id: unknown_1d48_not_found
+    type: u1
+  - id: last_68_difference_sep3_usa_retail
+    type: u1
+  - id: not_found_in_code1
+    type: u2
+  - id: test
+    type: u2    
+  - id: not_found_in_code2 
+    type: u2
+  - id: not_found_in_code3
+    type: u2
+  - id: skip_0x24
+    size: 0x24
+  - id: unknown_notinsep3_again
+    type: u2
+  - id: time_to_beat_in_time_trial_for_current_event
+    type: u4
+  - id: skip5
+    size: 8
+  - id: original_event_time
+    type: u4
+  - id: battle_setup_struct
+    type: battle_setup
 
 instances:
   renderflags:
@@ -128,6 +199,32 @@ instances:
     type: u1
     
 types:
+
+  battle_setup:
+    seq:
+      - id: life_limit
+        type: u4
+      - id: kill_limit
+        type: u4
+      - id: unk_related_to_team_squares
+        type: u4
+        repeat: expr
+        repeat-expr: 4
+      - id: weapons_enabled
+        type: u4
+      - id: player_teams
+        type: u1
+        repeat: expr
+        repeat-expr: 4
+      - id: skip
+        size: 0x30
+      - id: team_flags
+        type: u4
+      - id: num_teams
+        type: u4
+      - id: unk_weapons
+        size: 0x40
+
 
   db:
     seq:
@@ -180,11 +277,11 @@ types:
         type: vector3s
       - id: unk1
         type: vector3s
-      - id: fade_from_black_current_value
+      - id: fade_in_current
         type: s2
-      - id: fade_from_black_desired_esult
+      - id: fadein_target
         type: s2
-      - id: unk2
+      - id: fadein_step
         type: s2
       - id: unk3
         type: u4
