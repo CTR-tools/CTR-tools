@@ -6,7 +6,7 @@ meta:
   endian: le
 
 doc: |
-  kaitai-struct conversion of CTR RAM Mapping Project/ModSDK structs
+  kaitai-struct conversion of CTR RAM Mapping Project/ModSDK GameConfig struct
 
 seq:
   - id: game_mode
@@ -157,6 +157,118 @@ seq:
     type: u4
   - id: battle_setup_struct
     type: battle_setup
+  - id: frozen_time_remaining
+    type: u4
+  - id: time_crate_type_smashed
+    type: u4
+  - id: num_crystals_in_lev
+    type: u4
+  - id: time_crates_in_lev
+    type: u4 
+    
+    
+  - id: num_trophies
+    type: u4
+  - id: num_relics
+    type: u4
+  - id: num_keys
+    type: u4
+  - id: total
+    type: u4 
+  - id: red
+    type: u4
+  - id: green
+    type: u4
+  - id: blue
+    type: u4
+  - id: yellow
+    type: u4 
+  - id: purlpe
+    type: u4 
+  - id: completion_percent
+    type: u4 
+  - id: cup_id
+    type: u4 
+  - id: track_index
+    type: u4 
+  - id: points
+    type: u4
+    repeat: expr
+    repeat-expr: 8
+  - id: standing_points
+    size: 0x30
+  - id: curr_lev
+    type: u4
+  - id: prev_lev
+    type: u4
+  - id: boss_id
+    type: u4
+  - id: arcade_difficulty
+    type: u4
+  - id: num_missiles
+    type: u4
+  - id: num_players_with_3_misiles
+    type: u4
+  - id: rain_var
+    type: u4
+  - id: ptr_red_off
+    type: u4
+  - id: ptr_red_on
+    type: u4
+  - id: ptr_green_off
+    type: u4
+  - id: ptr_green_on
+    type: u4
+  - id: demo_countdown_timer
+    type: u4
+  - id: unk1_afterdemo
+    type: u4
+  - id: unk2_afterdemo
+    type: u4
+  - id: unk3_afterdemo
+    type: u4
+  - id: ptr_icons
+    type: u4
+    repeat: expr
+    repeat-expr: 0x88
+  - id: unk210c
+    type: u4
+  - id: unk2110
+    type: u4
+  - id: icon_group
+    type: u4
+    repeat: expr
+    repeat-expr: 0x11
+  - id: unk2158
+    type: u4
+  - id: unk215c
+    type: u4
+  - id: model_ptr
+    type: u4
+    repeat: expr
+    repeat-expr: 0xe3
+  - id: ptr_drivers
+    type: u4  
+    repeat: expr
+    repeat-expr: 8
+  - id: ptr_drivers_ordered
+    type: u4  
+    repeat: expr
+    repeat-expr: 8
+  - id: filler_unk1
+    type: u4      
+  - id: filler_unk2
+    type: u4     
+  - id: filler_null1
+    size: 0xc
+  - id: overlay_loaded1
+    type: u1  
+  - id: overlay_loaded2
+    type: u1  
+  - id: overlay_loaded3
+    type: u1
+  - id: overlay_loaded4
+    type: u1
 
 instances:
   renderflags:
@@ -184,16 +296,7 @@ instances:
 
       rest unknown or no visible effects
 
-  ptr_drivers:
-    pos: 0x24ec
-    type: u4  
-    repeat: expr
-    repeat-expr: 8
-  ptr_drivers_ordered:
-    pos: 0x250C
-    type: u4  
-    repeat: expr
-    repeat-expr: 8
+
   current_p1_standing:
     pos: 0x257a
     type: u1
