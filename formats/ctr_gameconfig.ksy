@@ -255,24 +255,23 @@ seq:
     type: u4  
     repeat: expr
     repeat-expr: 8
-  - id: filler_unk1
-    type: u4      
-  - id: filler_unk2
-    type: u4     
+  - id: deadcoed_struct
+    type: deadcoed      
   - id: filler_null1
     size: 0xc
   - id: overlay_loaded1
     type: u1  
   - id: overlay_loaded2
     type: u1  
-  - id: overlay_loaded3
+  - id: overlay_loaded3_neverused
     type: u1
   - id: overlay_loaded4
     type: u1
-
-instances:
-  renderflags:
-    pos: 0x256c
+  - id: skip_final_filler
+    size: 36
+  - id: frame_delay_maybe
+    type: u4
+  - id: renderflags
     type: u4
     doc: |
       0x256c - uint - render flags
@@ -296,12 +295,32 @@ instances:
 
       rest unknown or no visible effects
 
+  - id: clock_effect_enabled
+    type: u4
+    doc: only bit0 has effect
 
-  current_p1_standing:
-    pos: 0x257a
+  - id: some_ptr_before_positions
+    type: u4
+
+  - id: some_value_before_positions
+    type: u2
+
+  - id: current_human_player_position
     type: u1
+    repeat: expr
+    repeat-expr: 8
+    
+  - id: final_short
+    type: s2
     
 types:
+
+  deadcoed:
+    seq:
+      - id: unk1
+        type: u4
+      - id: unk2
+        type: u4
 
   battle_setup:
     seq:
