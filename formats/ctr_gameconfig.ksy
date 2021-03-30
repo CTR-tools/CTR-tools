@@ -21,7 +21,7 @@ seq:
     type: u4
     repeat: expr
     repeat-expr: 2
-  - id: db
+  - id: database
     type: db
     repeat: expr
     repeat-expr: 2
@@ -302,8 +302,10 @@ seq:
   - id: value_after_clock_effect
     type: u2
     
-  - id: some_ptr_before_positions
-    type: u4
+  - id: some_howl_bank_data
+    type: u1
+    repeat: expr
+    repeat-expr: 4
 
   - id: some_value_before_positions1
     type: u1
