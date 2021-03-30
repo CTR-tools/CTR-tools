@@ -296,15 +296,20 @@ seq:
       rest unknown or no visible effects
 
   - id: clock_effect_enabled
-    type: u4
+    type: u2
     doc: only bit0 has effect
-
+    
+  - id: value_after_clock_effect
+    type: u2
+    
   - id: some_ptr_before_positions
     type: u4
 
-  - id: some_value_before_positions
-    type: u2
-
+  - id: some_value_before_positions1
+    type: u1
+  - id: some_value_before_positions2
+    type: u1
+    
   - id: current_human_player_position
     type: u1
     repeat: expr
