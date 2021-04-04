@@ -147,6 +147,8 @@
     <Compile Include="Code\vrm\BMPHeader.cs" />
     <Compile Include="Code\vrm\Tim.cs" />
     <Compile Include="Code\vrm\CtrVrm.cs" />
+    <Compile Include="ThirdParty\Kaitai\KaitaiStream.cs" />
+    <Compile Include="ThirdParty\Kaitai\KaitaiStruct.cs" />
     <Compile Include="ThirdParty\PlyImporter\Extensions\ArrayExtensions.cs" />
     <Compile Include="ThirdParty\PlyImporter\Extensions\EnumerableExtensions.cs" />
     <Compile Include="ThirdParty\PlyImporter\PlyHandler.cs" />
