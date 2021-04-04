@@ -3,6 +3,7 @@ using CTRFramework.Shared;
 using System;
 using System.IO;
 using System.Windows.Forms;
+using CTRTools;
 
 namespace CTRTools.Controls
 {
@@ -136,6 +137,37 @@ namespace CTRTools.Controls
 
 
             //m.WriteArray(lev, b);
+        }
+
+        Timer timer;    
+        CtrGameconfig cfg;
+
+        private void GetGameConfig(object sender, EventArgs e)
+        {
+            if (m == null)
+            {
+                timer.Stop();
+                return;
+            }
+
+            cfg = CtrGameconfig.FromStream(new MemoryStream(m.ReadArray(m.ReadPSXUInt32(0x8008d2ac), 9604)));
+            propertyGrid2.SelectedObject = cfg;
+        }
+
+        private void TimerInit()
+        {
+            timer = new Timer();
+            m = new Mem("ePSXe");
+            cfg = CtrGameconfig.FromStream(new MemoryStream(m.ReadArray(m.ReadPSXUInt32(0x8008d2ac), 9604)));
+            timer.Interval = 100;
+            timer.Tick += GetGameConfig;
+            propertyGrid2.SelectedObject = cfg;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            TimerInit();
+            timer.Start();
         }
     }
 }

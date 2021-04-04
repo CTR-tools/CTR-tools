@@ -110,6 +110,7 @@
     <Compile Include="Controls\LevControl.Designer.cs">
       <DependentUpon>LevControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="CtrGameconfig.cs" />
     <Compile Include="LevelSlot.cs" />
     <Compile Include="Mcs.cs" />
     <Compile Include="Mem.cs" />

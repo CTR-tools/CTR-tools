@@ -37,6 +37,7 @@ namespace CTRTools.Controls
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.actionAttach = new System.Windows.Forms.Button();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
@@ -125,10 +126,21 @@ namespace CTRTools.Controls
             0,
             0});
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(486, 343);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(109, 33);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "Read GameConfig";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // EmuControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.button28);
             this.Controls.Add(this.propertyGrid2);
@@ -153,5 +165,6 @@ namespace CTRTools.Controls
         private TextBox textBox5;
         private Button actionAttach;
         private NumericUpDown numericUpDown2;
+        private Button button1;
     }
 }
