@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml;
+using System.Security.Cryptography;
 
 namespace CTRFramework.Sound
 {
@@ -12,7 +14,20 @@ namespace CTRFramework.Sound
         //Release rel;
         string name;
         string reg;
-        string[] names;
+
+        public static Dictionary<int, string> seqnames = new Dictionary<int, string>();
+        public static Dictionary<int, string> banknames = new Dictionary<int, string>();
+        public static Dictionary<int, string> samplenames = new Dictionary<int, string>();
+
+        public static string GetName(int x, Dictionary<int, string> dict)
+        {
+            string result = $"{x.ToString("0000")}_{ x.ToString("X4")}";
+
+            if (dict.ContainsKey(x))
+                result += dict[x];
+
+            return result;
+        }
 
         public HowlHeader header;
 
@@ -30,7 +45,35 @@ namespace CTRFramework.Sound
         {
         }
 
-        public void DetectHowl(string fn)
+        private void KnownFileCheck(BinaryReaderEx br)
+        {
+            br.Jump(0);
+
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(Helpers.GetTextFromResource(Meta.XmlPath));
+
+            var hash = MD5.Create().ComputeHash(br.BaseStream);
+            string md5 = BitConverter.ToString(hash).Replace("-", "");
+
+            foreach (XmlElement el in doc.SelectNodes("/data/howl/entry"))
+            {
+                if (md5.ToLower() == el["md5"].InnerText.ToLower())
+                {
+                    Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.");
+                    banknames = Meta.LoadNumberedList(el["banks"].InnerText);
+                    seqnames = Meta.LoadNumberedList(el["sequences"].InnerText);
+                    samplenames = Meta.LoadNumberedList(el["samples"].InnerText);
+                    return;
+                }
+            }
+
+            br.Jump(0);
+
+            Console.WriteLine("Unknown HOWL file.");
+        }
+
+        /*
+            public void DetectHowl(string fn)
         {
             name = fn;
             reg = Meta.Detect(fn, "howls", 0);
@@ -44,9 +87,7 @@ namespace CTRFramework.Sound
                 Console.WriteLine("Unknown HWL.");
             }
         }
-
-        public static Dictionary<int, string> sampledict = new Dictionary<int, string>();
-
+        */
 
         public Howl(BinaryReaderEx br)
         {
@@ -68,14 +109,9 @@ namespace CTRFramework.Sound
             return new Howl(br);
         }
 
-        public static void ReadSampleNames()
-        {
-            sampledict = Meta.LoadNumberedList(Meta.SmplPath);
-        }
-
         public void Read(BinaryReaderEx br)
         {
-            ReadSampleNames();
+            KnownFileCheck(br);
 
             header = HowlHeader.FromReader(br);
 
@@ -131,8 +167,6 @@ namespace CTRFramework.Sound
 
         public void ExportCSEQ(string path, BinaryReaderEx br)
         {
-            Bank.ReadNames();
-
             string pathBank = Path.Combine(path, "banks");
             Helpers.CheckFolder(pathBank);
 
@@ -164,7 +198,7 @@ namespace CTRFramework.Sound
                     fn = String.Format(
                         "{0}_{1}.cseq",
                         j.ToString("00"),
-                        (j < names.Length) ? names[j] : "sequence"
+                        seqnames.ContainsKey(j) ? seqnames[j] : "sequence"
                     );
                 }
                 else

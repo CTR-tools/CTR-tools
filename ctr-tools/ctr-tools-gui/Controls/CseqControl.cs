@@ -94,7 +94,7 @@ namespace CTRTools.Controls
 
             foreach (SampleDef sd in seq.samples)
             {
-                TreeNode tn1 = new TreeNode(sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : ""));
+                TreeNode tn1 = new TreeNode(sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""));
                 tn.Nodes.Add(tn1);
             }
 
@@ -102,7 +102,7 @@ namespace CTRTools.Controls
 
             foreach (SampleDefReverb sd in seq.samplesReverb)
             {
-                TreeNode tn3 = new TreeNode(sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : ""));
+                TreeNode tn3 = new TreeNode(sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""));
                 tn2.Nodes.Add(tn3);
             }
 
@@ -321,14 +321,14 @@ namespace CTRTools.Controls
                 {
                     SampleDef sd = seq.samples[treeView1.SelectedNode.Index];
                     propertyGrid1.SelectedObject = sd;
-                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : "") + ".wav";
+                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : "") + ".wav";
                 }
 
                 if (treeView1.SelectedNode.Parent.Index == 0)
                 {
                     SampleDefReverb sd = seq.samplesReverb[treeView1.SelectedNode.Index];
                     propertyGrid1.SelectedObject = sd;
-                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.sampledict.ContainsKey(sd.SampleID) ? "_" + Howl.sampledict[sd.SampleID] : "") + ".wav";
+                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : "") + ".wav";
                 }
 
 

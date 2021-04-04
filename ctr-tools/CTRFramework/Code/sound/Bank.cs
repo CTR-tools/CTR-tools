@@ -105,16 +105,19 @@ namespace CTRFramework.Sound
                 Directory.CreateDirectory(vagpath);
 
                 //string vagname = vagpath + "\\" +  (name == null ?  (Howl.sampledict.ContainsKey(id) ? Howl.sampledict[id] : "sample_" + id.ToString("0000")) : name) + ".vag";
-                string vagname = vagpath + "\\";
+                string vagname = vagpath + "\\" + Howl.GetName(id, Howl.samplenames);
 
+                
+                /*
                 if (name != null)
                 {
-                    vagname += (name != null ? name : "sample") + (Howl.sampledict.ContainsKey(id) ? "_" + Howl.sampledict[id] : "") + ".vag";
+                    vagname += (name != null ? name : "sample") + (Howl.samplenames.ContainsKey(id) ? "_" + Howl.samplenames[id] : "") + ".vag";
                 }
                 else
                 {
                     vagname += "sample_" + id.ToString("0000") + ".vag";
                 }
+                */
 
                 Console.WriteLine(vagname);
 
@@ -123,8 +126,8 @@ namespace CTRFramework.Sound
                     VagSample vag = new VagSample();
                     if (freq != -1)
                         vag.sampleFreq = freq;
-                    if (Howl.sampledict.ContainsKey(id))
-                        vag.SampleName = Howl.sampledict[id];
+                    if (Howl.samplenames.ContainsKey(id))
+                        vag.SampleName = Howl.samplenames[id];
                     vag.ReadFrames(br, samples[id].Length);
 
                     vag.Save(vagname);

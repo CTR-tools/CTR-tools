@@ -35,16 +35,12 @@ namespace howl
 
             string path = Path.Combine(basepath, Path.GetFileNameWithoutExtension(filename));
 
-            Howl.ReadSampleNames();
-            Bank.ReadNames();
-
             switch (ext)
             {
                 case ".hwl":
                     using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
                     {
                         Howl hwl = Howl.FromReader(br);
-                        hwl.DetectHowl(filename);
                         Console.Write(hwl.ToString());
 
                         hwl.ExportCSEQ(path, br);
@@ -55,6 +51,7 @@ namespace howl
                     break;
 
                 case ".bnk":
+                    Bank.ReadNames();
                     Bank bnk = Bank.FromFile(filename);
                     bnk.ExportAll(0, Path.Combine(basepath, name));
                     break;
