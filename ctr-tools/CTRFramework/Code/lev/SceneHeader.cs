@@ -48,11 +48,11 @@ namespace CTRFramework
         public uint particleRenderMode; //assumed to control how particles are drawn
 
         public uint cntTrialData; //that's incorrect
-        public uint ptrTrialData; 
+        public uint ptrTrialData;
         public uint cntu2;
         public uint ptru2;
-        public uint cntSpawnPts;    
-        public uint ptrSpawnPts;    
+        public uint cntSpawnPts;
+        public uint ptrSpawnPts;
         public uint cntRestartPts;      //number of restarts points in the level
         public uint ptrRestartPts;      //points to the 1st entry in restart points array
 

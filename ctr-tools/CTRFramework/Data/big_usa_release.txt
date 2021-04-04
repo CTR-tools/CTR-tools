@@ -129,6 +129,8 @@
 110=levels\tracks\space\relic\data.vrm
 111=levels\tracks\space\relic\data.lev
 
+#renamed from alphalt1 to coco1
+
 112=levels\tracks\coco1\1P\data.vrm
 113=levels\tracks\coco1\1P\data.lev
 114=levels\tracks\coco1\2P\data.vrm
@@ -137,6 +139,8 @@
 117=levels\tracks\coco1\4P\data.lev
 118=levels\tracks\coco1\relic\data.vrm
 119=levels\tracks\coco1\relic\data.lev
+
+#renamed from alphalt2 to arena2
 
 120=levels\tracks\arena2\1P\data.vrm
 121=levels\tracks\arena2\1P\data.lev
