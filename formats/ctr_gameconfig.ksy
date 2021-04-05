@@ -278,17 +278,17 @@ seq:
 
       00000001 - draw lev
       00000002 - draw rain
-      00000004 - ?
+      00000004 - draw confetti?
       00000008 - draw stars
       00000010 - ?
       00000020 - draw ctr models (instances?)
       00000040 - ?
       00000080 - probably wheels, but doesn't render without kart
-      00000100 - ?
+      00000100 - draw 2-4P model to texture
       00000200 - draw particles (fire, smoke)
       00000400 - draw shadow
       00000800 - draw heat effect
-      00001000 - trigger checkered flag
+      00001000 - draw checkered flag (also triggers some logic like can't pause)
       00002000 - clear back buffer with back color
       00004000 - ?
       00008000 - ?
@@ -406,11 +406,11 @@ types:
         type: vector3s
       - id: unk1
         type: vector3s
-      - id: fade_in_current
+      - id: fade_current
         type: s2
-      - id: fadein_target
+      - id: fade_target
         type: s2
-      - id: fadein_step
+      - id: fade_step
         type: s2
       - id: unk3
         type: u4
@@ -429,7 +429,7 @@ types:
     seq:
       - id: driver_index
         type: u4
-      - id: data_0x44
+      - id: data_0x40
         size: 0x40
       - id: ptr_driver
         type: u4

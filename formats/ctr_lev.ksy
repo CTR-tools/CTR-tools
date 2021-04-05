@@ -173,7 +173,7 @@ types:
         type: u4
       - id: ptr_instances_ptr
         type: u4
-      - id: unk_ptr3
+      - id: unk_ptr3_related_to_water_anim
         type: u4
       - id: null1
         type: u4
@@ -251,7 +251,7 @@ types:
         type: color
         repeat: expr
         repeat-expr: 4
-      - id: skip2_unkptr
+      - id: skip2_unkptr_related_to_vcol_anim
         type: u4
       - id: cnt_vcanim
         type: u4
