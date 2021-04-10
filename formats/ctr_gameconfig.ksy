@@ -76,7 +76,9 @@ seq:
   - id: ptr_render_bucket_instance
     type: u4
   - id: skip3
-    size: 0x10
+    size: 0xC
+  - id: num_particles
+    type: u4
   - id: num_players
     type: u1
   - id: num_controllers
