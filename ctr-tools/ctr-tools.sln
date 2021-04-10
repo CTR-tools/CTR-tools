@@ -42,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ctrviewer", "ctrviewer\ctrv
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cmd_tools", "cmd_tools", "{1ABEE12F-A18C-4F32-A69C-E5EC20467116}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTRFramework_UnitTesting", "CTRFramework_UnitTests\CTRFramework_UnitTesting.csproj", "{2F78E6DD-9F0D-48DE-9B6A-115F59FBB5CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTRFramework_Tests", "CTRFramework_Tests\CTRFramework_Tests.csproj", "{2F78E6DD-9F0D-48DE-9B6A-115F59FBB5CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

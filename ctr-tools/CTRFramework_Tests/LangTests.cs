@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using CTRFramework.Shared;
 
-namespace CTRFramework_UnitTests
+namespace CTRFramework_Tests
 {
     [TestClass]
     public class LangTests

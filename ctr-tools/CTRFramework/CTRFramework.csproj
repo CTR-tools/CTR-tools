@@ -176,10 +176,12 @@
     <EmbeddedResource Include="Data\cseq.json" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Data\versions.json" />
+    <None Include="ThirdParty\Kaitai\README.md" />
     <None Include="ThirdParty\PlyImporter\LICENSE" />
     <None Include="ThirdParty\PlyImporter\README.md" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ThirdParty\Kaitai\LICENSE" />
     <EmbeddedResource Include="Data\big_usa_beta_aug.txt" />
     <EmbeddedResource Include="Data\big_usa_demo.txt" />
     <EmbeddedResource Include="Data\big_pal_release.txt" />
