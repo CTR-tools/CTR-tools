@@ -160,6 +160,7 @@ namespace ctrviewer.Engine
             if (vid["ShowCamPos"] != null) settings.ShowCamPos = Boolean.Parse(vid["ShowCamPos"].InnerText);
             if (vid["WindowScale"] != null) settings.WindowScale = Int32.Parse(vid["WindowScale"].InnerText);
             if (vid["UseLowLod"] != null) settings.UseLowLod = Boolean.Parse(vid["UseLowLod"].InnerText);
+            if (vid["ShowConsole"] != null) settings.ShowConsole = Boolean.Parse(vid["ShowConsole"].InnerText);
 
             return settings;
         }

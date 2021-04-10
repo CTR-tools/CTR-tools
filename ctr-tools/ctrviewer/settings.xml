@@ -17,4 +17,5 @@
   <ShowCamPos>false</ShowCamPos>
   <WindowScale>75</WindowScale>
   <UseLowLod>false</UseLowLod>
+  <ShowConsole>false</ShowConsole>
 </settings>

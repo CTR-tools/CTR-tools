@@ -409,32 +409,36 @@ namespace ctrviewer
                 }
             }
 
-            string[] models = Directory.GetFiles(Path.Combine(Meta.BasePath, Meta.ModelsPath), "*.ctr");
+            string mdlpath = Path.Combine(Meta.BasePath, Meta.ModelsPath);
 
-            foreach (var s in models)
+            if (Directory.Exists(mdlpath))
             {
-                CtrModel c = CtrModel.FromFile(s);
+                string[] models = Directory.GetFiles(mdlpath, "*.ctr");
 
-                if (!instTris.ContainsKey(c.Name))
+                foreach (var s in models)
                 {
-                    List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
+                    CtrModel c = CtrModel.FromFile(s);
 
-                    foreach (var x in c.Entries[0].verts)
-                        li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
+                    if (!instTris.ContainsKey(c.Name))
+                    {
+                        List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
-                    TriList t = new TriList();
-                    t.textureEnabled = false;
-                    t.textureName = "test";
-                    t.scrollingEnabled = false;
-                    t.PushTri(li);
-                    t.Seal();
+                        foreach (var x in c.Entries[0].verts)
+                            li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
 
-                    instTris.Add(c.Name, t);
+                        TriList t = new TriList();
+                        t.textureEnabled = false;
+                        t.textureName = "test";
+                        t.scrollingEnabled = false;
+                        t.PushTri(li);
+                        t.Seal();
 
-                    external.Add(new InstancedModel(c.Name, Vector3.Zero, Vector3.Zero, 0.1f));
+                        instTris.Add(c.Name, t);
+
+                        external.Add(new InstancedModel(c.Name, Vector3.Zero, Vector3.Zero, 0.1f));
+                    }
                 }
             }
-
 
             RenderEnabled = false;
 
