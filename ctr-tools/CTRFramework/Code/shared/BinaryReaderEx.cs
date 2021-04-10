@@ -24,24 +24,30 @@ namespace CTRFramework.Shared
             switch (origin)
             {
                 case SeekOrigin.Begin:
+                    if (x < 0 || x >= this.BaseStream.Length)
+                        throw new IndexOutOfRangeException($"{x}, {this.BaseStream.Length}, Trying to seek out of stream range");
+
                     this.BaseStream.Position = x;
                     break;
 
                 case SeekOrigin.Current:
+                    if (x > this.BaseStream.Length - this.BaseStream.Position || x < -this.BaseStream.Position)
+                        throw new IndexOutOfRangeException("Trying to seek out of stream range");
+
                     this.BaseStream.Position += x;
                     break;
 
                 case SeekOrigin.End:
+                    if (x > this.BaseStream.Position)
+                        throw new IndexOutOfRangeException("Trying to seek out of stream range");
+
                     this.BaseStream.Position = this.BaseStream.Length - x;
                     break;
             }
-
-            if (this.BaseStream.Position < 0 || this.BaseStream.Position > this.BaseStream.Length)
-                throw new IndexOutOfRangeException("Attempted to seek beyond stream.");
         }
 
         /// <summary>
-        /// Seek wrapper that always jump to given location from the beginning of the stream.
+        /// Seek wrapper that always jumps to given absolute location from the beginning of the stream.
         /// </summary>
         /// <param name="position">Stream position to jump to.</param>
         public void Jump(long position)
