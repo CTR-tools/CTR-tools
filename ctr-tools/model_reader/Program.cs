@@ -96,8 +96,21 @@ namespace model_reader
                     }
                 case ".mpk":
                     {
+                        string vrampath = Path.ChangeExtension(filename, "vrm");
+
+                        if (!File.Exists(vrampath))
+                        {
+                            vrampath = Path.Combine(Path.GetDirectoryName(filename), "shared.vrm");
+
+                            if (!File.Exists(vrampath))
+                            {
+                                Console.WriteLine("Warning! No vram file found.\r\nPlease put shared.vrm file with mpk you want to extract.");
+                                vrampath = "";
+                            }
+                        }
+
                         ModelPack mpk = ModelPack.FromFile(filename);
-                        mpk.Extract(Path.Combine(basepath, name), CtrVrm.FromFile(Path.Combine(basepath, "shared.vrm")));
+                        mpk.Extract(Path.Combine(basepath, name), CtrVrm.FromFile(vrampath));
 
                         break;
                     }

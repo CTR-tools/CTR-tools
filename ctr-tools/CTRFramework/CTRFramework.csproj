@@ -110,9 +110,9 @@
     <Compile Include="Code\Interfaces.cs" />
     <Compile Include="Code\shared\Meta.cs" />
     <Compile Include="Code\lev\nav\NavFrame.cs" />
-    <Compile Include="Code\mpk\UImap.cs" />
+    <Compile Include="Code\mpk\IconPack.cs" />
     <Compile Include="Code\mpk\ModelPack.cs" />
-    <Compile Include="Code\mpk\TexMap.cs" />
+    <Compile Include="Code\mpk\Icon.cs" />
     <Compile Include="Code\shared\InstanceList.cs" />
     <Compile Include="Code\lev\Scene.cs" />
     <Compile Include="Code\lev\SceneHeader.cs" />

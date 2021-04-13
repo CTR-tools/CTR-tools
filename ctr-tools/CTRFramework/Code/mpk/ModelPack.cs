@@ -9,11 +9,9 @@ namespace CTRFramework
     public class ModelPack : IRead
     {
         string path;
-        int texOff;
-        UImap map;
 
+        IconPack iconPack;
         public List<CtrModel> Models = new List<CtrModel>();
-
         public List<UIntPtr> PointerMap = new List<UIntPtr>();
 
         public ModelPack()
@@ -29,23 +27,35 @@ namespace CTRFramework
             using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(data)))
             {
                 int size = br.ReadInt32();
+                br.BaseStream.Position = size + 4;
+                int size2 = br.ReadInt32();
 
-                using (MemoryStream ms = new MemoryStream(data, 4, size))
+                //if size mismatch, assume it's demo
+                if (4 + size + 4 + size2 != br.BaseStream.Length)
                 {
-                    using (BinaryReaderEx br2 = new BinaryReaderEx(ms))
-                    {
-                        Read(br2);
-                    }
+                    Console.WriteLine("demo!");
+                    br.Jump(0);
+                    Read(br);
                 }
+                else
+                {
+                    using (MemoryStream ms = new MemoryStream(data, 4, size))
+                    {
+                        using (BinaryReaderEx br2 = new BinaryReaderEx(ms))
+                        {
+                            Read(br2);
+                        }
+                    }
 
-                PointerMap.Clear();
+                    PointerMap.Clear();
 
-                br.Jump(size + 4);
+                    br.Jump(size + 4);
 
-                int ptrMapSize = br.ReadInt32();
+                    int ptrMapSize = br.ReadInt32();
 
-                for (int i = 0; i < ptrMapSize / 4; i++)
-                    PointerMap.Add(br.ReadUIntPtr());
+                    for (int i = 0; i < ptrMapSize / 4; i++)
+                        PointerMap.Add(br.ReadUIntPtr());
+                }
             }
         }
 
@@ -56,9 +66,9 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            texOff = br.ReadInt32();
+            int texOff = br.ReadInt32();
 
-            //so here's what's going on, instead of  reading all pointers in a loop, we assume the 1st pointer is smallest, which is also where pointermap ends.
+            //so here's what's going on, instead of reading all pointers in a loop, we assume the 1st pointer is smallest, which is also where pointermap ends.
             //we get number of models and just read the array. this will shamelessly fail, if pointers are not sorted or models don't come after pointer map.
             int numModels = (br.ReadInt32() - 4) / 4 - 1;
 
@@ -66,21 +76,28 @@ namespace CTRFramework
 
             List<uint> modelPtrs = br.ReadListUInt32(numModels);
 
-
             br.Jump(texOff);
-
-            map = new UImap(br);
-
+            iconPack = new IconPack(br);
+    
             foreach (var ptr in modelPtrs)
             {
                 br.Jump(ptr);
-                Models.Add(CtrModel.FromReader(br));
+
+                try
+                {
+                    Models.Add(CtrModel.FromReader(br));
+                }
+                catch
+                {
+                    Console.WriteLine($"Model failed: {ptr.ToString("X8")}");
+                }
             }
+            
         }
 
         public void Extract(string path, Tim tim)
         {
-            map.Extract(tim, Path.Combine(path, "textures"));
+            iconPack.Extract(tim, Path.Combine(path, "textures"));
 
             foreach (var model in Models)
             {

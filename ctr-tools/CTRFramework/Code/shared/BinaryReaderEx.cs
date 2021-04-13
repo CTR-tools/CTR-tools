@@ -32,14 +32,14 @@ namespace CTRFramework.Shared
 
                 case SeekOrigin.Current:
                     if (x > this.BaseStream.Length - this.BaseStream.Position || x < -this.BaseStream.Position)
-                        throw new IndexOutOfRangeException("Trying to seek out of stream range");
+                        throw new IndexOutOfRangeException($"{x}, {this.BaseStream.Length}, Trying to seek out of stream range");
 
                     this.BaseStream.Position += x;
                     break;
 
                 case SeekOrigin.End:
-                    if (x > this.BaseStream.Position)
-                        throw new IndexOutOfRangeException("Trying to seek out of stream range");
+                    if (x < 0 || x > this.BaseStream.Position)
+                        throw new IndexOutOfRangeException($"{x}, {this.BaseStream.Length}, Trying to seek out of stream range");
 
                     this.BaseStream.Position = this.BaseStream.Length - x;
                     break;

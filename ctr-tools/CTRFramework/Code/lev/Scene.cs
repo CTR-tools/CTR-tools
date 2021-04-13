@@ -25,7 +25,7 @@ namespace CTRFramework
         public SkyBox skybox;
         public Nav nav;
 
-        public List<TexMap> texmaps = new List<TexMap>();
+        public List<Icon> texmaps = new List<Icon>();
 
         public UnkAdv unkadv;
         public TrialData trial;
