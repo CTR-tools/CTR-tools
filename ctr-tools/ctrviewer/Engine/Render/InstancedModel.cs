@@ -25,7 +25,8 @@ namespace ctrviewer.Engine.Render
 
         public void Update(GameTime gameTime)
         {
-            Rotation += new Vector3((float)(-3.14f / 4 * gameTime.ElapsedGameTime.TotalSeconds), 0f, 0f);
+            //just a rotation test
+            //Rotation += new Vector3((float)(-3.14f / 4 * gameTime.ElapsedGameTime.TotalSeconds), 0f, 0f);
         }
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha, FirstPersonCamera camera)

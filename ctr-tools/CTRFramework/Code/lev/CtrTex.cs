@@ -67,6 +67,7 @@ namespace CTRFramework
             {
                 ptrHi = br.ReadUInt32();
 
+                if (Scene.ReadHiTex)
                 //loosely assume we got a valid pointer
                 if (ptrHi > 0x30000 && ptrHi < 0xB0000)
                 {

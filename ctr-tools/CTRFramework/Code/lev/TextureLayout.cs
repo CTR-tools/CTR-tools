@@ -194,10 +194,15 @@ namespace CTRFramework
             */
         }
 
+        private string _tag = "";
+
         //meant to be unique
         public string Tag()
         {
-            return RealX + "_" + RealY + "_" + PalX + "_" + PalY + "_" + width + "_" + height;
+            if (_tag == "")
+                _tag = $"{RealX}_{RealY}_{PalX}_{PalY}_{width}_{height}";
+
+            return _tag;
             // return offset.ToString("X8");
 
             /*

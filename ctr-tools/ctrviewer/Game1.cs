@@ -470,7 +470,7 @@ namespace ctrviewer
 
             foreach (string s in files)
             {
-                scn.Add(Scene.FromFile(s));
+                scn.Add(Scene.FromFile(s, false));
             }
 
             GameConsole.Write("scenes parsed at: " + sw.Elapsed.TotalSeconds);
@@ -587,7 +587,8 @@ namespace ctrviewer
 
             foreach (Scene s in scn)
             {
-                BspDraw(s.visdata[0], s, 0);
+                if (s.visdata.Count > 0)
+                    BspDraw(s.visdata[0], s, 0);
             }
 
             sw.Stop();
@@ -960,8 +961,6 @@ namespace ctrviewer
             leftCamera.rotationSpeed = camera.rotationSpeed;
             leftCamera.Target = camera.Target;
             leftCamera.Update(gameTime, updatemouse, true, newms, oldms);
-
-
         }
 
         private void UpdateProjectionMatrices()

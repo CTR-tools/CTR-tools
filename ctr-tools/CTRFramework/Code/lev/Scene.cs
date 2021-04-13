@@ -10,6 +10,8 @@ namespace CTRFramework
 {
     public class Scene : IRead, IDisposable
     {
+        public static bool ReadHiTex = true;
+
         public string path;
         public string name;
 
@@ -34,8 +36,9 @@ namespace CTRFramework
 
         public Tim ctrvram;
 
-        public static Scene FromFile(string fn)
+        public static Scene FromFile(string fn, bool readHi = true)
         {
+            Scene.ReadHiTex = readHi;
             return new Scene(fn);
         }
 
@@ -224,7 +227,14 @@ namespace CTRFramework
                 br.BaseStream.Position = x + 4 * i;
                 br.BaseStream.Position = br.ReadUInt32();
 
-                Models.Add(CtrModel.FromReader(br));
+                try
+                {
+                    Models.Add(CtrModel.FromReader(br));
+                }
+                catch
+                {
+                    Console.WriteLine("Error parsing model...");
+                }
             }
 
 
@@ -530,7 +540,7 @@ namespace CTRFramework
                                 if (!tex.ContainsKey(t.midlods[2].Tag()))
                                     tex.Add(t.midlods[2].Tag(), t.midlods[2]);
                         break;
-
+                        
                     case Detail.High:
                         foreach (CtrTex t in qb.tex)
                             foreach (var x in t.hi)
@@ -538,7 +548,7 @@ namespace CTRFramework
                                     if (!tex.ContainsKey(x.Tag()))
                                         tex.Add(x.Tag(), x);
                         break;
-
+                        
                     case Detail.Models:
                         foreach (var model in Models)
                             foreach (var entry in model.Entries)
@@ -564,11 +574,11 @@ namespace CTRFramework
             foreach (var t in GetTexturesList(Detail.Med))
                 if (!tex.ContainsKey(t.Key))
                     tex.Add(t.Key, t.Value);
-
+            
             foreach (var t in GetTexturesList(Detail.High))
                 if (!tex.ContainsKey(t.Key))
                     tex.Add(t.Key, t.Value);
-
+            
             foreach (var t in GetTexturesList(Detail.Models))
                 if (!tex.ContainsKey(t.Key))
                     tex.Add(t.Key, t.Value);
