@@ -590,42 +590,17 @@ namespace CTRTools.Controls
             }
         }
 
-        private void button33_Click(object sender, EventArgs e)
+        private void actionExportObj(object sender, EventArgs e)
         {
-            Random r = new Random();
-
-            /*
-            foreach (Vertex v in scn.verts)
+            if (scn!= null)
             {
-                v.coord.X = (short)-v.coord.X;
-            }
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
 
-            foreach (VisData v in scn.visdata)
-            {
-                v.bbox.Min.X = (short)-v.bbox.Min.X;
-                v.bbox.Max.X = (short)-v.bbox.Max.X;
-
-                if (v.bbox.Min.X > v.bbox.Max.X)
+                if (fbd.ShowDialog() == DialogResult.OK)
                 {
-                    short x = v.bbox.Min.X;
-                    v.bbox.Min.X = v.bbox.Max.X;
-                    v.bbox.Max.X = v.bbox.Min.X;
+                    scn.Export(fbd.SelectedPath, ExportFlags.All);
                 }
             }
-
-            foreach (PosAng pa in scn.restartPts)
-            {
-                pa.Position.X = (short)-pa.Position.X;
-            }
-            */
-
-            foreach (QuadBlock qb in scn.quads)
-            {
-                if (qb.mosaicStruct != 0)
-                    qb.mosaicStruct = 0x3CE48;
-            }
-
-            MessageBox.Show("Done.");
         }
     }
 }

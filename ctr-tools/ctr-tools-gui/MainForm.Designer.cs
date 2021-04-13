@@ -30,6 +30,7 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabAbout = new System.Windows.Forms.TabPage();
+            this.warning = new System.Windows.Forms.Label();
             this.signLabel = new System.Windows.Forms.Label();
             this.labelVersion = new System.Windows.Forms.Label();
             this.appLogo = new System.Windows.Forms.PictureBox();
@@ -43,14 +44,10 @@
             this.ctrControl1 = new CTRTools.Controls.CtrControl();
             this.tabLev = new System.Windows.Forms.TabPage();
             this.levControl1 = new CTRTools.Controls.LevControl();
-            this.tabHowl = new System.Windows.Forms.TabPage();
-            this.howlControl1 = new CTRTools.Controls.HowlControl();
             this.tabCseq = new System.Windows.Forms.TabPage();
             this.cseqControl1 = new CTRTools.Controls.CseqControl();
             this.tabLang = new System.Windows.Forms.TabPage();
             this.langControl1 = new CTRTools.Controls.LangControl();
-            this.tabEmu = new System.Windows.Forms.TabPage();
-            this.emuControl1 = new CTRTools.Controls.EmuControl();
             this.tabControl1.SuspendLayout();
             this.tabAbout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appLogo)).BeginInit();
@@ -60,10 +57,8 @@
             this.tabVram.SuspendLayout();
             this.tabCtr.SuspendLayout();
             this.tabLev.SuspendLayout();
-            this.tabHowl.SuspendLayout();
             this.tabCseq.SuspendLayout();
             this.tabLang.SuspendLayout();
-            this.tabEmu.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -76,10 +71,8 @@
             this.tabControl1.Controls.Add(this.tabVram);
             this.tabControl1.Controls.Add(this.tabCtr);
             this.tabControl1.Controls.Add(this.tabLev);
-            this.tabControl1.Controls.Add(this.tabHowl);
             this.tabControl1.Controls.Add(this.tabCseq);
             this.tabControl1.Controls.Add(this.tabLang);
-            this.tabControl1.Controls.Add(this.tabEmu);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tabControl1.Location = new System.Drawing.Point(7, 7);
             this.tabControl1.Name = "tabControl1";
@@ -90,6 +83,7 @@
             // tabAbout
             // 
             this.tabAbout.BackColor = System.Drawing.Color.White;
+            this.tabAbout.Controls.Add(this.warning);
             this.tabAbout.Controls.Add(this.signLabel);
             this.tabAbout.Controls.Add(this.labelVersion);
             this.tabAbout.Controls.Add(this.appLogo);
@@ -100,6 +94,19 @@
             this.tabAbout.Size = new System.Drawing.Size(603, 403);
             this.tabAbout.TabIndex = 7;
             this.tabAbout.Text = "About";
+            // 
+            // warning
+            // 
+            this.warning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.warning.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.warning.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.warning.Location = new System.Drawing.Point(3, 17);
+            this.warning.Name = "warning";
+            this.warning.Size = new System.Drawing.Size(597, 61);
+            this.warning.TabIndex = 10;
+            this.warning.Text = "Warning! This tool is in the early stage of development.\r\nSome features may be mi" +
+    "ssing or won\'t work as intended.";
+            this.warning.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // signLabel
             // 
@@ -128,9 +135,9 @@
             this.appLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.appLogo.ErrorImage = null;
             this.appLogo.Image = global::CTRTools.Properties.Resources.ctr_tools_logo;
-            this.appLogo.Location = new System.Drawing.Point(7, 90);
+            this.appLogo.Location = new System.Drawing.Point(3, 90);
             this.appLogo.Name = "appLogo";
-            this.appLogo.Size = new System.Drawing.Size(593, 84);
+            this.appLogo.Size = new System.Drawing.Size(597, 84);
             this.appLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.appLogo.TabIndex = 3;
             this.appLogo.TabStop = false;
@@ -238,25 +245,6 @@
             this.levControl1.Size = new System.Drawing.Size(603, 403);
             this.levControl1.TabIndex = 0;
             // 
-            // tabHowl
-            // 
-            this.tabHowl.Controls.Add(this.howlControl1);
-            this.tabHowl.Location = new System.Drawing.Point(4, 22);
-            this.tabHowl.Name = "tabHowl";
-            this.tabHowl.Size = new System.Drawing.Size(603, 403);
-            this.tabHowl.TabIndex = 11;
-            this.tabHowl.Text = "HOWL sound";
-            this.tabHowl.UseVisualStyleBackColor = true;
-            // 
-            // howlControl1
-            // 
-            this.howlControl1.AllowDrop = true;
-            this.howlControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.howlControl1.Location = new System.Drawing.Point(0, 0);
-            this.howlControl1.Name = "howlControl1";
-            this.howlControl1.Size = new System.Drawing.Size(603, 403);
-            this.howlControl1.TabIndex = 0;
-            // 
             // tabCseq
             // 
             this.tabCseq.Controls.Add(this.cseqControl1);
@@ -295,24 +283,6 @@
             this.langControl1.Size = new System.Drawing.Size(603, 403);
             this.langControl1.TabIndex = 0;
             // 
-            // tabEmu
-            // 
-            this.tabEmu.Controls.Add(this.emuControl1);
-            this.tabEmu.Location = new System.Drawing.Point(4, 22);
-            this.tabEmu.Name = "tabEmu";
-            this.tabEmu.Size = new System.Drawing.Size(603, 403);
-            this.tabEmu.TabIndex = 6;
-            this.tabEmu.Text = "ePSXe";
-            this.tabEmu.UseVisualStyleBackColor = true;
-            // 
-            // emuControl1
-            // 
-            this.emuControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.emuControl1.Location = new System.Drawing.Point(0, 0);
-            this.emuControl1.Name = "emuControl1";
-            this.emuControl1.Size = new System.Drawing.Size(603, 403);
-            this.emuControl1.TabIndex = 0;
-            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -334,10 +304,8 @@
             this.tabVram.ResumeLayout(false);
             this.tabCtr.ResumeLayout(false);
             this.tabLev.ResumeLayout(false);
-            this.tabHowl.ResumeLayout(false);
             this.tabCseq.ResumeLayout(false);
             this.tabLang.ResumeLayout(false);
-            this.tabEmu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -353,21 +321,18 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabLev;
         private System.Windows.Forms.TabPage tabBig;
-        private System.Windows.Forms.TabPage tabEmu;
         private System.Windows.Forms.TabPage tabAbout;
         private System.Windows.Forms.TabPage tabVram;
         private System.Windows.Forms.TabPage tabCtr;
         private System.Windows.Forms.TabPage tabCseq;
-        private System.Windows.Forms.TabPage tabHowl;
         private System.Windows.Forms.TabPage tabLang;
 
         private Controls.VramControl vramControl1;
         private Controls.BigFileControl bigFileControl1;
         private Controls.CseqControl cseqControl1;
-        private Controls.EmuControl emuControl1;
-        private Controls.HowlControl howlControl1;
         private Controls.CtrControl ctrControl1;
         private Controls.LevControl levControl1;
         private Controls.LangControl langControl1;
+        private System.Windows.Forms.Label warning;
     }
 }

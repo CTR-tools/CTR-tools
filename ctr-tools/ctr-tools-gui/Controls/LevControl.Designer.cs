@@ -39,7 +39,6 @@ namespace CTRTools.Controls
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabVerts = new System.Windows.Forms.TabPage();
-            this.button33 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.button22 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -65,13 +64,12 @@ namespace CTRTools.Controls
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabVisData = new System.Windows.Forms.TabPage();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button19 = new System.Windows.Forms.Button();
-            this.button18 = new System.Windows.Forms.Button();
             this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
             this.button28 = new System.Windows.Forms.Button();
             this.button27 = new System.Windows.Forms.Button();
             this.button26 = new System.Windows.Forms.Button();
             this.button32 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl2.SuspendLayout();
             this.tabPickups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -121,6 +119,7 @@ namespace CTRTools.Controls
             this.button21.TabIndex = 19;
             this.button21.Text = "memcard save";
             this.button21.UseVisualStyleBackColor = true;
+            this.button21.Visible = false;
             this.button21.Click += new System.EventHandler(this.button21_Click);
             // 
             // button4
@@ -184,7 +183,6 @@ namespace CTRTools.Controls
             // 
             // tabVerts
             // 
-            this.tabVerts.Controls.Add(this.button33);
             this.tabVerts.Controls.Add(this.textBox3);
             this.tabVerts.Controls.Add(this.button22);
             this.tabVerts.Controls.Add(this.groupBox1);
@@ -195,16 +193,6 @@ namespace CTRTools.Controls
             this.tabVerts.TabIndex = 1;
             this.tabVerts.Text = "Vertex array";
             this.tabVerts.UseVisualStyleBackColor = true;
-            // 
-            // button33
-            // 
-            this.button33.Location = new System.Drawing.Point(15, 214);
-            this.button33.Name = "button33";
-            this.button33.Size = new System.Drawing.Size(234, 23);
-            this.button33.TabIndex = 12;
-            this.button33.Text = "Mirror X";
-            this.button33.UseVisualStyleBackColor = true;
-            this.button33.Click += new System.EventHandler(this.button33_Click);
             // 
             // textBox3
             // 
@@ -249,7 +237,7 @@ namespace CTRTools.Controls
             this.button24.Name = "button24";
             this.button24.Size = new System.Drawing.Size(75, 23);
             this.button24.TabIndex = 12;
-            this.button24.Text = "button1";
+            this.button24.Text = "main color";
             this.button24.UseVisualStyleBackColor = true;
             this.button24.Click += new System.EventHandler(this.button24_Click);
             // 
@@ -456,8 +444,6 @@ namespace CTRTools.Controls
             // tabVisData
             // 
             this.tabVisData.Controls.Add(this.textBox2);
-            this.tabVisData.Controls.Add(this.button19);
-            this.tabVisData.Controls.Add(this.button18);
             this.tabVisData.Controls.Add(this.checkedListBox2);
             this.tabVisData.Controls.Add(this.button28);
             this.tabVisData.Location = new System.Drawing.Point(4, 22);
@@ -469,29 +455,11 @@ namespace CTRTools.Controls
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(129, 61);
+            this.textBox2.Location = new System.Drawing.Point(129, 3);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(494, 352);
+            this.textBox2.Size = new System.Drawing.Size(494, 410);
             this.textBox2.TabIndex = 32;
-            // 
-            // button19
-            // 
-            this.button19.Location = new System.Drawing.Point(506, 32);
-            this.button19.Name = "button19";
-            this.button19.Size = new System.Drawing.Size(117, 23);
-            this.button19.TabIndex = 31;
-            this.button19.Text = "Load LNG and EXE";
-            this.button19.UseVisualStyleBackColor = true;
-            // 
-            // button18
-            // 
-            this.button18.Location = new System.Drawing.Point(506, 3);
-            this.button18.Name = "button18";
-            this.button18.Size = new System.Drawing.Size(117, 23);
-            this.button18.TabIndex = 30;
-            this.button18.Text = "export font";
-            this.button18.UseVisualStyleBackColor = true;
             // 
             // checkedListBox2
             // 
@@ -547,8 +515,20 @@ namespace CTRTools.Controls
             this.button32.UseVisualStyleBackColor = true;
             this.button32.Click += new System.EventHandler(this.button32_Click);
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(439, 453);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(96, 24);
+            this.button1.TabIndex = 22;
+            this.button1.Text = "Export OBJ";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.actionExportObj);
+            // 
             // LevControl
             // 
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.button32);
             this.Controls.Add(this.button26);
             this.Controls.Add(this.button27);
@@ -615,9 +595,7 @@ namespace CTRTools.Controls
         private TabPage tabVisData;
         private CheckedListBox checkedListBox2;
         private Button button28;
-        private Button button33;
-        private Button button19;
-        private Button button18;
         private TextBox textBox2;
+        private Button button1;
     }
 }

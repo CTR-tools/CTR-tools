@@ -49,6 +49,7 @@ namespace CTRTools.Controls
             this.button28.TabIndex = 12;
             this.button28.Text = "button28";
             this.button28.UseVisualStyleBackColor = true;
+            this.button28.Visible = false;
             this.button28.Click += new System.EventHandler(this.button28_Click);
             // 
             // propertyGrid2

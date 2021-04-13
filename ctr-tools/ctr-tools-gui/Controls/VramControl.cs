@@ -269,5 +269,40 @@ namespace CTRTools.Controls
         {
             Helpers.RestoreFile(Path.ChangeExtension(pathFile.Text, ".vrm"));
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                Bitmap src = (Bitmap)Bitmap.FromFile(ofd.FileName);
+                pictureBox2.Image = src;
+
+                Bitmap dst = new Bitmap(src.Width, src.Height / 2);
+
+                Graphics g = Graphics.FromImage(dst);
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+                g.DrawImage(src, new Point(0, 0));
+
+                for (int i = 0; i < dst.Width; i++)
+                    for (int j = 0; j < dst.Height; j++)
+                    {
+                        Color x = src.GetPixel(i, j);
+                        Color y = src.GetPixel(i, j + dst.Height);
+
+                        if (x.A == 0)
+                            x = Color.FromArgb(0, 0, 0, 0);
+
+                        if (y.A == 0)
+                            y = Color.FromArgb(0, 0, 0, 0);
+
+                        Color final = Color.FromArgb(x.R + y.R / 2, x.G + y.G / 2, x.B + y.B / 2);
+
+                        dst.SetPixel(i, j, final);
+                    }
+
+                pictureBox3.Image = dst;
+            }
+        }
     }
 }
