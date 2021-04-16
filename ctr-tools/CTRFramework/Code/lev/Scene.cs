@@ -524,38 +524,41 @@ namespace CTRFramework
         {
             Dictionary<string, TextureLayout> tex = new Dictionary<string, TextureLayout>();
 
-            foreach (QuadBlock qb in quads)
+            if (lod == Detail.Models)
             {
-                switch (lod)
+                foreach (var model in Models)
+                    foreach (var entry in model.Entries)
+                        foreach (TextureLayout tl in entry.tl)
+                            if (!tex.ContainsKey(tl.Tag()))
+                                tex.Add(tl.Tag(), tl);
+            }
+            else
+            {
+                foreach (QuadBlock qb in quads)
                 {
-                    case Detail.Low:
-                        if (qb.ptrTexLow != 0)
-                            if (!tex.ContainsKey(qb.texlow.Tag()))
-                                tex.Add(qb.texlow.Tag(), qb.texlow);
-                        break;
+                    switch (lod)
+                    {
+                        case Detail.Low:
+                            if (qb.ptrTexLow != 0)
+                                if (!tex.ContainsKey(qb.texlow.Tag()))
+                                    tex.Add(qb.texlow.Tag(), qb.texlow);
+                            break;
 
-                    case Detail.Med:
-                        foreach (CtrTex t in qb.tex)
-                            if (t.midlods[2].Position != 0)
-                                if (!tex.ContainsKey(t.midlods[2].Tag()))
-                                    tex.Add(t.midlods[2].Tag(), t.midlods[2]);
-                        break;
-                        
-                    case Detail.High:
-                        foreach (CtrTex t in qb.tex)
-                            foreach (var x in t.hi)
-                                if (x != null)
-                                    if (!tex.ContainsKey(x.Tag()))
-                                        tex.Add(x.Tag(), x);
-                        break;
-                        
-                    case Detail.Models:
-                        foreach (var model in Models)
-                            foreach (var entry in model.Entries)
-                                foreach (TextureLayout tl in entry.tl)
-                                    if (!tex.ContainsKey(tl.Tag()))
-                                        tex.Add(tl.Tag(), tl);
-                        break;
+                        case Detail.Med:
+                            foreach (CtrTex t in qb.tex)
+                                if (t.midlods[2].Position != 0)
+                                    if (!tex.ContainsKey(t.midlods[2].Tag()))
+                                        tex.Add(t.midlods[2].Tag(), t.midlods[2]);
+                            break;
+
+                        case Detail.High:
+                            foreach (CtrTex t in qb.tex)
+                                foreach (var x in t.hi)
+                                    if (x != null)
+                                        if (!tex.ContainsKey(x.Tag()))
+                                            tex.Add(x.Tag(), x);
+                            break;
+                    }
                 }
             }
 
