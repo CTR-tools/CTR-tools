@@ -119,7 +119,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TexMap.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

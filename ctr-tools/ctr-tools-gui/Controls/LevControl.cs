@@ -428,18 +428,18 @@ namespace CTRTools.Controls
                 using (BinaryReaderEx br2 = new BinaryReaderEx(File.Open("ui_map", FileMode.Open)))
                 {
                     int z = br2.ReadInt32();
-                    List<TexMap> list = new List<TexMap>();
+                    List<CTRFramework.Icon> list = new List<CTRFramework.Icon>();
 
                     for (int i = 0; i < 50; i++)
-                        list.Add(new TexMap(br2));
+                        list.Add(new CTRFramework.Icon(br2));
 
 
                     int x = 0;
                     int y = 0;
 
-                    foreach (TexMap map in list)
+                    foreach (CTRFramework.Icon map in list)
                     {
-                        Bitmap b = buf.GetTexture(map.tl, "tex", map.name);
+                        Bitmap b = buf.GetTexture(map.tl, "tex", map.Name);
 
                         g.DrawImage(b, x * 16, y * 16);
 
