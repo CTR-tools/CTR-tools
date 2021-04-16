@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CTRFramework.Shared;
 
 namespace CTRFramework.Big
 {
@@ -55,6 +56,11 @@ namespace CTRFramework.Big
                     Console.WriteLine("Unable to access the file.");
                 }
             }
+        }
+
+        public void Save(string path)
+        {
+            Helpers.WriteToFile(Path.Combine(path, Name), Data);
         }
 
         public override string ToString()

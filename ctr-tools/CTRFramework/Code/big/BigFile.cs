@@ -70,7 +70,7 @@ namespace CTRFramework.Big
             {
                 while (b.NextFile())
                 {
-                    Entries.Add(new BigEntry(b.GetFilename(), b.ReadFile()));
+                    Entries.Add(b.ReadFile());
                 }
             }
 

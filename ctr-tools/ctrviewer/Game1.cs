@@ -1101,14 +1101,14 @@ namespace ctrviewer
                 if (Path.GetExtension(big.GetFilename()) != ".vrm")
                     return;
 
-                Helpers.WriteToFile(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+                big.ReadFile().Save(Meta.BasePath);
 
                 big.NextFile();
 
                 if (Path.GetExtension(big.GetFilename()) != ".lev")
                     return;
 
-                Helpers.WriteToFile(Path.Combine(Meta.BasePath, big.GetFilename()), big.ReadFile());
+                big.ReadFile().Save(Meta.BasePath);
 
                 files.Add(Path.Combine(Meta.BasePath, big.GetFilename()));
             }
