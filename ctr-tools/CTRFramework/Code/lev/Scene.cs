@@ -31,6 +31,7 @@ namespace CTRFramework
 
         public UnkAdv unkadv;
         public TrialData trial;
+        public IconPack iconpack;
 
         public List<Pose> restartPts = new List<Pose>();
 
@@ -102,6 +103,11 @@ namespace CTRFramework
             if (header.ptrVcolAnim != 0) vertanims = InstanceList<VertexAnim>.FromReader(br, header.ptrVcolAnim, header.cntVcolAnim);
             if (header.ptrAiNav != 0) nav = Instance<Nav>.FromReader(br, header.ptrAiNav);
             if (header.ptrTrialData != 0) trial = Instance<TrialData>.FromReader(br, header.ptrTrialData);
+            if (header.ptrIcons != 0)
+            {
+                iconpack = Instance<IconPack>.FromReader(br, header.ptrIcons);
+                Console.WriteLine(iconpack.ToString());
+            }
 
             if (header.cntSpawnPts != 0)
             {
@@ -154,38 +160,6 @@ namespace CTRFramework
                 }
             }
 
-
-            /*
-            //texture defs
-            br.Jump(header.ptrTexArray);
-            br.Skip(8);
-            int ptrTexList = br.ReadInt32();
-            br.Jump(ptrTexList);
-
-            Console.WriteLine(ptrTexList.ToString("X8"));
-            Console.ReadKey();
-
-            texmaps = new List<TexMap>();
-
-            TexMap mp;
-
-            do
-            {
-                mp = new TexMap(br, "none");
-
-                Console.WriteLine(mp.name);
-                Console.ReadKey();
-
-                if (mp.name != "")
-                {
-                    texmaps.Add(mp);
-                }
-
-            }
-            while (mp.name != "");
-            */
-
-
             /*
              //water texture
             br.BaseStream.Position = header.ptrWater;
@@ -220,23 +194,17 @@ namespace CTRFramework
 
 
             br.Jump(header.ptrModelsPtr);
-            int x = (int)br.BaseStream.Position;
 
-            for (int i = 0; i < header.numModels; i++)
+            List<uint> modelPtr = br.ReadListUInt32(header.numModels);
+
+            foreach (var ptr in modelPtr)
             {
-                br.BaseStream.Position = x + 4 * i;
-                br.BaseStream.Position = br.ReadUInt32();
+                br.Jump(ptr);
 
-                try
-                {
-                    Models.Add(CtrModel.FromReader(br));
-                }
-                catch
-                {
-                    Console.WriteLine("Error parsing model...");
-                }
+                CtrModel ctr = CtrModel.FromReader(br);
+                if (ctr != null)
+                    Models.Add(ctr);
             }
-
 
             /*
             quads = quads.OrderBy(o => o.mosaicPtr1).ToList();
@@ -305,7 +273,7 @@ namespace CTRFramework
 
                     if (!File.Exists(Path.Combine(path, "tex" + lod.ToString() + "\\" + s.Tag() + ".png")))
                     {
-                        Helpers.Panic(this, "missing bitmap");
+                        Helpers.Panic(this, PanicType.Warning, "missing bitmap");
 
                         Bitmap bmp = new Bitmap(1, 1);
                         bmp.Save(Path.Combine(path, "tex" + lod.ToString() + "\\" + s.Tag() + ".png"));
