@@ -1,11 +1,10 @@
 ﻿using CTRFramework.Shared;
-using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace CTRFramework
+namespace CTRFramework.Vram
 {
     public class TextureLayout : IRead
     {
