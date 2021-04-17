@@ -1,6 +1,8 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
 using System;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace CTRFramework
 {
@@ -44,6 +46,17 @@ namespace CTRFramework
             Name = br.ReadStringFixed(16);
             Index = br.ReadUInt32();
             tl = TextureLayout.FromStream(br);
+        }
+
+        public void Save(string path, Tim tim)
+        {
+            if (tim == null)
+            {
+                Helpers.Panic(this, PanicType.Error, "Passed null vram.");
+                return;
+            }
+
+            tim.GetTexture(tl).Save(Path.Combine(path, $"{Name}.png"), ImageFormat.Png);
         }
     }
 }

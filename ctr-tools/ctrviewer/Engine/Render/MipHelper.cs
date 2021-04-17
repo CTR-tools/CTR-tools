@@ -1,4 +1,5 @@
-﻿using CTRFramework.Shared;
+﻿using CTRFramework;
+using CTRFramework.Shared;
 using Microsoft.Xna.Framework.Graphics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
