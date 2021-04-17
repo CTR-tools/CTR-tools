@@ -8,16 +8,22 @@ meta:
 seq:
   - id: scene_data_size
     type: u4
+  - id: scene_wo_ptrmap
+    type: lev
+    size: _io.size - 4
+    if: scene_data_size > 0x80000000
   - id: scene
     type: lev
     size: scene_data_size
+    if: scene_data_size < 0x80000000
   - id: ptr_map_size
     type: u4
+    if: scene_data_size < 0x80000000
   - id: ptr_map
     type: u4
     repeat: expr
     repeat-expr: ptr_map_size / 4
-
+    if: scene_data_size < 0x80000000
 types:
   lev:
     seq:
@@ -60,7 +66,6 @@ types:
       trial:
         pos: header.ptr_trial_data
         type: trial_data
-        if: header.cnt_trial_data > 0
     
       skybox:
         pos: header.ptr_skybox
@@ -73,9 +78,9 @@ types:
         repeat: expr
         repeat-expr: mesh_info_header.cnt_vis_data
     
-      unk_struct1_array:
-        pos: header.ptr_tex_array
-        type: unk_struct
+      icons:
+        pos: header.ptr_icons
+        type: icon_pack
     
       ai_nav:
         pos: header.ptr_ai_nav
@@ -183,9 +188,9 @@ types:
         type: u4
       - id: ptr_water
         type: u4 
-      - id: ptr_named_tex
+      - id: ptr_icons
         type: u4
-      - id: ptr_named_tex_array
+      - id: ptr_icons_array
         type: u4
       - id: ptr_restart_main
         type: u4
@@ -280,10 +285,13 @@ types:
         type: u4
       - id: ptr_tropy_ghost
         type: u4
-        if: cnt_pointers == 6
+        if: cnt_pointers >= 6
       - id: ptr_oxide_ghost
         type: u4
-        if: cnt_pointers == 6
+        if: cnt_pointers >= 6
+      - id: ptr_credits_text
+        type: u4
+        if: cnt_pointers >= 7
         
   somedata:
     seq:
@@ -489,34 +497,55 @@ types:
         type: u1
 
 
-  unk_struct:
+  icon_pack:
     seq:
-      - id: self_ptr
+      - id: num_icons
         type: u4
-      - id: cnt_entries
+      - id: ptr_tex_array
         type: u4
-      - id: some_ptr2
+      - id: num_groups
         type: u4
-      - id: nil
-        type: u4
-      - id: some_ptr3
+      - id: ptr_groups
         type: u4
       - id: entries
-        type: unk_entry
+        type: icon
         repeat: expr
-        repeat-expr: cnt_entries
-
-  unk_entry:
+        repeat-expr: num_icons
+      - id: dummy
+        type: u4
+      - id: groups_ptr
+        type: u4
+        repeat: expr
+        repeat-expr: num_groups
+      - id: groups
+        type: icon_group
+        repeat: expr
+        repeat-expr: num_groups     
+  icon:
     seq:
       - id: name
         type: strz
         encoding: ascii
         size: 16
-      - id: entry_type
+      - id: index
         type: u4
       - id: layout
         type: texture_layout
-        if: entry_type != 0x86
+
+  icon_group:
+    seq:
+      - id: name
+        type: strz
+        encoding: ascii
+        size: 16
+      - id: unk1
+        type: u2
+      - id: num_icons
+        type: u2
+      - id: entries
+        type: u4
+        repeat: expr
+        repeat-expr: num_icons
 
   ai_frame_header:
     seq:
