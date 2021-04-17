@@ -8,6 +8,8 @@ namespace CTRFramework.Vram
 {
     public class TextureLayout : IRead
     {
+        public static readonly int SizeOf = 0x0C;
+
         public uint offset;
 
         public List<Vector2b> uv = new List<Vector2b>();
@@ -36,6 +38,7 @@ namespace CTRFramework.Vram
                     );
             }
         }
+
         public Point max
         {
             get
@@ -46,7 +49,6 @@ namespace CTRFramework.Vram
                     );
             }
         }
-
 
         public int width
         {
@@ -80,7 +82,6 @@ namespace CTRFramework.Vram
             }
         }
 
-
         public int RealX
         {
             get
@@ -96,7 +97,6 @@ namespace CTRFramework.Vram
             }
         }
 
-
         public Rectangle frame
         {
             get
@@ -110,7 +110,6 @@ namespace CTRFramework.Vram
             Read(br);
         }
 
-
         public void NormalizeUV()
         {
             normuv.Clear();
@@ -123,7 +122,6 @@ namespace CTRFramework.Vram
                 normuv.Add(n);
             }
         }
-
 
         public TextureLayout()
         {
@@ -191,6 +189,9 @@ namespace CTRFramework.Vram
                 //Console.ReadKey();
             }
             */
+
+            if (br.BaseStream.Position - offset != SizeOf)
+                throw new Exception("TextureLayout: size mismatch");
         }
 
         private string _tag = "";
