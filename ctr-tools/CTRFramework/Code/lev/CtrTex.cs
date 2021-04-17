@@ -42,10 +42,10 @@ namespace CTRFramework
                 int whatsthat = br.ReadInt16();
 
                 if (whatsthat != 0)
-                    Helpers.Panic(this, $"whatsthat is not null! {whatsthat}");
+                    Helpers.Panic(this, PanicType.Assume, $"whatsthat is not null! {whatsthat}");
 
                 if (br.ReadUInt32() != 0)
-                    Helpers.Panic(this, "not 0!");
+                    Helpers.Panic(this, PanicType.Assume, "not 0!");
 
                 uint[] ptrs = br.ReadArrayUInt32(numFrames);
 

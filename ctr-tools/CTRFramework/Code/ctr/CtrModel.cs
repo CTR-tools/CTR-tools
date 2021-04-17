@@ -138,18 +138,19 @@ namespace CTRFramework
             }
         }
 
-        //public static List<int> ptrs = new List<int>();
-
+        /// <summary>
+        /// Writes Ctr model to BinaryWriter.
+        /// </summary>
+        /// <param name="bw">BinaryWriter object.</param>
         public void Write(BinaryWriterEx bw)
         {
             PointerMap.Clear();
             BinaryWriterEx.PointerMap.Clear();
-            //ptrs.Clear();
 
             bw.Write(FixPointers());
 
             if (name.Length > 16)
-                Helpers.Panic(this, $"Name too long: {name}");
+                Helpers.Panic(this, PanicType.Warning, $"Name too long, will be truncated: {name}");
 
             bw.Write(name.ToCharArray().Take(16).ToArray());
             bw.BaseStream.Position = 20;
@@ -157,7 +158,6 @@ namespace CTRFramework
             bw.Write((ushort)gameEvent);
             bw.Write((ushort)Entries.Count);
 
-            //ptrs.Add((int)bw.BaseStream.Position);
             bw.Write(ptrHeaders);
 
             foreach (var ctr in Entries)

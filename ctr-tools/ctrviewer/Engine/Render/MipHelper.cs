@@ -68,7 +68,7 @@ namespace ctrviewer.Engine
             }
             catch
             {
-                Helpers.Panic("MipHelper", "Failed to create Texture2D object.");
+                Helpers.Panic("MipHelper", PanicType.Error, "Failed to create Texture2D object.");
                 return new Texture2D(device, 1, 1);
             }
 

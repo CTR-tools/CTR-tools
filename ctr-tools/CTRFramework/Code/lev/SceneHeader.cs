@@ -24,7 +24,7 @@ namespace CTRFramework
 
         public uint cntWater;       //number of vertices treated as water
         public uint ptrWater;       //pointer to array of water entries
-        public uint ptrNamedTex;    //lead to the header for the data below
+        public uint ptrIcons;    //lead to the header for the data below
         public uint ptrNamedTexArray; //leads to some named data (drop, bubble, map-asphalt01) with an array of 0x0C bytes afterwards
         public uint ptrRestartMain;
 
@@ -101,11 +101,11 @@ namespace CTRFramework
             null2 = br.ReadInt32();
 
             if (null1 != 0 || null2 != 0)
-                Helpers.Panic(this, "WARNING header.null1 = " + null1 + "; header.null2 = " + null2);
+                Helpers.Panic(this, PanicType.Assume, "WARNING header.null1 = " + null1 + "; header.null2 = " + null2);
 
             cntWater = br.ReadUInt32();
             ptrWater = br.ReadUInt32();
-            ptrNamedTex = br.ReadUInt32();
+            ptrIcons = br.ReadUInt32();
             ptrNamedTexArray = br.ReadUInt32();
 
             ptrRestartMain = br.ReadUInt32();
@@ -125,7 +125,7 @@ namespace CTRFramework
             {
                 Pose pos = new Pose(br);
                 startGrid[i] = pos;
-                Console.WriteLine(startGrid[i].ToString());
+                //Console.WriteLine(startGrid[i].ToString());
             }
 
             unkPtr4 = br.ReadUInt32();
@@ -223,7 +223,7 @@ namespace CTRFramework
 
             bw.Write(cntWater);
             bw.Write(ptrWater);
-            bw.Write(ptrNamedTex);
+            bw.Write(ptrIcons);
             bw.Write(ptrNamedTexArray);
             bw.Write(ptrRestartMain);
 

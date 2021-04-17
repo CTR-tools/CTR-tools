@@ -62,7 +62,7 @@ namespace CTRFramework
 
             //flag is likely ushort, just testing if upper byte has any data
             if (unk0 != 0)
-                Helpers.Panic(this, "unk0 is not null");
+                Helpers.Panic(this, PanicType.Assume, "unk0 is not null");
 
             if (flag.HasFlag(VisDataFlags.Leaf)) counter[0]++;
             if (flag.HasFlag(VisDataFlags.Water)) counter[1]++;
@@ -89,16 +89,16 @@ namespace CTRFramework
                 //test leaf assumptions
 
                 if (!(divX == 4096 || divX == 0))
-                    Helpers.Panic(this, $"{flag} {IsLeaf} {pos.ToString("X8")} divX = {divX.ToString("X8")}");
+                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {pos.ToString("X8")} divX = {divX.ToString("X8")}");
 
                 if (!(divY == 4096 || divY == 0))
-                    Helpers.Panic(this, $"{flag} {IsLeaf} {pos.ToString("X8")} divY = {divY.ToString("X8")}");
+                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {pos.ToString("X8")} divY = {divY.ToString("X8")}");
 
                 if (!(divZ == 4096 || divZ == 0))
-                    Helpers.Panic(this, $"{flag} {IsLeaf} {pos.ToString("X8")} divZ = {divZ.ToString("X8")}");
+                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {pos.ToString("X8")} divZ = {divZ.ToString("X8")}");
 
                 if (unk1 != 0)
-                    Helpers.Panic(this, $"{flag} {IsLeaf} {pos.ToString("X8")} unk1 = {unk1.ToString("X8")}");
+                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {pos.ToString("X8")} unk1 = {unk1.ToString("X8")}");
             }
             else
             {
@@ -108,7 +108,7 @@ namespace CTRFramework
                 ptrQuadBlock = br.ReadUInt32();
 
                 if (reserved != 0)
-                    Helpers.Panic(this, "reserved is not 0: " + reserved.ToString("X8"));
+                    Helpers.Panic(this, PanicType.Assume, "reserved is not 0: " + reserved.ToString("X8"));
             }
 
 

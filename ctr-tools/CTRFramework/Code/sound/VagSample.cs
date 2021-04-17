@@ -57,17 +57,17 @@ namespace CTRFramework.Sound
 
             //vagedit exports vags without magic string for some reason, so only warn
             if (magic != "VAGp")
-                Helpers.Panic(this, $"No VAGp found. Possibly not a VAG file: magic = {magic}");
+                Helpers.Panic(this, PanicType.Assume, $"No VAGp found. Possibly not a VAG file: magic = {magic}");
 
             version = br.ReadInt32Big();
 
             if (version != 3)
-                Helpers.Panic(this, $"Version != 3: {version}.");
+                Helpers.Panic(this, PanicType.Assume, $"Version != 3: {version}.");
 
             reserved = br.ReadInt32Big();
 
             if (reserved != 0)
-                Helpers.Panic(this, "reserved != 0...");
+                Helpers.Panic(this, PanicType.Assume, "reserved != 0...");
 
             int dataSize = br.ReadInt32Big();
             sampleFreq = br.ReadInt32Big();

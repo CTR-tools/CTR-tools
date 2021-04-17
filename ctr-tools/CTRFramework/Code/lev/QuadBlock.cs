@@ -133,7 +133,7 @@ namespace CTRFramework
             byte tf = br.ReadByte();
 
             if (tf > 20)
-                Helpers.Panic(this, "unexpected terrain flag value -> " + tf);
+                Helpers.Panic(this, PanicType.Assume, "unexpected terrain flag value -> " + tf);
 
             terrainFlag = (TerrainFlags)tf;
             WeatherIntensity = br.ReadByte();
@@ -278,7 +278,7 @@ namespace CTRFramework
 
                     if (buf.Count != 4)
                     {
-                        Helpers.Panic(this, "not a quad! " + buf.Count);
+                        Helpers.Panic(this, PanicType.Error, "not a quad! " + buf.Count);
                         Console.ReadKey();
                     }
 
@@ -355,7 +355,7 @@ namespace CTRFramework
 
                     if (buf.Count != 4)
                     {
-                        Helpers.Panic(this, "not a quad! " + buf.Count);
+                        Helpers.Panic(this, PanicType.Error, "not a quad! " + buf.Count);
                         Console.ReadKey();
                     }
                 }
@@ -364,7 +364,7 @@ namespace CTRFramework
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, "Can't export quad to MG. Give null.\r\n" + i + "\r\n" + ex.Message);
+                Helpers.Panic(this, PanicType.Error, "Can't export quad to MG. Give null.\r\n" + i + "\r\n" + ex.Message);
                 return null;
             }
         }

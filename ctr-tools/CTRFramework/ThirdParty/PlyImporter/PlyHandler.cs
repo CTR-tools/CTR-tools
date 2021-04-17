@@ -94,11 +94,11 @@ namespace ThreeDeeBear.Models.Ply
                             triangles.AddRange(QuadToTriangles(indices));
                             return triangles;
                         default:
-                            Helpers.Panic("PlyHandler", "Warning: Found a face with more than 4 vertices, skipping...");
+                            Helpers.Panic("PlyHandler", PanicType.Warning, "Warning: Found a face with more than 4 vertices, skipping...");
                             return new List<int>();
                     }
                 default:
-                    Helpers.Panic("PlyHandler", "GetTriangles: Unknown parse mode");
+                    Helpers.Panic("PlyHandler", PanicType.Warning, "GetTriangles: Unknown parse mode");
                     return new List<int>();
             }
 
@@ -183,7 +183,7 @@ namespace ThreeDeeBear.Models.Ply
                 }
                 else
                 {
-                    Helpers.Panic("PlyHandler", "Warning: Found a face with more than 4 vertices, skipping...");
+                    Helpers.Panic("PlyHandler", PanicType.Warning, "Warning: Found a face with more than 4 vertices, skipping...");
                 }
 
                 facesRead++;

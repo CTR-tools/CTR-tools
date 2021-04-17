@@ -5,16 +5,6 @@ using System.Reflection;
 
 namespace CTRFramework.Shared
 {
-    [Flags]
-    public enum PanicLevel
-    {
-        Silent = 1 << 0,        //silent level overrides other settings
-        Warn = 1 << 1,          //writes message to the console
-        Pause = 1 << 2,         //waits for user input
-        File = 1 << 3,          //writes to file
-        Exception = 1 << 4      //throws an exception
-    }
-
     public class Helpers
     {
         public static string logpath = Path.Combine(Meta.BasePath, "ctrframework.log");
@@ -27,9 +17,9 @@ namespace CTRFramework.Shared
         /// </summary>
         /// <param name="x">the object that wants to panic</param>
         /// <param name="msg">the message it wants to send</param>
-        public static void Panic(object x, string msg)
+        public static void Panic(object x, PanicType ptype, string msg)
         {
-            Panic(x.GetType().Name, msg);
+            Panic(x.GetType().Name, ptype, msg);
         }
 
         /// <summary>
@@ -37,15 +27,15 @@ namespace CTRFramework.Shared
         /// </summary>
         /// <param name="x">summary text</param>
         /// <param name="msg">message text</param>
-        public static void Panic(string sender, string msg)
+        public static void Panic(string sender, PanicType ptype, string msg)
         {
             if (panic.HasFlag(PanicLevel.Silent))
                 return;
 
-            string message = $"{sender}:\t{msg}";
+            string message = $"{ptype}\t{sender}:\t{msg}";
 
             if (panic.HasFlag(PanicLevel.File))
-                File.AppendAllText(logpath, DateTime.Now.ToString() + "\t" + message + "\r\n");
+                File.AppendAllText(logpath, DateTime.Now.ToString() + "\t" + ptype.ToString() + "\t" + message + "\r\n");
 
             if (panic.HasFlag(PanicLevel.Warn))
             {

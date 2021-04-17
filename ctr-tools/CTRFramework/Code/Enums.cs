@@ -2,6 +2,50 @@
 
 namespace CTRFramework
 {
+    #region panic enums
+
+    [Flags]
+    public enum PanicLevel
+    {
+        Silent = 1 << 0,        //silent level overrides other settings
+        Warn = 1 << 1,          //writes message to the console
+        Pause = 1 << 2,         //waits for user input
+        File = 1 << 3,          //writes to file
+        Exception = 1 << 4      //throws an exception
+    }
+
+    public enum PanicType
+    {
+        Error,      //typically used to denote an event, that halts execution of current function to prevent crashing
+        Warning,    //used to warn about unexpected code execution, i.e missing enum in switch case
+        Info,       //general info
+        Assume      //format assumptions or sanity checks
+    }
+
+    #endregion
+
+    #region howl enums
+
+    [Flags]
+    enum HowlExportFlags
+    {
+        All = -1,
+        SamplesVag = 1 << 0,
+        SamplesWav = 1 << 1,
+        Sequences = 1 << 2,
+        Midis = 1 << 3,
+        Banks = 1 << 4,
+    }
+
+    //defines instrument type in CSEQ
+    public enum InstType
+    {
+        Long,
+        Short
+    }
+
+    #endregion
+
     public enum Level
     {
         DingoCanyon = 0,
@@ -34,17 +78,6 @@ namespace CTRFramework
         hub3,
         hub4,
         hub5
-    }
-
-    [Flags]
-    enum HowlExportFlags
-    {
-        All = -1,
-        SamplesVag = 1 << 0,
-        SamplesWav = 1 << 1,
-        Sequences = 1 << 2,
-        Midis = 1 << 3,
-        Banks = 1 << 4,
     }
 
     [Flags]
@@ -257,12 +290,5 @@ namespace CTRFramework
         Default,
         Morph,
         Flag
-    }
-
-    //defines instrument type in CSEQ
-    public enum InstType
-    {
-        Long,
-        Short
     }
 }

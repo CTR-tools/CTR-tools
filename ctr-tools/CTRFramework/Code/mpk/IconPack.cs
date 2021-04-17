@@ -2,13 +2,19 @@
 using CTRFramework.Vram;
 using System.Collections.Generic;
 using System.IO;
+using System.Drawing.Imaging;
+using System.Text;
 using System;
 
 namespace CTRFramework
 {
-    class IconPack
+    public class IconPack : IRead
     {
-        Dictionary<string, List<Icon>> Icons = new Dictionary<string, List<Icon>>();
+        public Dictionary<string, List<Icon>> Icons = new Dictionary<string, List<Icon>>();
+
+        public IconPack()
+        {
+        }
 
         public IconPack(BinaryReaderEx br)
         {
@@ -35,7 +41,7 @@ namespace CTRFramework
                 int numTex2 = br.ReadInt16();
 
                 uint[] tOffs = br.ReadArrayUInt32(numTex2);
-                
+
                 foreach (int i in tOffs)
                 {
                     br.Jump(i);
@@ -62,9 +68,10 @@ namespace CTRFramework
 
         public void Extract(Tim tim, string path)
         {
-            Helpers.CheckFolder(path);
-
             if (tim != null)
+            {
+                Helpers.CheckFolder(path);
+
                 foreach (var group in Icons.Keys)
                 {
                     string subdir = Path.Combine(path, group);
@@ -72,8 +79,24 @@ namespace CTRFramework
                     Helpers.CheckFolder(subdir);
 
                     foreach (Icon tm in Icons[group])
-                        tim.GetTexture(tm.tl).Save(Path.Combine(subdir, $"{tm.Name}.png"), System.Drawing.Imaging.ImageFormat.Png);
+                        tim.GetTexture(tm.tl).Save(Path.Combine(subdir, $"{tm.Name}.png"), ImageFormat.Png);
                 }
+            }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var x in Icons.Values)
+            {
+                foreach (var y in x)
+                {
+                    sb.AppendLine(y.Name);
+                }
+            }
+
+            return sb.ToString();
         }
     }
 }

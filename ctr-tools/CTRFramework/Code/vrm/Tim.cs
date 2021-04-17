@@ -154,7 +154,7 @@ namespace CTRFramework.Vram
         {
             if (src.data == null)
             {
-                Helpers.Panic(this, "missing tim data.");
+                Helpers.Panic(this, PanicType.Error, "Passed TIM is null.");
                 return;
             }
 
@@ -181,7 +181,7 @@ namespace CTRFramework.Vram
 
             if (src.clutdata == null)
             {
-                Helpers.Panic(this, "clutdata is missing");
+                Helpers.Panic(this, PanicType.Error, "clutdata is missing");
                 return;
             }
 
@@ -272,6 +272,8 @@ namespace CTRFramework.Vram
             int width = (int)(tl.width * (bpp / 8.0f));
             int height = tl.height;
 
+            Console.WriteLine(width + "x" + height);
+
             ushort[] buf = new ushort[(width / 2) * height];
 
             //Console.WriteLine(width + "x" + height);
@@ -357,13 +359,27 @@ namespace CTRFramework.Vram
         /// <returns></returns>
         public Bitmap GetTexture(TextureLayout tl, string path = "", string name = "")
         {
+
+            if (tl.Tag() == "768_241_36_510_15_7")
+            {
+                Console.WriteLine(tl.ToString());
+                try
+                {
+                    Tim x = GetTimTexture(tl);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message + "\r\n" + ex.ToString());
+                }
+            }
+
             try
             {
                 Tim x = GetTimTexture(tl);
 
                 if (x.region.Width <= 0 || x.region.Height <= 0)
                 {
-                    Helpers.Panic(this, "negative or null size");
+                    Helpers.Panic(this, PanicType.Error, "negative or null size");
                     return new Bitmap(1, 1);
                 }
 
@@ -380,7 +396,7 @@ namespace CTRFramework.Vram
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, "GetTexture fails: " + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
+                Helpers.Panic(this, PanicType.Error, "GetTexture fails: " + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
                 return null;
             }
         }
@@ -388,14 +404,14 @@ namespace CTRFramework.Vram
         /// <summary>
         /// Loads texture data from bitmap file. Make sure you're quantizing your textures to 4 bits beforehand.
         /// </summary>
-        /// <param name="f"></param>
-        public void LoadDataFromBitmap(string f)
+        /// <param name="filename"></param>
+        public void LoadDataFromBitmap(string filename)
         {
-            Bitmap bitmap = (Bitmap)Bitmap.FromFile(f);
+            Bitmap bitmap = (Bitmap)Bitmap.FromFile(filename);
 
             if (bitmap.Width / 4 != region.Width || bitmap.Height != region.Height)
             {
-                Helpers.Panic(this, "Bitmap size mismatch.");
+                Helpers.Panic(this, PanicType.Error, $"Bitmap size mismatch {filename}.");
                 return;
             }
 
@@ -428,7 +444,7 @@ namespace CTRFramework.Vram
                     palette.Add(col);
                     if (palette.Count > 16)
                     {
-                        Helpers.Panic(this, "Too many colors.");
+                        Helpers.Panic(this, PanicType.Error, $"Too many colors. Halt loading texture {filename}.");
                         return;
                     }
                 }

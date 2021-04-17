@@ -54,7 +54,7 @@ namespace CTRTools.Controls
 
                     if (!list.ContainsKey(tag))
                     {
-                        Helpers.Panic(ctr, "unknown texture entry");
+                        Helpers.Panic(ctr, PanicType.Warning, "unknown texture entry");
                         continue;
                     }
 

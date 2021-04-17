@@ -1,4 +1,5 @@
 ﻿using CTRFramework;
+using CTRFramework.Vram;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

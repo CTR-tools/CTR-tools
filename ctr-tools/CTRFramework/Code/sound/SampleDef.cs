@@ -93,10 +93,10 @@ namespace CTRFramework.Sound
 
             //sanity checks
             if (magic1 != 1)
-                Helpers.Panic(this, $"magic1 != 1: {magic1}");
+                Helpers.Panic(this, PanicType.Assume, $"magic1 != 1: {magic1}");
 
             if (always0 != 0)
-                Helpers.Panic(this, $"always0 != 0: {always0}");
+                Helpers.Panic(this, PanicType.Assume, $"always0 != 0: {always0}");
         }
 
         public virtual void Write(BinaryWriterEx bw)

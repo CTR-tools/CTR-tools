@@ -110,7 +110,7 @@ namespace ThreeDeeBear.Models.Ply
                         FaceParseMode = PlyFaceParseMode.VertexCountVertexIndex;
                         break;
                     default:
-                        Helpers.Panic(this, $"{property}\r\nUnknown face property, will not know how to read faces from the mesh");
+                        Helpers.Panic(this, PanicType.Warning, $"{property}\r\nUnknown face property, will not know how to read faces from the mesh");
                         break;
                 }
             }

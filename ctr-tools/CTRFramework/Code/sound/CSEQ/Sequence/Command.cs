@@ -203,7 +203,7 @@ namespace CTRFramework.Sound.CSeq
                         break;
                     }
                 default:
-                    Helpers.Panic("Command", $"Unimplemented MIDI event: {midi.CommandCode}");
+                    Helpers.Panic("Command", PanicType.Warning, $"Unimplemented MIDI event: {midi.CommandCode}");
                     break;
             }
 

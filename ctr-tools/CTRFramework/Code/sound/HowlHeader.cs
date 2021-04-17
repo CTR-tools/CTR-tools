@@ -41,7 +41,7 @@ namespace CTRFramework.Sound
             reserved2 = br.ReadInt32();
 
             if (reserved1 != 0 || reserved2 != 0)
-                Helpers.Panic(this, "reserved is not null. Possible error.");
+                Helpers.Panic(this, PanicType.Assume, "reserved is not null. Possible error.");
 
             cntUnk = br.ReadInt32();
             cntSfx = br.ReadInt32();

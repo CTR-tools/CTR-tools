@@ -136,7 +136,7 @@ namespace CTRFramework.Vram
 
             if (test == 0)
             {
-                Helpers.Panic("TextureLayout", "test failed");
+                Helpers.Panic("TextureLayout", PanicType.Assume, "test failed");
                 return null;
             }
 
@@ -171,7 +171,7 @@ namespace CTRFramework.Vram
             //checking page byte 2 if it's ever not 0
             if (check != 0)
             {
-                Helpers.Panic(this, offset.ToString("X8") + " WTF? page 2nd byte != 0");
+                Helpers.Panic(this, PanicType.Assume, offset.ToString("X8") + $"page 2nd byte != 0: {check}");
                 //Console.ReadKey();
             }
 

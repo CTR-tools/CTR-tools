@@ -118,7 +118,7 @@ namespace CTRFramework.Sound
             for (int i = 0; i < header.cntUnk; i++)
             {
                 if (br.ReadUInt16() != 0)
-                    Helpers.Panic(this, "upper word is not 0.");
+                    Helpers.Panic(this, PanicType.Assume, "upper word is not 0.");
 
                 unk.Add(br.ReadUInt16());
             }

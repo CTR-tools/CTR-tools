@@ -84,10 +84,10 @@ namespace CTRFramework
             Console.WriteLine($"CtrHeader: {name}");
 
             if (unk0 != 0)
-                Helpers.Panic(this, $"check unusual unk0 value = {unk0}");
+                Helpers.Panic(this, PanicType.Assume, $"check unusual unk0 value = {unk0}");
 
             if (billboard > 1)
-                Helpers.Panic(this, $"check unusual billboard value = {billboard}");
+                Helpers.Panic(this, PanicType.Assume, $"check unusual billboard value = {billboard}");
 
             scale = new Vector4s(br);
 
@@ -108,10 +108,10 @@ namespace CTRFramework
                 animPtrMap.Add(br.ReadInt32());
 
             if (unk3 != 0)
-                Helpers.Panic(this, $"check unusual unk3 value = {unk3}");
+                Helpers.Panic(this, PanicType.Assume, $"check unusual unk3 value = {unk3}");
 
             if (unk4 != 0)
-                Helpers.Panic(this, $"check unusual unk4 value = {unk4}");
+                Helpers.Panic(this, PanicType.Assume, $"check unusual unk4 value = {unk4}");
 
             long pos = br.BaseStream.Position;
 
@@ -223,7 +223,7 @@ namespace CTRFramework
 
                 if (!(new List<int> { 0x1C, 0x22 }).Contains(vrenderMode))
                 {
-                    Helpers.Panic(this, $"check vrender {vrenderMode.ToString("X8")}");
+                    Helpers.Panic(this, PanicType.Assume, $"check vrender {vrenderMode.ToString("X8")}");
                 }
             }
             else
@@ -498,7 +498,7 @@ namespace CTRFramework
             //check for clut overflow
             if (dColors.Count > clutlimit)
             {
-                Helpers.Panic("CtrHeader", "More than 128 distinct colors! Truncating...");
+                Helpers.Panic("CtrHeader", PanicType.Info, "More than 128 distinct colors! Truncating...");
                 dColors = dColors.GetRange(0, clutlimit);
 
                 foreach (var x in cfaces)
@@ -735,7 +735,7 @@ namespace CTRFramework
 
                     break;
 
-                default: Helpers.Panic(this, "unknown mode"); break;
+                default: Helpers.Panic(this, PanicType.Warning, $"unimplemented mode {mode.ToString()}"); break;
             }
         }
     }

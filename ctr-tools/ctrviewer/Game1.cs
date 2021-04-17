@@ -239,9 +239,10 @@ namespace ctrviewer
 
             SwitchDisplayMode();
 
+
+
             base.Initialize();
         }
-
 
         void LoadGenericTextures()
         {
