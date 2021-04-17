@@ -2,9 +2,10 @@ meta:
   id: ctr_lev
   application: Crash Team Racing
   title: Crash Team Racing (PS1) scene file
-  doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_lev.ksy
   file-extension: lev
   endian: le
+
+doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_lev.ksy
 
 seq:
   - id: scene_data_size
