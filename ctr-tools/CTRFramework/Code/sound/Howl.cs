@@ -3,9 +3,9 @@ using CTRFramework.Sound.CSeq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
-using System.Security.Cryptography;
 
 namespace CTRFramework.Sound
 {

@@ -3,7 +3,6 @@ using CTRFramework.Shared;
 using System;
 using System.IO;
 using System.Windows.Forms;
-using CTRTools;
 
 namespace CTRTools.Controls
 {
@@ -139,7 +138,7 @@ namespace CTRTools.Controls
             //m.WriteArray(lev, b);
         }
 
-        Timer timer;    
+        Timer timer;
         CtrGameconfig cfg;
 
         private void GetGameConfig(object sender, EventArgs e)

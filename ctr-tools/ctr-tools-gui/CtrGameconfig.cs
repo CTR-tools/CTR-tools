@@ -33,36 +33,36 @@ namespace CTRTools
             _cheats = m_io.ReadU4le();
             _advFlags = m_io.ReadU4le();
             _swapchainIndex = m_io.ReadU4le();
-            _ptrSwapchain = new List<uint>((int) (2));
+            _ptrSwapchain = new List<uint>((int)(2));
             for (var i = 0; i < 2; i++)
             {
                 _ptrSwapchain.Add(m_io.ReadU4le());
             }
-            _database = new List<Db>((int) (2));
+            _database = new List<Db>((int)(2));
             for (var i = 0; i < 2; i++)
             {
                 _database.Add(new Db(m_io, this, m_root));
             }
             _ptrLev1 = m_io.ReadU4le();
             _prtLev2 = m_io.ReadU4le();
-            _cameras = new List<Camera>((int) (4));
+            _cameras = new List<Camera>((int)(4));
             for (var i = 0; i < 4; i++)
             {
                 _cameras.Add(new Camera(m_io, this, m_root));
             }
-            _skipArray12Entries = new List<byte[]>((int) (12));
+            _skipArray12Entries = new List<byte[]>((int)(12));
             for (var i = 0; i < 12; i++)
             {
                 _skipArray12Entries.Add(m_io.ReadBytes(296));
             }
             _cameraUi = new Camera(m_io, this, m_root);
-            _driverCameras = new List<CameraDc>((int) (4));
+            _driverCameras = new List<CameraDc>((int)(4));
             for (var i = 0; i < 4; i++)
             {
                 _driverCameras.Add(new CameraDc(m_io, this, m_root));
             }
             _data0xc0 = m_io.ReadBytes(192);
-            _ptrOt = new List<uint>((int) (2));
+            _ptrOt = new List<uint>((int)(2));
             for (var i = 0; i < 2; i++)
             {
                 _ptrOt.Add(m_io.ReadU4le());
@@ -90,7 +90,7 @@ namespace CTRTools
             _frameTimerNoExceptions = m_io.ReadU4le();
             _frameTimerNotPaused = m_io.ReadU4le();
             _timer = m_io.ReadU4le();
-            _variousTimers = new List<uint>((int) (7));
+            _variousTimers = new List<uint>((int)(7));
             for (var i = 0; i < 7; i++)
             {
                 _variousTimers.Add(m_io.ReadU4le());
@@ -139,7 +139,7 @@ namespace CTRTools
             _completionPercent = m_io.ReadU4le();
             _cupId = m_io.ReadU4le();
             _trackIndex = m_io.ReadU4le();
-            _points = new List<uint>((int) (8));
+            _points = new List<uint>((int)(8));
             for (var i = 0; i < 8; i++)
             {
                 _points.Add(m_io.ReadU4le());
@@ -160,31 +160,31 @@ namespace CTRTools
             _unk1Afterdemo = m_io.ReadU4le();
             _unk2Afterdemo = m_io.ReadU4le();
             _unk3Afterdemo = m_io.ReadU4le();
-            _ptrIcons = new List<uint>((int) (136));
+            _ptrIcons = new List<uint>((int)(136));
             for (var i = 0; i < 136; i++)
             {
                 _ptrIcons.Add(m_io.ReadU4le());
             }
             _unk210c = m_io.ReadU4le();
             _unk2110 = m_io.ReadU4le();
-            _iconGroup = new List<uint>((int) (17));
+            _iconGroup = new List<uint>((int)(17));
             for (var i = 0; i < 17; i++)
             {
                 _iconGroup.Add(m_io.ReadU4le());
             }
             _unk2158 = m_io.ReadU4le();
             _unk215c = m_io.ReadU4le();
-            _modelPtr = new List<uint>((int) (227));
+            _modelPtr = new List<uint>((int)(227));
             for (var i = 0; i < 227; i++)
             {
                 _modelPtr.Add(m_io.ReadU4le());
             }
-            _ptrDrivers = new List<uint>((int) (8));
+            _ptrDrivers = new List<uint>((int)(8));
             for (var i = 0; i < 8; i++)
             {
                 _ptrDrivers.Add(m_io.ReadU4le());
             }
-            _ptrDriversOrdered = new List<uint>((int) (8));
+            _ptrDriversOrdered = new List<uint>((int)(8));
             for (var i = 0; i < 8; i++)
             {
                 _ptrDriversOrdered.Add(m_io.ReadU4le());
@@ -200,14 +200,14 @@ namespace CTRTools
             _renderflags = m_io.ReadU4le();
             _clockEffectEnabled = m_io.ReadU2le();
             _valueAfterClockEffect = m_io.ReadU2le();
-            _someHowlBankData = new List<byte>((int) (4));
+            _someHowlBankData = new List<byte>((int)(4));
             for (var i = 0; i < 4; i++)
             {
                 _someHowlBankData.Add(m_io.ReadU1());
             }
             _someValueBeforePositions1 = m_io.ReadU1();
             _someValueBeforePositions2 = m_io.ReadU1();
-            _currentHumanPlayerPosition = new List<byte>((int) (8));
+            _currentHumanPlayerPosition = new List<byte>((int)(8));
             for (var i = 0; i < 8; i++)
             {
                 _currentHumanPlayerPosition.Add(m_io.ReadU1());
@@ -537,13 +537,13 @@ namespace CTRTools
             {
                 _lifeLimit = m_io.ReadU4le();
                 _killLimit = m_io.ReadU4le();
-                _unkRelatedToTeamSquares = new List<uint>((int) (4));
+                _unkRelatedToTeamSquares = new List<uint>((int)(4));
                 for (var i = 0; i < 4; i++)
                 {
                     _unkRelatedToTeamSquares.Add(m_io.ReadU4le());
                 }
                 _weaponsEnabled = m_io.ReadU4le();
-                _playerTeams = new List<byte>((int) (4));
+                _playerTeams = new List<byte>((int)(4));
                 for (var i = 0; i < 4; i++)
                 {
                     _playerTeams.Add(m_io.ReadU1());

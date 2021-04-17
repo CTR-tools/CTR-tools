@@ -2,7 +2,6 @@
 using CTRFramework.Vram;
 using System.Collections.Generic;
 using System.Text;
-using System;
 
 namespace CTRFramework
 {
@@ -44,7 +43,7 @@ namespace CTRFramework
             uint[] groupPtrs = br.ReadArrayUInt32(numGroups);
 
             for (int i = 0; i < numGroups; i++)
-            { 
+            {
                 string gname = br.ReadStringFixed(16);
                 int unk = br.ReadInt16();
                 int numTex2 = br.ReadInt16();

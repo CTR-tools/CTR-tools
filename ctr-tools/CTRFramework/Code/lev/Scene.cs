@@ -545,11 +545,11 @@ namespace CTRFramework
             foreach (var t in GetTexturesList(Detail.Med))
                 if (!tex.ContainsKey(t.Key))
                     tex.Add(t.Key, t.Value);
-            
+
             foreach (var t in GetTexturesList(Detail.High))
                 if (!tex.ContainsKey(t.Key))
                     tex.Add(t.Key, t.Value);
-            
+
             foreach (var t in GetTexturesList(Detail.Models))
                 if (!tex.ContainsKey(t.Key))
                     tex.Add(t.Key, t.Value);

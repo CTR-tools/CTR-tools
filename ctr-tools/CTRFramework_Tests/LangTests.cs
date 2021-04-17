@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using CTRFramework.Lang;
+using CTRFramework.Shared;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using CTRFramework.Lang;
 using System.Collections.Generic;
 using System.IO;
-using CTRFramework.Shared;
 
 namespace CTRFramework_Tests
 {

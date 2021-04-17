@@ -77,10 +77,10 @@ namespace CTRFramework.Lang
                 {
                     CharSwap swap = new CharSwap(swapfile);
 
-                    for ( int i = 0; i < lng.Entries.Count; i++)
+                    for (int i = 0; i < lng.Entries.Count; i++)
                         lng.Entries[i] = swap.Parse(lng.Entries[i], SwapMode.ToEnglish);
                 }
-            }    
+            }
 
             return lng;
         }

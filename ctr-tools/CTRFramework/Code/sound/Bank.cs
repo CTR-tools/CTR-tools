@@ -107,7 +107,7 @@ namespace CTRFramework.Sound
                 //string vagname = vagpath + "\\" +  (name == null ?  (Howl.sampledict.ContainsKey(id) ? Howl.sampledict[id] : "sample_" + id.ToString("0000")) : name) + ".vag";
                 string vagname = vagpath + "\\" + Howl.GetName(id, Howl.samplenames);
 
-                
+
                 /*
                 if (name != null)
                 {

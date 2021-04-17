@@ -1,8 +1,8 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
 using System;
-using System.IO;
 using System.Drawing.Imaging;
+using System.IO;
 
 namespace CTRFramework
 {

@@ -1,5 +1,3 @@
-using System;
-
 namespace Kaitai
 {
     public abstract class KaitaiStruct

@@ -1218,7 +1218,7 @@ namespace ctrviewer
 
             if (settings.ShowConsole)
                 GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);
-  
+
             //draw calls count
             //spriteBatch.DrawString(font, GraphicsDevice.Metrics.DrawCount.ToString(), new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString(GraphicsDevice.Metrics.DrawCount.ToString()).X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 

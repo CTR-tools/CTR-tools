@@ -78,7 +78,7 @@ namespace CTRFramework
 
             br.Jump(texOff);
             iconPack = new IconPack(br);
-    
+
             foreach (var ptr in modelPtrs)
             {
                 br.Jump(ptr);
@@ -92,7 +92,7 @@ namespace CTRFramework
                     Console.WriteLine($"Model failed: {ptr.ToString("X8")}");
                 }
             }
-            
+
         }
 
         public void Extract(string path, Tim tim)

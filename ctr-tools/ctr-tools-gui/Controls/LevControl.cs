@@ -592,7 +592,7 @@ namespace CTRTools.Controls
 
         private void actionExportObj(object sender, EventArgs e)
         {
-            if (scn!= null)
+            if (scn != null)
             {
                 FolderBrowserDialog fbd = new FolderBrowserDialog();
 

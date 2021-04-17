@@ -69,14 +69,14 @@ namespace CTRFramework
                 ptrHi = br.ReadUInt32();
 
                 if (Scene.ReadHiTex)
-                //loosely assume we got a valid pointer
-                if (ptrHi > 0x30000 && ptrHi < 0xB0000)
-                {
-                    br.Jump(ptrHi);
+                    //loosely assume we got a valid pointer
+                    if (ptrHi > 0x30000 && ptrHi < 0xB0000)
+                    {
+                        br.Jump(ptrHi);
 
-                    for (int i = 0; i < 16; i++)
-                        hi[i] = TextureLayout.FromStream(br);
-                }
+                        for (int i = 0; i < 16; i++)
+                            hi[i] = TextureLayout.FromStream(br);
+                    }
             }
         }
     }
