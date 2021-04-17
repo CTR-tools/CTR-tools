@@ -2,6 +2,7 @@ meta:
   id: ctr_lev
   application: Crash Team Racing
   title: Crash Team Racing (PS1) scene file
+  doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_lev.ksy
   file-extension: lev
   endian: le
 
@@ -9,11 +10,11 @@ seq:
   - id: scene_data_size
     type: u4
   - id: scene_wo_ptrmap
-    type: lev
+    type: scene
     size: _io.size - 4
     if: scene_data_size > 0x80000000
   - id: scene
-    type: lev
+    type: scene
     size: scene_data_size
     if: scene_data_size < 0x80000000
   - id: ptr_map_size
@@ -24,8 +25,12 @@ seq:
     repeat: expr
     repeat-expr: ptr_map_size / 4
     if: scene_data_size < 0x80000000
+
 types:
-  lev:
+  scene:
+    doc: |
+      main scene struct
+      contains all scene data
     seq:
       - id: header
         type: scene_header
@@ -92,7 +97,11 @@ types:
         repeat: expr
         repeat-expr: header.cnt_water
 
+
   vis_data:
+    doc: | 
+      bsp tree used for level drawing
+      simply an array of either leaf or branch
     seq:
       - id: flag
         type: u2
@@ -110,6 +119,9 @@ types:
             1: vis_data_leaf
 
   vis_data_branch:
+    doc: |
+      bsp tree branch node
+      contains split axis info and children indices
     seq:
       - id: axis_x
         type: u2
@@ -127,6 +139,9 @@ types:
         type: u4
 
   vis_data_leaf:
+    doc: | 
+      bsp tree branch termination node
+      points to a set of quadblocks
     seq:
       - id: unk
         type: u4
@@ -138,6 +153,9 @@ types:
         type: u4
 
   skybox:
+    doc: | 
+      skybox struct, contains 8 even segments
+      unfinished, defines indices after vertex_array
     seq:
       - id: num_vertex
         type : u4
@@ -157,6 +175,9 @@ types:
         repeat-expr: num_vertex
 
   scene_header:
+    doc: | 
+      scene header, contains pointer to other data within the file and
+      variouis global data like starting grid, background colors, etc. 
     seq:
       - id: ptr_mesh_info
         type: u4
@@ -277,15 +298,19 @@ types:
         type: u4
       - id: ptr_map
         type: u4
+        if: cnt_pointers >= 1
       - id: ptr_null
         type: u4
+        if: cnt_pointers >= 2
       - id: ptr_post_cam
         type: u4
+        if: cnt_pointers >= 3
       - id: ptr_intro_cam
         type: u4
+        if: cnt_pointers >= 4
       - id: ptr_tropy_ghost
         type: u4
-        if: cnt_pointers >= 6
+        if: cnt_pointers >= 5
       - id: ptr_oxide_ghost
         type: u4
         if: cnt_pointers >= 6
@@ -304,50 +329,10 @@ types:
       - id: s4
         type: u4
 
-  pose:
-    seq:
-      - id: position
-        type: vector3s
-      - id: angle
-        type: vector3s
-
-  vector3u:
-    seq:
-      - id: x
-        type: u2
-      - id: y
-        type: u2
-      - id: z
-        type: u2
-
-  vector3s:
-    seq:
-      - id: x
-        type: s2
-      - id: y
-        type: s2
-      - id: z
-        type: s2
-
-  vector4s:
-    seq:
-      - id: x
-        type: s2
-      - id: y
-        type: s2
-      - id: z
-        type: s2
-      - id: w
-        type: s2
-
-  vector2b:
-    seq:
-      - id: x
-        type: u1
-      - id: y
-        type: u1
-
   instance:
+    doc: |
+      describes a single instance of the model on the map
+      used to spawn hazards, crates, etc.
     seq:
       - id: name
         size: 0x10
@@ -373,6 +358,9 @@ types:
         type: u4
 
   mesh_info:
+    doc: | 
+      meash header struct, contains pointer to vertex array, quadblock array 
+      and visdata array
     seq:
       - id: cnt_quad_block
         type: u4
@@ -391,13 +379,6 @@ types:
       - id: cnt_vis_data
         type: u4
 
-  bounding_box:
-    seq:
-      - id: min
-        type: vector3s
-      - id: max
-        type: vector3s
- 
   ctr_tex:
     seq:
       - id: mid_tex
@@ -408,6 +389,9 @@ types:
         type: u4
 
   quad_block:
+    doc: |
+      describes the atomic entity of the level
+      contains 4 quads and various per quad flag based info
     seq:
       - id: indices
         type: u2
@@ -468,14 +452,16 @@ types:
         type: ctr_tex
 
   vertex:
-    seq: 
+    doc: |
+      describes a single vertex
+      contains spacial coordinate, vertex color and additional color value,
+      that is used when morphing between lod levels 
+    seq:
       - id: coord
-        type: vector3s
-      - id: nil
-        type: u2
-      - id: colorz
+        type: vector4s
+      - id: vcolor
         type: color
-      - id: color_morph
+      - id: vcolor_morph
         type: color
 
   skybox_vertex:
@@ -485,19 +471,10 @@ types:
       - id: colorz
         type: color
 
-  color:
-    seq:
-      - id: r
-        type: u1
-      - id: g
-        type: u1
-      - id: b
-        type: u1
-      - id: a
-        type: u1
-
-
   icon_pack:
+    doc: |
+      describes a set of icons
+      used either in lev scene or mpk file
     seq:
       - id: num_icons
         type: u4
@@ -520,8 +497,11 @@ types:
       - id: groups
         type: icon_group
         repeat: expr
-        repeat-expr: num_groups     
+        repeat-expr: num_groups
+
   icon:
+    doc: |
+      essentially, a tagged vram region
     seq:
       - id: name
         type: strz
@@ -564,6 +544,8 @@ types:
         size: 8
 
   ai_path:
+    doc: |
+      describes a set of navigation points for bots to follow
     seq:
       - id: header
         type: ai_frame_header
@@ -575,6 +557,8 @@ types:
         repeat-expr: header.num_frames
 
   ai_paths:
+    doc: |
+      contains 3 bots paths for each difficulty level
     seq:
       - id: ptr
         type: u4
@@ -588,6 +572,9 @@ types:
         if: ptr[0] != 0 and ptr[1] != 0 and ptr[2] != 0
 
   texture_layout:
+    doc: |
+      a stuct to describe vram region.
+      contains 4 UV coords, palette coord and texture page index
     seq:
       - id: uv1
         type: vector2b
@@ -614,6 +601,8 @@ types:
         type: u4
 
   build_info:
+    doc: |
+      contains pointer to strings, assumed to define vistree compilation times
     seq:
       - id: ptr_build_start
         type: u4
@@ -634,3 +623,65 @@ types:
         type: strz
         encoding: ascii
         pos: ptr_build_type
+
+
+  vector2b:
+    seq:
+      - id: x
+        type: u1
+      - id: y
+        type: u1
+
+  color:
+    seq:
+      - id: r
+        type: u1
+      - id: g
+        type: u1
+      - id: b
+        type: u1
+      - id: a
+        type: u1
+
+  vector3u:
+    seq:
+      - id: x
+        type: u2
+      - id: y
+        type: u2
+      - id: z
+        type: u2
+
+  vector3s:
+    seq:
+      - id: x
+        type: s2
+      - id: y
+        type: s2
+      - id: z
+        type: s2
+
+  vector4s:
+    seq:
+      - id: x
+        type: s2
+      - id: y
+        type: s2
+      - id: z
+        type: s2
+      - id: w
+        type: s2
+
+  pose:
+    seq:
+      - id: position
+        type: vector3s
+      - id: angle
+        type: vector3s
+
+  bounding_box:
+    seq:
+      - id: min
+        type: vector3s
+      - id: max
+        type: vector3s
