@@ -13,22 +13,33 @@ seq:
   - id: scene
     type: scene
     size: data_size
-  - id: ptr_map_size
-    type: u4
-    if: ext_ptr_map == 0
   - id: ptr_map
-    type: u4
-    repeat: expr
-    repeat-expr: ptr_map_size / 4
+    type: ptr_map
     if: ext_ptr_map == 0
 
 instances:
   ext_ptr_map:
     value: header_value >> 31
   data_size:
-    value: header_value << 1 >> 1
+    value: header_value & ~(1 << 31)
 
 types:
+
+  ptr_map:
+    doc: |
+      an array of offsets that is used to convert relative pointers to
+      absolute psx ram pointers
+    seq:
+      - id: ptr_map_size
+        type: u4
+      - id: ptr_map
+        type: u4
+        repeat: expr
+        repeat-expr: num_entries
+    instances:
+      num_entries:
+        value: ptr_map_size / 4
+
   scene:
     doc: |
       main scene struct
@@ -157,17 +168,16 @@ types:
   skybox:
     doc: | 
       skybox struct, contains 8 even segments
-      unfinished, defines indices after vertex_array
     seq:
       - id: num_vertex
         type : u4
       - id: ptr_vertex
         type : u4 
-      - id: num8
+      - id: num_faces
         type: u2
         repeat: expr
         repeat-expr: 8
-      - id: ptr8
+      - id: ptr_faces
         type: u4
         repeat: expr
         repeat-expr: 8
@@ -175,6 +185,20 @@ types:
         type: skybox_vertex
         repeat: expr
         repeat-expr: num_vertex
+      - id: faces
+        type: face_array(num_faces[_index])
+        repeat: expr
+        repeat-expr: 8
+
+  face_array:
+    params:
+      - id: num_entries
+        type: u4
+    seq:
+      - id: faces
+        type: vector4s
+        repeat: expr
+        repeat-expr: num_entries
 
   scene_header:
     doc: | 
