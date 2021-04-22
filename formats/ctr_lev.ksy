@@ -8,24 +8,25 @@ meta:
 doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_lev.ksy
 
 seq:
-  - id: scene_data_size
+  - id: header_value
     type: u4
-  - id: scene_wo_ptrmap
-    type: scene
-    size: _io.size - 4
-    if: scene_data_size > 0x80000000
   - id: scene
     type: scene
-    size: scene_data_size
-    if: scene_data_size < 0x80000000
+    size: data_size
   - id: ptr_map_size
     type: u4
-    if: scene_data_size < 0x80000000
+    if: ext_ptr_map == 0
   - id: ptr_map
     type: u4
     repeat: expr
     repeat-expr: ptr_map_size / 4
-    if: scene_data_size < 0x80000000
+    if: ext_ptr_map == 0
+
+instances:
+  ext_ptr_map:
+    value: header_value >> 31
+  data_size:
+    value: header_value << 1 >> 1
 
 types:
   scene:
