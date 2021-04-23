@@ -422,28 +422,37 @@ namespace CTRFramework
                         {
                             List<Vertex> list = GetVertexListq(v, i);
 
-                            foreach (Vertex vt in list)
+                            //this normally shouldn't be null
+                            if (list != null)
                             {
-                                sb.AppendLine(vt.ToString());
-                                sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
-                            }
 
-                            sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != 0 ? tex[i].midlods[2].Tag() : "default"));
+                                foreach (Vertex vt in list)
+                                {
+                                    sb.AppendLine(vt.ToString());
+                                    sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
+                                }
 
-                            if (objSaveQuads)
-                            {
-                                sb.Append(OBJ.ASCIIQuad("f", a, b));
+                                sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != 0 ? tex[i].midlods[2].Tag() : "default"));
+
+                                if (objSaveQuads)
+                                {
+                                    sb.Append(OBJ.ASCIIQuad("f", a, b));
+                                }
+                                else
+                                {
+                                    sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
+                                    sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
+                                }
+
+                                sb.AppendLine();
+
+                                b += 4;
+                                a += 4;
                             }
                             else
                             {
-                                sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
-                                sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
+                                Helpers.Panic(this, PanicType.Error, $"something's wrong with quadblock {id} at {pos.ToString("X8")}, happens in secret2_4p and temple2_4p");
                             }
-
-                            sb.AppendLine();
-
-                            b += 4;
-                            a += 4;
                         }
 
                         break;
