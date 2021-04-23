@@ -60,13 +60,15 @@ namespace CTRFramework.Vram
         }
 
 
-        public static Tim FromFile(string fn)
+        public static Tim FromFile(string filename)
         {
-            if (!File.Exists(fn))
+            Console.WriteLine($"Loading VRAM from file: {filename}");
+
+            if (!File.Exists(filename))
                 return new Tim(new Rectangle(0, 0, Width, Height));
             //throw new FileNotFoundException($"File not found: {fn}");
 
-            return FromStream(File.OpenRead(fn));
+            return FromStream(File.OpenRead(filename));
         }
     }
 }

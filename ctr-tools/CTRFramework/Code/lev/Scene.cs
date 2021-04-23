@@ -16,7 +16,7 @@ namespace CTRFramework
         public string name;
 
         public SceneHeader header;
-        public MeshInfo meshinfo;
+        public MeshInfo mesh;
 
         public List<Vertex> verts = new List<Vertex>();
         public List<VertexAnim> vertanims = new List<VertexAnim>();
@@ -27,7 +27,6 @@ namespace CTRFramework
         public SkyBox skybox;
         public Nav nav;
 
-        public List<Icon> texmaps = new List<Icon>();
 
         public UnkAdv unkadv;
         public TrialData trial;
@@ -91,11 +90,11 @@ namespace CTRFramework
 
             if (header.ptrMeshInfo != 0)
             {
-                meshinfo = Instance<MeshInfo>.FromReader(br, header.ptrMeshInfo);
+                mesh = Instance<MeshInfo>.FromReader(br, header.ptrMeshInfo);
 
-                if (meshinfo.ptrVertexArray != 0) verts = InstanceList<Vertex>.FromReader(br, meshinfo.ptrVertexArray, meshinfo.cntVertex);
-                if (meshinfo.ptrVisDataArray != 0) visdata = InstanceList<VisData>.FromReader(br, meshinfo.ptrVisDataArray, meshinfo.cntColData);
-                if (meshinfo.ptrQuadBlockArray != 0) quads = InstanceList<QuadBlock>.FromReader(br, meshinfo.ptrQuadBlockArray, meshinfo.cntQuadBlock);
+                quads = mesh.QuadBlocks;
+                verts = mesh.Vertices;
+                visdata = mesh.VisData;
             }
 
             //optional stuff, can be missing
@@ -103,18 +102,13 @@ namespace CTRFramework
             if (header.ptrVcolAnim != 0) vertanims = InstanceList<VertexAnim>.FromReader(br, header.ptrVcolAnim, header.cntVcolAnim);
             if (header.ptrAiNav != 0) nav = Instance<Nav>.FromReader(br, header.ptrAiNav);
             if (header.ptrTrialData != 0) trial = Instance<TrialData>.FromReader(br, header.ptrTrialData);
-            if (header.ptrIcons != 0)
-            {
-                iconpack = Instance<IconPack>.FromReader(br, header.ptrIcons);
-                Console.WriteLine(iconpack.ToString());
-            }
+            if (header.ptrIcons != 0) iconpack = Instance<IconPack>.FromReader(br, header.ptrIcons);
 
             if (header.cntSpawnPts != 0)
             {
                 br.Jump(header.ptrSpawnPts);
                 unkadv = new UnkAdv(br, (int)header.cntSpawnPts);
             }
-
 
             if (header.cntTrialData != 0)
             {
@@ -152,13 +146,14 @@ namespace CTRFramework
                 {
                     if (v.flag.HasFlag(VisDataFlags.Water))
                     {
-                        int z = (int)((v.ptrQuadBlock - meshinfo.ptrQuadBlockArray) / 0x5C);
+                        int z = (int)((v.ptrQuadBlock - mesh.ptrQuadBlocks) / 0x5C);
 
                         for (int i = z; i < z + v.numQuadBlock; i++)
                             quads[i].isWater = true;
                     }
                 }
             }
+
 
             /*
              //water texture
@@ -499,6 +494,19 @@ namespace CTRFramework
                         foreach (TextureLayout tl in entry.tl)
                             if (!tex.ContainsKey(tl.Tag()))
                                 tex.Add(tl.Tag(), tl);
+
+                if (iconpack != null)
+                    foreach (var i in iconpack.Icons.Values)
+                        if (i.tl != null)
+                        {
+                            if (!tex.ContainsKey(i.tl.Tag()))
+                                tex.Add(i.tl.Tag(), i.tl);
+                        }
+                        else
+                        {
+                            //hmm
+                            Helpers.Panic(this, PanicType.Error, i.Name);
+                        }
             }
             else
             {
@@ -609,7 +617,7 @@ namespace CTRFramework
         public void Dispose()
         {
             header = null;
-            meshinfo = null;
+            mesh = null;
             verts.Clear();
             vertanims.Clear();
             quads.Clear();

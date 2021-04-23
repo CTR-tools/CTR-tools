@@ -5,71 +5,70 @@ namespace CTRFramework
 {
     public class SceneHeader : IRead
     {
-        public uint ptrMeshInfo;    //pointer to MeshInfo
-        public uint ptrSkybox;      //pointer to SkyBox
-        public uint ptrTexArray;    //leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
+        public uint ptrMeshInfo;    //0x0 - pointer to MeshInfo
+        public uint ptrSkybox;      //0x4 - pointer to SkyBox
+        public uint ptrTexArray;    //0x8 - leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
 
-        public int numInstances;    //number of model instances in the level (i.e. every single box, fruit, etc.)
-        public uint ptrInstances;   //points to the 1st entry of the array of model instances
-        public int numModels;       //number of actual models
-        public uint ptrModelsPtr;   //pointer to the array of pointers to models. easy in c++, messy in c# 
+        public int numInstances;    //0xC - number of model instances in the level (i.e. every single box, fruit, etc.)
+        public uint ptrInstances;   //0x10 - points to the 1st entry of the array of model instances
+        public int numModels;       //0x14 - number of actual models
+        public uint ptrModelsPtr;   //0x18 - pointer to the array of pointers to models. easy in c++, messy in c# 
 
-        public uint unkPtr1;
-        public uint unkPtr2;
-        public uint ptrInstancesPtr;    //pointer to the array of pointers to model instances.
-        public uint unkPtr3;
+        public uint unkPtr1;        //0x1C
+        public uint unkPtr2;        //0x20
+        public uint ptrInstancesPtr;    //0x24 - pointer to the array of pointers to model instances.
+        public uint unkPtr3;        //0x28
 
-        public int null1;           //assumed reserved
-        public int null2;           //assumed reserved
+        public int null1;           //0x2C - assumed reserved
+        public int null2;           //0x30 - assumed reserved
 
-        public uint cntWater;       //number of vertices treated as water
-        public uint ptrWater;       //pointer to array of water entries
-        public uint ptrIcons;    //lead to the header for the data below
-        public uint ptrNamedTexArray; //leads to some named data (drop, bubble, map-asphalt01) with an array of 0x0C bytes afterwards
-        public uint ptrRestartMain;
+        public uint cntWater;       //0x34 - number of vertices treated as water
+        public uint ptrWater;       //0x38 - pointer to array of water entries
+        public uint ptrIcons;       //0x3C - lead to the icon pack header
+        public uint ptrIconsArray;  //0x40 - leads to the icon pack data
+        public uint ptrRestartMain; //0x44 - looks like a restart point, but doesn't affect anything? maybe like play area bbox?
 
-        public SomeData[] someData; //???
-        public Pose[] startGrid;    //array of 8 starting locations
+        public SomeData[] someData; //0x48 - ??? 36 bytes
+        public Pose[] startGrid;    //0x6C - array of 8 starting locations (96 bytes = (6 * 2) * 8)
 
-        public uint unkPtr4;
-        public uint unkPtr5;
-        public uint ptrLowTexArray; //assumed to be a pointer to low textures array, there is no number of entries though
-        public Vector4b backColor;  //base background color, used to clear the screen
-        public uint bgMode;         //control background drawing mode, 1 color, 2 colors, 4 colors
+        public uint unkPtr4;        //0xCC
+        public uint unkPtr5;        //0xD0
+        public uint ptrLowTexArray; //0xD4 - assumed to be a pointer to low textures array, there is no number of entries though
+        public Vector4b backColor;  //0xD8 - base background color, used to clear the screen
+        public uint bgMode;         //0xDC - control background drawing mode, 1 color, 2 colors, 4 colors
 
-        public uint ptrBuildStart;  //pointer to string, date, assumed visdata compilation start
-        public uint ptrBuildEnd;    //pointer to string, date, assumed visdata compilation end
-        public uint ptrBuildType;   //pointer to string, assumed build type
+        public uint ptrBuildStart;  //0xE0 - pointer to string, date, assumed visdata compilation start
+        public uint ptrBuildEnd;    //0xE4 - pointer to string, date, assumed visdata compilation end
+        public uint ptrBuildType;   //0xE8 - pointer to string, assumed build type
 
-        byte[] skip;    //assumed to be related to particles, contains particle gravity value
+        byte[] skip;                //0xEC - (7*8 = 56 bytes) assumed to be related to particles, contains particle gravity value
 
-        public Vector4b particleColorTop;       //controls bottom color of particles (i.e. snow)
-        public Vector4b particleColorBottom;    //controls bottom color of particles (i.e. snow)
-        public uint particleRenderMode; //assumed to control how particles are drawn
+        public Vector4b particleColorTop;       //0x124 - controls bottom color of particles (i.e. snow)
+        public Vector4b particleColorBottom;    //0x128 - controls bottom color of particles (i.e. snow)
+        public uint particleRenderMode;         //0x12C - assumed to control how particles are drawn
 
-        public uint cntTrialData; //that's incorrect
-        public uint ptrTrialData;
-        public uint cntu2;
-        public uint ptru2;
-        public uint cntSpawnPts;
-        public uint ptrSpawnPts;
-        public uint cntRestartPts;      //number of restarts points in the level
-        public uint ptrRestartPts;      //points to the 1st entry in restart points array
+        public uint cntTrialData;   //0x130 - that's incorrect
+        public uint ptrTrialData;   //0x134 - pointer to additional data referred to as "trialdata" for now
+        public uint cntu2;          //0x138 - 
+        public uint ptru2;          //0x13C
+        public uint cntSpawnPts;    //0x140
+        public uint ptrSpawnPts;    //0x144
+        public uint cntRestartPts;  //0x148 - number of restart points in the level
+        public uint ptrRestartPts;  //0x14C - points to the 1st entry in restart points array
 
-        byte[] skip2;
+        byte[] skip2;               //0x150 - 16 bytes
 
-        public Vector4b[] bgColor;
-        public uint skip2_unkPtr;
+        public Vector4b[] bgColor;  //0x160 - 4 * 4 = 16 bytes for 4 background colors.
+        public uint skip2_unkPtr;   //0x170 - 
 
-        public uint cntVcolAnim;
-        public uint ptrVcolAnim;
+        public uint cntVcolAnim;    //0x174 - number of animated vertices data
+        public uint ptrVcolAnim;    //0x178 - pointer to animated vertices data
 
-        byte[] skip23;
+        byte[] skip23;              //0x17C - 12 bytes
 
+        public uint ptrAiNav;       //0x188 - pointer to bot path data
 
-        public uint ptrAiNav;
-
-        byte[] skip3;
+        byte[] skip3;               //0x18C - 36 bytes
 
 
         public SceneHeader()
@@ -106,7 +105,7 @@ namespace CTRFramework
             cntWater = br.ReadUInt32();
             ptrWater = br.ReadUInt32();
             ptrIcons = br.ReadUInt32();
-            ptrNamedTexArray = br.ReadUInt32();
+            ptrIconsArray = br.ReadUInt32();
 
             ptrRestartMain = br.ReadUInt32();
 
@@ -224,7 +223,7 @@ namespace CTRFramework
             bw.Write(cntWater);
             bw.Write(ptrWater);
             bw.Write(ptrIcons);
-            bw.Write(ptrNamedTexArray);
+            bw.Write(ptrIconsArray);
             bw.Write(ptrRestartMain);
 
             for (int i = 0; i < someData.Length; i++)

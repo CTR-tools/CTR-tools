@@ -387,13 +387,13 @@ namespace CTRTools.Controls
                     ph.Write(bw);
 
 
-                bw.Jump(scn.meshinfo.ptrVertexArray + 4);
+                bw.Jump(scn.mesh.ptrVertices + 4);
 
                 foreach (Vertex v in scn.verts)
                     v.Write(bw);
 
 
-                bw.Jump(scn.meshinfo.ptrQuadBlockArray + 4);
+                bw.Jump(scn.mesh.ptrQuadBlocks + 4);
 
                 foreach (QuadBlock qb in scn.quads)
                     qb.Write(bw);
@@ -403,7 +403,7 @@ namespace CTRTools.Controls
                 foreach (VertexAnim vc in scn.vertanims)
                     vc.Write(bw);
 
-                bw.Jump(scn.meshinfo.ptrVisDataArray + 4);
+                bw.Jump(scn.mesh.ptrVisData + 4);
 
                 foreach (VisData v in scn.visdata)
                     v.Write(bw);

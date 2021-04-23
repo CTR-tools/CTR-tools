@@ -127,12 +127,12 @@ namespace CTRTools.Controls
                 mi = new MeshInfo(br);
             }
 
-            ushort ind = m.ReadPSXUInt16(mi.ptrQuadBlockArray);
+            ushort ind = m.ReadPSXUInt16(mi.ptrQuadBlocks);
 
             textBox5.Text += ind.ToString("X8");
 
-            m.WritePSXUInt32((uint)(mi.ptrVertexArray + ind * 16 + 8), 0, textBox5);
-            m.WritePSXUInt32((uint)(mi.ptrVertexArray + ind * 16 + 12), 0, textBox5);
+            m.WritePSXUInt32((uint)(mi.ptrVertices + ind * 16 + 8), 0, textBox5);
+            m.WritePSXUInt32((uint)(mi.ptrVertices + ind * 16 + 12), 0, textBox5);
 
 
             //m.WriteArray(lev, b);

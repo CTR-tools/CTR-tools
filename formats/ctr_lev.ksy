@@ -73,12 +73,12 @@ types:
       - id: quad_block_array
         type: quad_block
         repeat: expr
-        repeat-expr: mesh_info_header.cnt_quad_block
+        repeat-expr: mesh_info_header.num_quad_blocks
     
       - id: vertex_array
         type: vertex
         repeat: expr
-        repeat-expr: mesh_info_header.vertexnum
+        repeat-expr: mesh_info_header.num_vertices
     
     instances:
       trial:
@@ -91,10 +91,10 @@ types:
         if: header.ptr_skybox != 0
     
       vis_data_array:
-        pos: mesh_info_header.ptr_vis_data_array
+        pos: mesh_info_header.ptr_vis_data
         type: vis_data
         repeat: expr
-        repeat-expr: mesh_info_header.cnt_vis_data
+        repeat-expr: mesh_info_header.num_vis_data
     
       icons:
         pos: header.ptr_icons
@@ -186,11 +186,11 @@ types:
         repeat: expr
         repeat-expr: num_vertex
       - id: faces
-        type: face_array(num_faces[_index])
+        type: skybox_face_array(num_faces[_index])
         repeat: expr
         repeat-expr: 8
 
-  face_array:
+  skybox_face_array:
     params:
       - id: num_entries
         type: u4
@@ -388,21 +388,21 @@ types:
       meash header struct, contains pointer to vertex array, quadblock array 
       and visdata array
     seq:
-      - id: cnt_quad_block
+      - id: num_quad_blocks
         type: u4
-      - id: vertexnum
+      - id: num_vertices
         type: u4
-      - id: unk1
+      - id: num_unk
         type: u4
-      - id: ptr_quadblock_array
+      - id: ptr_quadblocks
         type: u4
-      - id: ptr_vert_array
+      - id: ptr_vertices
         type: u4
-      - id: unk2
+      - id: ptr_unk
         type: u4
-      - id: ptr_vis_data_array
+      - id: ptr_vis_data
         type: u4
-      - id: cnt_vis_data
+      - id: num_vis_data
         type: u4
 
   ctr_tex:
