@@ -13,11 +13,16 @@ namespace ctrviewer.Engine
 
         public static void Write(string message)
         {
-            Console.WriteLine(message);
+            string[] lines = message.Split("\r\n");
 
-            Lines.Add(message);
-            if (Lines.Count > MaxLines)
-                Lines.RemoveAt(0);
+            foreach (var msg in lines)
+            {
+                Console.WriteLine(msg);
+
+                Lines.Add(msg);
+                if (Lines.Count > MaxLines)
+                    Lines.RemoveAt(0);
+            }
         }
 
         public static SpriteFont font;

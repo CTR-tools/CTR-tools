@@ -600,6 +600,8 @@ namespace ctrviewer
             {
                 if (s.visdata.Count > 0)
                     BspDraw(s.visdata[0], s, 0);
+
+                GameConsole.Write(s.Info());
             }
 
             sw.Stop();
@@ -748,6 +750,10 @@ namespace ctrviewer
                     settings.Windowed = !settings.Windowed;
                 }
 
+                if (newkb.IsKeyDown(Keys.OemTilde) && !oldkb.IsKeyDown(Keys.OemTilde))
+                {
+                    settings.ShowConsole = !settings.ShowConsole;
+                }
 
                 if (Keyboard.GetState().IsKeyDown(Keys.OemMinus)) settings.FieldOfView--;
                 if (Keyboard.GetState().IsKeyDown(Keys.OemPlus)) settings.FieldOfView++;
