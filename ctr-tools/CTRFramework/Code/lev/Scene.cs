@@ -26,8 +26,6 @@ namespace CTRFramework
         public List<CtrModel> Models = new List<CtrModel>();
         public SkyBox skybox;
         public Nav nav;
-
-
         public UnkAdv unkadv;
         public TrialData trial;
         public IconPack iconpack;
@@ -35,13 +33,6 @@ namespace CTRFramework
         public List<Pose> restartPts = new List<Pose>();
 
         public Tim ctrvram;
-
-        public static Scene FromFile(string fn, bool readHi = true)
-        {
-            Scene.ReadHiTex = readHi;
-            return new Scene(fn);
-        }
-
 
         public Scene(string filename)
         {
@@ -63,46 +54,41 @@ namespace CTRFramework
                         Console.WriteLine("VRAM found!");
                         ctrvram = CtrVrm.FromFile(vrmpath);
                         LoadTextures();
-                        /*
-                        if (ctrvram != null)
-                            foreach (var m in texmaps)
-                            {
-                                ctrvram.GetTexture(m.tl, ".\\textures\\", m.name);
-                                Console.WriteLine(m.name);
-                                Console.ReadKey();
-                            }
-                        */
                     }
                 }
             }
         }
 
+        public static Scene FromFile(string fn, bool readHi = true)
+        {
+            Scene.ReadHiTex = readHi;
+            return new Scene(fn);
+        }
 
         public List<Vector3s> posu2 = new List<Vector3s>();
         public List<Pose> posu1 = new List<Pose>();
 
         public void Read(BinaryReaderEx br)
         {
-            //data that seems to be present in every level
             header = Instance<SceneHeader>.FromReader(br, 0);
 
-            if (header.ptrRestartPts != 0) restartPts = InstanceList<Pose>.FromReader(br, header.ptrRestartPts, header.cntRestartPts);
+            if (header == null)
+                throw new Exception("Scene header is null. Halt parsing.");
 
-            if (header.ptrMeshInfo != 0)
+            if (header.ptrMeshInfo != UIntPtr.Zero)
             {
-                mesh = Instance<MeshInfo>.FromReader(br, header.ptrMeshInfo);
-
+                mesh = new PtrWrap<MeshInfo>(header.ptrMeshInfo).Get(br);
                 quads = mesh.QuadBlocks;
                 verts = mesh.Vertices;
                 visdata = mesh.VisData;
             }
 
-            //optional stuff, can be missing
-            if (header.ptrSkybox != 0) skybox = Instance<SkyBox>.FromReader(br, header.ptrSkybox);
-            if (header.ptrVcolAnim != 0) vertanims = InstanceList<VertexAnim>.FromReader(br, header.ptrVcolAnim, header.cntVcolAnim);
-            if (header.ptrAiNav != 0) nav = Instance<Nav>.FromReader(br, header.ptrAiNav);
-            if (header.ptrTrialData != 0) trial = Instance<TrialData>.FromReader(br, header.ptrTrialData);
-            if (header.ptrIcons != 0) iconpack = Instance<IconPack>.FromReader(br, header.ptrIcons);
+            restartPts = new PtrWrap<Pose>(header.ptrRestartPts).GetList(br, header.cntRestartPts);
+            vertanims = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.cntVcolAnim);
+            skybox = new PtrWrap<SkyBox>(header.ptrSkybox).Get(br);
+            nav = new PtrWrap<Nav>(header.ptrAiNav).Get(br);
+            iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
+            trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
 
             if (header.cntSpawnPts != 0)
             {

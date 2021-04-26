@@ -132,6 +132,7 @@ namespace ctrviewer.Engine
             });
 
             List<MenuItem> cupmenu = new List<MenuItem>();
+            cupmenu.Add(new MenuItem("level type".ToUpper(), "link", "level_type", true));
             cupmenu.Add(new MenuItem("wumpa cup".ToUpper(), "link", "cup_wumpa", true));
             cupmenu.Add(new MenuItem("crystal cup".ToUpper(), "link", "cup_cryst", true));
             cupmenu.Add(new MenuItem("nitro cup".ToUpper(), "link", "cup_nitro", true));
@@ -143,6 +144,14 @@ namespace ctrviewer.Engine
             cupmenu.Add(new MenuItem("back".ToUpper(), "link", "main", true));
             menus.Add("cupmenu", cupmenu);
 
+            menus.Add("level_type", new List<MenuItem>()
+            {
+                new MenuItem("1 player".ToUpper(), "setleveltype", "", true, intValue: 0),
+                new MenuItem("2 players".ToUpper(), "setleveltype", "", true, intValue: 1),
+                new MenuItem("4 players".ToUpper(), "setleveltype", "", true, intValue: 2),
+                new MenuItem("relic race".ToUpper(), "setleveltype", "", true, intValue: 3),
+                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+            });
 
             menus.Add("cup_wumpa", new List<MenuItem>()
             {

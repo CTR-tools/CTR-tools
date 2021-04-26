@@ -15,8 +15,18 @@ using System.Threading.Tasks;
 
 namespace ctrviewer
 {
+    public enum LevelType
+    {
+        P1 = 0,
+        P2 = 1,
+        P4 = 2,
+        Relic = 3
+    }
+
     public class Game1 : Game
     {
+        public LevelType levelType = LevelType.P1;
+
         public static List<string> alphalist = new List<string>();
 
         EngineSettings settings;
@@ -511,7 +521,7 @@ namespace ctrviewer
                     }
                 }
 
-                if (s.header.ptrTrialData != 0)
+                if (s.header.ptrTrialData != UIntPtr.Zero)
                 {
                     foreach (var v in s.posu1)
                     {
@@ -785,6 +795,9 @@ namespace ctrviewer
                                 break;
                             case "link":
                                 menu.SetMenu(font);
+                                break;
+                            case "setleveltype":
+                                levelType = (LevelType)menu.SelectedItem.Value;
                                 break;
                             case "toggle":
                                 switch (menu.SelectedItem.Param)
@@ -1095,9 +1108,12 @@ namespace ctrviewer
 
             List<string> files = new List<string>();
 
-            foreach (int i in absId)
+            for (int i = 0; i < absId.Length; i++)
             {
-                big.FileCursor = i;
+                if (absId[i] < 200)
+                    absId[i] += (int)levelType * 2;
+
+                big.FileCursor = absId[i];
 
                 if (Path.GetExtension(big.GetFilename()) != ".vrm")
                     return;

@@ -7,6 +7,11 @@ namespace CTRFramework.Shared
     {
         public UIntPtr Pointer = UIntPtr.Zero;
 
+        public PtrWrap(UIntPtr ptr)
+        {
+            Pointer = ptr;
+        }
+
         public PtrWrap(BinaryReaderEx br)
         {
             Pointer = br.ReadUIntPtr();
@@ -16,6 +21,9 @@ namespace CTRFramework.Shared
         {
             if (Pointer == UIntPtr.Zero)
                 return default(T);
+
+            if (Pointer.ToUInt32() > br.BaseStream.Length)
+                throw new OverflowException("Trying to read out of stream bounds.");
 
             int pos = (int)br.BaseStream.Position;
 
@@ -30,6 +38,9 @@ namespace CTRFramework.Shared
         {
             if (Pointer == UIntPtr.Zero)
                 return new List<T>();
+
+            if (Pointer.ToUInt32() > br.BaseStream.Length)
+                throw new OverflowException("Trying to read out of stream bounds.");
 
             int pos = (int)br.BaseStream.Position;
 
@@ -68,6 +79,11 @@ namespace CTRFramework.Shared
             T t = new T();
             t.Read(br);
             return t;
+        }
+
+        public static T FromReader(BinaryReaderEx br, UIntPtr pos)
+        {
+            return FromReader(br, pos.ToUInt32());
         }
     }
 }

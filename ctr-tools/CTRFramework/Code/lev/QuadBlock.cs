@@ -47,7 +47,7 @@ namespace CTRFramework
 
         public byte[] drawOrderHigh = new byte[4];
 
-        public uint[] ptrTexMid = new uint[4];    //offsets to mid texture definition
+        public UIntPtr[] ptrTexMid = new UIntPtr[4];    //offsets to mid texture definition
 
         public BoundingBox bb;              //a box that bounds
 
@@ -117,13 +117,11 @@ namespace CTRFramework
 
             for (int i = 0; i < 4; i++)
             {
-                ptrTexMid[i] = br.ReadUInt32();
+                ptrTexMid[i] = br.ReadUIntPtr();
 
-                if (Helpers.TestPointer(ptrTexMid[i]) != 0)
-                {
-                    Console.WriteLine("mid " + Helpers.TestPointer(ptrTexMid[i]).ToString("x2"));
+                if (Helpers.TestPointer(ptrTexMid[i].ToUInt32()) != 0)
+                    Helpers.Panic(this, PanicType.Assume, $"mid {Helpers.TestPointer(ptrTexMid[i].ToUInt32()).ToString("x2")}");
                     // Console.ReadKey();
-                }
             }
 
 
@@ -432,7 +430,7 @@ namespace CTRFramework
                                     sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
                                 }
 
-                                sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != 0 ? tex[i].midlods[2].Tag() : "default"));
+                                sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? tex[i].midlods[2].Tag() : "default"));
 
                                 if (objSaveQuads)
                                 {

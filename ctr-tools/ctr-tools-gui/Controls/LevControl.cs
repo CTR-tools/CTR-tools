@@ -171,7 +171,7 @@ namespace CTRTools.Controls
                 foreach (QuadBlock qb in scn.quads)
                 {
                     qb.mosaicStruct = 0;
-                    qb.ptrTexMid = new uint[] { 0, 0, 0, 0 };
+                    qb.ptrTexMid = new UIntPtr[] { UIntPtr.Zero, UIntPtr.Zero, UIntPtr.Zero, UIntPtr.Zero};
                 }
             }
         }

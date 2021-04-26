@@ -147,7 +147,7 @@ namespace ctrviewer.Engine.Render
                                     bool isAnimated = false;
                                     string texTag = "test";
 
-                                    if (qb.ptrTexMid[j] != 0)
+                                    if (qb.ptrTexMid[j] != UIntPtr.Zero)
                                     {
                                         isAnimated = qb.tex[j].isAnimated;
                                         if (texTag != "00000000")
