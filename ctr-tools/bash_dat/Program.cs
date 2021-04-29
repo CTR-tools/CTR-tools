@@ -1,7 +1,10 @@
 ﻿using CTRFramework.Shared;
+using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Drawing;
+
 
 namespace bash_dat
 {
@@ -46,9 +49,13 @@ namespace bash_dat
         public uint size;
         public short numTex;
         public short numPals;
-        public uint palDataSize;
+        public uint skipToPal;
+        public uint skipToTex;
+        public uint skipToUnk;
+        public uint ptrNext;
+        public uint zero;
 
-        List<byte[]> pals = new List<byte[]>();
+        List<List<Color>> pals = new List<List<Color>>();
         List<Tex> tex = new List<Tex>();
 
         public TexPak(BinaryReaderEx br)
@@ -62,18 +69,29 @@ namespace bash_dat
             size = br.ReadUInt32();
             numTex = br.ReadInt16();
             numPals = br.ReadInt16();
-            palDataSize = br.ReadUInt32();
-
-            br.Seek(0x10);
+            skipToTex = br.ReadUInt32();
+            skipToPal = br.ReadUInt32();
+            skipToUnk = br.ReadUInt32();
+            ptrNext = br.ReadUInt32();
+            zero = br.ReadUInt32();
 
             for (int i = 0; i < numPals; i++)
             {
                 int numCols = br.ReadInt32();
-                pals.Add(br.ReadBytes(numCols * 2));
+
+                List<Color> palette = new List<Color>();
+
+                for (int j = 0; j < numCols; j++)
+                {
+                    palette.Add(Tim.Convert16(br.ReadUInt16(), false));
+                }
+
+                pals.Add(palette);
             }
 
             for (int i = 0; i < numTex; i++)
             {
+                Console.WriteLine(br.HexPos());
                 tex.Add(new Tex(br));
             }
         }
@@ -82,13 +100,12 @@ namespace bash_dat
         {
             static void Main(string[] args)
             {
-
                 if (args.Length > 0)
                 {
                     using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(args[0])))
                     {
 
-                        List<uint> ptrs = br.ReadListUInt32(4);
+                        //List<uint> ptrs = br.ReadListUInt32(4);
                         /*
                         using (BinaryWriterEx bw = new BinaryWriterEx(File.Create("kek.vab")))
                         {
@@ -100,7 +117,7 @@ namespace bash_dat
                         }
                         */
 
-
+                        /*
                         br.Jump(ptrs[0]);
                         File.WriteAllBytes("kek.vb", br.ReadBytes((int)ptrs[1] - (int)ptrs[0]));
 
@@ -116,6 +133,8 @@ namespace bash_dat
                             File.WriteAllBytes("kek2.seq", br.ReadBytes((int)br.BaseStream.Length - (int)ptrs[2]));
 
                         }
+                        */
+
                         /*
                         br.Jump(0x1ca54);
 
@@ -151,56 +170,85 @@ namespace bash_dat
                         File.AppendAllText("test.obj", sb.ToString());
                         */
 
-
-                        /*
                         TexPak x = new TexPak(br);
 
-                        int i = 0;
-                        foreach(Tex t in x.tex)
+                        Console.WriteLine(x.numPals + " " + x.numTex);
+
+                        string path = Path.Combine(Path.GetDirectoryName(args[0]), Path.GetFileNameWithoutExtension(args[0]));
+
+                        Helpers.CheckFolder(path);
+
+                        int num = 0;
+
+                        foreach (Tex t in x.tex)
                         {
                             BMPHeader b = new BMPHeader();
-                            b.Update(t.height, t.width, 256, 4);
-                            b.UpdateData(x.pals[t.unk3], t.data);
+                            b.Update(t.width * 4, t.height, 16, 4);
 
-                            i++;
+                            byte[] pal = new byte[16 * 4];
 
-                            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite("kek" + i + ".bmp")))
+                            bool bad = false;
+
+                            int palindex = t.unk2 / 2;
+
+                            if (palindex < 0 || palindex > x.pals.Count)
+                            {
+                                palindex = 0;
+                                bad = true;
+                            }
+
+                            for (int i = 0; i < 16; i++)
+                            {
+                                pal[i * 4 + 0] = x.pals[palindex][i].B;
+                                pal[i * 4 + 1] = x.pals[palindex][i].G;
+                                pal[i * 4 + 2] = x.pals[palindex][i].R;
+                                pal[i * 4 + 3] = x.pals[palindex][i].A;
+                            }
+
+
+                            b.UpdateData(pal, Tim.FixPixelOrder(t.data));
+
+                            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite($"{path}\\tex_" + num + (bad ? "_badpal" : "") + ".bmp")))
                             {
                                 b.Write(bw);
                             }
-                        }
-                        */
-                    }
 
-                    Console.ReadKey();
+                            num++;
+                        }
+                    }
                 }
                 else
                 {
+                    string exe = "SCUS_945.70";
+                    //string exe = "CRASHBSH.EXE";
+                    string bsh = "CRASHBSH.DAT";
 
+                    if (!File.Exists("SCUS_945.70") || !File.Exists("CRASHBSH.DAT"))
+                    {
+                        Console.WriteLine("Please put both CRASHBSH.DAT and SCUS_945.70 in this folder.");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    string exe_md5 = Helpers.CalculateMD5(exe);
+                    string bsh_md5 = Helpers.CalculateMD5(bsh);
+
+                    File.WriteAllText("md5.txt", exe_md5 + "\r\n" + bsh_md5);
+
+                    int ptr = 0;
+                    int num = 0;
+
+                    switch (exe_md5)
+                    {
+                        case "ee4963398064c458e9a9b27040d639e0": ptr = 0x33784; num = 0x1E6; break; //NTSC_DEMO_SPYRO_SPLIT
+                        case "f620ac01cd60c55ab0e981104f2b6c48": ptr = 0x3e910; num = 0x3E0; break; //NTSC_RELEASE
+                        case "e71360b5c119f87d88acd9964ac56c21": ptr = 0x3f264; num = 0x545; break; //PAL_RELEASE
+                        default: Console.WriteLine("unsupported!"); return;
+                    }
 
                     try
                     {
                         Directory.CreateDirectory("data");
-
-                        //string exe = "SCUS_945.70";
-                        string exe = "CRASHBSH.EXE";
-                        string bsh = "CRASHBSH.DAT";
-
-                        string exe_md5 = Helpers.CalculateMD5(exe);
-                        string bsh_md5 = Helpers.CalculateMD5(bsh);
-
-                        File.WriteAllText("md5.txt", exe_md5 + "\r\n" + bsh_md5);
-
-                        int ptr = 0;
-                        int num = 0;
-
-                        switch (exe_md5)
-                        {
-                            case "ee4963398064c458e9a9b27040d639e0": ptr = 0x33784; num = 0x1E6; break; //NTSC_DEMO_SPYRO_SPLIT
-                            case "f620ac01cd60c55ab0e981104f2b6c48": ptr = 0x3e910; num = 0x3E0; break; //NTSC_RELEASE
-                            case "e71360b5c119f87d88acd9964ac56c21": ptr = 0x3f264; num = 0x545; break; //PAL_RELEASE
-                            default: Console.WriteLine("unsupported!"); return;
-                        }
 
                         using (BinaryReaderEx hdr = new BinaryReaderEx(File.Open(exe, FileMode.Open)))
                         {
@@ -272,10 +320,9 @@ namespace bash_dat
 
                         Console.WriteLine("done!");
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Console.Write("Please put both CRASHBSH.DAT and SCUS_945.70 in this folder.");
-                        Console.ReadKey();
+                        Console.WriteLine(ex.ToString());
                     }
                 }
             }

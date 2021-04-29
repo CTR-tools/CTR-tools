@@ -223,7 +223,7 @@ namespace CTRFramework.Vram
         /// </summary>
         /// <param name="data">4-bit pixel array of bytes.</param>
         /// <returns></returns>
-        private byte[] FixPixelOrder(byte[] data)
+        public static byte[] FixPixelOrder(byte[] data)
         {
             byte[] x = data;
 
