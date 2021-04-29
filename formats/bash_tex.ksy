@@ -6,33 +6,44 @@ meta:
   endian: le
 
 seq:
-  - id: tex_pack
-    type: tex_block
+  - id: magic
+    type: u4
+  - id: fsize
+    type: u4
+  - id: num_tex
+    type: u2
+  - id: num_pals
+    type: u2
+  - id: skip_to_tex
+    type: u4
+  - id: skip_to_pal
+    type: u4
+  - id: unk3
+    type: u4
+  - id: ptr_animated
+    type: u4
+  - id: zero #null?
+    type: u4
+  - id: palettes
+    type: pal
+    repeat: expr
+    repeat-expr: num_pals
+  - id: textures
+    type: tex
+    repeat: expr
+    repeat-expr: num_tex
+  - id: magic2
+    type: u4
+  - id: fsize2
+    type: u4
+  - id: num_anim_tex
+    type: u4
+  - id: anim_heads
+    type: anim_header
+    repeat: expr
+    repeat-expr: num_anim_tex
 
 types:
-
-  tex_block:
-    seq:
-      - id: magic
-        type: u4
-      - id: fsize
-        type: u4
-      - id: num_tex
-        type: u2
-      - id: num_pals
-        type: u2
-      - id: unk1
-        type: u4
-      - id: skip
-        size: 0x10
-      - id: palettes
-        type: pal
-        repeat: expr
-        repeat-expr: num_pals
-      - id: textures
-        type: tex
-        repeat: expr
-        repeat-expr: num_tex
   pal:
     seq:
       - id: num_colors
@@ -41,7 +52,20 @@ types:
         type: u2
         repeat: expr
         repeat-expr: num_colors
-        
+
+  anim_header:
+    seq:
+      - id: skip_to_data
+        type: u4
+      - id: pal_index #maybe?
+        type: u4
+      - id: num_frames
+        type: u4
+      - id: unk4
+        type: u4
+      - id: zero #null?
+        type: u4
+
   tex:
     seq:
       - id: width
@@ -58,4 +82,3 @@ types:
         type: u4
       - id: data
         size: width * height * 2
-    
