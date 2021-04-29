@@ -665,10 +665,13 @@ namespace ctrviewer
                 rightCamera.Position = camera.Position;
                 leftCamera.Position = camera.Position;
 
-                camera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Y / 4096 * Math.PI * 2));
-                rightCamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Y / 4096 * Math.PI * 2));
-                leftCamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Y / 4096 * Math.PI * 2));
-                skycamera.SetRotation((float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2), (float)(scn[0].header.startGrid[0].Rotation.Y / 4096 * Math.PI * 2));
+                float x = (float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2f - Math.PI / 2f);
+                float y = (float)(scn[0].header.startGrid[0].Rotation.Y / 4096f * Math.PI * 2f - Math.PI / 2f);
+
+                camera.SetRotation(y, x);
+                rightCamera.SetRotation(y, x);
+                leftCamera.SetRotation(y, x);
+                skycamera.SetRotation(y, x);
 
                 UpdateCameras(new GameTime());
 
