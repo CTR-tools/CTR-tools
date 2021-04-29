@@ -73,7 +73,7 @@ namespace bash_dat
                 case "a45627fa6c3d1768f8ad56fb46569f06": ptr = 0x335A0; num = 0x1CA; version = "OPSM 38 Demo"; break;
                 case "ee4963398064c458e9a9b27040d639e0": ptr = 0x33784; num = 0x1E6; version = "Spyro Split / Winter Jampack 2000 / demo disc 1.3"; break;
                 case "98e02493600b898bcacbdcb129e9019f": ptr = 0x3483C; num = 0x241; version = "Spyro 3 NTSC Demo"; break;
-                case "db497990f79454bcbd41a770df3692ef": ptr = 0x35238; num = 0x276; version = "Euro Demo 51?"; break;
+                case "db497990f79454bcbd41a770df3692ef": ptr = 0x35238; num = 0x276; version = "Euro Demo xx?"; break;
                 case "b9a576bc33399addb51779c1e2e2bc42": ptr = 0x35850; num = 0x2A6; version = "Sep 14, preview prototype"; break;
                 case "f620ac01cd60c55ab0e981104f2b6c48": ptr = 0x3e910; num = 0x3E0; version = "NTSC Release"; break;
                 case "ce7e3fe1bf226cc8dd195e025725fdd1": ptr = 0x3F988; num = 0x4D9; version = "Oct 9 PAL prototype"; break;
