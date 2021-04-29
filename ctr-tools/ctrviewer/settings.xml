@@ -10,7 +10,7 @@
   <VisDataLeaves>false</VisDataLeaves>
   <Sky>true</Sky>
   <BotsPath>false</BotsPath>
-  <Models>false</Models>
+  <Models>true</Models>
   <StereoPair>false</StereoPair>
   <StereoPairSeparation>130</StereoPairSeparation>
   <FieldOfView>80</FieldOfView>
