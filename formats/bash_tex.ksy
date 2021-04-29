@@ -6,7 +6,7 @@ meta:
   endian: le
 
 seq:
-  - id: magic
+  - id: magic # 8 (or skip size)
     type: u4
   - id: fsize
     type: u4
@@ -32,7 +32,7 @@ seq:
     type: tex
     repeat: expr
     repeat-expr: num_tex
-  - id: magic2
+  - id: magic2 # 8 (or skip size)
     type: u4
   - id: fsize2
     type: u4
@@ -42,6 +42,8 @@ seq:
     type: anim_header
     repeat: expr
     repeat-expr: num_anim_tex
+    
+  # num_anim_tex * ( num_frames * 4 (ptrs to data) + texture stream data)
 
 types:
   pal:
@@ -68,17 +70,17 @@ types:
 
   tex:
     seq:
-      - id: width
+      - id: width #data width, for 4 bit multiply by 4
         type: u2
       - id: height
         type: u2
-      - id: unk0
+      - id: unk0 #unknown, either flags or maybe real data size?
         type: u4
-      - id: unk1
+      - id: unk1 #mostly 0
         type: u4
-      - id: unk2
+      - id: pal_index #divided by 2 for some reason, also negative sometimes
         type: u4
-      - id: unk3
+      - id: unk3 #mostly 1
         type: u4
       - id: data
         size: width * height * 2
