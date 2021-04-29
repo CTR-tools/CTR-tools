@@ -1,329 +1,226 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Drawing;
-
 
 namespace bash_dat
 {
-    class Tex
+    class Program
     {
-        public int width;
-        public int height;
-        public int unk0;
-        public int unk1;
-        public int unk2;
-        public int unk3; //possible vals = 1, 2, 8, 16
-        public byte[] data;
-
-        public Tex(BinaryReaderEx br)
+        static void Main(string[] args)
         {
-            Read(br);
-        }
+            Console.WriteLine(
+                "{0}\r\n{1}\r\n\r\n{2}\r\n",
+                $"CTR-tools: bash_dat - {Meta.GetSignature()}",
+                "Extracts binary files from Crash Bash CRASHBSH.DAT file and converts TEX to BMP.",
+                Meta.GetVersion());
 
-        public void Read(BinaryReaderEx br)
-        {
-            width = br.ReadInt16();
-            height = br.ReadInt16();
-            unk0 = br.ReadInt32();
-
-            if (unk1 != 0)
-                Console.WriteLine("unk1 not 0!");
-
-            unk1 = br.ReadInt32();
-            unk2 = br.ReadInt32();
-            unk3 = br.ReadInt32();
-
-            if (unk3 != 1 && unk3 != 2 && unk3 != 8 && unk3 != 16)
-                Console.WriteLine("unk3 not 1!" + unk3);
-
-            data = br.ReadBytes(width * height * 2);
-        }
-    }
-
-    class TexPak
-    {
-        public uint magic;
-        public uint size;
-        public short numTex;
-        public short numPals;
-        public uint skipToPal;
-        public uint skipToTex;
-        public uint skipToUnk;
-        public uint ptrNext;
-        public uint zero;
-
-        List<List<Color>> pals = new List<List<Color>>();
-        List<Tex> tex = new List<Tex>();
-
-        public TexPak(BinaryReaderEx br)
-        {
-            Read(br);
-        }
-
-        public void Read(BinaryReaderEx br)
-        {
-            magic = br.ReadUInt32();
-            size = br.ReadUInt32();
-            numTex = br.ReadInt16();
-            numPals = br.ReadInt16();
-            skipToTex = br.ReadUInt32();
-            skipToPal = br.ReadUInt32();
-            skipToUnk = br.ReadUInt32();
-            ptrNext = br.ReadUInt32();
-            zero = br.ReadUInt32();
-
-            for (int i = 0; i < numPals; i++)
+            if (args.Length == 0)
             {
-                int numCols = br.ReadInt32();
+                Console.WriteLine(
+                    "{0}:\r\n\t{1}: {2}\r\n\t{3}: {4}",
+                    "Usage",
+                    "Extract files example", "bash_dat C:\\path_to.exe",
+                    "Extract textures example", "bash_dat C:\\some_dir\\some_file.tex"
+                    );
 
-                List<Color> palette = new List<Color>();
-
-                for (int j = 0; j < numCols; j++)
-                {
-                    palette.Add(Tim.Convert16(br.ReadUInt16(), false));
-                }
-
-                pals.Add(palette);
+                return;
             }
 
-            for (int i = 0; i < numTex; i++)
+            if (args.Length == 0)
             {
-                Console.WriteLine(br.HexPos());
-                tex.Add(new Tex(br));
+
+                Console.WriteLine("No file given.");
+                return;
+            }
+
+            string ext = Path.GetExtension(args[0]);
+
+            switch (ext)
+            {
+                case ".tex":
+                    LoadTextureFile(args[0]);
+                    break;
+                default:
+                    LoadDataFile(args[0]);
+                    break;
             }
         }
 
-        class Program
+        static void LoadDataFile(string filename)
         {
-            static void Main(string[] args)
+            string dir = Path.GetDirectoryName(filename);
+            string datapath = Path.Combine(dir, "CRASHBSH.DAT");
+
+            if (!File.Exists(filename) || !File.Exists(datapath))
             {
-                if (args.Length > 0)
+                Console.WriteLine("Please put both CRASHBSH.DAT and SCUS_945.70 in this folder.");
+                Console.ReadKey();
+                return;
+            }
+
+            string exe_md5 = Helpers.CalculateMD5(filename);
+            string bsh_md5 = Helpers.CalculateMD5(datapath);
+
+            //File.WriteAllText("md5.txt", exe_md5 + "\r\n" + bsh_md5);
+
+            int ptr = 0;
+            int num = 0;
+            string version = "Unknown";
+
+            switch (exe_md5)
+            {
+                case "a45627fa6c3d1768f8ad56fb46569f06": ptr = 0x335A0; num = 0x1CA; version = "OPSM 38 Demo"; break;
+                case "ee4963398064c458e9a9b27040d639e0": ptr = 0x33784; num = 0x1E6; version = "Spyro Split / Winter Jampack 2000 / demo disc 1.3"; break;
+                case "98e02493600b898bcacbdcb129e9019f": ptr = 0x3483C; num = 0x241; version = "Spyro 3 NTSC Demo"; break;
+                case "db497990f79454bcbd41a770df3692ef": ptr = 0x35238; num = 0x276; version = "Euro Demo 51?"; break;
+                case "b9a576bc33399addb51779c1e2e2bc42": ptr = 0x35850; num = 0x2A6; version = "Sep 14, preview prototype"; break;
+                case "f620ac01cd60c55ab0e981104f2b6c48": ptr = 0x3e910; num = 0x3E0; version = "NTSC Release"; break;
+                case "ce7e3fe1bf226cc8dd195e025725fdd1": ptr = 0x3F988; num = 0x4D9; version = "Oct 9 PAL prototype"; break;
+                case "e71360b5c119f87d88acd9964ac56c21": ptr = 0x3f264; num = 0x545; version = "PAL Release"; break;
+                case "e830b0f1b91c1edeef42a60d3160b752": ptr = 0x3e97c; num = 0x3D2; version = "JAP Trial"; break;
+                case "e9ad2756fe43d11e3d93af05acafef71": ptr = 0x3ee30; num = 0x4DD; version = "JAP Release"; break;
+
+                default: Console.WriteLine($"Unknown file: {exe_md5}"); return;
+            }
+
+            Console.WriteLine(version);
+
+            try
+            {
+                Directory.CreateDirectory("data");
+
+                using (BinaryReaderEx hdr = new BinaryReaderEx(File.Open(filename, FileMode.Open)))
                 {
-                    using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(args[0])))
+                    using (BinaryReaderEx dat = new BinaryReaderEx(File.Open(datapath, FileMode.Open)))
                     {
+                        string magic = hdr.ReadStringFixed(8);
 
-                        //List<uint> ptrs = br.ReadListUInt32(4);
-                        /*
-                        using (BinaryWriterEx bw = new BinaryWriterEx(File.Create("kek.vab")))
+                        if (magic != "PS-X EXE")
                         {
-                            br.Jump(ptrs[1]);
-                            bw.Write(br.ReadBytes((int)ptrs[2] - (int)ptrs[1]));
-
-                            br.Jump(ptrs[0]);
-                            bw.Write(br.ReadBytes((int)ptrs[1] - (int)ptrs[0]));
-                        }
-                        */
-
-                        /*
-                        br.Jump(ptrs[0]);
-                        File.WriteAllBytes("kek.vb", br.ReadBytes((int)ptrs[1] - (int)ptrs[0]));
-
-                        br.Jump(ptrs[1]);
-                        File.WriteAllBytes("kek.vh", br.ReadBytes((int)ptrs[2] - (int)ptrs[1]));
-
-                        if (ptrs[3] != 0)
-                        {
-                            br.Jump(ptrs[2]);
-                            File.WriteAllBytes("kek1.seq", br.ReadBytes((int)ptrs[3] - (int)ptrs[2]));
-
-                            br.Jump(ptrs[3]);
-                            File.WriteAllBytes("kek2.seq", br.ReadBytes((int)br.BaseStream.Length - (int)ptrs[2]));
-
-                        }
-                        */
-
-                        /*
-                        br.Jump(0x1ca54);
-
-                        List<Vector3s> vv = new List<Vector3s>();
-
-                        for (int i =0; i < 0x17e8 / 6; i++)
-                        {
-                            vv.Add(new Vector3s(br));
+                            Console.WriteLine("Not a PS-X EXE.");
+                            return;
                         }
 
-                        StringBuilder sb = new StringBuilder();
+                        hdr.Jump(ptr);
 
-                        foreach (var v in vv)
+                        for (int i = 0; i < num; i++)
                         {
-                            sb.AppendFormat("v {0}\r\n", v.ToString(VecFormat.Numbers));
-                        }
-                        */
-                        /*
-                        br.Jump(0x3ef2);
+                            int offset = hdr.ReadInt32() * 0x800;
+                            int size = hdr.ReadInt32();
 
-                        List<Vector4s> vv2 = new List<Vector4s>();
+                            dat.Jump(offset);
 
-                        for (int i = 0; i < 0x6a; i++)
-                        {
-                            vv2.Add(new Vector4s(br));
-                        }
+                            string ext = ".bin";
+                            int check = dat.ReadInt32();
 
-                        foreach (var v in vv2)
-                        {
-                            sb.AppendFormat("f {0} {1} {2}\r\n", v.X + 1, v.Y + 1, v.Z + 1);
-                        }
-
-                        File.AppendAllText("test.obj", sb.ToString());
-                        */
-
-                        TexPak x = new TexPak(br);
-
-                        Console.WriteLine(x.numPals + " " + x.numTex);
-
-                        string path = Path.Combine(Path.GetDirectoryName(args[0]), Path.GetFileNameWithoutExtension(args[0]));
-
-                        Helpers.CheckFolder(path);
-
-                        int num = 0;
-
-                        foreach (Tex t in x.tex)
-                        {
-                            BMPHeader b = new BMPHeader();
-                            b.Update(t.width * 4, t.height, 16, 4);
-
-                            byte[] pal = new byte[16 * 4];
-
-                            bool bad = false;
-
-                            int palindex = t.unk2 / 2;
-
-                            if (palindex < 0 || palindex > x.pals.Count)
+                            switch (check)
                             {
-                                palindex = 0;
-                                bad = true;
+                                case 0x08: ext = ".tex"; break;
+
+                                case 0x0C160029: ext = ".mdl"; break;
+                                case 0x09160026: ext = ".mdl2"; break;
+
+                                case 0x0C: ext = ".sfx1"; break;
+                                case 0x10: ext = ".sfx2"; break;
+                                case 0x14: ext = ".sfx3"; break;
+
+                                case 0x20000: ext = ".scrn"; break;
+
+                                case 0x7:
+                                case 0x9:
+                                case 0xA:
+                                case 0xB:
+                                case 0xD:
+                                case 0xE:
+                                case 0xF:
+                                case 0x12:
+                                case 0x11:
+                                    ext = ".map"; break;
+
+                                case 0x5D:
+                                case 0x5E:
+                                case 0x5F:
+                                case 0x60:
+                                case 0x61:
+                                case 0x62:
+                                case 0x63:
+                                case 0x64:
+                                case 0x65:
+                                case 0x66:
+                                case 0x67:
+                                case 0x68:
+                                case 0x69:
+                                case 0x6A:
+                                case 0x6B:
+                                    ext = ".code"; break;
                             }
 
-                            for (int i = 0; i < 16; i++)
-                            {
-                                pal[i * 4 + 0] = x.pals[palindex][i].B;
-                                pal[i * 4 + 1] = x.pals[palindex][i].G;
-                                pal[i * 4 + 2] = x.pals[palindex][i].R;
-                                pal[i * 4 + 3] = x.pals[palindex][i].A;
-                            }
+                            dat.Jump(offset);
+                            File.WriteAllBytes(Path.Combine(dir, "data", $"{i.ToString("00000")}{ext}"), dat.ReadBytes(size));
 
-
-                            b.UpdateData(pal, Tim.FixPixelOrder(t.data));
-
-                            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite($"{path}\\tex_" + num + (bad ? "_badpal" : "") + ".bmp")))
-                            {
-                                b.Write(bw);
-                            }
-
-                            num++;
+                            Console.Write(".");
                         }
                     }
                 }
-                else
+
+                Console.WriteLine($"\r\nDone! Extracted {num} files.");
+                Console.ReadKey();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        static void LoadTextureFile(string filename)
+        {
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            {
+                TexPak x = new TexPak(br);
+
+                Console.WriteLine(x.numPals + " " + x.numTex);
+
+                string path = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename));
+
+                Helpers.CheckFolder(path);
+
+                int num = 0;
+
+                foreach (Tex t in x.tex)
                 {
-                    string exe = "SCUS_945.70";
-                    //string exe = "CRASHBSH.EXE";
-                    string bsh = "CRASHBSH.DAT";
+                    BMPHeader b = new BMPHeader();
+                    b.Update(t.width * 4, t.height, 16, 4);
 
-                    if (!File.Exists("SCUS_945.70") || !File.Exists("CRASHBSH.DAT"))
+                    byte[] pal = new byte[16 * 4];
+
+                    bool bad = false;
+
+                    int palindex = t.unk2 / 2;
+
+                    if (palindex < 0 || palindex > x.pals.Count)
                     {
-                        Console.WriteLine("Please put both CRASHBSH.DAT and SCUS_945.70 in this folder.");
-                        Console.ReadKey();
-                        return;
+                        palindex = 0;
+                        bad = true;
                     }
 
-                    string exe_md5 = Helpers.CalculateMD5(exe);
-                    string bsh_md5 = Helpers.CalculateMD5(bsh);
-
-                    File.WriteAllText("md5.txt", exe_md5 + "\r\n" + bsh_md5);
-
-                    int ptr = 0;
-                    int num = 0;
-
-                    switch (exe_md5)
+                    for (int i = 0; i < 16; i++)
                     {
-                        case "ee4963398064c458e9a9b27040d639e0": ptr = 0x33784; num = 0x1E6; break; //NTSC_DEMO_SPYRO_SPLIT
-                        case "f620ac01cd60c55ab0e981104f2b6c48": ptr = 0x3e910; num = 0x3E0; break; //NTSC_RELEASE
-                        case "e71360b5c119f87d88acd9964ac56c21": ptr = 0x3f264; num = 0x545; break; //PAL_RELEASE
-                        default: Console.WriteLine("unsupported!"); return;
+                        pal[i * 4 + 0] = x.pals[palindex][i].B;
+                        pal[i * 4 + 1] = x.pals[palindex][i].G;
+                        pal[i * 4 + 2] = x.pals[palindex][i].R;
+                        pal[i * 4 + 3] = x.pals[palindex][i].A;
                     }
 
-                    try
+
+                    b.UpdateData(pal, Tim.FixPixelOrder(t.data));
+
+                    using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite($"{path}\\tex_" + num + (bad ? "_badpal" : "") + ".bmp")))
                     {
-                        Directory.CreateDirectory("data");
-
-                        using (BinaryReaderEx hdr = new BinaryReaderEx(File.Open(exe, FileMode.Open)))
-                        {
-                            using (BinaryReaderEx dat = new BinaryReaderEx(File.Open(bsh, FileMode.Open)))
-                            {
-                                hdr.Jump(ptr);
-
-                                for (int i = 0; i < num; i++)
-                                {
-                                    int offset = hdr.ReadInt32() * 0x800;
-                                    int size = hdr.ReadInt32();
-
-                                    dat.Jump(offset);
-
-                                    string ext = "";
-
-
-                                    int check = dat.ReadInt32();
-
-                                    switch (check)
-                                    {
-                                        case 0x08: ext = ".tex"; break;
-
-                                        case 0x0C160029: ext = ".mdl"; break;
-                                        case 0x09160026: ext = ".mdl2"; break;
-
-                                        case 0x0C: ext = ".sfx1"; break;
-                                        case 0x10: ext = ".sfx2"; break;
-                                        case 0x14: ext = ".sfx3"; break;
-
-                                        case 0x20000: ext = ".scrn"; break;
-
-                                        case 0x7:
-                                        case 0x9:
-                                        case 0xA:
-                                        case 0xB:
-                                        case 0xD:
-                                        case 0xE:
-                                        case 0xF:
-                                        case 0x12:
-                                        case 0x11:
-                                            ext = ".map"; break;
-
-                                        case 0x5D:
-                                        case 0x5E:
-                                        case 0x5F:
-                                        case 0x60:
-                                        case 0x61:
-                                        case 0x62:
-                                        case 0x63:
-                                        case 0x64:
-                                        case 0x65:
-                                        case 0x66:
-                                        case 0x67:
-                                        case 0x68:
-                                        case 0x69:
-                                        case 0x6A:
-                                        case 0x6B:
-                                            ext = ".code"; break;
-                                    }
-
-                                    dat.Jump(offset);
-                                    File.WriteAllBytes("data\\" + i.ToString("00000") + ext, dat.ReadBytes(size));
-
-                                    Console.Write(".");
-                                }
-                            }
-                        }
-
-                        Console.WriteLine("done!");
+                        b.Write(bw);
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.ToString());
-                    }
+
+                    num++;
                 }
             }
         }
