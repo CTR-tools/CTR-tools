@@ -446,7 +446,7 @@ namespace ctrviewer
 
                         instTris.Add(c.Name, t);
 
-                        external.Add(new InstancedModel(c.Name, Vector3.Zero, Vector3.Zero, 0.1f));
+                        external.Add(new InstancedModel(c.Name, Vector3.Zero, Vector3.Zero, new Vector3(0.1f)));
                     }
                 }
             }
@@ -510,14 +510,14 @@ namespace ctrviewer
                 if (s.unkadv != null)
                 {
                     foreach (var pa in s.unkadv.smth)
-                        instanced.Add(new InstancedModel("limecone", DataConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, 0.03f));
+                        instanced.Add(new InstancedModel("limecone", DataConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                 }
 
                 if (s.header.ptru2 != 0)
                 {
                     foreach (var v in s.posu2)
                     {
-                        instanced.Add(new InstancedModel("goldcone", DataConverter.ToVector3(v, 0.01f), Vector3.Zero, 0.03f));
+                        instanced.Add(new InstancedModel("goldcone", DataConverter.ToVector3(v, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                     }
                 }
 
@@ -525,7 +525,7 @@ namespace ctrviewer
                 {
                     foreach (var v in s.posu1)
                     {
-                        instanced.Add(new InstancedModel("browncone", DataConverter.ToVector3(v.Position, 0.01f), Vector3.Zero, 0.03f));
+                        instanced.Add(new InstancedModel("browncone", DataConverter.ToVector3(v.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                     }
                 }
             }
@@ -563,26 +563,33 @@ namespace ctrviewer
             foreach (Scene s in scn)
             {
                 foreach (var pa in s.header.startGrid)
-                    instanced.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, 0.03f));
+                    instanced.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
 
                 foreach (var ph in s.pickups)
+                {
                     instanced.Add(new InstancedModel(
                         ph.ModelName,
                         DataConverter.ToVector3(ph.Position, 0.01f),
-                        Vector3.Zero,//new Vector3((float)(ph.Angle.X / 4094f * Math.PI * 2), (float)(ph.Angle.Y / 4094f * Math.PI * 2), (float)(ph.Angle.Z / 4094f * Math.PI * 2)),
-                        0.05f));
+                        new Vector3(
+                            (float)(ph.Angle.Y / 4096f * Math.PI * 2f),
+                            (float)(ph.Angle.X / 4096f * Math.PI * 2f),
+                            (float)(ph.Angle.Z / 4096f * Math.PI * 2f)
+                        ),
+                        new Vector3(ph.Scale.X / 4096f, ph.Scale.Y / 4096f, ph.Scale.Z / 4096f) * 0.05f
+                        ));
+                }
 
                 foreach (var n in s.restartPts)
-                    paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Position, 0.01f), Vector3.Zero, 0.03f));
+                    paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
 
                 if (s.nav.paths.Count == 3)
                 {
                     foreach (NavFrame n in s.nav.paths[0].frames)
-                        paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
+                        paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                     foreach (NavFrame n in s.nav.paths[1].frames)
-                        paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
+                        paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                     foreach (NavFrame n in s.nav.paths[2].frames)
-                        paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, 0.03f));
+                        paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                 }
             }
 
@@ -665,7 +672,7 @@ namespace ctrviewer
                 rightCamera.Position = camera.Position;
                 leftCamera.Position = camera.Position;
 
-                float x = (float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2f - Math.PI / 2f);
+                float x = (float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2f);
                 float y = (float)(scn[0].header.startGrid[0].Rotation.Y / 4096f * Math.PI * 2f - Math.PI / 2f);
 
                 camera.SetRotation(y, x);

@@ -8,14 +8,14 @@ namespace ctrviewer.Engine.Render
     {
         public Vector3 Position;
         public Vector3 Rotation;
-        public float Scale;
+        public Vector3 Scale;
         public string ModelName;
 
         public InstancedModel()
         {
         }
 
-        public InstancedModel(string name, Vector3 pos, Vector3 rot, float scale)
+        public InstancedModel(string name, Vector3 pos, Vector3 rot, Vector3 scale)
         {
             Position = pos;
             Rotation = rot;
