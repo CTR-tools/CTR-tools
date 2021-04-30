@@ -54,7 +54,7 @@ namespace bash_dat
 
             if (!File.Exists(filename) || !File.Exists(datapath))
             {
-                Console.WriteLine("Please put both CRASHBSH.DAT and SCUS_945.70 in this folder.");
+                Console.WriteLine("Required files not found. Please put exe and data file in the same folder.");
                 Console.ReadKey();
                 return;
             }

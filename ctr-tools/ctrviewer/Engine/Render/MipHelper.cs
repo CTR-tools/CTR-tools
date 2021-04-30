@@ -34,6 +34,9 @@ namespace ctrviewer.Engine
         {
             Texture2D t = GetTexture2DFromBitmap(device, bmp, out alpha);
 
+            byte[] temp = new byte[t.Width * t.Height * 4];
+            bmp = FixBitmap(bmp, out alpha, out temp, false);
+
             bool x = alpha;
 
             int i = 1;
@@ -90,41 +93,9 @@ namespace ctrviewer.Engine
         /// <returns>Texture2D object.</returns>
         public static Texture2D GetTexture2DFromBitmap(GraphicsDevice device, Bitmap bitmap, out bool alpha, bool mipmaps = true, Texture2D tex = null, int level = -1)
         {
-            BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            byte[] bytes = new byte[bitmap.Width * bitmap.Height * 4];
 
-            //create data buffer 
-            byte[] bytes = new byte[data.Height * data.Stride];
-
-            // copy bitmap data into buffer
-            Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
-
-            // unlock the bitmap data
-            bitmap.UnlockBits(data);
-
-            alpha = false;
-
-            //BGRA -> RGBA
-            for (int i = 0; i < bytes.Length / 4; i++)
-            {
-                byte B = bytes[i * 4 + 0];
-                byte G = bytes[i * 4 + 1];
-                byte R = bytes[i * 4 + 2];
-                byte A = bytes[i * 4 + 3];
-
-                if (B == 255 && R == 255)
-                {
-                    B = 0;
-                    R = 0;
-                    A = 0;
-
-                    alpha = true;
-                }
-
-                bytes[i * 4 + 0] = R;
-                bytes[i * 4 + 1] = G;
-                bytes[i * 4 + 2] = B;
-                bytes[i * 4 + 3] = A;
-            }
+            bitmap = FixBitmap(bitmap, out alpha, out bytes, false);
 
             if (tex == null)
             {
@@ -137,6 +108,53 @@ namespace ctrviewer.Engine
             }
 
             return tex;
+        }
+
+        public static Bitmap FixBitmap(Bitmap bitmap, out bool alpha, out byte[] bytes, bool swapRB = false)
+        {
+            BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+            //create data buffer 
+            bytes = new byte[data.Height * data.Stride];
+
+            // copy bitmap data into buffer
+            Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
+
+            alpha = false;
+
+            //BGRA -> RGBA
+            for (int i = 0; i < bytes.Length / 4; i++)
+            {
+                byte B = bytes[i * 4 + 0];
+                byte G = bytes[i * 4 + 1];
+                byte R = bytes[i * 4 + 2];
+                byte A = bytes[i * 4 + 3];
+
+                if (A == 0)
+                    alpha = true;
+
+                if (B == 255 && G == 0 && R == 255)
+                {
+                    B = 0;
+                    R = 0;
+                    A = 0;
+
+                    alpha = true;
+                }
+
+                bytes[i * 4 + 0] = swapRB ? B : R;
+                bytes[i * 4 + 1] = G;
+                bytes[i * 4 + 2] = swapRB ? R : B;
+                bytes[i * 4 + 3] = A;
+            }
+
+            // copy data back to bitmap
+            Marshal.Copy(bytes, 0, data.Scan0, bytes.Length);
+
+            // unlock the bitmap data
+            bitmap.UnlockBits(data);
+
+            return bitmap;
         }
 
     }
