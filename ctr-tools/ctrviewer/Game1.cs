@@ -984,12 +984,12 @@ namespace ctrviewer
             skycamera.Update(gameTime, updatemouse, false, newms, oldms);
             camera.Update(gameTime, updatemouse, true, newms, oldms);
 
-            rightCamera.Position = camera.Position + Vector3.Transform(Vector3.Left * settings.StereoPairSeparation / 100f, Matrix.CreateFromYawPitchRoll(camera.leftRightRot, camera._upDownRot, 0));
+            rightCamera.Position = camera.Position + Vector3.Transform(Vector3.Left * settings.StereoPairSeparation / 100f, Matrix.CreateFromYawPitchRoll(camera.leftRightRot, camera.upDownRot, 0));
             rightCamera.rotationSpeed = camera.rotationSpeed;
             rightCamera.Target = camera.Target;
             rightCamera.Update(gameTime, updatemouse, true, newms, oldms);
 
-            leftCamera.Position = camera.Position + Vector3.Transform(Vector3.Right * settings.StereoPairSeparation / 100f, Matrix.CreateFromYawPitchRoll(camera.leftRightRot, camera._upDownRot, 0));
+            leftCamera.Position = camera.Position + Vector3.Transform(Vector3.Right * settings.StereoPairSeparation / 100f, Matrix.CreateFromYawPitchRoll(camera.leftRightRot, camera.upDownRot, 0));
             leftCamera.rotationSpeed = camera.rotationSpeed;
             leftCamera.Target = camera.Target;
             leftCamera.Update(gameTime, updatemouse, true, newms, oldms);
