@@ -31,8 +31,14 @@ namespace CTRFramework
             for (int i = 0; i < numTex; i++)
             {
                 Icon icon = Icon.FromReader(br);
-                Icons.Add(icon.Name, icon);
-                IconsPtrDict.Add((uint)br.BaseStream.Position, icon);
+
+                if (!Icons.ContainsKey(icon.Name))
+                {
+                    Icons.Add(icon.Name, icon);
+
+                    if (!IconsPtrDict.ContainsKey((uint)br.BaseStream.Position))
+                        IconsPtrDict.Add((uint)br.BaseStream.Position, icon);
+                }
             }
 
             if (br.ReadInt32() != 0)
@@ -54,7 +60,8 @@ namespace CTRFramework
                 uint[] tOffs = br.ReadArrayUInt32(numTex2);
 
                 foreach (var ptr in tOffs)
-                    Groups[gname].Add(IconsPtrDict[ptr].Name);
+                    if (IconsPtrDict.ContainsKey(ptr))
+                        Groups[gname].Add(IconsPtrDict[ptr].Name);
             }
         }
 

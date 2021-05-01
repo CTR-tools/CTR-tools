@@ -77,7 +77,11 @@ namespace CTRFramework
         /// <param name="br">BinaryReaderEx object.</param>
         public void Read(BinaryReaderEx br)
         {
+            Console.WriteLine("!!!!!!!!!!!!! " + br.HexPos());
+
             name = br.ReadStringFixed(16);
+            Console.WriteLine("!!!!!!!!!!!!! " + name);
+
             unk0 = br.ReadInt32();
             lodDistance = br.ReadInt16();
             billboard = br.ReadInt16();
@@ -350,7 +354,7 @@ namespace CTRFramework
                 stripLength++;
             }
 
-            br.Jump(pos);
+            //br.Jump(pos);
             br.Jump(returnto);
         }
 

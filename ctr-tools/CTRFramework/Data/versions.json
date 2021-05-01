@@ -38,6 +38,7 @@
 	},
 
 	"howls": {
+		"9a284df93297c9fa514b5d77819f3d82": { "list": "HOWL_AUG_BETA",  "comment": "August 14 beta"  } ,
 		"bdbc727b51d3786c203307e2dff6d391": { "list": "HOWL_AUG_BETA", "comment": "August beta (earliest known)" },
 		"c5de2d39e42267e74aa4d5e7b47165a5": { "list": "HOWL_PROTO",  "comment": "September beta (review copy)" },
 		"702ac23e8ab5940f32cfc5ab1e8fc913": { "list": "HOWL_NTSCDEMO", "comment": "NTSC-U Standalone Toys R Us/Pizza Hut Demo" },

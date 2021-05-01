@@ -63,6 +63,16 @@ namespace CTRFramework.Big
             Helpers.WriteToFile(Path.Combine(path, Name), Data);
         }
 
+        public T ParseAs<T>() where T : IRead, new ()
+        {
+            using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(Data)))
+            {
+                T t = new T();
+                t.Read(br);
+                return t;
+            }
+        }
+
         public override string ToString()
         {
             return $"{Name} [{(Size / 1024) + 1} kb]";

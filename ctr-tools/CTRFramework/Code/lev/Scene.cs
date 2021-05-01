@@ -182,9 +182,16 @@ namespace CTRFramework
             {
                 br.Jump(ptr);
 
-                CtrModel ctr = CtrModel.FromReader(br);
-                if (ctr != null)
-                    Models.Add(ctr);
+                try
+                {
+                    CtrModel ctr = CtrModel.FromReader(br);
+                    if (ctr != null)
+                        Models.Add(ctr);
+                }
+                catch
+                {
+                    Helpers.Panic(this, PanicType.Error, "Unexpected CtrModel crash.");
+                }
             }
 
             /*

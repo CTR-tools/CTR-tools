@@ -128,11 +128,11 @@ namespace CTRFramework.Vram
 
         }
 
-        public static TextureLayout FromStream(BinaryReaderEx br)
+        public static TextureLayout FromStream(BinaryReaderEx br, bool skipcheck = false)
         {
             int test = br.ReadInt32();
 
-            if (test == 0)
+            if (test == 0 && !skipcheck)
             {
                 Helpers.Panic("TextureLayout", PanicType.Assume, "test failed");
                 return null;
