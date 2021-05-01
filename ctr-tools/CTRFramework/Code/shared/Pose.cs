@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Numerics;
 
 namespace CTRFramework.Shared
 {
@@ -6,24 +7,24 @@ namespace CTRFramework.Shared
     {
         #region ComponentModel
         [CategoryAttribute("Values"), DescriptionAttribute("Position vector.")]
-        public Vector3s Position
+        public Vector3 Position
         {
             get { return position; }
             set { position = value; }
         }
 
         [CategoryAttribute("Values"), DescriptionAttribute("Rotation vector.")]
-        public Vector3s Rotation
+        public Vector3 Rotation
         {
             get { return rotation; }
             set { rotation = value; }
         }
         #endregion
 
-        private Vector3s position;
-        private Vector3s rotation;
+        private Vector3 position;
+        private Vector3 rotation;
 
-        public static Pose Zero = new Pose(Vector3s.Zero, Vector3s.Zero);
+        public static Pose Zero = new Pose(Vector3.Zero, Vector3.Zero);
 
         public Pose()
         {
@@ -34,7 +35,17 @@ namespace CTRFramework.Shared
             Read(br);
         }
 
-        public Pose(Vector3s pos, Vector3s ang)
+        public void Move(Vector3 move)
+        {
+            position += move;
+        }
+
+        public void Rotate(Vector3 rot)
+        {
+            rotation += rot;
+        }
+
+        public Pose(Vector3 pos, Vector3 ang)
         {
             position = pos;
             rotation = ang;
@@ -42,14 +53,14 @@ namespace CTRFramework.Shared
 
         public void Read(BinaryReaderEx br)
         {
-            position = new Vector3s(br);
-            rotation = new Vector3s(br);
+            position = br.ReadVector3s(1/100f);
+            rotation = br.ReadVector3s(1/4096f);
         }
 
         public void Write(BinaryWriterEx bw)
         {
-            position.Write(bw);
-            rotation.Write(bw);
+            bw.WriteVector3s(position, 1/100f);
+            bw.WriteVector3s(rotation, 1/4096f);
         }
 
         public override string ToString()

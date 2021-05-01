@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Linq;
 
 namespace CTRFramework.Shared
@@ -190,7 +191,39 @@ namespace CTRFramework.Shared
             return System.Text.Encoding.Default.GetString(bytes.ToArray());
         }
 
+        public string ReadFixedStringPtr(UIntPtr ptr, int length)
+        {
+            int x = (int)BaseStream.Position;
+            Jump(ptr);
+            string value = ReadStringFixed(16);
+            Jump(x);
+
+            return value;
+        }
+
         #endregion
+
+        public Vector3 ReadVector3sPadded(float scale = 1.0f)
+        {
+            short[] values = ReadArrayInt16(4);
+
+            return new Vector3(
+                values[0] * scale,
+                values[1] * scale,
+                values[2] * scale
+                );
+        }
+        public Vector3 ReadVector3s(float scale = 1.0f)
+        {
+            short[] values = ReadArrayInt16(3);
+
+            return new Vector3(
+                values[0] * scale,
+                values[1] * scale,
+                values[2] * scale
+                );
+        }
+
 
         public UIntPtr ReadUIntPtr()
         {

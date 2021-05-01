@@ -5,9 +5,14 @@ namespace ctrviewer.Engine
 {
     class DataConverter
     {
-        public static Vector3 ToVector3(CTRFramework.Shared.Vector3s s, float scale = 1.0f)
+        public static Vector3 ToVector3(CTRFramework.Shared.Vector3s vector, float scale = 1.0f)
         {
-            return new Vector3(s.X * scale, s.Y * scale, s.Z * scale);
+            return new Vector3(vector.X * scale, vector.Y * scale, vector.Z * scale);
+        }
+
+        public static Vector3 ToVector3(System.Numerics.Vector3 vector, float scale = 1.0f)
+        {
+            return new Vector3(vector.X, vector.Y, vector.Z) * scale;
         }
         public static Vector3 ToVector3(CTRFramework.Shared.Vector4s s, float scale = 1.0f)
         {
@@ -21,8 +26,8 @@ namespace ctrviewer.Engine
 
         public static VertexPositionColorTexture[] ToLineList(CTRFramework.Shared.BoundingBox bbox, Color color)
         {
-            Vector3 min = ToVector3(bbox.Min, 0.01f);
-            Vector3 max = ToVector3(bbox.Max, 0.01f);
+            Vector3 min = new Vector3(bbox.Min.X, bbox.Min.Y, bbox.Min.Z) / 100f;
+            Vector3 max = new Vector3(bbox.Max.X, bbox.Max.Y, bbox.Max.Z) / 100f;
 
             return new VertexPositionColorTexture[]
             {

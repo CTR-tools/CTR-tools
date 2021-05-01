@@ -563,24 +563,26 @@ namespace ctrviewer
             foreach (Scene s in scn)
             {
                 foreach (var pa in s.header.startGrid)
-                    instanced.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                    instanced.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
 
                 foreach (var ph in s.pickups)
                 {
+                    GameConsole.Write(ph.Scale.ToString());
+
                     instanced.Add(new InstancedModel(
                         ph.ModelName,
-                        DataConverter.ToVector3(ph.Position, 0.01f),
+                        DataConverter.ToVector3(ph.Pose.Position),
                         new Vector3(
-                            (float)(ph.Angle.Y / 4096f * Math.PI * 2f),
-                            (float)(ph.Angle.X / 4096f * Math.PI * 2f),
-                            (float)(ph.Angle.Z / 4096f * Math.PI * 2f)
+                            (float)(ph.Pose.Rotation.Y * Math.PI * 2f),
+                            (float)(ph.Pose.Rotation.X * Math.PI * 2f),
+                            (float)(ph.Pose.Rotation.Z * Math.PI * 2f)
                         ),
-                        new Vector3(ph.Scale.Y / 4096f, ph.Scale.X / 4096f, ph.Scale.Z / 4096f) / 16f
-                        ));
+                        new Vector3(ph.Scale.Y, ph.Scale.X, ph.Scale.Z)
+                        )) ;
                 }
 
                 foreach (var n in s.restartPts)
-                    paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                    paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Position), Vector3.Zero, new Vector3(0.03f)));
 
                 if (s.nav.paths.Count == 3)
                 {
@@ -668,12 +670,12 @@ namespace ctrviewer
         {
             if (scn.Count > 0)
             {
-                camera.Position = DataConverter.ToVector3(scn[0].header.startGrid[0].Position, 0.01f);
+                camera.Position = DataConverter.ToVector3(scn[0].header.startGrid[0].Position);
                 rightCamera.Position = camera.Position;
                 leftCamera.Position = camera.Position;
 
-                float x = (float)(scn[0].header.startGrid[0].Rotation.X / 4096f * Math.PI * 2f);
-                float y = (float)(scn[0].header.startGrid[0].Rotation.Y / 4096f * Math.PI * 2f - Math.PI / 2f);
+                float x = (float)(scn[0].header.startGrid[0].Rotation.X * Math.PI * 2f);
+                float y = (float)(scn[0].header.startGrid[0].Rotation.Y * Math.PI * 2f - Math.PI / 2f);
 
                 camera.SetRotation(y, x);
                 rightCamera.SetRotation(y, x);

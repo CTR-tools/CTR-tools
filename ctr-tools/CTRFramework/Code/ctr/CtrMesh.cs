@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Numerics;
 using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework
@@ -331,7 +332,7 @@ namespace CTRFramework
                     for (int z = 3 - 1; z >= 0; z--)
                     {
                         Vertex v = new Vertex();
-                        v.coord = new Vector4s(crd[1 + z].X, crd[z + 1].Y, crd[z + 1].Z, 0);
+                        v.coord = new Vector3(crd[1 + z].X, crd[z + 1].Y, crd[z + 1].Z);
                         v.color = clr[1 + z];
                         v.color_morph = v.color;
                         verts.Add(v);

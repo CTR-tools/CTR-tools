@@ -1,45 +1,39 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.ComponentModel;
+using System.Numerics;
 
 namespace CTRFramework
 {
     public class PickupHeader
     {
 
-        [CategoryAttribute("General"), DescriptionAttribute("Name of the model.")]
+        [CategoryAttribute("General"), DescriptionAttribute("Name of the instance.")]
         public string Name
         {
             get { return name; }
             set { name = value; }
         }
 
-        [CategoryAttribute("General"), DescriptionAttribute("Mesh offset.")]
-        public uint ModelOffset
+        [CategoryAttribute("General"), DescriptionAttribute("Pointer to model.")]
+        public UIntPtr ModelOffset
         {
-            get { return modelOffset; }
-            set { modelOffset = value; }
+            get { return ptrModel; }
+            set { ptrModel = value; }
         }
 
-        [CategoryAttribute("Spacing"), DescriptionAttribute("Scale of the model."), TypeConverter(typeof(ExpandableObjectConverter))]
-        public Vector4s Scale
+        [CategoryAttribute("Spacing"), DescriptionAttribute("Scale of the instance."), TypeConverter(typeof(ExpandableObjectConverter))]
+        public Vector3 Scale
         {
             get { return scale; }
             set { scale = value; }
         }
 
-        [CategoryAttribute("Spacing"), DescriptionAttribute("Angles of the model."), TypeConverter(typeof(ExpandableObjectConverter))]
-        public Vector3s Angle
+        [CategoryAttribute("Spacing"), DescriptionAttribute("Pose of the instance."), TypeConverter(typeof(ExpandableObjectConverter))]
+        public Pose Pose
         {
-            get { return angle; }
-            set { angle = value; }
-        }
-
-        [CategoryAttribute("Spacing"), DescriptionAttribute("Position of the model."), TypeConverter(typeof(ExpandableObjectConverter))]
-        public Vector3s Position
-        {
-            get { return position; }
-            set { position = value; }
+            get { return pose; }
+            set { pose = value; }
         }
 
         [CategoryAttribute("Settings"), DescriptionAttribute("Assigned event.")]
@@ -50,19 +44,11 @@ namespace CTRFramework
         }
 
         private string name;
-        private uint modelOffset;
-
-        //maybe scale
-        Vector4s scale;
-
+        private UIntPtr ptrModel;
+        Vector3 scale;
         public uint null1;
-
         public uint unk1;
-
-        private Vector3s position;
-        private Vector3s angle;
-
-        //public PosAng posang;
+        private Pose pose;
 
         //event type?
         private int evt;
@@ -72,42 +58,32 @@ namespace CTRFramework
 
         public PickupHeader(BinaryReaderEx br)
         {
-            name = System.Text.Encoding.ASCII.GetString(br.ReadBytes(16)).Replace("\0", "");
-            modelOffset = br.ReadUInt32();
-
-            scale = new Vector4s(br);
-
-            if (scale.W != 0) Console.WriteLine("!! scale.W != 0 !! W = " + scale.W);
-
+            name = br.ReadStringFixed(16);
+            ptrModel = br.ReadUIntPtr();
+            scale = br.ReadVector3sPadded(1 / 4096f / 16f);
             null1 = br.ReadUInt32();
 
-            if (null1 != 0) Console.WriteLine("!! null != 0 !! null1 = " + null1);
+            if (null1 != 0)
+                Helpers.Panic(this, PanicType.Assume, $"!! null1 != 0 --> {null1}");
 
             unk1 = br.ReadUInt32();
 
             br.BaseStream.Position += 4 * 3;
 
-            position = new Vector3s(br);
-            angle = new Vector3s(br);
+            pose = new Pose(br);
 
             evt = br.ReadInt32();
 
-            int x = (int)br.BaseStream.Position;
-
-            br.Jump(modelOffset);
-
-            ModelName = br.ReadStringFixed(16);
-
-            br.BaseStream.Position = x;
+            ModelName = br.ReadFixedStringPtr(ptrModel, 16);
         }
 
         public void Write(BinaryWriterEx bw)
         {
             bw.Write(System.Text.Encoding.ASCII.GetBytes(name));
             for (int i = 0; i < 16 - name.Length; i++) bw.Write((byte)0);
-            bw.Write(modelOffset);
+            bw.Write(ptrModel);
 
-            scale.Write(bw);
+            bw.WriteVector3sPadded(scale, 1 / 4096f / 16f);
 
             bw.Write(null1);
             bw.Write(unk1);
@@ -116,8 +92,7 @@ namespace CTRFramework
             bw.Write((int)0);
             bw.Write((int)0);
 
-            position.Write(bw);
-            angle.Write(bw);
+            pose.Write(bw);
 
             bw.Write(evt);
         }
@@ -130,8 +105,7 @@ namespace CTRFramework
                 // "\t(" + px + ", " + py +  ", " + pz + ") " +
                 // "\t" + null1 +
                 "\t" + unk1 +
-                "\t" + position.ToString() +
-                "\t" + angle.ToString() +
+                "\t" + pose.ToString() +
                 "\t" + ((CTREvent)evt).ToString()
                 ;
         }

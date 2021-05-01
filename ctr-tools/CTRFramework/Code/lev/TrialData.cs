@@ -38,11 +38,11 @@ namespace CTRFramework
                 do
                 {
                     Vertex v = new Vertex();
-                    v.coord = new Vector4s(br);
+                    v.coord = br.ReadVector3sPadded(1/100f);
 
                     br.Seek(2);
 
-                    sb.AppendFormat("v {0}\r\n", v.coord.ToString(VecFormat.Numbers));
+                    sb.AppendFormat("v {0}\r\n", v.coord.ToString());
                 }
                 while (br.BaseStream.Position < ptrs[5]);
 

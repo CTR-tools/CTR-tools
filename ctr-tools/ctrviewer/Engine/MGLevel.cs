@@ -56,9 +56,9 @@ namespace ctrviewer.Engine.Render
             for (int i = 0; i < sb.faces.Count; i++)
             {
                 List<VertexPositionColorTexture> tri = new List<VertexPositionColorTexture>();
-                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].X], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
-                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].Y], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
-                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].Z], new CTRFramework.Shared.Vector2b(0, 0), 0.01f));
+                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].X], new CTRFramework.Shared.Vector2b(0, 0)));
+                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].Y], new CTRFramework.Shared.Vector2b(0, 0)));
+                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].Z], new CTRFramework.Shared.Vector2b(0, 0)));
 
                 normal.PushTri(tri);
             }
@@ -90,7 +90,7 @@ namespace ctrviewer.Engine.Render
                             if (vts != null)
                             {
                                 foreach (Vertex cv in vts)
-                                    monolist.Add(DataConverter.ToVptc(cv, cv.uv, 0.01f));
+                                    monolist.Add(DataConverter.ToVptc(cv, cv.uv));
 
                                 TextureLayout t = qb.texlow;
 
@@ -142,7 +142,7 @@ namespace ctrviewer.Engine.Render
                                 if (vts != null)
                                 {
                                     foreach (Vertex cv in vts)
-                                        monolist.Add(DataConverter.ToVptc(cv, cv.uv, 0.01f));
+                                        monolist.Add(DataConverter.ToVptc(cv, cv.uv));
 
                                     bool isAnimated = false;
                                     string texTag = "test";

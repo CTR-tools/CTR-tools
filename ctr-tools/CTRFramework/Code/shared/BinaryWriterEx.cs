@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 
 namespace CTRFramework.Shared
 {
@@ -54,6 +55,19 @@ namespace CTRFramework.Shared
                 PointerMap.Add((UIntPtr)BaseStream.Position);
 
             Write(value.ToUInt32());
+        }
+
+        public void WriteVector3s(Vector3 value, float scale = 1.0f)
+        {
+            Write((short)(Math.Round(value.X / scale)));
+            Write((short)(Math.Round(value.Y / scale)));
+            Write((short)(Math.Round(value.Z / scale)));
+        }
+
+        public void WriteVector3sPadded(Vector3 value, float scale = 1.0f)
+        {
+            WriteVector3s(value, scale);
+            Write((short)0);
         }
     }
 }

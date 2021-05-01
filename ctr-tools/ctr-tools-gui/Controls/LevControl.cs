@@ -9,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using System.Numerics;
 
 namespace CTRTools.Controls
 {
@@ -67,7 +68,7 @@ namespace CTRTools.Controls
             {
                 foreach (PickupHeader ph in scn.pickups)
                 {
-                    ph.Position.Y += (short)numericUpDown1.Value;
+                    ph.Pose.Move(new Vector3(0, (float)numericUpDown1.Value / 100f, 0));
                 }
 
                 //lmao
@@ -81,7 +82,7 @@ namespace CTRTools.Controls
             {
                 foreach (PickupHeader ph in scn.pickups)
                 {
-                    ph.Position.Y -= (short)numericUpDown1.Value;
+                    ph.Pose.Move(new Vector3(0, -(float)numericUpDown1.Value / 100f, 0));
                 }
 
                 //lmao
@@ -99,8 +100,8 @@ namespace CTRTools.Controls
             {
                 foreach (Vertex v in scn.verts)
                 {
-                    v.SetColor(Vcolor.Default, new Vector4b(vertexcolor1));
-                    v.SetColor(Vcolor.Morph, new Vector4b(vertexcolor2));
+                    v.SetColor(new Vector4b(vertexcolor1), Vcolor.Default);
+                    v.SetColor(new Vector4b(vertexcolor2), Vcolor.Morph);
                 }
             }
         }
@@ -483,14 +484,14 @@ namespace CTRTools.Controls
             {
                 foreach (Pose pa in scn.header.startGrid)
                 {
-                    pa.Position.X -= 1000;
-                    pa.Rotation.Y += 2048;
+                    pa.Position += new Vector3(1000, 0, 0);
+                    pa.Rotation += new Vector3(2048, 0, 0);
                 }
 
                 scn.restartPts.Reverse();
 
                 foreach (Pose pa in scn.restartPts)
-                    pa.Rotation.Y += 2048;
+                    pa.Rotation += new Vector3(2048, 0, 0);
 
 
                 foreach (QuadBlock qb in scn.quads)

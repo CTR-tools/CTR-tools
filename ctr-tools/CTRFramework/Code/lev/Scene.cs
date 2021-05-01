@@ -243,22 +243,30 @@ namespace CTRFramework
 
             Dictionary<string, TextureLayout> tex = GetTexturesList(lod);
 
-            foreach (var s in tex.Values)
+            string lodpath = Path.Combine(path, "tex" + lod.ToString());
+            Helpers.CheckFolder(lodpath);
+
+            foreach (var tl in tex.Values)
             {
-                Helpers.CheckFolder(Path.Combine(path, ".\\tex" + lod.ToString()));
-
-                if (s.Position != 0)
+                if (tl.Position != 0)
                 {
-                    sb.Append(String.Format("newmtl {0}\r\n", s.Tag()));
-                    sb.Append(String.Format($"map_Kd tex{lod.ToString()}\\{s.Tag()}.png\r\n\r\n"));
+                    string texname = $"tex{lod.ToString()}\\{ tl.Tag()}.png";
 
-                    if (!File.Exists(Path.Combine(path, "tex" + lod.ToString() + "\\" + s.Tag() + ".png")))
+                    sb.AppendLine($"newmtl {tl.Tag()}");
+                    sb.AppendLine("Kd 2.0 2.0 2.0"); //not sure if it actually works in obj, but it's what psx does
+                    sb.AppendLine($"map_Kd {texname}\r\n");
+
+                    if (!File.Exists(Path.Combine(path, texname)))
                     {
                         Helpers.Panic(this, PanicType.Warning, "missing bitmap");
 
                         Bitmap bmp = new Bitmap(1, 1);
-                        bmp.Save(Path.Combine(path, "tex" + lod.ToString() + "\\" + s.Tag() + ".png"));
+                        bmp.Save(Path.Combine(path, texname));
                     }
+                }
+                else
+                {
+                    Helpers.Panic(this, PanicType.Warning, $"tl position == 0? {tl.Tag()}");
                 }
             }
 

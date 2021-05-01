@@ -113,7 +113,7 @@ namespace CTRFramework.Shared
             return bb;
         }
 
-
+        /*
         public BoundingBox GetBB(List<Vertex> vertices)
         {
             BoundingBox bb_new = new BoundingBox();
@@ -132,7 +132,7 @@ namespace CTRFramework.Shared
 
             return bb_new;
         }
-
+        */
         /*
         public int Max(int x, int y, int z)
         {
