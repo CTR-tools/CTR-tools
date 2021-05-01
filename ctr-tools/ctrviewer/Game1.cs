@@ -575,7 +575,7 @@ namespace ctrviewer
                             (float)(ph.Angle.X / 4096f * Math.PI * 2f),
                             (float)(ph.Angle.Z / 4096f * Math.PI * 2f)
                         ),
-                        new Vector3(ph.Scale.X / 4096f, ph.Scale.Y / 4096f, ph.Scale.Z / 4096f) * 0.05f
+                        new Vector3(ph.Scale.Y / 4096f, ph.Scale.X / 4096f, ph.Scale.Z / 4096f) / 16f
                         ));
                 }
 
