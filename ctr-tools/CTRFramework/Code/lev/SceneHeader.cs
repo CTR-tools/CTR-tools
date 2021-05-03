@@ -5,6 +5,8 @@ namespace CTRFramework
 {
     public class SceneHeader : IRead
     {
+        public static readonly int SizeOf = 0x1B0;
+
         public UIntPtr ptrMeshInfo;    //0x0 - pointer to MeshInfo
         public UIntPtr ptrSkybox;      //0x4 - pointer to SkyBox
         public UIntPtr ptrTexArray;    //0x8 - leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
@@ -82,6 +84,8 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
+            int dataStart = (int)br.BaseStream.Position;
+
             ptrMeshInfo = br.ReadUIntPtr();
             ptrSkybox = br.ReadUIntPtr();
             ptrTexArray = br.ReadUIntPtr();
@@ -173,18 +177,25 @@ namespace CTRFramework
 
             skip3 = br.ReadBytes(0x24);
 
-            long posx = br.BaseStream.Position;
+            long dataEnd = br.BaseStream.Position;
+
+            if (dataEnd - dataStart != SizeOf)
+                throw new Exception("SceneHeader: size mismatch");
+
+
 
             if (ptrBuildStart != UIntPtr.Zero)
             {
                 br.Jump(ptrBuildStart);
                 compilationBegins = Helpers.ParseDate(br.ReadStringNT());
+                Console.WriteLine(compilationBegins);
             }
 
             if (ptrBuildEnd != UIntPtr.Zero)
             {
                 br.Jump(ptrBuildEnd);
                 compilationEnds = Helpers.ParseDate(br.ReadStringNT());
+                Console.WriteLine(compilationEnds);
             }
 
             if (ptrBuildType != UIntPtr.Zero)
@@ -193,8 +204,7 @@ namespace CTRFramework
                 Console.WriteLine(br.ReadStringNT());
             }
 
-            br.Jump(posx);
-            //Console.ReadKey();
+            br.Jump(dataEnd);
         }
 
         public DateTime compilationBegins;
@@ -203,6 +213,8 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw)
         {
+            long dataStart = bw.BaseStream.Position;
+
             bw.Write(ptrMeshInfo);
             bw.Write(ptrSkybox);
             bw.Write(ptrTexArray);
@@ -244,6 +256,10 @@ namespace CTRFramework
 
             bw.Write(skip);
 
+            particleColorTop.Write(bw);
+            particleColorBottom.Write(bw);
+            bw.Write(particleRenderMode);
+
             bw.Write(cntTrialData);
             bw.Write(ptrTrialData);
             bw.Write(cntu2);
@@ -269,6 +285,11 @@ namespace CTRFramework
             bw.Write(ptrAiNav);
 
             bw.Write(skip3);
+
+            long dataEnd = bw.BaseStream.Position;
+
+            if (dataEnd - dataStart != SizeOf)
+                throw new Exception("SceneHeader: size mismatch");
         }
     }
 }
