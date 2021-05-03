@@ -203,6 +203,7 @@ namespace CTRFramework.Shared
 
         #endregion
 
+        #region Vectors
         public Vector3 ReadVector3sPadded(float scale = 1.0f)
         {
             short[] values = ReadArrayInt16(4);
@@ -224,6 +225,16 @@ namespace CTRFramework.Shared
                 );
         }
 
+        public Vector2 ReadVector2s(float scale = 1.0f)
+        {
+            short[] values = ReadArrayInt16(2);
+
+            return new Vector2(
+                values[0] * scale,
+                values[1] * scale
+                );
+        }
+        #endregion
 
         public UIntPtr ReadUIntPtr()
         {

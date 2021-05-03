@@ -3,6 +3,7 @@ using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Numerics;
 
 namespace CTRFramework
 {
@@ -70,7 +71,7 @@ namespace CTRFramework
         public uint mosaicPtr3;
         public uint mosaicPtr4;
 
-        public List<Vector2s> unk3 = new List<Vector2s>();  //unknown
+        public List<Vector2> unk3 = new List<Vector2>();    //face normal vector or smth. 4*2 for mid + 2 for low
 
         //additional data
         public TextureLayout texlow;
@@ -162,7 +163,7 @@ namespace CTRFramework
             }
 
             for (int i = 0; i < 5; i++)
-                unk3.Add(new Vector2s(br));
+                unk3.Add(br.ReadVector2s(1 / 4096));
 
 
 
@@ -609,8 +610,8 @@ namespace CTRFramework
             bw.Write(ptrTexLow);
             bw.Write(mosaicStruct);
 
-            foreach (Vector2s v in unk3)
-                v.Write(bw);
+            foreach (Vector2 v in unk3)
+                bw.WriteVector2s(v, 1 / 4096);
         }
     }
 }

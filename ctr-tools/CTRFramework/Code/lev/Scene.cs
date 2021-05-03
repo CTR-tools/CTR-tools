@@ -34,6 +34,10 @@ namespace CTRFramework
 
         public Tim ctrvram;
 
+        public Scene()
+        {
+        }
+
         public Scene(string filename)
         {
             path = filename;

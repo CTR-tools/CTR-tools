@@ -63,6 +63,11 @@ namespace CTRFramework.Shared
             Write((short)(Math.Round(value.Y / scale)));
             Write((short)(Math.Round(value.Z / scale)));
         }
+        public void WriteVector2s(Vector2 value, float scale = 1.0f)
+        {
+            Write((short)(Math.Round(value.X / scale)));
+            Write((short)(Math.Round(value.Y / scale)));
+        }
 
         public void WriteVector3sPadded(Vector3 value, float scale = 1.0f)
         {

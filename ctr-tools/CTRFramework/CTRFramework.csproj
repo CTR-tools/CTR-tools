@@ -99,7 +99,6 @@
     <Compile Include="Code\lev\VertexAnim.cs" />
     <Compile Include="Code\lang\LNG.cs" />
     <Compile Include="Code\shared\Vectors\Vector2b.cs" />
-    <Compile Include="Code\shared\Vectors\Vector2s.cs" />
     <Compile Include="Code\shared\Vectors\Vector3b.cs" />
     <Compile Include="Code\shared\Vectors\Vector3f.cs" />
     <Compile Include="Code\shared\Vectors\Vector3i.cs" />
