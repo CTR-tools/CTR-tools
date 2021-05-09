@@ -30,6 +30,11 @@ namespace CTRFramework.Shared
         {
         }
 
+        public static Pose FromReader(BinaryReaderEx br)
+        {
+            return new Pose(br);
+        }
+
         public Pose(BinaryReaderEx br)
         {
             Read(br);
