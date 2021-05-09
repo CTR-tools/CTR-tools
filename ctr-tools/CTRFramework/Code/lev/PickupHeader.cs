@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace CTRFramework
 {
-    public class PickupHeader
+    public class PickupHeader : IRead, IWrite
     {
 
         [CategoryAttribute("General"), DescriptionAttribute("Name of the instance.")]
@@ -58,6 +58,16 @@ namespace CTRFramework
 
         public PickupHeader(BinaryReaderEx br)
         {
+            Read(br);
+        }
+
+        public static PickupHeader FromReader(BinaryReaderEx br)
+        {
+            return new PickupHeader(br);
+        }
+
+        public void Read(BinaryReaderEx br)
+        {
             name = br.ReadStringFixed(16);
             ptrModel = br.ReadUIntPtr();
             scale = br.ReadVector3sPadded(1 / 4096f / 16f);
@@ -70,7 +80,7 @@ namespace CTRFramework
 
             br.BaseStream.Position += 4 * 3;
 
-            pose = new Pose(br);
+            pose = Pose.FromReader(br);
 
             evt = br.ReadInt32();
 
@@ -81,6 +91,7 @@ namespace CTRFramework
         {
             bw.Write(System.Text.Encoding.ASCII.GetBytes(name));
             for (int i = 0; i < 16 - name.Length; i++) bw.Write((byte)0);
+
             bw.Write(ptrModel);
 
             bw.WriteVector3sPadded(scale, 1 / 4096f / 16f);
