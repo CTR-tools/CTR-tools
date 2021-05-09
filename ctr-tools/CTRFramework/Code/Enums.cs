@@ -8,18 +8,19 @@ namespace CTRFramework
     public enum PanicLevel
     {
         Silent = 1 << 0,        //silent level overrides other settings
-        Warn = 1 << 1,          //writes message to the console
+        Console = 1 << 1,          //writes message to the console
         Pause = 1 << 2,         //waits for user input
         File = 1 << 3,          //writes to file
         Exception = 1 << 4      //throws an exception
     }
 
+    [Flags]
     public enum PanicType
     {
-        Error,      //typically used to denote an event, that halts execution of current function to prevent crashing
-        Warning,    //used to warn about unexpected code execution, i.e missing enum in switch case
-        Info,       //general info
-        Assume      //format assumptions or sanity checks
+        Error = 1 << 0,      //typically used to denote an event, that halts execution of current function to prevent crashing
+        Warning = 1 << 1,    //used to warn about unexpected code execution, i.e missing enum in switch case
+        Info = 1 << 2,       //general info
+        Assume = 1 << 3      //format assumptions or sanity checks
     }
 
     #endregion

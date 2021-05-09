@@ -7,10 +7,12 @@ namespace CTRFramework.Shared
 {
     public class Helpers
     {
+        public static Random Random = new Random();
+
         public static string logpath = Path.Combine(Meta.BasePath, "ctrframework.log");
 
-        public static PanicLevel panic = PanicLevel.Warn;
-        public static Random Random = new Random();
+        public static PanicLevel panicLevel = PanicLevel.Console | PanicLevel.File;
+        public static PanicType panicType = PanicType.Assume | PanicType.Error;
 
         /// <summary>
         /// Call this if something unexpected happened.
@@ -29,23 +31,23 @@ namespace CTRFramework.Shared
         /// <param name="msg">message text</param>
         public static void Panic(string sender, PanicType ptype, string msg)
         {
-            if (panic.HasFlag(PanicLevel.Silent))
+            if (panicLevel.HasFlag(PanicLevel.Silent))
                 return;
 
             string message = $"{ptype}\t{sender}:\t{msg}";
 
-            if (panic.HasFlag(PanicLevel.File))
-                File.AppendAllText(logpath, DateTime.Now.ToString() + "\t" + ptype.ToString() + "\t" + message + "\r\n");
+            if (panicLevel.HasFlag(PanicLevel.File))
+                File.AppendAllText(logpath, $"{DateTime.Now}\t{message}\r\n");
 
-            if (panic.HasFlag(PanicLevel.Warn))
+            if (panicLevel.HasFlag(PanicLevel.Console))
             {
                 Console.WriteLine(message);
 
-                if (panic.HasFlag(PanicLevel.Pause))
+                if (panicLevel.HasFlag(PanicLevel.Pause))
                     Console.ReadKey();
             }
 
-            if (panic == PanicLevel.Exception)
+            if (panicLevel.HasFlag(PanicLevel.Exception) && ptype.HasFlag(PanicType.Error))
                 throw new Exception(message);
         }
 
