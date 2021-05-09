@@ -30,7 +30,7 @@ seq:
     type: u4
     repeat: expr
     repeat-expr: num_groups
-  - id: unk4_groups
+  - id: start_index # tells where exactly the group starts in the array of entries
     type: u4
     repeat: expr
     repeat-expr: num_groups
