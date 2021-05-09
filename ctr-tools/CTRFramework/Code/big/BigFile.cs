@@ -70,7 +70,7 @@ namespace CTRFramework.Big
             {
                 while (b.NextFile())
                 {
-                    Entries.Add(b.ReadFile());
+                    Entries.Add(b.ReadEntry());
                 }
             }
 
@@ -80,13 +80,11 @@ namespace CTRFramework.Big
         /// <summary>
         /// Populates Big with a list of files.
         /// </summary>
-        /// <param name="fn">Filename.</param>
-        private void LoadFromTxt(string fn)
+        /// <param name="filename">Text file path.</param>
+        private void LoadFromTxt(string filename)
         {
-            string path = Path.GetFileNameWithoutExtension(fn);
-            string[] files = File.ReadAllLines(fn);
-
-            //Console.WriteLine(fn);
+            string path = Path.GetFileNameWithoutExtension(filename);
+            string[] files = File.ReadAllLines(filename);
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -101,24 +99,15 @@ namespace CTRFramework.Big
         /// <param name="path">Folder.</param>
         public void Extract(string path)
         {
-            Console.WriteLine("Exporting BIG to: " + path);
+            Console.WriteLine($"Exporting BIG to: {path}");
+            Console.WriteLine($"{Entries.Count} files:");
 
             StringBuilder biglist = new StringBuilder();
-
-            Console.Write(Entries.Count + " files:\r\n");
 
             foreach (BigEntry cf in Entries)
             {
                 string filename = Path.Combine(path, cf.Name);
-
-                try
-                {
-                    Directory.CreateDirectory(Path.GetDirectoryName(filename));
-                }
-                catch
-                {
-                    Console.WriteLine("Can't create directory.");
-                }
+                Helpers.CheckFolder(Path.GetDirectoryName(filename));
 
                 biglist.AppendLine(cf.Name);
 
@@ -129,7 +118,7 @@ namespace CTRFramework.Big
                 Console.Write(".");
             }
 
-            File.WriteAllText(Path.GetFileNameWithoutExtension(path) + ".txt", biglist.ToString());
+            Helpers.WriteToFile(Path.ChangeExtension(path, "txt"), biglist.ToString()); 
 
             Console.WriteLine("\r\nDone.");
         }

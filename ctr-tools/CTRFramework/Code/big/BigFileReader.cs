@@ -116,7 +116,7 @@ namespace CTRFramework.Big
         /// Reads file entry.
         /// </summary>
         /// <returns>File data as array of byte.</returns>
-        public BigEntry ReadFile()
+        public BigEntry ReadEntry()
         {
             if (FileCursor == -1)
                 throw new ArgumentOutOfRangeException($"{this.GetType().Name}: Must use NextFile() first!");
