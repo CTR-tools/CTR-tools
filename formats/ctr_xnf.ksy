@@ -36,7 +36,7 @@ seq:
     repeat-expr: num_groups
   - id: skip_data
     size: num_skip_ints * 4
-  - id: entry
+  - id: entries
     type: xa_entry
     repeat: expr
     repeat-expr: num_total_entries
