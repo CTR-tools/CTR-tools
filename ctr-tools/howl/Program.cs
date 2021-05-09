@@ -55,6 +55,12 @@ namespace howl
                     Bank bnk = Bank.FromFile(filename);
                     bnk.ExportAll(0, Path.Combine(basepath, name));
                     break;
+
+                case ".xnf":
+                    Xinf xnf = Xinf.FromFile(filename);
+                    Console.WriteLine(xnf.ToString());
+                    break;
+
                 default:
                     Console.WriteLine("Unsupported file.");
                     break;
