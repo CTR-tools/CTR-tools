@@ -37,6 +37,16 @@ seq:
   - id: skip_data
     size: num_skip_ints * 4
   - id: entry
-    type: u4
+    type: xa_entry
     repeat: expr
     repeat-expr: num_total_entries
+    
+types:
+  xa_entry:
+    seq:
+      - id: entry_index
+        type: u1
+      - id: file_index
+        type: u1
+      - id: unk # maybe entry length?
+        type: u2
