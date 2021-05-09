@@ -6,11 +6,6 @@ namespace CTRFramework
 {
     public class SkyBox : IRead
     {
-        public int cntVertex;
-        public uint ptrVertex;
-        public short[] sizes = new short[8];
-        public uint[] offs = new uint[8];
-
         public List<Vertex> verts = new List<Vertex>();
         public List<Vector4s> faces = new List<Vector4s>();
 
@@ -23,15 +18,20 @@ namespace CTRFramework
             Read(br);
         }
 
+        public static SkyBox FromReader(BinaryReaderEx br)
+        {
+            return new SkyBox(br);
+        }
+
         public void Read(BinaryReaderEx br)
         {
-            cntVertex = br.ReadInt32();
-            ptrVertex = br.ReadUInt32();
+            uint numVertex = br.ReadUInt32();
+            uint ptrVertex = br.ReadUInt32();
 
-            sizes = br.ReadArrayInt16(8);
-            offs = br.ReadArrayUInt32(8);
+            short[] sizes = br.ReadArrayInt16(8);
+            uint[] offs = br.ReadArrayUInt32(8);
 
-            for (int i = 0; i < cntVertex; i++)
+            for (int i = 0; i < numVertex; i++)
             {
                 Vertex x = new Vertex();
                 x.ReadShort(br);
