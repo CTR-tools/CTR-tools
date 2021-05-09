@@ -15,16 +15,16 @@ namespace CTRFramework
         public int unk0 = 0; //0?
         public short lodDistance = 1000;
         public short billboard = 0; //bit0 forces model to always face the camera, check other bits
-        public Vector4s scale = new Vector4s(1024, 1024, 1024, 0);
+        public Vector3 scale = new Vector3(4096);
 
-        public UIntPtr ptrCmd = (UIntPtr)0; //this is null if we have anims
-        public UIntPtr ptrVerts = (UIntPtr)0;
-        public UIntPtr ptrTex = (UIntPtr)0;
-        public UIntPtr ptrClut = (UIntPtr)0;
+        public UIntPtr ptrCmd = UIntPtr.Zero; //this is null if we have anims
+        public UIntPtr ptrVerts = UIntPtr.Zero;
+        public UIntPtr ptrTex = UIntPtr.Zero;
+        public UIntPtr ptrClut = UIntPtr.Zero;
 
         public int unk3 = 0; //?
         public int numAnims = 0;
-        public UIntPtr ptrAnims = (UIntPtr)0;
+        public UIntPtr ptrAnims = UIntPtr.Zero;
         public int unk4 = 0; //?
 
         public Vector4s posOffset = new Vector4s(0, 0, 0, 0);
@@ -77,14 +77,19 @@ namespace CTRFramework
         /// <param name="br">BinaryReaderEx object.</param>
         public void Read(BinaryReaderEx br)
         {
-            Console.WriteLine("!!!!!!!!!!!!! " + br.HexPos());
-
             name = br.ReadStringFixed(16);
-            Console.WriteLine("!!!!!!!!!!!!! " + name);
-
             unk0 = br.ReadInt32();
             lodDistance = br.ReadInt16();
             billboard = br.ReadInt16();
+            scale = br.ReadVector3sPadded();
+            ptrCmd = br.ReadUIntPtr();
+            ptrVerts = br.ReadUIntPtr();
+            ptrTex = br.ReadUIntPtr();
+            ptrClut = br.ReadUIntPtr();
+            unk3 = br.ReadInt32();
+            numAnims = br.ReadInt32();
+            ptrAnims = br.ReadUIntPtr();
+            unk4 = br.ReadInt32();
 
             Console.WriteLine($"CtrHeader: {name}");
 
@@ -94,16 +99,6 @@ namespace CTRFramework
             if (billboard > 1)
                 Helpers.Panic(this, PanicType.Assume, $"check unusual billboard value = {billboard}");
 
-            scale = new Vector4s(br);
-
-            ptrCmd = br.ReadUIntPtr();
-            ptrVerts = br.ReadUIntPtr();
-            ptrTex = br.ReadUIntPtr();
-            ptrClut = br.ReadUIntPtr();
-            unk3 = br.ReadInt32();
-            numAnims = br.ReadInt32();
-            ptrAnims = br.ReadUIntPtr();
-            unk4 = br.ReadInt32();
 
             int returnto = (int)br.BaseStream.Position;
 
@@ -118,8 +113,9 @@ namespace CTRFramework
             if (unk4 != 0)
                 Helpers.Panic(this, PanicType.Assume, $"check unusual unk4 value = {unk4}");
 
-            long pos = br.BaseStream.Position;
 
+
+            long pos = br.BaseStream.Position;
 
             //read all drawing commands
 
@@ -354,7 +350,6 @@ namespace CTRFramework
                 stripLength++;
             }
 
-            //br.Jump(pos);
             br.Jump(returnto);
         }
 
@@ -411,7 +406,7 @@ namespace CTRFramework
             sb.AppendLine($"unk0: {unk0}");
             sb.AppendLine($"lodDistance: {lodDistance}");
             sb.AppendLine($"billboard: {billboard}");
-            sb.AppendLine($"scale: {scale.ToString(VecFormat.CommaSeparated)}");
+            sb.AppendLine($"scale: {scale.ToString()}");
             sb.AppendLine($"ptrCmd: {ptrCmd.ToUInt32().ToString("X8")}");
             sb.AppendLine($"ptrVerts: {ptrVerts.ToUInt32().ToString("X8")}");
             sb.AppendLine($"ptrTex: {ptrTex.ToUInt32().ToString("X8")}");
@@ -533,11 +528,11 @@ namespace CTRFramework
                 0);
 
             //save scale to model
-            model.scale = new Vector4s(
-                (short)(bb2.maxf.X * 1000f),
-                (short)(bb2.maxf.Y * 1000f),
-                (short)(bb2.maxf.Z * 1000f),
-                0);
+            model.scale = new Vector3(
+                bb2.maxf.X * 1000f,
+                bb2.maxf.Y * 1000f,
+                bb2.maxf.Z * 1000f
+                );
 
 
             //compress vertices to byte vector 
@@ -656,7 +651,7 @@ namespace CTRFramework
                     bw.Write(unk0);
                     bw.Write(lodDistance);
                     bw.Write(billboard);
-                    scale.Write(bw);
+                    bw.WriteVector3sPadded(scale);
                     bw.Write(ptrCmd);
                     bw.Write(ptrVerts);
                     bw.Write(ptrTex);
