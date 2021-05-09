@@ -9,20 +9,14 @@ namespace CTRFramework
     public interface IRead
     {
         /// <summary>Reads data from BinaryReader.</summary>
-        /// <param name="br">BinaryReaderEx to read data from.</param>
+        /// <param name="br">BinaryReaderEx instance to read data from.</param>
         void Read(BinaryReaderEx br);
     }
 
     public interface IWrite
     {
         /// <summary>Writes data to BinaryWriter.</summary>
-        /// <param name="bw">BinaryWriteer to write data to.</param>
+        /// <param name="bw">BinaryWriterEx instance to write data to.</param>
         void Write(BinaryWriterEx bw);
-    }
-
-    public interface IByteArray
-    {
-        /// <summary>Returns a structured array of bytes.</summary>
-        byte[] ToByteArray();
     }
 }

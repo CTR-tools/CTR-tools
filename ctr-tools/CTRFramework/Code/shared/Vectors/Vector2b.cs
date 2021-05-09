@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace CTRFramework.Shared
 {
-    public class Vector2b : IReadWrite, IByteArray
+    public class Vector2b : IReadWrite
     {
 
         #region Public Fields
