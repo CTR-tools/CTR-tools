@@ -10,16 +10,15 @@ seq:
     type: str
     size: 4
     encoding: ascii
-  - id: version #static value, code checks against hardcoded int
+  - id: version #static value, code checks against hardcoded int, assumed version
     type: u4
-  - id: num_groups #seems to be always 3. if checks against this number
+  - id: num_groups #seems to be always 3. basically 1 for every folder in XA. file halts parsing if not 3.
     type: u4
   - id: num_skip_ints # wat?
     type: u4
   - id: num_total_entries
     type: u4
-    
-  - id: unk1_groups
+  - id: num_xa_files
     type: u4
     repeat: expr
     repeat-expr: num_groups
@@ -27,8 +26,7 @@ seq:
     type: u4
     repeat: expr
     repeat-expr: num_groups
-    
-  - id: num_entries_groups # all summed should be equal to num_total_entries
+  - id: num_entries # all summed should be equal to num_total_entries
     type: u4
     repeat: expr
     repeat-expr: num_groups
@@ -36,10 +34,8 @@ seq:
     type: u4
     repeat: expr
     repeat-expr: num_groups
-    
   - id: skip_data
     size: num_skip_ints * 4
-    
   - id: entry
     type: u4
     repeat: expr
