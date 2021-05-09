@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Linq;
+using System.Drawing;
 
 namespace CTRFramework.Shared
 {
@@ -232,6 +233,17 @@ namespace CTRFramework.Shared
             return new Vector2(
                 values[0] * scale,
                 values[1] * scale
+                );
+        }
+
+        public Vector3 ReadVector3b()
+        {
+            byte[] values = ReadBytes(3);
+
+            return new Vector3(
+                values[0],
+                values[1],
+                values[2]
                 );
         }
         #endregion

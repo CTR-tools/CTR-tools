@@ -27,6 +27,8 @@ namespace ctrviewer
     {
         public LevelType levelType = LevelType.P1;
 
+        public MenuRootComponent newmenu = new MenuRootComponent();
+
         public static List<string> alphalist = new List<string>();
 
         EngineSettings settings;
@@ -84,7 +86,6 @@ namespace ctrviewer
 
         //get version only once, because we don't want this to be allocated every frame.
         public static string version = Meta.GetVersion();
-
 
         public Game1()
         {
@@ -249,7 +250,20 @@ namespace ctrviewer
 
             SwitchDisplayMode();
 
+            newmenu = new MenuRootComponent();
 
+            /*
+MenuButton btn = new MenuButton();
+btn.Size = new Point(100, 100);
+btn.Position = new Point(100, 50);
+btn.OnClick += (s, e) => {
+    GameConsole.Write($"hello from {btn.Text}");
+    btn.buttonState = xButtonState.Disabled;
+};
+btn.Text = "Hi there, i'm a button.";
+
+newmenu.Children.Add(btn);
+*/
 
             base.Initialize();
         }
@@ -288,6 +302,7 @@ namespace ctrviewer
             tint.SetData(new Color[] { Color.Black });
 
             menu = new Menu(font);
+            MenuRootComponent.Font = font;
 
             UpdateSplitscreenViewports();
 
@@ -726,6 +741,8 @@ namespace ctrviewer
 
             newms = Mouse.GetState();
 
+            newmenu.Update(gameTime, new Point(newms.X, newms.Y));
+
             //x += 0.01f ;
             //if (x > Math.PI * 2)
             //    x = 0;
@@ -1136,14 +1153,14 @@ namespace ctrviewer
                 if (Path.GetExtension(big.GetFilename()) != ".vrm")
                     return;
 
-                big.ReadFile().Save(Meta.BasePath);
+                big.ReadEntry().Save(Meta.BasePath);
 
                 big.NextFile();
 
                 if (Path.GetExtension(big.GetFilename()) != ".lev")
                     return;
 
-                big.ReadFile().Save(Meta.BasePath);
+                big.ReadEntry().Save(Meta.BasePath);
 
                 files.Add(Path.Combine(Meta.BasePath, big.GetFilename()));
             }
@@ -1256,9 +1273,9 @@ namespace ctrviewer
             //draw calls count
             //spriteBatch.DrawString(font, GraphicsDevice.Metrics.DrawCount.ToString(), new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString(GraphicsDevice.Metrics.DrawCount.ToString()).X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
+            newmenu.Draw(gameTime, spriteBatch);
+
             spriteBatch.End();
-
-
 
 
             // base.Draw(gameTime);

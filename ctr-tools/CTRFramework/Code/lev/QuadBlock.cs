@@ -39,7 +39,7 @@ namespace CTRFramework
         public short[] ind = new short[9];
         public QuadFlags quadFlags;
 
-        public uint bitvalue; //important! big endian!
+        public uint bitvalue;
 
         //these values are contained in bitvalue, mask is 8b5b5b5b5b4z where b is bit and z is empty. or is it?
         public byte drawOrderLow;
@@ -121,7 +121,7 @@ namespace CTRFramework
                 ptrTexMid[i] = br.ReadUIntPtr();
 
                 if (Helpers.TestPointer(ptrTexMid[i].ToUInt32()) != 0)
-                    Helpers.Panic(this, PanicType.Assume, $"mid {Helpers.TestPointer(ptrTexMid[i].ToUInt32()).ToString("x2")}");
+                    Helpers.Panic(this, PanicType.Assume, $"ptrTexMid[{i}] {ptrTexMid[i].ToUInt32().ToString("X8")} - {Helpers.TestPointer(ptrTexMid[i].ToUInt32()).ToString("x2")}");
                     // Console.ReadKey();
             }
 

@@ -127,7 +127,7 @@ namespace CTRTools.Controls
                 mi = new MeshInfo(br);
             }
 
-            ushort ind = m.ReadPSXUInt16(mi.ptrQuadBlocks);
+            ushort ind = m.ReadPSXUInt16(mi.ptrQuadBlocks.ToUInt32());
 
             textBox5.Text += ind.ToString("X8");
 

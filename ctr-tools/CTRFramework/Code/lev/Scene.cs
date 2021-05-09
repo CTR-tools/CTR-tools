@@ -87,17 +87,17 @@ namespace CTRFramework
                 visdata = mesh.VisData;
             }
 
-            restartPts = new PtrWrap<Pose>(header.ptrRestartPts).GetList(br, header.cntRestartPts);
-            vertanims = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.cntVcolAnim);
+            restartPts = new PtrWrap<Pose>(header.ptrRestartPts).GetList(br, header.numRestartPts);
+            vertanims = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
             skybox = new PtrWrap<SkyBox>(header.ptrSkybox).Get(br);
             nav = new PtrWrap<Nav>(header.ptrAiNav).Get(br);
             iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
             trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
 
-            if (header.cntSpawnPts != 0)
+            if (header.numSpawnPts != 0)
             {
                 br.Jump(header.ptrSpawnPts);
-                unkadv = new UnkAdv(br, (int)header.cntSpawnPts);
+                unkadv = new UnkAdv(br, (int)header.numSpawnPts);
             }
 
             if (header.cntTrialData != 0)
@@ -136,7 +136,7 @@ namespace CTRFramework
                 {
                     if (v.flag.HasFlag(VisDataFlags.Water))
                     {
-                        int z = (int)((v.ptrQuadBlock - mesh.ptrQuadBlocks) / 0x5C);
+                        int z = (int)((v.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
 
                         for (int i = z; i < z + v.numQuadBlock; i++)
                             quads[i].isWater = true;
@@ -174,7 +174,7 @@ namespace CTRFramework
                 br.Jump(header.ptrInstancesPtr + 4 * i);
                 br.Jump(br.ReadUInt32());
 
-                pickups.Add(new PickupHeader(br));
+                pickups.Add(PickupHeader.FromReader(br));
             }
 
 

@@ -10,11 +10,11 @@ namespace CTRFramework
         public uint numVertices;
         public uint numUnk; //this is probably some third count
 
-        public uint ptrQuadBlocks;
-        public uint ptrVertices;
-        public uint ptrUnk;// and this supposed to be third pointer, but it's null?
+        public UIntPtr ptrQuadBlocks;
+        public UIntPtr ptrVertices;
+        public UIntPtr ptrUnk;// and this supposed to be third pointer, but it's null?
 
-        public uint ptrVisData; //visibility bsp tree
+        public UIntPtr ptrVisData; //visibility bsp tree
         public uint numVisData;
 
         public List<QuadBlock> QuadBlocks = new List<QuadBlock>();
@@ -38,16 +38,16 @@ namespace CTRFramework
 
             PtrWrap<QuadBlock> ptrQuadBlocks2 = new PtrWrap<QuadBlock>(br);
             PtrWrap<Vertex> ptrVertices2 = new PtrWrap<Vertex>(br);
-            ptrUnk = br.ReadUInt32();
+            ptrUnk = br.ReadUIntPtr();
 
             PtrWrap<VisData> ptrVisData2 = new PtrWrap<VisData>(br);
             numVisData = br.ReadUInt32();
 
-            ptrQuadBlocks = ptrQuadBlocks2.Pointer.ToUInt32();
-            ptrVertices = ptrVertices2.Pointer.ToUInt32();
-            ptrVisData = ptrVisData2.Pointer.ToUInt32();
+            ptrQuadBlocks = ptrQuadBlocks2.Pointer;
+            ptrVertices = ptrVertices2.Pointer;
+            ptrVisData = ptrVisData2.Pointer;
 
-            if (ptrUnk != 0)
+            if (ptrUnk != UIntPtr.Zero)
                 Helpers.Panic(this, PanicType.Assume, $"ptrUnk != 0 !!! {ptrUnk}");
 
             QuadBlocks = ptrQuadBlocks2.GetList(br, numQuadBlocks);

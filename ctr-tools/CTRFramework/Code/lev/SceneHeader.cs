@@ -24,7 +24,7 @@ namespace CTRFramework
         public int null1;           //0x2C - assumed reserved
         public int null2;           //0x30 - assumed reserved
 
-        public uint cntWater;       //0x34 - number of vertices treated as water
+        public uint numWater;       //0x34 - number of vertices treated as water
         public UIntPtr ptrWater;       //0x38 - pointer to array of water entries
         public UIntPtr ptrIcons;       //0x3C - lead to the icon pack header
         public UIntPtr ptrIconsArray;  //0x40 - leads to the icon pack data
@@ -53,9 +53,9 @@ namespace CTRFramework
         public UIntPtr ptrTrialData;   //0x134 - pointer to additional data referred to as "trialdata" for now
         public uint cntu2;          //0x138 - 
         public uint ptru2;          //0x13C
-        public uint cntSpawnPts;    //0x140
+        public uint numSpawnPts;    //0x140
         public UIntPtr ptrSpawnPts;    //0x144
-        public uint cntRestartPts;  //0x148 - number of restart points in the level
+        public uint numRestartPts;  //0x148 - number of restart points in the level
         public UIntPtr ptrRestartPts;  //0x14C - points to the 1st entry in restart points array
 
         byte[] skip2;               //0x150 - 16 bytes
@@ -63,7 +63,7 @@ namespace CTRFramework
         public Vector4b[] bgColor;  //0x160 - 4 * 4 = 16 bytes for 4 background colors.
         public uint skip2_unkPtr;   //0x170 - 
 
-        public uint cntVcolAnim;    //0x174 - number of animated vertices data
+        public uint numVcolAnim;    //0x174 - number of animated vertices data
         public UIntPtr ptrVcolAnim;    //0x178 - pointer to animated vertices data
 
         byte[] skip23;              //0x17C - 12 bytes
@@ -106,7 +106,7 @@ namespace CTRFramework
             if (null1 != 0 || null2 != 0)
                 Helpers.Panic(this, PanicType.Assume, "WARNING header.null1 = " + null1 + "; header.null2 = " + null2);
 
-            cntWater = br.ReadUInt32();
+            numWater = br.ReadUInt32();
             ptrWater = br.ReadUIntPtr();
             ptrIcons = br.ReadUIntPtr();
             ptrIconsArray = br.ReadUIntPtr();
@@ -152,13 +152,11 @@ namespace CTRFramework
             cntu2 = br.ReadUInt32();
             ptru2 = br.ReadUInt32();
 
-            cntSpawnPts = br.ReadUInt32();
+            numSpawnPts = br.ReadUInt32();
             ptrSpawnPts = br.ReadUIntPtr();
 
-            cntRestartPts = br.ReadUInt32();
+            numRestartPts = br.ReadUInt32();
             ptrRestartPts = br.ReadUIntPtr();
-
-            //skip2 = br.ReadBytes(0x38);
 
             skip2 = br.ReadBytes(16);
 
@@ -168,7 +166,7 @@ namespace CTRFramework
                 bgColor[i] = new Vector4b(br);
 
             skip2_unkPtr = br.ReadUInt32();
-            cntVcolAnim = br.ReadUInt32();
+            numVcolAnim = br.ReadUInt32();
             ptrVcolAnim = br.ReadUIntPtr();
 
             skip23 = br.ReadBytes(12);
@@ -232,7 +230,7 @@ namespace CTRFramework
             bw.Write(null1);
             bw.Write(null2);
 
-            bw.Write(cntWater);
+            bw.Write(numWater);
             bw.Write(ptrWater);
             bw.Write(ptrIcons);
             bw.Write(ptrIconsArray);
@@ -264,9 +262,9 @@ namespace CTRFramework
             bw.Write(ptrTrialData);
             bw.Write(cntu2);
             bw.Write(ptru2);
-            bw.Write(cntSpawnPts);
+            bw.Write(numSpawnPts);
             bw.Write(ptrSpawnPts);
-            bw.Write(cntRestartPts);
+            bw.Write(numRestartPts);
             bw.Write(ptrRestartPts);
 
             bw.Write(skip2);
@@ -276,7 +274,7 @@ namespace CTRFramework
 
             bw.Write(skip2_unkPtr);
 
-            bw.Write(cntVcolAnim);
+            bw.Write(numVcolAnim);
             bw.Write(ptrVcolAnim);
 
             bw.Write(skip23);

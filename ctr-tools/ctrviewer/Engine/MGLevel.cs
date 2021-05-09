@@ -56,9 +56,9 @@ namespace ctrviewer.Engine.Render
             for (int i = 0; i < sb.faces.Count; i++)
             {
                 List<VertexPositionColorTexture> tri = new List<VertexPositionColorTexture>();
-                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].X], new CTRFramework.Shared.Vector2b(0, 0)));
-                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].Y], new CTRFramework.Shared.Vector2b(0, 0)));
-                tri.Add(DataConverter.ToVptc(sb.verts[sb.faces[i].Z], new CTRFramework.Shared.Vector2b(0, 0)));
+                tri.Add(DataConverter.ToVptc(sb.verts[(int)sb.faces[i].X], new CTRFramework.Shared.Vector2b(0, 0)));
+                tri.Add(DataConverter.ToVptc(sb.verts[(int)sb.faces[i].Y], new CTRFramework.Shared.Vector2b(0, 0)));
+                tri.Add(DataConverter.ToVptc(sb.verts[(int)sb.faces[i].Z], new CTRFramework.Shared.Vector2b(0, 0)));
 
                 normal.PushTri(tri);
             }
