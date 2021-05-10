@@ -10,8 +10,19 @@ Tools description: https://github.com/DCxDemo/CTR-tools/wiki/Tools-description
 
 Join the CTR-tools Discord server: https://discord.gg/56xm9Aj
 
+## Features
+* fly around the original CTR levels in a 3D viewer, including a stereoscopic 3d mode
+* extract and rebuild BIGFILE.BIG, human readable filenames and folder structure included
+* extract levels in OBJ format featuring medium texture quality
+* extract static models and import untextured models back in the game
+* extract samples in VAG/WAV formats and music tracks in MIDI format from KART.HWL
+* edit level vram textures
+* edit localization files
+* minor Crash Bash support: unpack CRASHBSH.DAT from various CB builds and extract textures
+
 ## Building
-CTR-tools is being developed in Visual Studio Community 2019, target platform is .NET 4.5. \
+CTR-tools is being developed in Visual Studio Community 2019.\
+Target platform is .NET Framework 4.5 (ctrviewer is targeting the latest stable .NET).\
 It should be enough to install VS and add dependencies via NuGet.
 
 Project dependencies:
