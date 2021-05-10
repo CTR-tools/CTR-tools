@@ -18,11 +18,11 @@ seq:
     type: u4
   - id: num_total_entries
     type: u4
-  - id: num_xa_files
+  - id: num_files
     type: u4
     repeat: expr
     repeat-expr: num_groups
-  - id: unk2_groups
+  - id: file_start_index
     type: u4
     repeat: expr
     repeat-expr: num_groups
@@ -30,7 +30,7 @@ seq:
     type: u4
     repeat: expr
     repeat-expr: num_groups
-  - id: start_index # tells where exactly the group starts in the array of entries
+  - id: entry_start_index # tells where exactly the group starts in the array of entries
     type: u4
     repeat: expr
     repeat-expr: num_groups

@@ -14,10 +14,10 @@ namespace CTRFramework.Sound
         private int numGroups = 0;
         private int numSkipInts = 0;
 
-        private int[] numXaFiles = new int[3];
-        private int[] unk2 = new int[3];
+        private int[] numFiles = new int[3];
+        private int[] fileStartIndex = new int[3];
         private int[] numEntries = new int[3];
-        private int[] startIndex = new int[3];
+        private int[] entryStartIndex = new int[3];
 
         public List<uint> Entries = new List<uint>();
 
@@ -65,16 +65,16 @@ namespace CTRFramework.Sound
             int numTotalEntries = br.ReadInt32();
 
             for (int i = 0; i < numGroups; i++)
-                numXaFiles[i] = br.ReadInt32();
+                numFiles[i] = br.ReadInt32();
 
             for (int i = 0; i < numGroups; i++)
-                unk2[i] = br.ReadInt32();
+                fileStartIndex[i] = br.ReadInt32();
 
             for (int i = 0; i < numGroups; i++)
                 numEntries[i] = br.ReadInt32();
 
             for (int i = 0; i < numGroups; i++)
-                startIndex[i] = br.ReadInt32();
+                entryStartIndex[i] = br.ReadInt32();
 
             br.Seek(numSkipInts * 4);
 
