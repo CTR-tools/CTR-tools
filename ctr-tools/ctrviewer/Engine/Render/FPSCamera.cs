@@ -26,6 +26,7 @@ namespace ctrviewer.Engine.Render
 
         public float speedScale = 1.0f;
         public float mouseScale = 1.0f;
+        public float gamePadScale = 0.75f;
 
         Vector3 slowdown = new Vector3(0, 0, 0);
 
@@ -60,8 +61,8 @@ namespace ctrviewer.Engine.Render
             }
 
 
-            leftRightRot -= GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.X * amount * 4;
-            upDownRot += GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.Y * amount * 4;
+            leftRightRot -= GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.X * amount * 4 * gamePadScale;
+            upDownRot += GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.Y * amount * 4 * gamePadScale;
 
 
             Vector3 moveVector = new Vector3(0, 0, 0);
