@@ -14,7 +14,7 @@ seq:
     type: u4
   - id: num_groups #seems to be always 3. basically 1 for every folder in XA. file halts parsing if not 3.
     type: u4
-  - id: num_skip_ints # wat?
+  - id: num_total_files
     type: u4
   - id: num_total_entries
     type: u4
@@ -34,8 +34,8 @@ seq:
     type: u4
     repeat: expr
     repeat-expr: num_groups
-  - id: skip_data
-    size: num_skip_ints * 4
+  - id: file_entries # zero
+    size: num_total_files * 4
   - id: entries
     type: xa_entry
     repeat: expr
