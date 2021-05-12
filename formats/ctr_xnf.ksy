@@ -5,8 +5,10 @@ meta:
   file-extension: xnf
   endian: le
 
+doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_xnf.ksy
+
 seq:
-  - id: magic
+  - id: magic # XINF
     type: str
     size: 4
     encoding: ascii
@@ -18,7 +20,7 @@ seq:
     type: u4
   - id: num_total_entries
     type: u4
-  - id: num_files
+  - id: num_files # all summed should be equal to num_total_files
     type: u4
     repeat: expr
     repeat-expr: num_groups
@@ -34,7 +36,7 @@ seq:
     type: u4
     repeat: expr
     repeat-expr: num_groups
-  - id: file_entries # zero
+  - id: ptr_files # zero, calculated at runtime
     size: num_total_files * 4
   - id: entries
     type: xa_entry
@@ -48,5 +50,5 @@ types:
         type: u1
       - id: file_index
         type: u1
-      - id: unk # maybe entry length?
+      - id: entry_length # in sectors?
         type: u2
