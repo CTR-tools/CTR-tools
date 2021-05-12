@@ -16,12 +16,7 @@ namespace CTRFramework.Big
 
         public int SizePadded
         {
-            get
-            {
-                int val = Size;
-                while (val % 2048 != 0) val++;
-                return val;
-            }
+            get { return (Size + 2047) >> 11 << 11; }
         }
 
         public byte[] Data;
@@ -67,9 +62,7 @@ namespace CTRFramework.Big
         {
             using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(Data)))
             {
-                T t = new T();
-                t.Read(br);
-                return t;
+                return Instance<T>.FromReader(br, 0);
             }
         }
 
