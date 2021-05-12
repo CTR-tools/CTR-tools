@@ -57,7 +57,7 @@ namespace howl
                     break;
 
                 case ".xnf":
-                    Xinf xnf = Xinf.FromFile(filename);
+                    XaInfo xnf = XaInfo.FromFile(filename);
                     Console.WriteLine(xnf.ToString());
                     break;
 

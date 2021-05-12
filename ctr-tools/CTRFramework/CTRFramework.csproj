@@ -119,7 +119,8 @@
     <Compile Include="Code\lev\PickupHeader.cs" />
     <Compile Include="Code\lev\QuadBlock.cs" />
     <Compile Include="Code\lev\SkyBox.cs" />
-    <Compile Include="Code\sound\Xinf.cs" />
+    <Compile Include="Code\sound\XaInfoEntry.cs" />
+    <Compile Include="Code\sound\XaInfo.cs" />
     <Compile Include="Code\vrm\TextureLayout.cs" />
     <Compile Include="Code\lev\Vertex.cs" />
     <Compile Include="Code\lev\VisData.cs" />

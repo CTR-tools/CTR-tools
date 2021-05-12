@@ -6,50 +6,50 @@ using System.Text;
 
 namespace CTRFramework.Sound
 {
-    public class Xinf : IRead
+    public class XaInfo : IRead
     {
         public string magic = "XINF";
         private int version = 0x66;
 
         private int numGroups = 0;
-        private int numSkipInts = 0;
+        private int numFilesTotal = 0;
 
         private int[] numFiles;
         private int[] fileStartIndex;
         private int[] numEntries;
         private int[] entryStartIndex;
 
-        public List<uint> Entries = new List<uint>();
+        public List<XaInfoEntry> Entries = new List<XaInfoEntry>();
 
-        public Xinf()
+        public XaInfo()
         {
         }
 
-        public Xinf(BinaryReaderEx br)
+        public XaInfo(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public static Xinf FromReader(BinaryReaderEx br)
+        public static XaInfo FromReader(BinaryReaderEx br)
         {
-            return new Xinf(br);
+            return new XaInfo(br);
         }
 
         /// <summary>
-        /// Creates XINF instance from file.
+        /// Creates XaInfo instance from file.
         /// </summary>
         /// <param name="filename">Source file name.</param>
         /// <returns></returns>
-        public static Xinf FromFile(string filename)
+        public static XaInfo FromFile(string filename)
         {
             using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                return Xinf.FromReader(br);
+                return XaInfo.FromReader(br);
             }
         }
 
         /// <summary>
-        /// Read VAG data from stream using binary reader.
+        /// Read XaInfo data from stream using binary reader.
         /// </summary>
         /// <param name="br">BinaryReaderEx instance.</param>
         public void Read(BinaryReaderEx br)
@@ -61,7 +61,7 @@ namespace CTRFramework.Sound
 
             version = br.ReadInt32();
             numGroups = br.ReadInt32();
-            numSkipInts = br.ReadInt32();
+            numFilesTotal = br.ReadInt32();
             int numTotalEntries = br.ReadInt32();
 
             numFiles = new int[numGroups];
@@ -81,14 +81,14 @@ namespace CTRFramework.Sound
             for (int i = 0; i < numGroups; i++)
                 entryStartIndex[i] = br.ReadInt32();
 
-            br.Seek(numSkipInts * 4);
+            br.Seek(numFilesTotal * 4);
 
             for (int i = 0; i < numTotalEntries; i++)
-                Entries.Add(br.ReadUInt32());
+                Entries.Add(XaInfoEntry.FromReader(br));
         }
 
         /// <summary>
-        /// Saves XINF to file.
+        /// Saves XaInfo to file.
         /// </summary>
         /// <param name="filename">Target file name.</param>
         public void Save(string filename)
@@ -100,7 +100,7 @@ namespace CTRFramework.Sound
         }
 
         /// <summary>
-        /// Writes XINF data to stream using binary writer.
+        /// Writes XaInfo data to stream using binary writer.
         /// </summary>
         /// <param name="bw">BinaryWriterEx object.</param>
         public void Write(BinaryWriterEx bw)
@@ -118,7 +118,7 @@ namespace CTRFramework.Sound
             sb.AppendLine("---");
 
             foreach (var en in Entries)
-                sb.AppendLine(en.ToString("X8"));
+                sb.AppendLine(en.ToString());
 
             return sb.ToString();
         }
