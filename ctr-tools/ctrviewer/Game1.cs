@@ -733,6 +733,8 @@ newmenu.Children.Add(btn);
 
         protected override void Update(GameTime gameTime)
         {
+            Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
+
             if (loading == null)
                 LoadGame();
 
