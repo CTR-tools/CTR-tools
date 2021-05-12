@@ -733,9 +733,6 @@ newmenu.Children.Add(btn);
 
         protected override void Update(GameTime gameTime)
         {
-            //rotation += 0.01f;
-            //camera.SetRotation(rotation, 0);
-
             if (loading == null)
                 LoadGame();
 
