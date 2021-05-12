@@ -26,7 +26,7 @@ namespace ctrviewer.Engine.Render
         public void Update(GameTime gameTime)
         {
             if (ModelName == "c" || ModelName == "t" || ModelName == "r")
-                Rotation += new Vector3(0.5f, 0, 0);
+                Rotation += new Vector3(2f * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000f, 0, 0);
         }
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha, FirstPersonCamera camera)
