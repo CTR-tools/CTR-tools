@@ -118,7 +118,7 @@ namespace CTRFramework.Big
                 Console.Write(".");
             }
 
-            Helpers.WriteToFile(Path.ChangeExtension(path, "txt"), biglist.ToString()); 
+            Helpers.WriteToFile(Path.ChangeExtension(path, "txt"), biglist.ToString());
 
             Console.WriteLine("\r\nDone.");
         }

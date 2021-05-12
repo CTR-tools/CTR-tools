@@ -1,5 +1,4 @@
 ﻿using CTRFramework.Shared;
-using System;
 using System.Numerics;
 
 namespace CTRFramework
@@ -31,20 +30,20 @@ namespace CTRFramework
 
         public void ReadShort(BinaryReaderEx br)
         {
-            coord = br.ReadVector3sPadded(1/100f);
+            coord = br.ReadVector3sPadded(1 / 100f);
             color = new Vector4b(br);
         }
 
         public void Read(BinaryReaderEx br)
         {
-            coord = br.ReadVector3sPadded(1/100f);
+            coord = br.ReadVector3sPadded(1 / 100f);
             color = new Vector4b(br);
             color_morph = new Vector4b(br);
         }
 
         public void Write(BinaryWriterEx bw)
         {
-            bw.WriteVector3sPadded(coord, 1/100f);
+            bw.WriteVector3sPadded(coord, 1 / 100f);
             color.Write(bw);
             color_morph.Write(bw);
         }

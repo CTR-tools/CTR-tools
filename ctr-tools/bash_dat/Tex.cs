@@ -1,5 +1,5 @@
-﻿using System;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
+using System;
 
 namespace bash_dat
 {

@@ -2,8 +2,8 @@
 using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Numerics;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -122,7 +122,7 @@ namespace CTRFramework
 
                 if (Helpers.TestPointer(ptrTexMid[i].ToUInt32()) != 0)
                     Helpers.Panic(this, PanicType.Assume, $"ptrTexMid[{i}] {ptrTexMid[i].ToUInt32().ToString("X8")} - {Helpers.TestPointer(ptrTexMid[i].ToUInt32()).ToString("x2")}");
-                    // Console.ReadKey();
+                // Console.ReadKey();
             }
 
 

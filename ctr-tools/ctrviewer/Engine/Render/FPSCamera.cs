@@ -121,7 +121,7 @@ namespace ctrviewer.Engine.Render
                 moveVector += new Vector3(padState.ThumbSticks.Left.X / 100f, 0, -padState.ThumbSticks.Left.Y / 100f);
 
                 if (keyState.IsKeyDown(Keys.LeftShift) || padState.Buttons.A == ButtonState.Pressed)
-                     moveVector *= 2;
+                    moveVector *= 2;
 
                 speedScale -= padState.Triggers.Left / 20f;
                 speedScale += padState.Triggers.Right / 20f;

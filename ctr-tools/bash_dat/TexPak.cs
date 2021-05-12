@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using CTRFramework.Vram;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using CTRFramework.Shared;
-using CTRFramework.Vram;
 
 namespace bash_dat
 {

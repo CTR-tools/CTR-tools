@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
 using System.Linq;
-using System.Drawing;
+using System.Numerics;
 
 namespace CTRFramework.Shared
 {

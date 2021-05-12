@@ -58,7 +58,7 @@ namespace CTRFramework.Big
             Helpers.WriteToFile(Path.Combine(path, Name), Data);
         }
 
-        public T ParseAs<T>() where T : IRead, new ()
+        public T ParseAs<T>() where T : IRead, new()
         {
             using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(Data)))
             {

@@ -58,14 +58,14 @@ namespace CTRFramework.Shared
 
         public void Read(BinaryReaderEx br)
         {
-            position = br.ReadVector3s(1/100f);
-            rotation = br.ReadVector3s(1/4096f);
+            position = br.ReadVector3s(1 / 100f);
+            rotation = br.ReadVector3s(1 / 4096f);
         }
 
         public void Write(BinaryWriterEx bw)
         {
-            bw.WriteVector3s(position, 1/100f);
-            bw.WriteVector3s(rotation, 1/4096f);
+            bw.WriteVector3s(position, 1 / 100f);
+            bw.WriteVector3s(rotation, 1 / 4096f);
         }
 
         public override string ToString()

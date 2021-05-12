@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Numerics;
 using System.Text;
 using System.Windows.Forms;
-using System.Numerics;
 
 namespace CTRTools.Controls
 {
@@ -172,7 +172,7 @@ namespace CTRTools.Controls
                 foreach (QuadBlock qb in scn.quads)
                 {
                     qb.mosaicStruct = 0;
-                    qb.ptrTexMid = new UIntPtr[] { UIntPtr.Zero, UIntPtr.Zero, UIntPtr.Zero, UIntPtr.Zero};
+                    qb.ptrTexMid = new UIntPtr[] { UIntPtr.Zero, UIntPtr.Zero, UIntPtr.Zero, UIntPtr.Zero };
                 }
             }
         }

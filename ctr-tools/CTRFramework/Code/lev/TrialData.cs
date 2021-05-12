@@ -38,7 +38,7 @@ namespace CTRFramework
                 do
                 {
                     Vertex v = new Vertex();
-                    v.coord = br.ReadVector3sPadded(1/100f);
+                    v.coord = br.ReadVector3sPadded(1 / 100f);
 
                     br.Seek(2);
 

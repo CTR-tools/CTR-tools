@@ -593,7 +593,7 @@ newmenu.Children.Add(btn);
                             (float)(ph.Pose.Rotation.Z * Math.PI * 2f)
                         ),
                         new Vector3(ph.Scale.Y, ph.Scale.X, ph.Scale.Z)
-                        )) ;
+                        ));
                 }
 
                 foreach (var n in s.restartPts)
