@@ -19,16 +19,16 @@ namespace CTRFramework
         [Browsable(true), DisplayName("Model name"), Description(""), Category("CTR Model")]
         public string Name
         {
-            get { return name; }
-            set { name = value; }
+            get => name;
+            set => name = value;
         }
 
         private CTREvent gameEvent = CTREvent.Nothing;
         [Browsable(true), DisplayName("CTR event"), Description(""), Category("CTR Model")]
         public CTREvent GameEvent
         {
-            get { return gameEvent; }
-            set { gameEvent = value; }
+            get => gameEvent;
+            set => gameEvent = value;
         }
 
         //public short numEntries;

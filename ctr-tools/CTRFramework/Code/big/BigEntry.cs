@@ -11,12 +11,12 @@ namespace CTRFramework.Big
         public int Offset;
         public int Size
         {
-            get { return Data != null ? Data.Length : 0; }
+            get => Data != null ? Data.Length : 0;
         }
 
         public int SizePadded
         {
-            get { return (Size + 2047) >> 11 << 11; }
+            get => (Size + 2047) >> 11 << 11;
         }
 
         public byte[] Data;

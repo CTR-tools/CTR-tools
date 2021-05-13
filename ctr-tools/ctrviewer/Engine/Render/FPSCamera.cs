@@ -11,7 +11,7 @@ namespace ctrviewer.Engine.Render
 
         public float upDownRot
         {
-            get { return _upDownRot; }
+            get => _upDownRot;
             set
             {
                 if ((value < MathHelper.Pi / 2) && (value > -MathHelper.Pi / 2))

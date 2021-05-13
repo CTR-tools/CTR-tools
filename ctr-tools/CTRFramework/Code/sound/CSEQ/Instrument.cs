@@ -16,7 +16,7 @@ namespace CTRFramework.Sound.CSeq
         public int frequency
         {
             //cents needed?
-            get { return (int)Math.Round(basepitch * 44100.0f / 4096.0f); }
+            get => (int)Math.Round(basepitch * 44100.0f / 4096.0f);
         }
 
         public short sampleID;

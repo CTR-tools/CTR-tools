@@ -58,7 +58,7 @@ namespace CTRFramework
 
         public bool isTextured
         {
-            get { return ptrTex == ptrClut; }
+            get => ptrTex == ptrClut;
         }
 
         public CtrMesh()

@@ -11,36 +11,36 @@ namespace CTRFramework
         [CategoryAttribute("General"), DescriptionAttribute("Name of the instance.")]
         public string Name
         {
-            get { return name; }
-            set { name = value; }
+            get => name;
+            set => name = value;
         }
 
         [CategoryAttribute("General"), DescriptionAttribute("Pointer to model.")]
         public UIntPtr ModelOffset
         {
-            get { return ptrModel; }
-            set { ptrModel = value; }
+            get => ptrModel;
+            set => ptrModel = value;
         }
 
         [CategoryAttribute("Spacing"), DescriptionAttribute("Scale of the instance."), TypeConverter(typeof(ExpandableObjectConverter))]
         public Vector3 Scale
         {
-            get { return scale; }
-            set { scale = value; }
+            get => scale;
+            set => scale = value; 
         }
 
         [CategoryAttribute("Spacing"), DescriptionAttribute("Pose of the instance."), TypeConverter(typeof(ExpandableObjectConverter))]
         public Pose Pose
         {
-            get { return pose; }
-            set { pose = value; }
+            get => pose;
+            set => pose = value;
         }
 
         [CategoryAttribute("Settings"), DescriptionAttribute("Assigned event.")]
         public CTREvent Event
         {
-            get { return (CTREvent)evt; }
-            set { evt = (int)value; }
+            get => (CTREvent)evt;
+            set => evt = (int)value;
         }
 
         private string name;

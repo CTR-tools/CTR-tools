@@ -75,7 +75,7 @@ namespace ctrviewer.Engine
 
         public Rectangle Region
         {
-            get { return new Rectangle(Position, Size); }
+            get => new Rectangle(Position, Size);
         }
 
         public event EventHandler<EventArgs> OnClick = delegate { };

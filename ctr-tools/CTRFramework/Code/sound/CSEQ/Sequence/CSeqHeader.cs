@@ -8,7 +8,7 @@ namespace CTRFramework.Sound.CSeq
         public int trackNum;
         public int BPM;
         public int TPQN;
-        public int MPQN { get { return (int)(60000000.0f / (float)BPM); } }
+        public int MPQN => (int)(60000000.0f / (float)BPM);
         //public float tickDuration { get { return 60.0f / BPM / TPQN * 1000.0f; } }
 
         public bool Read(BinaryReaderEx br)

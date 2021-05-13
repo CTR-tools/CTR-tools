@@ -17,12 +17,12 @@ namespace ctrviewer.Engine.Render
 
         public int numVerts
         {
-            get { return verts.Count; }
+            get => verts.Count;
         }
 
         public int numQuads
         {
-            get { return indices.Length / 3; }
+            get => indices.Length / 3;
         }
 
         public void SetColor(Color c)
@@ -155,5 +155,4 @@ namespace ctrviewer.Engine.Render
             }
         }
     }
-
 }

@@ -9,22 +9,22 @@ namespace CTRFramework.Sound
         [CategoryAttribute("Meta info"), DescriptionAttribute("Instrument title.")]
         public string Title
         {
-            get { return title; }
-            set { title = value; }
+            get => title;
+            set => title = value;
         }
 
         [CategoryAttribute("Meta info"), DescriptionAttribute("MIDI instrument number.")]
         public byte MIDI
         {
-            get { return midi; }
-            set { midi = value; }
+            get => midi;
+            set => midi = value;
         }
 
         [CategoryAttribute("Meta info"), DescriptionAttribute("Pitch shift.")]
         public string PitchShift
         {
-            get { return pitchshift; }
-            set { pitchshift = value; }
+            get => pitchshift;
+            set => pitchshift = value;
         }
 
 
@@ -38,22 +38,22 @@ namespace CTRFramework.Sound
         [CategoryAttribute("General"), DescriptionAttribute("Sample volume.")]
         public byte Volume
         {
-            get { return volume; }
-            set { volume = value; }
+            get => volume;
+            set => volume = value;
         }
 
         [CategoryAttribute("General"), DescriptionAttribute("Sample pitch.")]
         public ushort Pitch
         {
-            get { return pitch; }
-            set { pitch = value; }
+            get => pitch;
+            set => pitch = value;
         }
 
         [CategoryAttribute("General"), DescriptionAttribute("Sample ID.")]
         public ushort SampleID
         {
-            get { return sampleID; }
-            set { sampleID = value; }
+            get => sampleID;
+            set => sampleID = value;
         }
 
 
@@ -66,7 +66,7 @@ namespace CTRFramework.Sound
         public int Frequency
         {
             //cents needed?
-            get { return (int)Math.Round(pitch / 4096.0f * 44100.0f); }
+            get => (int)Math.Round(pitch / 4096.0f * 44100.0f);
         }
 
         public SampleDef()

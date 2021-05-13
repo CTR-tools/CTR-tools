@@ -9,15 +9,15 @@ namespace CTRFramework.Shared
         [CategoryAttribute("Values"), DescriptionAttribute("Position vector.")]
         public Vector3 Position
         {
-            get { return position; }
-            set { position = value; }
+            get => position;
+            set => position = value;
         }
 
         [CategoryAttribute("Values"), DescriptionAttribute("Rotation vector.")]
         public Vector3 Rotation
         {
-            get { return rotation; }
-            set { rotation = value; }
+            get => rotation;
+            set => rotation = value;
         }
         #endregion
 

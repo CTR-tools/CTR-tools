@@ -9,22 +9,22 @@ namespace CTRFramework.Sound
         [CategoryAttribute("General"), DescriptionAttribute("Unknown FF80.")]
         public short UnknownFF80
         {
-            get { return unknownFF80; }
-            set { unknownFF80 = value; }
+            get => unknownFF80;
+            set => unknownFF80 = value;
         }
 
         [CategoryAttribute("General"), DescriptionAttribute("Unknown FF80.")]
         public byte Reverb
         {
-            get { return reverb; }
-            set { reverb = value; }
+            get => reverb;
+            set => reverb = value;
         }
 
         [CategoryAttribute("General"), DescriptionAttribute("Unknown FF80.")]
         public byte Reverb2
         {
-            get { return reverb2; }
-            set { reverb2 = value; }
+            get => reverb2;
+            set => reverb2 = value;
         }
 
         private byte magic1;

@@ -8,15 +8,15 @@ namespace CTRFramework.Shared
         [CategoryAttribute("Values"), DescriptionAttribute("Mininum.")]
         public Vector3s Min
         {
-            get { return min; }
-            set { Min = value; }
+            get => min;
+            set => Min = value; 
         }
 
         [CategoryAttribute("Values"), DescriptionAttribute("Maximum.")]
         public Vector3s Max
         {
-            get { return max; }
-            set { Max = value; }
+            get => max;
+            set => Max = value;
         }
 
 

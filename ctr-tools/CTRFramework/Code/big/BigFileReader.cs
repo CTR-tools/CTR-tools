@@ -14,7 +14,7 @@ namespace CTRFramework.Big
         private int totalFiles = 0;
         public int TotalFiles
         {
-            get { return totalFiles; }
+            get => totalFiles;
         }
 
         public int FileSize
@@ -39,7 +39,7 @@ namespace CTRFramework.Big
 
         private int fileDefPtr
         {
-            get { return 8 + FileCursor * 8; }
+            get => 8 + FileCursor * 8;
         }
 
         public BigFileReader(Stream stream) : base(stream)

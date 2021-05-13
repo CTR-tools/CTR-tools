@@ -57,12 +57,12 @@ namespace ctrviewer.Engine
 
         public MenuItem SelectedItem
         {
-            get { return items[selection]; }
+            get => items[selection];
         }
 
         public int Selection
         {
-            get { return selection; }
+            get => selection;
             set
             {
                 selection = value;
