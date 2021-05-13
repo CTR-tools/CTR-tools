@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net5.0-windows</TargetFrameworks>
     <PublishReadyToRun>false</PublishReadyToRun>
-    <TieredCompilation>false</TieredCompilation>
+    <TieredCompilation>true</TieredCompilation>
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>x64;x86</Platforms>
   </PropertyGroup>
@@ -15,13 +15,13 @@
     <SignAssembly>false</SignAssembly>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net5.0-windows|x64'">
     <ErrorReport>prompt</ErrorReport>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp3.1|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net5.0-windows|x64'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>

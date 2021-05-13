@@ -783,8 +783,8 @@ newmenu.Children.Add(btn);
                     settings.ShowConsole = !settings.ShowConsole;
                 }
 
-                if (Keyboard.GetState().IsKeyDown(Keys.OemMinus)) settings.FieldOfView--;
-                if (Keyboard.GetState().IsKeyDown(Keys.OemPlus)) settings.FieldOfView++;
+                if (newkb.IsKeyDown(Keys.OemMinus)) settings.FieldOfView--;
+                if (newkb.IsKeyDown(Keys.OemPlus)) settings.FieldOfView++;
 
                 if ((newstate.Buttons.Start == ButtonState.Pressed && oldstate.Buttons.Start != newstate.Buttons.Start) ||
                     (newkb.IsKeyDown(Keys.Escape) && newkb.IsKeyDown(Keys.Escape) != oldkb.IsKeyDown(Keys.Escape)))
@@ -1338,6 +1338,5 @@ newmenu.Children.Add(btn);
 
             sky = null;
         }
-
     }
 }
