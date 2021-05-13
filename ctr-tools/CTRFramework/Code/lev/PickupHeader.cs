@@ -26,7 +26,7 @@ namespace CTRFramework
         public Vector3 Scale
         {
             get => scale;
-            set => scale = value; 
+            set => scale = value;
         }
 
         [CategoryAttribute("Spacing"), DescriptionAttribute("Pose of the instance."), TypeConverter(typeof(ExpandableObjectConverter))]

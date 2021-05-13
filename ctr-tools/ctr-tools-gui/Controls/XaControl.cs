@@ -1,9 +1,8 @@
-﻿using CTRFramework;
-using CTRFramework.Sound;
+﻿using CTRFramework.Sound;
+using NAudio.Wave;
 using System;
 using System.IO;
 using System.Windows.Forms;
-using NAudio.Wave;
 
 namespace CTRTools.Controls
 {

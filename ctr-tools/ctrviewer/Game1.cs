@@ -887,17 +887,17 @@ newmenu.Children.Add(btn);
                     foreach (MGLevel mg in MeshHigh)
                         mg.Update(gameTime);
 
+                    foreach (InstancedModel im in instanced)
+                        im.Update(gameTime);
+
+                    foreach (InstancedModel im in paths)
+                        im.Update(gameTime);
+
                     if (ControlsEnabled)
                     {
                         UpdateCameras(gameTime);
                     }
                 }
-
-                foreach (InstancedModel im in instanced)
-                    im.Update(gameTime);
-
-                foreach (InstancedModel im in paths)
-                    im.Update(gameTime);
 
                 oldstate = newstate;
                 oldkb = newkb;

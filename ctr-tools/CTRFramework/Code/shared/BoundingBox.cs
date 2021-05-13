@@ -9,7 +9,7 @@ namespace CTRFramework.Shared
         public Vector3s Min
         {
             get => min;
-            set => Min = value; 
+            set => Min = value;
         }
 
         [CategoryAttribute("Values"), DescriptionAttribute("Maximum.")]
