@@ -8,6 +8,8 @@ namespace CTRFramework.Sound
         public byte FileIndex;
         public short Length;
 
+        public string Name = "";
+
         public XaInfoEntry()
         {
         }
@@ -44,9 +46,14 @@ namespace CTRFramework.Sound
             bw.Write(Length);
         }
 
+        public string GetName()
+        {
+            return $"S{FileIndex.ToString("00")}.XA[{Index}].wav";
+        }
+
         public override string ToString()
         {
-            return $"Index: {Index}, FileIndex: {FileIndex}, Length: {Length}";
+            return $"{(Name == "" ? GetName() : Name)}\t{GetName()}\t[{FileIndex}, {Index}], Len: {Length}";
         }
     }
 }

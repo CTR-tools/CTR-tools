@@ -93,11 +93,13 @@ namespace CTRFramework.Shared
 
             Dictionary<int, string> names = new Dictionary<int, string>();
 
-            foreach (string line in lines)
+            foreach (string l in lines)
             {
-                if (line.Trim() != "" && !line.Contains("#"))
+                string line = l.Split('#')[0];
+
+                if (line.Trim() != "")
                 {
-                    string[] bb = line.Replace(" ", "").Split('=');
+                    string[] bb = line.Trim().Replace(" ", "").Split('=');
 
                     int x = -1;
                     Int32.TryParse(bb[0], out x);

@@ -48,6 +48,9 @@ namespace CTRTools
                     case ".big":
                         tabControl1.SelectedTab = tabBig;
                         break;
+                    case ".xnf":
+                        tabControl1.SelectedTab = tabXa;
+                        break;
                     //case ".hwl":
                     //   tabControl1.SelectedTab = tabHowl;
                     //   break;

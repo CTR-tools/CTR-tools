@@ -196,6 +196,7 @@
     <EmbeddedResource Include="Data\versions.xml" />
     <EmbeddedResource Include="Data\banknames.txt" />
     <EmbeddedResource Include="Data\big_usa_beta_14th.txt" />
+    <EmbeddedResource Include="Data\xa_usa_release.txt" />
     <Content Include="Properties\BuildDate.txt" />
   </ItemGroup>
   <ItemGroup>

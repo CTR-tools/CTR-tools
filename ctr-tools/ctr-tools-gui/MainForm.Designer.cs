@@ -48,6 +48,8 @@
             this.cseqControl1 = new CTRTools.Controls.CseqControl();
             this.tabLang = new System.Windows.Forms.TabPage();
             this.langControl1 = new CTRTools.Controls.LangControl();
+            this.tabXa = new System.Windows.Forms.TabPage();
+            this.xaControl1 = new CTRTools.Controls.XaControl();
             this.tabControl1.SuspendLayout();
             this.tabAbout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appLogo)).BeginInit();
@@ -59,6 +61,7 @@
             this.tabLev.SuspendLayout();
             this.tabCseq.SuspendLayout();
             this.tabLang.SuspendLayout();
+            this.tabXa.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -73,6 +76,7 @@
             this.tabControl1.Controls.Add(this.tabLev);
             this.tabControl1.Controls.Add(this.tabCseq);
             this.tabControl1.Controls.Add(this.tabLang);
+            this.tabControl1.Controls.Add(this.tabXa);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tabControl1.Location = new System.Drawing.Point(7, 7);
             this.tabControl1.Name = "tabControl1";
@@ -283,6 +287,25 @@
             this.langControl1.Size = new System.Drawing.Size(603, 403);
             this.langControl1.TabIndex = 0;
             // 
+            // tabXa
+            // 
+            this.tabXa.Controls.Add(this.xaControl1);
+            this.tabXa.Location = new System.Drawing.Point(4, 22);
+            this.tabXa.Name = "tabXa";
+            this.tabXa.Size = new System.Drawing.Size(603, 403);
+            this.tabXa.TabIndex = 13;
+            this.tabXa.Text = "XA audio";
+            this.tabXa.UseVisualStyleBackColor = true;
+            // 
+            // xaControl1
+            // 
+            this.xaControl1.AllowDrop = true;
+            this.xaControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.xaControl1.Location = new System.Drawing.Point(0, 0);
+            this.xaControl1.Name = "xaControl1";
+            this.xaControl1.Size = new System.Drawing.Size(603, 403);
+            this.xaControl1.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -306,6 +329,7 @@
             this.tabLev.ResumeLayout(false);
             this.tabCseq.ResumeLayout(false);
             this.tabLang.ResumeLayout(false);
+            this.tabXa.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -334,5 +358,7 @@
         private Controls.LevControl levControl1;
         private Controls.LangControl langControl1;
         private System.Windows.Forms.Label warning;
+        private System.Windows.Forms.TabPage tabXa;
+        private Controls.XaControl xaControl1;
     }
 }

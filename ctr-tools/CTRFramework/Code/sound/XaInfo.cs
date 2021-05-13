@@ -9,15 +9,19 @@ namespace CTRFramework.Sound
     public class XaInfo : IRead
     {
         public string magic = "XINF";
-        private int version = 0x66;
+        public int version = 0x66;
 
-        private int numGroups = 0;
-        private int numFilesTotal = 0;
+        public int numGroups = 0;
+        public int numFilesTotal = 0;
 
-        private int[] numFiles;
-        private int[] fileStartIndex;
-        private int[] numEntries;
-        private int[] entryStartIndex;
+        public int[] numFiles;
+        public int[] fileStartIndex;
+        public int[] numEntries;
+        public int[] entryStartIndex;
+
+        public string[] folders;
+        public string RootPath = ".\\";
+        public string Lang = "ENG";
 
         public List<XaInfoEntry> Entries = new List<XaInfoEntry>();
 
@@ -44,7 +48,19 @@ namespace CTRFramework.Sound
         {
             using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                return XaInfo.FromReader(br);
+                XaInfo xa = XaInfo.FromReader(br);
+                xa.RootPath = Path.GetDirectoryName(filename);
+                xa.Lang = Path.GetFileNameWithoutExtension(filename);
+
+                xa.folders = new string[]
+                {
+                "MUSIC",
+                $"{xa.Lang}\\EXTRA",
+                $"{xa.Lang}\\GAME"
+                };
+
+
+                return xa;
             }
         }
 
@@ -85,6 +101,19 @@ namespace CTRFramework.Sound
 
             for (int i = 0; i < numTotalEntries; i++)
                 Entries.Add(XaInfoEntry.FromReader(br));
+
+            if (Entries.Count == 414)
+            {
+                Dictionary<int, string> xanames = Meta.LoadNumberedList("xa_usa_release.txt");
+
+                for (int i = 0; i < Entries.Count; i++)
+                {
+                    if (xanames.ContainsKey(i))
+                    {
+                        Entries[i].Name = xanames[i];
+                    }
+                }
+            }
         }
 
         /// <summary>

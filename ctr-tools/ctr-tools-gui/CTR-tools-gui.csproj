@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CTRTools</RootNamespace>
     <AssemblyName>CTR-tools-gui</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -77,6 +77,12 @@
     <Compile Include="Controls\CseqControl.Designer.cs">
       <DependentUpon>CseqControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\XaControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\XaControl.Designer.cs">
+      <DependentUpon>XaControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CtrControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -139,6 +145,9 @@
     <EmbeddedResource Include="Controls\CseqControl.resx">
       <DependentUpon>CseqControl.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\XaControl.resx">
+      <DependentUpon>XaControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CtrControl.resx">
       <DependentUpon>CtrControl.cs</DependentUpon>
