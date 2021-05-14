@@ -748,7 +748,10 @@ newmenu.Children.Add(btn);
                     k.Update(gameTime);
 
                 if (newstate.Buttons.Start == ButtonState.Pressed && newstate.Buttons.Back == ButtonState.Pressed)
+                {
+                    settings.Save();
                     Exit();
+                }
 
                 if (settings.StereoPair)
                 {
@@ -827,8 +830,8 @@ newmenu.Children.Add(btn);
                             case "toggle":
                                 switch (menu.SelectedItem.Param)
                                 {
-                                    case "inst": settings.Models = !settings.Models; break;
-                                    case "paths": settings.BotsPath = !settings.BotsPath; break;
+                                    case "inst": settings.ShowModels = !settings.ShowModels; break;
+                                    case "paths": settings.ShowBotsPath = !settings.ShowBotsPath; break;
                                     case "lod": settings.UseLowLod = !settings.UseLowLod; break;
                                     case "antialias": settings.AntiAlias = !settings.AntiAlias; break;
                                     case "invis": HideInvisible = !HideInvisible; break;
@@ -843,7 +846,7 @@ newmenu.Children.Add(btn);
                                     case "window": settings.Windowed = !settings.Windowed; break;
                                     case "vcolor": settings.VertexLighting = !settings.VertexLighting; break;
                                     case "stereo": settings.StereoPair = !settings.StereoPair; break;
-                                    case "sky": settings.Sky = !settings.Sky; break;
+                                    case "sky": settings.ShowSky = !settings.ShowSky; break;
                                     case "vsync": settings.VerticalSync = !settings.VerticalSync; break;
                                     default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
                                 }
@@ -1020,7 +1023,7 @@ newmenu.Children.Add(btn);
                 //if (loading != null && gameLoaded)
                 //{
                 //if we have a sky and sky is enabled
-                if (sky != null && settings.Sky)
+                if (sky != null && settings.ShowSky)
                 {
                     effect.View = skycamera.ViewMatrix;
                     effect.Projection = skycamera.ProjectionMatrix;
@@ -1044,11 +1047,11 @@ newmenu.Children.Add(btn);
                 foreach (var v in external)
                     v.Draw(graphics, instanceEffect, null, cam);
 
-                if (settings.Models || settings.BotsPath)
+                if (settings.ShowModels || settings.ShowBotsPath)
                 {
                     Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
 
-                    if (settings.Models)
+                    if (settings.ShowModels)
                     {
                         foreach (var v in instanced)
                             v.Draw(graphics, instanceEffect, null, cam);
@@ -1058,7 +1061,7 @@ newmenu.Children.Add(btn);
                             k.Draw(graphics, instanceEffect, null, cam);
                     }
 
-                    if (settings.BotsPath)
+                    if (settings.ShowBotsPath)
                     {
                         foreach (var v in paths)
                             v.Draw(graphics, instanceEffect, null, cam);

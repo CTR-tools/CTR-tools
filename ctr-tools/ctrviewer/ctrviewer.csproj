@@ -57,9 +57,4 @@
   <ItemGroup>
     <ProjectReference Include="..\CTRFramework\CTRFramework.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="settings.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>

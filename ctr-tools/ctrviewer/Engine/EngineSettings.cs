@@ -2,10 +2,13 @@
 using System;
 using System.IO;
 using System.Xml;
+using System.Xml.Serialization;
+
 
 namespace ctrviewer.Engine
 {
-    class EngineSettings
+    [Serializable]
+    public class EngineSettings
     {
         public static string SettingsFile = "settings.xml";
 
@@ -16,9 +19,9 @@ namespace ctrviewer.Engine
         public bool VisData { get; set; } = false;
         public bool VisDataLeaves { get; set; } = false;
         public bool GenerateMips { get; set; } = true;
-        public bool Sky { get; set; } = true;
-        public bool BotsPath { get; set; } = false;
-        public bool Models { get; set; } = false;
+        public bool ShowSky { get; set; } = true;
+        public bool ShowBotsPath { get; set; } = false;
+        public bool ShowModels { get; set; } = false;
         public bool StereoPair { get; set; } = false;
         public int StereoPairSeparation { get; set; } = 20;
         public bool ShowCamPos { get; set; } = false;
@@ -121,53 +124,63 @@ namespace ctrviewer.Engine
 
         public delegate void DelegateNoArgs();
 
+        [XmlIgnore]
         public DelegateNoArgs onWindowedChanged = null;
+        [XmlIgnore]
         public DelegateNoArgs onVertexLightingChanged = null;
+        [XmlIgnore]
         public DelegateNoArgs onAntiAliasChanged = null;
+        [XmlIgnore]
         public DelegateNoArgs onVerticalSyncChanged = null;
+        [XmlIgnore]
         public DelegateNoArgs onFieldOfViewChanged = null;
 
         public EngineSettings()
         {
         }
 
-        public static EngineSettings Load()
+        public void Save(string filename = "")
         {
-            if (!File.Exists(SettingsFile))
-                return new EngineSettings();
+            if (filename == "")
+                filename = EngineSettings.SettingsFile;
 
-            XmlDocument xml = new XmlDocument();
-            xml.LoadXml(File.ReadAllText(SettingsFile));
+            using (StreamWriter sw = new StreamWriter(File.Create(filename)))
+            {
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add("", "");
 
-            XmlNode vid = xml.SelectNodes("/settings")[0];
+                XmlSerializer x = new XmlSerializer(this.GetType());
+                x.Serialize(sw, this, ns);
+                sw.Flush();
+                sw.Close();
+            }
+        }
+
+        public static EngineSettings Load(string filename = "")
+        {
+            if (filename == "")
+                filename = EngineSettings.SettingsFile;
 
             EngineSettings settings = new EngineSettings();
 
-            if (vid["AntiAlias"] != null) settings.AntiAlias = Boolean.Parse(vid["AntiAlias"].InnerText);
-            if (vid["AntiAliasLevel"] != null) settings.AntiAliasLevel = Byte.Parse(vid["AntiAliasLevel"].InnerText);
-            if (vid["Windowed"] != null) settings.Windowed = Boolean.Parse(vid["Windowed"].InnerText);
-            if (vid["TextureFiltering"] != null) settings.TextureFiltering = Boolean.Parse(vid["TextureFiltering"].InnerText);
-            if (vid["VerticalSync"] != null) settings.VerticalSync = Boolean.Parse(vid["VerticalSync"].InnerText);
-            if (vid["VertexLighting"] != null) settings.VertexLighting = Boolean.Parse(vid["VertexLighting"].InnerText);
-            if (vid["VisData"] != null) settings.VisData = Boolean.Parse(vid["VisData"].InnerText);
-            if (vid["GenerateMips"] != null) settings.GenerateMips = Boolean.Parse(vid["GenerateMips"].InnerText);
-            if (vid["Sky"] != null) settings.Sky = Boolean.Parse(vid["Sky"].InnerText);
-            if (vid["Models"] != null) settings.Models = Boolean.Parse(vid["Models"].InnerText);
-            if (vid["BotsPath"] != null) settings.BotsPath = Boolean.Parse(vid["BotsPath"].InnerText);
-            if (vid["StereoPair"] != null) settings.StereoPair = Boolean.Parse(vid["StereoPair"].InnerText);
-            if (vid["StereoPairSeparation"] != null) settings.StereoPairSeparation = Int32.Parse(vid["StereoPairSeparation"].InnerText);
-            if (vid["FieldOfView"] != null) settings.FieldOfView = Int32.Parse(vid["FieldOfView"].InnerText);
-            if (vid["ShowCamPos"] != null) settings.ShowCamPos = Boolean.Parse(vid["ShowCamPos"].InnerText);
-            if (vid["WindowScale"] != null) settings.WindowScale = Int32.Parse(vid["WindowScale"].InnerText);
-            if (vid["UseLowLod"] != null) settings.UseLowLod = Boolean.Parse(vid["UseLowLod"].InnerText);
-            if (vid["ShowConsole"] != null) settings.ShowConsole = Boolean.Parse(vid["ShowConsole"].InnerText);
+            if (!File.Exists(filename))
+                return settings;
+
+            using (StreamReader reader = new StreamReader(File.OpenRead(filename)))
+            {
+                try
+                {
+                    XmlSerializer x = new XmlSerializer(settings.GetType());
+                    settings = (EngineSettings)x.Deserialize(reader);
+                    reader.Close();
+                }
+                catch
+                {
+                    GameConsole.Write("Load settings failed.");
+                }
+            }
 
             return settings;
-        }
-
-        public static void Save(string path)
-        {
-            throw new NotImplementedException();
         }
     }
 }
