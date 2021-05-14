@@ -102,9 +102,14 @@ namespace CTRFramework.Sound
             for (int i = 0; i < numTotalEntries; i++)
                 Entries.Add(XaInfoEntry.FromReader(br));
 
-            if (Entries.Count == 414)
+            string list = "";
+
+            if (Entries.Count == 414) list = "xa_usa_release.txt";
+            if (Entries.Count == 427) list = "xa_usa_beta_sep.txt";
+
+            if (list != "")
             {
-                Dictionary<int, string> xanames = Meta.LoadNumberedList("xa_usa_release.txt");
+                Dictionary<int, string> xanames = Meta.LoadNumberedList(list);
 
                 for (int i = 0; i < Entries.Count; i++)
                 {

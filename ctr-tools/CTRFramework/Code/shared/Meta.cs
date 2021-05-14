@@ -110,7 +110,14 @@ namespace CTRFramework.Shared
                         continue;
                     }
 
-                    names.Add(x, bb[1]);
+                    if (!names.ContainsKey(x))
+                    {
+                        names.Add(x, bb[1]);
+                    }
+                    else
+                    {
+                        Helpers.Panic("Meta", PanicType.Error, $"duplicate entry {x}");
+                    }
                 }
             }
 
