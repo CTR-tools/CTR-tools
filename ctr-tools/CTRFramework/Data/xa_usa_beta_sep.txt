@@ -137,15 +137,15 @@
 
 106=intro01	#Start your engines...
 107=intro02	#Fasten your seatbelts...
+108=intro03	#Crash Team Racing
 
 # === unused Cortex GUI voice lines
 # not sure if all are cortex
 
-108=cxspk01	#Crash Team Racing
-109=cxspk02	#Press start to play
-110=cxspk03	#Select player
-111=cxspk04	#Select players
-112=cxspk05	#Choose a racetrack
+109=cxspk01	#Press start to play
+110=cxspk02	#Select player
+111=cxspk03	#Select players
+112=cxspk04	#Choose a racetrack
 
 # =========== GAME section ==============
 # names in this section are based XA leftovers found in game data

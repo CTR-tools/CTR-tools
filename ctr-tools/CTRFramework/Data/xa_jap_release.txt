@@ -1,5 +1,6 @@
 # Crash Team Racing JPN.XNF master file list
 # 364 entries, Matches NTSC-J
+# compared to PAL this version adds a line for aku and uka and 4 lines to the end
 
 # =========== MUSIC section ==============
 # names in this section are made up
@@ -121,8 +122,7 @@
 
 93=intro01	#Sony Computah Entertaymentoh, yeeeeeeeey
 94=intro02	#Naughty Dog, jaja!
-
-95=cxspk01	#Kurashu Bandicu Reysingu
+95=intro03	#Kurashu Bandicu Reysingu
 
 # =========== GAME section ==============
 # names in this section are based XA leftovers found in game data
@@ -411,9 +411,9 @@
 358=pspbt01	#Pinstripe pre boss battle
 359=pspbt02	#Pinstripe post boss battle
 
-# i assume these are unused UI lines, moved to the end
+# i assume these are unused UI lines, moved to the end? or some extra jap lines?
 
-360=cxspk02
-361=cxspk03
-362=cxspk04
-363=cxspk05
+360=cxspk01
+361=cxspk02
+362=cxspk03
+363=cxspk04
