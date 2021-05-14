@@ -748,10 +748,7 @@ newmenu.Children.Add(btn);
                     k.Update(gameTime);
 
                 if (newstate.Buttons.Start == ButtonState.Pressed && newstate.Buttons.Back == ButtonState.Pressed)
-                {
-                    settings.Save();
                     Exit();
-                }
 
                 if (settings.StereoPair)
                 {
@@ -1332,6 +1329,12 @@ newmenu.Children.Add(btn);
             bbox2.Clear();
 
             sky = null;
+        }
+
+        protected override void OnExiting(Object sender, EventArgs args)
+        {
+            settings.Save();
+            base.OnExiting(sender, args);
         }
     }
 }
