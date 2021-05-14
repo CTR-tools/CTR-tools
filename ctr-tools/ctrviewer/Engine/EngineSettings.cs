@@ -14,6 +14,8 @@ namespace ctrviewer.Engine
 
         public Point Resolution = Point.Zero;
 
+        public string BigFileLocation = ".\\bigfile.big";
+
         public byte AntiAliasLevel { get; set; } = 4;
         public bool TextureFiltering { get; set; } = true;
         public bool VisData { get; set; } = false;

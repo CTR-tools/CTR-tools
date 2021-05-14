@@ -25,6 +25,8 @@ namespace ctrviewer
 
     public class Game1 : Game
     {
+        public static bool BigFileExists = false;
+
         public LevelType levelType = LevelType.P1;
 
         public MenuRootComponent newmenu = new MenuRootComponent();
@@ -300,6 +302,8 @@ newmenu.Children.Add(btn);
             //load fonts
             GameConsole.font = Content.Load<SpriteFont>("debug");
             font = Content.Load<SpriteFont>("File");
+
+            BigFileExists = FindBigFile();
 
             //loadmenu
             menu = new Menu(font);
@@ -1118,18 +1122,56 @@ newmenu.Children.Add(btn);
         BigFileReader big;
         Howl howl;
 
-        private void LoadLevelsFromBig(params int[] absId)
+        private bool FindBigFile()
         {
+            bool result = false;
+
             if (big == null)
             {
-                if (File.Exists("bigfile.big"))
+                if (File.Exists(settings.BigFileLocation))
                 {
-                    big = new BigFileReader(File.OpenRead("bigfile.big"));
+                    result = true;
                 }
-                else
+                else if (File.Exists(".\\bigfile.big"))
                 {
-                    return;
+                    settings.BigFileLocation = ".\\bigfile.big";
+                    result = true;
                 }
+                else //scan drives
+                {
+                    var drv = DriveInfo.GetDrives();
+
+                    GameConsole.Write("drives: " + drv.Length);
+
+                    result = false;
+
+                    foreach (DriveInfo dInfo in drv)
+                    {
+                        GameConsole.Write(dInfo.Name);
+                        string path = Path.Combine(dInfo.Name, "bigfile.big");
+                        if (File.Exists(path))
+                        {
+                            settings.BigFileLocation = path;
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (result == true && big == null)
+                big = new BigFileReader(File.OpenRead(settings.BigFileLocation));
+
+            return true;
+        }
+
+
+        private void LoadLevelsFromBig(params int[] absId)
+        {
+            if (big == null && !FindBigFile())
+            {
+                GameConsole.Write("Missing BIGFILE!");
+                return;
             }
 
             List<string> files = new List<string>();

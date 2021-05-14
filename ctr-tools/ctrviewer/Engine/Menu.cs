@@ -237,7 +237,7 @@ namespace ctrviewer.Engine
             List<MenuItem> main = new List<MenuItem>();
             main.Add(new MenuItem("resume".ToUpper(), "close", "", true));
             //main.Add(new MenuItem("reload level".ToUpper(), "load", "", true));
-            main.Add(new MenuItem("load level".ToUpper(), "link", "cupmenu", File.Exists("bigfile.big")));
+            main.Add(new MenuItem("load level".ToUpper(), "link", "cupmenu", Game1.BigFileExists)); // File.Exists("bigfile.big")));
             main.Add(new MenuItem("level options".ToUpper(), "link", "level", true));
             main.Add(new MenuItem("video options".ToUpper(), "link", "video", true));
             main.Add(new MenuItem("time of day".ToUpper(), "link", "tod", true));
