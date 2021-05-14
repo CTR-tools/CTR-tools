@@ -1,69 +1,98 @@
+# Crash Team Racing ENG.XNF master file list
+# 414 entries, Matches NTSC-U (SCUS_944.26)
+
 # =========== MUSIC section ==============
+# names in this section are made up
+
+00=racestart01
+01=racestart02
+02=racestart03
+03=racestart04
+
+04=racewon
+05=racelost
+06=finallap
+
+07=jingle01
+08=jingle02
+09=jingle03
+10=jingle04
+11=jingle05
+12=jingle06
 
 # =========== EXTRA section ==============
+# names in this section are based XA leftover found in game data
 
-13=akuspk01
-14=akuspk02
-15=akuspk03
-16=akuspk04
-17=akuspk05
-18=akuspk06
-19=akuspk07
-20=akuspk08
-21=akuspk09
-22=akuspk10
-23=akuspk11
-24=akuspk12
-25=akuspk13
-26=akuspk14
-27=akuspk15
-28=akuspk16
-29=akuspk17
-30=akuspk18
-31=akuspk19
-32=akuspk20
-33=akuspk21
-34=akuspk22
-35=akuspk23
-36=akuspk24
-37=akuspk25
-38=akuspk26
-39=akuspk27
-40=akuspk28
-41=akuspk29
-42=akuspk30
+# Aku Aku hints
+
+13=akuspk01	#welcome
+14=akuspk02	#vortex hint
+15=akuspk03	#trophy locked race hint
+16=akuspk04	#locked boss garage hint
+17=akuspk05	#oxide door missing 4 keys hint
+18=akuspk06	#1 boss key missing hint
+19=akuspk07	#load save hint
+20=akuspk08	#new area opened hint
+21=akuspk09	#no memory card warning
+22=akuspk10	#full memory card warning
+23=akuspk11	#no save to load warning
+24=akuspk12	#no controllers warning
+25=akuspk13	#you win a trophy
+26=akuspk14	#you've earned a key
+27=akuspk15	#hang time hint
+28=akuspk16	#powerslide hint
+29=akuspk17	#turbo boost hint
+30=akuspk18	#break slide hint
+31=akuspk19	#2 boss keys missing hint
+32=akuspk20	#you earned a relic
+33=akuspk21	#you've collected a token
+34=akuspk22	#you've won a gem
+35=akuspk23	#wumpa fruit hint
+36=akuspk24	#tnt hop hint
+37=akuspk25	#dots and starts map hint
+38=akuspk26	#crystal challenge hint
+39=akuspk27	#token race hint
+40=akuspk28	#gem locked hint
+41=akuspk29	#missing relics
+42=akuspk30	#relic race hint
 43=akuspk31	#Wrong way
-44=ukaspk01
-45=ukaspk02
-46=ukaspk03
-47=ukaspk04
-48=ukaspk05
-49=ukaspk06
-50=ukaspk07
-51=ukaspk08
-52=ukaspk09
-53=ukaspk10
-54=ukaspk11
-55=ukaspk12
-56=ukaspk13
-57=ukaspk14
-58=ukaspk15
-59=ukaspk16
-60=ukaspk17
-61=ukaspk18
-62=ukaspk19
-63=ukaspk20
-64=ukaspk21
-65=ukaspk22
-66=ukaspk23
-67=ukaspk24
-68=ukaspk25
-69=ukaspk26
-70=ukaspk27
-71=ukaspk28
-72=ukaspk29
-73=ukaspk30
+
+# Uka Uka hints
+
+44=ukaspk01	#welcome
+45=ukaspk02	#vortex hint
+46=ukaspk03	#trophy locked race hint
+47=ukaspk04	#locked boss garage hint
+48=ukaspk05	#oxide door missing 4 keys hint
+49=ukaspk06	#1 boss key missing hint
+50=ukaspk07	#load save hint
+51=ukaspk08	#new area opened hint
+52=ukaspk09	#no memory card warning
+53=ukaspk10	#full memory card warning
+54=ukaspk11	#no save to load warning
+55=ukaspk12	#no controllers warning
+56=ukaspk13	#you win a trophy
+57=ukaspk14	#you've earned a key
+58=ukaspk15	#hang time hint
+59=ukaspk16	#powerslide hint
+60=ukaspk17	#turbo boost hint
+61=ukaspk18	#break slide hint
+62=ukaspk19	#2 boss keys missing hint
+63=ukaspk20	#you earned a relic
+64=ukaspk21	#you've collected a token
+65=ukaspk22	#you've won a gem
+66=ukaspk23	#wumpa fruit hint
+67=ukaspk24	#tnt hop hint
+68=ukaspk25	#dots and starts map hint
+69=ukaspk26	#crystal challenge hint
+70=ukaspk27	#token race hint
+71=ukaspk28	#gem locked hint
+72=ukaspk29	#missing relics
+73=ukaspk30	#relic race hint
 74=ukaspk31	#Wrong way
+
+# n.tropy voicelines
+
 75=nyspk01
 76=nyspk02
 77=nyspk03
@@ -74,6 +103,9 @@
 82=nyspk08
 83=nyspk09
 84=nyspk10
+
+# oxide voicelines
+
 85=nospk01
 86=nospk02
 87=nospk03
@@ -83,7 +115,22 @@
 91=nospk07
 92=nospk08
 
+# not original names for these 2
+
+93=intro01	#Start your engines...
+94=intro02	#Fasten your seatbelts...
+
+# === unused Cortex GUI voice lines
+# not sure if all are cortex
+
+95=cxspk01	#Crash Team Racing
+96=cxspk02	#Press start to play
+97=cxspk03	#Select player
+98=cxspk04	#Select players
+99=cxspk05	#Choose a racetrack
+
 # =========== GAME section ==============
+# names in this section are based XA leftovers found in game data
 
 100=cryea1	#Crash Yay 1
 101=cryea2	#Crash Yay 2
@@ -104,6 +151,7 @@
 116=crfin1	#Crash Finished 1st
 117=crfin2	#Crash Finished 2nd
 118=crfin3	#Crash Finished 3rd
+
 119=cxyea1	#Cortex Yay 1
 120=cxyea2	#Cortex Yay 2
 121=cxoww1	#Cortex Ouch 1
@@ -123,6 +171,7 @@
 135=cxfin1	#Cortex Finished 1st
 136=cxfin2	#Cortex Finished 2nd
 137=cxfin3	#Cortex Finished 3rd
+
 138=tiyea1	#Tiny Yay 1
 139=tiyea2	#Tiny Yay 2
 140=tioww1	#Tiny Ouch 1
@@ -142,6 +191,7 @@
 154=tifin1	#Tiny Finished 1st
 155=tifin2	#Tiny Finished 2nd
 156=tifin3	#Tiny Finished 3rd
+
 157=ccyea1	#Coco Yay 1
 158=ccyea2	#Coco Yay 2
 159=ccoww1	#Coco Ouch 1
@@ -161,6 +211,7 @@
 173=ccfin1	#Coco Finished 1st
 174=ccfin2	#Coco Finished 2nd
 175=ccfin3	#Coco Finished 3rd
+
 176=ngyea1	#NGin Yay 1
 177=ngyea2	#NGin Yay 2
 178=ngoww1	#NGin Ouch 1
@@ -180,6 +231,7 @@
 192=ngfin1	#NGin Finished 1st
 193=ngfin2	#NGin Finished 2nd
 194=ngfin3	#NGin Finished 3rd
+
 195=diyea1	#Dingo Yay 1
 196=diyea2	#Dingo Yay 2
 197=dioww1	#Dingo Ouch 1
@@ -199,6 +251,7 @@
 211=difin1	#Dingo Finished 1st
 212=difin2	#Dingo Finished 2nd
 213=difin3	#Dingo Finished 3rd
+
 214=poyea1	#Polar Yay 1
 215=poyea2	#Polar Yay 2
 216=pooww1	#Polar Ouch 1
@@ -218,6 +271,7 @@
 230=pofin1	#Polar Finished 1st
 231=pofin2	#Polar Finished 2nd
 232=pofin3	#Polar Finished 3rd
+
 233=pryea1	#Pura Yay 1
 234=pryea2	#Pura Yay 2
 235=proww1	#Pura Ouch 1
@@ -237,6 +291,7 @@
 249=prfin1	#Pura Finished 1st
 250=prfin2	#Pura Finished 2nd
 251=prfin3	#Pura Finished 3rd
+
 252=psyea1	#Pinstripe Yay 1
 253=psyea2	#Pinstripe Yay 2
 254=psoww1	#Pinstripe Ouch 1
@@ -256,6 +311,7 @@
 268=psfin1	#Pinstripe Finished 1st
 269=psfin2	#Pinstripe Finished 2nd
 270=psfin3	#Pinstripe Finished 3rd
+
 271=ppyea1	#Papu Yay 1
 272=ppyea2	#Papu Yay 2
 273=ppoww1	#Papu Ouch 1
@@ -275,6 +331,7 @@
 287=ppfin1	#Papu Finished 1st
 288=ppfin2	#Papu Finished 2nd
 289=ppfin3	#Papu Finished 3rd
+
 290=royea1	#Roo Yay 1
 291=royea2	#Roo Yay 2
 292=rooww1	#Roo Ouch 1
@@ -294,6 +351,7 @@
 306=rofin1	#Roo Finished 1st
 307=rofin2	#Roo Finished 2nd
 308=rofin3	#Roo Finished 3rd
+
 309=joyea1	#Joe Yay 1
 310=joyea2	#Joe Yay 2
 311=jooww1	#Joe Ouch 1
@@ -313,6 +371,7 @@
 325=jofin1	#Joe Finished 1st
 326=jofin2	#Joe Finished 2nd
 327=jofin3	#Joe Finished 3rd
+
 328=nyyea1	#Tropy Yay 1
 329=nyyea2	#Tropy Yay 2
 330=nyoww1	#Tropy Ouch 1
@@ -332,6 +391,7 @@
 344=nyfin1	#Tropy Finished 1st
 345=nyfin2	#Tropy Finished 2nd
 346=nyfin3	#Tropy Finished 3rd
+
 347=pnyea1	#Penta Yay 1
 348=pnyea2	#Penta Yay 2
 349=pnoww1	#Penta Ouch 1
@@ -351,6 +411,7 @@
 363=pnfin1	#Penta Finished 1st
 364=pnfin2	#Penta Finished 2nd
 365=pnfin3	#Penta Finished 3rd
+
 366=fcyea1	#Fake Crash Yay 1
 367=fcyea2	#Fake Crash Yay 2
 368=fcoww1	#Fake Crash Ouch 1
@@ -370,6 +431,7 @@
 382=fcfin1	#Fake Crash Finished 1st
 383=fcfin2	#Fake Crash Finished 2nd
 384=fcfin3	#Fake Crash Finished 3rd
+
 385=noyea1	#Oxide Yay 1
 386=noyea2	#Oxide Yay 2
 387=nooww1	#Oxide Ouch 1
@@ -389,3 +451,17 @@
 401=nofin1	#Oxide Finished 1st
 402=nofin2	#Oxide Finished 2nd
 403=nofin3	#Oxide Finished 3rd
+
+# boss speech
+# we only know jopbt01 original name, rest is made up
+
+404=ropbt01	#Roo pre boss battle
+405=ropbt02	#Roo post boss battle
+406=ropbt01_spk	#Roo pre boss battle (unused voiced)
+407=ropbt02_spk	#Roo post boss battle (unused voiced)
+408=pppbt01	#Papu pre boss battle
+409=pppbt02	#Papu post boss battle
+410=jopbt01	#Joe pre boss battle
+411=jopbt02	#Joe post boss battle
+412=pspbt01	#Pinstripe pre boss battle
+413=pspbt02	#Pinstripe post boss battle
