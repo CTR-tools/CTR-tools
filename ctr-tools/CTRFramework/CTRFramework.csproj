@@ -199,6 +199,7 @@
     <EmbeddedResource Include="Data\big_usa_beta_14th.txt" />
     <EmbeddedResource Include="Data\xa_usa_release.txt" />
     <EmbeddedResource Include="Data\xa_usa_beta_sep.txt" />
+    <EmbeddedResource Include="Data\xa_jap_release.txt" />
     <Content Include="Properties\BuildDate.txt" />
   </ItemGroup>
   <ItemGroup>
