@@ -9,7 +9,7 @@ namespace ctrviewer.Engine
     {
         public static string SettingsFile = "settings.xml";
 
-        public Vector2 Resolution = Vector2.Zero;
+        public Point Resolution = Point.Zero;
 
         public byte AntiAliasLevel { get; set; } = 4;
         public bool TextureFiltering { get; set; } = true;

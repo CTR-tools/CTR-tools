@@ -7,7 +7,7 @@ Crash Team Racing (PS1) scene viewer powered by CTRFramework and MonoGame.
 
 ## Texture replacement
 Viewer supports texture replacements.
-It checks "\levels\newtex" folder for existing PNG files before loading the texture from ps1 vram.
+It checks "newtex" folder for existing PNG files before loading the texture from ps1 vram.
 If replacement texture is found, it will be used instead the original. It also supports mip map generation, which may take some time if you load many textures.
 
 - use model_reader command line tool to extract the data from lev/vram

@@ -66,6 +66,8 @@ namespace ctrviewer
         FirstPersonCamera leftCamera;
         FirstPersonCamera skycamera;
 
+        List<FirstPersonCamera> allCameras = new List<FirstPersonCamera>();
+
         //ctr scenes
         List<Scene> scn = new List<Scene>();
 
@@ -75,7 +77,7 @@ namespace ctrviewer
 
         //sky
         MGLevel sky;
-        Color backColor = Color.Blue;
+        Color backColor = Color.DarkBlue;
 
 
         public static PlayerIndex activeGamePad = PlayerIndex.One;
@@ -91,7 +93,7 @@ namespace ctrviewer
         {
             GameConsole.Write($"ctrviewer - {version}");
 
-            OBJ.FixCulture();
+            //OBJ.FixCulture();
 
             Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
@@ -211,10 +213,8 @@ namespace ctrviewer
 
         public void UpdateFOV()
         {
-            camera.ViewAngle = settings.FieldOfView;
-            skycamera.ViewAngle = settings.FieldOfView;
-            rightCamera.ViewAngle = settings.FieldOfView;
-            leftCamera.ViewAngle = settings.FieldOfView;
+            foreach (var camera in allCameras)
+                camera.ViewAngle = settings.FieldOfView;
         }
 
         protected override void Initialize()
@@ -232,6 +232,11 @@ namespace ctrviewer
             rightCamera = new FirstPersonCamera(this);
             leftCamera = new FirstPersonCamera(this);
             skycamera = new FirstPersonCamera(this);
+
+            allCameras.Add(camera);
+            allCameras.Add(rightCamera);
+            allCameras.Add(leftCamera);
+            allCameras.Add(skycamera);
 
             UpdateEffects();
 
@@ -268,19 +273,14 @@ newmenu.Children.Add(btn);
             base.Initialize();
         }
 
+
+        public bool IsChristmas() => (DateTime.Now.Month == 12 && DateTime.Now.Day >= 20) || (DateTime.Now.Month == 1 && DateTime.Now.Day <= 7);
+
         void LoadGenericTextures()
         {
             textures.Add("test", Content.Load<Texture2D>("test"));
             textures.Add("flag", Content.Load<Texture2D>("flag"));
-
-            if ((DateTime.Now.Month == 12 && DateTime.Now.Day >= 20) || (DateTime.Now.Month == 1 && DateTime.Now.Day <= 7))
-            {
-                textures.Add("logo", Content.Load<Texture2D>("logo_xmas"));
-            }
-            else
-            {
-                textures.Add("logo", Content.Load<Texture2D>("logo"));
-            }
+            textures.Add("logo", Content.Load<Texture2D>(IsChristmas() ? "logo_xmas" : "logo"));
         }
 
 
@@ -289,18 +289,19 @@ newmenu.Children.Add(btn);
         protected override void LoadContent()
         {
             GameConsole.Write("LoadContent()");
-            GameConsole.font = Content.Load<SpriteFont>("debug");
 
             LoadGenericTextures();
-
             effect.Texture = textures["test"];
             //effect.TextureEnabled = true;
-
-            font = Content.Load<SpriteFont>("File");
 
             tint = new Texture2D(GraphicsDevice, 1, 1);
             tint.SetData(new Color[] { Color.Black });
 
+            //load fonts
+            GameConsole.font = Content.Load<SpriteFont>("debug");
+            font = Content.Load<SpriteFont>("File");
+
+            //loadmenu
             menu = new Menu(font);
             MenuRootComponent.Font = font;
 
@@ -318,7 +319,7 @@ newmenu.Children.Add(btn);
         }
 
 
-
+        //convert this abomination to a model import
         public void AddCone(string name, Color c)
         {
             GameConsole.Write($"AddCone({name}, {c.ToString()})");
@@ -375,7 +376,7 @@ newmenu.Children.Add(btn);
                 foreach (var t in s.ctrvram.textures)
                 {
                     //first look for texture replacement
-                    string path = $".\\levels\\newtex\\{t.Key}.png";
+                    string path = $".\\newtex\\{t.Key}.png";
 
                     bool alpha = false;
 
@@ -399,16 +400,8 @@ newmenu.Children.Add(btn);
         }
 
 
-        private void LoadLevel(string[] lev)
+        private void TestLoadKart()
         {
-            GameConsole.Write("LoadLevel()");
-
-            if (lev == null)
-                lev = new string[] { };
-
-            Dispose();
-            LoadGenericTextures(); //making sure we have default textures loaded. maybe should just allocate statically?
-
             if (File.Exists("karts.lev"))
             {
                 Scene karts = Scene.FromFile("karts.lev");
@@ -431,10 +424,14 @@ newmenu.Children.Add(btn);
 
                         instTris.Add(m.Name, t);
                     }
-
                 }
-            }
 
+                //karts.Add(new Kart("selectkart", MGConverter.ToVector3(scn[0].header.startGrid[0].Position), Vector3.Left, 0.5f));
+            }
+        }
+
+        public void TestLoadExtrenalModels()
+        {
             string mdlpath = Path.Combine(Meta.BasePath, Meta.ModelsPath);
 
             if (Directory.Exists(mdlpath))
@@ -465,36 +462,45 @@ newmenu.Children.Add(btn);
                     }
                 }
             }
+        }
+
+
+        private void LoadLevel(string[] lev)
+        {
+            GameConsole.Write("LoadLevel()");
+
+            if (lev == null)
+                lev = new string[] { };
 
             RenderEnabled = false;
 
             //wait for the end of frame, in case we are still rendering.
             while (IsDrawing) { };
 
+
+            Dispose();
+            LoadGenericTextures(); //making sure we have default textures loaded. maybe should just allocate statically?
+
+            TestLoadKart();
+            TestLoadExtrenalModels();
+
+
             Stopwatch sw = new Stopwatch();
             sw.Start();
-
-            GameConsole.Write("LoadLevel()");
-
-            string[] files = new string[] { };
 
             if (lev.Length == 0)
             {
                 if (Directory.Exists(@"levels\"))
-                    files = Directory.GetFiles(@"levels\", "*.lev");
-            }
-            else
-            {
-                files = lev;
+                    lev = Directory.GetFiles(@"levels\", "*.lev");
             }
 
-            if (files.Length == 0)
+            if (lev.Length == 0)
             {
                 GameConsole.Write("no files");
                 return;
             }
 
-            foreach (string s in files)
+            foreach (string s in lev)
             {
                 scn.Add(Scene.FromFile(s, false));
             }
@@ -569,10 +575,6 @@ newmenu.Children.Add(btn);
                 }
 
 
-            //karts.Add(new Kart("selectkart", MGConverter.ToVector3(scn[0].header.startGrid[0].Position), Vector3.Left, 0.5f));
-
-
-
             GameConsole.Write("extracted dynamics at: " + sw.Elapsed.TotalSeconds);
 
             foreach (Scene s in scn)
@@ -610,15 +612,8 @@ newmenu.Children.Add(btn);
                 }
             }
 
-
-
-            //foreach (Scene s in scn)
-            //    s.ExportTexturesAll(Path.Combine(Meta.BasePath, "levels\\tex"));
-
-
             GameConsole.Write("textures extracted at: " + sw.Elapsed.TotalSeconds);
 
-            //files = Directory.GetFiles("tex", "*.png");
 
             foreach (Scene s in scn)
             {
@@ -692,14 +687,10 @@ newmenu.Children.Add(btn);
                 float x = (float)(scn[0].header.startGrid[0].Rotation.X * Math.PI * 2f);
                 float y = (float)(scn[0].header.startGrid[0].Rotation.Y * Math.PI * 2f - Math.PI / 2f);
 
-                camera.SetRotation(y, x);
-                rightCamera.SetRotation(y, x);
-                leftCamera.SetRotation(y, x);
-                skycamera.SetRotation(y, x);
+                foreach (var camera in allCameras)
+                    camera.SetRotation(y, x);
 
                 UpdateCameras(new GameTime());
-
-                GameConsole.Write(scn[0].header.startGrid[0].Rotation.ToString());
             }
         }
 
@@ -1013,16 +1004,17 @@ newmenu.Children.Add(btn);
 
         private void UpdateProjectionMatrices()
         {
-            camera.UpdateProjectionMatrix();
-            rightCamera.UpdateProjectionMatrix();
-            leftCamera.UpdateProjectionMatrix();
-            skycamera.UpdateProjectionMatrix();
+            foreach (var camera in allCameras)
+                camera.UpdateProjectionMatrix();
         }
 
         //public static bool twoSided = false;
 
         private void DrawLevel(FirstPersonCamera cam = null)
         {
+            if (cam == null)
+                cam = camera;
+
             if (RenderEnabled)
             {
                 //if (loading != null && gameLoaded)
@@ -1043,14 +1035,14 @@ newmenu.Children.Add(btn);
                     GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
                 }
 
-                effect.View = (cam != null ? cam.ViewMatrix : camera.ViewMatrix);
-                effect.Projection = (cam != null ? cam.ProjectionMatrix : camera.ProjectionMatrix);
+                effect.View = cam.ViewMatrix;
+                effect.Projection = cam.ProjectionMatrix;
 
                 alphaTestEffect.View = effect.View;
                 alphaTestEffect.Projection = effect.Projection;
 
                 foreach (var v in external)
-                    v.Draw(graphics, instanceEffect, null, (cam != null ? cam : camera));
+                    v.Draw(graphics, instanceEffect, null, cam);
 
                 if (settings.Models || settings.BotsPath)
                 {
@@ -1059,17 +1051,17 @@ newmenu.Children.Add(btn);
                     if (settings.Models)
                     {
                         foreach (var v in instanced)
-                            v.Draw(graphics, instanceEffect, null, (cam != null ? cam : camera));
+                            v.Draw(graphics, instanceEffect, null, cam);
 
                         //render karts
                         foreach (Kart k in karts)
-                            k.Draw(graphics, instanceEffect, null, (cam != null ? cam : camera));
+                            k.Draw(graphics, instanceEffect, null, cam);
                     }
 
                     if (settings.BotsPath)
                     {
                         foreach (var v in paths)
-                            v.Draw(graphics, instanceEffect, null, (cam != null ? cam : camera));
+                            v.Draw(graphics, instanceEffect, null, cam);
                     }
 
                     Samplers.SetToDevice(graphics, EngineRasterizer.Default);
