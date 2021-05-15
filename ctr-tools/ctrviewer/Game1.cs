@@ -1162,7 +1162,7 @@ newmenu.Children.Add(btn);
             if (result == true && big == null)
                 big = new BigFileReader(File.OpenRead(settings.BigFileLocation));
 
-            return true;
+            return result;
         }
 
 
