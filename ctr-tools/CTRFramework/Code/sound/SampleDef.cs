@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Shared;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace CTRFramework.Sound
@@ -99,7 +100,7 @@ namespace CTRFramework.Sound
                 Helpers.Panic(this, PanicType.Assume, $"always0 != 0: {always0}");
         }
 
-        public virtual void Write(BinaryWriterEx bw)
+        public virtual void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write((byte)magic1);
             bw.Write((byte)volume);

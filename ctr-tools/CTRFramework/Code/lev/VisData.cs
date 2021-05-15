@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -115,7 +116,7 @@ namespace CTRFramework
             //Console.ReadKey();
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write((byte)flag);
             bw.Write(unk0);

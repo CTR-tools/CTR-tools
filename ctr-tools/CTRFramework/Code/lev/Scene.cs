@@ -520,7 +520,7 @@ namespace CTRFramework
                     switch (lod)
                     {
                         case Detail.Low:
-                            if (qb.ptrTexLow != 0)
+                            if (qb.ptrTexLow != UIntPtr.Zero)
                                 if (!tex.ContainsKey(qb.texlow.Tag()))
                                     tex.Add(qb.texlow.Tag(), qb.texlow);
                             break;

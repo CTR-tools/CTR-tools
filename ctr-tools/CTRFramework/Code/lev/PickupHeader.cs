@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Shared;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
 
@@ -87,12 +88,12 @@ namespace CTRFramework
             ModelName = br.ReadFixedStringPtr(ptrModel, 16);
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write(System.Text.Encoding.ASCII.GetBytes(name));
             for (int i = 0; i < 16 - name.Length; i++) bw.Write((byte)0);
 
-            bw.Write(ptrModel);
+            bw.Write(ptrModel, patchTable);
 
             bw.WriteVector3sPadded(scale, 1 / 4096f / 16f);
 

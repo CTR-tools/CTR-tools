@@ -146,7 +146,7 @@ namespace CTRFramework.Lang
         /// Writes all entries to stream using binary writer.
         /// </summary>
         /// <param name="filename">BinaryWriterEx object.</param>
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             List<string> dEntries = new List<string>();
 

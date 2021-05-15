@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Shared;
 using System;
+using System.Collections.Generic;
 
 namespace CTRFramework.Sound
 {
@@ -53,7 +54,7 @@ namespace CTRFramework.Sound
             sampleDataSize = br.ReadInt32();
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             if (new string(magic) != "HOWL")
             {

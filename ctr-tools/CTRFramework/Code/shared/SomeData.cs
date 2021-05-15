@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace CTRFramework.Shared
 {
@@ -20,7 +22,7 @@ namespace CTRFramework.Shared
                 data[i] = br.ReadInt16();
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write(s1);
             bw.Write(s2);

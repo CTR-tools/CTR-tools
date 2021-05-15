@@ -1,4 +1,6 @@
 ﻿using CTRFramework.Shared;
+using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace CTRFramework
@@ -41,7 +43,7 @@ namespace CTRFramework
             color_morph = new Vector4b(br);
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.WriteVector3sPadded(coord, 1 / 100f);
             color.Write(bw);

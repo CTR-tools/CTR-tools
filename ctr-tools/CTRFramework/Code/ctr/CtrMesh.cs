@@ -638,7 +638,7 @@ namespace CTRFramework
         /// </summary>
         /// <param name="bw">BinaryWriterEx object.</param>
         /// <param name="mode">Write mode (writes wither header or data).</param>
-        public void Write(BinaryWriterEx bw, CtrWriteMode mode)
+        public void Write(BinaryWriterEx bw, CtrWriteMode mode, List<UIntPtr> patchTable)
         {
             int pos = 0;
 
@@ -652,13 +652,13 @@ namespace CTRFramework
                     bw.Write(lodDistance);
                     bw.Write(billboard);
                     bw.WriteVector3sPadded(scale);
-                    bw.Write(ptrCmd);
-                    bw.Write(ptrVerts);
-                    bw.Write(ptrTex);
-                    bw.Write(ptrClut);
+                    bw.Write(ptrCmd, patchTable);
+                    bw.Write(ptrVerts, patchTable);
+                    bw.Write(ptrTex, patchTable);
+                    bw.Write(ptrClut, patchTable);
                     bw.Write(unk3);
                     bw.Write(numAnims);
-                    bw.Write(ptrAnims);
+                    bw.Write(ptrAnims, patchTable);
                     bw.Write(unk4);
 
                     break;
@@ -692,7 +692,7 @@ namespace CTRFramework
                             //CtrModel.ptrs.Add((int)bw.BaseStream.Position - 4);
 
                             UIntPtr ptr = (UIntPtr)(pos + 4 * tl.Count + i * 12);
-                            bw.Write(ptr);
+                            bw.Write(ptr, null);
                         }
 
                         foreach (var t in tl)

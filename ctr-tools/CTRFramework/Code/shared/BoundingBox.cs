@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace CTRFramework.Shared
@@ -67,7 +68,7 @@ namespace CTRFramework.Shared
             max = new Vector3s(br);
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             min.Write(bw);
             max.Write(bw);

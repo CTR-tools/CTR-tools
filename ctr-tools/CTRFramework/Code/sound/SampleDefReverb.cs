@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Shared;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace CTRFramework.Sound
@@ -60,7 +61,7 @@ namespace CTRFramework.Sound
                 throw new Exception(String.Format("SampleDef always0 = {0} ", always0));
         }
 
-        public override void Write(BinaryWriterEx bw)
+        public override void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write((byte)magic1);
             bw.Write((byte)Volume);

@@ -21,7 +21,7 @@ namespace CTRFramework
 
 
 
-    public class QuadBlock : IReadWrite
+    public class QuadBlock : IRead, IWrite
     {
         /*
          * 0--4--1
@@ -63,7 +63,7 @@ namespace CTRFramework
 
         //public byte[] midflags = new byte[2];
 
-        public uint ptrTexLow;                 //offset to LOD texture definition
+        public UIntPtr ptrTexLow;                 //offset to LOD texture definition
         public uint mosaicStruct;
 
         public uint mosaicPtr1;
@@ -146,11 +146,11 @@ namespace CTRFramework
 
             //midflags = br.ReadBytes(2);
 
-            ptrTexLow = br.ReadUInt32();
+            ptrTexLow = (UIntPtr)br.ReadUInt32();
 
-            if (Helpers.TestPointer(ptrTexLow) != 0)
+            if (Helpers.TestPointer(ptrTexLow.ToUInt32()) != 0)
             {
-                Console.WriteLine("ptrTexLow " + Helpers.TestPointer(ptrTexLow).ToString("x2"));
+                Console.WriteLine("ptrTexLow " + Helpers.TestPointer(ptrTexLow.ToUInt32()).ToString("x2"));
                 //Console.ReadKey();
             }
 
@@ -193,7 +193,8 @@ namespace CTRFramework
                 }
                 else
                 {
-                    if (ptrTexLow != 0) Console.WriteLine("!");
+                    if (ptrTexLow != UIntPtr.Zero)
+                        Helpers.Panic(this, PanicType.Assume, $"Got low tex without mid tex at {br.HexPos()}.");
                 }
             }
 
@@ -397,7 +398,7 @@ namespace CTRFramework
                             sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
                         }
 
-                        sb.AppendLine("\r\nusemtl " + (ptrTexLow != 0 ? texlow.Tag() : "default"));
+                        sb.AppendLine("\r\nusemtl " + (ptrTexLow != UIntPtr.Zero ? texlow.Tag() : "default"));
 
                         if (objSaveQuads)
                         {
@@ -579,7 +580,7 @@ namespace CTRFramework
         */
 
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             for (int i = 0; i < 9; i++)
                 bw.Write(ind[i]);
@@ -592,7 +593,7 @@ namespace CTRFramework
             bw.Write(drawOrderHigh);
 
             for (int i = 0; i < 4; i++)
-                bw.Write(ptrTexMid[i]);
+                bw.Write(ptrTexMid[i], patchTable);
 
             bb.Write(bw);
 
@@ -607,7 +608,7 @@ namespace CTRFramework
             bw.Write(midunk);
             //bw.Write(midflags);
 
-            bw.Write(ptrTexLow);
+            bw.Write(ptrTexLow, patchTable);
             bw.Write(mosaicStruct);
 
             foreach (Vector2 v in unk3)

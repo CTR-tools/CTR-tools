@@ -47,12 +47,10 @@ namespace CTRFramework.Shared
             //for (int i = 0; i < 4; i++) Write(x[3 - i]);
         }
 
-        public static List<UIntPtr> PointerMap = new List<UIntPtr>();
-
-        public void Write(UIntPtr value)
+        public void Write(UIntPtr value, List<UIntPtr> patchTable)
         {
-            if (value != UIntPtr.Zero)
-                PointerMap.Add((UIntPtr)BaseStream.Position);
+            if (value != UIntPtr.Zero && patchTable != null)
+                patchTable.Add((UIntPtr)BaseStream.Position);
 
             Write(value.ToUInt32());
         }

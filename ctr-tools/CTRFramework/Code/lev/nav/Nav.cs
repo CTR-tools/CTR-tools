@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -29,7 +30,7 @@ namespace CTRFramework
             }
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             foreach (uint p in ptrs)
                 bw.Write(p);

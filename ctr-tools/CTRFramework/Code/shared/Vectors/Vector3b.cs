@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace CTRFramework.Shared
 {
-    public class Vector3b : IReadWrite, IEquatable<Vector3b>
+    public class Vector3b : IRead, IEquatable<Vector3b>
     {
         public byte X = 0;
         public byte Y = 0;

@@ -1,4 +1,6 @@
 ﻿using CTRFramework.Shared;
+using System;
+using System.Collections.Generic;
 
 namespace CTRFramework
 {
@@ -17,6 +19,6 @@ namespace CTRFramework
     {
         /// <summary>Writes data to BinaryWriter.</summary>
         /// <param name="bw">BinaryWriterEx instance to write data to.</param>
-        void Write(BinaryWriterEx bw);
+        void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null);
     }
 }

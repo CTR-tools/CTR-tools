@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Numerics;
 
 namespace CTRFramework.Shared
@@ -62,7 +64,7 @@ namespace CTRFramework.Shared
             rotation = br.ReadVector3s(1 / 4096f);
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.WriteVector3s(position, 1 / 100f);
             bw.WriteVector3s(rotation, 1 / 4096f);

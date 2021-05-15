@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace CTRFramework.Shared
 {
-    public class Vector3f : IReadWrite, IEquatable<Vector3f>
+    public class Vector3f : IRead, IEquatable<Vector3f>
     {
         #region ComponentModel
         [CategoryAttribute("Values"), DescriptionAttribute("X axis.")]

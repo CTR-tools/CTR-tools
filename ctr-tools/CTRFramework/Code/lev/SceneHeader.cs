@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Shared;
 using System;
+using System.Collections.Generic;
 
 namespace CTRFramework
 {
@@ -209,32 +210,32 @@ namespace CTRFramework
         public DateTime compilationEnds;
 
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             long dataStart = bw.BaseStream.Position;
 
-            bw.Write(ptrMeshInfo);
-            bw.Write(ptrSkybox);
-            bw.Write(ptrTexArray);
+            bw.Write(ptrMeshInfo, patchTable);
+            bw.Write(ptrSkybox, patchTable);
+            bw.Write(ptrTexArray, patchTable);
 
             bw.Write(numInstances);
-            bw.Write(ptrInstances);
+            bw.Write(ptrInstances, patchTable);
             bw.Write(numModels);
-            bw.Write(ptrModelsPtr);
+            bw.Write(ptrModelsPtr, patchTable);
 
             bw.Write(unkPtr1);
             bw.Write(unkPtr2);
-            bw.Write(ptrInstancesPtr);
+            bw.Write(ptrInstancesPtr, patchTable);
             bw.Write(unkPtr3);
 
             bw.Write(null1);
             bw.Write(null2);
 
             bw.Write(numWater);
-            bw.Write(ptrWater);
-            bw.Write(ptrIcons);
-            bw.Write(ptrIconsArray);
-            bw.Write(ptrRestartMain);
+            bw.Write(ptrWater, patchTable);
+            bw.Write(ptrIcons, patchTable);
+            bw.Write(ptrIconsArray, patchTable);
+            bw.Write(ptrRestartMain, patchTable);
 
             for (int i = 0; i < someData.Length; i++)
                 someData[i].Write(bw);
@@ -244,13 +245,13 @@ namespace CTRFramework
 
             bw.Write(unkPtr4);
             bw.Write(unkPtr5);
-            bw.Write(ptrLowTexArray);
+            bw.Write(ptrLowTexArray, patchTable);
             backColor.Write(bw);
             bw.Write(bgMode);
 
-            bw.Write(ptrBuildStart);
-            bw.Write(ptrBuildEnd);
-            bw.Write(ptrBuildType);
+            bw.Write(ptrBuildStart, patchTable);
+            bw.Write(ptrBuildEnd, patchTable);
+            bw.Write(ptrBuildType, patchTable);
 
             bw.Write(skip);
 
@@ -259,13 +260,13 @@ namespace CTRFramework
             bw.Write(particleRenderMode);
 
             bw.Write(cntTrialData);
-            bw.Write(ptrTrialData);
+            bw.Write(ptrTrialData, patchTable);
             bw.Write(cntu2);
             bw.Write(ptru2);
             bw.Write(numSpawnPts);
-            bw.Write(ptrSpawnPts);
+            bw.Write(ptrSpawnPts, patchTable);
             bw.Write(numRestartPts);
-            bw.Write(ptrRestartPts);
+            bw.Write(ptrRestartPts, patchTable);
 
             bw.Write(skip2);
 
@@ -275,12 +276,12 @@ namespace CTRFramework
             bw.Write(skip2_unkPtr);
 
             bw.Write(numVcolAnim);
-            bw.Write(ptrVcolAnim);
+            bw.Write(ptrVcolAnim, patchTable);
 
             bw.Write(skip23);
 
 
-            bw.Write(ptrAiNav);
+            bw.Write(ptrAiNav, patchTable);
 
             bw.Write(skip3);
 

@@ -11,7 +11,7 @@ namespace CTRFramework
 {
     public class CtrModel
     {
-        public static List<UIntPtr> PointerMap = new List<UIntPtr>();
+        public List<UIntPtr> PatchTable = new List<UIntPtr>();
 
         public string path;
 
@@ -56,7 +56,7 @@ namespace CTRFramework
                 int ptrMapSize = br.ReadInt32() / 4;
 
                 for (int i = 0; i < ptrMapSize; i++)
-                    PointerMap.Add((UIntPtr)br.ReadUInt32());
+                    PatchTable.Add((UIntPtr)br.ReadUInt32());
             }
         }
 
@@ -144,8 +144,7 @@ namespace CTRFramework
         /// <param name="bw">BinaryWriter object.</param>
         public void Write(BinaryWriterEx bw)
         {
-            PointerMap.Clear();
-            BinaryWriterEx.PointerMap.Clear();
+            PatchTable.Clear();
 
             bw.Write(FixPointers());
 
@@ -158,22 +157,17 @@ namespace CTRFramework
             bw.Write((ushort)gameEvent);
             bw.Write((ushort)Entries.Count);
 
-            bw.Write(ptrHeaders);
+            bw.Write(ptrHeaders, PatchTable);
 
             foreach (var ctr in Entries)
-            {
-                ctr.Write(bw, CtrWriteMode.Header);
-            }
+                ctr.Write(bw, CtrWriteMode.Header, PatchTable);
 
             foreach (var ctr in Entries)
-            {
-                ctr.Write(bw, CtrWriteMode.Data);
-            }
+                ctr.Write(bw, CtrWriteMode.Data, PatchTable);
 
-            PointerMap = BinaryWriterEx.PointerMap;
+            bw.Write(PatchTable.Count * 4);
 
-            bw.Write(PointerMap.Count * 4);
-            foreach (int x in PointerMap)
+            foreach (int x in PatchTable)
                 bw.Write(x - 4);
         }
 
