@@ -80,6 +80,7 @@ namespace CTRTools.Controls
                         break;
 
                     case ".obj":
+                    case ".ply":
                         LoadModel(files[0]);
                         break;
 

@@ -36,6 +36,8 @@ namespace CTRTools
                 {
                     case ".dyn":
                     case ".ctr":
+                    case ".obj":
+                    case ".ply":
                         tabControl1.SelectedTab = tabCtr;
                         break;
                     case ".vrm":
