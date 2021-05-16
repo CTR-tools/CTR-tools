@@ -17,48 +17,43 @@ namespace CTRFramework.Vram
 
         public static Dictionary<string, Bitmap> textures = new Dictionary<string, Bitmap>();
 
-        public static Tim FromStream(Stream str)
+        public static Tim FromReader(BinaryReaderEx br)
         {
             frames.Clear();
             buffer = new Tim(new Rectangle(0, 0, Width, Height));
 
-            using (BinaryReaderEx br = new BinaryReaderEx(str))
+            if (br.ReadInt32() == 0x20)
             {
-                if (br.ReadInt32() == 0x20)
+                for (int i = 0; i < 2; i++)
                 {
-                    for (int i = 0; i < 2; i++)
-                    {
-                        br.ReadInt32();
-                        Tim tim = new Tim(br);
-                        //tim.Write("vram" + i.ToString("X2") + ".tim");
-                        buffer.DrawTim(tim);
-
-                        frames.Add(tim.region);
-
-                        Console.WriteLine(tim.ToString());
-                    }
-                }
-                else
-                {
-                    br.BaseStream.Position = 0;
+                    br.ReadInt32();
                     Tim tim = new Tim(br);
-                    //tim.Write("vram01.tim");
+                    //tim.Write("vram" + i.ToString("X2") + ".tim");
                     buffer.DrawTim(tim);
 
                     frames.Add(tim.region);
 
                     Console.WriteLine(tim.ToString());
                 }
+            }
+            else
+            {
+                br.BaseStream.Position = 0;
+                Tim tim = new Tim(br);
+                //tim.Write("vram01.tim");
+                buffer.DrawTim(tim);
 
-                //use this to dump whole vram as a single grayscale image
-                //buffer.SaveBMP("vram.png", BMPHeader.GrayScalePalette(16));
-                //buffer.Write("vram.tim");
+                frames.Add(tim.region);
 
-                return buffer;
+                Console.WriteLine(tim.ToString());
             }
 
-        }
+            //use this to dump whole vram as a single grayscale image
+            //buffer.SaveBMP("vram.png", BMPHeader.GrayScalePalette(16));
+            //buffer.Write("vram.tim");
 
+            return buffer;
+        }
 
         public static Tim FromFile(string filename)
         {
@@ -68,7 +63,10 @@ namespace CTRFramework.Vram
                 return new Tim(new Rectangle(0, 0, Width, Height));
             //throw new FileNotFoundException($"File not found: {fn}");
 
-            return FromStream(File.OpenRead(filename));
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            {
+                return FromReader(br);
+            }
         }
     }
 }

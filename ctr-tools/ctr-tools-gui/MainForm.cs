@@ -38,29 +38,29 @@ namespace CTRTools
                     case ".ctr":
                     case ".obj":
                     case ".ply":
-                        tabControl1.SelectedTab = tabCtr;
+                        tabControl.SelectedTab = tabCtr;
                         break;
                     case ".vrm":
-                        tabControl1.SelectedTab = tabVram;
+                        tabControl.SelectedTab = tabVram;
                         break;
                     case ".lev":
-                        if (tabControl1.SelectedTab != tabVram)
-                            tabControl1.SelectedTab = tabLev;
+                        if (tabControl.SelectedTab != tabVram)
+                            tabControl.SelectedTab = tabLev;
                         break;
                     case ".big":
-                        tabControl1.SelectedTab = tabBig;
+                        tabControl.SelectedTab = tabBig;
                         break;
                     case ".xnf":
-                        tabControl1.SelectedTab = tabXa;
+                        tabControl.SelectedTab = tabXa;
                         break;
                     //case ".hwl":
                     //   tabControl1.SelectedTab = tabHowl;
                     //   break;
                     case ".cseq":
-                        tabControl1.SelectedTab = tabCseq;
+                        tabControl.SelectedTab = tabCseq;
                         break;
                     case ".lng":
-                        tabControl1.SelectedTab = tabLang;
+                        tabControl.SelectedTab = tabLang;
                         break;
                 }
             }

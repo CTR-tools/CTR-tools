@@ -38,7 +38,7 @@ namespace CTRFramework
         {
         }
 
-        public Scene(string filename)
+        public Scene(string filename, Tim vram = null)
         {
             path = filename;
             name = Path.GetFileNameWithoutExtension(filename);
@@ -50,16 +50,22 @@ namespace CTRFramework
                 using (BinaryReaderEx br = new BinaryReaderEx(ms))
                 {
                     Read(br);
-
-                    string vrmpath = Path.ChangeExtension(filename, ".vrm");
-
-                    if (File.Exists(vrmpath))
-                    {
-                        Console.WriteLine("VRAM found!");
-                        ctrvram = CtrVrm.FromFile(vrmpath);
-                        LoadTextures();
-                    }
                 }
+            }
+
+            if (vram != null)
+            {
+                ctrvram = vram;
+                return;
+            }
+
+            string vrmpath = Path.ChangeExtension(filename, ".vrm");
+
+            if (File.Exists(vrmpath))
+            {
+                Console.WriteLine("VRAM found!");
+                ctrvram = CtrVrm.FromFile(vrmpath);
+                LoadTextures();
             }
         }
 
@@ -577,12 +583,14 @@ namespace CTRFramework
         public List<VisData> GetVisDataChildren(VisData visData)
         {
             List<VisData> childVisData = new List<VisData>();
+
             if (visData.leftChild != 0 && !visData.IsLeaf) // in the future: handle leaves different. Draw them?
             {
                 ushort uLeftChild = (ushort)(visData.leftChild & 0x3fff);
                 VisData leftChild = visdata.Find(cc => cc.id == uLeftChild);
                 childVisData.Add(leftChild);
             }
+
             if (visData.rightChild != 0 && !visData.IsLeaf) // in the future: handle leaves different. Draw them?
             {
                 ushort uRightChild = (ushort)(visData.rightChild & 0x3fff);
