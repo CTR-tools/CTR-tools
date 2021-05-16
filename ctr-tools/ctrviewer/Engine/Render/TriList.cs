@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
 {
-    public class TriList
+    public class TriList : IRenderable
     {
         public bool Sealed = false;
         public List<VertexPositionColorTexture> verts = new List<VertexPositionColorTexture>();

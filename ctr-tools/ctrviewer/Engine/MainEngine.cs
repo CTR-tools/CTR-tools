@@ -40,7 +40,7 @@ namespace ctrviewer.Engine
         {
             InitializeCameras(game);
 
-            GameConsole.Write(Cameras[CameraType.DefaultCamera].Position.ToString());
+            Settings.onFieldOfViewChanged += UpdateFOV;
         }
 
         public void InitializeCameras(Game game)
@@ -49,14 +49,20 @@ namespace ctrviewer.Engine
             Cameras.Add(CameraType.LeftEyeCamera, new FirstPersonCamera(game));
             Cameras.Add(CameraType.RightEyeCamera, new FirstPersonCamera(game));
             Cameras.Add(CameraType.SkyCamera, new FirstPersonCamera(game));
-
-            Settings.onFieldOfViewChanged += UpdateFOV;
         }
 
         public void UpdateProjectionMatrices()
         {
             foreach (var camera in Cameras.Values)
                 camera.UpdateProjectionMatrix();
+        }
+
+        public void UpdateStereoCamera(CameraType cameraType, float separationValue)
+        {
+            Vector3 moveVector = Vector3.Transform((cameraType == CameraType.LeftEyeCamera ? Vector3.Left : Vector3.Right) * separationValue / 100f, Cameras[CameraType.DefaultCamera].GetYawPitchRollMatrix());
+            Cameras[cameraType].Position = Cameras[CameraType.DefaultCamera].Position + moveVector;
+            Cameras[cameraType].rotationSpeed = Cameras[CameraType.DefaultCamera].rotationSpeed;
+            Cameras[cameraType].Target = Cameras[CameraType.DefaultCamera].Target;
         }
 
         public void UpdateFOV()
@@ -89,6 +95,8 @@ namespace ctrviewer.Engine
 
         public void Dispose()
         {
+            Settings.onFieldOfViewChanged -= UpdateFOV;
+
             Cameras.Clear();
             this.Clear();
         }

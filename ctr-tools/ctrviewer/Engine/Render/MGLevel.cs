@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
 {
-    public class MGLevel
+    public class MGLevel : IRenderable
     {
         public TriList normal = new TriList();
         public TriList wire = new TriList();

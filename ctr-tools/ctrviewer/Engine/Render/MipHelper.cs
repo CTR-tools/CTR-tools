@@ -6,7 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace ctrviewer.Engine
+namespace ctrviewer.Engine.Render
 {
     public class MipHelper
     {

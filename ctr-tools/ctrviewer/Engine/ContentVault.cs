@@ -1,4 +1,5 @@
-﻿using CTRFramework.Shared;
+﻿using CTRFramework;
+using CTRFramework.Shared;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace ctrviewer.Engine
         {
             if (Textures.ContainsKey(name))
             {
-                Helpers.Panic("ContentVault", CTRFramework.PanicType.Warning, $"Attempted to add a duplicate texture: '{name}'.");
+                Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate texture: '{name}'.");
                 return false;
             }
 

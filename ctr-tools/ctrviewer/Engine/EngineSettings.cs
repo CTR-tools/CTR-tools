@@ -21,7 +21,7 @@ namespace ctrviewer.Engine
         public bool GenerateMips { get; set; } = true;
         public bool ShowSky { get; set; } = true;
         public bool ShowBotsPath { get; set; } = false;
-        public bool ShowModels { get; set; } = false;
+        public bool ShowModels { get; set; } = true;
         public bool StereoPair { get; set; } = false;
         public int StereoPairSeparation { get; set; } = 20;
         public bool ShowCamPos { get; set; } = false;
@@ -38,8 +38,7 @@ namespace ctrviewer.Engine
             set
             {
                 _windowed = value;
-                if (onWindowedChanged != null)
-                    onWindowedChanged();
+                onWindowedChanged?.Invoke();
             }
         }
 
@@ -53,8 +52,7 @@ namespace ctrviewer.Engine
             set
             {
                 _vertexLighting = value;
-                if (onVertexLightingChanged != null)
-                    onVertexLightingChanged();
+                onVertexLightingChanged?.Invoke();
             }
         }
 
@@ -68,8 +66,7 @@ namespace ctrviewer.Engine
             set
             {
                 _antiAlias = value;
-                if (onAntiAliasChanged != null)
-                    onAntiAliasChanged();
+               onAntiAliasChanged?.Invoke();
             }
         }
 
@@ -83,8 +80,7 @@ namespace ctrviewer.Engine
             set
             {
                 _verticalSync = value;
-                if (onVerticalSyncChanged != null)
-                    onVerticalSyncChanged();
+                onVerticalSyncChanged?.Invoke();
             }
         }
 
@@ -100,8 +96,7 @@ namespace ctrviewer.Engine
             set
             {
                 _fieldOfView = value;
-                if (onFieldOfViewChanged != null)
-                    onFieldOfViewChanged();
+                onFieldOfViewChanged?.Invoke();
             }
         }
 
@@ -110,15 +105,14 @@ namespace ctrviewer.Engine
         {
             get
             {
-                if (_windowScale < 10) _fieldOfView = 10;
-                if (_windowScale > 90) _fieldOfView = 90;
-                return _fieldOfView;
+                if (_windowScale < 10) _windowScale = 10;
+                if (_windowScale > 90) _windowScale = 90;
+                return _windowScale;
             }
             set
             {
-                _fieldOfView = value;
-                if (onWindowedChanged != null)
-                    onWindowedChanged();
+                _windowScale = value;
+                onWindowedChanged?.Invoke();
             }
         }
 

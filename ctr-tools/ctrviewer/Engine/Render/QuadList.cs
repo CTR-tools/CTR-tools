@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
 {
-    public class QuadList
+    public class QuadList : IRenderable
     {
         public bool Sealed = false;
         public List<VertexPositionColorTexture> verts = new List<VertexPositionColorTexture>();

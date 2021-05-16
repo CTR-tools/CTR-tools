@@ -982,18 +982,13 @@ newmenu.Children.Add(btn);
             }
 
 
-
             eng.Cameras[CameraType.SkyCamera].Update(gameTime, updatemouse, false, newms, oldms);
             eng.Cameras[CameraType.DefaultCamera].Update(gameTime, updatemouse, true, newms, oldms);
 
-            eng.Cameras[CameraType.RightEyeCamera].Position = eng.Cameras[CameraType.DefaultCamera].Position + Vector3.Transform(Vector3.Left * eng.Settings.StereoPairSeparation / 100f, eng.Cameras[CameraType.DefaultCamera].GetYawPitchRollMatrix());
-            eng.Cameras[CameraType.RightEyeCamera].rotationSpeed = eng.Cameras[CameraType.DefaultCamera].rotationSpeed;
-            eng.Cameras[CameraType.RightEyeCamera].Target = eng.Cameras[CameraType.DefaultCamera].Target;
+            eng.UpdateStereoCamera(CameraType.RightEyeCamera, eng.Settings.StereoPairSeparation);
             eng.Cameras[CameraType.RightEyeCamera].Update(gameTime, updatemouse, true, newms, oldms);
 
-            eng.Cameras[CameraType.LeftEyeCamera].Position = eng.Cameras[CameraType.DefaultCamera].Position + Vector3.Transform(Vector3.Right * eng.Settings.StereoPairSeparation / 100f, eng.Cameras[CameraType.DefaultCamera].GetYawPitchRollMatrix());
-            eng.Cameras[CameraType.LeftEyeCamera].rotationSpeed = eng.Cameras[CameraType.DefaultCamera].rotationSpeed;
-            eng.Cameras[CameraType.LeftEyeCamera].Target = eng.Cameras[CameraType.DefaultCamera].Target;
+            eng.UpdateStereoCamera(CameraType.LeftEyeCamera, eng.Settings.StereoPairSeparation);
             eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true, newms, oldms);
         }
 
