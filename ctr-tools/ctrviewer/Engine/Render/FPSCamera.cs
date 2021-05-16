@@ -183,6 +183,11 @@ namespace ctrviewer.Engine.Render
         }
 
 
+        public Matrix GetYawPitchRollMatrix()
+        {
+            return Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
+        }
+
         public void Copy(GameTime gameTime, FirstPersonCamera c)
         {
             leftRightRot = c.leftRightRot;

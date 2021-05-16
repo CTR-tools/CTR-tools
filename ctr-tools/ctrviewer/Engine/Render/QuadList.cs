@@ -1,10 +1,9 @@
-﻿using ctrviewer.Engine.Render;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-namespace ctrviewer.Engine
+namespace ctrviewer.Engine.Render
 {
     public class QuadList
     {
@@ -107,16 +106,16 @@ namespace ctrviewer.Engine
                     effect.TextureEnabled = textureEnabled;
 
                     if (textureEnabled)
-                        if (Game1.textures.ContainsKey(textureName))
+                        if (ContentVault.Textures.ContainsKey(textureName))
                         {
-                            effect.Texture = Game1.textures[textureName];
+                            effect.Texture = ContentVault.Textures[textureName];
                             if (alpha != null)
                                 alpha.Texture = effect.Texture;
                         }
                         else
                         {
                             //Console.WriteLine("missing texture: " + textureName);
-                            effect.Texture = Game1.textures["test"];
+                            effect.Texture = ContentVault.Textures["test"];
                             if (alpha != null)
                                 alpha.Texture = effect.Texture;
                         }

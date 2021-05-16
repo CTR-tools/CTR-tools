@@ -4,6 +4,7 @@ using CTRFramework.Shared;
 using CTRFramework.Sound;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Render;
+using ctrviewer.Engine.Testing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -23,37 +24,33 @@ namespace ctrviewer
         Relic = 3
     }
 
-    public class Game1 : Game
+    public enum PreferredTimeOfDay
     {
+        Day,
+        Evening,
+        Night
+    }
+
+    public partial class Game1 : Game
+    {
+        public MainEngine eng;
+
         public static bool BigFileExists = false;
 
         public LevelType levelType = LevelType.P1;
 
         public MenuRootComponent newmenu = new MenuRootComponent();
 
-        public static List<string> alphalist = new List<string>();
-
-        EngineSettings settings;
-
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont font;
 
-        public static Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
-
-        public static Dictionary<string, TriList> instTris = new Dictionary<string, TriList>();
-        public static Dictionary<string, QuadList> instmodels = new Dictionary<string, QuadList>();
-
-
-        List<InstancedModel> external = new List<InstancedModel>();
-        List<InstancedModel> instanced = new List<InstancedModel>();
-        List<InstancedModel> paths = new List<InstancedModel>();
 
         List<Kart> karts = new List<Kart>();
 
+        //ctr scenes
+        List<Scene> scn = new List<Scene>();
 
-        List<VertexPositionColorTexture[]> bbox = new List<VertexPositionColorTexture[]>();
-        Dictionary<int, List<VertexPositionColorTexture[]>> bbox2 = new Dictionary<int, List<VertexPositionColorTexture[]>>();
 
         Menu menu;
 
@@ -62,24 +59,6 @@ namespace ctrviewer
         BasicEffect instanceEffect;         //used for instanced mesh
         AlphaTestEffect alphaTestEffect;    //used for alpha textures pass
 
-        //cameras
-        FirstPersonCamera camera;
-        FirstPersonCamera rightCamera;
-        FirstPersonCamera leftCamera;
-        FirstPersonCamera skycamera;
-
-        List<FirstPersonCamera> allCameras = new List<FirstPersonCamera>();
-
-        //ctr scenes
-        List<Scene> scn = new List<Scene>();
-
-        //hi and low scenes converted to monogame
-        List<MGLevel> MeshHigh = new List<MGLevel>();
-        List<MGLevel> MeshLow = new List<MGLevel>();
-
-        //sky
-        MGLevel sky;
-        Color backColor = Color.DarkBlue;
 
 
         public static PlayerIndex activeGamePad = PlayerIndex.One;
@@ -100,13 +79,6 @@ namespace ctrviewer
             Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
             graphics.HardwareModeSwitch = false;
-
-            settings = EngineSettings.Load();
-            settings.onWindowedChanged = SwitchDisplayMode;
-            settings.onVertexLightingChanged = UpdateEffects;
-            settings.onAntiAliasChanged = UpdateAntiAlias;
-            settings.onVerticalSyncChanged = UpdateVSync;
-            settings.onFieldOfViewChanged = UpdateFOV;
         }
 
         public void SwitchDisplayMode()
@@ -114,15 +86,15 @@ namespace ctrviewer
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
-            if (settings.Windowed)
+            if (eng.Settings.Windowed)
             {
-                graphics.PreferredBackBufferWidth = graphics.PreferredBackBufferWidth * settings.WindowScale / 100;
-                graphics.PreferredBackBufferHeight = graphics.PreferredBackBufferHeight * settings.WindowScale / 100;
+                graphics.PreferredBackBufferWidth = graphics.PreferredBackBufferWidth * eng.Settings.WindowScale / 100;
+                graphics.PreferredBackBufferHeight = graphics.PreferredBackBufferHeight * eng.Settings.WindowScale / 100;
             }
 
             UpdateSplitscreenViewports();
 
-            graphics.IsFullScreen = !settings.Windowed;
+            graphics.IsFullScreen = !eng.Settings.Windowed;
             graphics.ApplyChanges();
 
             GameConsole.Write($"SwitchDisplayMode(): {graphics.PreferredBackBufferWidth}x{graphics.PreferredBackBufferHeight}");
@@ -177,21 +149,21 @@ namespace ctrviewer
         public void UpdateEffects()
         {
             effect = new BasicEffect(graphics.GraphicsDevice);
-            effect.VertexColorEnabled = settings.VertexLighting;
+            effect.VertexColorEnabled = eng.Settings.VertexLighting;
             effect.TextureEnabled = true;
-            effect.DiffuseColor = settings.VertexLighting ? TimeOfDay : new Vector3(1f);
+            effect.DiffuseColor = eng.Settings.VertexLighting ? TimeOfDay : new Vector3(1f);
 
             alphaTestEffect = new AlphaTestEffect(GraphicsDevice);
             alphaTestEffect.AlphaFunction = CompareFunction.Greater;
             alphaTestEffect.ReferenceAlpha = 0;
-            alphaTestEffect.VertexColorEnabled = settings.VertexLighting;
+            alphaTestEffect.VertexColorEnabled = eng.Settings.VertexLighting;
             alphaTestEffect.DiffuseColor = effect.DiffuseColor;
 
 
             effect.FogEnabled = true;
-            effect.FogColor = new Vector3(backColor.R / 255f, backColor.G / 255f, backColor.B / 255f);
-            effect.FogStart = camera.FarClip / 4 * 3;
-            effect.FogEnd = camera.FarClip;
+            effect.FogColor = DataConverter.ToVector3(eng.BackgroundColor);
+            effect.FogStart = eng.Cameras[CameraType.DefaultCamera].FarClip / 4 * 3;
+            effect.FogEnd = eng.Cameras[CameraType.DefaultCamera].FarClip;
 
             instanceEffect = new BasicEffect(graphics.GraphicsDevice);
             instanceEffect.VertexColorEnabled = true;
@@ -202,25 +174,49 @@ namespace ctrviewer
 
         public void UpdateVSync()
         {
-            graphics.SynchronizeWithVerticalRetrace = settings.VerticalSync;
-            IsFixedTimeStep = settings.VerticalSync;
+            graphics.SynchronizeWithVerticalRetrace = eng.Settings.VerticalSync;
+            IsFixedTimeStep = eng.Settings.VerticalSync;
             graphics.ApplyChanges();
         }
 
         public void UpdateAntiAlias()
         {
             graphics.PreferMultiSampling = !graphics.PreferMultiSampling;
-            graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = settings.AntiAliasLevel;
+            graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
         }
 
-        public void UpdateFOV()
+
+        public void SetTimeOfDay(PreferredTimeOfDay tod)
         {
-            foreach (var camera in allCameras)
-                camera.ViewAngle = settings.FieldOfView;
+            switch (tod)
+            {
+                case PreferredTimeOfDay.Night:
+                    TimeOfDay = new Vector3(0.5f, 0.7f, 1.7f);
+                    break;
+
+                case PreferredTimeOfDay.Evening:
+                    TimeOfDay = new Vector3(1.7f, 1.4f, 0.7f);
+                    break;
+
+                case PreferredTimeOfDay.Day:
+                default:
+                    TimeOfDay = new Vector3(2f);
+                    break;
+            }
+
+            UpdateEffects();
         }
+
 
         protected override void Initialize()
         {
+            eng = new MainEngine(this);
+
+            eng.Settings.onWindowedChanged += SwitchDisplayMode;
+            eng.Settings.onVertexLightingChanged += UpdateEffects;
+            eng.Settings.onAntiAliasChanged += UpdateAntiAlias;
+            eng.Settings.onVerticalSyncChanged += UpdateVSync;
+
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             UpdateAntiAlias();
             UpdateVSync();
@@ -229,16 +225,6 @@ namespace ctrviewer
             IsMouseVisible = false;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            camera = new FirstPersonCamera(this);
-            rightCamera = new FirstPersonCamera(this);
-            leftCamera = new FirstPersonCamera(this);
-            skycamera = new FirstPersonCamera(this);
-
-            allCameras.Add(camera);
-            allCameras.Add(rightCamera);
-            allCameras.Add(leftCamera);
-            allCameras.Add(skycamera);
 
             UpdateEffects();
 
@@ -280,9 +266,9 @@ newmenu.Children.Add(btn);
 
         void LoadGenericTextures()
         {
-            textures.Add("test", Content.Load<Texture2D>("test"));
-            textures.Add("flag", Content.Load<Texture2D>("flag"));
-            textures.Add("logo", Content.Load<Texture2D>(IsChristmas() ? "logo_xmas" : "logo"));
+            ContentVault.AddTexture("test", Content.Load<Texture2D>("test"));
+            ContentVault.AddTexture("flag", Content.Load<Texture2D>("flag"));
+            ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas() ? "logo_xmas" : "logo"));
         }
 
 
@@ -293,7 +279,7 @@ newmenu.Children.Add(btn);
             GameConsole.Write("LoadContent()");
 
             LoadGenericTextures();
-            effect.Texture = textures["test"];
+            effect.Texture = ContentVault.Textures["test"];
             //effect.TextureEnabled = true;
 
             tint = new Texture2D(GraphicsDevice, 1, 1);
@@ -311,6 +297,11 @@ newmenu.Children.Add(btn);
 
             UpdateSplitscreenViewports();
 
+            LoadCones();
+        }
+
+        public void LoadCones()
+        {
             AddCone("greencone", Color.Green);
             AddCone("yellowcone", Color.Yellow);
             AddCone("redcone", Color.Red);
@@ -355,20 +346,20 @@ newmenu.Children.Add(btn);
 
             modl.Seal();
 
-            instmodels.Add(name, modl);
+            ContentVault.Models.Add(name, modl);
         }
 
 
-        bool gameLoaded = false;
+        bool IsLoading = false;
 
         private void LoadStuff(string[] lev)
         {
-            gameLoaded = false;
+            IsLoading = true;
 
             LoadLevel(lev);
             ResetCamera();
 
-            gameLoaded = true;
+            IsLoading = false;
         }
 
         private void LoadTextures()
@@ -379,6 +370,7 @@ newmenu.Children.Add(btn);
             {
                 foreach (var t in s.ctrvram.textures)
                 {
+
                     //first look for texture replacement
                     string path = $".\\newtex\\{t.Key}.png";
 
@@ -386,19 +378,19 @@ newmenu.Children.Add(btn);
 
                     if (File.Exists(path))
                     {
-                        if (!textures.ContainsKey(t.Key))
+                        if (!ContentVault.Textures.ContainsKey(t.Key))
                         {
-                            textures.Add(t.Key, settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path, out alpha) : Texture2D.FromFile(GraphicsDevice, path));
+                            ContentVault.Textures.Add(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path, out alpha) : Texture2D.FromFile(GraphicsDevice, path));
                             continue;
                         }
                     }
 
-                    if (!textures.ContainsKey(t.Key))
-                        textures.Add(t.Key, settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
+                    if (!ContentVault.Textures.ContainsKey(t.Key))
+                        ContentVault.Textures.Add(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
 
                     if (alpha)
-                        if (!alphalist.Contains(t.Key))
-                            alphalist.Add(t.Key);
+                        if (!ContentVault.alphalist.Contains(t.Key))
+                            ContentVault.alphalist.Add(t.Key);
                 }
             }
         }
@@ -412,7 +404,7 @@ newmenu.Children.Add(btn);
 
                 foreach (CtrModel m in karts.Models)
                 {
-                    if (!instTris.ContainsKey(m.Name) && m.Name == "selectkart")
+                    if (!ContentVault.Tris.ContainsKey(m.Name) && m.Name == "selectkart")
                     {
                         List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
@@ -426,7 +418,7 @@ newmenu.Children.Add(btn);
                         t.PushTri(li);
                         t.Seal();
 
-                        instTris.Add(m.Name, t);
+                        ContentVault.Tris.Add(m.Name, t);
                     }
                 }
 
@@ -446,7 +438,7 @@ newmenu.Children.Add(btn);
                 {
                     CtrModel c = CtrModel.FromFile(s);
 
-                    if (!instTris.ContainsKey(c.Name))
+                    if (!ContentVault.Tris.ContainsKey(c.Name))
                     {
                         List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
@@ -460,9 +452,9 @@ newmenu.Children.Add(btn);
                         t.PushTri(li);
                         t.Seal();
 
-                        instTris.Add(c.Name, t);
+                        ContentVault.Tris.Add(c.Name, t);
 
-                        external.Add(new InstancedModel(c.Name, Vector3.Zero, Vector3.Zero, new Vector3(0.1f)));
+                        eng.external.Add(new InstancedModel(c.Name, Vector3.Zero, Vector3.Zero, new Vector3(0.1f)));
                     }
                 }
             }
@@ -482,8 +474,13 @@ newmenu.Children.Add(btn);
             while (IsDrawing) { };
 
 
-            Dispose();
-            LoadGenericTextures(); //making sure we have default textures loaded. maybe should just allocate statically?
+            //Dispose();
+            eng.Clear();
+            scn.Clear();
+
+            //making sure we have default stuff loaded. maybe should just allocate statically?
+            LoadCones();
+            LoadGenericTextures();
 
             TestLoadKart();
             TestLoadExtrenalModels();
@@ -516,8 +513,8 @@ newmenu.Children.Add(btn);
 
             foreach (Scene s in scn)
             {
-                MeshHigh.Add(new MGLevel(s, Detail.Med));
-                MeshLow.Add(new MGLevel(s, Detail.Low));
+                eng.MeshHigh.Add(new MGLevel(s, Detail.Med));
+                eng.MeshLow.Add(new MGLevel(s, Detail.Low));
             }
 
             GameConsole.Write("converted scenes to monogame render at: " + sw.Elapsed.TotalSeconds);
@@ -525,9 +522,9 @@ newmenu.Children.Add(btn);
             //force 1st scene sky and back color
             if (scn.Count > 0)
             {
-                backColor = DataConverter.ToColor(scn[0].header.backColor);
+                eng.BackgroundColor = DataConverter.ToColor(scn[0].header.backColor);
                 if (scn[0].skybox != null)
-                    sky = new MGLevel(scn[0].skybox);
+                    eng.sky = new MGLevel(scn[0].skybox);
             }
 
             foreach (Scene s in scn)
@@ -535,14 +532,14 @@ newmenu.Children.Add(btn);
                 if (s.unkadv != null)
                 {
                     foreach (var pa in s.unkadv.smth)
-                        instanced.Add(new InstancedModel("limecone", DataConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                        eng.instanced.Add(new InstancedModel("limecone", DataConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                 }
 
                 if (s.header.ptru2 != 0)
                 {
                     foreach (var v in s.posu2)
                     {
-                        instanced.Add(new InstancedModel("goldcone", DataConverter.ToVector3(v, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                        eng.instanced.Add(new InstancedModel("goldcone", DataConverter.ToVector3(v, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                     }
                 }
 
@@ -550,7 +547,7 @@ newmenu.Children.Add(btn);
                 {
                     foreach (var v in s.posu1)
                     {
-                        instanced.Add(new InstancedModel("browncone", DataConverter.ToVector3(v.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                        eng.instanced.Add(new InstancedModel("browncone", DataConverter.ToVector3(v.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                     }
                 }
             }
@@ -559,7 +556,7 @@ newmenu.Children.Add(btn);
             foreach (Scene s in scn)
                 foreach (CtrModel m in s.Models)
                 {
-                    if (!instTris.ContainsKey(m.Name))
+                    if (!ContentVault.Tris.ContainsKey(m.Name))
                     {
                         List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
@@ -573,7 +570,7 @@ newmenu.Children.Add(btn);
                         t.PushTri(li);
                         t.Seal();
 
-                        instTris.Add(m.Name, t);
+                        ContentVault.Tris.Add(m.Name, t);
                     }
 
                 }
@@ -584,13 +581,13 @@ newmenu.Children.Add(btn);
             foreach (Scene s in scn)
             {
                 foreach (var pa in s.header.startGrid)
-                    instanced.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
+                    eng.instanced.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
 
                 foreach (var ph in s.pickups)
                 {
                     GameConsole.Write(ph.Scale.ToString());
 
-                    instanced.Add(new InstancedModel(
+                    eng.instanced.Add(new InstancedModel(
                         ph.ModelName,
                         DataConverter.ToVector3(ph.Pose.Position),
                         new Vector3(
@@ -603,16 +600,16 @@ newmenu.Children.Add(btn);
                 }
 
                 foreach (var n in s.restartPts)
-                    paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Position), Vector3.Zero, new Vector3(0.03f)));
+                    eng.paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Position), Vector3.Zero, new Vector3(0.03f)));
 
                 if (s.nav.paths.Count == 3)
                 {
                     foreach (NavFrame n in s.nav.paths[0].frames)
-                        paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                        eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                     foreach (NavFrame n in s.nav.paths[1].frames)
-                        paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                        eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                     foreach (NavFrame n in s.nav.paths[2].frames)
-                        paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                        eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                 }
             }
 
@@ -656,7 +653,7 @@ newmenu.Children.Add(btn);
         private void BspDraw(VisData visDat, Scene scene, int level)
         {
             List<VisData> childVisData = scene.GetVisDataChildren(visDat); // if node has children get those children
-            if (childVisData != null && childVisData.Count > 0)  // has any children?
+            if (childVisData.Count > 0)  // has any children?
             {
                 foreach (var b in childVisData)
                 {
@@ -665,15 +662,15 @@ newmenu.Children.Add(btn);
 
                     if (b.IsLeaf) // leaves don't have children
                     {
-                        bbox.Add(DataConverter.ToLineList(b.bbox, Color.Magenta));
+                        eng.bbox.Add(new WireBox(DataConverter.ToVector3(b.bbox.Min), DataConverter.ToVector3(b.bbox.Max), Color.Magenta, 1 / 100f));
                     }
                     else
                     {
                         // show those children in different color than the parent
-                        if (!bbox2.ContainsKey(level))
-                            bbox2.Add(level, new List<VertexPositionColorTexture[]>());
+                        if (!eng.bbox2.ContainsKey(level))
+                            eng.bbox2.Add(level, new List<WireBox>());
 
-                        bbox2[level].Add(DataConverter.ToLineList(b.bbox, colorLevelsOfBsp[level % colorLevelsOfBsp.Length]));
+                        eng.bbox2[level].Add(new WireBox(DataConverter.ToVector3(b.bbox.Min), DataConverter.ToVector3(b.bbox.Max), colorLevelsOfBsp[level % colorLevelsOfBsp.Length], 1 / 100f));
                         BspDraw(b, scene, level + 1);
                     }
                 }
@@ -684,14 +681,14 @@ newmenu.Children.Add(btn);
         {
             if (scn.Count > 0)
             {
-                camera.Position = DataConverter.ToVector3(scn[0].header.startGrid[0].Position);
-                rightCamera.Position = camera.Position;
-                leftCamera.Position = camera.Position;
+                eng.Cameras[CameraType.DefaultCamera].Position = DataConverter.ToVector3(scn[0].header.startGrid[0].Position);
+                eng.Cameras[CameraType.LeftEyeCamera].Position = eng.Cameras[CameraType.DefaultCamera].Position;
+                eng.Cameras[CameraType.LeftEyeCamera].Position = eng.Cameras[CameraType.DefaultCamera].Position;
 
                 float x = (float)(scn[0].header.startGrid[0].Rotation.X * Math.PI * 2f);
                 float y = (float)(scn[0].header.startGrid[0].Rotation.Y * Math.PI * 2f - Math.PI / 2f);
 
-                foreach (var camera in allCameras)
+                foreach (var camera in eng.Cameras.Values)
                     camera.SetRotation(y, x);
 
                 UpdateCameras(new GameTime());
@@ -700,11 +697,8 @@ newmenu.Children.Add(btn);
 
         protected override void UnloadContent()
         {
-            scn.Clear();
-            textures.Clear();
-            instanced.Clear();
-            instmodels.Clear();
-            instTris.Clear();
+            eng.Dispose();
+            ContentVault.Clear();
         }
 
         public bool updatemouse = false;
@@ -715,10 +709,9 @@ newmenu.Children.Add(btn);
         public static bool ControlsEnabled = true;
         public static bool IsDrawing = false;
 
-        public bool lodEnabled = false;
 
-        GamePadState oldstate = GamePad.GetState(activeGamePad);
-        GamePadState newstate = GamePad.GetState(activeGamePad);
+        GamePadState oldgs = GamePad.GetState(activeGamePad);
+        GamePadState newgs = GamePad.GetState(activeGamePad);
 
         KeyboardState oldkb = new KeyboardState();
         KeyboardState newkb = new KeyboardState();
@@ -730,12 +723,8 @@ newmenu.Children.Add(btn);
         {
             Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
 
-            if (loading == null)
-                LoadGame();
-
-            newms = Mouse.GetState();
-
-            newmenu.Update(gameTime, new Point(newms.X, newms.Y));
+            //if (loading == null)
+            //    LoadGame();
 
             //x += 0.01f ;
             //if (x > Math.PI * 2)
@@ -743,45 +732,50 @@ newmenu.Children.Add(btn);
             //camera.SetRotation(x, y);
             //Console.WriteLine(x);
 
+            newms = Mouse.GetState();
+
             if (IsActive)
             {
-                newstate = GamePad.GetState(activeGamePad);
+
+                newmenu.Update(gameTime, new Point(newms.X, newms.Y));
+
+                newgs = GamePad.GetState(activeGamePad);
                 newkb = Keyboard.GetState();
 
                 foreach (Kart k in karts)
                     k.Update(gameTime);
 
-                if (newstate.Buttons.Start == ButtonState.Pressed && newstate.Buttons.Back == ButtonState.Pressed)
+                if (newgs.Buttons.Start == ButtonState.Pressed && newgs.Buttons.Back == ButtonState.Pressed)
                     Exit();
 
-                if (settings.StereoPair)
+                if (eng.Settings.StereoPair)
                 {
-                    if (newstate.IsButtonDown(Buttons.RightShoulder))
-                        settings.StereoPairSeparation += 5;
+                    if (newgs.IsButtonDown(Buttons.RightShoulder))
+                        eng.Settings.StereoPairSeparation += 5;
 
-                    if (newstate.IsButtonDown(Buttons.LeftShoulder))
-                        settings.StereoPairSeparation -= 5;
+                    if (newgs.IsButtonDown(Buttons.LeftShoulder))
+                        eng.Settings.StereoPairSeparation -= 5;
 
-                    if (settings.StereoPairSeparation < 0) settings.StereoPairSeparation = 0;
+                    if (eng.Settings.StereoPairSeparation < 0) eng.Settings.StereoPairSeparation = 0;
 
-                    if (newstate.IsButtonDown(Buttons.RightShoulder) && newstate.IsButtonDown(Buttons.LeftShoulder))
-                        settings.StereoPairSeparation = 130;
+                    if (newgs.IsButtonDown(Buttons.RightShoulder) && newgs.IsButtonDown(Buttons.LeftShoulder))
+                        eng.Settings.StereoPairSeparation = 130;
                 }
 
                 if ((newkb.IsKeyDown(Keys.Enter) && newkb.IsKeyDown(Keys.RightAlt)) && !(oldkb.IsKeyDown(Keys.Enter) && newkb.IsKeyDown(Keys.RightAlt)))
                 {
-                    settings.Windowed = !settings.Windowed;
+                    eng.Settings.Windowed = !eng.Settings.Windowed;
                 }
 
                 if (newkb.IsKeyDown(Keys.OemTilde) && !oldkb.IsKeyDown(Keys.OemTilde))
                 {
-                    settings.ShowConsole = !settings.ShowConsole;
+                    eng.Settings.ShowConsole = !eng.Settings.ShowConsole;
                 }
 
-                if (newkb.IsKeyDown(Keys.OemMinus)) settings.FieldOfView--;
-                if (newkb.IsKeyDown(Keys.OemPlus)) settings.FieldOfView++;
+                if (newkb.IsKeyDown(Keys.OemMinus)) eng.Settings.FieldOfView--;
+                if (newkb.IsKeyDown(Keys.OemPlus)) eng.Settings.FieldOfView++;
 
-                if ((newstate.Buttons.Start == ButtonState.Pressed && oldstate.Buttons.Start != newstate.Buttons.Start) ||
+                if ((newgs.Buttons.Start == ButtonState.Pressed && oldgs.Buttons.Start != newgs.Buttons.Start) ||
                     (newkb.IsKeyDown(Keys.Escape) && newkb.IsKeyDown(Keys.Escape) != oldkb.IsKeyDown(Keys.Escape)))
                 {
                     InMenu = !InMenu;
@@ -789,7 +783,7 @@ newmenu.Children.Add(btn);
 
                 if (InMenu)
                 {
-                    menu.Update(oldstate, newstate, oldkb, newkb);
+                    menu.Update(oldgs, newgs, oldkb, newkb);
 
                     //currentflag = menu.items.Find(x => x.Title == "current flag: {0}").rangeval;
 
@@ -800,10 +794,10 @@ newmenu.Children.Add(btn);
                             case "close":
                                 InMenu = false;
                                 break;
-                            case "load":
-                                LoadGame();
-                                InMenu = false;
-                                break;
+                            //case "load":
+                            //    LoadGame();
+                            //    InMenu = false;
+                            //    break;
                             case "loadbig":
                                 LoadLevelsFromBig(menu.SelectedItem.Value);//, 0, 2); 
                                 break;
@@ -811,16 +805,13 @@ newmenu.Children.Add(btn);
                                 LoadLevelsFromBig(200, 203, 206, 209, 212);
                                 break;
                             case "tod_day":
-                                TimeOfDay = new Vector3(2f);
-                                UpdateEffects();
+                                SetTimeOfDay(PreferredTimeOfDay.Day);
                                 break;
                             case "tod_evening":
-                                TimeOfDay = new Vector3(1.7f, 1.4f, 0.7f);
-                                UpdateEffects();
+                                SetTimeOfDay(PreferredTimeOfDay.Evening);
                                 break;
                             case "tod_night":
-                                TimeOfDay = new Vector3(0.5f, 0.7f, 1.7f);
-                                UpdateEffects();
+                                SetTimeOfDay(PreferredTimeOfDay.Night);
                                 break;
                             case "link":
                                 menu.SetMenu(font);
@@ -831,24 +822,24 @@ newmenu.Children.Add(btn);
                             case "toggle":
                                 switch (menu.SelectedItem.Param)
                                 {
-                                    case "inst": settings.ShowModels = !settings.ShowModels; break;
-                                    case "paths": settings.ShowBotsPath = !settings.ShowBotsPath; break;
-                                    case "lod": settings.UseLowLod = !settings.UseLowLod; break;
-                                    case "antialias": settings.AntiAlias = !settings.AntiAlias; break;
+                                    case "inst": eng.Settings.ShowModels = !eng.Settings.ShowModels; break;
+                                    case "paths": eng.Settings.ShowBotsPath = !eng.Settings.ShowBotsPath; break;
+                                    case "lod": eng.Settings.UseLowLod = !eng.Settings.UseLowLod; break;
+                                    case "antialias": eng.Settings.AntiAlias = !eng.Settings.AntiAlias; break;
                                     case "invis": HideInvisible = !HideInvisible; break;
                                     case "water": HideWater = !HideWater; break;
-                                    case "console": settings.ShowConsole = !settings.ShowConsole; break;
-                                    case "campos": settings.ShowCamPos = !settings.ShowCamPos; break;
-                                    case "visbox": settings.VisData = !settings.VisData; break;
-                                    case "visboxleaf": settings.VisDataLeaves = !settings.VisDataLeaves; break;
+                                    case "console": eng.Settings.ShowConsole = !eng.Settings.ShowConsole; break;
+                                    case "campos": eng.Settings.ShowCamPos = !eng.Settings.ShowCamPos; break;
+                                    case "visbox": eng.Settings.VisData = !eng.Settings.VisData; break;
+                                    case "visboxleaf": eng.Settings.VisDataLeaves = !eng.Settings.VisDataLeaves; break;
                                     case "filter": Samplers.EnableFiltering = !Samplers.EnableFiltering; Samplers.Refresh(); break;
                                     case "wire": Samplers.EnableWireframe = !Samplers.EnableWireframe; break;
-                                    case "genmips": settings.GenerateMips = !settings.GenerateMips; break;
-                                    case "window": settings.Windowed = !settings.Windowed; break;
-                                    case "vcolor": settings.VertexLighting = !settings.VertexLighting; break;
-                                    case "stereo": settings.StereoPair = !settings.StereoPair; break;
-                                    case "sky": settings.ShowSky = !settings.ShowSky; break;
-                                    case "vsync": settings.VerticalSync = !settings.VerticalSync; break;
+                                    case "genmips": eng.Settings.GenerateMips = !eng.Settings.GenerateMips; break;
+                                    case "window": eng.Settings.Windowed = !eng.Settings.Windowed; break;
+                                    case "vcolor": eng.Settings.VertexLighting = !eng.Settings.VertexLighting; break;
+                                    case "stereo": eng.Settings.StereoPair = !eng.Settings.StereoPair; break;
+                                    case "sky": eng.Settings.ShowSky = !eng.Settings.ShowSky; break;
+                                    case "vsync": eng.Settings.VerticalSync = !eng.Settings.VerticalSync; break;
                                     default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
                                 }
                                 break;
@@ -861,7 +852,7 @@ newmenu.Children.Add(btn);
                         menu.Exec = !menu.Exec;
                     }
 
-                    if (newstate.Buttons.B == ButtonState.Pressed && newstate.Buttons.B != oldstate.Buttons.B)
+                    if (newgs.Buttons.B == ButtonState.Pressed && newgs.Buttons.B != oldgs.Buttons.B)
                     {
                         bool togglemenu = true;
 
@@ -879,13 +870,13 @@ newmenu.Children.Add(btn);
                 }
                 else
                 {
-                    foreach (MGLevel mg in MeshHigh)
+                    foreach (MGLevel mg in eng.MeshHigh)
                         mg.Update(gameTime);
 
-                    foreach (InstancedModel im in instanced)
+                    foreach (InstancedModel im in eng.instanced)
                         im.Update(gameTime);
 
-                    foreach (InstancedModel im in paths)
+                    foreach (InstancedModel im in eng.paths)
                         im.Update(gameTime);
 
                     if (ControlsEnabled)
@@ -894,11 +885,11 @@ newmenu.Children.Add(btn);
                     }
                 }
 
-                oldstate = newstate;
+                oldgs = newgs;
                 oldkb = newkb;
-
-                oldms = newms;
             }
+
+            oldms = newms;
 
             base.Update(gameTime);
         }
@@ -951,20 +942,20 @@ newmenu.Children.Add(btn);
 
                         if (newms.ScrollWheelValue > oldms.ScrollWheelValue)
                         {
-                            camera.speedScale += 0.1f;
+                            eng.Cameras[CameraType.DefaultCamera].speedScale += 0.1f;
                         }
 
                         if (newms.ScrollWheelValue < oldms.ScrollWheelValue)
                         {
-                            camera.speedScale -= 0.1f;
+                            eng.Cameras[CameraType.DefaultCamera].speedScale -= 0.1f;
                         }
 
 
-                        if (camera.speedScale < 0.1f)
-                            camera.speedScale = 0.1f;
+                        if (eng.Cameras[CameraType.DefaultCamera].speedScale < 0.1f)
+                            eng.Cameras[CameraType.DefaultCamera].speedScale = 0.1f;
 
-                        if (camera.speedScale > 5)
-                            camera.speedScale = 5;
+                        if (eng.Cameras[CameraType.DefaultCamera].speedScale > 5)
+                            eng.Cameras[CameraType.DefaultCamera].speedScale = 5;
                     }
                     else
                     {
@@ -992,45 +983,40 @@ newmenu.Children.Add(btn);
 
 
 
-            skycamera.Update(gameTime, updatemouse, false, newms, oldms);
-            camera.Update(gameTime, updatemouse, true, newms, oldms);
+            eng.Cameras[CameraType.SkyCamera].Update(gameTime, updatemouse, false, newms, oldms);
+            eng.Cameras[CameraType.DefaultCamera].Update(gameTime, updatemouse, true, newms, oldms);
 
-            rightCamera.Position = camera.Position + Vector3.Transform(Vector3.Left * settings.StereoPairSeparation / 100f, Matrix.CreateFromYawPitchRoll(camera.leftRightRot, camera.upDownRot, 0));
-            rightCamera.rotationSpeed = camera.rotationSpeed;
-            rightCamera.Target = camera.Target;
-            rightCamera.Update(gameTime, updatemouse, true, newms, oldms);
+            eng.Cameras[CameraType.RightEyeCamera].Position = eng.Cameras[CameraType.DefaultCamera].Position + Vector3.Transform(Vector3.Left * eng.Settings.StereoPairSeparation / 100f, eng.Cameras[CameraType.DefaultCamera].GetYawPitchRollMatrix());
+            eng.Cameras[CameraType.RightEyeCamera].rotationSpeed = eng.Cameras[CameraType.DefaultCamera].rotationSpeed;
+            eng.Cameras[CameraType.RightEyeCamera].Target = eng.Cameras[CameraType.DefaultCamera].Target;
+            eng.Cameras[CameraType.RightEyeCamera].Update(gameTime, updatemouse, true, newms, oldms);
 
-            leftCamera.Position = camera.Position + Vector3.Transform(Vector3.Right * settings.StereoPairSeparation / 100f, Matrix.CreateFromYawPitchRoll(camera.leftRightRot, camera.upDownRot, 0));
-            leftCamera.rotationSpeed = camera.rotationSpeed;
-            leftCamera.Target = camera.Target;
-            leftCamera.Update(gameTime, updatemouse, true, newms, oldms);
+            eng.Cameras[CameraType.LeftEyeCamera].Position = eng.Cameras[CameraType.DefaultCamera].Position + Vector3.Transform(Vector3.Right * eng.Settings.StereoPairSeparation / 100f, eng.Cameras[CameraType.DefaultCamera].GetYawPitchRollMatrix());
+            eng.Cameras[CameraType.LeftEyeCamera].rotationSpeed = eng.Cameras[CameraType.DefaultCamera].rotationSpeed;
+            eng.Cameras[CameraType.LeftEyeCamera].Target = eng.Cameras[CameraType.DefaultCamera].Target;
+            eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true, newms, oldms);
         }
 
-        private void UpdateProjectionMatrices()
-        {
-            foreach (var camera in allCameras)
-                camera.UpdateProjectionMatrix();
-        }
 
         //public static bool twoSided = false;
 
         private void DrawLevel(FirstPersonCamera cam = null)
         {
             if (cam == null)
-                cam = camera;
+                cam = eng.Cameras[CameraType.DefaultCamera];
 
             if (RenderEnabled)
             {
                 //if (loading != null && gameLoaded)
                 //{
                 //if we have a sky and sky is enabled
-                if (sky != null && settings.ShowSky)
+                if (eng.sky != null && eng.Settings.ShowSky)
                 {
-                    effect.View = skycamera.ViewMatrix;
-                    effect.Projection = skycamera.ProjectionMatrix;
+                    effect.View = eng.Cameras[CameraType.SkyCamera].ViewMatrix;
+                    effect.Projection = eng.Cameras[CameraType.SkyCamera].ProjectionMatrix;
 
                     effect.DiffuseColor /= 2;
-                    sky.DrawSky(graphics, effect, null);
+                    eng.sky.DrawSky(graphics, effect, null);
                     effect.DiffuseColor *= 2;
 
                     alphaTestEffect.DiffuseColor = effect.DiffuseColor;
@@ -1045,16 +1031,16 @@ newmenu.Children.Add(btn);
                 alphaTestEffect.View = effect.View;
                 alphaTestEffect.Projection = effect.Projection;
 
-                foreach (var v in external)
+                foreach (var v in eng.external)
                     v.Draw(graphics, instanceEffect, null, cam);
 
-                if (settings.ShowModels || settings.ShowBotsPath)
+                if (eng.Settings.ShowModels || eng.Settings.ShowBotsPath)
                 {
                     Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
 
-                    if (settings.ShowModels)
+                    if (eng.Settings.ShowModels)
                     {
-                        foreach (var v in instanced)
+                        foreach (var v in eng.instanced)
                             v.Draw(graphics, instanceEffect, null, cam);
 
                         //render karts
@@ -1062,9 +1048,9 @@ newmenu.Children.Add(btn);
                             k.Draw(graphics, instanceEffect, null, cam);
                     }
 
-                    if (settings.ShowBotsPath)
+                    if (eng.Settings.ShowBotsPath)
                     {
-                        foreach (var v in paths)
+                        foreach (var v in eng.paths)
                             v.Draw(graphics, instanceEffect, null, cam);
                     }
 
@@ -1074,42 +1060,31 @@ newmenu.Children.Add(btn);
                 Samplers.SetToDevice(graphics, EngineRasterizer.Default);
 
                 //render depending on lod
-                foreach (MGLevel qb in (settings.UseLowLod ? MeshLow : MeshHigh))
+                foreach (MGLevel qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshHigh))
                     qb.Draw(graphics, effect, alphaTestEffect);
 
 
-                if (settings.VisData)
+                if (eng.Settings.VisData)
                 {
                     //GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
 
                     //texture enabled makes visdata invisible
                     effect.TextureEnabled = false;
 
-                    foreach (var x in bbox)
-                    {
-                        foreach (var pass in effect.CurrentTechnique.Passes)
-                        {
-                            pass.Apply();
-                            graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, x, 0, x.Length / 2);
-                        }
-                    }
+                    foreach (var x in eng.bbox)
+                        x.Draw(graphics, effect);
 
-                    if (settings.VisDataLeaves)
-                        foreach (var key in bbox2.Keys)
-                            foreach (var x in bbox2[key])
-                            {
-                                foreach (var pass in effect.CurrentTechnique.Passes)
-                                {
-                                    pass.Apply();
-                                    graphics.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineList, x, 0, x.Length / 2);
-                                }
-                            }
+                    if (eng.Settings.VisDataLeaves)
+                        foreach (var key in eng.bbox2.Keys)
+                            foreach (var x in eng.bbox2[key])
+                                x.Draw(graphics, effect);
                 }
             }
         }
 
 
         Task loading;
+
 
         private void LoadGame()
         {
@@ -1128,13 +1103,13 @@ newmenu.Children.Add(btn);
 
             if (big == null)
             {
-                if (File.Exists(settings.BigFileLocation))
+                if (File.Exists(eng.Settings.BigFileLocation))
                 {
                     result = true;
                 }
                 else if (File.Exists(".\\bigfile.big"))
                 {
-                    settings.BigFileLocation = ".\\bigfile.big";
+                    eng.Settings.BigFileLocation = ".\\bigfile.big";
                     result = true;
                 }
                 else //scan drives
@@ -1151,7 +1126,7 @@ newmenu.Children.Add(btn);
                         string path = Path.Combine(dInfo.Name, "bigfile.big");
                         if (File.Exists(path))
                         {
-                            settings.BigFileLocation = path;
+                            eng.Settings.BigFileLocation = path;
                             result = true;
                             break;
                         }
@@ -1160,7 +1135,7 @@ newmenu.Children.Add(btn);
             }
 
             if (result == true && big == null)
-                big = new BigFileReader(File.OpenRead(settings.BigFileLocation));
+                big = new BigFileReader(File.OpenRead(eng.Settings.BigFileLocation));
 
             return result;
         }
@@ -1206,44 +1181,43 @@ newmenu.Children.Add(btn);
             //remember we're busy drawing stuff
             IsDrawing = true;
 
-            GraphicsDevice.Clear(backColor);
+            GraphicsDevice.Clear(eng.BackgroundColor);
 
             //graphics.GraphicsDevice.Viewport = vpFull;
             //DrawLevel();
 
-            if (settings.StereoPair)
+            if (eng.Settings.StereoPair)
             {
                 graphics.GraphicsDevice.Viewport = vpLeft;
-                UpdateProjectionMatrices();
-                DrawLevel(leftCamera);
+                eng.UpdateProjectionMatrices();
+                DrawLevel(eng.Cameras[CameraType.LeftEyeCamera]);
 
                 graphics.GraphicsDevice.Viewport = vpRight;
-                UpdateProjectionMatrices();
-                DrawLevel(rightCamera);
+                eng.UpdateProjectionMatrices();
+                DrawLevel(eng.Cameras[CameraType.RightEyeCamera]);
+
+                graphics.GraphicsDevice.Viewport = vpFull;
+                eng.UpdateProjectionMatrices();
             }
             else
             {
                 DrawLevel();
             }
 
-            graphics.GraphicsDevice.Viewport = vpFull;
-            UpdateProjectionMatrices();
-
             if (InMenu)
                 menu.Draw(GraphicsDevice, spriteBatch, font, tint);
-
 
             spriteBatch.Begin(depthStencilState: DepthStencilState.Default);
 
             if (InMenu)
             {
                 spriteBatch.Draw(
-                    textures["logo"],
+                    ContentVault.Textures["logo"],
                     new Vector2((graphics.GraphicsDevice.Viewport.Width / 2), 50 * graphics.GraphicsDevice.Viewport.Height / 1080f),
-                    new Rectangle(0, 0, textures["logo"].Width, textures["logo"].Height),
+                    new Rectangle(0, 0, ContentVault.Textures["logo"].Width, ContentVault.Textures["logo"].Height),
                     Color.White,
                     0,
-                    new Vector2(textures["logo"].Width / 2, 0),
+                    new Vector2(ContentVault.Textures["logo"].Width / 2, 0),
                     graphics.GraphicsDevice.Viewport.Height / 1080f,
                     SpriteEffects.None,
                     0.5f
@@ -1262,10 +1236,10 @@ newmenu.Children.Add(btn);
                     );
             }
 
-            if (!gameLoaded)
+            if (IsLoading)
                 spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
-            if (scn.Count == 0 && gameLoaded)
+            if (scn.Count == 0 && !IsLoading)
                 spriteBatch.DrawString(font, $"No levels loaded.\r\nPut LEV/VRM files in levels folder.\r\n...or put BIGFILE.BIG in root folder\r\nand use load level menu.".ToString(),
                     new Vector2(20 * graphics.GraphicsDevice.Viewport.Height / 1080f, 20 * graphics.GraphicsDevice.Viewport.Height / 1080f),
                     Color.Yellow,
@@ -1280,17 +1254,17 @@ newmenu.Children.Add(btn);
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Keyboard.GetState().IsKeyDown(Keys.OemPlus))
-                spriteBatch.DrawString(font, String.Format("FOV {0}", camera.ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", camera.ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
+                spriteBatch.DrawString(font, String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
 
             if (GamePad.GetState(0).Triggers.Left > 0 || GamePad.GetState(0).Triggers.Right > 0)
                 spriteBatch.DrawString(
                     font,
-                    $"Speed scale: {camera.speedScale.ToString("0.##")}",
-                    new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString($"Speed scale: {camera.speedScale.ToString("0.##")}").X - 20, 20),
+                    $"Speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}",
+                    new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString($"Speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}").X - 20, 20),
                     Color.Yellow);
 
-            if (settings.ShowCamPos)
-                spriteBatch.DrawString(font, $"({camera.Position.X.ToString("0.00")}, {camera.Position.Y.ToString("0.00")}, {camera.Position.Z.ToString("0.00")})", new Vector2(20, 20), Color.Yellow,
+            if (eng.Settings.ShowCamPos)
+                spriteBatch.DrawString(font, $"({eng.Cameras[CameraType.DefaultCamera].Position.X.ToString("0.00")}, {eng.Cameras[CameraType.DefaultCamera].Position.Y.ToString("0.00")}, {eng.Cameras[CameraType.DefaultCamera].Position.Z.ToString("0.00")})", new Vector2(20, 20), Color.Yellow,
                     0,
                     Vector2.Zero,
                     graphics.GraphicsDevice.Viewport.Height / 1080f,
@@ -1300,7 +1274,7 @@ newmenu.Children.Add(btn);
 
             //spriteBatch.DrawString(font, String.Format("sp: {0}\r\nac:{1}", karts[0].Speed, karts[0].Accel), new Vector2(20, 20), Color.Yellow);
 
-            if (settings.ShowConsole)
+            if (eng.Settings.ShowConsole)
                 GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);
 
             //draw calls count
@@ -1360,22 +1334,15 @@ newmenu.Children.Add(btn);
 
         protected override void Dispose(bool disposing)
         {
-            alphalist.Clear();
-            paths.Clear();
-            textures.Clear();
             scn.Clear();
-            MeshHigh.Clear();
-            MeshLow.Clear();
-            instanced.Clear();
-            bbox.Clear();
-            bbox2.Clear();
-
-            sky = null;
+            eng.Dispose();
+            ContentVault.Clear();
+            scn.Clear();
         }
 
         protected override void OnExiting(Object sender, EventArgs args)
         {
-            settings.Save();
+            eng.Settings.Save();
             base.OnExiting(sender, args);
         }
     }

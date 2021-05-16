@@ -7,10 +7,8 @@ using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
 {
-    class MGLevel
+    public class MGLevel
     {
-        public static Color ToD = new Color(1f, 1f, 1f);
-
         public TriList normal = new TriList();
         public TriList wire = new TriList();
 
@@ -114,7 +112,7 @@ namespace ctrviewer.Engine.Render
                                     continue;
                                 }
 
-                                if (Game1.alphalist.Contains(texTag))
+                                if (ContentVault.alphalist.Contains(texTag))
                                 {
                                     Push(alphaq, texTag, monolist);
                                 }
@@ -172,7 +170,7 @@ namespace ctrviewer.Engine.Render
                                         continue;
                                     }
 
-                                    Push((isAnimated ? animatedq : (Game1.alphalist.Contains(texTag) ? alphaq : normalq)), texTag, monolist);
+                                    Push((isAnimated ? animatedq : (ContentVault.alphalist.Contains(texTag) ? alphaq : normalq)), texTag, monolist);
 
                                     if (isAnimated)
                                         animatedq[texTag].scrollingEnabled = true;

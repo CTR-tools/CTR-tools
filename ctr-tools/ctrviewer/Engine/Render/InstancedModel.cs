@@ -4,7 +4,7 @@ using System;
 
 namespace ctrviewer.Engine.Render
 {
-    class InstancedModel
+    public class InstancedModel
     {
         public Vector3 Position;
         public Vector3 Rotation;
@@ -35,13 +35,13 @@ namespace ctrviewer.Engine.Render
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ProjectionMatrix;
 
-            if (Game1.instmodels.ContainsKey(ModelName))
+            if (ContentVault.Models.ContainsKey(ModelName))
             {
-                Game1.instmodels[ModelName].Draw(graphics, effect, alpha);
+                ContentVault.Models[ModelName].Draw(graphics, effect, alpha);
             }
-            else if (Game1.instTris.ContainsKey(ModelName))
+            else if (ContentVault.Tris.ContainsKey(ModelName))
             {
-                Game1.instTris[ModelName].Draw(graphics, effect, alpha);
+                ContentVault.Tris[ModelName].Draw(graphics, effect, alpha);
             }
             else
             {

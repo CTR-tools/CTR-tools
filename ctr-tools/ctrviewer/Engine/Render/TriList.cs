@@ -101,14 +101,14 @@ namespace ctrviewer.Engine.Render
                     effect.TextureEnabled = textureEnabled;
 
                     if (textureEnabled)
-                        if (Game1.textures.ContainsKey(textureName))
+                        if (ContentVault.Textures.ContainsKey(textureName))
                         {
-                            effect.Texture = Game1.textures[textureName];
+                            effect.Texture = ContentVault.Textures[textureName];
                         }
                         else
                         {
                             //Console.WriteLine("missing texture: " + textureName);
-                            effect.Texture = Game1.textures["test"];
+                            effect.Texture = ContentVault.Textures["test"];
                         }
 
                     Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);

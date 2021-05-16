@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace ctrviewer.Engine
+namespace ctrviewer.Engine.Testing
 {
     class Kart : InstancedModel
     {
@@ -81,13 +81,13 @@ namespace ctrviewer.Engine
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ProjectionMatrix;
 
-            if (Game1.instmodels.ContainsKey(ModelName))
+            if (ContentVault.Models.ContainsKey(ModelName))
             {
-                Game1.instmodels[ModelName].Draw(graphics, effect, alpha);
+                ContentVault.Models[ModelName].Draw(graphics, effect, alpha);
             }
-            else if (Game1.instTris.ContainsKey(ModelName))
+            else if (ContentVault.Tris.ContainsKey(ModelName))
             {
-                Game1.instTris[ModelName].Draw(graphics, effect, alpha);
+                ContentVault.Tris[ModelName].Draw(graphics, effect, alpha);
             }
             else
             {
