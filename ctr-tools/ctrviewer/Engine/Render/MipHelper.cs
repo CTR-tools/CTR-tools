@@ -10,6 +10,8 @@ namespace ctrviewer.Engine.Render
 {
     public class MipHelper
     {
+        public static int MinMipSize = 2;
+
         /// <summary>
         /// Loads Mipmapped Texture2D object from disk using GDI+ Bitmap.
         /// </summary>
@@ -32,53 +34,48 @@ namespace ctrviewer.Engine.Render
         /// <returns>Texture2D object.</returns>
         public static Texture2D LoadTextureFromBitmap(GraphicsDevice device, Bitmap bmp, out bool alpha)
         {
-            Texture2D t = GetTexture2DFromBitmap(device, bmp, out alpha);
+            Texture2D texture = GetTexture2DFromBitmap(device, bmp, out alpha);
 
-            byte[] temp = new byte[t.Width * t.Height * 4];
+            byte[] temp = new byte[texture.Width * texture.Height * 4];
             bmp = FixBitmap(bmp, out alpha, out temp, false);
 
             bool x = alpha;
 
-            int i = 1;
+            int level = 1;
 
             int width = bmp.Width;
             int height = bmp.Height;
-            try
+
+            if (width <= MinMipSize || height <= MinMipSize)
+                return texture;
+
+            do
             {
-                do
+                width /= 2;
+                height /= 2;
+
+                using (Bitmap mip = new Bitmap(width, height))
                 {
-                    width /= 2;
-                    height /= 2;
+                    Graphics gr = Graphics.FromImage(mip);
+                    gr.SmoothingMode = SmoothingMode.AntiAlias;
+                    gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    gr.CompositingMode = CompositingMode.SourceOver;
 
-                    using (Bitmap mip = new Bitmap(width, height))
-                    {
+                    var attributes = new ImageAttributes();
+                    attributes.SetWrapMode(WrapMode.TileFlipXY);
 
-                        Graphics gr = Graphics.FromImage(mip);
-                        gr.SmoothingMode = SmoothingMode.AntiAlias;
-                        gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                        gr.CompositingMode = CompositingMode.SourceOver;
-
-                        var attributes = new ImageAttributes();
-                        attributes.SetWrapMode(WrapMode.TileFlipXY);
-
-                        gr.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, mip.Width, mip.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, attributes);
-                        t = GetTexture2DFromBitmap(device, mip, out alpha, true, t, i);
-                    }
-
-                    i++;
+                    gr.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, mip.Width, mip.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, attributes);
+                    texture = GetTexture2DFromBitmap(device, mip, out alpha, true, texture, level);
                 }
-                while (width >= 2 && height >= 2);
+
+                level++;
             }
-            catch
-            {
-                Helpers.Panic("MipHelper", PanicType.Error, "Failed to create Texture2D object.");
-                return new Texture2D(device, 1, 1);
-            }
+            while (width >= MinMipSize && height >= MinMipSize);
 
             alpha = x;
 
-            return t;
+            return texture;
         }
 
         /// <summary>

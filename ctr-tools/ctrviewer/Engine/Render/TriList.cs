@@ -10,8 +10,12 @@ namespace ctrviewer.Engine.Render
         public bool Sealed = false;
         public List<VertexPositionColorTexture> verts = new List<VertexPositionColorTexture>();
         private VertexPositionColorTexture[] verts_sealed;
-        public bool textureEnabled;
-        public bool scrollingEnabled;
+        public List<int> curColor = new List<int>();
+        public Dictionary<int, List<Color>> animatedColors = new Dictionary<int, List<Color>>();
+        public bool vColAnimEnabled = true;
+        public bool textureEnabled = true;
+        public bool ScrollingEnabled = false;
+        public bool CullingEnabled = true;
         public string textureName = "";
         private short[] indices;
 
@@ -38,10 +42,23 @@ namespace ctrviewer.Engine.Render
         public TriList()
         {
         }
+
         public void Seal()
         {
             indices = GenerateIndices().ToArray();
             verts_sealed = verts.ToArray();
+            for (int i = 0; i < numVerts; i++)
+            {
+                animatedColors.Add(i, new List<Color>());
+
+                for (int j = 0; j < 127; j++)
+                    animatedColors[i].Add(new Color(j*2,j*2,j*2));
+
+                for (int j = 0; j < 127; j++)
+                    animatedColors[i].Add(new Color(255-j*2, 255-j*2, 255-j*2));
+
+                curColor.Add(0);
+            }
             Sealed = true;
         }
 
@@ -57,16 +74,42 @@ namespace ctrviewer.Engine.Render
                 verts.AddRange(lv);
         }
 
+        public void PushQuad(List<VertexPositionColorTexture> lv)
+        {
+            if (Sealed)
+            {
+                Console.WriteLine("Trying to update sealed list.");
+                return;
+            }
+
+            if (lv != null)
+                verts.AddRange(new List<VertexPositionColorTexture>() { lv[0], lv[1], lv[2], lv[2], lv[1], lv[3] } );
+        }
+
         public void Update(GameTime gameTime)
         {
-            if (scrollingEnabled)
+            if (ScrollingEnabled)
             {
-                for (int i = 0; i < verts.Count; i++)
+                for (int i = 0; i < numVerts; i++)
+                {
                     verts_sealed[i].TextureCoordinate.Y -= (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000f * 3; //this will potentially overflow
+                }
+            }
+
+            if (vColAnimEnabled)
+            {
+                for (int i = 0; i < numVerts; i++)
+                {
+                    verts_sealed[i].Color = animatedColors[i][curColor[i]];
+
+                    curColor[i]++;
+                    if (curColor[i] >= animatedColors[i].Count)
+                        curColor[i] = 0;
+                }
             }
         }
 
-        public TriList(VertexPositionColorTexture[] v, short[] i, bool te, string name = "")
+        public TriList(List<VertexPositionColorTexture> v, bool te, string name = "")
         {
             verts.AddRange(v);
             textureEnabled = te;
@@ -83,12 +126,12 @@ namespace ctrviewer.Engine.Render
 
         public List<short> GenerateIndices()
         {
-            List<short> x = new List<short>();
+            List<short> indices = new List<short>();
 
-            for (int i = 0; i < verts.Count; i++)
-                x.Add((short)i);
+            for (int i = 0; i < numVerts; i++)
+                indices.Add((short)i);
 
-            return x;
+            return indices;
         }
 
 
@@ -101,17 +144,15 @@ namespace ctrviewer.Engine.Render
                     effect.TextureEnabled = textureEnabled;
 
                     if (textureEnabled)
-                        if (ContentVault.Textures.ContainsKey(textureName))
-                        {
-                            effect.Texture = ContentVault.Textures[textureName];
-                        }
-                        else
-                        {
-                            //Console.WriteLine("missing texture: " + textureName);
-                            effect.Texture = ContentVault.Textures["test"];
-                        }
+                    {
+                        effect.Texture = ContentVault.Textures["test"];
 
-                    Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
+                        if (ContentVault.Textures.ContainsKey(textureName))
+                            effect.Texture = ContentVault.Textures[textureName];
+                    }
+
+                    if (!CullingEnabled)
+                        Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
 
                     foreach (var pass in effect.CurrentTechnique.Passes)
                     {
@@ -119,7 +160,7 @@ namespace ctrviewer.Engine.Render
 
                         graphics.GraphicsDevice.DrawUserIndexedPrimitives(
                                 PrimitiveType.TriangleList,
-                                verts.ToArray(), 0, verts.Count,
+                                verts_sealed, 0, numVerts,
                                 indices, 0, indices.Length / 3,
                                 VertexPositionColorTexture.VertexDeclaration
                         );
@@ -138,14 +179,14 @@ namespace ctrviewer.Engine.Render
 
                             graphics.GraphicsDevice.DrawUserIndexedPrimitives(
                                 PrimitiveType.TriangleList,
-                                verts_sealed, 0, verts_sealed.Length,
+                                verts_sealed, 0, numVerts,
                                 indices, 0, indices.Length / 3,
                                 VertexPositionColorTexture.VertexDeclaration
                             );
                         }
-
-                        Samplers.SetToDevice(graphics, EngineRasterizer.Default);
                     }
+
+                    Samplers.SetToDevice(graphics, EngineRasterizer.Default);
 
                 }
                 else

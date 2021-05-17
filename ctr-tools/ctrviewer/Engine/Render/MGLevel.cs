@@ -12,13 +12,14 @@ namespace ctrviewer.Engine.Render
         public TriList normal = new TriList();
         public TriList wire = new TriList();
 
-        Dictionary<string, QuadList> normalq = new Dictionary<string, QuadList>();
-        Dictionary<string, QuadList> waterq = new Dictionary<string, QuadList>();
-        Dictionary<string, QuadList> alphaq = new Dictionary<string, QuadList>();
-        Dictionary<string, QuadList> animatedq = new Dictionary<string, QuadList>();
-        QuadList wireq = new QuadList();
+        Dictionary<string, TriList> normalq = new Dictionary<string, TriList>();
+        Dictionary<string, TriList> waterq = new Dictionary<string, TriList>();
+        Dictionary<string, TriList> alphaq = new Dictionary<string, TriList>();
+        Dictionary<string, TriList> animatedq = new Dictionary<string, TriList>();
 
-        Dictionary<string, QuadList> flagq = new Dictionary<string, QuadList>();
+        TriList wireq = new TriList();
+
+        Dictionary<string, TriList> flagq = new Dictionary<string, TriList>();
 
         public List<string> textureList
         {
@@ -49,7 +50,7 @@ namespace ctrviewer.Engine.Render
         public MGLevel(SkyBox sb)
         {
             normal.textureEnabled = false;
-            normal.scrollingEnabled = false;
+            normal.ScrollingEnabled = false;
 
             for (int i = 0; i < sb.faces.Count; i++)
             {
@@ -173,7 +174,7 @@ namespace ctrviewer.Engine.Render
                                     Push((isAnimated ? animatedq : (ContentVault.alphalist.Contains(texTag) ? alphaq : normalq)), texTag, monolist);
 
                                     if (isAnimated)
-                                        animatedq[texTag].scrollingEnabled = true;
+                                        animatedq[texTag].ScrollingEnabled = true;
                                 }
                             }
                         }
@@ -198,7 +199,7 @@ namespace ctrviewer.Engine.Render
                 ql.Value.Seal();
         }
 
-
+        /*
         public void Push(Dictionary<string, QuadList> dict, string name, List<VertexPositionColorTexture> monolist, string custTex = "")
         {
             if (dict.ContainsKey(name))
@@ -211,6 +212,23 @@ namespace ctrviewer.Engine.Render
                 dict.Add(name, ql);
             }
         }
+        */
+
+        public void Push(Dictionary<string, TriList> dict, string name, List<VertexPositionColorTexture> monolist, string custTex = "")
+        {
+            if (dict.ContainsKey(name))
+            {
+               //dict[name].PushQuad(monolist);
+            }
+            else
+            {
+                TriList ql = new TriList(new List<VertexPositionColorTexture>() { }, true, (custTex != "" ? custTex : name));
+                dict.Add(name, ql);
+            }
+
+            dict[name].PushQuad(monolist);
+        }
+
 
 
         public void Update(GameTime gameTime)

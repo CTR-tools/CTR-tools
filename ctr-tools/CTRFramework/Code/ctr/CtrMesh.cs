@@ -6,6 +6,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using ThreeDeeBear.Models.Ply;
+using System.IO;
 
 namespace CTRFramework
 {
@@ -30,6 +31,7 @@ namespace CTRFramework
         public Vector4s posOffset = new Vector4s(0, 0, 0, 0);
 
         public List<Vertex> verts = new List<Vertex>();
+        public List<TextureLayout> matIndices = new List<TextureLayout>();
 
         public int cmdNum = 0x40;
         public int vrenderMode = 0x1C;
@@ -305,12 +307,12 @@ namespace CTRFramework
                 clr[2] = clr[3];
                 clr[3] = cols[d.colorIndex];
 
-                /*
+                
                 tlb[0] = tlb[1];
                 tlb[1] = tlb[2];
                 tlb[2] = tlb[3];
                 tlb[3] = (d.texIndex == 0 ? null : tl[d.texIndex - 1]);
-                */
+                
 
                 if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
@@ -327,7 +329,7 @@ namespace CTRFramework
 
                 //if we got 3 indices in tristrip (0,1,2)
                 if (stripLength >= 2)
-                {
+                { 
                     //read 3 vertices and push to the array
                     for (int z = 3 - 1; z >= 0; z--)
                     {
@@ -345,10 +347,15 @@ namespace CTRFramework
                         verts[verts.Count - 1] = verts[verts.Count - 2];
                         verts[verts.Count - 2] = v;
                     }
+
+                    matIndices.Add(tlb[3]);
                 }
 
                 stripLength++;
             }
+
+            for (int i = 0; i < verts.Count / 3; i++)
+                verts.Reverse(i * 3, 3);
 
             br.Jump(returnto);
         }
@@ -364,6 +371,7 @@ namespace CTRFramework
             sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
             sb.AppendLine($"#{Meta.GetVersion()}");
             sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
+            sb.AppendLine($"mtllib test_{name}.mtl\r\n");
 
             sb.AppendLine("# textures used:");
 
@@ -392,8 +400,47 @@ namespace CTRFramework
                     v.color.ToString(VecFormat.Numbers));
             }
 
+            Console.WriteLine(matIndices.Count);
+            Console.WriteLine(verts.Count / 3);
+
             for (int i = 0; i < verts.Count / 3; i++)
-                sb.AppendLine("f " + (i * 3 + 1) + " " + (i * 3 + 2) + " " + (i * 3 + 3));
+            {
+                if (matIndices[i] != null)
+                {
+                    sb.AppendLine($"usemtl {matIndices[i].Tag()}");
+                    sb.AppendLine(matIndices[i].ToObj());
+                }
+                else
+                {
+                    sb.AppendLine($"usemtl no_texture");
+                    sb.AppendLine($"vt 0 0");
+                    sb.AppendLine($"vt 0 1");
+                    sb.AppendLine($"vt 1 1");
+                    sb.AppendLine($"vt 1 0");
+                }
+
+                sb.AppendLine($"f {i * 3 + 1}/{i * 3 + 1} {i * 3 + 2}/{i * 3 + 2} {i * 3 + 3}/{i * 3 + 3}");
+            }
+
+
+            StringBuilder bb = new StringBuilder();
+
+            bb.AppendLine(matIndices.Count + "");
+
+            foreach (var tl in matIndices)
+            {
+                if (tl != null)
+                {
+                    string texname = $"texModels\\{tl.Tag()}.png";
+
+                    bb.AppendLine($"newmtl {tl.Tag()}");
+                    bb.AppendLine("Kd 2.0 2.0 2.0"); //not sure if it actually works in obj, but it's what psx does
+                    bb.AppendLine($"map_Kd {texname}\r\n");
+                }
+            }
+
+            Helpers.WriteToFile(Path.Combine(Meta.BasePath, $"test_{name}.mtl"), bb.ToString());
+
 
             return sb.ToString();
         }

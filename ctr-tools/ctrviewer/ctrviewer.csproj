@@ -2,8 +2,10 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net5.0-windows</TargetFrameworks>
-    <PublishReadyToRun>false</PublishReadyToRun>
+    <PublishTrimmed>true</PublishTrimmed>
+    <PublishReadyToRun>true</PublishReadyToRun>
     <TieredCompilation>true</TieredCompilation>
+    <PublishSingleFile>false</PublishSingleFile>
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>x64;x86</Platforms>
   </PropertyGroup>

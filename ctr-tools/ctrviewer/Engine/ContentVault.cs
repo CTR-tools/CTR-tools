@@ -12,7 +12,7 @@ namespace ctrviewer.Engine
         public static List<string> alphalist = new List<string>();
 
         public static Dictionary<string, TriList> Tris = new Dictionary<string, TriList>();
-        public static Dictionary<string, QuadList> Models = new Dictionary<string, QuadList>();
+        public static Dictionary<string, TriList> Models = new Dictionary<string, TriList>();
 
         public static bool AddTexture(string name, Texture2D texture)
         {

@@ -230,7 +230,6 @@ namespace CTRFramework.Vram
                     normuv[inds[i]].X,
                     normuv[inds[i]].Y
                 );
-
             }
 
             /*

@@ -1,11 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CTRFramework.Shared;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace ctrviewer.Engine
 {
     class DataConverter
     {
-        public static Vector3 ToVector3(CTRFramework.Shared.Vector3s vector, float scale = 1.0f)
+        public static Vector3 ToVector3(Vector3s vector, float scale = 1.0f)
         {
             return new Vector3(vector.X * scale, vector.Y * scale, vector.Z * scale);
         }
@@ -19,17 +20,17 @@ namespace ctrviewer.Engine
         {
             return new Vector3(vector.X, vector.Y, vector.Z) * scale;
         }
-        public static Vector3 ToVector3(CTRFramework.Shared.Vector4s s, float scale = 1.0f)
+        public static Vector3 ToVector3(Vector4s s, float scale = 1.0f)
         {
             return new Vector3(s.X * scale, s.Y * scale, s.Z * scale);
         }
 
-        public static Color ToColor(CTRFramework.Shared.Vector4b s)
+        public static Color ToColor(Vector4b s)
         {
             return new Color(s.X, s.Y, s.Z, s.W);
         }
 
-        public static VertexPositionColorTexture ToVptc(CTRFramework.Vertex v, CTRFramework.Shared.Vector2b uv, float scale = 1.0f)
+        public static VertexPositionColorTexture ToVptc(CTRFramework.Vertex v, Vector2b uv, float scale = 1.0f)
         {
             VertexPositionColorTexture mono_v = new VertexPositionColorTexture();
             mono_v.Position = ToVector3(v.coord, scale);

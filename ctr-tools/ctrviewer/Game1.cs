@@ -319,7 +319,7 @@ newmenu.Children.Add(btn);
         {
             GameConsole.Write($"AddCone({name}, {c.ToString()})");
 
-            QuadList modl = new QuadList();
+            TriList modl = new TriList();
 
             List<VertexPositionColorTexture> vptc = new List<VertexPositionColorTexture>();
 
@@ -414,7 +414,7 @@ newmenu.Children.Add(btn);
                         TriList t = new TriList();
                         t.textureEnabled = false;
                         t.textureName = "test";
-                        t.scrollingEnabled = false;
+                        t.ScrollingEnabled = false;
                         t.PushTri(li);
                         t.Seal();
 
@@ -446,9 +446,9 @@ newmenu.Children.Add(btn);
                             li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
 
                         TriList t = new TriList();
-                        t.textureEnabled = false;
+                        t.textureEnabled = true;
                         t.textureName = "test";
-                        t.scrollingEnabled = false;
+                        t.ScrollingEnabled = false;
                         t.PushTri(li);
                         t.Seal();
 
@@ -566,7 +566,7 @@ newmenu.Children.Add(btn);
                         TriList t = new TriList();
                         t.textureEnabled = false;
                         t.textureName = "test";
-                        t.scrollingEnabled = false;
+                        t.ScrollingEnabled = false;
                         t.PushTri(li);
                         t.Seal();
 
