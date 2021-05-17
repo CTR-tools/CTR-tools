@@ -26,7 +26,7 @@ instances:
 types:
 
   ptr_map:
-    doc: |
+    doc: | 
       an array of offsets that is used to convert relative pointers to
       absolute psx ram pointers
     seq:
@@ -84,7 +84,13 @@ types:
       trial:
         pos: header.ptr_trial_data
         type: trial_data
-    
+
+      vcolors:
+        pos: header.ptr_vcanim
+        type: vcolor
+        repeat: expr
+        repeat-expr: header.num_vcanim
+
       skybox:
         pos: header.ptr_skybox
         type: skybox
@@ -109,7 +115,6 @@ types:
         type: water_packet
         repeat: expr
         repeat-expr: header.cnt_water
-
 
   vis_data:
     doc: | 
@@ -305,7 +310,7 @@ types:
         repeat-expr: 4
       - id: skip2_unkptr_related_to_vcol_anim
         type: u4
-      - id: cnt_vcanim
+      - id: num_vcanim
         type: u4
       - id: ptr_vcanim
         type: u4
@@ -367,19 +372,15 @@ types:
       - id: model_ptr
         type: u4
       - id: scale
-        type: vector3s
-      - id: scale1
-        type: u2
+        type: vector4s
       - id: null1
         type: u4
       - id: unk1
         type: u4
       - id: skip
         size: 12
-      - id: position
-        type: vector3s
-      - id: angle
-        type: vector3s
+      - id: pose
+        type: pose
       - id: event
         type: u4
 
@@ -457,7 +458,7 @@ types:
         type: u1
       - id: ptr_texture_low
         type: u4
-      - id: ptr_texture_high
+      - id: ptr_add_tex
         type: u4
       - id: unk_col_array
         type: u2
@@ -476,6 +477,21 @@ types:
       midtex4:
         pos: ptr_texture_mid[3]
         type: ctr_tex
+      add_tex:
+        pos: ptr_add_tex
+        type: add_tex
+        if: ptr_add_tex != 0
+
+  add_tex:
+    seq:
+      - id: ptr1
+        type: u4
+      - id: ptr2
+        type: u4
+      - id: ptr3
+        type: u4
+      - id: ptr4
+        type: u4
 
   vertex:
     doc: |
@@ -495,6 +511,17 @@ types:
       - id: position
         type: vector4s
       - id: colorz
+        type: color
+        
+  vcolor:
+    seq:
+      - id: ptr_vertex
+        type: u4
+      - id: u1
+        type: u4
+      - id: u2
+        type: u4
+      - id: color
         type: color
 
   icon_pack:
