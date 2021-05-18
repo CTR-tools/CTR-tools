@@ -32,12 +32,13 @@ namespace CTRTools.Controls
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.fileTree = new System.Windows.Forms.TreeView();
+            this.fileInfo = new System.Windows.Forms.TextBox();
             this.actionLoadBig = new System.Windows.Forms.Button();
             this.actionExportAll = new System.Windows.Forms.Button();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.fbd = new System.Windows.Forms.FolderBrowserDialog();
+            this.bigLoader = new System.ComponentModel.BackgroundWorker();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -68,36 +69,36 @@ namespace CTRTools.Controls
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.treeView1);
+            this.splitContainer1.Panel1.Controls.Add(this.fileTree);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.textBox4);
+            this.splitContainer1.Panel2.Controls.Add(this.fileInfo);
             this.splitContainer1.Size = new System.Drawing.Size(622, 419);
             this.splitContainer1.SplitterDistance = 258;
             this.splitContainer1.TabIndex = 0;
             // 
-            // treeView1
+            // fileTree
             // 
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.treeView1.Location = new System.Drawing.Point(0, 0);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(258, 419);
-            this.treeView1.TabIndex = 5;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.fileTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fileTree.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.fileTree.Location = new System.Drawing.Point(0, 0);
+            this.fileTree.Name = "fileTree";
+            this.fileTree.Size = new System.Drawing.Size(258, 419);
+            this.fileTree.TabIndex = 5;
+            this.fileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // textBox4
             // 
-            this.textBox4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox4.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox4.Location = new System.Drawing.Point(0, 0);
-            this.textBox4.Multiline = true;
-            this.textBox4.Name = "textBox4";
-            this.textBox4.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox4.Size = new System.Drawing.Size(360, 419);
-            this.textBox4.TabIndex = 7;
-            this.textBox4.WordWrap = false;
+            this.fileInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fileInfo.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.fileInfo.Location = new System.Drawing.Point(0, 0);
+            this.fileInfo.Multiline = true;
+            this.fileInfo.Name = "textBox4";
+            this.fileInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.fileInfo.Size = new System.Drawing.Size(360, 419);
+            this.fileInfo.TabIndex = 7;
+            this.fileInfo.WordWrap = false;
             // 
             // actionLoadBig
             // 
@@ -125,6 +126,11 @@ namespace CTRTools.Controls
             // 
             this.ofd.Filter = "Crash Team Racing BIG file (*.big)|*.big";
             // 
+            // bigLoader
+            // 
+            this.bigLoader.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bigLoader_DoWork);
+            this.bigLoader.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bigLoader_RunWorkerCompleted);
+            // 
             // BigFileControl
             // 
             this.AllowDrop = true;
@@ -151,12 +157,13 @@ namespace CTRTools.Controls
         #endregion
 
         private GroupBox groupBox1;
-        private TreeView treeView1;
-        private TextBox textBox4;
+        private TreeView fileTree;
+        private TextBox fileInfo;
         private Button actionLoadBig;
         private Button actionExportAll;
         private SplitContainer splitContainer1;
         private OpenFileDialog ofd;
         private FolderBrowserDialog fbd;
+        private System.ComponentModel.BackgroundWorker bigLoader;
     }
 }

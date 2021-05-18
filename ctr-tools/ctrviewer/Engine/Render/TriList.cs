@@ -88,6 +88,9 @@ namespace ctrviewer.Engine.Render
 
         public void Update(GameTime gameTime)
         {
+            if (!vColAnimEnabled && !ScrollingEnabled)
+                return;
+
             if (ScrollingEnabled)
             {
                 for (int i = 0; i < numVerts; i++)

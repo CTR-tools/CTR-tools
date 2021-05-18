@@ -37,18 +37,18 @@
             this.discordLogo = new System.Windows.Forms.PictureBox();
             this.githubLogo = new System.Windows.Forms.PictureBox();
             this.tabBig = new System.Windows.Forms.TabPage();
-            this.tabVram = new System.Windows.Forms.TabPage();
-            this.tabCtr = new System.Windows.Forms.TabPage();
-            this.tabLev = new System.Windows.Forms.TabPage();
-            this.tabCseq = new System.Windows.Forms.TabPage();
-            this.tabLang = new System.Windows.Forms.TabPage();
-            this.tabXa = new System.Windows.Forms.TabPage();
             this.bigFileControl = new CTRTools.Controls.BigFileControl();
+            this.tabVram = new System.Windows.Forms.TabPage();
             this.vramControl = new CTRTools.Controls.VramControl();
+            this.tabCtr = new System.Windows.Forms.TabPage();
             this.ctrControl = new CTRTools.Controls.CtrControl();
+            this.tabLev = new System.Windows.Forms.TabPage();
             this.levControl = new CTRTools.Controls.LevControl();
+            this.tabCseq = new System.Windows.Forms.TabPage();
             this.cseqControl = new CTRTools.Controls.CseqControl();
+            this.tabLang = new System.Windows.Forms.TabPage();
             this.langControl = new CTRTools.Controls.LangControl();
+            this.tabXa = new System.Windows.Forms.TabPage();
             this.xaControl = new CTRTools.Controls.XaControl();
             this.tabControl.SuspendLayout();
             this.tabAbout.SuspendLayout();
@@ -81,7 +81,7 @@
             this.tabControl.Location = new System.Drawing.Point(7, 7);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(611, 429);
+            this.tabControl.Size = new System.Drawing.Size(619, 438);
             this.tabControl.TabIndex = 1;
             // 
             // tabAbout
@@ -95,7 +95,7 @@
             this.tabAbout.Controls.Add(this.githubLogo);
             this.tabAbout.Location = new System.Drawing.Point(4, 22);
             this.tabAbout.Name = "tabAbout";
-            this.tabAbout.Size = new System.Drawing.Size(603, 403);
+            this.tabAbout.Size = new System.Drawing.Size(611, 412);
             this.tabAbout.TabIndex = 7;
             this.tabAbout.Text = "About";
             // 
@@ -104,9 +104,9 @@
             this.warning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.warning.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.warning.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.warning.Location = new System.Drawing.Point(3, 17);
+            this.warning.Location = new System.Drawing.Point(3, 22);
             this.warning.Name = "warning";
-            this.warning.Size = new System.Drawing.Size(597, 61);
+            this.warning.Size = new System.Drawing.Size(605, 61);
             this.warning.TabIndex = 10;
             this.warning.Text = "Warning! This tool is in the early stage of development.\r\nSome features may be mi" +
     "ssing or won\'t work as intended.";
@@ -116,9 +116,9 @@
             // 
             this.signLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.signLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.signLabel.Location = new System.Drawing.Point(3, 308);
+            this.signLabel.Location = new System.Drawing.Point(3, 313);
             this.signLabel.Name = "signLabel";
-            this.signLabel.Size = new System.Drawing.Size(597, 24);
+            this.signLabel.Size = new System.Drawing.Size(605, 24);
             this.signLabel.TabIndex = 9;
             this.signLabel.Text = "Signature from DLL";
             this.signLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -127,9 +127,9 @@
             // 
             this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.labelVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelVersion.Location = new System.Drawing.Point(3, 177);
+            this.labelVersion.Location = new System.Drawing.Point(3, 182);
             this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(597, 24);
+            this.labelVersion.Size = new System.Drawing.Size(605, 24);
             this.labelVersion.TabIndex = 6;
             this.labelVersion.Text = "Framework version from DLL";
             this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -139,9 +139,9 @@
             this.appLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.appLogo.ErrorImage = null;
             this.appLogo.Image = global::CTRTools.Properties.Resources.ctr_tools_logo;
-            this.appLogo.Location = new System.Drawing.Point(3, 90);
+            this.appLogo.Location = new System.Drawing.Point(3, 95);
             this.appLogo.Name = "appLogo";
-            this.appLogo.Size = new System.Drawing.Size(597, 84);
+            this.appLogo.Size = new System.Drawing.Size(605, 84);
             this.appLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.appLogo.TabIndex = 3;
             this.appLogo.TabStop = false;
@@ -152,7 +152,7 @@
             this.discordLogo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.discordLogo.Image = global::CTRTools.Properties.Resources.icon_discord;
             this.discordLogo.InitialImage = null;
-            this.discordLogo.Location = new System.Drawing.Point(315, 228);
+            this.discordLogo.Location = new System.Drawing.Point(319, 233);
             this.discordLogo.Name = "discordLogo";
             this.discordLogo.Size = new System.Drawing.Size(64, 64);
             this.discordLogo.TabIndex = 5;
@@ -165,7 +165,7 @@
             this.githubLogo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.githubLogo.ErrorImage = null;
             this.githubLogo.Image = global::CTRTools.Properties.Resources.icon_github;
-            this.githubLogo.Location = new System.Drawing.Point(236, 228);
+            this.githubLogo.Location = new System.Drawing.Point(240, 233);
             this.githubLogo.Name = "githubLogo";
             this.githubLogo.Size = new System.Drawing.Size(64, 64);
             this.githubLogo.TabIndex = 4;
@@ -177,70 +177,10 @@
             this.tabBig.Controls.Add(this.bigFileControl);
             this.tabBig.Location = new System.Drawing.Point(4, 22);
             this.tabBig.Name = "tabBig";
-            this.tabBig.Size = new System.Drawing.Size(603, 403);
+            this.tabBig.Size = new System.Drawing.Size(611, 412);
             this.tabBig.TabIndex = 5;
             this.tabBig.Text = "BIG archive";
             this.tabBig.UseVisualStyleBackColor = true;
-            // 
-            // tabVram
-            // 
-            this.tabVram.Controls.Add(this.vramControl);
-            this.tabVram.Location = new System.Drawing.Point(4, 22);
-            this.tabVram.Name = "tabVram";
-            this.tabVram.Size = new System.Drawing.Size(603, 403);
-            this.tabVram.TabIndex = 8;
-            this.tabVram.Text = "VRAM textures";
-            this.tabVram.UseVisualStyleBackColor = true;
-            // 
-            // tabCtr
-            // 
-            this.tabCtr.Controls.Add(this.ctrControl);
-            this.tabCtr.Location = new System.Drawing.Point(4, 22);
-            this.tabCtr.Name = "tabCtr";
-            this.tabCtr.Size = new System.Drawing.Size(603, 403);
-            this.tabCtr.TabIndex = 9;
-            this.tabCtr.Text = "CTR models";
-            this.tabCtr.UseVisualStyleBackColor = true;
-            // 
-            // tabLev
-            // 
-            this.tabLev.Controls.Add(this.levControl);
-            this.tabLev.Location = new System.Drawing.Point(4, 22);
-            this.tabLev.Name = "tabLev";
-            this.tabLev.Size = new System.Drawing.Size(603, 403);
-            this.tabLev.TabIndex = 0;
-            this.tabLev.Text = "LEV scenes";
-            this.tabLev.UseVisualStyleBackColor = true;
-            // 
-            // tabCseq
-            // 
-            this.tabCseq.Controls.Add(this.cseqControl);
-            this.tabCseq.Location = new System.Drawing.Point(4, 22);
-            this.tabCseq.Name = "tabCseq";
-            this.tabCseq.Size = new System.Drawing.Size(603, 403);
-            this.tabCseq.TabIndex = 10;
-            this.tabCseq.Text = "CSEQ music";
-            this.tabCseq.UseVisualStyleBackColor = true;
-            // 
-            // tabLang
-            // 
-            this.tabLang.Controls.Add(this.langControl);
-            this.tabLang.Location = new System.Drawing.Point(4, 22);
-            this.tabLang.Name = "tabLang";
-            this.tabLang.Size = new System.Drawing.Size(603, 403);
-            this.tabLang.TabIndex = 12;
-            this.tabLang.Text = "LNG text";
-            this.tabLang.UseVisualStyleBackColor = true;
-            // 
-            // tabXa
-            // 
-            this.tabXa.Controls.Add(this.xaControl);
-            this.tabXa.Location = new System.Drawing.Point(4, 22);
-            this.tabXa.Name = "tabXa";
-            this.tabXa.Size = new System.Drawing.Size(603, 403);
-            this.tabXa.TabIndex = 13;
-            this.tabXa.Text = "XA audio";
-            this.tabXa.UseVisualStyleBackColor = true;
             // 
             // bigFileControl
             // 
@@ -249,8 +189,18 @@
             this.bigFileControl.Location = new System.Drawing.Point(0, 0);
             this.bigFileControl.MinimumSize = new System.Drawing.Size(488, 223);
             this.bigFileControl.Name = "bigFileControl";
-            this.bigFileControl.Size = new System.Drawing.Size(603, 403);
+            this.bigFileControl.Size = new System.Drawing.Size(611, 412);
             this.bigFileControl.TabIndex = 0;
+            // 
+            // tabVram
+            // 
+            this.tabVram.Controls.Add(this.vramControl);
+            this.tabVram.Location = new System.Drawing.Point(4, 22);
+            this.tabVram.Name = "tabVram";
+            this.tabVram.Size = new System.Drawing.Size(611, 412);
+            this.tabVram.TabIndex = 8;
+            this.tabVram.Text = "VRAM textures";
+            this.tabVram.UseVisualStyleBackColor = true;
             // 
             // vramControl
             // 
@@ -259,8 +209,18 @@
             this.vramControl.Location = new System.Drawing.Point(0, 0);
             this.vramControl.MinimumSize = new System.Drawing.Size(461, 218);
             this.vramControl.Name = "vramControl";
-            this.vramControl.Size = new System.Drawing.Size(603, 403);
+            this.vramControl.Size = new System.Drawing.Size(611, 412);
             this.vramControl.TabIndex = 0;
+            // 
+            // tabCtr
+            // 
+            this.tabCtr.Controls.Add(this.ctrControl);
+            this.tabCtr.Location = new System.Drawing.Point(4, 22);
+            this.tabCtr.Name = "tabCtr";
+            this.tabCtr.Size = new System.Drawing.Size(611, 412);
+            this.tabCtr.TabIndex = 9;
+            this.tabCtr.Text = "CTR models";
+            this.tabCtr.UseVisualStyleBackColor = true;
             // 
             // ctrControl
             // 
@@ -268,16 +228,36 @@
             this.ctrControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctrControl.Location = new System.Drawing.Point(0, 0);
             this.ctrControl.Name = "ctrControl";
-            this.ctrControl.Size = new System.Drawing.Size(603, 403);
+            this.ctrControl.Size = new System.Drawing.Size(611, 412);
             this.ctrControl.TabIndex = 0;
+            // 
+            // tabLev
+            // 
+            this.tabLev.Controls.Add(this.levControl);
+            this.tabLev.Location = new System.Drawing.Point(4, 22);
+            this.tabLev.Name = "tabLev";
+            this.tabLev.Size = new System.Drawing.Size(611, 412);
+            this.tabLev.TabIndex = 0;
+            this.tabLev.Text = "LEV scenes";
+            this.tabLev.UseVisualStyleBackColor = true;
             // 
             // levControl
             // 
             this.levControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.levControl.Location = new System.Drawing.Point(0, 0);
             this.levControl.Name = "levControl";
-            this.levControl.Size = new System.Drawing.Size(603, 403);
+            this.levControl.Size = new System.Drawing.Size(611, 412);
             this.levControl.TabIndex = 0;
+            // 
+            // tabCseq
+            // 
+            this.tabCseq.Controls.Add(this.cseqControl);
+            this.tabCseq.Location = new System.Drawing.Point(4, 22);
+            this.tabCseq.Name = "tabCseq";
+            this.tabCseq.Size = new System.Drawing.Size(611, 412);
+            this.tabCseq.TabIndex = 10;
+            this.tabCseq.Text = "CSEQ music";
+            this.tabCseq.UseVisualStyleBackColor = true;
             // 
             // cseqControl
             // 
@@ -285,8 +265,18 @@
             this.cseqControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cseqControl.Location = new System.Drawing.Point(0, 0);
             this.cseqControl.Name = "cseqControl";
-            this.cseqControl.Size = new System.Drawing.Size(603, 403);
+            this.cseqControl.Size = new System.Drawing.Size(611, 412);
             this.cseqControl.TabIndex = 11;
+            // 
+            // tabLang
+            // 
+            this.tabLang.Controls.Add(this.langControl);
+            this.tabLang.Location = new System.Drawing.Point(4, 22);
+            this.tabLang.Name = "tabLang";
+            this.tabLang.Size = new System.Drawing.Size(611, 412);
+            this.tabLang.TabIndex = 12;
+            this.tabLang.Text = "LNG text";
+            this.tabLang.UseVisualStyleBackColor = true;
             // 
             // langControl
             // 
@@ -294,8 +284,18 @@
             this.langControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.langControl.Location = new System.Drawing.Point(0, 0);
             this.langControl.Name = "langControl";
-            this.langControl.Size = new System.Drawing.Size(603, 403);
+            this.langControl.Size = new System.Drawing.Size(611, 412);
             this.langControl.TabIndex = 0;
+            // 
+            // tabXa
+            // 
+            this.tabXa.Controls.Add(this.xaControl);
+            this.tabXa.Location = new System.Drawing.Point(4, 22);
+            this.tabXa.Name = "tabXa";
+            this.tabXa.Size = new System.Drawing.Size(611, 412);
+            this.tabXa.TabIndex = 13;
+            this.tabXa.Text = "XA audio";
+            this.tabXa.UseVisualStyleBackColor = true;
             // 
             // xaControl
             // 
@@ -303,7 +303,7 @@
             this.xaControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xaControl.Location = new System.Drawing.Point(0, 0);
             this.xaControl.Name = "xaControl";
-            this.xaControl.Size = new System.Drawing.Size(603, 403);
+            this.xaControl.Size = new System.Drawing.Size(611, 412);
             this.xaControl.TabIndex = 0;
             // 
             // MainForm
@@ -311,7 +311,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 442);
+            this.ClientSize = new System.Drawing.Size(632, 451);
             this.Controls.Add(this.tabControl);
             this.DoubleBuffered = true;
             this.MinimumSize = new System.Drawing.Size(640, 480);

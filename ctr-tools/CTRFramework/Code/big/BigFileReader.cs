@@ -152,5 +152,25 @@ namespace CTRFramework.Big
             FileCursor++;
             return FileCursor < TotalFiles;
         }
+
+        /// <summary>
+        /// Extracts all entries to target folder.
+        /// </summary>
+        /// <param name="path">Target path.</param>
+        public void ExtractAll(string path)
+        {
+            Reset();
+
+            while (NextFile())
+                ReadEntry().Save(Path.Combine(path));
+        }
+
+        /// <summary>
+        /// Moves file cursor in the beginning.
+        /// </summary>
+        public void Reset()
+        {
+            FileCursor = -1;
+        }
     }
 }

@@ -1,22 +1,38 @@
 ﻿using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Lang;
+using CTRFramework.Shared;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace CTRTools.Controls
 {
     public partial class BigFileControl : UserControl
     {
+        private BigFileReader Reader
+        {
+            get => _reader;
+            set
+            {
+                _reader = value;
+                onReaderUpdated?.Invoke(this, null);
+            }
+        }
+
+        private BigFileReader _reader;
+        private EventHandler onReaderUpdated;
+
+
         public BigFileControl()
         {
             InitializeComponent();
             this.DoubleBuffered = true;
+            onReaderUpdated += LoadFromReader;
         }
-
-        BigFile big;
 
         private async void LoadBigFull(string path)
         {
@@ -26,46 +42,49 @@ namespace CTRTools.Controls
                 return;
             }
 
-            Task load = new Task(() => big = BigFile.FromFile(path));
-            load.Start();
-            await load;
-            LoadBig(path);
-
-            MessageBox.Show("Done.");
+            bigLoader.RunWorkerAsync(path);
         }
 
-        private void LoadBig(string fn)
-        {
-            treeView1.Nodes.Clear();
 
-            TreeNode tn = new TreeNode("bigfile");
+        private void LoadFromReader(object sender, EventArgs e)
+        {
+            TreeNode tn = new TreeNode("root");
             tn.Expand();
 
-            foreach (BigEntry cf in big.Entries)
+            Reader.Reset();
+
+            while (Reader.NextFile())
             {
-                if (cf.Size > 0)
-                {
-                    string[] s = cf.Name.Split('\\');
+                string[] s = Reader.GetFilename().Split('\\');
 
-                    TreeNode curnode = tn;
+                TreeNode curnode = tn;
 
-                    for (int i = 0; i < s.Length - 1; i++)
-                    {
-                        curnode = GetOrCreateNode(curnode, s[i]);
-                    }
+                for (int i = 0; i < s.Length - 1; i++)
+                    curnode = GetOrCreateNode(curnode, s[i]);
 
-                    TreeNode final = new TreeNode(s[s.Length - 1]);
-                    final.Tag = cf;
+                TreeNode final = new TreeNode(s[s.Length - 1]);
+                final.Tag = Reader.FileCursor;
 
-                    curnode.Nodes.Add(final);
-                }
+                curnode.Nodes.Add(final);
             }
 
-            treeView1.Nodes.Add(tn);
-            //treeView1.ExpandAll();
+            if (fileTree.InvokeRequired)
+            {
+                fileTree.BeginInvoke(new MethodInvoker(delegate { UpdateListBox(tn); }));
+            }
+            else
+            {
+                UpdateListBox(tn);
+            }
         }
 
-
+        private void UpdateListBox(TreeNode tn)
+        {
+            fileTree.BeginUpdate();
+            fileTree.Nodes.Clear();
+            fileTree.Nodes.Add(tn);
+            fileTree.EndUpdate();
+        }
 
         private TreeNode GetOrCreateNode(TreeNode tn, string name)
         {
@@ -78,27 +97,25 @@ namespace CTRTools.Controls
             return child;
         }
 
-
         private void exportFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BigEntry en = (BigEntry)treeView1.SelectedNode.Tag;
-
-            if (en != null)
+            try
             {
-                SaveFileDialog fd = new SaveFileDialog();
-                fd.FileName = Path.GetFileName(en.Name);
+                Reader.FileCursor = (int)fileTree.SelectedNode.Tag;
+                BigEntry en = Reader.ReadEntry();
 
-                if (fd.ShowDialog() == DialogResult.OK)
+                if (en != null)
                 {
-                    try
-                    {
-                        File.WriteAllBytes(fd.FileName, en.Data);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message + "\r\n" + ex.ToString());
-                    }
+                    SaveFileDialog fd = new SaveFileDialog();
+                    fd.FileName = Path.GetFileName(en.Name);
+
+                    if (fd.ShowDialog() == DialogResult.OK)
+                        en.Save(fd.FileName);
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.ToString());
             }
         }
 
@@ -129,10 +146,9 @@ namespace CTRTools.Controls
 
         private void actionExportAll_Click(object sender, EventArgs e)
         {
-            if (fbd.ShowDialog() == DialogResult.OK)
-            {
-                big.Extract(fbd.SelectedPath);
-            }
+            if (Reader != null)
+                if (fbd.ShowDialog() == DialogResult.OK)
+                    Reader.ExtractAll(fbd.SelectedPath);
         }
 
         private void BigFileControl_DragEnter(object sender, DragEventArgs e)
@@ -142,39 +158,46 @@ namespace CTRTools.Controls
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (treeView1.SelectedNode.Tag != null)
+            try
             {
-                BigEntry cf = treeView1.SelectedNode.Tag as BigEntry;
-
-                if (Path.GetExtension(cf.Name) == ".lng")
+                if (fileTree.SelectedNode.Tag != null)
                 {
-                    try
-                    {
-                        File.WriteAllBytes("temp.lng", cf.Data);
-                        LNG lng = LNG.FromFile("temp.lng");
-                        textBox4.Lines = lng.Entries.ToArray();
-                        File.Delete("temp.lng");
-                    }
-                    catch
-                    {
-                    }
-                }
+                    Reader.FileCursor = (int)fileTree.SelectedNode.Tag;
+                    BigEntry en = Reader.ReadEntry();
 
-                if (Path.GetExtension(cf.Name) == ".lev")
-                {
-                    try
+                    switch (Path.GetExtension(en.Name).ToLower())
                     {
-                        File.WriteAllBytes("temp.lev", cf.Data);
-                        Scene s = Scene.FromFile("temp.lev");
-                        textBox4.Text = s.Info();
-                        File.Delete("temp.lev");
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
+                        case ".lng":
+                            LNG lng = en.ParseAs<LNG>();
+                            fileInfo.Lines = lng.Entries.ToArray();
+                            break;
+
+                        case ".lev":
+                            Scene lev = en.ParseAs<Scene>();
+                            fileInfo.Text = lev.ToString();
+                            break;
+
+                        case ".ctr":
+                            CtrModel ctr = en.ParseAs<CtrModel>();
+                            fileInfo.Text = ctr.ToString();
+                            break;
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.ToString());
+            }
+        }
+
+        private void bigLoader_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Reader = new BigFileReader(File.OpenRead(e.Argument as string));
+        }
+
+        private void bigLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            MessageBox.Show("Done.");
         }
     }
 }

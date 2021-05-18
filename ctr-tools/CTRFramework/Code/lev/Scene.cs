@@ -204,6 +204,11 @@ namespace CTRFramework
                 }
             }
 
+            foreach (VertexAnim va in vertanims)
+            {
+                Helpers.Panic(this, PanicType.Info, va.ToString());
+            }
+
             /*
             quads = quads.OrderBy(o => o.mosaicPtr1).ToList();
 

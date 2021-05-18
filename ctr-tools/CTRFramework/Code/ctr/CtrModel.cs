@@ -9,7 +9,7 @@ using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework
 {
-    public class CtrModel
+    public class CtrModel : IRead
     {
         public List<UIntPtr> PatchTable = new List<UIntPtr>();
 
