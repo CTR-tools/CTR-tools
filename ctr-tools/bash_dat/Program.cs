@@ -2,6 +2,8 @@
 using CTRFramework.Vram;
 using System;
 using System.IO;
+using System.Text;
+using System.Collections.Generic;
 
 namespace bash_dat
 {
@@ -27,19 +29,15 @@ namespace bash_dat
                 return;
             }
 
-            if (args.Length == 0)
-            {
-
-                Console.WriteLine("No file given.");
-                return;
-            }
-
-            string ext = Path.GetExtension(args[0]);
+            string ext = Path.GetExtension(args[0]).ToLower();
 
             switch (ext)
             {
                 case ".tex":
                     LoadTextureFile(args[0]);
+                    break;
+                case ".mdl":
+                    LoadModelFile(args[0]);
                     break;
                 default:
                     LoadDataFile(args[0]);
@@ -76,11 +74,11 @@ namespace bash_dat
                 case "0f35ba94f0ce49b0e6fe8e2012e5f1b4": ptr = 0x34F40; num = 0x276; version = "Spyro 3 PAL Demo"; break;
                 case "db497990f79454bcbd41a770df3692ef": ptr = 0x35238; num = 0x276; version = "Euro Demo xx?"; break;
                 case "b9a576bc33399addb51779c1e2e2bc42": ptr = 0x35850; num = 0x2A6; version = "Sep 14, preview prototype"; break;
-                case "e830b0f1b91c1edeef42a60d3160b752": ptr = 0x3e97c; num = 0x3D2; version = "JAP Trial"; break;
-                case "f620ac01cd60c55ab0e981104f2b6c48": ptr = 0x3e910; num = 0x3E0; version = "NTSC Release"; break;
+                case "e830b0f1b91c1edeef42a60d3160b752": ptr = 0x3E97c; num = 0x3D2; version = "JAP Trial"; break;
+                case "f620ac01cd60c55ab0e981104f2b6c48": ptr = 0x3E910; num = 0x3E0; version = "NTSC Release"; break;
                 case "ce7e3fe1bf226cc8dd195e025725fdd1": ptr = 0x3F988; num = 0x4D9; version = "Oct 9 PAL prototype"; break;
-                case "e9ad2756fe43d11e3d93af05acafef71": ptr = 0x3ee30; num = 0x4DD; version = "JAP Release"; break;
-                case "e71360b5c119f87d88acd9964ac56c21": ptr = 0x3f264; num = 0x545; version = "PAL Release"; break;
+                case "e9ad2756fe43d11e3d93af05acafef71": ptr = 0x3EE30; num = 0x4DD; version = "JAP Release"; break;
+                case "e71360b5c119f87d88acd9964ac56c21": ptr = 0x3F264; num = 0x545; version = "PAL Release"; break;
 
                 default: Console.WriteLine($"Unknown file: {exe_md5}"); return;
             }
@@ -126,7 +124,7 @@ namespace bash_dat
                                 case 0x10: ext = ".sfx2"; break;
                                 case 0x14: ext = ".sfx3"; break;
 
-                                case 0x20000: ext = ".scrn"; break;
+                                case 0x20000: ext = ".tga"; break;
 
                                 case 0x7:
                                 case 0x9:
@@ -223,6 +221,37 @@ namespace bash_dat
 
                     num++;
                 }
+            }
+        }
+
+        static void LoadModelFile(string filename)
+        {
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            {
+                //br.Jump(0x1D4);
+                //br.Jump(0x1B1C);
+                br.Jump(0x26F0);
+
+                List<Vector4s> verts = new List<Vector4s>();
+
+                //for (int i = 0; i <0x23E; i++)
+                for (int i = 0; i <0xFF0/8; i++)
+                {
+                    verts.Add(new Vector4s(br));
+                }
+
+                StringBuilder sb = new StringBuilder();
+
+                foreach (var v in verts)
+                    sb.AppendLine($"v {v.X} {v.Y} {v.Z}");
+
+                for (int i = 0; i < verts.Count; i++)
+                {
+                    sb.AppendLine($"f {4 * i + 1} {4 * i + 2} {4 * i + 3}");
+                    sb.AppendLine($"f {4 * i + 3} {4 * i + 2} {4 * i + 4}");
+                }
+
+                Helpers.WriteToFile(Path.Combine(Meta.BasePath, "test.obj"), sb.ToString());
             }
         }
     }
