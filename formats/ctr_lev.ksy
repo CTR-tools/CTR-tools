@@ -13,8 +13,8 @@ seq:
   - id: scene
     type: scene
     size: data_size
-  - id: ptr_map
-    type: ptr_map
+  - id: patch_table
+    type: t_patch_table
     if: ext_ptr_map == 0
 
 instances:
@@ -25,20 +25,17 @@ instances:
 
 types:
 
-  ptr_map:
+  t_patch_table:
     doc: | 
       an array of offsets that is used to convert relative pointers to
       absolute psx ram pointers
     seq:
-      - id: ptr_map_size
+      - id: size
         type: u4
-      - id: ptr_map
+      - id: entries
         type: u4
         repeat: expr
-        repeat-expr: num_entries
-    instances:
-      num_entries:
-        value: ptr_map_size / 4
+        repeat-expr: size / 4
 
   scene:
     doc: |
