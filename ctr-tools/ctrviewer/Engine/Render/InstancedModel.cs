@@ -39,10 +39,6 @@ namespace ctrviewer.Engine.Render
             {
                 ContentVault.Models[ModelName].Draw(graphics, effect, alpha);
             }
-            else if (ContentVault.Tris.ContainsKey(ModelName))
-            {
-                ContentVault.Tris[ModelName].Draw(graphics, effect, alpha);
-            }
             else
             {
                 Console.WriteLine(ModelName + " not loaded");

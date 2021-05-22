@@ -24,7 +24,7 @@ namespace ctrviewer.Engine.Render
             get => verts.Count;
         }
 
-        public int numQuads
+        public int numFaces
         {
             get => indices.Length / 3;
         }
@@ -147,27 +147,33 @@ namespace ctrviewer.Engine.Render
                     effect.TextureEnabled = textureEnabled;
 
                     if (textureEnabled)
-                    {
-                        effect.Texture = ContentVault.Textures["test"];
-
                         if (ContentVault.Textures.ContainsKey(textureName))
+                        {
                             effect.Texture = ContentVault.Textures[textureName];
-                    }
+                            if (alpha != null)
+                                alpha.Texture = effect.Texture;
+                        }
+                        else
+                        {
+                            //Console.WriteLine("missing texture: " + textureName);
+                            effect.Texture = ContentVault.Textures["test"];
+                            if (alpha != null)
+                                alpha.Texture = effect.Texture;
+                        }
 
-                    if (!CullingEnabled)
+                    if (!CullingEnabled || Game1.ForceNoCulling)
                         Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
 
-                    foreach (var pass in effect.CurrentTechnique.Passes)
+                    foreach (var pass in (alpha != null ? alpha.CurrentTechnique.Passes : effect.CurrentTechnique.Passes))
                     {
                         pass.Apply();
 
                         graphics.GraphicsDevice.DrawUserIndexedPrimitives(
-                                PrimitiveType.TriangleList,
-                                verts_sealed, 0, numVerts,
-                                indices, 0, indices.Length / 3,
-                                VertexPositionColorTexture.VertexDeclaration
+                            PrimitiveType.TriangleList,
+                            verts_sealed, 0, numVerts,
+                            indices, 0, numFaces,
+                            VertexPositionColorTexture.VertexDeclaration
                         );
-
                     }
 
                     if (Samplers.EnableWireframe)
@@ -183,7 +189,7 @@ namespace ctrviewer.Engine.Render
                             graphics.GraphicsDevice.DrawUserIndexedPrimitives(
                                 PrimitiveType.TriangleList,
                                 verts_sealed, 0, numVerts,
-                                indices, 0, indices.Length / 3,
+                                indices, 0, numFaces,
                                 VertexPositionColorTexture.VertexDeclaration
                             );
                         }

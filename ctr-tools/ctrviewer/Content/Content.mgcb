@@ -63,6 +63,18 @@
 /processorParam:TextureFormat=Color
 /build:logo_xmas.png
 
+#begin sfx/menu_down.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx/menu_down.wav
+
+#begin sfx/menu_up.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx/menu_up.wav
+
 #begin test.png
 /importer:TextureImporter
 /processor:TextureProcessor

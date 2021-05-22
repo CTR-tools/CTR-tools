@@ -1,6 +1,9 @@
-﻿using CTRFramework.Shared;
+﻿using CTRFramework;
+using CTRFramework.Shared;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using ctrviewer.Engine.Render;
 
 namespace ctrviewer.Engine
 {
@@ -41,6 +44,23 @@ namespace ctrviewer.Engine
                 );
             mono_v.TextureCoordinate = new Microsoft.Xna.Framework.Vector2(uv.X / 255.0f, uv.Y / 255.0f);
             return mono_v;
+        }
+
+        public static TriList ToTriList(CTRFramework.CtrModel model)
+        {
+            List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
+
+            foreach (var x in model.Entries[0].verts)
+                li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
+
+            TriList t = new TriList();
+            t.textureEnabled = false;
+            t.textureName = "test";
+            t.ScrollingEnabled = false;
+            t.PushTri(li);
+            t.Seal();
+
+            return t;
         }
     }
 }

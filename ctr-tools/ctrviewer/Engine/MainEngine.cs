@@ -76,7 +76,7 @@ namespace ctrviewer.Engine
 
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
 
         }
@@ -95,6 +95,7 @@ namespace ctrviewer.Engine
 
         public void Dispose()
         {
+            Settings.Save();
             Settings.onFieldOfViewChanged -= UpdateFOV;
 
             Cameras.Clear();

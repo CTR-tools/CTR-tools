@@ -54,6 +54,8 @@ namespace ctrviewer.Engine
 
         public List<MenuItem> items = new List<MenuItem>();
 
+        public bool Visible = false;
+
         public MenuItem SelectedItem
         {
             get => items[selection];
@@ -106,6 +108,7 @@ namespace ctrviewer.Engine
                 new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true),
                 new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true),
                 new MenuItem("toggle vertex lighting".ToUpper(), "toggle", "vcolor", true),
+                new MenuItem("toggle double sided".ToUpper(), "toggle", "nocull", true),
                 new MenuItem("toggle skybox".ToUpper(), "toggle", "sky", true),
                 new MenuItem("toggle water".ToUpper(), "toggle", "water", true),
                 new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true),
@@ -263,6 +266,8 @@ namespace ctrviewer.Engine
                 Selection++;
             }
             while (items[Selection].Action == "" && items[Selection].Enabled);
+
+            //ContentVault.Sounds["menu_down"].Play(0.15f, 0, 0);
         }
 
         public void Previous()
@@ -272,6 +277,8 @@ namespace ctrviewer.Engine
                 Selection--;
             }
             while (items[Selection].Action == "" && items[Selection].Enabled);
+
+            //ContentVault.Sounds["menu_up"].Play(0.15f, 0, 0);
         }
 
 
@@ -316,9 +323,11 @@ namespace ctrviewer.Engine
 
         public void Draw(GraphicsDevice gd, SpriteBatch g, SpriteFont fnt, Texture2D background)
         {
+            if (!Visible) return;
+
             float scale = gd.Viewport.Height / 1080f;
 
-            g.Begin(depthStencilState: DepthStencilState.None);
+            //g.Begin(depthStencilState: DepthStencilState.None);
 
             g.Draw(background, gd.Viewport.Bounds, Color.White * 0.25f);
 
@@ -342,9 +351,31 @@ namespace ctrviewer.Engine
                 i++;
             }
 
-            //loc = Position;
+            //draw logo
+            g.Draw(
+                ContentVault.Textures["logo"],
+                new Vector2((gd.Viewport.Width / 2), 50 * gd.Viewport.Height / 1080f),
+                new Rectangle(0, 0, ContentVault.Textures["logo"].Width, ContentVault.Textures["logo"].Height),
+                Color.White,
+                0,
+                new Vector2(ContentVault.Textures["logo"].Width / 2, 0),
+                gd.Viewport.Height / 1080f,
+                SpriteEffects.None,
+                0.5f
+                );
 
-            g.End();
+            //draw framework version
+            g.DrawString(
+                fnt,
+                Game1.version,
+                new Vector2(((gd.Viewport.Width - fnt.MeasureString(Game1.version).X * gd.Viewport.Height / 1080f) / 2), gd.Viewport.Height - 60 * gd.Viewport.Width / 1080f),
+                Color.Aquamarine,
+                0,
+                new Vector2(0, 0),
+                gd.Viewport.Height / 1080f,
+                SpriteEffects.None,
+                 0.5f
+                );
         }
     }
 }

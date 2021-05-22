@@ -275,7 +275,6 @@ namespace ctrviewer.Engine.Render
                     flagq["invis"].Draw(graphics, effect, null);
             }
 
-
             effect.Alpha = 1f;
         }
 

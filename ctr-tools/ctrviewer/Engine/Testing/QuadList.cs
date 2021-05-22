@@ -2,8 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using ctrviewer.Engine.Render;
 
-namespace ctrviewer.Engine.Render
+namespace ctrviewer.Engine.Testing
 {
     public class QuadList : IRenderable
     {
@@ -12,6 +13,7 @@ namespace ctrviewer.Engine.Render
         private VertexPositionColorTexture[] verts_sealed;
         public bool textureEnabled;
         public bool scrollingEnabled;
+        public bool CullingEnabled = true;
         public string textureName = "";
         private short[] indices;
 
@@ -120,6 +122,8 @@ namespace ctrviewer.Engine.Render
                                 alpha.Texture = effect.Texture;
                         }
 
+                    if (!CullingEnabled || Game1.ForceNoCulling)
+                        Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
 
                     foreach (var pass in (alpha != null ? alpha.CurrentTechnique.Passes : effect.CurrentTechnique.Passes))
                     {
@@ -132,7 +136,6 @@ namespace ctrviewer.Engine.Render
                             VertexPositionColorTexture.VertexDeclaration
                         );
                     }
-
 
                     if (Samplers.EnableWireframe)
                     {

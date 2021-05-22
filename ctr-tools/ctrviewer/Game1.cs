@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Audio;
 
 namespace ctrviewer
 {
@@ -33,36 +34,30 @@ namespace ctrviewer
 
     public partial class Game1 : Game
     {
-        public MainEngine eng;
-
-        public static bool BigFileExists = false;
-
-        public LevelType levelType = LevelType.P1;
-
-        public MenuRootComponent newmenu = new MenuRootComponent();
+        MainEngine eng;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont font;
 
-
-        List<Kart> karts = new List<Kart>();
-
         //ctr scenes
         List<Scene> scn = new List<Scene>();
 
+        BigFileReader big;
+        Howl howl;
 
         Menu menu;
+        MenuRootComponent newmenu = new MenuRootComponent();
 
         //effects
         BasicEffect effect;                 //used for static level mesh
         BasicEffect instanceEffect;         //used for instanced mesh
         AlphaTestEffect alphaTestEffect;    //used for alpha textures pass
 
-
-
         public static PlayerIndex activeGamePad = PlayerIndex.One;
 
+        public static Vector3 TimeOfDay = new Vector3(2f);
+        List<Kart> karts = new List<Kart>();
 
         //meh
         public static int currentflag = 1;
@@ -70,11 +65,13 @@ namespace ctrviewer
         //get version only once, because we don't want this to be allocated every frame.
         public static string version = Meta.GetVersion();
 
+        public static bool BigFileExists = false;
+
+        public LevelType levelType = LevelType.P1;
+
         public Game1()
         {
             GameConsole.Write($"ctrviewer - {version}");
-
-            //OBJ.FixCulture();
 
             Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
@@ -169,8 +166,6 @@ namespace ctrviewer
             instanceEffect.VertexColorEnabled = true;
             instanceEffect.TextureEnabled = false;
         }
-
-        public static Vector3 TimeOfDay = new Vector3(2f);
 
         public void UpdateVSync()
         {
@@ -278,6 +273,9 @@ newmenu.Children.Add(btn);
         {
             GameConsole.Write("LoadContent()");
 
+            ContentVault.AddSound("menu_up", Content.Load<SoundEffect>("sfx\\menu_up"));
+            ContentVault.AddSound("menu_down", Content.Load<SoundEffect>("sfx\\menu_down"));
+
             LoadGenericTextures();
             effect.Texture = ContentVault.Textures["test"];
             //effect.TextureEnabled = true;
@@ -320,6 +318,7 @@ newmenu.Children.Add(btn);
             GameConsole.Write($"AddCone({name}, {c.ToString()})");
 
             TriList modl = new TriList();
+            modl.textureEnabled = false;
 
             List<VertexPositionColorTexture> vptc = new List<VertexPositionColorTexture>();
 
@@ -332,12 +331,14 @@ newmenu.Children.Add(btn);
             vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), c1, new Vector2(0, 0)));
             modl.PushQuad(vptc);
 
+            vptc.Clear();
             vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), c1, new Vector2(0, 0)));
             vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), c1, new Vector2(0, 0)));
             vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), c2, new Vector2(0, 0)));
             vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), c1, new Vector2(0, 0)));
             modl.PushQuad(vptc);
 
+            vptc.Clear();
             vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), c1, new Vector2(0, 0)));
             vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), c1, new Vector2(0, 0)));
             vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), c1, new Vector2(0, 0)));
@@ -395,67 +396,38 @@ newmenu.Children.Add(btn);
             }
         }
 
-
         private void TestLoadKart()
         {
-            if (File.Exists("karts.lev"))
-            {
-                Scene karts = Scene.FromFile("karts.lev");
+            if (!File.Exists("karts.lev"))
+                return;
 
-                foreach (CtrModel m in karts.Models)
-                {
-                    if (!ContentVault.Tris.ContainsKey(m.Name) && m.Name == "selectkart")
-                    {
-                        List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
+            Scene karts = Scene.FromFile("karts.lev");
 
-                        foreach (var x in m.Entries[0].verts)
-                            li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
+            foreach (CtrModel m in karts.Models)
+                if (!ContentVault.Models.ContainsKey(m.Name) && m.Name == "selectkart")
+                    ContentVault.Models.Add(m.Name, DataConverter.ToTriList(m));
 
-                        TriList t = new TriList();
-                        t.textureEnabled = false;
-                        t.textureName = "test";
-                        t.ScrollingEnabled = false;
-                        t.PushTri(li);
-                        t.Seal();
-
-                        ContentVault.Tris.Add(m.Name, t);
-                    }
-                }
-
-                //karts.Add(new Kart("selectkart", MGConverter.ToVector3(scn[0].header.startGrid[0].Position), Vector3.Left, 0.5f));
-            }
+            //karts.Add(new Kart("selectkart", MGConverter.ToVector3(scn[0].header.startGrid[0].Position), Vector3.Left, 0.5f));
         }
 
         public void TestLoadExtrenalModels()
         {
             string mdlpath = Path.Combine(Meta.BasePath, Meta.ModelsPath);
 
-            if (Directory.Exists(mdlpath))
+            if (!Directory.Exists(mdlpath)) return;
+
+            string[] models = Directory.GetFiles(mdlpath, "*.ctr");
+
+            if (models.Length == 0) return;
+
+            foreach (var s in models)
             {
-                string[] models = Directory.GetFiles(mdlpath, "*.ctr");
+                CtrModel c = CtrModel.FromFile(s);
 
-                foreach (var s in models)
+                if (!ContentVault.Models.ContainsKey(c.Name))
                 {
-                    CtrModel c = CtrModel.FromFile(s);
-
-                    if (!ContentVault.Tris.ContainsKey(c.Name))
-                    {
-                        List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
-
-                        foreach (var x in c.Entries[0].verts)
-                            li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
-
-                        TriList t = new TriList();
-                        t.textureEnabled = true;
-                        t.textureName = "test";
-                        t.ScrollingEnabled = false;
-                        t.PushTri(li);
-                        t.Seal();
-
-                        ContentVault.Tris.Add(c.Name, t);
-
-                        eng.external.Add(new InstancedModel(c.Name, Vector3.Zero, Vector3.Zero, new Vector3(0.1f)));
-                    }
+                    ContentVault.Models.Add(c.Name, DataConverter.ToTriList(c));
+                    eng.external.Add(new InstancedModel(c.Name, Vector3.Zero, Vector3.Zero, new Vector3(0.1f)));
                 }
             }
         }
@@ -556,7 +528,7 @@ newmenu.Children.Add(btn);
             foreach (Scene s in scn)
                 foreach (CtrModel m in s.Models)
                 {
-                    if (!ContentVault.Tris.ContainsKey(m.Name))
+                    if (!ContentVault.Models.ContainsKey(m.Name))
                     {
                         List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
@@ -570,7 +542,7 @@ newmenu.Children.Add(btn);
                         t.PushTri(li);
                         t.Seal();
 
-                        ContentVault.Tris.Add(m.Name, t);
+                        ContentVault.Models.Add(m.Name, t);
                     }
 
                 }
@@ -702,7 +674,7 @@ newmenu.Children.Add(btn);
         }
 
         public bool updatemouse = false;
-        public static bool InMenu = false;
+        public static bool ForceNoCulling = false;
         public static bool HideInvisible = true;
         public static bool HideWater = false;
         public static bool RenderEnabled = true;
@@ -732,15 +704,17 @@ newmenu.Children.Add(btn);
             //camera.SetRotation(x, y);
             //Console.WriteLine(x);
 
+            oldgs = newgs;
+            oldkb = newkb;
+            oldms = newms;
+
             newms = Mouse.GetState();
+            newgs = GamePad.GetState(activeGamePad);
+            newkb = Keyboard.GetState();
 
             if (IsActive)
             {
-
                 newmenu.Update(gameTime, new Point(newms.X, newms.Y));
-
-                newgs = GamePad.GetState(activeGamePad);
-                newkb = Keyboard.GetState();
 
                 foreach (Kart k in karts)
                     k.Update(gameTime);
@@ -778,10 +752,10 @@ newmenu.Children.Add(btn);
                 if ((newgs.Buttons.Start == ButtonState.Pressed && oldgs.Buttons.Start != newgs.Buttons.Start) ||
                     (newkb.IsKeyDown(Keys.Escape) && newkb.IsKeyDown(Keys.Escape) != oldkb.IsKeyDown(Keys.Escape)))
                 {
-                    InMenu = !InMenu;
+                    menu.Visible = !menu.Visible;
                 }
 
-                if (InMenu)
+                if (menu.Visible)
                 {
                     menu.Update(oldgs, newgs, oldkb, newkb);
 
@@ -792,7 +766,7 @@ newmenu.Children.Add(btn);
                         switch (menu.SelectedItem.Action)
                         {
                             case "close":
-                                InMenu = false;
+                                menu.Visible = false;
                                 break;
                             //case "load":
                             //    LoadGame();
@@ -831,6 +805,7 @@ newmenu.Children.Add(btn);
                                     case "console": eng.Settings.ShowConsole = !eng.Settings.ShowConsole; break;
                                     case "campos": eng.Settings.ShowCamPos = !eng.Settings.ShowCamPos; break;
                                     case "visbox": eng.Settings.VisData = !eng.Settings.VisData; break;
+                                    case "nocull": ForceNoCulling = !ForceNoCulling; break;
                                     case "visboxleaf": eng.Settings.VisDataLeaves = !eng.Settings.VisDataLeaves; break;
                                     case "filter": Samplers.EnableFiltering = !Samplers.EnableFiltering; Samplers.Refresh(); break;
                                     case "wire": Samplers.EnableWireframe = !Samplers.EnableWireframe; break;
@@ -852,7 +827,8 @@ newmenu.Children.Add(btn);
                         menu.Exec = !menu.Exec;
                     }
 
-                    if (newgs.Buttons.B == ButtonState.Pressed && newgs.Buttons.B != oldgs.Buttons.B)
+                    if ((newgs.Buttons.B == ButtonState.Pressed && newgs.Buttons.B != oldgs.Buttons.B) ||
+                        (newgs.Buttons.Y == ButtonState.Pressed && newgs.Buttons.Y != oldgs.Buttons.Y))
                     {
                         bool togglemenu = true;
 
@@ -865,18 +841,21 @@ newmenu.Children.Add(btn);
                             }
                         }
 
-                        if (togglemenu) InMenu = !InMenu;
+                        if (togglemenu) menu.Visible = !menu.Visible;
                     }
                 }
                 else
                 {
-                    foreach (MGLevel mg in eng.MeshHigh)
+                    foreach (var mg in eng.MeshHigh)
                         mg.Update(gameTime);
 
-                    foreach (InstancedModel im in eng.instanced)
+                    foreach (var mg in eng.MeshLow)
+                        mg.Update(gameTime);
+
+                    foreach (var im in eng.instanced)
                         im.Update(gameTime);
 
-                    foreach (InstancedModel im in eng.paths)
+                    foreach (var im in eng.paths)
                         im.Update(gameTime);
 
                     if (ControlsEnabled)
@@ -884,12 +863,7 @@ newmenu.Children.Add(btn);
                         UpdateCameras(gameTime);
                     }
                 }
-
-                oldgs = newgs;
-                oldkb = newkb;
             }
-
-            oldms = newms;
 
             base.Update(gameTime);
         }
@@ -997,100 +971,80 @@ newmenu.Children.Add(btn);
 
         private void DrawLevel(FirstPersonCamera cam = null)
         {
+            if (!RenderEnabled) return;
+
             if (cam == null)
                 cam = eng.Cameras[CameraType.DefaultCamera];
 
-            if (RenderEnabled)
+            //if we have a sky and sky is enabled
+            if (eng.sky != null && eng.Settings.ShowSky)
             {
-                //if (loading != null && gameLoaded)
-                //{
-                //if we have a sky and sky is enabled
-                if (eng.sky != null && eng.Settings.ShowSky)
+                effect.View = eng.Cameras[CameraType.SkyCamera].ViewMatrix;
+                effect.Projection = eng.Cameras[CameraType.SkyCamera].ProjectionMatrix;
+
+                effect.DiffuseColor /= 2;
+                eng.sky.DrawSky(graphics, effect, null);
+                effect.DiffuseColor *= 2;
+
+                alphaTestEffect.DiffuseColor = effect.DiffuseColor;
+
+                //clear z buffer
+                GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
+            }
+
+            effect.View = cam.ViewMatrix;
+            effect.Projection = cam.ProjectionMatrix;
+
+            alphaTestEffect.View = effect.View;
+            alphaTestEffect.Projection = effect.Projection;
+
+            //render ctr models from external folder
+            foreach (var v in eng.external)
+                v.Draw(graphics, instanceEffect, null, cam);
+
+
+            if (eng.Settings.ShowModels || eng.Settings.ShowBotsPath)
+            {
+                if (eng.Settings.ShowModels)
                 {
-                    effect.View = eng.Cameras[CameraType.SkyCamera].ViewMatrix;
-                    effect.Projection = eng.Cameras[CameraType.SkyCamera].ProjectionMatrix;
+                    //render all instanced models
+                    foreach (var v in eng.instanced)
+                        v.Draw(graphics, instanceEffect, null, cam);
 
-                    effect.DiffuseColor /= 2;
-                    eng.sky.DrawSky(graphics, effect, null);
-                    effect.DiffuseColor *= 2;
-
-                    alphaTestEffect.DiffuseColor = effect.DiffuseColor;
-
-                    //clear z buffer
-                    GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
+                    //render karts
+                    foreach (Kart k in karts)
+                        k.Draw(graphics, instanceEffect, null, cam);
                 }
 
-                effect.View = cam.ViewMatrix;
-                effect.Projection = cam.ProjectionMatrix;
-
-                alphaTestEffect.View = effect.View;
-                alphaTestEffect.Projection = effect.Projection;
-
-                foreach (var v in eng.external)
-                    v.Draw(graphics, instanceEffect, null, cam);
-
-                if (eng.Settings.ShowModels || eng.Settings.ShowBotsPath)
+                if (eng.Settings.ShowBotsPath)
                 {
-                    Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
-
-                    if (eng.Settings.ShowModels)
-                    {
-                        foreach (var v in eng.instanced)
-                            v.Draw(graphics, instanceEffect, null, cam);
-
-                        //render karts
-                        foreach (Kart k in karts)
-                            k.Draw(graphics, instanceEffect, null, cam);
-                    }
-
-                    if (eng.Settings.ShowBotsPath)
-                    {
-                        foreach (var v in eng.paths)
-                            v.Draw(graphics, instanceEffect, null, cam);
-                    }
-
-                    Samplers.SetToDevice(graphics, EngineRasterizer.Default);
-                }
-
-                Samplers.SetToDevice(graphics, EngineRasterizer.Default);
-
-                //render depending on lod
-                foreach (MGLevel qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshHigh))
-                    qb.Draw(graphics, effect, alphaTestEffect);
-
-
-                if (eng.Settings.VisData)
-                {
-                    //GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
-
-                    //texture enabled makes visdata invisible
-                    effect.TextureEnabled = false;
-
-                    foreach (var x in eng.bbox)
-                        x.Draw(graphics, effect);
-
-                    if (eng.Settings.VisDataLeaves)
-                        foreach (var key in eng.bbox2.Keys)
-                            foreach (var x in eng.bbox2[key])
-                                x.Draw(graphics, effect);
+                    //render bot paths
+                    foreach (var v in eng.paths)
+                        v.Draw(graphics, instanceEffect, null, cam);
                 }
             }
+
+            //Samplers.SetToDevice(graphics, EngineRasterizer.Default);
+
+            //render level mesh depending on lod
+            foreach (MGLevel qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshHigh))
+                qb.Draw(graphics, effect, alphaTestEffect);
+
+
+            if (eng.Settings.VisData)
+            {
+                //texture enabled makes visdata invisible
+                effect.TextureEnabled = false;
+
+                foreach (var x in eng.bbox)
+                    x.Draw(graphics, effect);
+
+                if (eng.Settings.VisDataLeaves)
+                    foreach (var key in eng.bbox2.Keys)
+                        foreach (var x in eng.bbox2[key])
+                            x.Draw(graphics, effect);
+            }
         }
-
-
-        Task loading;
-
-
-        private void LoadGame()
-        {
-            LoadStuff(null);
-            loading = Task.Run(() => { });
-            //loading = Task.Run(() => LoadStuff());
-            //loading.Wait();
-        }
-
-        BigFileReader big;
-        Howl howl;
 
         private bool FindBigFile()
         {
@@ -1177,9 +1131,7 @@ newmenu.Children.Add(btn);
             IsDrawing = true;
 
             GraphicsDevice.Clear(eng.BackgroundColor);
-
-            //graphics.GraphicsDevice.Viewport = vpFull;
-            //DrawLevel();
+            spriteBatch.Begin();
 
             if (eng.Settings.StereoPair)
             {
@@ -1199,43 +1151,19 @@ newmenu.Children.Add(btn);
                 DrawLevel();
             }
 
-            if (InMenu)
-                menu.Draw(GraphicsDevice, spriteBatch, font, tint);
+            menu.Draw(GraphicsDevice, spriteBatch, font, tint);
 
-            spriteBatch.Begin(depthStencilState: DepthStencilState.Default);
-
-            if (InMenu)
-            {
-                spriteBatch.Draw(
-                    ContentVault.Textures["logo"],
-                    new Vector2((graphics.GraphicsDevice.Viewport.Width / 2), 50 * graphics.GraphicsDevice.Viewport.Height / 1080f),
-                    new Rectangle(0, 0, ContentVault.Textures["logo"].Width, ContentVault.Textures["logo"].Height),
-                    Color.White,
-                    0,
-                    new Vector2(ContentVault.Textures["logo"].Width / 2, 0),
-                    graphics.GraphicsDevice.Viewport.Height / 1080f,
-                    SpriteEffects.None,
-                    0.5f
-                    );
-
-                spriteBatch.DrawString(
-                    font,
-                    version,
-                    new Vector2(((graphics.PreferredBackBufferWidth - font.MeasureString(version).X * graphics.GraphicsDevice.Viewport.Height / 1080f) / 2), graphics.PreferredBackBufferHeight - 60 * graphics.GraphicsDevice.Viewport.Height / 1080f),
-                    Color.Aquamarine,
-                    0,
-                    new Vector2(0, 0),
-                    graphics.GraphicsDevice.Viewport.Height / 1080f,
-                    SpriteEffects.None,
-                     0.5f
-                    );
-            }
 
             if (IsLoading)
                 spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
             if (scn.Count == 0 && !IsLoading)
-                spriteBatch.DrawString(font, $"No levels loaded.\r\nPut LEV/VRM files in levels folder.\r\n...or put BIGFILE.BIG in root folder\r\nand use load level menu.".ToString(),
+                spriteBatch.DrawString(font, 
+                    "Crash Team Racing level viewer\r\n\r\n" +
+                    "No levels loaded.\r\n"+
+                    "Put LEV/VRM files in levels folder,\r\n"+
+                    "or put BIGFILE.BIG in root folder,\r\n"+
+                    "or insert/mount CTR CD and use load level menu.",
                     new Vector2(20 * graphics.GraphicsDevice.Viewport.Height / 1080f, 20 * graphics.GraphicsDevice.Viewport.Height / 1080f),
                     Color.Yellow,
                     0,
@@ -1243,7 +1171,6 @@ newmenu.Children.Add(btn);
                     graphics.GraphicsDevice.Viewport.Height / 1080f,
                     SpriteEffects.None,
                     0.5f);
-
 
             //spriteBatch.DrawString(font, $"{newms.ToString()}", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString($"{newms.ToString()}").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
@@ -1272,13 +1199,12 @@ newmenu.Children.Add(btn);
             if (eng.Settings.ShowConsole)
                 GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);
 
-            //draw calls count
-            //spriteBatch.DrawString(font, GraphicsDevice.Metrics.DrawCount.ToString(), new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString(GraphicsDevice.Metrics.DrawCount.ToString()).X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
-
             newmenu.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
 
+            //reset depth state to default cause spritebatch uses none
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
             // base.Draw(gameTime);
 
