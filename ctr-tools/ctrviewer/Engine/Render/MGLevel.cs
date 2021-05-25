@@ -216,11 +216,7 @@ namespace ctrviewer.Engine.Render
 
         public void Push(Dictionary<string, TriList> dict, string name, List<VertexPositionColorTexture> monolist, string custTex = "")
         {
-            if (dict.ContainsKey(name))
-            {
-               //dict[name].PushQuad(monolist);
-            }
-            else
+            if (!dict.ContainsKey(name))
             {
                 TriList ql = new TriList(new List<VertexPositionColorTexture>() { }, true, (custTex != "" ? custTex : name));
                 dict.Add(name, ql);

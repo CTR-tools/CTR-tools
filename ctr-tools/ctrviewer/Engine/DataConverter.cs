@@ -48,6 +48,8 @@ namespace ctrviewer.Engine
 
         public static TriList ToTriList(CTRFramework.CtrModel model)
         {
+            GameConsole.Write(model.Name);
+
             List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
             foreach (var x in model.Entries[0].verts)

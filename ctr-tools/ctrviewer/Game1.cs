@@ -257,13 +257,13 @@ newmenu.Children.Add(btn);
         }
 
 
-        public bool IsChristmas() => (DateTime.Now.Month == 12 && DateTime.Now.Day >= 20) || (DateTime.Now.Month == 1 && DateTime.Now.Day <= 7);
+        public bool IsChristmas => (DateTime.Now.Month == 12 && DateTime.Now.Day >= 20) || (DateTime.Now.Month == 1 && DateTime.Now.Day <= 7);
 
         void LoadGenericTextures()
         {
             ContentVault.AddTexture("test", Content.Load<Texture2D>("test"));
             ContentVault.AddTexture("flag", Content.Load<Texture2D>("flag"));
-            ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas() ? "logo_xmas" : "logo"));
+            ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas ? "logo_xmas" : "logo"));
         }
 
 
@@ -315,8 +315,6 @@ newmenu.Children.Add(btn);
         //convert this abomination to a model import
         public void AddCone(string name, Color c)
         {
-            GameConsole.Write($"AddCone({name}, {c.ToString()})");
-
             TriList modl = new TriList();
             modl.textureEnabled = false;
 
@@ -483,6 +481,8 @@ newmenu.Children.Add(btn);
             //loading textures between scenes and conversion to monogame for alpha textures info
             LoadTextures();
 
+            GameConsole.Write("textures extracted at: " + sw.Elapsed.TotalSeconds);
+
             foreach (Scene s in scn)
             {
                 eng.MeshHigh.Add(new MGLevel(s, Detail.Med));
@@ -530,25 +530,9 @@ newmenu.Children.Add(btn);
                 {
                     if (!ContentVault.Models.ContainsKey(m.Name))
                     {
-                        List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
-
-                        foreach (var x in m.Entries[0].verts)
-                            li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
-
-                        TriList t = new TriList();
-                        t.textureEnabled = false;
-                        t.textureName = "test";
-                        t.ScrollingEnabled = false;
-                        t.PushTri(li);
-                        t.Seal();
-
-                        ContentVault.Models.Add(m.Name, t);
+                        ContentVault.Models.Add(m.Name, DataConverter.ToTriList(m));
                     }
-
                 }
-
-
-            GameConsole.Write("extracted dynamics at: " + sw.Elapsed.TotalSeconds);
 
             foreach (Scene s in scn)
             {
@@ -557,8 +541,6 @@ newmenu.Children.Add(btn);
 
                 foreach (var ph in s.pickups)
                 {
-                    GameConsole.Write(ph.Scale.ToString());
-
                     eng.instanced.Add(new InstancedModel(
                         ph.ModelName,
                         DataConverter.ToVector3(ph.Pose.Position),
@@ -585,20 +567,19 @@ newmenu.Children.Add(btn);
                 }
             }
 
-            GameConsole.Write("textures extracted at: " + sw.Elapsed.TotalSeconds);
-
+            GameConsole.Write("extracted dynamics an bsp at: " + sw.Elapsed.TotalSeconds);
 
             foreach (Scene s in scn)
             {
                 if (s.visdata.Count > 0)
-                    BspDraw(s.visdata[0], s, 0);
+                    BspPopulate(s.visdata[0], s, 0);
 
                 GameConsole.Write(s.Info());
             }
 
             sw.Stop();
 
-            GameConsole.Write("textures loaded. level done: " + sw.Elapsed.TotalSeconds);
+            GameConsole.Write("level done: " + sw.Elapsed.TotalSeconds);
 
             UpdateEffects();
 
@@ -622,7 +603,7 @@ newmenu.Children.Add(btn);
             new Color(0.0f,0.0f,0.0f,1.0f)
         };
 
-        private void BspDraw(VisData visDat, Scene scene, int level)
+        private void BspPopulate(VisData visDat, Scene scene, int level)
         {
             List<VisData> childVisData = scene.GetVisDataChildren(visDat); // if node has children get those children
             if (childVisData.Count > 0)  // has any children?
@@ -643,7 +624,7 @@ newmenu.Children.Add(btn);
                             eng.bbox2.Add(level, new List<WireBox>());
 
                         eng.bbox2[level].Add(new WireBox(DataConverter.ToVector3(b.bbox.Min), DataConverter.ToVector3(b.bbox.Max), colorLevelsOfBsp[level % colorLevelsOfBsp.Length], 1 / 100f));
-                        BspDraw(b, scene, level + 1);
+                        BspPopulate(b, scene, level + 1);
                     }
                 }
             }
@@ -741,7 +722,10 @@ newmenu.Children.Add(btn);
                     eng.Settings.Windowed = !eng.Settings.Windowed;
                 }
 
-                if (newkb.IsKeyDown(Keys.OemTilde) && !oldkb.IsKeyDown(Keys.OemTilde))
+                if (
+                    (newkb.IsKeyDown(Keys.OemTilde) && !oldkb.IsKeyDown(Keys.OemTilde)) ||
+                    (newgs.IsButtonDown(Buttons.Back) && ! oldgs.IsButtonDown(Buttons.Back))
+                   )
                 {
                     eng.Settings.ShowConsole = !eng.Settings.ShowConsole;
                 }

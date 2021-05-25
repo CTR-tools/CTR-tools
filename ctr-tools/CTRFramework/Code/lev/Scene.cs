@@ -150,6 +150,12 @@ namespace CTRFramework
                 }
             }
 
+            //assign anim color target to vertex
+            foreach (var va in vertanims)
+            {
+                verts[(int)((va.ptrVertex - mesh.ptrVertices.ToUInt32()) / 16)].color_target = va.color;
+            }
+
 
             /*
              //water texture

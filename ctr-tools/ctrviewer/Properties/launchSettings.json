@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ctrviewer": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

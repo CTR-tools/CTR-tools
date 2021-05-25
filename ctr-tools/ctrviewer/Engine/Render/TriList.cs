@@ -10,7 +10,8 @@ namespace ctrviewer.Engine.Render
         public bool Sealed = false;
         public List<VertexPositionColorTexture> verts = new List<VertexPositionColorTexture>();
         private VertexPositionColorTexture[] verts_sealed;
-        public List<int> curColor = new List<int>();
+        public List<Color> beginColor = new List<Color>();
+        public List<Color> endColor = new List<Color>();
         public Dictionary<int, List<Color>> animatedColors = new Dictionary<int, List<Color>>();
         public bool vColAnimEnabled = true;
         public bool textureEnabled = true;
@@ -19,15 +20,11 @@ namespace ctrviewer.Engine.Render
         public string textureName = "";
         private short[] indices;
 
-        public int numVerts
-        {
-            get => verts.Count;
-        }
+        float lerp = 0;
 
-        public int numFaces
-        {
-            get => indices.Length / 3;
-        }
+        public int numVerts => verts.Count;
+
+        public int numFaces => indices.Length / 3;
 
         public void SetColor(Color c)
         {
@@ -47,19 +44,12 @@ namespace ctrviewer.Engine.Render
         {
             indices = GenerateIndices().ToArray();
             verts_sealed = verts.ToArray();
+            Sealed = true;
             for (int i = 0; i < numVerts; i++)
             {
-                animatedColors.Add(i, new List<Color>());
-
-                for (int j = 0; j < 127; j++)
-                    animatedColors[i].Add(new Color(j*2,j*2,j*2));
-
-                for (int j = 0; j < 127; j++)
-                    animatedColors[i].Add(new Color(255-j*2, 255-j*2, 255-j*2));
-
-                curColor.Add(0);
+                beginColor.Add(verts[i].Color);
+                endColor.Add(Color.White);
             }
-            Sealed = true;
         }
 
         public void PushTri(List<VertexPositionColorTexture> lv)
@@ -86,6 +76,8 @@ namespace ctrviewer.Engine.Render
                 verts.AddRange(new List<VertexPositionColorTexture>() { lv[0], lv[1], lv[2], lv[2], lv[1], lv[3] } );
         }
 
+        bool forward = true;
+
         public void Update(GameTime gameTime)
         {
             if (!vColAnimEnabled && !ScrollingEnabled)
@@ -103,12 +95,15 @@ namespace ctrviewer.Engine.Render
             {
                 for (int i = 0; i < numVerts; i++)
                 {
-                    verts_sealed[i].Color = animatedColors[i][curColor[i]];
-
-                    curColor[i]++;
-                    if (curColor[i] >= animatedColors[i].Count)
-                        curColor[i] = 0;
+                    verts_sealed[i].Color = Color.Lerp(beginColor[i], endColor[i], forward ? lerp : 1 - lerp);
                 }
+            }
+
+            lerp += (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000f;
+            if (lerp > 1)
+            {
+                lerp -= 1;
+                forward = !forward;
             }
         }
 

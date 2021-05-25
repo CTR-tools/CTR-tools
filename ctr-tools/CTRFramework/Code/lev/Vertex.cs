@@ -10,6 +10,8 @@ namespace CTRFramework
         public Vector3 coord;
         public Vector4b color;
         public Vector4b color_morph;
+
+        public Vector4b color_target;
         public Vector2b uv; //not used by CTR, added for convenience
 
         public Vertex()
