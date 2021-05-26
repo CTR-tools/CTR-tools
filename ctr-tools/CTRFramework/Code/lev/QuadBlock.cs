@@ -55,7 +55,7 @@ namespace CTRFramework
         public TerrainFlags terrainFlag;
         public byte WeatherIntensity;
         public byte WeatherType;
-        public byte TerrainFlagUnknown;
+        public byte TerrainFlagUnknown; //almost always 0, only found in tiger temple and sewer speedway
 
         public short id;
         public byte trackPos;
@@ -225,6 +225,13 @@ namespace CTRFramework
             9, 4, 8
         };
 
+        private List<int[]> FaceIndices = new List<int[]>() {
+            new int[] { 0, 4, 5, 6 },
+            new int[] { 4, 1, 6, 7 },
+            new int[] { 5, 6, 2, 8 },
+            new int[] { 6, 7, 8, 3 }
+        };
+
         /*
         //magic array of indices, each line contains 2 quads
         int[] inds = new int[]
@@ -236,9 +243,9 @@ namespace CTRFramework
         };
         */
 
-        public List<CTRFramework.Vertex> GetVertexList(Scene s)
+        public List<Vertex> GetVertexList(Scene s)
         {
-            List<CTRFramework.Vertex> buf = new List<CTRFramework.Vertex>();
+            List<Vertex> buf = new List<Vertex>();
 
             for (int i = inds.Length - 1; i >= 0; i--)
                 buf.Add(s.verts[ind[inds[i] - 1]]);
@@ -258,18 +265,18 @@ namespace CTRFramework
 
 
         //use this later for obj export too
-        public List<CTRFramework.Vertex> GetVertexListq(List<Vertex> v, int i)
+        public List<Vertex> GetVertexListq(List<Vertex> vertexArray, int i)
         {
             try
             {
-                List<CTRFramework.Vertex> buf = new List<CTRFramework.Vertex>();
+                List<Vertex> buf = new List<Vertex>();
 
                 if (i == -1)
                 {
                     int[] arrind = new int[] { 0, 1, 2, 3 };
 
                     for (int j = 0; j < 4; j++)
-                        buf.Add(v[ind[arrind[j]]]);
+                        buf.Add(vertexArray[ind[arrind[j]]]);
 
                     for (int j = 0; j < 4; j++)
                     {
@@ -321,18 +328,27 @@ namespace CTRFramework
                     }
 
 
-                    switch (i)
+                    if (i > 4 || i < 0)
                     {
-                        case 0: arrind = new int[4] { 0, 4, 5, 6 }; break;
-                        case 1: arrind = new int[4] { 4, 1, 6, 7 }; break;
-                        case 2: arrind = new int[4] { 5, 6, 2, 8 }; break;
-                        case 3: arrind = new int[4] { 6, 7, 8, 3 }; break;
-                        default: throw new Exception("Can't have more than 4 quads in a quad block.");
+                        Helpers.Panic(this, PanicType.Warning, "Can't have more than 4 quads in a quad block.");
+                        return null;
                     }
 
-                    for (int j = 0; j < 4; j++)
-                        buf.Add(v[ind[arrind[j]]]);
+                    arrind = FaceIndices[i];
 
+                    for (int j = 0; j < 4; j++)
+                        buf.Add(vertexArray[ind[arrind[j]]]);
+
+                    /*
+                    for (int j = 0; j < 4; j++)
+                    {
+                        buf[j].color = new Vector4b(
+                            (byte)(255 / 4 * j),
+                            (byte)(255 / 4 * j),
+                            (byte)(255 / 4 * j), 
+                            0);
+                    }
+                    */
 
                     for (int j = 0; j < 4; j++)
                     {
@@ -349,15 +365,12 @@ namespace CTRFramework
                         }
                         else
                         {
-                            buf[j].uv = new Vector2b((byte)((j & 3) >> 1), (byte)(j & 1));
+                            buf[j].uv = new Vector2b(0, 0);//new Vector2b((byte)((j & 3) >> 1), (byte)(j & 1));
                         }
                     }
 
                     if (buf.Count != 4)
-                    {
                         Helpers.Panic(this, PanicType.Error, "not a quad! " + buf.Count);
-                        Console.ReadKey();
-                    }
                 }
 
                 return buf;

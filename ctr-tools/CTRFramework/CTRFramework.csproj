@@ -201,6 +201,7 @@
     <EmbeddedResource Include="Data\xa_usa_beta_sep.txt" />
     <EmbeddedResource Include="Data\xa_jap_release.txt" />
     <EmbeddedResource Include="Data\xa_pal_release.txt" />
+    <EmbeddedResource Include="Data\bash_filelist.txt" />
     <Content Include="Properties\BuildDate.txt" />
   </ItemGroup>
   <ItemGroup>

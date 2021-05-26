@@ -2,11 +2,11 @@
 using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using ThreeDeeBear.Models.Ply;
-using System.IO;
 
 namespace CTRFramework
 {
@@ -307,12 +307,12 @@ namespace CTRFramework
                 clr[2] = clr[3];
                 clr[3] = cols[d.colorIndex];
 
-                
+
                 tlb[0] = tlb[1];
                 tlb[1] = tlb[2];
                 tlb[2] = tlb[3];
                 tlb[3] = (d.texIndex == 0 ? null : tl[d.texIndex - 1]);
-                
+
 
                 if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
@@ -329,7 +329,7 @@ namespace CTRFramework
 
                 //if we got 3 indices in tristrip (0,1,2)
                 if (stripLength >= 2)
-                { 
+                {
                     //read 3 vertices and push to the array
                     for (int z = 3 - 1; z >= 0; z--)
                     {

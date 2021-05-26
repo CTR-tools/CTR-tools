@@ -66,7 +66,7 @@ namespace ctrviewer.Engine
             set
             {
                 _antiAlias = value;
-               onAntiAliasChanged?.Invoke();
+                onAntiAliasChanged?.Invoke();
             }
         }
 

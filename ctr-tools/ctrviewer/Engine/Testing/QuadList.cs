@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using ctrviewer.Engine.Render;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using ctrviewer.Engine.Render;
 
 namespace ctrviewer.Engine.Testing
 {

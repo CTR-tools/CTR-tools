@@ -1,13 +1,10 @@
 ﻿using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Lang;
-using CTRFramework.Shared;
 using System;
-using System.IO;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.ComponentModel;
-using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
 
 namespace CTRTools.Controls
 {

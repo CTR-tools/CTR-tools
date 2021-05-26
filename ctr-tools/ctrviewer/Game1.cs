@@ -6,14 +6,13 @@ using ctrviewer.Engine;
 using ctrviewer.Engine.Render;
 using ctrviewer.Engine.Testing;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Audio;
 
 namespace ctrviewer
 {
@@ -724,7 +723,7 @@ newmenu.Children.Add(btn);
 
                 if (
                     (newkb.IsKeyDown(Keys.OemTilde) && !oldkb.IsKeyDown(Keys.OemTilde)) ||
-                    (newgs.IsButtonDown(Buttons.Back) && ! oldgs.IsButtonDown(Buttons.Back))
+                    (newgs.IsButtonDown(Buttons.Back) && !oldgs.IsButtonDown(Buttons.Back))
                    )
                 {
                     eng.Settings.ShowConsole = !eng.Settings.ShowConsole;
@@ -1142,11 +1141,11 @@ newmenu.Children.Add(btn);
                 spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
             if (scn.Count == 0 && !IsLoading)
-                spriteBatch.DrawString(font, 
+                spriteBatch.DrawString(font,
                     "Crash Team Racing level viewer\r\n\r\n" +
-                    "No levels loaded.\r\n"+
-                    "Put LEV/VRM files in levels folder,\r\n"+
-                    "or put BIGFILE.BIG in root folder,\r\n"+
+                    "No levels loaded.\r\n" +
+                    "Put LEV/VRM files in levels folder,\r\n" +
+                    "or put BIGFILE.BIG in root folder,\r\n" +
                     "or insert/mount CTR CD and use load level menu.",
                     new Vector2(20 * graphics.GraphicsDevice.Viewport.Height / 1080f, 20 * graphics.GraphicsDevice.Viewport.Height / 1080f),
                     Color.Yellow,

@@ -73,7 +73,7 @@ namespace ctrviewer.Engine.Render
             }
 
             if (lv != null)
-                verts.AddRange(new List<VertexPositionColorTexture>() { lv[0], lv[1], lv[2], lv[2], lv[1], lv[3] } );
+                verts.AddRange(new List<VertexPositionColorTexture>() { lv[0], lv[1], lv[2], lv[2], lv[1], lv[3] });
         }
 
         bool forward = true;

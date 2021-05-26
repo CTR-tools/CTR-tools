@@ -1,9 +1,8 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
 using System;
-using System.IO;
-using System.Text;
 using System.Collections.Generic;
+using System.IO;
 
 namespace bash_dat
 {
@@ -87,7 +86,7 @@ namespace bash_dat
 
             try
             {
-                Directory.CreateDirectory("data");
+                Dictionary<int, string> filelist = Meta.LoadNumberedList("bash_filelist.txt");
 
                 using (BinaryReaderEx hdr = new BinaryReaderEx(File.Open(filename, FileMode.Open)))
                 {
@@ -156,7 +155,10 @@ namespace bash_dat
                             }
 
                             dat.Jump(offset);
-                            File.WriteAllBytes(Path.Combine(dir, "data", $"{i.ToString("00000")}{ext}"), dat.ReadBytes(size));
+
+                            string final_path = Path.Combine(dir, "data", (filelist.ContainsKey(i) && num == 0x3E0) ? filelist[i] : $"{i.ToString("00000")}{ext}");
+                            Directory.CreateDirectory(Path.GetDirectoryName(final_path));
+                            File.WriteAllBytes(final_path, dat.ReadBytes(size));
 
                             Console.Write(".");
                         }
@@ -226,32 +228,22 @@ namespace bash_dat
 
         static void LoadModelFile(string filename)
         {
+            List<BashMesh> models = new List<BashMesh>();
+
             using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                //br.Jump(0x1D4);
-                //br.Jump(0x1B1C);
-                br.Jump(0x26F0);
+                br.Jump(0x54);
 
-                List<Vector4s> verts = new List<Vector4s>();
+                int numModels = br.ReadInt32();
 
-                //for (int i = 0; i <0x23E; i++)
-                for (int i = 0; i <0xFF0/8; i++)
-                {
-                    verts.Add(new Vector4s(br));
-                }
+                for (int i = 0; i < numModels; i++)
+                    models.Add(new BashMesh(br));
 
-                StringBuilder sb = new StringBuilder();
+                foreach (var m in models)
+                    Console.WriteLine(m.ToString());
 
-                foreach (var v in verts)
-                    sb.AppendLine($"v {v.X} {v.Y} {v.Z}");
-
-                for (int i = 0; i < verts.Count; i++)
-                {
-                    sb.AppendLine($"f {4 * i + 1} {4 * i + 2} {4 * i + 3}");
-                    sb.AppendLine($"f {4 * i + 3} {4 * i + 2} {4 * i + 4}");
-                }
-
-                Helpers.WriteToFile(Path.Combine(Meta.BasePath, "test.obj"), sb.ToString());
+                for (int i = 0; i < numModels; i++)
+                    Helpers.WriteToFile(Path.Combine(Path.GetDirectoryName(filename), $"model_{i.ToString("00")}.obj"), models[i].ToObj());
             }
         }
     }
