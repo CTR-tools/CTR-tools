@@ -14,9 +14,9 @@
 145=overlays\text\pogo.bin
 146=overlays\text\papu.bin
 147=overlays\text\oxide.bin
-148=overlays\text\jewel.bin
+148=overlays\text\dino.bin
 149=overlays\text\kegs.bin
-150=overlays\text\mushroom.bin
+150=overlays\text\mallet.bin
 151=overlays\text\crate.bin
 152=overlays\text\ball.bin
 
@@ -179,12 +179,15 @@
 453=music\manic_panic.sfx
 454=music\pogo_padlock.sfx
 
+471=models\bearminator\data.tex
+472=models\bearminator\data.mdl
 
 487=overlays\modes\polar.bin
 
 
-610=modes\oxide_race\data.tex
-611=modes\oxide_race\data.mdl
+610=models\oxide_race\data.tex
+611=models\oxide_race\data.mdl
+
 
 # game mode overlays
 716=overlays\modes\kegs.bin
@@ -203,6 +206,26 @@
 
 
 
+# char models probably warp room
+743=models\chars\warp\rilla\data.tex
+744=models\chars\warp\rilla\data.mdl
+745=models\chars\warp\dingo\data.tex
+746=models\chars\warp\dingo\data.mdl
+747=models\chars\warp\kong\data.tex
+748=models\chars\warp\kong\data.mdl
+749=models\chars\warp\tiny\data.tex
+750=models\chars\warp\tiny\data.mdl
+751=models\chars\warp\brio\data.tex
+752=models\chars\warp\brio\data.mdl
+753=models\chars\warp\cortex\data.tex
+754=models\chars\warp\cortex\data.mdl
+755=models\chars\warp\coco\data.tex
+756=models\chars\warp\coco\data.mdl
+757=models\chars\warp\crash\data.tex
+758=models\chars\warp\crash\data.mdl
+
+
+
 
 787=models\papu_pummel\papu_minion\data.tex
 788=models\papu_pummel\papu_minion\data.mdl
@@ -214,23 +237,23 @@
 797=models\snow_bash\penguin\data.tex
 798=models\snow_bash\penguin\data.mdl
 
-# char models on sharks?
-799=models\chars\shark\brio\data.tex
-800=models\chars\shark\brio\data.mdl
-801=models\chars\shark\rilla\data.tex
-802=models\chars\shark\rilla\data.mdl
-803=models\chars\shark\coco\data.tex
-804=models\chars\shark\coco\data.mdl
-805=models\chars\shark\kong\data.tex
-806=models\chars\shark\kong\data.mdl
-807=models\chars\shark\dingo\data.tex
-808=models\chars\shark\dingo\data.mdl
-809=models\chars\shark\tiny\data.tex
-810=models\chars\shark\tiny\data.mdl
-811=models\chars\shark\cortex\data.tex
-812=models\chars\shark\cortex\data.mdl
-813=models\chars\shark\crash\data.tex
-814=models\chars\shark\crash\data.mdl
+# char models on sharks or splash dash
+799=models\chars\splash\brio\data.tex
+800=models\chars\splash\brio\data.mdl
+801=models\chars\splash\rilla\data.tex
+802=models\chars\splash\rilla\data.mdl
+803=models\chars\splash\coco\data.tex
+804=models\chars\splash\coco\data.mdl
+805=models\chars\splash\kong\data.tex
+806=models\chars\splash\kong\data.mdl
+807=models\chars\splash\dingo\data.tex
+808=models\chars\splash\dingo\data.mdl
+809=models\chars\splash\tiny\data.tex
+810=models\chars\splash\tiny\data.mdl
+811=models\chars\splash\cortex\data.tex
+812=models\chars\splash\cortex\data.mdl
+813=models\chars\splash\crash\data.tex
+814=models\chars\splash\crash\data.mdl
 
 # char models for crash dash modes
 815=models\chars\race\rilla\data.tex
