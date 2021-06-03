@@ -175,6 +175,14 @@
 302=music\sky_balls.sfx
 303=music\title.sfx
 
+# addional sfx block
+446=sfx\446.sfx
+447=sfx\447.sfx
+448=sfx\448.sfx
+449=sfx\449.sfx
+450=sfx\450.sfx
+451=sfx\451.sfx
+
 452=music\bearminator.sfx
 453=music\manic_panic.sfx
 454=music\pogo_padlock.sfx

@@ -59,7 +59,7 @@ namespace ctrviewer.Engine
 
         public void UpdateStereoCamera(CameraType cameraType, float separationValue)
         {
-            Vector3 moveVector = Vector3.Transform((cameraType == CameraType.LeftEyeCamera ? Vector3.Left : Vector3.Right) * separationValue / 100f, Cameras[CameraType.DefaultCamera].GetYawPitchRollMatrix());
+            Vector3 moveVector = Vector3.Transform((cameraType == CameraType.RightEyeCamera ? Vector3.Left : Vector3.Right) * separationValue / 100f, Cameras[CameraType.DefaultCamera].GetYawPitchRollMatrix());
             Cameras[cameraType].Position = Cameras[CameraType.DefaultCamera].Position + moveVector;
             Cameras[cameraType].rotationSpeed = Cameras[CameraType.DefaultCamera].rotationSpeed;
             Cameras[cameraType].Target = Cameras[CameraType.DefaultCamera].Target;

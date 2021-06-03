@@ -83,7 +83,7 @@ namespace bash_dat
                 ptrAfterVerts.ToString("X8") + " " +
                 ptrSmthElse.ToString("X8") + " " +
                 ptrSmthElse2.ToString("X8") + " " +
-                ptrLast.ToString("X8");
+                ptrLast.ToString("X8") + "numVerts=" + (ptrAfterVerts - ptrVerts - 0x14) / 8;
         }
     }
 }
