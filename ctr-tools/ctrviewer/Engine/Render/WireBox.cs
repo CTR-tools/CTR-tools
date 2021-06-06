@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ctrviewer.Engine.Render
 {
-    public class WireBox
+    public class WireBox : IRenderable
     {
         VertexPositionColor[] Vertices;
 
@@ -49,7 +49,7 @@ namespace ctrviewer.Engine.Render
             };
         }
 
-        public void Draw(GraphicsDeviceManager graphics, BasicEffect effect)
+        public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alphaEffect = null)
         {
             foreach (var pass in effect.CurrentTechnique.Passes)
             {

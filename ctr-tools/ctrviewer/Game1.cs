@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using ctrviewer.Loaders;
 
 namespace ctrviewer
 {
@@ -179,7 +180,6 @@ namespace ctrviewer
             graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
         }
 
-
         public void SetTimeOfDay(PreferredTimeOfDay tod)
         {
             switch (tod)
@@ -200,7 +200,6 @@ namespace ctrviewer
 
             UpdateEffects();
         }
-
 
         protected override void Initialize()
         {
@@ -237,34 +236,11 @@ namespace ctrviewer
 
             SwitchDisplayMode();
 
-            newmenu = new MenuRootComponent();
-
-            /*
-MenuButton btn = new MenuButton();
-btn.Size = new Point(100, 100);
-btn.Position = new Point(100, 50);
-btn.OnClick += (s, e) => {
-    GameConsole.Write($"hello from {btn.Text}");
-    btn.buttonState = xButtonState.Disabled;
-};
-btn.Text = "Hi there, i'm a button.";
-
-newmenu.Children.Add(btn);
-*/
-
             base.Initialize();
         }
 
 
         public bool IsChristmas => (DateTime.Now.Month == 12 && DateTime.Now.Day >= 20) || (DateTime.Now.Month == 1 && DateTime.Now.Day <= 7);
-
-        void LoadGenericTextures()
-        {
-            ContentVault.AddTexture("test", Content.Load<Texture2D>("test"));
-            ContentVault.AddTexture("flag", Content.Load<Texture2D>("flag"));
-            ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas ? "logo_xmas" : "logo"));
-        }
-
 
         Texture2D tint;
 
@@ -283,7 +259,7 @@ newmenu.Children.Add(btn);
             tint.SetData(new Color[] { Color.Black });
 
             //load fonts
-            GameConsole.font = Content.Load<SpriteFont>("debug");
+            GameConsole.Font = Content.Load<SpriteFont>("debug");
             font = Content.Load<SpriteFont>("File");
 
             BigFileExists = FindBigFile();
@@ -309,7 +285,6 @@ newmenu.Children.Add(btn);
             AddCone("bluecone", Color.Blue);
             AddCone("browncone", Color.Brown);
         }
-
 
         //convert this abomination to a model import
         public void AddCone(string name, Color c)
@@ -391,6 +366,13 @@ newmenu.Children.Add(btn);
                             ContentVault.alphalist.Add(t.Key);
                 }
             }
+        }
+
+        void LoadGenericTextures()
+        {
+            ContentVault.AddTexture("test", Content.Load<Texture2D>("test"));
+            ContentVault.AddTexture("flag", Content.Load<Texture2D>("flag"));
+            ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas ? "logo_xmas" : "logo"));
         }
 
         private void TestLoadKart()
@@ -484,8 +466,8 @@ newmenu.Children.Add(btn);
 
             foreach (Scene s in scn)
             {
-                eng.MeshHigh.Add(new MGLevel(s, Detail.Med));
-                eng.MeshLow.Add(new MGLevel(s, Detail.Low));
+                eng.MeshHigh.Add(CrashTeamRacingLevel.FromScene(s, Detail.Med));
+                eng.MeshLow.Add(CrashTeamRacingLevel.FromScene(s, Detail.Low));
             }
 
             GameConsole.Write("converted scenes to monogame render at: " + sw.Elapsed.TotalSeconds);
@@ -660,7 +642,7 @@ newmenu.Children.Add(btn);
         public static bool RenderEnabled = true;
         public static bool ControlsEnabled = true;
         public static bool IsDrawing = false;
-
+        bool captureMouse = false;
 
         GamePadState oldgs = GamePad.GetState(activeGamePad);
         GamePadState newgs = GamePad.GetState(activeGamePad);
@@ -668,8 +650,8 @@ newmenu.Children.Add(btn);
         KeyboardState oldkb = new KeyboardState();
         KeyboardState newkb = new KeyboardState();
 
-
-        public float rotation = 0;
+        MouseState oldms = new MouseState();
+        MouseState newms = new MouseState();
 
         protected override void Update(GameTime gameTime)
         {
@@ -850,12 +832,6 @@ newmenu.Children.Add(btn);
 
             base.Update(gameTime);
         }
-
-
-        MouseState oldms = new MouseState();
-        MouseState newms = new MouseState();
-
-        bool captureMouse = false;
 
         private void UpdateCameras(GameTime gameTime)
         {
@@ -1241,7 +1217,6 @@ newmenu.Children.Add(btn);
             scn.Clear();
             eng.Dispose();
             ContentVault.Clear();
-            scn.Clear();
         }
 
         protected override void OnExiting(Object sender, EventArgs args)

@@ -7,14 +7,9 @@
             get
             {
                 if (settings == null)
-                {
                     settings = EngineSettings.Load();
-                    return settings;
-                }
-                else
-                {
-                    return settings;
-                }
+
+                return settings;
             }
         }
     }
