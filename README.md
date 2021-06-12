@@ -8,7 +8,7 @@ Various tools to operate Crash Team Racing (PS1) game files.
 Download latest release here: https://github.com/DCxDemo/CTR-tools/releases/latest \
 Tools description: https://github.com/DCxDemo/CTR-tools/wiki/Tools-description
 
-Join the CTR-tools Discord server: https://discord.gg/56xm9Aj
+Join the CTR-tools Discord server: https://discord.gg/WHkuh2n
 
 ## Features
 * fly around the original CTR levels in a 3D viewer, including a stereoscopic 3d mode
