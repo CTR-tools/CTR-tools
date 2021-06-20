@@ -23,7 +23,7 @@ namespace ctrviewer
         P1 = 0,
         P2 = 1,
         P4 = 2,
-        Relic = 3
+        TT = 3
     }
 
     public enum PreferredTimeOfDay
@@ -1061,9 +1061,13 @@ namespace ctrviewer
             return result;
         }
 
-
+        /// <summary>
+        /// Loads scenes from BIG file.
+        /// </summary>
+        /// <param name="absId">Array of absolute file indices.</param>
         private void LoadLevelsFromBig(params int[] absId)
         {
+            //test whether big file is ready
             if (big == null && !FindBigFile())
             {
                 GameConsole.Write("Missing BIGFILE!");
@@ -1071,10 +1075,10 @@ namespace ctrviewer
             }
 
             List<Scene> scenes = new List<Scene>();
-            // List<string> files = new List<string>();
 
             for (int i = 0; i < absId.Length; i++)
             {
+                //if it's a level, consider level type to load (1p, 2p, 4p, tt)
                 if (absId[i] < 200)
                     absId[i] += (int)levelType * 2;
 
@@ -1083,8 +1087,6 @@ namespace ctrviewer
                 if (Path.GetExtension(big.GetFilename()) != ".vrm")
                     return;
 
-                //big.ReadEntry().Save(Meta.BasePath);
-
                 CtrVrm vrm = big.ReadEntry().ParseAs<CtrVrm>();
 
                 big.NextFile();
@@ -1092,17 +1094,13 @@ namespace ctrviewer
                 if (Path.GetExtension(big.GetFilename()) != ".lev")
                     return;
 
-                //big.ReadEntry().Save(Meta.BasePath);
                 Scene scene = big.ReadEntry().ParseAs<Scene>();
                 scene.SetVram(vrm);
 
                 scenes.Add(scene);
-
-                //files.Add(Path.Combine(Meta.BasePath, big.GetFilename()));
             }
 
             LoadStuff(scenes);
-            //LoadStuff(files.ToArray());
         }
 
         protected override void Draw(GameTime gameTime)

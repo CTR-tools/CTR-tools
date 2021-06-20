@@ -45,7 +45,7 @@ namespace CTRFramework
             name = Path.GetFileNameWithoutExtension(filename);
 
             PatchedContainer cnt = PatchedContainer.FromFile(filename);
-            Read(cnt.GetReader());
+            ReadScene(cnt.GetReader());
 
             //byte[] data = File.ReadAllBytes(filename);
             /*
