@@ -11,11 +11,13 @@ namespace CTRFramework
 {
     public class CtrModel : IRead
     {
-        public List<UIntPtr> PatchTable = new List<UIntPtr>();
-
         public string path;
+        string name = "defaultname";
+        CTREvent gameEvent = CTREvent.Nothing;
+        public List<CtrMesh> Entries = new List<CtrMesh>();
+        List<UIntPtr> PatchTable = new List<UIntPtr>();
 
-        private string name = "defaultname";
+        #region Component model
         [Browsable(true), DisplayName("Model name"), Description(""), Category("CTR Model")]
         public string Name
         {
@@ -23,18 +25,13 @@ namespace CTRFramework
             set => name = value;
         }
 
-        private CTREvent gameEvent = CTREvent.Nothing;
         [Browsable(true), DisplayName("CTR event"), Description(""), Category("CTR Model")]
         public CTREvent GameEvent
         {
             get => gameEvent;
             set => gameEvent = value;
         }
-
-        //public short numEntries;
-        public UIntPtr ptrHeaders = (UIntPtr)0;
-
-        public List<CtrMesh> Entries = new List<CtrMesh>();
+        #endregion
 
         public CtrModel()
         {
@@ -56,18 +53,13 @@ namespace CTRFramework
                 int ptrMapSize = br.ReadInt32() / 4;
 
                 for (int i = 0; i < ptrMapSize; i++)
-                    PatchTable.Add((UIntPtr)br.ReadUInt32());
+                    PatchTable.Add(br.ReadUIntPtr());
             }
         }
 
         public CtrModel(BinaryReaderEx br)
         {
             Read(br);
-        }
-
-        public static CtrModel FromReader(BinaryReaderEx br)
-        {
-            return new CtrModel(br);
         }
 
         /// <summary>
@@ -79,10 +71,10 @@ namespace CTRFramework
             name = br.ReadStringFixed(16);
             gameEvent = (CTREvent)br.ReadInt16();
             int numEntries = br.ReadInt16();
-            ptrHeaders = br.ReadUIntPtr();
+            UIntPtr ptrHeaders = br.ReadUIntPtr();
 
             for (int i = 0; i < numEntries; i++)
-                Entries.Add(new CtrMesh(br));
+                Entries.Add(CtrMesh.FromReader(br));
         }
 
         public override string ToString()
@@ -91,8 +83,8 @@ namespace CTRFramework
 
             sb.Append(name + ": ");
 
-            foreach (CtrMesh head in Entries)
-                sb.Append(head.name + ", ");
+            foreach (var entry in Entries)
+                sb.Append(entry.name + ", ");
 
             sb.Append("\r\n");
 
@@ -107,10 +99,10 @@ namespace CTRFramework
         {
             int i = 0;
 
-            foreach (var en in Entries)
+            foreach (var entry in Entries)
             {
-                string fn = Path.Combine(path, $"{name}.{en.name}.{i.ToString("00")}{(en.IsAnimated ? ".Animated" : "")}.obj");
-                Helpers.WriteToFile(fn, en.ToObj());
+                string fn = Path.Combine(path, $"{name}.{entry.name}.{i.ToString("00")}{(entry.IsAnimated ? ".Animated" : "")}.obj");
+                Helpers.WriteToFile(fn, entry.ToObj());
 
                 i++;
             }
@@ -157,7 +149,7 @@ namespace CTRFramework
             bw.Write((ushort)gameEvent);
             bw.Write((ushort)Entries.Count);
 
-            bw.Write(ptrHeaders, PatchTable);
+            bw.Write((UIntPtr)bw.BaseStream.Position, PatchTable);
 
             foreach (var ctr in Entries)
                 ctr.Write(bw, CtrWriteMode.Header, PatchTable);
@@ -176,7 +168,7 @@ namespace CTRFramework
         public int FixPointers()
         {
             int curPtr = 0x18;
-            ptrHeaders = (UIntPtr)curPtr;
+            //ptrHeaders = (UIntPtr)curPtr;
 
             curPtr += 64 * Entries.Count;
 
@@ -228,6 +220,22 @@ namespace CTRFramework
         }
 
 
+        /// <summary>
+        /// Reads CtrModel object using binary reader.
+        /// </summary>
+        /// <param name="br">BinaryReaderEx object.</param>
+        /// <returns>CtrModel object.</returns>
+        public static CtrModel FromReader(BinaryReaderEx br)
+        {
+            return new CtrModel(br);
+        }
+
+
+        /// <summary>
+        /// Creates CtrModel object using list of OBJ files.
+        /// </summary>
+        /// <param name="objlist"></param>
+        /// <returns></returns>
         public static CtrModel FromObj(List<OBJ> objlist)
         {
             CtrModel ctr = new CtrModel();
@@ -240,6 +248,11 @@ namespace CTRFramework
             return ctr;
         }
 
+        /// <summary>
+        /// Creates CtrModel object, FromObj overload for a single OBJ file.
+        /// </summary>
+        /// <param name="obj">OBJ object.</param>
+        /// <returns></returns>
         public static CtrModel FromObj(OBJ obj)
         {
             return FromObj(new List<OBJ> { obj });

@@ -98,6 +98,7 @@
     <Compile Include="Code\lev\UnkAdv.cs" />
     <Compile Include="Code\lev\VertexAnim.cs" />
     <Compile Include="Code\lang\LNG.cs" />
+    <Compile Include="Code\PatchedContainer.cs" />
     <Compile Include="Code\shared\Vectors\Vector2b.cs" />
     <Compile Include="Code\shared\Vectors\Vector3b.cs" />
     <Compile Include="Code\shared\Vectors\Vector3f.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="Code\lev\SkyBox.cs" />
     <Compile Include="Code\sound\XaInfoEntry.cs" />
     <Compile Include="Code\sound\XaInfo.cs" />
+    <Compile Include="Code\vrm\CtrVrm.cs" />
     <Compile Include="Code\vrm\TextureLayout.cs" />
     <Compile Include="Code\lev\Vertex.cs" />
     <Compile Include="Code\lev\VisData.cs" />
@@ -147,7 +149,6 @@
     <Compile Include="Code\vrm\TimReader.cs" />
     <Compile Include="Code\vrm\BMPHeader.cs" />
     <Compile Include="Code\vrm\Tim.cs" />
-    <Compile Include="Code\vrm\CtrVrm.cs" />
     <Compile Include="ThirdParty\Kaitai\KaitaiStream.cs" />
     <Compile Include="ThirdParty\Kaitai\KaitaiStruct.cs" />
     <Compile Include="ThirdParty\PlyImporter\Extensions\ArrayExtensions.cs" />

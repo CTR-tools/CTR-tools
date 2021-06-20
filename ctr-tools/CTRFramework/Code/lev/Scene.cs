@@ -32,6 +32,7 @@ namespace CTRFramework
 
         public List<Pose> restartPts = new List<Pose>();
 
+        public CtrVrm vram;
         public Tim ctrvram;
 
         public Scene()
@@ -43,8 +44,11 @@ namespace CTRFramework
             path = filename;
             name = Path.GetFileNameWithoutExtension(filename);
 
-            byte[] data = File.ReadAllBytes(filename);
+            PatchedContainer cnt = PatchedContainer.FromFile(filename);
+            Read(cnt.GetReader());
 
+            //byte[] data = File.ReadAllBytes(filename);
+            /*
             using (MemoryStream ms = new MemoryStream(data, 4, data.Length - 4))
             {
                 using (BinaryReaderEx br = new BinaryReaderEx(ms))
@@ -52,6 +56,7 @@ namespace CTRFramework
                     Read(br);
                 }
             }
+            */
 
             if (vram != null)
             {
@@ -64,9 +69,17 @@ namespace CTRFramework
             if (File.Exists(vrmpath))
             {
                 Console.WriteLine("VRAM found!");
-                ctrvram = CtrVrm.FromFile(vrmpath);
-                LoadTextures();
+                //ctrvram = CtrVrm.FromFile(vrmpath);
+
+                SetVram(CtrVrm.FromFile(vrmpath));
             }
+        }
+
+        public void SetVram(CtrVrm c)
+        {
+            vram = c;
+            ctrvram = c.GetVram();
+            LoadTextures();
         }
 
         public static Scene FromFile(string fn, bool readHi = true)
@@ -79,6 +92,12 @@ namespace CTRFramework
         public List<Pose> posu1 = new List<Pose>();
 
         public void Read(BinaryReaderEx br)
+        {
+            PatchedContainer pc = PatchedContainer.FromReader(br);
+            ReadScene(pc.GetReader());
+        }
+
+        public void ReadScene(BinaryReaderEx br)
         {
             header = Instance<SceneHeader>.FromReader(br, 0);
 

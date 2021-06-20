@@ -422,7 +422,7 @@ namespace CTRTools.Controls
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                Tim buf = CtrVrm.FromFile(ofd.FileName);
+                Tim buf = CtrVrm.FromFile(ofd.FileName).GetVram();
                 Bitmap bmp = new Bitmap(160, 80);
                 Graphics g = Graphics.FromImage(bmp);
 

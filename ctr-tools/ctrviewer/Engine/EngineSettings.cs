@@ -2,14 +2,13 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
+using CTRFramework.Shared;
 
 namespace ctrviewer.Engine
 {
     [Serializable]
     public class EngineSettings
     {
-        public static string SettingsFile = "settings.xml";
-
         public Point Resolution = Point.Zero;
 
         public string BigFileLocation = ".\\bigfile.big";
@@ -136,7 +135,10 @@ namespace ctrviewer.Engine
         public void Save(string filename = "")
         {
             if (filename == "")
-                filename = EngineSettings.SettingsFile;
+            {
+                Helpers.CheckFolder(Meta.UserPath);
+                filename = Meta.SettingsFile;
+            }
 
             using (StreamWriter sw = new StreamWriter(File.Create(filename)))
             {
@@ -153,7 +155,10 @@ namespace ctrviewer.Engine
         public static EngineSettings Load(string filename = "")
         {
             if (filename == "")
-                filename = EngineSettings.SettingsFile;
+            {
+                Helpers.CheckFolder(Meta.UserPath);
+                filename = Meta.SettingsFile;
+            }
 
             EngineSettings settings = new EngineSettings();
 

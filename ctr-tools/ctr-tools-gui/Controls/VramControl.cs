@@ -71,10 +71,12 @@ namespace CTRTools.Controls
 
 
                 List<Tim> tims = new List<Tim>();
-                foreach (var r in CtrVrm.frames)
-                {
-                    tims.Add(ctr.GetTrueColorTexture(r));
-                }
+
+                throw new Exception("reimplement frames via ctrvram2");
+                //foreach (var r in CtrVrm2.frames)
+                //{
+                //    tims.Add(ctr.GetTrueColorTexture(r));
+                //}
 
                 string tempFile = Path.Combine(pathFileParent, "temp.tim");
                 string vramFile = Path.ChangeExtension(pathFile.Text, ".vrm");

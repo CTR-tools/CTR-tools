@@ -2,6 +2,7 @@
 using CTRFramework.Big;
 using CTRFramework.Shared;
 using CTRFramework.Sound;
+using CTRFramework.Vram;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Render;
 using ctrviewer.Engine.Testing;
@@ -41,7 +42,7 @@ namespace ctrviewer
         SpriteFont font;
 
         //ctr scenes
-        List<Scene> scn = new List<Scene>();
+        List<Scene> Scenes = new List<Scene>();
 
         BigFileReader big;
         Howl howl;
@@ -325,11 +326,23 @@ namespace ctrviewer
 
         bool IsLoading = false;
 
-        private void LoadStuff(string[] lev)
+        private void LoadStuff(string[] scenes)
         {
             IsLoading = true;
 
-            LoadLevel(lev);
+            LoadScenes(scenes);
+            LoadLevel();
+            ResetCamera();
+
+            IsLoading = false;
+        }
+
+        private void LoadStuff(List<Scene> scenes)
+        {
+            IsLoading = true;
+
+            LoadScenes(scenes);
+            LoadLevel();
             ResetCamera();
 
             IsLoading = false;
@@ -339,7 +352,7 @@ namespace ctrviewer
         {
             GameConsole.Write("LoadTextures()");
 
-            foreach (Scene s in scn)
+            foreach (Scene s in Scenes)
             {
                 foreach (var t in s.ctrvram.textures)
                 {
@@ -412,33 +425,12 @@ namespace ctrviewer
         }
 
 
-        private void LoadLevel(string[] lev)
+        private void LoadScenes(string[] lev)
         {
-            GameConsole.Write("LoadLevel()");
-
             if (lev == null)
                 lev = new string[] { };
 
-            RenderEnabled = false;
-
-            //wait for the end of frame, in case we are still rendering.
-            while (IsDrawing) { };
-
-
-            //Dispose();
-            eng.Clear();
-            scn.Clear();
-
-            //making sure we have default stuff loaded. maybe should just allocate statically?
-            LoadCones();
-            LoadGenericTextures();
-
-            TestLoadKart();
-            TestLoadExtrenalModels();
-
-
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            Scenes.Clear();
 
             if (lev.Length == 0)
             {
@@ -454,9 +446,40 @@ namespace ctrviewer
 
             foreach (string s in lev)
             {
-                scn.Add(Scene.FromFile(s, false));
+                Scenes.Add(Scene.FromFile(s, false));
             }
+        }
 
+        private void LoadScenes(List<Scene> scenes)
+        {
+            Scenes.Clear();
+            Scenes = scenes;
+        }
+
+        private void LoadLevel()
+        {
+            GameConsole.Write("LoadLevel()");
+
+            RenderEnabled = false;
+
+            //wait for the end of frame, in case we are still rendering.
+            while (IsDrawing) { };
+
+            //Dispose();
+            eng.Clear();
+
+            //making sure we have default stuff loaded. maybe should just allocate statically?
+            LoadCones();
+            LoadGenericTextures();
+
+            TestLoadKart();
+            TestLoadExtrenalModels();
+
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+   
             GameConsole.Write("scenes parsed at: " + sw.Elapsed.TotalSeconds);
 
             //loading textures between scenes and conversion to monogame for alpha textures info
@@ -464,7 +487,7 @@ namespace ctrviewer
 
             GameConsole.Write("textures extracted at: " + sw.Elapsed.TotalSeconds);
 
-            foreach (Scene s in scn)
+            foreach (Scene s in Scenes)
             {
                 eng.MeshHigh.Add(CrashTeamRacingLevel.FromScene(s, Detail.Med));
                 eng.MeshLow.Add(CrashTeamRacingLevel.FromScene(s, Detail.Low));
@@ -473,14 +496,14 @@ namespace ctrviewer
             GameConsole.Write("converted scenes to monogame render at: " + sw.Elapsed.TotalSeconds);
 
             //force 1st scene sky and back color
-            if (scn.Count > 0)
+            if (Scenes.Count > 0)
             {
-                eng.BackgroundColor = DataConverter.ToColor(scn[0].header.backColor);
-                if (scn[0].skybox != null)
-                    eng.sky = new MGLevel(scn[0].skybox);
+                eng.BackgroundColor = DataConverter.ToColor(Scenes[0].header.backColor);
+                if (Scenes[0].skybox != null)
+                    eng.sky = new MGLevel(Scenes[0].skybox);
             }
 
-            foreach (Scene s in scn)
+            foreach (Scene s in Scenes)
             {
                 if (s.unkadv != null)
                 {
@@ -506,16 +529,11 @@ namespace ctrviewer
             }
 
 
-            foreach (Scene s in scn)
-                foreach (CtrModel m in s.Models)
-                {
-                    if (!ContentVault.Models.ContainsKey(m.Name))
-                    {
-                        ContentVault.Models.Add(m.Name, DataConverter.ToTriList(m));
-                    }
-                }
+            foreach (var scene in Scenes)
+                foreach (var model in scene.Models)
+                    ContentVault.AddModel(model.Name, DataConverter.ToTriList(model));
 
-            foreach (Scene s in scn)
+            foreach (Scene s in Scenes)
             {
                 foreach (var pa in s.header.startGrid)
                     eng.instanced.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
@@ -550,7 +568,7 @@ namespace ctrviewer
 
             GameConsole.Write("extracted dynamics an bsp at: " + sw.Elapsed.TotalSeconds);
 
-            foreach (Scene s in scn)
+            foreach (Scene s in Scenes)
             {
                 if (s.visdata.Count > 0)
                     BspPopulate(s.visdata[0], s, 0);
@@ -613,14 +631,14 @@ namespace ctrviewer
 
         public void ResetCamera()
         {
-            if (scn.Count > 0)
+            if (Scenes.Count > 0)
             {
-                eng.Cameras[CameraType.DefaultCamera].Position = DataConverter.ToVector3(scn[0].header.startGrid[0].Position);
+                eng.Cameras[CameraType.DefaultCamera].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
                 eng.Cameras[CameraType.LeftEyeCamera].Position = eng.Cameras[CameraType.DefaultCamera].Position;
-                eng.Cameras[CameraType.LeftEyeCamera].Position = eng.Cameras[CameraType.DefaultCamera].Position;
+                eng.Cameras[CameraType.RightEyeCamera].Position = eng.Cameras[CameraType.DefaultCamera].Position;
 
-                float x = (float)(scn[0].header.startGrid[0].Rotation.X * Math.PI * 2f);
-                float y = (float)(scn[0].header.startGrid[0].Rotation.Y * Math.PI * 2f - Math.PI / 2f);
+                float x = (float)(Scenes[0].header.startGrid[0].Rotation.X * Math.PI * 2f);
+                float y = (float)(Scenes[0].header.startGrid[0].Rotation.Y * Math.PI * 2f - Math.PI / 2f);
 
                 foreach (var camera in eng.Cameras.Values)
                     camera.SetRotation(y, x);
@@ -1057,7 +1075,8 @@ namespace ctrviewer
                 return;
             }
 
-            List<string> files = new List<string>();
+            List<Scene> scenes = new List<Scene>();
+            // List<string> files = new List<string>();
 
             for (int i = 0; i < absId.Length; i++)
             {
@@ -1069,19 +1088,26 @@ namespace ctrviewer
                 if (Path.GetExtension(big.GetFilename()) != ".vrm")
                     return;
 
-                big.ReadEntry().Save(Meta.BasePath);
+                //big.ReadEntry().Save(Meta.BasePath);
+
+                CtrVrm vrm = big.ReadEntry().ParseAs<CtrVrm>();
 
                 big.NextFile();
 
                 if (Path.GetExtension(big.GetFilename()) != ".lev")
                     return;
 
-                big.ReadEntry().Save(Meta.BasePath);
+                //big.ReadEntry().Save(Meta.BasePath);
+                Scene scene = big.ReadEntry().ParseAs<Scene>();
+                scene.SetVram(vrm);
 
-                files.Add(Path.Combine(Meta.BasePath, big.GetFilename()));
+                scenes.Add(scene);
+
+                //files.Add(Path.Combine(Meta.BasePath, big.GetFilename()));
             }
 
-            LoadStuff(files.ToArray());
+            LoadStuff(scenes);
+            //LoadStuff(files.ToArray());
         }
 
         protected override void Draw(GameTime gameTime)
@@ -1116,7 +1142,7 @@ namespace ctrviewer
             if (IsLoading)
                 spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
-            if (scn.Count == 0 && !IsLoading)
+            if (Scenes.Count == 0 && !IsLoading)
                 spriteBatch.DrawString(font,
                     "Crash Team Racing level viewer\r\n\r\n" +
                     "No levels loaded.\r\n" +
@@ -1214,7 +1240,7 @@ namespace ctrviewer
 
         protected override void Dispose(bool disposing)
         {
-            scn.Clear();
+            Scenes.Clear();
             eng.Dispose();
             ContentVault.Clear();
         }

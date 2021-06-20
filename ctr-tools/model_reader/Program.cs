@@ -109,7 +109,7 @@ namespace model_reader
                         }
 
                         ModelPack mpk = ModelPack.FromFile(filename);
-                        mpk.Extract(Path.Combine(basepath, name), CtrVrm.FromFile(vrampath));
+                        mpk.Extract(Path.Combine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
 
                         break;
                     }

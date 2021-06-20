@@ -13,6 +13,8 @@ namespace CTRFramework.Shared
         public static int SectorSize = 0x800;
 
         public static string BasePath = System.AppDomain.CurrentDomain.BaseDirectory;
+        public static string UserPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CTRViewer");
+        public static string SettingsFile = Path.Combine(UserPath, "settings.xml");
         public static string JsonPath = "versions.json";
         public static string XmlPath = "versions.xml";
         public static string HowlPath = "howlnames.txt";

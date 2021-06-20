@@ -73,6 +73,11 @@ namespace CTRFramework
             Read(br);
         }
 
+        public static CtrMesh FromReader(BinaryReaderEx br)
+        {
+            return new CtrMesh(br);
+        }
+
         /// <summary>
         /// Reads CTR model using BinaryReaderEx.
         /// </summary>
@@ -307,12 +312,12 @@ namespace CTRFramework
                 clr[2] = clr[3];
                 clr[3] = cols[d.colorIndex];
 
-
+                /*
                 tlb[0] = tlb[1];
                 tlb[1] = tlb[2];
                 tlb[2] = tlb[3];
                 tlb[3] = (d.texIndex == 0 ? null : tl[d.texIndex - 1]);
-
+                */
 
                 if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
