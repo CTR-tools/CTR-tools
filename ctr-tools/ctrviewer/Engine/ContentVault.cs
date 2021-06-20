@@ -40,7 +40,7 @@ namespace ctrviewer.Engine
 
         public static bool AddModel(string name, TriList model)
         {
-            if (Textures.ContainsKey(name))
+            if (Models.ContainsKey(name))
             {
                 Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate model: '{name}'.");
                 return false;

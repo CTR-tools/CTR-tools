@@ -27,7 +27,7 @@ namespace CTRFramework
         {
             int dataSize = br.ReadInt32();
             bool hasTable = (dataSize >> 31) == 0;
-            dataSize = dataSize & ~(1 << 31);
+            dataSize &= ~(1 << 31);
             Data = br.ReadBytes(dataSize);
 
             if (hasTable)

@@ -341,7 +341,8 @@ namespace ctrviewer
         {
             IsLoading = true;
 
-            LoadScenes(scenes);
+            Scenes.Clear();
+            Scenes = scenes;
             LoadLevel();
             ResetCamera();
 
@@ -448,12 +449,6 @@ namespace ctrviewer
             {
                 Scenes.Add(Scene.FromFile(s, false));
             }
-        }
-
-        private void LoadScenes(List<Scene> scenes)
-        {
-            Scenes.Clear();
-            Scenes = scenes;
         }
 
         private void LoadLevel()
