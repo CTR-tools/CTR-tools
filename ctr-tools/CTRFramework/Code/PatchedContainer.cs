@@ -26,11 +26,16 @@ namespace CTRFramework
         public void Read(BinaryReaderEx br)
         {
             int dataSize = br.ReadInt32();
+            bool hasTable = (dataSize >> 31) == 0;
+            dataSize = dataSize & ~(1 << 31);
             Data = br.ReadBytes(dataSize);
 
-            int numEntries = br.ReadInt32() / 4;
-            for (int i = 0; i < numEntries; i++)
-                PatchTable.Add(br.ReadUIntPtr());
+            if (hasTable)
+            {
+                int numEntries = br.ReadInt32() / 4;
+                for (int i = 0; i < numEntries; i++)
+                    PatchTable.Add(br.ReadUIntPtr());
+            }
         }
 
         public void Write(BinaryWriterEx bw)
