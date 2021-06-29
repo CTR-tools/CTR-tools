@@ -64,12 +64,12 @@ namespace CTRFramework
         //public byte[] midflags = new byte[2];
 
         public UIntPtr ptrTexLow;                 //offset to LOD texture definition
-        public uint mosaicStruct;
+        public UIntPtr mosaicStruct;
 
-        public uint mosaicPtr1;
-        public uint mosaicPtr2;
-        public uint mosaicPtr3;
-        public uint mosaicPtr4;
+        public UIntPtr mosaicPtr1;
+        public UIntPtr mosaicPtr2;
+        public UIntPtr mosaicPtr3;
+        public UIntPtr mosaicPtr4;
 
         public List<Vector2> unk3 = new List<Vector2>();    //face normal vector or smth. 4*2 for mid + 2 for low
 
@@ -154,12 +154,12 @@ namespace CTRFramework
                 //Console.ReadKey();
             }
 
-            mosaicStruct = br.ReadUInt32();
+            mosaicStruct = br.ReadUIntPtr();
 
-            if (Helpers.TestPointer(mosaicStruct) != 0)
+            if (Helpers.TestPointer(mosaicStruct.ToUInt32()) != 0)
             {
-                Console.WriteLine("offset2 " + Helpers.TestPointer(mosaicStruct).ToString("x2"));
-                //Console.ReadKey();
+                Console.WriteLine("offset2 " + Helpers.TestPointer(mosaicStruct.ToUInt32()).ToString("x2"));
+                Console.ReadKey();
             }
 
             for (int i = 0; i < 5; i++)
@@ -186,26 +186,26 @@ namespace CTRFramework
 
             foreach (uint u in ptrTexMid)
             {
-                if (u != 0)
-                {
-                    br.Jump(u);
-                    tex.Add(new CtrTex(br, (int)mosaicStruct));
-                }
-                else
+                if (u == 0)
                 {
                     if (ptrTexLow != UIntPtr.Zero)
                         Helpers.Panic(this, PanicType.Assume, $"Got low tex without mid tex at {br.HexPos()}.");
+
+                    continue;
                 }
+                
+                br.Jump(u);
+                tex.Add(new CtrTex(br, (int)mosaicStruct));
             }
 
-            if (mosaicStruct != 0)
+            if (mosaicStruct != UIntPtr.Zero)
             {
-                br.BaseStream.Position = mosaicStruct;
+                br.Jump(mosaicStruct);
 
-                mosaicPtr1 = br.ReadUInt32();
-                mosaicPtr2 = br.ReadUInt32();
-                mosaicPtr3 = br.ReadUInt32();
-                mosaicPtr4 = br.ReadUInt32();
+                mosaicPtr1 = br.ReadUIntPtr();
+                mosaicPtr2 = br.ReadUIntPtr();
+                mosaicPtr3 = br.ReadUIntPtr();
+                mosaicPtr4 = br.ReadUIntPtr();
             }
 
             br.BaseStream.Position = texpos;
@@ -622,7 +622,7 @@ namespace CTRFramework
             //bw.Write(midflags);
 
             bw.Write(ptrTexLow, patchTable);
-            bw.Write(mosaicStruct);
+            bw.Write(mosaicStruct, patchTable);
 
             foreach (Vector2 v in unk3)
                 bw.WriteVector2s(v, 1 / 4096);

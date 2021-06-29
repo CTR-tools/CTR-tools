@@ -484,8 +484,8 @@ namespace ctrviewer
 
             foreach (Scene s in Scenes)
             {
-                eng.MeshHigh.Add(CrashTeamRacingLevel.FromScene(s, Detail.Med));
-                eng.MeshLow.Add(CrashTeamRacingLevel.FromScene(s, Detail.Low));
+                eng.MeshHigh.Add(CrashTeamRacingLoader.FromScene(s, Detail.Med));
+                eng.MeshLow.Add(CrashTeamRacingLoader.FromScene(s, Detail.Low));
             }
 
             GameConsole.Write("converted scenes to monogame render at: " + sw.Elapsed.TotalSeconds);

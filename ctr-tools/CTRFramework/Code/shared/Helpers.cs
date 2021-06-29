@@ -111,6 +111,10 @@ namespace CTRFramework.Shared
             return result;
         }
 
+        /// <summary>
+        /// Makes sure the target folder exists. In case filename is passed, parent path is checked.
+        /// </summary>
+        /// <param name="path"></param>
         public static void CheckFolder(string path)
         {
             if (Path.HasExtension(path))
@@ -141,6 +145,7 @@ namespace CTRFramework.Shared
 
         public static byte TestPointer(uint ptr)
         {
+            Console.WriteLine($"Testing ptr: {ptr.ToString("X8")} -> {((byte)(ptr & 3)).ToString("X2")}");
             return (byte)(ptr & 3);
         }
 

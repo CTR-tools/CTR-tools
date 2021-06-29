@@ -12,14 +12,16 @@ using ctrviewer.Engine;
 
 namespace ctrviewer.Loaders
 {
-    public class CrashTeamRacingLevel : MGLevel
+    public class CrashTeamRacingLoader : MGLevel
     {
+        public CrashTeamRacingLoader(Scene s, Detail detail)
+        {
+            LoadCrashTeamRacingScene(s, detail);
+        }
+
         public static MGLevel FromScene(Scene s, Detail detail)
         {
-            CrashTeamRacingLevel level = new CrashTeamRacingLevel();
-            level.LoadCrashTeamRacingScene(s, detail);
-
-            return level as MGLevel;
+            return new CrashTeamRacingLoader(s, detail);
         }
 
         private void LoadCrashTeamRacingScene(Scene s, Detail detail)

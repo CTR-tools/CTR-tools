@@ -11,11 +11,12 @@ namespace CTRFramework
 {
     public class CtrModel : IRead
     {
+        List<UIntPtr> PatchTable = new List<UIntPtr>();
+
         public string path;
         string name = "defaultname";
-        CTREvent gameEvent = CTREvent.Nothing;
+        CTREvent gameEvent = CTREvent.None;
         public List<CtrMesh> Entries = new List<CtrMesh>();
-        List<UIntPtr> PatchTable = new List<UIntPtr>();
 
         #region Component model
         [Browsable(true), DisplayName("Model name"), Description(""), Category("CTR Model")]
@@ -41,20 +42,9 @@ namespace CTRFramework
         {
             path = filename;
 
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
-            {
-                int dataSize = br.ReadInt32();
-
-                using (BinaryReaderEx br2 = new BinaryReaderEx(new MemoryStream(br.ReadBytes(dataSize))))
-                {
-                    Read(br2);
-                }
-
-                int ptrMapSize = br.ReadInt32() / 4;
-
-                for (int i = 0; i < ptrMapSize; i++)
-                    PatchTable.Add(br.ReadUIntPtr());
-            }
+            PatchedContainer cnt = PatchedContainer.FromFile(filename);
+            Read(cnt.GetReader());
+            PatchTable = cnt.PatchTable;
         }
 
         public CtrModel(BinaryReaderEx br)

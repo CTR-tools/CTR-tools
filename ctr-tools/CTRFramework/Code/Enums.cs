@@ -216,7 +216,7 @@ namespace CTRFramework
 
     public enum CTREvent
     {
-        Nothing = -1,
+        None = -1,
 
         SingleFruit = 0x02,
 

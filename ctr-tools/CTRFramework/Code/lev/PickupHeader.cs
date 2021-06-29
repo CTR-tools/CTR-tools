@@ -8,7 +8,7 @@ namespace CTRFramework
 {
     public class PickupHeader : IRead, IWrite
     {
-
+        #region Component model
         [CategoryAttribute("General"), DescriptionAttribute("Name of the instance.")]
         public string Name
         {
@@ -43,6 +43,7 @@ namespace CTRFramework
             get => (CTREvent)evt;
             set => evt = (int)value;
         }
+        #endregion
 
         private string name;
         private UIntPtr ptrModel;

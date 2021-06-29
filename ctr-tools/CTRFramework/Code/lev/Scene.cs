@@ -44,19 +44,10 @@ namespace CTRFramework
             path = filename;
             name = Path.GetFileNameWithoutExtension(filename);
 
-            PatchedContainer cnt = PatchedContainer.FromFile(filename);
-            ReadScene(cnt.GetReader());
-
-            //byte[] data = File.ReadAllBytes(filename);
-            /*
-            using (MemoryStream ms = new MemoryStream(data, 4, data.Length - 4))
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                using (BinaryReaderEx br = new BinaryReaderEx(ms))
-                {
-                    Read(br);
-                }
+                Read(br);
             }
-            */
 
             if (vram != null)
             {
@@ -82,10 +73,10 @@ namespace CTRFramework
             LoadTextures();
         }
 
-        public static Scene FromFile(string fn, bool readHi = true)
+        public static Scene FromFile(string filename, bool readHi = true)
         {
             Scene.ReadHiTex = readHi;
-            return new Scene(fn);
+            return new Scene(filename);
         }
 
         public List<Vector3s> posu2 = new List<Vector3s>();
@@ -93,8 +84,7 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            PatchedContainer pc = PatchedContainer.FromReader(br);
-            ReadScene(pc.GetReader());
+            ReadScene(PatchedContainer.FromReader(br).GetReader());
         }
 
         public void ReadScene(BinaryReaderEx br)
@@ -119,13 +109,13 @@ namespace CTRFramework
             iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
             trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
 
-            if (header.numSpawnPts != 0)
+            if (header.numSpawnPts > 0)
             {
                 br.Jump(header.ptrSpawnPts);
                 unkadv = new UnkAdv(br, (int)header.numSpawnPts);
             }
 
-            if (header.cntTrialData != 0)
+            if (header.cntTrialData > 0)
             {
                 br.Jump(header.ptrTrialData);
 
@@ -139,7 +129,7 @@ namespace CTRFramework
             }
 
 
-            if (header.cntu2 != 0)
+            if (header.cntu2 > 0)
             {
                 br.Jump(header.ptru2);
 
@@ -155,15 +145,15 @@ namespace CTRFramework
 
 
             //find all water quads in visdata
-            foreach (VisData v in visdata)
+            foreach (var node in visdata)
             {
-                if (v.IsLeaf)
+                if (node.IsLeaf)
                 {
-                    if (v.flag.HasFlag(VisDataFlags.Water))
+                    if (node.flag.HasFlag(VisDataFlags.Water))
                     {
-                        int z = (int)((v.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
+                        int z = (int)((node.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
 
-                        for (int i = z; i < z + v.numQuadBlock; i++)
+                        for (int i = z; i < z + node.numQuadBlock; i++)
                             quads[i].isWater = true;
                     }
                 }

@@ -249,7 +249,9 @@ namespace CTRFramework.Shared
 
         public UIntPtr ReadUIntPtr()
         {
-            return (UIntPtr)ReadUInt32();
+            uint ptr = ReadUInt32();
+            Helpers.TestPointer(ptr);
+            return (UIntPtr)ptr;
         }
 
         public string HexPos()

@@ -96,13 +96,12 @@ namespace CTRTools.Controls
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (scn != null)
+            if (scn == null) return;
+
+            foreach (Vertex v in scn.verts)
             {
-                foreach (Vertex v in scn.verts)
-                {
-                    v.SetColor(new Vector4b(vertexcolor1), Vcolor.Default);
-                    v.SetColor(new Vector4b(vertexcolor2), Vcolor.Morph);
-                }
+                v.SetColor(new Vector4b(vertexcolor1), Vcolor.Default);
+                v.SetColor(new Vector4b(vertexcolor2), Vcolor.Morph);
             }
         }
 
@@ -130,25 +129,21 @@ namespace CTRTools.Controls
 
         private void button6_Click(object sender, EventArgs e)
         {
-            if (scn != null)
+            if (scn == null) return;
+
+            foreach (Vertex v in scn.verts)
             {
-                foreach (Vertex v in scn.verts)
-                {
-                    v.color.Scale(0.12f, 0.21f, 0.32f, 1f);
-                    v.color_morph.Scale(0.12f, 0.21f, 0.32f, 1f);
-                }
+                v.color.Scale(0.12f, 0.21f, 0.32f, 1f);
+                v.color_morph.Scale(0.12f, 0.21f, 0.32f, 1f);
             }
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
-            if (scn != null)
-            {
-                foreach (QuadBlock qb in scn.quads)
-                {
-                    qb.quadFlags = GetFlags(checkedListBox1);
-                }
-            }
+            if (scn == null) return;
+
+            foreach (QuadBlock qb in scn.quads)
+                qb.quadFlags = GetFlags(checkedListBox1);
         }
 
         private QuadFlags GetFlags(CheckedListBox clb)
@@ -167,32 +162,31 @@ namespace CTRTools.Controls
 
         private void button10_Click(object sender, EventArgs e)
         {
-            if (scn != null)
+            if (scn == null) return;
+
+            foreach (QuadBlock qb in scn.quads)
             {
-                foreach (QuadBlock qb in scn.quads)
-                {
-                    qb.mosaicStruct = 0;
-                    qb.ptrTexMid = new UIntPtr[] { UIntPtr.Zero, UIntPtr.Zero, UIntPtr.Zero, UIntPtr.Zero };
-                }
+                qb.mosaicStruct = UIntPtr.Zero;
+                qb.ptrTexMid = new UIntPtr[] { UIntPtr.Zero, UIntPtr.Zero, UIntPtr.Zero, UIntPtr.Zero };
             }
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
-            if (scn != null)
-            {
-                StringBuilder sb = new StringBuilder();
-                foreach (VisData vi in scn.visdata)
-                {
-                    sb.Append(vi.ToString() + "\r\n");
-                }
+            if (scn == null) return;
 
-                textBox2.Text = sb.ToString();
-            }
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var node in scn.visdata)
+                sb.Append(node.ToString() + "\r\n");
+
+            textBox2.Text = sb.ToString();
         }
 
         private void button12_Click(object sender, EventArgs e)
         {
+            if (scn == null) return;
+
             StringBuilder sb = new StringBuilder();
 
             List<byte> uniq1 = new List<byte>();
@@ -200,82 +194,71 @@ namespace CTRTools.Controls
             List<byte> uniq3 = new List<byte>();
             List<byte> uniq4 = new List<byte>();
 
-            if (scn != null)
+            foreach (QuadBlock qb in scn.quads)
             {
-                foreach (QuadBlock qb in scn.quads)
-                {
-                    /*
-                    if (!uniq1.Contains(qb.unk2[0]))
-                        uniq1.Add(qb.unk2[0]);
-                    if (!uniq2.Contains(qb.unk2[1]))
-                        uniq2.Add(qb.unk2[1]);
-                    if (!uniq3.Contains(qb.unk2[2]))
-                        uniq3.Add(qb.unk2[2]);
-                    if (!uniq4.Contains(qb.unk2[3]))
-                        uniq4.Add(qb.unk2[3]);
-                        */
-                    // qb.f1 = 17;
-                    //qb.unk2[0] = 8;
-                    //qb.unk2[3] = 0;
-                    /*
-                    qb.ulead = (byte)r.Next(255);
-
-                for (int i = 0; i < 4; i++)
-                    qb.uquad[i] = (byte)r.Next(255);
+                /*
+                if (!uniq1.Contains(qb.unk2[0]))
+                    uniq1.Add(qb.unk2[0]);
+                if (!uniq2.Contains(qb.unk2[1]))
+                    uniq2.Add(qb.unk2[1]);
+                if (!uniq3.Contains(qb.unk2[2]))
+                    uniq3.Add(qb.unk2[2]);
+                if (!uniq4.Contains(qb.unk2[3]))
+                    uniq4.Add(qb.unk2[3]);
                     */
-                }
+                // qb.f1 = 17;
+                //qb.unk2[0] = 8;
+                //qb.unk2[3] = 0;
+                /*
+                qb.ulead = (byte)r.Next(255);
 
-                uniq1.Sort();
-                uniq2.Sort();
-                uniq3.Sort();
-                uniq4.Sort();
-
-                foreach (byte b in uniq1) sb.Append(b + " ");
-                sb.Append("\r\n");
-                foreach (byte b in uniq2) sb.Append(b + " ");
-                sb.Append("\r\n");
-                foreach (byte b in uniq3) sb.Append(b + " ");
-                sb.Append("\r\n");
-                foreach (byte b in uniq4) sb.Append(b + " ");
-                sb.Append("\r\n");
-
-                textBox2.Text = sb.ToString();
+            for (int i = 0; i < 4; i++)
+                qb.uquad[i] = (byte)r.Next(255);
+                */
             }
+
+            uniq1.Sort();
+            uniq2.Sort();
+            uniq3.Sort();
+            uniq4.Sort();
+
+            foreach (byte b in uniq1) sb.Append(b + " ");
+            sb.Append("\r\n");
+            foreach (byte b in uniq2) sb.Append(b + " ");
+            sb.Append("\r\n");
+            foreach (byte b in uniq3) sb.Append(b + " ");
+            sb.Append("\r\n");
+            foreach (byte b in uniq4) sb.Append(b + " ");
+            sb.Append("\r\n");
+
+            textBox2.Text = sb.ToString();
         }
+
 
         Random r = new Random();
 
         private void button13_Click(object sender, EventArgs e)
         {
-            if (scn != null)
-            {
-                foreach (QuadBlock qb in scn.quads)
-                {
-                    qb.terrainFlag = (TerrainFlags)r.Next(20);
-                }
-            }
+            if (scn == null) return;
+
+            foreach (QuadBlock qb in scn.quads)
+                qb.terrainFlag = (TerrainFlags)r.Next(20);
         }
 
         private void button14_Click(object sender, EventArgs e)
         {
-            if (scn != null)
-            {
-                foreach (QuadBlock qb in scn.quads)
-                {
+            if (scn == null) return;
+
+            foreach (QuadBlock qb in scn.quads)
                     qb.WeatherIntensity = 255;
-                }
-            }
         }
 
         private void button15_Click(object sender, EventArgs e)
         {
-            if (scn != null)
-            {
-                foreach (QuadBlock qb in scn.quads)
-                {
+            if (scn == null) return;
+
+            foreach (QuadBlock qb in scn.quads)
                     qb.WeatherIntensity = 0;
-                }
-            }
         }
 
         private void button16_Click(object sender, EventArgs e)
