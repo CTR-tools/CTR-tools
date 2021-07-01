@@ -250,7 +250,7 @@ namespace CTRTools.Controls
             if (scn == null) return;
 
             foreach (QuadBlock qb in scn.quads)
-                    qb.WeatherIntensity = 255;
+                qb.WeatherIntensity = 255;
         }
 
         private void button15_Click(object sender, EventArgs e)
@@ -258,7 +258,7 @@ namespace CTRTools.Controls
             if (scn == null) return;
 
             foreach (QuadBlock qb in scn.quads)
-                    qb.WeatherIntensity = 0;
+                qb.WeatherIntensity = 0;
         }
 
         private void button16_Click(object sender, EventArgs e)

@@ -1,8 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CTRFramework.Shared;
+using Microsoft.Xna.Framework;
 using System;
 using System.IO;
 using System.Xml.Serialization;
-using CTRFramework.Shared;
 
 namespace ctrviewer.Engine
 {

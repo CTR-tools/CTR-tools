@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\cseq.json" />
+    <None Include="Data\readme.md" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Data\versions.json" />
     <None Include="ThirdParty\Kaitai\README.md" />

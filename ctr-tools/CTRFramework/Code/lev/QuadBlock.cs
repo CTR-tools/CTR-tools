@@ -193,7 +193,7 @@ namespace CTRFramework
 
                     continue;
                 }
-                
+
                 br.Jump(u);
                 tex.Add(new CtrTex(br, (int)mosaicStruct));
             }

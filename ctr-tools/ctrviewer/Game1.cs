@@ -6,6 +6,7 @@ using CTRFramework.Vram;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Render;
 using ctrviewer.Engine.Testing;
+using ctrviewer.Loaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,7 +15,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using ctrviewer.Loaders;
 
 namespace ctrviewer
 {
@@ -474,7 +474,7 @@ namespace ctrviewer
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-   
+
             GameConsole.Write("scenes parsed at: " + sw.Elapsed.TotalSeconds);
 
             //loading textures between scenes and conversion to monogame for alpha textures info
