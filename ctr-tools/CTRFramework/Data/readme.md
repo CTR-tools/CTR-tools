@@ -20,8 +20,8 @@ Numbered list containing names for every individual XA file linked in XNF file.
 # samplenames, howlnames and banknames
 Numbered list containing names for content in KART.HWL.
 
-#cseq.json
+# cseq.json
 Contains MIDI mappings for NTSC-U tracks.
 
-#bash_filelist.txt
+# bash_filelist.txt
 List of filenames for CRASHBSH.DAT found in NTSC-U Crash Bash.
