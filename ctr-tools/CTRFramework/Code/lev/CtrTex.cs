@@ -52,14 +52,14 @@ namespace CTRFramework
                 foreach (uint ptr in ptrs)
                 {
                     br.Jump(ptr);
-                    animframes.Add(TextureLayout.FromStream(br));
+                    animframes.Add(TextureLayout.FromReader(br));
                 }
 
                 br.Jump(texpos);
             }
 
             for (int i = 0; i < 3; i++)
-                midlods[i] = TextureLayout.FromStream(br);
+                midlods[i] = TextureLayout.FromReader(br);
 
             //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
             //Console.ReadKey();
@@ -75,7 +75,7 @@ namespace CTRFramework
                         br.Jump(ptrHi);
 
                         for (int i = 0; i < 16; i++)
-                            hi[i] = TextureLayout.FromStream(br);
+                            hi[i] = TextureLayout.FromReader(br);
                     }
             }
         }

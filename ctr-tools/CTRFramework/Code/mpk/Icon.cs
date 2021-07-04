@@ -45,7 +45,7 @@ namespace CTRFramework
         {
             Name = br.ReadStringFixed(16);
             Index = br.ReadUInt32();
-            tl = TextureLayout.FromStream(br, true);
+            tl = TextureLayout.FromReader(br, true);
 
             Console.WriteLine(Name);
         }

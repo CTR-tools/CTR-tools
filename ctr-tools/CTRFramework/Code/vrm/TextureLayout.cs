@@ -128,7 +128,7 @@ namespace CTRFramework.Vram
 
         }
 
-        public static TextureLayout FromStream(BinaryReaderEx br, bool skipcheck = false)
+        public static TextureLayout FromReader(BinaryReaderEx br, bool skipcheck = false)
         {
             int test = br.ReadInt32();
 
