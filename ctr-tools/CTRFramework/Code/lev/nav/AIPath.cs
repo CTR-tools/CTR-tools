@@ -7,7 +7,7 @@ namespace CTRFramework
 {
     public class AIPath : IReadWrite
     {
-        public ushort unk1;
+        public ushort version;
         public ushort numFrames;
         public byte[] data;
         public NavFrame start;
@@ -25,7 +25,10 @@ namespace CTRFramework
         }
         public void Read(BinaryReaderEx br)
         {
-            unk1 = br.ReadUInt16();
+            version = br.ReadUInt16();
+
+            Helpers.Panic(this, PanicType.Info, $"Path version: 0x{version.ToString("X8")}");
+
             numFrames = br.ReadUInt16();
             data = br.ReadBytes(4 * 18); //0x4c = total header size
 
@@ -67,7 +70,7 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.Write(unk1);
+            bw.Write(version);
             bw.Write(numFrames);
             bw.Write(data);
             start.Write(bw);
