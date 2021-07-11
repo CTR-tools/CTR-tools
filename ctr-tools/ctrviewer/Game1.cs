@@ -1056,7 +1056,7 @@ namespace ctrviewer
             }
 
             if (result == true && big == null)
-                big = new BigFileReader(File.OpenRead(eng.Settings.BigFileLocation));
+                big = BigFileReader.FromFile(eng.Settings.BigFileLocation);
 
             return result;
         }

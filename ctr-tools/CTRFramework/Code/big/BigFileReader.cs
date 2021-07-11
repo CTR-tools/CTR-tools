@@ -48,6 +48,14 @@ namespace CTRFramework.Big
             KnownFileCheck();
         }
 
+        public static BigFileReader FromFile(string filename)
+        {
+            using (Stream stream = File.OpenRead(filename))
+            {
+                return new BigFileReader(stream);
+            }
+        }
+
         /// <summary>
         /// Sanity check for CTR BIG format.
         /// </summary>

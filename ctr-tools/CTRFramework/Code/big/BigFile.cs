@@ -58,15 +58,15 @@ namespace CTRFramework.Big
         /// <summary>
         /// Loads Big from compiled BIGFILE.BIG.
         /// </summary>
-        /// <param name="fn">Filename.</param>
-        private void LoadFromBig(string fn)
+        /// <param name="filename">Filename.</param>
+        private void LoadFromBig(string filename)
         {
-            if (!File.Exists(fn))
-                throw new Exception($"File doesn't exist: {fn}");
+            if (!File.Exists(filename))
+                throw new Exception($"File doesn't exist: {filename}");
 
-            Console.WriteLine($"Loading BIG from: {fn}");
+            Console.WriteLine($"Loading BIG from: {filename}");
 
-            using (BigFileReader b = new BigFileReader(File.OpenRead(fn)))
+            using (BigFileReader b = BigFileReader.FromFile(filename))
             {
                 while (b.NextFile())
                 {

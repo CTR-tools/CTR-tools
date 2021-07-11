@@ -189,7 +189,7 @@ namespace CTRTools.Controls
 
         private void bigLoader_DoWork(object sender, DoWorkEventArgs e)
         {
-            Reader = new BigFileReader(File.OpenRead(e.Argument as string));
+            Reader = BigFileReader.FromFile(e.Argument as string);
         }
 
         private void bigLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
