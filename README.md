@@ -20,9 +20,11 @@ Join the CTR-tools Discord server: https://discord.gg/WHkuh2n
 * edit localization files
 * minor Crash Bash support: unpack CRASHBSH.DAT from various CB builds and extract textures
 
+![CTR-tools](ctr-tools-banner.jpg)
+
 ## Building
 CTR-tools is being developed in Visual Studio Community 2019.\
-Target platform is .NET Framework 4.5 (ctrviewer is targeting the latest stable .NET).\
+Target platform is .NET Framework 4.6 (ctrviewer is targeting .NET Core 3.1).\
 It should be enough to install VS and add dependencies via NuGet.
 
 Project dependencies:
