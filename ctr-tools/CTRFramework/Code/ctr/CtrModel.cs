@@ -263,5 +263,11 @@ namespace CTRFramework
 
             return ctr;
         }
+
+        public void ExportPly(string path)
+        {
+            foreach (var entry in Entries)
+                entry.ExportPly(Path.Combine(path, $"{Name}.ply"));
+        }
     }
 }

@@ -685,6 +685,14 @@ namespace CTRFramework
             return CtrMesh.FromPly(name, obj.Result);
         }
 
+        public void ExportPly(string filename)
+        {
+            PlyResult ply = new PlyResult(new List<Vector3f>(), new List<int>(), new List<Vector4b>());
+
+            foreach (var v in verts)
+                ply.Vertices.Add(new Vector3f(v.coord.X, v.coord.Y, v.coord.Z));
+        }
+
         /// <summary>
         /// Writes CTR model in original CTR format.
         /// </summary>

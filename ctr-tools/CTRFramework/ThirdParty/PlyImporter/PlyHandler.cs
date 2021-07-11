@@ -21,6 +21,34 @@ namespace ThreeDeeBear.Models.Ply
             Triangles = triangles;
             Colors = colors;
         }
+
+        public void Export(string filename)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine("ply");
+            sb.AppendLine("format ascii 1.0");
+            sb.AppendLine("comment Converted using CTR-tools by DCxDemo*");
+            sb.AppendLine($"element vertex {Vertices.Count}");
+            sb.AppendLine("property float x");
+            sb.AppendLine("property float y");
+            sb.AppendLine("property float z");
+            sb.AppendLine("property uchar red");
+            sb.AppendLine("property uchar green");
+            sb.AppendLine("property uchar blue");
+
+            sb.AppendLine($"element face {Triangles.Count}");
+            sb.AppendLine("property list uchar uint vertex_indices");
+            sb.AppendLine("end_header");
+
+            foreach (var v in Vertices)
+                sb.AppendLine($"{v.X} {v.Y} {v.Z}");
+
+            for (int i = 0; i < Triangles.Count / 3; i++)
+                sb.AppendLine($"3 {Triangles[i * 3]} {Triangles[i * 3 + 1]} {Triangles[i * 3] + 2}");
+
+            Helpers.WriteToFile(filename, sb.ToString());
+        }
     }
 
     public static class PlyHandler

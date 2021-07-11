@@ -138,5 +138,14 @@ namespace CTRTools.Controls
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void actionExportPly_Click(object sender, EventArgs e)
+        {
+            if (ctr != null)
+            {
+                if (fbd.ShowDialog() == DialogResult.OK)
+                    ctr.ExportPly(fbd.SelectedPath);
+            }
+        }
     }
 }

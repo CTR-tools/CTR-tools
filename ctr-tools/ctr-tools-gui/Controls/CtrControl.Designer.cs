@@ -41,6 +41,7 @@ namespace CTRTools.Controls
             this.ofdctr = new System.Windows.Forms.OpenFileDialog();
             this.ofdmdl = new System.Windows.Forms.OpenFileDialog();
             this.fbd = new System.Windows.Forms.FolderBrowserDialog();
+            this.actionExportPly = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -150,11 +151,23 @@ namespace CTRTools.Controls
             this.ofdmdl.Filter = "All supported models (*.ply, *.obj)|*.ply;*.obj|Wavefront OBJ (*.obj)|*.obj|Stanf" +
     "ord PLY (*.ply)|*.ply";
             // 
+            // actionExportPly
+            // 
+            this.actionExportPly.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.actionExportPly.Location = new System.Drawing.Point(337, 453);
+            this.actionExportPly.Name = "actionExportPly";
+            this.actionExportPly.Size = new System.Drawing.Size(96, 24);
+            this.actionExportPly.TabIndex = 12;
+            this.actionExportPly.Text = "Export PLY";
+            this.actionExportPly.UseVisualStyleBackColor = true;
+            this.actionExportPly.Click += new System.EventHandler(this.actionExportPly_Click);
+            // 
             // CtrControl
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.actionExportPly);
             this.Controls.Add(this.actionSaveCtr);
             this.Controls.Add(this.actionLoadCtr);
             this.Controls.Add(this.groupBox1);
@@ -187,5 +200,6 @@ namespace CTRTools.Controls
         private OpenFileDialog ofdctr;
         private OpenFileDialog ofdmdl;
         private FolderBrowserDialog fbd;
+        private Button actionExportPly;
     }
 }
