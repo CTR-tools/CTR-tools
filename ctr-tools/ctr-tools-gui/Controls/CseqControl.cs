@@ -80,7 +80,7 @@ namespace CTRTools.Controls
             loadedfile = Path.GetFileName(fn);
             this.Text = "CTR CSEQ - " + loadedfile;
 
-            textBox2.Text = seq.header.ToString();
+            textBox2.Text = "hi";//seq.header.ToString();
 
             int i = 0;
 

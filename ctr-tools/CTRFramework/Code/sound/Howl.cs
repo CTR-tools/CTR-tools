@@ -99,7 +99,7 @@ namespace CTRFramework.Sound
         {
             using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                return Howl.FromReader(br);
+                return FromReader(br);
             }
         }
 
@@ -126,13 +126,6 @@ namespace CTRFramework.Sound
             samples1 = InstanceList<SampleDef>.FromReader(br, (uint)br.BaseStream.Position, (uint)header.cntSfx);
             samples2 = InstanceList<SampleDef>.FromReader(br, (uint)br.BaseStream.Position, (uint)header.cntEngineSfx);
 
-            /*
-            for (int i = 0; i < header.cntSfx; i++)
-                samples1.Add(SampleDef.FromReader(br));
-
-            for (int i = 0; i < header.cntEngineSfx; i++)
-                samples2.Add(SampleDef.FromReader(br));
-            */
 
             for (int i = 0; i < header.cntBank; i++)
                 ptrBanks.Add(br.ReadUInt16() * Meta.SectorSize);

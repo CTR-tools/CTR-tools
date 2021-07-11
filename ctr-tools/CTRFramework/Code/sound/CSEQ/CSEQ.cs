@@ -28,9 +28,9 @@ namespace CTRFramework.Sound.CSeq
 
         public string path;
         public string name;
-        public CHeader header = new CHeader();
-        public List<Instrument> longSamples = new List<Instrument>();
-        public List<Instrument> shortSamples = new List<Instrument>();
+
+        //public List<InstrumentLong> longSamples = new List<InstrumentLong>();
+        //public List<Instrument> shortSamples = new List<Instrument>();
         public List<Sequence> sequences = new List<Sequence>();
 
         public Bank bank = new Bank();
@@ -76,7 +76,18 @@ namespace CTRFramework.Sound.CSeq
 
         public bool Read(BinaryReaderEx br)
         {
-            header.Read(br);
+            // header.Read(br);
+
+            int size = br.ReadInt32();
+
+            if (size != br.BaseStream.Length)
+                throw new Exception("Stream length mismatch.");
+
+            byte longCnt = br.ReadByte();
+            byte shortCnt = br.ReadByte();
+            short seqCnt = br.ReadInt16();
+
+            System.Windows.Forms.MessageBox.Show($"{longCnt} {shortCnt}");
 
             //if we read from howl, it never equals
             //if (header.size != br.BaseStream.Length)
@@ -85,31 +96,36 @@ namespace CTRFramework.Sound.CSeq
             //}
 
             long pos = br.BaseStream.Position;
-
-            for (int i = 0; i < header.longCnt; i++)
-            {
+            
+            for (int i = 0; i < longCnt; i++)
+            { 
                 samplesReverb.Add(new SampleDefReverb(br));
             }
 
-            for (int i = 0; i < header.shortCnt; i++)
+            for (int i = 0; i < shortCnt; i++)
             {
                 samples.Add(new SampleDef(br));
             }
+            
 
-            br.BaseStream.Position = pos;
+            //br.BaseStream.Position = pos;
 
+            System.Windows.Forms.MessageBox.Show($"{pos.ToString("X8")}");
+
+            /*
             //read instruments
-            for (int i = 0; i < header.longCnt; i++)
-                longSamples.Add(Instrument.GetLong(br));
+            for (int i = 0; i < longCnt; i++)
+                longSamples.Add(InstrumentLong.FromReader(br));
 
-            for (int i = 0; i < header.shortCnt; i++)
-                shortSamples.Add(Instrument.GetShort(br));
+            for (int i = 0; i < shortCnt; i++)
+                shortSamples.Add(Instrument.FromReader(br));
+            */
 
             //read offsets
-            short[] seqPtrs = br.ReadArrayInt16(header.seqCnt);
+            short[] seqPtrs = br.ReadArrayInt16(seqCnt);
 
             //awesome NTSC demo fix
-            int p = (header.seqCnt == 4) ? 1 : 3;
+            int p = (seqCnt == 4) ? 1 : 3;
 
             //checking whether it's 0 or not
             for (int i = 0; i < p; i++)
@@ -120,8 +136,10 @@ namespace CTRFramework.Sound.CSeq
             int seqStart = (int)br.BaseStream.Position;
 
             //loop through all sequences
-            for (int i = 0; i < header.seqCnt; i++)
+            for (int i = 0; i < seqCnt; i++)
             {
+                System.Windows.Forms.MessageBox.Show($"{seqStart.ToString("X8")} + {seqPtrs[i].ToString("X8")}");
+
                 br.Jump(seqStart + seqPtrs[i]);
 
                 Sequence seq = new Sequence();
@@ -149,14 +167,19 @@ namespace CTRFramework.Sound.CSeq
 
         public void LoadMetaInstruments(string song)
         {
-            for (int i = 0; i < longSamples.Count; i++)
+            
+            for (int i = 0; i < samplesReverb.Count; i++)
             {
-                longSamples[i].info = Meta.GetMetaInst(song, "long", i);
+                MetaInst info = Meta.GetMetaInst(song, "long", i);
+                samplesReverb[i].MIDI = (byte)info.Midi;
+                samplesReverb[i].PitchShift = info.Pitch;
             }
 
-            for (int i = 0; i < shortSamples.Count; i++)
+            for (int i = 0; i < samples.Count; i++)
             {
-                shortSamples[i].info = Meta.GetMetaInst(song, "short", i);
+                MetaInst info = Meta.GetMetaInst(song, "short", i);
+                samples[i].MIDI = (byte)info.Key;
+                samples[i].PitchShift = info.Pitch;
             }
         }
 
@@ -189,21 +212,30 @@ namespace CTRFramework.Sound.CSeq
         {
             Helpers.CheckFolder(Path.GetDirectoryName(fileName));
 
+            //sanity checks
+            if (samplesReverb.Count > Byte.MaxValue) throw new IndexOutOfRangeException("Too many instruments");
+            if (samples.Count > Byte.MaxValue) throw new IndexOutOfRangeException("Too many instruments");
+            if (sequences.Count > UInt16.MaxValue) throw new IndexOutOfRangeException("Too many instruments");
+
             using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(fileName)))
             {
-                header.Write(bw);
+                bw.Write((int)0); //filesize, write in the end
+                bw.Write((byte)samplesReverb.Count);
+                bw.Write((byte)samples.Count);
+                bw.Write((short)sequences.Count);
 
                 //System.Windows.Forms.MessageBox.Show(longSamples.Count + " " + shortSamples.Count);
 
-                foreach (Instrument ls in longSamples)
+                foreach (var ls in samplesReverb)
                     ls.Write(bw);
 
-                foreach (Instrument ss in shortSamples)
+                foreach (var ss in samples)
                     ss.Write(bw);
 
                 long offsetsarraypos = bw.BaseStream.Position;
 
-                foreach (Sequence seq in sequences)
+                //it's meant to be like that
+                foreach (var seq in sequences)
                     bw.Write((short)0);
 
                 int p = 3;
@@ -252,69 +284,70 @@ namespace CTRFramework.Sound.CSeq
 
         public bool CheckBankForSamples()
         {
-            foreach (Instrument x in longSamples)
+            foreach (var x in samplesReverb)
             {
-                if (!bank.Contains(x.sampleID))
+                if (!bank.Contains(x.SampleID))
                     return false;
             }
 
-            foreach (Instrument x in shortSamples)
+            foreach (var x in samples)
             {
-                if (!bank.Contains(x.sampleID))
+                if (!bank.Contains(x.SampleID))
                     return false;
             }
-
+            
             return true;
         }
 
         public string ListMissingSamples()
         {
             StringBuilder sb = new StringBuilder();
-
-            foreach (Instrument x in longSamples)
+            
+            foreach (var x in samplesReverb)
             {
-                if (!bank.Contains(x.sampleID))
-                    sb.Append("long: " + x.sampleID + "\r\n");
+                if (!bank.Contains(x.SampleID))
+                    sb.Append("long: " + x.SampleID + "\r\n");
             }
 
-            foreach (Instrument x in shortSamples)
+            foreach (var x in samples)
             {
-                if (!bank.Contains(x.sampleID))
-                    sb.Append("short: " + x.sampleID + "\r\n");
+                if (!bank.Contains(x.SampleID))
+                    sb.Append("short: " + x.SampleID + "\r\n");
             }
-
+            
             return sb.ToString();
         }
 
         public List<int> GetAllIDs()
         {
             List<int> ids = new List<int>();
+            
+            foreach (var s in samplesReverb)
+                ids.Add(s.SampleID);
 
-            foreach (Instrument s in longSamples)
-                ids.Add(s.sampleID);
-
-            foreach (Instrument s in shortSamples)
-                ids.Add(s.sampleID);
-
+            foreach (var s in samples)
+                ids.Add(s.SampleID);
+            
             return ids;
         }
 
         public int GetFrequencyBySampleID(int id)
         {
-            foreach (Instrument s in longSamples)
-                if (s.sampleID == id)
-                    return s.frequency;
+            
+            foreach (var s in samplesReverb)
+                if (s.SampleID == id)
+                    return s.Frequency;
 
-            foreach (Instrument s in shortSamples)
-                if (s.sampleID == id)
-                    return s.frequency;
-
+            foreach (var s in samples)
+                if (s.SampleID == id)
+                    return s.Frequency;
+            
             return VagSample.DefaultSampleRate;
         }
 
         public int GetLongSampleIDByTrack(CTrack ct)
         {
-            return longSamples[ct.instrument].sampleID;
+            return samplesReverb[ct.instrument].SampleID;
         }
 
     }

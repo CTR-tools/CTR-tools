@@ -52,13 +52,11 @@ namespace CTRFramework.Sound
                 xa.RootPath = Path.GetDirectoryName(filename);
                 xa.Lang = Path.GetFileNameWithoutExtension(filename);
 
-                xa.folders = new string[]
-                {
-                "MUSIC",
-                $"{xa.Lang}\\EXTRA",
-                $"{xa.Lang}\\GAME"
+                xa.folders = new string[] {
+                    "MUSIC",
+                    $"{xa.Lang}\\EXTRA",
+                    $"{xa.Lang}\\GAME"
                 };
-
 
                 return xa;
             }

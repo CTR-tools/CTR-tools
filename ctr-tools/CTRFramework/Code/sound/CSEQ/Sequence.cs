@@ -8,36 +8,36 @@ namespace CTRFramework.Sound.CSeq
 {
     public class Sequence
     {
-        public CSeqHeader header;
-        public List<CTrack> tracks;
+        public int trackNum;
+        public int BPM;
+        public int TPQN;
+        public int MPQN => (int)(60000000.0f / (float)BPM);
 
+        public List<CTrack> tracks = new List<CTrack>();
 
         public Sequence()
         {
-            header = new CSeqHeader();
-            tracks = new List<CTrack>();
         }
-
 
         //reads CSEQ from given binaryreader
         public bool Read(BinaryReaderEx br, CSEQ cs)
         {
-            //read header
-            if (!header.Read(br))
-                return false;
+            trackNum = br.ReadByte();
+            BPM = br.ReadInt16();
+            TPQN = br.ReadInt16();
 
             //read offsets
-            short[] seqOffsets = br.ReadArrayInt16(header.trackNum);
+            short[] seqOffsets = br.ReadArrayInt16(trackNum);
 
             //padding i guess?
-            if (header.trackNum % 2 == 0)
+            if (trackNum % 2 == 0)
                 br.ReadInt16();
 
             //save current position to read tracks
             int trackData = (int)br.BaseStream.Position;
 
             //loop through all tracks
-            for (int i = 0; i < header.trackNum; i++)
+            for (int i = 0; i < trackNum; i++)
             {
                 //jump to track offset
                 br.Jump(trackData + seqOffsets[i]);
@@ -57,13 +57,13 @@ namespace CTRFramework.Sound.CSeq
         {
             string cr = Path.GetFileNameWithoutExtension(fn) + "\r\n\r\n" + Properties.Resources.midi_copyright;
 
-            MidiEventCollection mc = new MidiEventCollection(1, header.TPQN);
+            MidiEventCollection mc = new MidiEventCollection(1, TPQN);
 
             //this is a lazy fix for guitarpro5 bug, 1st track does not import there
             List<MidiEvent> dummy = new List<MidiEvent>();
             dummy.Add(new TextEvent(Path.GetFileNameWithoutExtension(fn), MetaEventType.SequenceTrackName, 0));
             dummy.Add(new TextEvent(cr, MetaEventType.Copyright, 0));
-            dummy.Add(new TempoEvent(header.MPQN, 0));
+            dummy.Add(new TempoEvent(MPQN, 0));
 
             mc.AddTrack(dummy);
 
@@ -71,7 +71,7 @@ namespace CTRFramework.Sound.CSeq
 
             for (int i = 0; i < tracks.Count; i++)
             {
-                mc.AddTrack(tracks[i].ToMidiEventList(header, tracks[i].isDrumTrack ? 10 : availablechannel, seq));
+                mc.AddTrack(tracks[i].ToMidiEventList(MPQN, tracks[i].isDrumTrack ? 10 : availablechannel, seq));
 
                 if (!tracks[i].isDrumTrack)
                 {
@@ -102,7 +102,9 @@ namespace CTRFramework.Sound.CSeq
 
         public void WriteBytes(BinaryWriterEx bw)
         {
-            header.WriteBytes(bw);
+            bw.Write((byte)trackNum);
+            bw.Write((short)BPM);
+            bw.Write((short)TPQN);
 
             long offsetsarraypos = bw.BaseStream.Position;
 

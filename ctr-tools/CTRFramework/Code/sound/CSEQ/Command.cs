@@ -90,9 +90,7 @@ namespace CTRFramework.Sound.CSeq
             channel = (channel <= 16) ? channel : 16;
 
             if (CSEQ.IgnoreVolume)
-            {
                 velocity = 127;
-            }
 
             var p = pitch;
 
@@ -102,7 +100,8 @@ namespace CTRFramework.Sound.CSeq
                 {
                     if (evt == CSEQEvent.NoteOn || evt == CSEQEvent.NoteOff)
                     {
-                        p = (byte)seq.shortSamples[pitch].info.Key;
+                        p = (byte)seq.samples[pitch].MIDI;
+                        //p = (byte)seq.shortSamples[pitch].info.Key;
                     }
                 }
 
@@ -111,13 +110,15 @@ namespace CTRFramework.Sound.CSeq
                     if (evt == CSEQEvent.ChangePatch)
                     {
                         CSEQ.ActiveInstrument = pitch;
-                        p = (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Midi;
+                        p = (byte)seq.samplesReverb[pitch].MIDI;
+                        //p = (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Midi;
                     }
                     else if (evt == CSEQEvent.NoteOn || evt == CSEQEvent.NoteOff)
                     {
                         try
                         {
-                            p += (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Pitch;
+                            p += (byte)seq.samplesReverb[pitch].Pitch;
+                            //p += (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Pitch;
                         }
                         catch //(Exception ex)
                         {

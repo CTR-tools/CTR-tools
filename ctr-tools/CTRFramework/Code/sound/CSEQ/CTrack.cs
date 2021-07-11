@@ -81,7 +81,7 @@ namespace CTRFramework.Sound.CSeq
         }
 
 
-        public List<MidiEvent> ToMidiEventList(CSeqHeader header, int channel, CSEQ seq)
+        public List<MidiEvent> ToMidiEventList(int MPQN, int channel, CSEQ seq)
         {
             List<MidiEvent> me = new List<MidiEvent>();
             //MidiEvent x;
@@ -89,7 +89,7 @@ namespace CTRFramework.Sound.CSeq
             int absTime = 0;
 
             me.Add(new TextEvent(name, MetaEventType.SequenceTrackName, absTime));
-            me.Add(new TempoEvent(header.MPQN, absTime));
+            me.Add(new TempoEvent(MPQN, absTime));
 
             if (channel == 10)
             {

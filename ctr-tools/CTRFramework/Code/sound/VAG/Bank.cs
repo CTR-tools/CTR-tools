@@ -21,6 +21,10 @@ namespace CTRFramework.Sound
         public Bank()
         {
         }
+        public Bank(BinaryReaderEx br)
+        {
+            Read(br);
+        }
 
         public static Bank FromFile(string filename)
         {
@@ -28,11 +32,6 @@ namespace CTRFramework.Sound
             {
                 return new Bank(br);
             }
-        }
-
-        public Bank(BinaryReaderEx br)
-        {
-            Read(br);
         }
 
         public static Bank FromReader(BinaryReaderEx br)

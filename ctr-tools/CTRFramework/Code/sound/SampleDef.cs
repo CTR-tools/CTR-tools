@@ -7,6 +7,18 @@ namespace CTRFramework.Sound
 {
     public class SampleDef : IReadWrite
     {
+        private byte magic1;
+        public byte Velocity;
+        public int Frequency;  //4096 is considered to be 44100
+        public ushort sampleID;
+        private short always0;
+
+        private string title;
+        private byte midi;
+        private int pitchshift;
+
+        #region [Component model]
+
         [CategoryAttribute("Meta info"), DescriptionAttribute("Instrument title.")]
         public string Title
         {
@@ -22,32 +34,26 @@ namespace CTRFramework.Sound
         }
 
         [CategoryAttribute("Meta info"), DescriptionAttribute("Pitch shift.")]
-        public string PitchShift
+        public int PitchShift
         {
             get => pitchshift;
             set => pitchshift = value;
         }
 
-
-        private string title;
-        private byte midi;
-        private string pitchshift;
-
         public string Tag => SampleID.ToString("X4") + "_" + Frequency;
-
 
         [CategoryAttribute("General"), DescriptionAttribute("Sample volume.")]
         public byte Volume
         {
-            get => volume;
-            set => volume = value;
+            get => Velocity;
+            set => Velocity = value;
         }
 
         [CategoryAttribute("General"), DescriptionAttribute("Sample pitch.")]
-        public ushort Pitch
+        public int Pitch
         {
-            get => pitch;
-            set => pitch = value;
+            get => Frequency;
+            set => Frequency = value;
         }
 
         [CategoryAttribute("General"), DescriptionAttribute("Sample ID.")]
@@ -57,18 +63,7 @@ namespace CTRFramework.Sound
             set => sampleID = value;
         }
 
-
-        private byte magic1;
-        private byte volume;
-        private ushort pitch;  //4096 is considered to be 44100
-        private ushort sampleID;
-        private short always0;
-
-        public int Frequency
-        {
-            //cents needed?
-            get => (int)Math.Round(pitch / 4096.0f * 44100.0f);
-        }
+        #endregion
 
         public SampleDef()
         {
@@ -87,8 +82,8 @@ namespace CTRFramework.Sound
         public virtual void Read(BinaryReaderEx br)
         {
             magic1 = br.ReadByte();
-            volume = br.ReadByte();
-            pitch = br.ReadUInt16();
+            Velocity = br.ReadByte();
+            Frequency = (int)Math.Round(br.ReadUInt16() / 4096.0f * 44100.0f);
             sampleID = br.ReadUInt16();
             always0 = br.ReadInt16();
 
@@ -103,8 +98,8 @@ namespace CTRFramework.Sound
         public virtual void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write((byte)magic1);
-            bw.Write((byte)volume);
-            bw.Write((ushort)pitch);
+            bw.Write((byte)Velocity);
+            bw.Write((short)Math.Round(Frequency * 4096.0f / 44100.0f));
             bw.Write((ushort)sampleID);
             bw.Write((short)always0);
         }
