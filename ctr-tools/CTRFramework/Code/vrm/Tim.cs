@@ -199,7 +199,7 @@ namespace CTRFramework.Vram
         public void SaveBMP(string s, byte[] pal)
         {
             s = Path.ChangeExtension(s, ".bmp");
-            File.WriteAllBytes(s, SaveBMPToStream(pal));
+            Helpers.WriteToFile(s, SaveBMPToStream(pal));
         }
 
         public byte[] SaveBMPToStream(byte[] pal)

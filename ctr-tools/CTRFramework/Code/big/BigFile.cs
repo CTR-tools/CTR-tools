@@ -96,7 +96,7 @@ namespace CTRFramework.Big
         /// <summary>
         /// Exports all BigFile entries to a given folder.
         /// </summary>
-        /// <param name="path">Folder.</param>
+        /// <param name="path">Folder to extract files to.</param>
         public void Extract(string path)
         {
             Console.WriteLine($"Exporting BIG to: {path}");
@@ -104,16 +104,16 @@ namespace CTRFramework.Big
 
             StringBuilder biglist = new StringBuilder();
 
-            foreach (BigEntry cf in Entries)
+            foreach (var entry in Entries)
             {
-                string filename = Path.Combine(path, cf.Name);
-                Helpers.CheckFolder(Path.GetDirectoryName(filename));
+                string filename = Path.Combine(path, entry.Name);
+                //Helpers.CheckFolder(Path.GetDirectoryName(filename));
 
-                biglist.AppendLine(cf.Name);
+                biglist.AppendLine(entry.Name);
 
                 //this ensures we don't have dummy files
-                if (cf.Size > 0)
-                    File.WriteAllBytes(filename, cf.Data);
+                if (entry.Size > 0)
+                    Helpers.WriteToFile(filename, entry.Data);
 
                 Console.Write(".");
             }
@@ -127,7 +127,7 @@ namespace CTRFramework.Big
         /// Saves BigFile to a given location.
         /// </summary>
         /// <param name="filename">Filename.</param>
-        public void Save(string filename)
+        public void Save(string filename = "bigfile.big")
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -135,6 +135,7 @@ namespace CTRFramework.Big
             Console.WriteLine($"we'll need {TotalSize / 1024.0f / 1024.0f}MB for {Entries.Count} files:");
 
             byte[] final_big = new byte[TotalSize];
+
             using (BinaryWriterEx bw = new BinaryWriterEx(new MemoryStream(final_big)))
             {
                 bw.Write((int)0);
@@ -147,7 +148,7 @@ namespace CTRFramework.Big
                     Console.Write(".");
 
                     int pos = (int)bw.BaseStream.Position;
-                    c.Offset = pos / 2048;
+                    c.Offset = pos / Meta.SectorSize;
 
                     bw.Write(c.Data);
 
@@ -166,7 +167,7 @@ namespace CTRFramework.Big
 
                 Console.WriteLine("Dumping to disk...");
 
-                File.WriteAllBytes(filename, final_big);
+                Helpers.WriteToFile(filename, final_big);
             }
 
             sw.Stop();

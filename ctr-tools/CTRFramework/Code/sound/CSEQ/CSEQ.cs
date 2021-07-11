@@ -96,9 +96,9 @@ namespace CTRFramework.Sound.CSeq
             //}
 
             long pos = br.BaseStream.Position;
-            
+
             for (int i = 0; i < longCnt; i++)
-            { 
+            {
                 samplesReverb.Add(new SampleDefReverb(br));
             }
 
@@ -106,7 +106,7 @@ namespace CTRFramework.Sound.CSeq
             {
                 samples.Add(new SampleDef(br));
             }
-            
+
 
             //br.BaseStream.Position = pos;
 
@@ -167,7 +167,7 @@ namespace CTRFramework.Sound.CSeq
 
         public void LoadMetaInstruments(string song)
         {
-            
+
             for (int i = 0; i < samplesReverb.Count; i++)
             {
                 MetaInst info = Meta.GetMetaInst(song, "long", i);
@@ -295,14 +295,14 @@ namespace CTRFramework.Sound.CSeq
                 if (!bank.Contains(x.SampleID))
                     return false;
             }
-            
+
             return true;
         }
 
         public string ListMissingSamples()
         {
             StringBuilder sb = new StringBuilder();
-            
+
             foreach (var x in samplesReverb)
             {
                 if (!bank.Contains(x.SampleID))
@@ -314,26 +314,26 @@ namespace CTRFramework.Sound.CSeq
                 if (!bank.Contains(x.SampleID))
                     sb.Append("short: " + x.SampleID + "\r\n");
             }
-            
+
             return sb.ToString();
         }
 
         public List<int> GetAllIDs()
         {
             List<int> ids = new List<int>();
-            
+
             foreach (var s in samplesReverb)
                 ids.Add(s.SampleID);
 
             foreach (var s in samples)
                 ids.Add(s.SampleID);
-            
+
             return ids;
         }
 
         public int GetFrequencyBySampleID(int id)
         {
-            
+
             foreach (var s in samplesReverb)
                 if (s.SampleID == id)
                     return s.Frequency;
@@ -341,7 +341,7 @@ namespace CTRFramework.Sound.CSeq
             foreach (var s in samples)
                 if (s.SampleID == id)
                     return s.Frequency;
-            
+
             return VagSample.DefaultSampleRate;
         }
 

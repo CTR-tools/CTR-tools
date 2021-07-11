@@ -157,8 +157,8 @@ namespace bash_dat
                             dat.Jump(offset);
 
                             string final_path = Path.Combine(dir, "data", (filelist.ContainsKey(i) && num == 0x3E0) ? filelist[i] : $"{i.ToString("00000")}{ext}");
-                            Directory.CreateDirectory(Path.GetDirectoryName(final_path));
-                            File.WriteAllBytes(final_path, dat.ReadBytes(size));
+
+                            Helpers.WriteToFile(final_path, dat.ReadBytes(size));
 
                             Console.Write(".");
                         }

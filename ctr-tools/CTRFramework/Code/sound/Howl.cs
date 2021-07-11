@@ -172,7 +172,7 @@ namespace CTRFramework.Sound
 
                 fn = Path.Combine(pathBank, fn);
 
-                File.WriteAllBytes(fn, br.ReadBytes(ptrBanks[i + 1] - ptrBanks[i]));
+                Helpers.WriteToFile(fn, br.ReadBytes(ptrBanks[i + 1] - ptrBanks[i]));
             }
 
             Console.WriteLine("---");
@@ -208,7 +208,7 @@ namespace CTRFramework.Sound
                 br.BaseStream.Position = i;
 
                 byte[] data = br.ReadBytes(size);
-                File.WriteAllBytes(fn, data);
+                Helpers.WriteToFile(fn, data);
 
                 j++;
             }
