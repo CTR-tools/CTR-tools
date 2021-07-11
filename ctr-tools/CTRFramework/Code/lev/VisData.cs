@@ -29,13 +29,7 @@ namespace CTRFramework
         public uint numQuadBlock;
         public uint ptrQuadBlock;
 
-        public bool IsLeaf
-        {
-            get
-            {
-                return flag.HasFlag(VisDataFlags.Leaf);
-            }
-        }
+        public bool IsLeaf => flag.HasFlag(VisDataFlags.Leaf);
 
         public VisData()
         {
@@ -62,7 +56,7 @@ namespace CTRFramework
 
             //flag is likely ushort, just testing if upper byte has any data
             if (unk0 != 0)
-                Helpers.Panic(this, PanicType.Assume, "unk0 is not null");
+                Helpers.Panic(this, PanicType.Assume, $"unk0 is not null: {unk0.ToString("X2")}");
 
             if (flag.HasFlag(VisDataFlags.Leaf)) counter[0]++;
             if (flag.HasFlag(VisDataFlags.Water)) counter[1]++;
