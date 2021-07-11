@@ -81,12 +81,14 @@ types:
       trial:
         pos: header.ptr_trial_data
         type: trial_data
+        if: header.ptr_trial_data != 0
 
       vcolors:
         pos: header.ptr_vcanim
         type: vcolor
         repeat: expr
         repeat-expr: header.num_vcanim
+        if: header.ptr_vcanim != 0
 
       skybox:
         pos: header.ptr_skybox
@@ -98,20 +100,24 @@ types:
         type: vis_data
         repeat: expr
         repeat-expr: mesh_info_header.num_vis_data
+        if: mesh_info_header.ptr_vis_data != 0
     
       icons:
         pos: header.ptr_icons
         type: icon_pack
+        if: header.ptr_icons != 0
     
       ai_nav:
         pos: header.ptr_ai_nav
         type: ai_paths
+        if: header.ptr_ai_nav != 0
     
       water_data:
         pos: header.ptr_water
         type: water_packet
         repeat: expr
         repeat-expr: header.cnt_water
+        if: header.ptr_water != 0
 
   vis_data:
     doc: | 
@@ -204,7 +210,7 @@ types:
 
   scene_header:
     doc: | 
-      scene header, contains pointer to other data within the file and
+      scene header, contains pointers to other data within the file and
       variouis global data like starting grid, background colors, etc. 
     seq:
       - id: ptr_mesh_info
@@ -383,7 +389,7 @@ types:
 
   mesh_info:
     doc: | 
-      meash header struct, contains pointer to vertex array, quadblock array 
+      mesh header struct, contains pointer to vertex array, quadblock array 
       and visdata array
     seq:
       - id: num_quad_blocks
@@ -480,6 +486,9 @@ types:
         if: ptr_add_tex != 0
 
   add_tex:
+    doc: |
+      points to 4 structs, one of them assumed to store mosaic texture def
+      each pointer might include flag hidden in lsb
     seq:
       - id: ptr1
         type: u4
@@ -504,6 +513,8 @@ types:
         type: color
 
   skybox_vertex:
+    doc: |
+      shorter vertex defintion without morph color
     seq:
       - id: position
         type: vector4s
@@ -511,6 +522,8 @@ types:
         type: color
         
   vcolor:
+    doc: |
+      controls vertex animation, both color and position (roo's tubes best example).
     seq:
       - id: ptr_vertex
         type: u4
@@ -563,6 +576,8 @@ types:
         type: texture_layout
 
   icon_group:
+    doc: |
+      some icons are grouped together (like all wheel sprites)
     seq:
       - id: name
         type: strz
@@ -578,6 +593,8 @@ types:
         repeat-expr: num_icons
 
   ai_frame_header:
+    doc: |
+      ai path header data
     seq:
       - id: version # assumed to be, game code tests against const value 
         type: u2
@@ -587,6 +604,8 @@ types:
         size: 0x48
 
   nav_frame:
+    doc: |
+      describes a single navigation point for bots
     seq:
       - id: point
         type: pose
@@ -643,7 +662,7 @@ types:
       - id: uv4
         type: vector2b
 
-  water_packet: 
+  water_packet:
     seq:
       - id: ptr_vertex
         type: u4
