@@ -579,7 +579,7 @@ types:
 
   ai_frame_header:
     seq:
-      - id: unk1
+      - id: version # assumed to be, game code tests against const value 
         type: u2
       - id: num_frames
         type: u2
