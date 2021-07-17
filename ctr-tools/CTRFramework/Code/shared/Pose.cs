@@ -7,6 +7,11 @@ namespace CTRFramework.Shared
 {
     public class Pose : IReadWrite
     {
+        public static Pose Zero = new Pose(Vector3.Zero, Vector3.Zero);
+
+        private Vector3 position;
+        private Vector3 rotation;
+
         #region ComponentModel
         [CategoryAttribute("Values"), DescriptionAttribute("Position vector.")]
         public Vector3 Position
@@ -22,11 +27,6 @@ namespace CTRFramework.Shared
             set => rotation = value;
         }
         #endregion
-
-        private Vector3 position;
-        private Vector3 rotation;
-
-        public static Pose Zero = new Pose(Vector3.Zero, Vector3.Zero);
 
         public Pose()
         {

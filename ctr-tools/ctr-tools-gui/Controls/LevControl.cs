@@ -29,6 +29,7 @@ namespace CTRTools.Controls
         private void LevControl_DragDrop(object sender, DragEventArgs e)
         {
             string path = ((string[])e.Data.GetData(DataFormats.FileDrop, false))[0];
+            LoadLEV(path);
         }
 
         private void LevControl_DragEnter(object sender, DragEventArgs e)
@@ -45,44 +46,31 @@ namespace CTRTools.Controls
 
         string path = "";
 
-        private void LoadLEV()
+        private void LoadLEV(string filename)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CTR Scene file (*.lev)|*.lev";
-
-            if (ofd.ShowDialog() == DialogResult.OK)
+            try
             {
-                path = ofd.FileName;
+                path = filename;
                 Helpers.BackupFile(path);
                 scn = Scene.FromFile(path);
 
-                Text = String.Format("levTool - {0}", path);
+                Text = $"CTR-tools-gui - {path}";
                 propertyGrid1.SelectedObject = scn.pickups[0];
                 trackBar1.Maximum = scn.pickups.Count - 1;
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }        
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void actionMoveAll(object sender, EventArgs e)
         {
             if (scn != null)
             {
                 foreach (PickupHeader ph in scn.pickups)
                 {
                     ph.Pose.Move(new Vector3(0, (float)numericUpDown1.Value / 100f, 0));
-                }
-
-                //lmao
-                propertyGrid1.SelectedObject = propertyGrid1.SelectedObject;
-            }
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (scn != null)
-            {
-                foreach (PickupHeader ph in scn.pickups)
-                {
-                    ph.Pose.Move(new Vector3(0, -(float)numericUpDown1.Value / 100f, 0));
                 }
 
                 //lmao
@@ -528,12 +516,16 @@ namespace CTRTools.Controls
                 }
         }
 
-        private void button26_Click(object sender, EventArgs e)
+        private void actionLoadLev(object sender, EventArgs e)
         {
-            LoadLEV();
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "CTR Scene file (*.lev)|*.lev";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+                LoadLEV(ofd.FileName);
         }
 
-        private void button27_Click(object sender, EventArgs e)
+        private void actionSaveLev(object sender, EventArgs e)
         {
             SaveLEV();
         }
@@ -565,7 +557,7 @@ namespace CTRTools.Controls
             return (VisDataFlags)final;
         }
 
-        private void button32_Click(object sender, EventArgs e)
+        private void actionRestoreLev(object sender, EventArgs e)
         {
             if (path != "")
             {

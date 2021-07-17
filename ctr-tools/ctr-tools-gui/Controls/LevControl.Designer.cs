@@ -33,7 +33,6 @@ namespace CTRTools.Controls
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
             this.button21 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.button3 = new System.Windows.Forms.Button();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
@@ -98,7 +97,6 @@ namespace CTRTools.Controls
             // tabPickups
             // 
             this.tabPickups.Controls.Add(this.button21);
-            this.tabPickups.Controls.Add(this.button4);
             this.tabPickups.Controls.Add(this.numericUpDown1);
             this.tabPickups.Controls.Add(this.button3);
             this.tabPickups.Controls.Add(this.trackBar1);
@@ -122,16 +120,6 @@ namespace CTRTools.Controls
             this.button21.Visible = false;
             this.button21.Click += new System.EventHandler(this.button21_Click);
             // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(117, 57);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(89, 23);
-            this.button4.TabIndex = 18;
-            this.button4.Text = "move all down";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
             // numericUpDown1
             // 
             this.numericUpDown1.Location = new System.Drawing.Point(117, 3);
@@ -140,6 +128,11 @@ namespace CTRTools.Controls
             0,
             0,
             0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(89, 20);
             this.numericUpDown1.TabIndex = 17;
@@ -155,9 +148,9 @@ namespace CTRTools.Controls
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(89, 23);
             this.button3.TabIndex = 16;
-            this.button3.Text = "move all up";
+            this.button3.Text = "move all";
             this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.button3.Click += new System.EventHandler(this.actionMoveAll);
             // 
             // trackBar1
             // 
@@ -491,7 +484,7 @@ namespace CTRTools.Controls
             this.button27.TabIndex = 21;
             this.button27.Text = "Save LEV";
             this.button27.UseVisualStyleBackColor = true;
-            this.button27.Click += new System.EventHandler(this.button27_Click);
+            this.button27.Click += new System.EventHandler(this.actionSaveLev);
             // 
             // button26
             // 
@@ -502,7 +495,7 @@ namespace CTRTools.Controls
             this.button26.TabIndex = 20;
             this.button26.Text = "Load LEV";
             this.button26.UseVisualStyleBackColor = true;
-            this.button26.Click += new System.EventHandler(this.button26_Click);
+            this.button26.Click += new System.EventHandler(this.actionLoadLev);
             // 
             // button32
             // 
@@ -513,7 +506,7 @@ namespace CTRTools.Controls
             this.button32.TabIndex = 20;
             this.button32.Text = "Restore LEV";
             this.button32.UseVisualStyleBackColor = true;
-            this.button32.Click += new System.EventHandler(this.button32_Click);
+            this.button32.Click += new System.EventHandler(this.actionRestoreLev);
             // 
             // button1
             // 
@@ -528,6 +521,7 @@ namespace CTRTools.Controls
             // 
             // LevControl
             // 
+            this.AllowDrop = true;
             this.Controls.Add(this.button1);
             this.Controls.Add(this.button32);
             this.Controls.Add(this.button26);
@@ -560,7 +554,6 @@ namespace CTRTools.Controls
         private TabControl tabControl2;
         private TabPage tabPickups;
         private Button button21;
-        private Button button4;
         private NumericUpDown numericUpDown1;
         private Button button3;
         private TrackBar trackBar1;
