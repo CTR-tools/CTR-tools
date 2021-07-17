@@ -143,8 +143,8 @@ namespace CTRTools.Controls
                     }
                 }
 
-                bmp.Save(Path.Combine(pathFileParent, "test.bmp"));
-
+                bmp.Save(Path.Combine(pathFileParent, "test_color.bmp"));
+                s.ctrvram.SaveBMP(Path.Combine(pathFileParent, "test_bw.bmp"), BMPHeader.GrayScalePalette(16));
             }
 
             GC.Collect();

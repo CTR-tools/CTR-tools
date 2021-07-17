@@ -464,6 +464,11 @@ namespace CTRFramework
             }
         }
 
+        public override string ToString()
+        {
+            return Info();
+        }
+
         public string Info()
         {
             int numLeaves = 0;

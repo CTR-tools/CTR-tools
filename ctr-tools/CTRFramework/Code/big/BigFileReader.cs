@@ -50,10 +50,7 @@ namespace CTRFramework.Big
 
         public static BigFileReader FromFile(string filename)
         {
-            using (Stream stream = File.OpenRead(filename))
-            {
-                return new BigFileReader(stream);
-            }
+            return new BigFileReader(File.OpenRead(filename));
         }
 
         /// <summary>

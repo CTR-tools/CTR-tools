@@ -568,15 +568,13 @@ namespace CTRTools.Controls
 
         private void actionExportObj(object sender, EventArgs e)
         {
-            if (scn != null)
-            {
-                FolderBrowserDialog fbd = new FolderBrowserDialog();
+            if (scn == null) return;
 
-                if (fbd.ShowDialog() == DialogResult.OK)
-                {
-                    scn.Export(fbd.SelectedPath, ExportFlags.All);
-                }
-            }
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.SelectedPath = Path.GetDirectoryName(path);
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+                scn.Export(fbd.SelectedPath, ExportFlags.All);
         }
     }
 }
