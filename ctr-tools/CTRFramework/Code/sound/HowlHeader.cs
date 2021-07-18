@@ -6,15 +6,14 @@ namespace CTRFramework.Sound
 {
     public class HowlHeader : IReadWrite
     {
-        public char[] magic;    //HOWL char[]
-
-        public int u1;          //freezes the game if changed, game code tests against fixed number for some reason. maybe like version.
+        public int version;     //freezes the game if changed, game code tests against fixed number for some reason. maybe like version.
         public int reserved1;   //no effect
         public int reserved2;   //no effect
 
         public int cntUnk;      //number of entries in an unknown array, messes up all samples if anything is modified
         public int cntSfx;      //number of sample declarations, contains all sfx entries (not instruments)
         public int cntEngineSfx;//number of engine sound array entries
+
         public int cntBank;     //number of banks
         public int cntSeq;      //number of sequences
 
@@ -32,12 +31,12 @@ namespace CTRFramework.Sound
 
         public void Read(BinaryReaderEx br)
         {
-            magic = br.ReadChars(4);
+            char[] magic = br.ReadChars(4);
 
             if (new string(magic) != "HOWL")
                 throw new Exception("Not a CTR HOWL file.");
 
-            u1 = br.ReadInt32();
+            version = br.ReadInt32();
             reserved1 = br.ReadInt32();
             reserved2 = br.ReadInt32();
 
@@ -56,14 +55,8 @@ namespace CTRFramework.Sound
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            if (new string(magic) != "HOWL")
-            {
-                Console.WriteLine("Not a CTR HOWL file.");
-                return;
-            }
-
-            bw.Write(magic);
-            bw.Write(u1);
+            bw.Write("HOWL".ToCharArray());
+            bw.Write(version);
             bw.Write(reserved1);
             bw.Write(reserved2);
 

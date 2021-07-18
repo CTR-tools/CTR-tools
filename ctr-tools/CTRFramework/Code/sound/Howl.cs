@@ -103,7 +103,6 @@ namespace CTRFramework.Sound
             }
         }
 
-
         public static Howl FromReader(BinaryReaderEx br)
         {
             return new Howl(br);
@@ -153,7 +152,7 @@ namespace CTRFramework.Sound
 
             foreach (var c in sequences)
             {
-                c.Export(Path.Combine(path, $"{i.ToString("00")}.cseq"));
+                c.Save(Path.Combine(path, $"{i.ToString("00")}.cseq"));
                 i++;
             }
         }

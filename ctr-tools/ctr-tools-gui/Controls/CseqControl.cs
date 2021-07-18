@@ -174,7 +174,7 @@ namespace CTRTools.Controls
         private void exportSEQToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (seq != null)
-                seq.Export(Path.Combine(Meta.BasePath, "test.cseq"));
+                seq.Save(Path.Combine(Meta.BasePath, "test.cseq"));
         }
 
         Bank bnk = new Bank();

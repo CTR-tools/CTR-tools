@@ -224,8 +224,7 @@ namespace ctrviewer
 
             for (PlayerIndex i = PlayerIndex.One; i <= PlayerIndex.Four; i++)
             {
-                GamePadState state = GamePad.GetState(i);
-                if (state.IsConnected)
+                if (GamePad.GetState(i).IsConnected)
                 {
                     activeGamePad = i;
                     break;

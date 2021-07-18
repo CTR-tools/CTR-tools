@@ -8,7 +8,6 @@ namespace CTRFramework.Sound.CSeq
 {
     public class Sequence
     {
-        public int trackNum;
         public int BPM;
         public int TPQN;
         public int MPQN => (int)(60000000.0f / (float)BPM);
@@ -19,10 +18,20 @@ namespace CTRFramework.Sound.CSeq
         {
         }
 
-        //reads CSEQ from given binaryreader
-        public bool Read(BinaryReaderEx br, CSEQ cs)
+        public Sequence(BinaryReaderEx br)
         {
-            trackNum = br.ReadByte();
+            Read(br);
+        }
+
+        public static Sequence FromReader(BinaryReaderEx br)
+        {
+            return new Sequence(br);
+        }
+
+        //reads CSEQ from given binaryreader
+        public bool Read(BinaryReaderEx br)
+        {
+            int trackNum = br.ReadByte();
             BPM = br.ReadInt16();
             TPQN = br.ReadInt16();
 
@@ -100,9 +109,12 @@ namespace CTRFramework.Sound.CSeq
         }
 
 
-        public void WriteBytes(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw)
         {
-            bw.Write((byte)trackNum);
+            //sanity check
+            if (tracks.Count > Byte.MaxValue) throw new IndexOutOfRangeException("Too many tracks, max 255.");
+
+            bw.Write((byte)tracks.Count);
             bw.Write((short)BPM);
             bw.Write((short)TPQN);
 
@@ -133,8 +145,6 @@ namespace CTRFramework.Sound.CSeq
                 bw.Write((short)off);
 
             bw.BaseStream.Position = comeback;
-
         }
-
     }
 }

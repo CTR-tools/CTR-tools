@@ -25,7 +25,7 @@ namespace howl
 
             if (!File.Exists(filename))
             {
-                Console.WriteLine("{0} doesn't exist.", filename);
+                Console.WriteLine($"{filename} doesn't exist.");
                 return;
             }
 
