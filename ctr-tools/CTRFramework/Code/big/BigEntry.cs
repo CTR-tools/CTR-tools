@@ -9,15 +9,8 @@ namespace CTRFramework.Big
         public int Index;
         public string Name;
         public int Offset;
-        public int Size
-        {
-            get => Data != null ? Data.Length : 0;
-        }
-
-        public int SizePadded
-        {
-            get => (Size + 2047) >> 11 << 11;
-        }
+        public int Size => Data != null ? Data.Length : 0;
+        public int SizePadded => (Size + 2047) >> 11 << 11;
 
         public byte[] Data;
 

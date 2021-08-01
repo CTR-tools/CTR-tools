@@ -35,10 +35,10 @@ namespace CTRTools.Controls
             }
             else
             {
-                listBox1.Items.Clear();
+                metaInstList.Items.Clear();
                 comboBox1.Items.Clear();
 
-                listBox1.Items.AddRange(Meta.GetPatchList().ToArray());
+                metaInstList.Items.AddRange(Meta.GetPatchList().ToArray());
                 comboBox1.Items.AddRange(Meta.GetPatchList().ToArray());
             }
 
@@ -58,13 +58,12 @@ namespace CTRTools.Controls
                     comboBox1.SelectedIndex = i;
             }
 
-            seq = new CSEQ();
-
-            if (seq.Read(fn))
+            try
             {
+                seq = CSEQ.FromFile(fn);
                 FillUI(fn);
             }
-            else
+            catch 
             {
                 MessageBox.Show("Failed to read CTR sequence!");
             }
@@ -72,7 +71,7 @@ namespace CTRTools.Controls
 
         private void FillUI(string fn)
         {
-            treeView1.Nodes.Clear();
+            instrumentList.Nodes.Clear();
             sequenceBox.Items.Clear();
             trackBox.Items.Clear();
             textBox2.Text = "";
@@ -106,10 +105,10 @@ namespace CTRTools.Controls
                 tn2.Nodes.Add(tn3);
             }
 
-            treeView1.Nodes.Add(tn2);
-            treeView1.Nodes.Add(tn);
+            instrumentList.Nodes.Add(tn2);
+            instrumentList.Nodes.Add(tn);
 
-            treeView1.ExpandAll();
+            instrumentList.ExpandAll();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -139,7 +138,7 @@ namespace CTRTools.Controls
             int y = trackBox.SelectedIndex;
 
             if (x != -1 && y != -1)
-                this.textBox1.Text = seq.sequences[x].tracks[y].ToString();
+                this.trackInfoBox.Text = seq.sequences[x].tracks[y].ToString();
 
             tabControl1.SelectedIndex = 0;
         }
@@ -194,7 +193,7 @@ namespace CTRTools.Controls
             {
                 seq.bank = bnk;
                 MessageBox.Show(seq.CheckBankForSamples() ? "samples OK!" : "samples missing");
-                textBox1.Text = seq.ListMissingSamples();
+                trackInfoBox.Text = seq.ListMissingSamples();
             }
         }
 
@@ -221,7 +220,7 @@ namespace CTRTools.Controls
 
         private void tutorialToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            textBox1.Text = "halp!";//Properties.Resources.help;
+            trackInfoBox.Text = "halp!";//Properties.Resources.help;
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
@@ -274,7 +273,7 @@ namespace CTRTools.Controls
 
                 foreach (string s in x) sb.AppendLine(s);
 
-                textBox1.Text = sb.ToString();
+                trackInfoBox.Text = sb.ToString();
             }
 
             /*
@@ -315,19 +314,19 @@ namespace CTRTools.Controls
             WaveOut outputSound = null;
             string x = "";
 
-            if (treeView1.SelectedNode.Parent != null)
+            if (instrumentList.SelectedNode.Parent != null)
             {
-                if (treeView1.SelectedNode.Parent.Index == 1)
+                if (instrumentList.SelectedNode.Parent.Index == 1)
                 {
-                    SampleDef sd = seq.samples[treeView1.SelectedNode.Index];
-                    propertyGrid1.SelectedObject = sd;
+                    SampleDef sd = seq.samples[instrumentList.SelectedNode.Index];
+                    instrumentInfo.SelectedObject = sd;
                     x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : "") + ".wav";
                 }
 
-                if (treeView1.SelectedNode.Parent.Index == 0)
+                if (instrumentList.SelectedNode.Parent.Index == 0)
                 {
-                    SampleDefReverb sd = seq.samplesReverb[treeView1.SelectedNode.Index];
-                    propertyGrid1.SelectedObject = sd;
+                    SampleDefReverb sd = seq.samplesReverb[instrumentList.SelectedNode.Index];
+                    instrumentInfo.SelectedObject = sd;
                     x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : "") + ".wav";
                 }
 
@@ -344,14 +343,14 @@ namespace CTRTools.Controls
                     }
                     catch (Exception ex)
                     {
-                        textBox1.Text = ex.Message;
+                        trackInfoBox.Text = ex.Message;
                     }
                 }
 
             }
             else
             {
-                propertyGrid1.SelectedObject = null;
+                instrumentInfo.SelectedObject = null;
             }
         }
 
@@ -405,7 +404,7 @@ namespace CTRTools.Controls
 
                 foreach (string s in x) sb.AppendLine(s);
 
-                textBox1.Text = sb.ToString();
+                trackInfoBox.Text = sb.ToString();
             }
 
         }
@@ -416,6 +415,7 @@ namespace CTRTools.Controls
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            metaInstInfo.Text = Meta.GetMetaInstText(metaInstList.SelectedItem.ToString());
             //textBox3.Text = CTRJson.midi[listBox1.SelectedItem].ToString();
         }
 
@@ -436,17 +436,6 @@ namespace CTRTools.Controls
 
                 }
             }
-        }
-
-        private void treeView1_DoubleClick(object sender, EventArgs e)
-        {
-
-
-        }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
         }
 
         private void importMIDIToolStripMenuItem_Click(object sender, EventArgs e)

@@ -3,15 +3,15 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using p = CTRFramework.Properties.Resources;
+using resources = CTRFramework.Properties.Resources;
 
 namespace CTRFramework.Shared
 {
     public class Meta
     {
-
         public static int SectorSize = 0x800;
 
+        #region Paths/filenames
         public static string BasePath = System.AppDomain.CurrentDomain.BaseDirectory;
         public static string UserPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CTRViewer");
         public static string SettingsFile = Path.Combine(UserPath, "settings.xml");
@@ -22,7 +22,7 @@ namespace CTRFramework.Shared
         public static string SmplPath = "samplenames.txt";
         public static string BankPath = "banknames.txt";
         public static string ModelsPath = "models";
-
+        #endregion
 
         static JObject json;
 
@@ -112,14 +112,13 @@ namespace CTRFramework.Shared
                         continue;
                     }
 
-                    if (!names.ContainsKey(x))
-                    {
-                        names.Add(x, bb[1]);
-                    }
-                    else
+                    if (names.ContainsKey(x))
                     {
                         Helpers.Panic("Meta", PanicType.Error, $"duplicate entry {x}");
+                        continue;
                     }
+
+                    names.Add(x, bb[1]);
                 }
             }
 
@@ -128,12 +127,12 @@ namespace CTRFramework.Shared
 
         public static string GetVersion()
         {
-            return "CTRFramework " + p.Version + " (" + p.BuildDate.Split(',')[0] + ")";
+            return "CTRFramework " + resources.Version + " (" + resources.BuildDate.Split(',')[0] + ")";
         }
 
         public static string GetSignature()
         {
-            return p.signature;
+            return resources.signature;
         }
 
 
@@ -200,6 +199,11 @@ namespace CTRFramework.Shared
                 list.Add(j.Key);
 
             return list;
+        }
+
+        public static string GetMetaInstText(string name)
+        {
+            return midi[name].ToString();
         }
 
         public static int GetBankIndex(string track)

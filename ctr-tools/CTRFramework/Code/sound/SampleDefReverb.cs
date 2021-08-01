@@ -61,6 +61,11 @@ namespace CTRFramework.Sound
                 throw new Exception(String.Format("SampleDef always0 = {0} ", always0));
         }
 
+        public new static SampleDefReverb FromReader(BinaryReaderEx br)
+        {
+            return new SampleDefReverb(br);
+        }
+
         public override void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write((byte)magic1);

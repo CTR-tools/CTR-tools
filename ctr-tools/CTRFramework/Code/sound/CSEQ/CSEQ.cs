@@ -8,9 +8,14 @@ namespace CTRFramework.Sound.CSeq
 {
     public class CSEQ
     {
+        public string path;
+        public string name;
 
         public List<SampleDef> samples = new List<SampleDef>();
         public List<SampleDefReverb> samplesReverb = new List<SampleDefReverb>();
+        public List<Sequence> sequences = new List<Sequence>();
+
+        public Bank bank = new Bank();
 
         #region [CSEQ global settings]
 
@@ -21,19 +26,6 @@ namespace CTRFramework.Sound.CSeq
         public static int ActiveInstrument = 0;
         public static string PatchName = "";
         public static bool UseSampleVolumeForTracks = true;
-
-        #endregion
-
-        #region [Properties]
-
-        public string path;
-        public string name;
-
-        //public List<InstrumentLong> longSamples = new List<InstrumentLong>();
-        //public List<Instrument> shortSamples = new List<Instrument>();
-        public List<Sequence> sequences = new List<Sequence>();
-
-        public Bank bank = new Bank();
 
         #endregion
 
@@ -72,8 +64,6 @@ namespace CTRFramework.Sound.CSeq
             }
         }
 
-
-
         public bool Read(BinaryReaderEx br)
         {
             long pos = br.BaseStream.Position;
@@ -84,14 +74,10 @@ namespace CTRFramework.Sound.CSeq
             short seqCnt = br.ReadInt16();
 
             for (int i = 0; i < longCnt; i++)
-            {
-                samplesReverb.Add(new SampleDefReverb(br));
-            }
+                samplesReverb.Add(SampleDefReverb.FromReader(br));
 
             for (int i = 0; i < shortCnt; i++)
-            {
-                samples.Add(new SampleDef(br));
-            }
+                samples.Add(SampleDef.FromReader(br));
 
             //read offsets
             short[] seqPtrs = br.ReadArrayInt16(seqCnt);

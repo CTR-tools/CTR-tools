@@ -34,6 +34,7 @@ namespace CTRTools.Controls
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportSEQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importMIDIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,13 +61,13 @@ namespace CTRTools.Controls
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.trackInfoBox = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.instrumentList = new System.Windows.Forms.TreeView();
+            this.instrumentInfo = new System.Windows.Forms.PropertyGrid();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.metaInstInfo = new System.Windows.Forms.TextBox();
+            this.metaInstList = new System.Windows.Forms.ListBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.button4 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -75,7 +76,6 @@ namespace CTRTools.Controls
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
-            this.importMIDIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -96,7 +96,6 @@ namespace CTRTools.Controls
             this.menuStrip1.Size = new System.Drawing.Size(640, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
             // 
             // fileToolStripMenuItem
             // 
@@ -114,27 +113,34 @@ namespace CTRTools.Controls
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // exportSEQToolStripMenuItem
             // 
             this.exportSEQToolStripMenuItem.Name = "exportSEQToolStripMenuItem";
-            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exportSEQToolStripMenuItem.Text = "Save";
             this.exportSEQToolStripMenuItem.Click += new System.EventHandler(this.exportSEQToolStripMenuItem_Click);
+            // 
+            // importMIDIToolStripMenuItem
+            // 
+            this.importMIDIToolStripMenuItem.Name = "importMIDIToolStripMenuItem";
+            this.importMIDIToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.importMIDIToolStripMenuItem.Text = "Import MIDI";
+            this.importMIDIToolStripMenuItem.Click += new System.EventHandler(this.importMIDIToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -361,7 +367,7 @@ namespace CTRTools.Controls
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.textBox1);
+            this.tabPage1.Controls.Add(this.trackInfoBox);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -370,22 +376,22 @@ namespace CTRTools.Controls
             this.tabPage1.Text = "Track Info";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // textBox1
+            // trackInfoBox
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox1.Location = new System.Drawing.Point(3, 3);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(472, 418);
-            this.textBox1.TabIndex = 5;
-            this.textBox1.Text = "  ";
+            this.trackInfoBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackInfoBox.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.trackInfoBox.Location = new System.Drawing.Point(3, 3);
+            this.trackInfoBox.Multiline = true;
+            this.trackInfoBox.Name = "trackInfoBox";
+            this.trackInfoBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.trackInfoBox.Size = new System.Drawing.Size(472, 418);
+            this.trackInfoBox.TabIndex = 5;
+            this.trackInfoBox.Text = "  ";
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.treeView1);
-            this.tabPage2.Controls.Add(this.propertyGrid1);
+            this.tabPage2.Controls.Add(this.instrumentList);
+            this.tabPage2.Controls.Add(this.instrumentInfo);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -394,31 +400,30 @@ namespace CTRTools.Controls
             this.tabPage2.Text = "Instruments / Samples";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // treeView1
+            // instrumentList
             // 
-            this.treeView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.instrumentList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.treeView1.Location = new System.Drawing.Point(6, 14);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(302, 395);
-            this.treeView1.TabIndex = 3;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            this.treeView1.DoubleClick += new System.EventHandler(this.treeView1_DoubleClick);
+            this.instrumentList.Location = new System.Drawing.Point(6, 14);
+            this.instrumentList.Name = "instrumentList";
+            this.instrumentList.Size = new System.Drawing.Size(302, 395);
+            this.instrumentList.TabIndex = 3;
+            this.instrumentList.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
-            // propertyGrid1
+            // instrumentInfo
             // 
-            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.instrumentInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.propertyGrid1.Location = new System.Drawing.Point(314, 14);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(149, 395);
-            this.propertyGrid1.TabIndex = 2;
+            this.instrumentInfo.Location = new System.Drawing.Point(314, 14);
+            this.instrumentInfo.Name = "instrumentInfo";
+            this.instrumentInfo.Size = new System.Drawing.Size(149, 395);
+            this.instrumentInfo.TabIndex = 2;
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.textBox3);
-            this.tabPage3.Controls.Add(this.listBox1);
+            this.tabPage3.Controls.Add(this.metaInstInfo);
+            this.tabPage3.Controls.Add(this.metaInstList);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(478, 424);
@@ -426,31 +431,31 @@ namespace CTRTools.Controls
             this.tabPage3.Text = "Meta";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // textBox3
+            // metaInstInfo
             // 
-            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.metaInstInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox3.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.textBox3.Location = new System.Drawing.Point(129, 3);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox3.Size = new System.Drawing.Size(156, 409);
-            this.textBox3.TabIndex = 1;
+            this.metaInstInfo.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.metaInstInfo.Location = new System.Drawing.Point(129, 3);
+            this.metaInstInfo.Multiline = true;
+            this.metaInstInfo.Name = "metaInstInfo";
+            this.metaInstInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.metaInstInfo.Size = new System.Drawing.Size(346, 409);
+            this.metaInstInfo.TabIndex = 1;
             // 
-            // listBox1
+            // metaInstList
             // 
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.metaInstList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.listBox1.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 15;
-            this.listBox1.Location = new System.Drawing.Point(3, 3);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(120, 394);
-            this.listBox1.TabIndex = 0;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            this.metaInstList.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.metaInstList.FormattingEnabled = true;
+            this.metaInstList.ItemHeight = 15;
+            this.metaInstList.Location = new System.Drawing.Point(3, 3);
+            this.metaInstList.Name = "metaInstList";
+            this.metaInstList.Size = new System.Drawing.Size(120, 409);
+            this.metaInstList.TabIndex = 0;
+            this.metaInstList.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // tabPage4
             // 
@@ -524,13 +529,6 @@ namespace CTRTools.Controls
             // 
             this.sfd.Filter = "MIDI File (*.mid)|*.mid";
             // 
-            // importMIDIToolStripMenuItem
-            // 
-            this.importMIDIToolStripMenuItem.Name = "importMIDIToolStripMenuItem";
-            this.importMIDIToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.importMIDIToolStripMenuItem.Text = "Import MIDI";
-            this.importMIDIToolStripMenuItem.Click += new System.EventHandler(this.importMIDIToolStripMenuItem_Click);
-            // 
             // CseqControl
             // 
             this.AllowDrop = true;
@@ -572,7 +570,7 @@ namespace CTRTools.Controls
         private ListBox sequenceBox;
         private TabControl tabControl1;
         private TabPage tabPage1;
-        private TextBox textBox1;
+        private TextBox trackInfoBox;
         private TabPage tabPage2;
         private ToolStripMenuItem optionsToolStripMenuItem;
         private ToolStripMenuItem exportSEQToolStripMenuItem;
@@ -591,13 +589,13 @@ namespace CTRTools.Controls
         private ToolStripMenuItem exportSamplesToolStripMenuItem;
         private ComboBox comboBox1;
         private ToolStripMenuItem ignoreOriginalVolumeToolStripMenuItem;
-        private PropertyGrid propertyGrid1;
-        private TreeView treeView1;
+        private PropertyGrid instrumentInfo;
+        private TreeView instrumentList;
         private ToolStripMenuItem copyInstrumentVolumeToTracksToolStripMenuItem;
         private ToolStripMenuItem alistAlBankSamplesToolStripMenuItem;
         private TabPage tabPage3;
-        private TextBox textBox3;
-        private ListBox listBox1;
+        private TextBox metaInstInfo;
+        private ListBox metaInstList;
         private ToolStripMenuItem reloadMIDIMappingsToolStripMenuItem;
         private TabPage tabPage4;
         private Button button4;
