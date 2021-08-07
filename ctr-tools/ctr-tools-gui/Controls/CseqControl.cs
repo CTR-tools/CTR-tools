@@ -416,7 +416,6 @@ namespace CTRTools.Controls
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             metaInstInfo.Text = Meta.GetMetaInstText(metaInstList.SelectedItem.ToString());
-            //textBox3.Text = CTRJson.midi[listBox1.SelectedItem].ToString();
         }
 
         private void reloadMIDIMappingsToolStripMenuItem_Click(object sender, EventArgs e)

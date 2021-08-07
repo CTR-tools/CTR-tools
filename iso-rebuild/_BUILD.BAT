@@ -1,3 +1,5 @@
+@echo off
+
 rem - CTR-tools ISO-rebuild
 
 rem - _BUILD.BAT: Crash Team Racing ISO rebuild batch file
