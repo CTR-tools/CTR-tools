@@ -24,10 +24,11 @@ rem - moving data file to root folder
 
 rem - extracting bigfile big
 
-	tools\ctrtools\bigtool %~dp0%big_name%.big
+	tools\ctrtools\bigtool %big_name%.big
 
 
 rem - deleting unknown md5 file
-
-	del unknown_md5.txt
+	if exist unknown_md5.txt (
+		del unknown_md5.txt
+	)
 
