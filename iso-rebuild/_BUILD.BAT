@@ -7,6 +7,7 @@ rem - --- use Notepad++ for nice syntax highlighting ---
 
 rem - !!! variables !!! change, if needed !!!
 
+	rem - Your emulator location here
 	set epsxe_path="D:\Games\Emu\epsxe 2.0.5\epsxe.exe"
 
 	set ctr_iso=ctr_rebuild
@@ -39,6 +40,7 @@ rem - building XML tree of source directory only if xml is not present!
 		tools\mkpsxiso\mkisoxml %src_path% -o %src_path%.xml
 	)
 
+
 rem - building ISO
 
 	tools\mkpsxiso\mkpsxiso %src_path%.xml -y -q -o %ctr_iso%.bin
@@ -50,6 +52,6 @@ rem - licensing ISO
 
 
 rem - done, launch epsxe
-
-	start "epsxe" %epsxe_path% -nogui -loadbin %ctr_iso%.bin
-
+	if exist %epsxe_path% (
+		start "epsxe" %epsxe_path% -nogui -loadbin %ctr_iso%.bin
+	)
