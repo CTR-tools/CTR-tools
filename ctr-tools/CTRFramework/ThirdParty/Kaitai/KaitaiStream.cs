@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Globalization;
 
 namespace Kaitai
 {
     /// <summary>
-    /// The base Kaitai steam which exposes an API for the Kaitai Struct framework.
+    /// The base Kaitai stream which exposes an API for the Kaitai Struct framework.
     /// It's based off a <code>BinaryReader</code>, which is a little-endian reader.
     /// </summary>
     public partial class KaitaiStream : BinaryReader
@@ -285,7 +287,11 @@ namespace Kaitai
             BitsLeft = 0;
         }
 
-        public ulong ReadBitsInt(int n)
+        /// <summary>
+        /// Read a n-bit integer in a big-endian manner from the stream
+        /// </summary>
+        /// <returns></returns>
+        public ulong ReadBitsIntBe(int n)
         {
             int bitsNeeded = n - BitsLeft;
             if (bitsNeeded > 0)
@@ -305,11 +311,9 @@ namespace Kaitai
 
             // raw mask with required number of 1s, starting from lowest bit
             ulong mask = GetMaskOnes(n);
-            // shift mask to align with highest bits available in "bits"
+            // shift "bits" to align the highest bits with the mask & derive reading result
             int shiftBits = BitsLeft - n;
-            mask = mask << shiftBits;
-            // derive reading result
-            ulong res = (Bits & mask) >> shiftBits;
+            ulong res = (Bits >> shiftBits) & mask;
             // clear top bits that we've just read => AND with 1s
             BitsLeft -= n;
             mask = GetMaskOnes(BitsLeft);
@@ -318,7 +322,16 @@ namespace Kaitai
             return res;
         }
 
-        //Method ported from algorithm specified @ issue#155
+        [Obsolete("use ReadBitsIntBe instead")]
+        public ulong ReadBitsInt(int n)
+        {
+            return ReadBitsIntBe(n);
+        }
+
+        /// <summary>
+        /// Read a n-bit integer in a little-endian manner from the stream
+        /// </summary>
+        /// <returns></returns>
         public ulong ReadBitsIntLe(int n)
         {
             int bitsNeeded = n - BitsLeft;
@@ -369,7 +382,7 @@ namespace Kaitai
         {
             if (count < 0 || count > Int32.MaxValue)
                 throw new ArgumentOutOfRangeException("requested " + count + " bytes, while only non-negative int32 amount of bytes possible");
-            byte[] bytes = base.ReadBytes((int)count);
+            byte[] bytes = base.ReadBytes((int) count);
             if (bytes.Length < count)
                 throw new EndOfStreamException("requested " + count + " bytes, but got only " + bytes.Length + " bytes");
             return bytes;
@@ -459,6 +472,7 @@ namespace Kaitai
         /// </summary>
         /// <param name="expected">The expected result</param>
         /// <returns></returns>
+        [Obsolete("use explicit \"if\" using ByteArrayCompare method instead")]
         public byte[] EnsureFixedContents(byte[] expected)
         {
             byte[] bytes = ReadBytes(expected.Length);
@@ -564,7 +578,7 @@ namespace Kaitai
                     {
                         byte bits = data[i];
                         // http://stackoverflow.com/a/812039
-                        r[i] = (byte)((bits << amount) | (bits >> (8 - amount)));
+                        r[i] = (byte) ((bits << amount) | (bits >> (8 - amount)));
                     }
                     break;
                 default:
@@ -663,22 +677,34 @@ namespace Kaitai
             int al = a.Length;
             int bl = b.Length;
             int minLen = al < bl ? al : bl;
-            for (int i = 0; i < minLen; i++)
-            {
+            for (int i = 0; i < minLen; i++) {
                 int cmp = a[i] - b[i];
                 if (cmp != 0)
                     return cmp;
             }
 
             // Reached the end of at least one of the arrays
-            if (al == bl)
-            {
+            if (al == bl) {
                 return 0;
-            }
-            else
-            {
+            } else {
                 return al - bl;
             }
+        }
+
+        /// <summary>
+        /// Reverses the string, Unicode-aware.
+        /// </summary>
+        /// <a href="https://stackoverflow.com/a/15029493">taken from here</a>
+        public static string StringReverse(string s)
+        {
+            TextElementEnumerator enumerator = StringInfo.GetTextElementEnumerator(s);
+
+            List<string> elements = new List<string>();
+            while (enumerator.MoveNext())
+                elements.Add(enumerator.GetTextElement());
+
+            elements.Reverse();
+            return string.Concat(elements);
         }
 
         #endregion
