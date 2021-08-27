@@ -23,6 +23,8 @@ namespace CTRFramework
 
     public class QuadBlock : IRead, IWrite
     {
+        public static readonly int SizeOf = 0x5C;
+
         /*
          * 0--4--1
          * | /| /|
@@ -163,7 +165,7 @@ namespace CTRFramework
             }
 
             for (int i = 0; i < 5; i++)
-                unk3.Add(br.ReadVector2s(1 / 4096));
+                unk3.Add(br.ReadVector2s(1 / 4096f));
 
 
 
@@ -595,6 +597,8 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
+            long sizeCheck = bw.BaseStream.Position;
+
             for (int i = 0; i < 9; i++)
                 bw.Write(ind[i]);
 
@@ -625,7 +629,12 @@ namespace CTRFramework
             bw.Write(mosaicStruct, patchTable);
 
             foreach (Vector2 v in unk3)
-                bw.WriteVector2s(v, 1 / 4096);
+                bw.WriteVector2s(v, 1 / 4096f);
+
+            if (bw.BaseStream.Position - sizeCheck != SizeOf)
+            {
+                throw new Exception("QuadBlock: size mismatch.");
+            }
         }
     }
 }
