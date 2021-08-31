@@ -122,8 +122,6 @@ namespace CTRFramework
 
 
 
-            long pos = br.BaseStream.Position;
-
             //read all drawing commands
 
             br.Jump(ptrCmd);
@@ -252,7 +250,10 @@ namespace CTRFramework
                 Console.WriteLine("anime!");
 
                 if (anim.someOffset != 0)
+                {
+                    br.Jump(returnto);
                     return;
+                }
                 //Console.ReadKey();
             }
 
