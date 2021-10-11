@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,29 +10,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CTRFramework</RootNamespace>
     <AssemblyName>CTRFramework</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -48,7 +31,7 @@
     <OutputPath>bin\x64\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
@@ -57,6 +40,9 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Team Tools\Static Analysis Tools\Rule Sets\MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>
+    </DocumentationFile>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -96,54 +82,76 @@
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CTRFramework.Code\big\BigFile.cs" />
-    <Compile Include="CTRFramework.Code\big\BigEntry.cs" />
-    <Compile Include="CTRFramework.Code\ctr\CTRAnim.cs" />
-    <Compile Include="CTRFramework.Code\ctr\LODHeader.cs" />
-    <Compile Include="CTRFramework.Code\ctr\LODModel.cs" />
-    <Compile Include="CTRFramework.Code\ctr\MshCommand.cs" />
-    <Compile Include="CTRFramework.Code\Enums.cs" />
-    <Compile Include="CTRFramework.Code\lev\CtrTex.cs" />
-    <Compile Include="CTRFramework.Code\lev\nav\Nav.cs" />
-    <Compile Include="CTRFramework.Code\lev\nav\AIPath.cs" />
-    <Compile Include="CTRFramework.Code\lev\VertexAnim.cs" />
-    <Compile Include="CTRFramework.Code\lang\LNG.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vector2b.cs" />
-    <Compile Include="CTRFramework.Code\sound\Bank.cs" />
-    <Compile Include="CTRFramework.Code\shared\BinaryReaderEx.cs" />
-    <Compile Include="CTRFramework.Code\shared\BinaryWriterEx.cs" />
-    <Compile Include="CTRFramework.Code\shared\Helpers.cs" />
-    <Compile Include="CTRFramework.Code\Interfaces.cs" />
-    <Compile Include="CTRFramework.Code\shared\Meta.cs" />
-    <Compile Include="CTRFramework.Code\lev\nav\NavFrame.cs" />
-    <Compile Include="CTRFramework.Code\mpk\UImap.cs" />
-    <Compile Include="CTRFramework.Code\mpk\ModelPack.cs" />
-    <Compile Include="CTRFramework.Code\mpk\TexMap.cs" />
-    <Compile Include="CTRFramework.Code\shared\InstanceList.cs" />
-    <Compile Include="CTRFramework.Code\lev\FaceGroup.cs" />
-    <Compile Include="CTRFramework.Code\lev\Scene.cs" />
-    <Compile Include="CTRFramework.Code\lev\SceneHeader.cs" />
-    <Compile Include="CTRFramework.Code\lev\MeshInfo.cs" />
-    <Compile Include="CTRFramework.Code\lev\PickupHeader.cs" />
-    <Compile Include="CTRFramework.Code\lev\QuadBlock.cs" />
-    <Compile Include="CTRFramework.Code\lev\SkyBox.cs" />
-    <Compile Include="CTRFramework.Code\lev\TextureLayout.cs" />
-    <Compile Include="CTRFramework.Code\lev\Vertex.cs" />
-    <Compile Include="CTRFramework.Code\lev\VisData.cs" />
-    <Compile Include="CTRFramework.Code\shared\BoundingBox.cs" />
-    <Compile Include="CTRFramework.Code\shared\OBJ.cs" />
-    <Compile Include="CTRFramework.Code\shared\PosAng.cs" />
-    <Compile Include="CTRFramework.Code\shared\SomeData.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vector3s.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vector4b.cs" />
-    <Compile Include="CTRFramework.Code\shared\Vector4s.cs" />
-    <Compile Include="CTRFramework.Code\sound\Howl.cs" />
-    <Compile Include="CTRFramework.Code\sound\HowlHeader.cs" />
-    <Compile Include="CTRFramework.Code\sound\SampleDecl.cs" />
-    <Compile Include="CTRFramework.Code\sound\VagHeader.cs" />
-    <Compile Include="CTRFramework.Code\vrm\BMPHeader.cs" />
-    <Compile Include="CTRFramework.Code\vrm\Tim.cs" />
-    <Compile Include="CTRFramework.Code\vrm\CtrVrm.cs" />
+    <Compile Include="Code\big\BigFile.cs" />
+    <Compile Include="Code\big\BigEntry.cs" />
+    <Compile Include="Code\big\BigFileReader.cs" />
+    <Compile Include="Code\ctr\CtrAnim.cs" />
+    <Compile Include="Code\ctr\CtrMesh.cs" />
+    <Compile Include="Code\ctr\CtrModel.cs" />
+    <Compile Include="Code\ctr\CtrDraw.cs" />
+    <Compile Include="Code\Enums.cs" />
+    <Compile Include="Code\lang\CharSwap.cs" />
+    <Compile Include="Code\lev\CtrTex.cs" />
+    <Compile Include="Code\lev\nav\Nav.cs" />
+    <Compile Include="Code\lev\nav\AIPath.cs" />
+    <Compile Include="Code\lev\TrialData.cs" />
+    <Compile Include="Code\lev\UnkAdv.cs" />
+    <Compile Include="Code\lev\VertexAnim.cs" />
+    <Compile Include="Code\lang\LNG.cs" />
+    <Compile Include="Code\PatchedContainer.cs" />
+    <Compile Include="Code\shared\Vectors\Vector2b.cs" />
+    <Compile Include="Code\shared\Vectors\Vector3b.cs" />
+    <Compile Include="Code\shared\Vectors\Vector3f.cs" />
+    <Compile Include="Code\shared\Vectors\Vector3i.cs" />
+    <Compile Include="Code\sound\VAG\Bank.cs" />
+    <Compile Include="Code\shared\BinaryReaderEx.cs" />
+    <Compile Include="Code\shared\BinaryWriterEx.cs" />
+    <Compile Include="Code\shared\Helpers.cs" />
+    <Compile Include="Code\Interfaces.cs" />
+    <Compile Include="Code\shared\Meta.cs" />
+    <Compile Include="Code\lev\nav\NavFrame.cs" />
+    <Compile Include="Code\mpk\IconPack.cs" />
+    <Compile Include="Code\mpk\ModelPack.cs" />
+    <Compile Include="Code\mpk\Icon.cs" />
+    <Compile Include="Code\shared\InstanceList.cs" />
+    <Compile Include="Code\lev\Scene.cs" />
+    <Compile Include="Code\lev\SceneHeader.cs" />
+    <Compile Include="Code\lev\MeshInfo.cs" />
+    <Compile Include="Code\lev\PickupHeader.cs" />
+    <Compile Include="Code\lev\QuadBlock.cs" />
+    <Compile Include="Code\lev\SkyBox.cs" />
+    <Compile Include="Code\sound\XNF\XaInfoEntry.cs" />
+    <Compile Include="Code\sound\XNF\XaInfo.cs" />
+    <Compile Include="Code\vrm\CtrVrm.cs" />
+    <Compile Include="Code\vrm\TextureLayout.cs" />
+    <Compile Include="Code\lev\Vertex.cs" />
+    <Compile Include="Code\lev\VisData.cs" />
+    <Compile Include="Code\shared\BoundingBox.cs" />
+    <Compile Include="Code\shared\OBJ.cs" />
+    <Compile Include="Code\shared\Pose.cs" />
+    <Compile Include="Code\shared\SomeData.cs" />
+    <Compile Include="Code\shared\Vectors\Vector3s.cs" />
+    <Compile Include="Code\shared\Vectors\Vector4b.cs" />
+    <Compile Include="Code\shared\Vectors\Vector4s.cs" />
+    <Compile Include="Code\sound\CSEQ\CSEQ.cs" />
+    <Compile Include="Code\sound\SampleDef.cs" />
+    <Compile Include="Code\sound\SampleDefReverb.cs" />
+    <Compile Include="Code\sound\CSEQ\Command.cs" />
+    <Compile Include="Code\sound\CSEQ\CTrack.cs" />
+    <Compile Include="Code\sound\CSEQ\Sequence.cs" />
+    <Compile Include="Code\sound\Howl.cs" />
+    <Compile Include="Code\sound\HowlHeader.cs" />
+    <Compile Include="Code\sound\VAG\VagFrame.cs" />
+    <Compile Include="Code\sound\VAG\VagSample.cs" />
+    <Compile Include="Code\vrm\TimReader.cs" />
+    <Compile Include="Code\vrm\BMPHeader.cs" />
+    <Compile Include="Code\vrm\Tim.cs" />
+    <Compile Include="ThirdParty\Kaitai\KaitaiStream.cs" />
+    <Compile Include="ThirdParty\Kaitai\KaitaiStruct.cs" />
+    <Compile Include="ThirdParty\PlyImporter\Extensions\ArrayExtensions.cs" />
+    <Compile Include="ThirdParty\PlyImporter\Extensions\EnumerableExtensions.cs" />
+    <Compile Include="ThirdParty\PlyImporter\PlyHandler.cs" />
+    <Compile Include="ThirdParty\PlyImporter\PlyHeader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -152,46 +160,47 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
+    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Data\cseq.json" />
+    <None Include="Data\readme.md" />
     <None Include="packages.config" />
-    <None Include="CTRFramework.Data\versions.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="Data\versions.json" />
+    <None Include="ThirdParty\Kaitai\README.md" />
+    <None Include="ThirdParty\PlyImporter\LICENSE" />
+    <None Include="ThirdParty\PlyImporter\README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CTRFramework.Data\big_usa_release_alt.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\big_usa_beta_aug.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\big_usa_demo.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\big_pal_release.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\big_usa_beta_sep.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\big_usa_release.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\howlnames.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="CTRFramework.Data\samplenames.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Include="ThirdParty\Kaitai\LICENSE" />
+    <EmbeddedResource Include="Data\big_usa_beta_aug.txt" />
+    <EmbeddedResource Include="Data\big_usa_demo.txt" />
+    <EmbeddedResource Include="Data\big_pal_release.txt" />
+    <EmbeddedResource Include="Data\big_usa_beta_sep.txt" />
+    <EmbeddedResource Include="Data\big_usa_release.txt" />
+    <EmbeddedResource Include="Data\howlnames.txt" />
+    <EmbeddedResource Include="Data\samplenames.txt" />
+    <EmbeddedResource Include="Data\versions.xml" />
+    <EmbeddedResource Include="Data\banknames.txt" />
+    <EmbeddedResource Include="Data\big_usa_beta_14th.txt" />
+    <EmbeddedResource Include="Data\xa_usa_release.txt" />
+    <EmbeddedResource Include="Data\xa_usa_beta_sep.txt" />
+    <EmbeddedResource Include="Data\xa_jap_release.txt" />
+    <EmbeddedResource Include="Data\xa_pal_release.txt" />
+    <EmbeddedResource Include="Data\bash_filelist.txt" />
     <Content Include="Properties\BuildDate.txt" />
   </ItemGroup>
   <ItemGroup>

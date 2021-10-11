@@ -1,11 +1,8 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
+using CTRFramework.Vram;
 using System;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Threading;
 
 namespace model_reader
 {
@@ -13,98 +10,118 @@ namespace model_reader
     {
         static void Main(string[] args)
         {
-            //this is here to force dots in floats.
-            CultureInfo customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
-            customCulture.NumberFormat.NumberDecimalSeparator = ".";
-            Thread.CurrentThread.CurrentCulture = customCulture;
+            OBJ.FixCulture();
 
+            Console.WriteLine(
+                "{0}\r\n{1}\r\n\r\n{2}\r\n",
+                $"CTR-Tools: model_reader - {Meta.GetSignature()}",
+                "Converts LEV, CTR and MPK files to OBJ format.",
+                Meta.GetVersion());
 
-            Console.WriteLine("CTR-Tools: model_reader\r\nDCxDemo*.\r\n");
-            Console.WriteLine(Meta.GetVersion() + "\r\n");
-
-            if (args.Length > 0)
+            if (args.Length == 0)
             {
-                if ((File.GetAttributes(args[0]) & FileAttributes.Directory) == FileAttributes.Directory)
-                {
-                    foreach (string s in Directory.GetFiles(args[0], "*.lev"))
-                        ConvertFile(s);
-                }
-                else
-                {
-                    ConvertFile(args[0]);
-                }
+                Console.WriteLine(
+                    "{0}:\r\n\t{1}: {2}\r\n\t{3}: {4}\r\n\t{5}: {6}\r\n\t{7}: {8}",
+                    "Usage",
+                    "Extract level", "model_reader C:\\proto8.lev",
+                    "Extract model", "model_reader C:\\crash.ctr",
+                    "Convert OBJ to CTR", "model_reader C:\\crash.obj",
+                    "Extract model pack", "model_reader C:\\shared.mpk"
+                    );
+                return;
+            }
 
-                /*
-                string format = "obj";
-                
-                try
+            string filename = args[0];
+
+            if (!(File.Exists(filename) || Directory.Exists(filename)))
+            {
+                Console.WriteLine("{0} doesn't exist.", filename);
+                return;
+            }
+
+            if ((File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                foreach (string s in Directory.GetFiles(filename, "*.*"))
                 {
-                    if (args[1] == "ply")
-                        format = args[1];
-                    else
-                        format = "obj";
+                    Console.WriteLine(s + " " + Path.IsPathRooted(s));
+                    ConvertFile(Path.IsPathRooted(s) ? s : ".\\" + s);
                 }
-                catch
-                {
-                    Console.WriteLine("Incorrect input.");
-                }
-                */
             }
             else
             {
-                Console.WriteLine("No filename given!");
+                filename = (Path.IsPathRooted(filename) ? "" : ".\\") + filename;
+                ConvertFile(filename);
             }
-
-            // Console.ReadKey();
         }
 
 
-        static void ConvertFile(string s)
+        static void ConvertFile(string filename)
         {
-            string ext = Path.GetExtension(s);
+            string basepath = Path.GetDirectoryName(filename);
+            string name = Path.GetFileNameWithoutExtension(filename);
+            string ext = Path.GetExtension(filename).ToLower();
 
             switch (ext)
             {
                 case ".lev":
                     {
-                        Scene scn = Scene.FromFile(s);
-                        scn.quads = scn.quads.OrderBy(o => o.id).ToList();
-                        string objfile = scn.Export("obj", Detail.Low, false, false);
-                        objfile = scn.Export("obj", Detail.Med, true, true);
-                        //LaunchMeshLab(objfile);
-
+                        Scene scn = Scene.FromFile(filename);
+                        //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
+                        scn.Export(basepath, ExportFlags.All);
                         break;
                     }
                 case ".ctr":
+                case ".dyn":
                     {
-                        LODModel mod = new LODModel(s);
-
-                        foreach (LODHeader lh in mod.lh)
-                            Helpers.WriteToFile(".\\"+mod.name + "_" + lh.name + ".obj", lh.ToObj());
+                        CtrModel d = CtrModel.FromFile(filename);
+                        d.Export(basepath);
 
                         break;
                     }
+                case ".obj":
+                    {
+                        OBJ obj = OBJ.FromFile(filename);
+                        CtrModel ctr = CtrModel.FromObj(obj);
+                        ctr.Save(basepath);
+
+                        break;
+                    }
+                case ".ply":
+                    {
+                        CtrModel ctr = CtrModel.FromPly(filename);
+                        ctr.Save(basepath);
+
+                        break;
+                    }
+                case ".mpk":
+                    {
+                        string vrampath = Path.ChangeExtension(filename, "vrm");
+
+                        if (!File.Exists(vrampath))
+                        {
+                            vrampath = Path.Combine(Path.GetDirectoryName(filename), "shared.vrm");
+
+                            if (!File.Exists(vrampath))
+                            {
+                                Console.WriteLine("Warning! No vram file found.\r\nPlease put shared.vrm file with mpk you want to extract.");
+                                vrampath = "";
+                            }
+                        }
+
+                        ModelPack mpk = ModelPack.FromFile(filename);
+                        mpk.Extract(Path.Combine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
+
+                        break;
+                    }
+                default:
+                    {
+                        Console.WriteLine($"Unsupported file: {filename}");
+                        return;
+                    }
 
             }
+
             Console.WriteLine("Done!");
-        }
-
-
-        static void LaunchMeshLab(string objfile)
-        {
-            //launch meshlab
-            try
-            {
-                ProcessStartInfo psi = new ProcessStartInfo();
-                psi.Arguments = $"\"{objfile}\"";
-                psi.FileName = @"C:\Program Files\VCG\MeshLab\MeshLab.exe";
-
-                Process.Start(psi);
-            }
-            catch
-            {
-                Console.WriteLine("Install MeshLab into default path to preview models automatically.");
-            }
         }
     }
 }

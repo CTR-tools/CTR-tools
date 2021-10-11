@@ -1,0 +1,192 @@
+﻿<data comment="versions.xml is used to identify known CTR files">
+
+  <big comment="file meta data based on MD5 checksum">
+
+    <entry comment="Empty entry sample">
+      <format></format>
+      <region></region>
+      <name></name>
+      <list></list>
+      <md5></md5>
+    </entry>
+
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>August 14th beta</name>
+      <list>big_usa_beta_14th.txt</list>
+      <md5>ba629418e162f979af820bcd3bc3d9d7</md5>
+    </entry>	
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>August 5th beta (the earliest known so far)</name>
+      <list>big_usa_beta_aug.txt</list>
+      <md5>f90f62a304a53a9e21ade4c7573d4293</md5>
+    </entry>
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>September beta (review copy)</name>
+      <list>big_usa_beta_sep.txt</list>
+      <md5>e73f0f3cade06dc5fc2719fe186cbe26</md5>
+    </entry>
+	
+	
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Spyro 2 demo</name>
+      <list>big_usa_demo.txt</list>
+      <md5>72fbd632f2ba68a3392a92204f29b118</md5>
+    </entry>
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Standalone Toys R Us/Pizza Hut Demo</name>
+      <list>big_usa_demo.txt</list>
+      <md5>eb0b4551f3a4a374080c085dea1a8609</md5>
+    </entry>
+	
+	
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Release</name>
+      <list>big_usa_release.txt</list>
+      <md5>c43eba5a20f0b4fc69a00c8d61a8ec10</md5>
+    </entry>
+	
+	
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Release, russian Vector</name>
+      <list>big_usa_release.txt</list>
+      <md5>ead88f93cfb4f9ad53d93b1b93d1bd97</md5>
+    </entry>	
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Release, russian Golden Leon</name>
+      <list>big_usa_release.txt</list>
+      <md5>3e8fac9eb6dfacbba4ab793c7acb8661</md5>
+    </entry>	
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Release, russian Paradox</name>
+      <list>big_usa_release.txt</list>
+      <md5>2cbb119c607300afe6aa9db04bffe8c2</md5>
+    </entry>	
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Release, russian Neizvestnaya Kontora</name>
+      <list>big_usa_release.txt</list>
+      <md5>01c8b4db80f24e976b093097e5d4163d</md5>
+    </entry>
+    <entry>
+      <format>big</format>
+      <region>NTSC</region>
+      <name>Release, russian RGR</name>
+      <list>big_usa_release.txt</list>
+      <md5>8b39957aef7e4d80611933a30f783b37</md5>
+    </entry>
+
+
+    <entry>
+      <format>big</format>
+      <region>PAL</region>
+      <name>Spyro demo</name>
+      <list>big_usa_demo.txt</list>
+      <md5>870780bddb386d04882d57526a03c966</md5>
+    </entry>
+    <entry>
+      <format>big</format>
+      <region>PAL</region>
+      <name>PS Magazine demo</name>
+      <list>big_usa_demo.txt</list>
+      <md5>efb66723fe589d9cd3321d109a34dfd9</md5>
+    </entry>
+	
+	
+    <entry>
+      <format>big</format>
+      <region>PAL</region>
+      <name>Release</name>
+      <list>big_pal_release.txt</list>
+      <md5>03a005e2abc6022fd1e1e7405300ad77</md5>
+    </entry>
+	
+
+    <entry>
+      <format>big</format>
+      <region>NTSC-J</region>
+      <name>Dengeki D26 demo</name>
+      <list>big_usa_demo.txt</list>
+      <md5>aa71f0adf8a40a77e767c40b73600e46</md5>
+    </entry>
+    <entry>
+      <format>big</format>
+      <region>NTSC-J</region>
+      <name>Standalone extended demo</name>
+      <list>big_usa_release.txt</list>
+      <md5>f241501d880ee98112044236d7296d9c</md5>
+    </entry>
+	
+	
+    <entry>
+      <format>big</format>
+      <region>NTSC-J</region>
+      <name>Release</name>
+      <list>big_usa_release.txt</list>
+      <md5>b22c894eff31539de853c83cf52a9025</md5>
+    </entry>
+	
+  </big>
+
+  <filenums comment="File list assumption based on number of files (for modded bigs).">
+    <entry>
+      <num>608</num>
+      <list>big_usa_release.txt</list>
+    </entry>
+    <entry>
+      <num>723</num>
+      <list>big_pal_release.txt</list>
+    </entry>
+    <entry>
+      <num>453</num>
+      <list>big_usa_beta_aug.txt</list>   
+    </entry>
+    <entry>
+      <num>511</num>
+      <list>big_usa_beta_14th.txt</list>
+    </entry>
+    <entry>
+      <num>609</num>
+      <list>big_usa_beta_sep.txt</list>
+    </entry>
+    <entry>
+      <num>189</num>
+      <list>big_usa_demo.txt</list>
+    </entry>
+    <entry>
+      <num>196</num>
+      <list>big_usa_demo.txt</list>
+    </entry>
+  </filenums>
+
+  <howl>
+    <entry>
+      <region>NTSC-U</region>
+      <name>August 5th beta (the earliest known so far)</name>
+      <banks>banknames.txt</banks>
+      <samples>samplenames.txt</samples>
+      <sequences>howlnames.txt</sequences>
+      <md5>f241501d880ee98112044236d7296d9c</md5>
+    </entry>
+    
+  </howl>
+
+</data>

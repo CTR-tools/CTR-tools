@@ -1,50 +1,122 @@
+# Crash Team Racing dynamic model format
+Historically we refer to this format as .ctr. CTR-tools implements .ctr parsing via classes prefixed with Ctr in Code\ctr folder.
+
+
+#common structures
+
 model {
   char[16] - name
   short - event id, assumed to be
-  short - number of models
-  short - pointer to model headers
+  short - number of model headers
+  uint - pointer to model headers
 
-  model header[number of models] - headers
+  model header[number of models] - array of model headers
 
-  byte[] model data
+  //some models contain extra data here, about 0x20 bytes
+  //however, no pointers to this data exists, it doesn't change the model visually and it works fine without it
+  //it is unclear whether this is a part of the format, or just some garbage
+
+  byte[] - model data, multiple arrays described in this doc after structures
 }
+
 
 model header {
   char[16] - name
-  int - unk0
-  int - unk1
-  Vector4s - model scale
-  int - pointer to command list
-  int - pointer to vertex data
-  int - point to texture layout data (same as in lev)
-  int - pointer to colors (clut)
-  int - unk3
-  int - number of animations
-  int - pointer to animation data
-  int - unk4
+  int? - unknown (always 0?)
+  short - lod distance
+  short - assumed billboarding (check other bits)
+  Vector4s - model scale (actually padded vector3s)
+  uint - pointer to command list
+  uint - pointer to vertex data - this is 0 if model is animated
+  uint - pointer to texture layout data (same as in lev) - if there are no textures, this is still a pointer, same as clut.
+  uint - pointer to colors (clut)
+  int? - unk3 - ruins model if changed
+  int? - number of animations
+  uint - pointer to animations pointer map
+  int? - unk4 - anything other than 0 freezes the game
 }
 
-the format does not define any size, so you have to read all commands properly
 
-command - big endian dword
-bitmask according to horror's spec
-sl??kv?? iiiiiiii ccccccct tttttttt //8-8-7-9 bits
+animation {
+  char[16] - anim name
+  short - num frames - negative value defines amount of render frames in 60fps (duplicated anim frames)
+  short - frame size
+  uint - points to some base anim data that affects every frame
+  vertex data[num frames] - additional data per frame
+  byte[unknown length] - base anim data
+}
 
-t - tex coord index (0 = no texture)
-c - color coord index
-i - index of write location in stack (multiplied by 8 makes it a pointer)
-v - don't read next vertex from array, but read from stack index 
-l - swap 1st vertex of the new face with the 1st from the last one (could be quad maybe?)
-s - new face block
+
+# trivia
+while technically the order of data is predefined, it's probably related to the original order in CTR export plugin. it's probably possible to swap data around if needed, since it's all pointer based.
+what also makes it difficult is the fact that the format doesn't store any sizes of its arrays. it can be obtained by parsing the command list once.
+
+
+# command list
+there are no face indices values per se, instead there is an array of drawing commands, it uses scratchpad to optimize model drawing on the original hardware.  
+
+command is a big endian dword (4 bytes)
+command list is an array of dwords.
+value of -1 (0xFFFFFFFF) is the list terminator
+
+original command bitmask was partially found by russian romhacker HoRRoR
+
+slndkv?? iiiiiiii ccccccct tttttttt //8-8-7-9 bits
+
+flags:
+s - new face block (reset flag)
+l - swap 1st vertex of the new face with the 1st from the last one
+n - defines whether the face normal should be flipped
+d - if set, cull backface, else double sided
 k - tells whether it should take color from scratchpad or ram (only affects real psx).
+v - don't read next vertex from array, but read from stack index 
 ? - unknown
 
-if command is -1 (0xFFFFFFFF) 
+indices:
+i - index of write location in stack (multiplied by 8 makes it a pointer), max = 255
+c - color coord index, max = 127
+t - tex coord index (0 = no texture), max = 511
 
-vertex - vector3b, a byte per coord. the final coord = vertex coord / 255 * scale coord.
+rendering process:
+to render a model, game parses through all commands.
+every command either copies vertex to stack at a given address or reads existing vertex from stack (copied previously).
+3 initial commands form a face. next vertex will use 2 vertices from previous face and so on.
+basically it starts drawing a tristrip where every additional vertex forms a new face.
+if the command contains the reset flag, it stops drawing current tristip and starts over.
+flags d and n define culling and normal flipping.
+flag l tells that another vertex should be used (0 instead of 1)
 
-texture data - same as texturelayout from lev file
 
-color data - just usual 4 bytes RGBA
+# texture data
+array of uint - pointers to texture data
+array of texturelayout - struct from lev file
 
-animation - simply an array of vertex data array that cycles through.
+basically defines texture page, quad UV coords and palette.
+
+
+# vertex data
+ushort - posX
+ushort - posY
+ushort - posZ
+16 bytes - unknown, nothing changes visually
+int - unknown, values other than the original often ruin the model. maybe some drawing mode.
+vector3b[] - array of vertices, a byte per coord.
+
+the original model is normalized to a byte vector, which results in 256 possible values per axis, scaled back to the orignal size using scale vector and moved around using the position offset. offset is applied to the compressed data values.
+
+the final coord = ((vertex coord + offset) / 255) * scale coord / 1000
+
+
+# color data (clut)
+just usual 4 bytes RGBX
+where X is bitwise flag value - defines rendering mode
+
+
+# animation data
+currently unknown.
+
+there is some base data for each animation and an array for each frame.
+this data is somehow combined to retrieve final vertex positions.
+it is speculated that complex animated models store relative coords instead of absolute
+
+same command list is used for every frame, only vertices change their positions.

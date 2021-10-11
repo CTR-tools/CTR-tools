@@ -9,40 +9,62 @@ namespace howl
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Crash Team Racing HOWL Extractor by DCxDemo*.\r\n");
+            Console.WriteLine(
+                "{0}\r\n{1}\r\n\r\n{2}\r\n",
+                $"CTR-Tools: howl - {Meta.GetSignature()}",
+                "Extracts samples and music sequences from HOWL and BNK",
+                Meta.GetVersion());
 
-            if (args.Length == 1)
+            if (args.Length == 0)
             {
-                string fn = args[0];
-
-                if (File.Exists(fn))
-                {
-                    byte[] data = File.ReadAllBytes(fn);
-                    MemoryStream ms = new MemoryStream(data);
-                    BinaryReaderEx br = new BinaryReaderEx(ms);
-
-                    Howl hwl = new Howl(fn);
-                    hwl.Read(br);
-
-                    Console.Write(hwl.ToString());
-
-                    hwl.ExportCSEQ(br);
-                    hwl.ExportAllSamples();
-
-                    Console.WriteLine("Done!");
-                }
-                else
-                {
-                    Console.WriteLine("{0} doesn't exist.", fn);
-                }
-
-            }
-            else
-            {
-                Console.WriteLine("Usage:\r\n\thowl.exe <path to KART.HWL>\r\n\r\nPress any key to quit...");
+                Console.WriteLine("Usage:\r\n\tExtract HWL:\thowl.exe C:\\example\\KART.HWL\r\n\tExtract BNK:\thowl.exe C:\\example\\01_canyon.bnk");
+                return;
             }
 
-            //Console.ReadKey();
+            string filename = args[0];
+
+            if (!File.Exists(filename))
+            {
+                Console.WriteLine($"{filename} doesn't exist.");
+                return;
+            }
+
+            string basepath = Path.GetDirectoryName(filename);
+            string name = Path.GetFileNameWithoutExtension(filename);
+            string ext = Path.GetExtension(filename).ToLower();
+
+            string path = Path.Combine(basepath, Path.GetFileNameWithoutExtension(filename));
+
+            switch (ext)
+            {
+                case ".hwl":
+                    using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+                    {
+                        Howl hwl = Howl.FromReader(br);
+                        Console.Write(hwl.ToString());
+
+                        hwl.ExportCSEQ(path, br);
+                        hwl.ExportAllSamples(path);
+
+                        Console.WriteLine("Done!");
+                    }
+                    break;
+
+                case ".bnk":
+                    Bank.ReadNames();
+                    Bank bnk = Bank.FromFile(filename);
+                    bnk.ExportAll(0, Path.Combine(basepath, name));
+                    break;
+
+                case ".xnf":
+                    XaInfo xnf = XaInfo.FromFile(filename);
+                    Console.WriteLine(xnf.ToString());
+                    break;
+
+                default:
+                    Console.WriteLine("Unsupported file.");
+                    break;
+            }
         }
     }
 }

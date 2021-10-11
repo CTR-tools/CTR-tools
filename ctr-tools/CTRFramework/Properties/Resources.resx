@@ -121,7 +121,15 @@
   <data name="BuildDate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>builddate.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
+  <data name="midi_copyright" xml:space="preserve">
+    <value>(C) 1999, Mutato Muzika: Mark Mothersbaugh, Josh Mancell.
+
+Converted to MIDI using CTR-Tools by DCxDemo*.</value>
+  </data>
+  <data name="signature" xml:space="preserve">
+    <value>2016-2021, DCxDemo*.</value>
+  </data>
   <data name="Version" xml:space="preserve">
-    <value>r10</value>
+    <value>r13prev</value>
   </data>
 </root>

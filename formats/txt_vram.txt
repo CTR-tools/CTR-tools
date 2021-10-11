@@ -1,16 +1,54 @@
-ctr textures are stored in texture pages, mostly indexed 16 colors (4 bits) using custom defined palettes.
+CTR uses native PSX TIM format to store a combined atlas of all textures in a single file.
+This allows to spend just a few calls to populate vram entirely instead of reading textures one by one.
+This approach creates a certain hurdle for decompilation as we only can extract actual polygon mappings, not the orginal texture sizes. while most of the time it matches, sometimes it divides a larger texture in smaller ones.
 
-dword - 0x20000000
-mempage x2 {
-  dword - texture page size
-  tim {
-    dword - 0x10000000
-    dword - 0x02000000
+
+texture container {
+  dword - 0x20000000
+  until eof {
     dword - tim size
-    word - memoryX
-    word - memoryY
-    word - width (it uses native 2 byte 16 bit color)
-    word - height
-    width * height * 2 bytes - vram data
+    byte[tim size] - psx tim
   }
 }
+
+psx tim {
+  dword - magic 0x10000000
+  dword - flags 0x02000000
+  dword - tim size
+  word - memoryX
+  word - memoryY
+  word - width
+  word - height
+  byte[] - pixel data
+}
+
+
+PSX VRAM 101
+
+1MB of VRAM is basically a 2048x512 byte array.
+
+Depending on pixel format, it can be treated as:
+16 bits - 2 bytes per pixel - 1024x512 image
+8 bits - 1 byte per pixel - 2048x512 image
+4 bits - 1 byte per 2 pixels - 4096x512 image
+
+CTR typically uses 4 bit mode, to enable more textures. However some textures use other modes too.
+
+Whole VRAM is split in 32 subareas, referred to as texture pages.
+there are 16x2 texture pages in vram, each texture page is 256x256 in 4 bit mode.
+considering framebuffers are also stored in vram, depending on the chosen resolution, developers only have 3/4 to 1/2 of vram available for texture space.
+
+you can loosely refer to VRAM texture pages like this:
+
+1111111122222222
+3333333344444444
+
+CTR splits vram into areas: 1 and 3 is used for framebuffers, but since screen resolution is smaller than 256, there is a gap between framebuffers. developers used this area to store wheels, smoke textures, etc.
+
+8th page of (2) is used for shared gui textures (top right corner of vram). it's loaded only once at the beginning, hence if it gets corrupted, it's never fixed.
+rest of (2) and (4) is used for level specific stuff (terrain and model textures).
+
+while the container can store unlimited amount of textures, it is typically split in 2 TIMs - one for atlas in (2) and another for atlas in (4).
+
+it's important to understand that there is no additional space for palette data, it must be stored in vram.
+hence we're simply copying raw pixels from the atlas, there is no info about matching textures and palettes. it is only contained within level/model files.

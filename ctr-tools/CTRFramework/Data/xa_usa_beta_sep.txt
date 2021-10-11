@@ -1,0 +1,485 @@
+# Crash Team Racing ENG.XNF master file list
+# 427 entries, Matches NTSC-U September beta
+
+# =========== MUSIC section ==============
+# names in this section are made up
+
+00=racestart01
+01=racestart02
+02=racestart03
+03=racestart04
+
+04=racewon
+05=racelost
+06=finallap
+
+07=jingle01
+08=jingle02
+09=jingle03
+10=jingle04
+11=jingle05
+12=jingle06
+
+# =========== EXTRA section ==============
+# names in this section are based XA leftover found in game data
+
+# Aku Aku hints
+
+13=akuspk01	#welcome
+14=akuspk02	#vortex hint
+15=akuspk03	#trophy locked race hint
+16=akuspk04	#locked boss garage hint
+17=akuspk05	#oxide door missing 4 keys hint
+18=akuspk06	#1 boss key missing hint
+19=akuspk07	#load save hint
+20=akuspk08	#new area opened hint
+21=akuspk09	#no memory card warning
+22=akuspk10	#full memory card warning
+23=akuspk11	#no save to load warning
+24=akuspk12	#no controllers warning
+25=akuspk13	#you win a trophy
+26=akuspk14	#you've earned a key
+27=akuspk15	#hang time hint
+28=akuspk16	#powerslide hint
+29=akuspk17	#turbo boost hint
+30=akuspk18	#break slide hint
+31=akuspk19	#2 boss keys missing hint
+32=akuspk20	#you earned a relic
+33=akuspk21	#you've collected a token
+34=akuspk22	#you've won a gem
+35=akuspk23	#wumpa fruit hint
+36=akuspk24	#tnt hop hint
+37=akuspk25	#dots and starts map hint
+38=akuspk26	#crystal challenge hint
+39=akuspk27	#token race hint
+40=akuspk28	#gem locked hint
+41=akuspk29	#missing relics
+42=akuspk30	#relic race hint
+
+# extra 4 voicelines cut from the final (except wrong way)
+43=akuspk31 #that's the wrong way
+44=akuspk32	#Wrong way
+45=akuspk33	#juiced up
+46=akuspk34	#oh yeah
+47=akuspk35	#gotcha
+
+# Uka Uka hints
+
+48=ukaspk01	#welcome
+49=ukaspk02	#vortex hint
+50=ukaspk03	#trophy locked race hint
+51=ukaspk04	#locked boss garage hint
+52=ukaspk05	#oxide door missing 4 keys hint
+53=ukaspk06	#1 boss key missing hint
+54=ukaspk07	#load save hint
+55=ukaspk08	#new area opened hint
+56=ukaspk09	#no memory card warning
+57=ukaspk10	#full memory card warning
+58=ukaspk11	#no save to load warning
+59=ukaspk12	#no controllers warning
+60=ukaspk13	#you win a trophy
+61=ukaspk14	#you've earned a key
+62=ukaspk15	#hang time hint
+63=ukaspk16	#powerslide hint
+64=ukaspk17	#turbo boost hint
+65=ukaspk18	#break slide hint
+66=ukaspk19	#2 boss keys missing hint
+67=ukaspk20	#you earned a relic
+68=ukaspk21	#you've collected a token
+69=ukaspk22	#you've won a gem
+70=ukaspk23	#wumpa fruit hint
+71=ukaspk24	#tnt hop hint
+72=ukaspk25	#dots and starts map hint
+73=ukaspk26	#crystal challenge hint
+74=ukaspk27	#token race hint
+75=ukaspk28	#gem locked hint
+76=ukaspk29	#missing relics
+77=ukaspk30	#relic race hint
+
+# extra 4 voicelines cut from the final (except wrong way)
+78=ukaspk31 #that's the wrong way
+79=ukaspk32	#Wrong way
+80=ukaspk33	#juiced up
+81=ukaspk34	#oh yeah
+82=ukaspk35	#gotcha
+
+# n.tropy voicelines
+
+83=nyspk01
+84=nyspk02
+85=nyspk03
+86=nyspk04
+87=nyspk05
+88=nyspk06
+89=nyspk07
+90=nyspk08
+91=nyspk09
+92=nyspk10
+
+# oxide voicelines
+# some stuff was cut in final
+
+93=nospk01
+94=nospk02
+95=nospk03
+96=nospk04
+97=nospk05
+98=nospk06
+99=nospk07
+100=nospk08
+101=nospk09
+102=nospk10
+103=nospk11
+104=nospk12
+105=nospk13
+
+# not original names for these 2
+
+106=intro01	#Start your engines...
+107=intro02	#Fasten your seatbelts...
+108=intro03	#Crash Team Racing
+
+# === unused Cortex GUI voice lines
+# not sure if all are cortex
+
+109=cxspk01	#Press start to play
+110=cxspk02	#Select player
+111=cxspk03	#Select players
+112=cxspk04	#Choose a racetrack
+
+# =========== GAME section ==============
+# names in this section are based XA leftovers found in game data
+
+113=cryea1 #Crash Yay 1
+114=cryea2 #Crash Yay 2
+115=croww1 #Crash Ouch 1
+116=croww2 #Crash Ouch 2
+117=crspn1 #Crash Spinout 1
+118=crspn2 #Crash Spinout 2
+119=crair1 #Crash Big Air 1
+120=crair2 #Crash Big Air 2
+121=crsnk1 #Crash Sneaky Taunt 1
+122=crsnk2 #Crash Sneaky Taunt 2
+123=crlaf1 #Crash Laugh Taunt 1
+124=crlaf2 #Crash Laugh Taunt 2
+125=crpas1 #Crash Passive Taunt 1
+126=crpas2 #Crash Passive Taunt 2
+127=cract1 #Crash Active Taunt 1
+128=cract2 #Crash Active Taunt 2
+129=crfin1 #Crash Finished 1st
+130=crfin2 #Crash Finished 2nd
+131=crfin3 #Crash Finished 3rd
+
+132=cxyea1 #Cortex Yay 1
+133=cxyea2 #Cortex Yay 2
+134=cxoww1 #Cortex Ouch 1
+135=cxoww2 #Cortex Ouch 2
+136=cxspn1 #Cortex Spinout 1
+137=cxspn2 #Cortex Spinout 2
+138=cxair1 #Cortex Big Air 1
+139=cxair2 #Cortex Big Air 2
+140=cxsnk1 #Cortex Sneaky Taunt 1
+141=cxsnk2 #Cortex Sneaky Taunt 2
+142=cxlaf1 #Cortex Laugh Taunt 1
+143=cxlaf2 #Cortex Laugh Taunt 2
+144=cxpas1 #Cortex Passive Taunt 1
+145=cxpas2 #Cortex Passive Taunt 2
+146=cxact1 #Cortex Active Taunt 1
+147=cxact2 #Cortex Active Taunt 2
+148=cxfin1 #Cortex Finished 1st
+149=cxfin2 #Cortex Finished 2nd
+150=cxfin3 #Cortex Finished 3rd
+
+151=tiyea1 #Tiny Yay 1
+152=tiyea2 #Tiny Yay 2
+153=tioww1 #Tiny Ouch 1
+154=tioww2 #Tiny Ouch 2
+155=tispn1 #Tiny Spinout 1
+156=tispn2 #Tiny Spinout 2
+157=tiair1 #Tiny Big Air 1
+158=tiair2 #Tiny Big Air 2
+159=tisnk1 #Tiny Sneaky Taunt 1
+160=tisnk2 #Tiny Sneaky Taunt 2
+161=tilaf1 #Tiny Laugh Taunt 1
+162=tilaf2 #Tiny Laugh Taunt 2
+163=tipas1 #Tiny Passive Taunt 1
+164=tipas2 #Tiny Passive Taunt 2
+165=tiact1 #Tiny Active Taunt 1
+166=tiact2 #Tiny Active Taunt 2
+167=tifin1 #Tiny Finished 1st
+168=tifin2 #Tiny Finished 2nd
+169=tifin3 #Tiny Finished 3rd
+
+170=ccyea1 #Coco Yay 1
+171=ccyea2 #Coco Yay 2
+172=ccoww1 #Coco Ouch 1
+173=ccoww2 #Coco Ouch 2
+174=ccspn1 #Coco Spinout 1
+175=ccspn2 #Coco Spinout 2
+176=ccair1 #Coco Big Air 1
+177=ccair2 #Coco Big Air 2
+178=ccsnk1 #Coco Sneaky Taunt 1
+179=ccsnk2 #Coco Sneaky Taunt 2
+180=cclaf1 #Coco Laugh Taunt 1
+181=cclaf2 #Coco Laugh Taunt 2
+182=ccpas1 #Coco Passive Taunt 1
+183=ccpas2 #Coco Passive Taunt 2
+184=ccact1 #Coco Active Taunt 1
+185=ccact2 #Coco Active Taunt 2
+186=ccfin1 #Coco Finished 1st
+187=ccfin2 #Coco Finished 2nd
+188=ccfin3 #Coco Finished 3rd
+
+189=ngyea1 #NGin Yay 1
+190=ngyea2 #NGin Yay 2
+191=ngoww1 #NGin Ouch 1
+192=ngoww2 #NGin Ouch 2
+193=ngspn1 #NGin Spinout 1
+194=ngspn2 #NGin Spinout 2
+195=ngair1 #NGin Big Air 1
+196=ngair2 #NGin Big Air 2
+197=ngsnk1 #NGin Sneaky Taunt 1
+198=ngsnk2 #NGin Sneaky Taunt 2
+199=nglaf1 #NGin Laugh Taunt 1
+200=nglaf2 #NGin Laugh Taunt 2
+201=ngpas1 #NGin Passive Taunt 1
+202=ngpas2 #NGin Passive Taunt 2
+203=ngact1 #NGin Active Taunt 1
+204=ngact2 #NGin Active Taunt 2
+205=ngfin1 #NGin Finished 1st
+206=ngfin2 #NGin Finished 2nd
+207=ngfin3 #NGin Finished 3rd
+
+208=diyea1 #Dingo Yay 1
+209=diyea2 #Dingo Yay 2
+210=dioww1 #Dingo Ouch 1
+211=dioww2 #Dingo Ouch 2
+212=dispn1 #Dingo Spinout 1
+213=dispn2 #Dingo Spinout 2
+214=diair1 #Dingo Big Air 1
+215=diair2 #Dingo Big Air 2
+216=disnk1 #Dingo Sneaky Taunt 1
+217=disnk2 #Dingo Sneaky Taunt 2
+218=dilaf1 #Dingo Laugh Taunt 1
+219=dilaf2 #Dingo Laugh Taunt 2
+220=dipas1 #Dingo Passive Taunt 1
+221=dipas2 #Dingo Passive Taunt 2
+222=diact1 #Dingo Active Taunt 1
+223=diact2 #Dingo Active Taunt 2
+224=difin1 #Dingo Finished 1st
+225=difin2 #Dingo Finished 2nd
+226=difin3 #Dingo Finished 3rd
+
+227=poyea1 #Polar Yay 1
+228=poyea2 #Polar Yay 2
+229=pooww1 #Polar Ouch 1
+230=pooww2 #Polar Ouch 2
+231=pospn1 #Polar Spinout 1
+232=pospn2 #Polar Spinout 2
+233=poair1 #Polar Big Air 1
+234=poair2 #Polar Big Air 2
+235=posnk1 #Polar Sneaky Taunt 1
+236=posnk2 #Polar Sneaky Taunt 2
+237=polaf1 #Polar Laugh Taunt 1
+238=polaf2 #Polar Laugh Taunt 2
+239=popas1 #Polar Passive Taunt 1
+240=popas2 #Polar Passive Taunt 2
+241=poact1 #Polar Active Taunt 1
+242=poact2 #Polar Active Taunt 2
+243=pofin1 #Polar Finished 1st
+244=pofin2 #Polar Finished 2nd
+245=pofin3 #Polar Finished 3rd
+
+246=pryea1 #Pura Yay 1
+247=pryea2 #Pura Yay 2
+248=proww1 #Pura Ouch 1
+249=proww2 #Pura Ouch 2
+250=prspn1 #Pura Spinout 1
+251=prspn2 #Pura Spinout 2
+252=prair1 #Pura Big Air 1
+253=prair2 #Pura Big Air 2
+254=prsnk1 #Pura Sneaky Taunt 1
+255=prsnk2 #Pura Sneaky Taunt 2
+256=prlaf1 #Pura Laugh Taunt 1
+257=prlaf2 #Pura Laugh Taunt 2
+258=prpas1 #Pura Passive Taunt 1
+259=prpas2 #Pura Passive Taunt 2
+260=pract1 #Pura Active Taunt 1
+261=pract2 #Pura Active Taunt 2
+262=prfin1 #Pura Finished 1st
+263=prfin2 #Pura Finished 2nd
+264=prfin3 #Pura Finished 3rd
+
+265=psyea1 #Pinstripe Yay 1
+266=psyea2 #Pinstripe Yay 2
+267=psoww1 #Pinstripe Ouch 1
+268=psoww2 #Pinstripe Ouch 2
+269=psspn1 #Pinstripe Spinout 1
+270=psspn2 #Pinstripe Spinout 2
+271=psair1 #Pinstripe Big Air 1
+272=psair2 #Pinstripe Big Air 2
+273=pssnk1 #Pinstripe Sneaky Taunt 1
+274=pssnk2 #Pinstripe Sneaky Taunt 2
+275=pslaf1 #Pinstripe Laugh Taunt 1
+276=pslaf2 #Pinstripe Laugh Taunt 2
+277=pspas1 #Pinstripe Passive Taunt 1
+278=pspas2 #Pinstripe Passive Taunt 2
+279=psact1 #Pinstripe Active Taunt 1
+280=psact2 #Pinstripe Active Taunt 2
+281=psfin1 #Pinstripe Finished 1st
+282=psfin2 #Pinstripe Finished 2nd
+283=psfin3 #Pinstripe Finished 3rd
+
+284=ppyea1 #Papu Yay 1
+285=ppyea2 #Papu Yay 2
+286=ppoww1 #Papu Ouch 1
+287=ppoww2 #Papu Ouch 2
+288=ppspn1 #Papu Spinout 1
+289=ppspn2 #Papu Spinout 2
+290=ppair1 #Papu Big Air 1
+291=ppair2 #Papu Big Air 2
+292=ppsnk1 #Papu Sneaky Taunt 1
+293=ppsnk2 #Papu Sneaky Taunt 2
+294=pplaf1 #Papu Laugh Taunt 1
+295=pplaf2 #Papu Laugh Taunt 2
+296=pppas1 #Papu Passive Taunt 1
+297=pppas2 #Papu Passive Taunt 2
+298=ppact1 #Papu Active Taunt 1
+299=ppact2 #Papu Active Taunt 2
+300=ppfin1 #Papu Finished 1st
+301=ppfin2 #Papu Finished 2nd
+302=ppfin3 #Papu Finished 3rd
+
+303=royea1 #Roo Yay 1
+304=royea2 #Roo Yay 2
+305=rooww1 #Roo Ouch 1
+306=rooww2 #Roo Ouch 2
+307=rospn1 #Roo Spinout 1
+308=rospn2 #Roo Spinout 2
+309=roair1 #Roo Big Air 1
+310=roair2 #Roo Big Air 2
+311=rosnk1 #Roo Sneaky Taunt 1
+312=rosnk2 #Roo Sneaky Taunt 2
+313=rolaf1 #Roo Laugh Taunt 1
+314=rolaf2 #Roo Laugh Taunt 2
+315=ropas1 #Roo Passive Taunt 1
+316=ropas2 #Roo Passive Taunt 2
+317=roact1 #Roo Active Taunt 1
+318=roact2 #Roo Active Taunt 2
+319=rofin1 #Roo Finished 1st
+320=rofin2 #Roo Finished 2nd
+321=rofin3 #Roo Finished 3rd
+
+322=joyea1 #Joe Yay 1
+323=joyea2 #Joe Yay 2
+324=jooww1 #Joe Ouch 1
+325=jooww2 #Joe Ouch 2
+326=jospn1 #Joe Spinout 1
+327=jospn2 #Joe Spinout 2
+328=joair1 #Joe Big Air 1
+329=joair2 #Joe Big Air 2
+330=josnk1 #Joe Sneaky Taunt 1
+331=josnk2 #Joe Sneaky Taunt 2
+332=jolaf1 #Joe Laugh Taunt 1
+333=jolaf2 #Joe Laugh Taunt 2
+334=jopas1 #Joe Passive Taunt 1
+335=jopas2 #Joe Passive Taunt 2
+336=joact1 #Joe Active Taunt 1
+337=joact2 #Joe Active Taunt 2
+338=jofin1 #Joe Finished 1st
+339=jofin2 #Joe Finished 2nd
+340=jofin3 #Joe Finished 3rd
+
+341=nyyea1 #Tropy Yay 1
+342=nyyea2 #Tropy Yay 2
+343=nyoww1 #Tropy Ouch 1
+344=nyoww2 #Tropy Ouch 2
+345=nyspn1 #Tropy Spinout 1
+346=nyspn2 #Tropy Spinout 2
+347=nyair1 #Tropy Big Air 1
+348=nyair2 #Tropy Big Air 2
+349=nysnk1 #Tropy Sneaky Taunt 1
+350=nysnk2 #Tropy Sneaky Taunt 2
+351=nylaf1 #Tropy Laugh Taunt 1
+352=nylaf2 #Tropy Laugh Taunt 2
+353=nypas1 #Tropy Passive Taunt 1
+354=nypas2 #Tropy Passive Taunt 2
+355=nyact1 #Tropy Active Taunt 1
+356=nyact2 #Tropy Active Taunt 2
+357=nyfin1 #Tropy Finished 1st
+358=nyfin2 #Tropy Finished 2nd
+359=nyfin3 #Tropy Finished 3rd
+
+360=pnyea1 #Penta Yay 1
+361=pnyea2 #Penta Yay 2
+362=pnoww1 #Penta Ouch 1
+363=pnoww2 #Penta Ouch 2
+364=pnspn1 #Penta Spinout 1
+365=pnspn2 #Penta Spinout 2
+366=pnair1 #Penta Big Air 1
+367=pnair2 #Penta Big Air 2
+368=pnsnk1 #Penta Sneaky Taunt 1
+369=pnsnk2 #Penta Sneaky Taunt 2
+370=pnlaf1 #Penta Laugh Taunt 1
+371=pnlaf2 #Penta Laugh Taunt 2
+372=pnpas1 #Penta Passive Taunt 1
+373=pnpas2 #Penta Passive Taunt 2
+374=pnact1 #Penta Active Taunt 1
+375=pnact2 #Penta Active Taunt 2
+376=pnfin1 #Penta Finished 1st
+377=pnfin2 #Penta Finished 2nd
+378=pnfin3 #Penta Finished 3rd
+
+379=fcyea1 #Fake Crash Yay 1
+380=fcyea2 #Fake Crash Yay 2
+381=fcoww1 #Fake Crash Ouch 1
+382=fcoww2 #Fake Crash Ouch 2
+383=fcspn1 #Fake Crash Spinout 1
+384=fcspn2 #Fake Crash Spinout 2
+385=fcair1 #Fake Crash Big Air 1
+386=fcair2 #Fake Crash Big Air 2
+387=fcsnk1 #Fake Crash Sneaky Taunt 1
+388=fcsnk2 #Fake Crash Sneaky Taunt 2
+389=fclaf1 #Fake Crash Laugh Taunt 1
+390=fclaf2 #Fake Crash Laugh Taunt 2
+391=fcpas1 #Fake Crash Passive Taunt 1
+392=fcpas2 #Fake Crash Passive Taunt 2
+393=fcact1 #Fake Crash Active Taunt 1
+394=fcact2 #Fake Crash Active Taunt 2
+395=fcfin1 #Fake Crash Finished 1st
+396=fcfin2 #Fake Crash Finished 2nd
+397=fcfin3 #Fake Crash Finished 3rd
+
+398=noyea1 #Oxide Yay 1
+399=noyea2 #Oxide Yay 2
+400=nooww1 #Oxide Ouch 1
+401=nooww2 #Oxide Ouch 2
+402=nospn1 #Oxide Spinout 1
+403=nospn2 #Oxide Spinout 2
+404=noair1 #Oxide Big Air 1
+405=noair2 #Oxide Big Air 2
+406=nosnk1 #Oxide Sneaky Taunt 1
+407=nosnk2 #Oxide Sneaky Taunt 2
+408=nolaf1 #Oxide Laugh Taunt 1
+409=nolaf2 #Oxide Laugh Taunt 2
+410=nopas1 #Oxide Passive Taunt 1
+411=nopas2 #Oxide Passive Taunt 2
+412=noact1 #Oxide Active Taunt 1
+413=noact2 #Oxide Active Taunt 2
+414=nofin1 #Oxide Finished 1st
+415=nofin2 #Oxide Finished 2nd
+416=nofin3 #Oxide Finished 3rd
+
+# boss speech
+# we only know jopbt01 original name, rest is made up
+
+417=ropbt01	#Roo pre boss battle
+418=ropbt02	#Roo post boss battle
+419=ropbt01_spk	#Roo pre boss battle (unused voiced)
+420=ropbt02_spk	#Roo post boss battle (unused voiced)
+421=pppbt01	#Papu pre boss battle
+422=pppbt02	#Papu post boss battle
+423=jopbt01	#Joe pre boss battle
+424=jopbt02	#Joe post boss battle
+425=pspbt01	#Pinstripe pre boss battle
+426=pspbt02	#Pinstripe post boss battle

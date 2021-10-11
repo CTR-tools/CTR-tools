@@ -1,0 +1,573 @@
+{
+	"midi": {
+		"canyon": {
+			"long": [
+				{ "midi": 34, "pitch": -12, "title": "Electric Bass" },
+				{ "midi": 87, "pitch": -12, "title": "Lead 8" },
+				{ "midi": 26, "pitch": -12, "title": "Jazz Guitar" },
+				{ "midi": 18, "pitch": 12, "title": "Rock Organ" },
+				{ "midi": 27, "title": "Guitar" },
+				{ "midi": 11, "title": "Vibraphone" },
+				{ "midi": 83, "title": "Lead 4" }
+			],
+			"short": [
+				{ "key": 35, "title": "Bass drum" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 38, "title": "Snare drum" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 39, "title": "Clap" },
+				{ "key": 47, "title": "Tom 1" },
+				{ "key": 45, "title": "Tom 2"  },
+				{ "key": 43, "title": "Tom 3"  },
+				{ "key": 41, "title": "Tom 4"  },
+				{ "key": 64, "title": "Bonga 1"  },
+				{ "key": 61, "title": "Bonga 2"  },
+				{ "key": 36, "title": "Bonga Bass"  }
+			]
+		},
+		"mines": {
+			"long": [
+				{ "midi": 2, "pitch": -12, "title": "Electric Grand Piano" },
+				{ "midi": 22, "pitch": 12, "title": "Harmonica" },
+				{ "midi": 32, "pitch": -12, "title": "Acoustic Bass" },
+				{ "midi": 118, "pitch": -24, "title": "Synth Drum" },
+				{ "midi": 107, "title": "Koto" }
+			],
+			"short": [
+				{ "key": 46, "title": "Open Hi-hat" },
+				{ "key": 38, "title": "Acoustic Snare" },
+				{ "key": 69, "title": "Cabasa" },
+				{ "key": 43, "title": "High Floor Tom" },
+				{ "key": 41, "title": "Low Floor Tom" },
+				{ "key": 35, "title": "Acoustic BassDrum" },
+				{ "key": 0, "title": "Loop1" },
+				{ "key": 1, "title": "Loop2" },
+				{ "key": 87, "title": "Open Surdo" },
+				{ "key": 53, "title": "Ride Bell" }
+			]
+		},
+		"bluff": {
+			"long": [
+				{ "midi": 34, "pitch": -12, "title": "Electric Bass" },
+				{ "midi": 67, "pitch": -12, "title": "Baritone Sax" },
+				{ "midi": 45, "title": "Pizzacato Strings" },
+				{ "midi": 21, "pitch": 12, "title": "Accordian" }
+			],
+			"short": [
+				{ "key": 35, "title": "Acoustic BassDrum" },
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 40, "title": "Electric SnareDrum" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 83, "title": "Jingle Bell" },
+				{ "key": 39, "title": "Hand Clap" }
+			]
+		},
+		"cove": {
+			"long": [
+				{ "midi": 87, "pitch": 12, "title": "Lead & Bass" },
+				{ "midi": 62, "pitch": -12, "title": "Synth Brass" },
+				{ "midi": 83, "title": "Lead 4" },
+				{ "midi": 114, "pitch": 12, "title": "Steel Drums" },
+				{ "midi": 34, "title": "Electric Bass" },
+				{ "midi": 11, "title": "Vibraphone" }
+			],
+			"short": [
+				{ "key": 63, "title": "Open Hi-Conga" },
+				{ "key": 61, "title": "Low Bongo" },
+				{ "key": 67, "title": "High Agogo" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 35, "title": "Acoustic Bass" },
+				{ "key": 51, "title": "Ride Cymbal" },
+				{ "key": 38, "title": "Acoustic Snare" },
+				{ "key": 45, "title": "Low Tom" },
+				{ "key": 43, "title": "High Floor Tom" }
+			]
+		},
+		"temple": {
+			"long": [
+				{ "midi": 84, "title": "Charang" },
+				{ "midi": 30, "pitch": -12, "title": "Distortion Guitar" },
+				{ "midi": 13, "title": "Xylophone" },
+				{ "midi": 12, "title": "Marimba" },
+				{ "midi": 26, "pitch": -24, "title": "Electric Guitar" }
+			],
+			"short": [
+				{ "key": 77, "title": "Woodblock" },
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 35, "title": "Acoustic BassDrum" },
+				{ "key": 40, "title": "Electric Snare" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 76, "title": "Bell2" },
+				{ "key": 64, "title": "Low Conga" },
+				{ "key": 63, "title": "Open High Conga" }
+			]
+		},
+		"pyramid": {
+			"long": [
+				{ "midi": 26, "pitch": -36, "title": "Electric Guitar" },
+				{ "midi": 12, "title": "Marimba" },
+				{ "midi": 52, "pitch": 12, "title": "Choir" },
+				{ "midi": 15, "pitch": -12, "title": "Dulcimer" }
+
+			],
+			"short": [
+				{ "key": 36, "title": "Bass Drum" },
+				{ "key": 40, "title": "Electric SnareDrum" },
+				{ "key": 38, "title": "Accoustic SnareDrum" },
+				{ "key": 42, "title": "Closed Hi-hat" },
+				{ "key": 46, "title": "Opened Hi-hat" },
+				{ "key": 44, "title": "Pedal Hi-hat" },
+				{ "key": 64, "title": "Low Conga" },
+				{ "key": 63, "title": "Open Hi Conga" },
+				{ "key": 61, "title": "Low Bongo" }
+			]
+		},
+		"tubes": {
+			"long": [
+				{ "midi": 8, "pitch": 12, "title": "Celesta" },
+				{ "midi": 18, "pitch": -12, "title": "Rock Organ" },
+				{ "midi": 25, "pitch": -12, "title": "Steel Acoustic Guitar" },
+				{ "midi": 11, "title": "Vibraphone" }
+			],
+			"short": [
+				{ "key": 35, "title": "Accoustic Bass Drum" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 38, "title": "Accoustic Snare" },
+				{ "key": 39, "title": "Hand Clap" },
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 29, "title": "Scratch" },
+				{ "key": 32, "title": "Square Click" },
+				{ "key": 49, "title": "Crash Cymbal" }
+			]
+		},
+		"skyway": {
+			"long": [
+				{ "midi": 71, "title": "Clarinet" },
+				{ "midi": 75, "pitch": -12, "title": "Pan Flute" },
+				{ "midi": 13, "title": "Marimba" },
+				{ "midi": 61, "title": "Brass" },
+				{ "midi": 87, "title": "Lead" },
+				{ "midi": 3, "title": "Piano" }
+			],
+			"short": [
+				{ "key": 65, "title": "High Timbale" },
+				{ "key": 68, "title": "Low Agogo" },
+				{ "key": 67, "title": "High Agogo" },
+				{ "key": 66, "title": "High Timbale" },
+				{ "key": 46, "title": "Open Hi-hat" },
+				{ "key": 40, "title": "Electric SnareDrum" },
+				{ "key": 35, "title": "Acoustic BassDrum" },
+				{ "key": 38, "title": "Acoustic SnareDrum" },
+				{ "key": 42, "title": "Closed Hi-Hat" }
+			]
+		},
+		"sewer": {
+			"long": [
+				{ "midi": 25, "pitch": 12, "title": "Guitar" },
+				{ "midi": 30, "pitch": -14, "title": "Distort Guitar" },
+				{ "midi": 18, "title": "Organ" },
+				{ "midi": 26, "pitch": -12, "title": "Bass" }
+			],
+			"short": [
+				{ "key": 63, "title": "Open Hi Conga" },
+				{ "key": 60, "title": "Hi Bongo" },
+				{ "key": 67, "title": "Agogo" },
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 66, "title": "Low Timbale" },
+				{ "key": 40, "title": "Snare" }
+			]
+		},
+		"caves": {
+			"long": [
+				{ "midi": 81, "pitch": -12, "title": "Lead 2" },
+				{ "midi": 33, "pitch": -12, "title": "Electric Bass" },
+				{ "midi": 15, "title": "Dulcimer" },
+				{ "midi": 38, "title": "Synth Bass" },
+				{ "midi": 56, "title": "Trumpet" }
+			],
+			"short": [
+				{ "key": 63, "title": "High Conga" },
+				{ "key": 64, "title": "Low Conga" },
+				{ "key": 68, "title": "Agogo" },
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 36, "title": "Bass Drum" },
+				{ "key": 38, "title": "Acoustic Snare" }
+			]
+		},
+		"castle": {
+			"long": [
+				{ "midi": 61, "pitch": -12, "title": "Brass" },
+				{ "midi": 60, "title": "French Horn" },
+				{ "midi": 73, "title": "Flute" },
+				{ "midi": 53, "title": "Voice" },
+				{ "midi": 45, "title": "Pizzicato" },
+				{ "midi": 33, "pitch": -12, "title": "Finger Bass" },
+				{ "midi": 44, "title": "Tremlo Strings" }
+			],
+			"short": [
+				{ "key": 87, "title": "Tinpani" },
+				{ "key": 57, "title": "Crash" },
+				{ "key": 44, "title": "Pedal Hi-hat" },
+				{ "key": 46, "title": "Open Hi-hat" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 38, "title": "Snare" },
+				{ "key": 58, "title": "Drumroll" },
+				{ "key": 55, "title": "Tamborine" }
+			]
+		},
+		"labs": {
+			"long": [
+				{ "midi": 38, "pitch": -24, "title": "Bass" },
+				{ "midi": 94, "pitch": 12, "title": "Voice" },
+				{ "midi": 80, "pitch": -4, "title": "Lead 1" },
+				{ "midi": 66, "pitch": -24, "title": "Sax" },
+				{ "midi": 113, "pitch": 24, "title": "Agogo" }
+			],
+			"short": [
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 27, "title": "High Q" },
+				{ "key": 35, "title": "Bass Drum1" },
+				{ "key": 28, "title": "Slap" },
+				{ "key": 31, "title": "Sticks" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 36, "title": "Bass Drum2" },
+				{ "key": 40, "title": "Electric Snare" }
+			]
+		},
+		"pass": {
+			"long": [
+				{ "midi": 7, "pitch": -12, "title": "Clavi" },
+				{ "midi": 36, "title": "SlapBass" },
+				{ "midi": 45, "title": "Pizzicato" },
+				{ "midi": 33, "pitch": -12, "title": "Bass" },
+				{ "midi": 14, "pitch": 12, "title": "Bell" }
+			],
+			"short": [
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 83, "title": "Jingle Bells" },
+				{ "key": 57, "title": "Tamborine" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 38, "title": "Snare" }
+			]
+		},
+		"station": {
+			"long": [
+				{ "midi": 7, "pitch": -12, "title": "Clavi" },
+				{ "midi": 102, "pitch": -12, "title": "FX7" },
+				{ "midi": 18, "pitch": -12, "title": "Rock Organ" },
+				{ "midi": 26, "pitch": -24, "title": "Jazz Guitar" },
+				{ "midi": 5, "title": "Electric Piano" }
+			],
+			"short": [
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 69, "title": "Cabasa" },
+				{ "key": 51, "title": "Ride Cymbal" },
+				{ "key": 36, "title": "Bass Drum" },
+				{ "key": 80, "title": "Mute Triangle" },
+				{ "key": 78, "title": "Mute Cuica" },
+				{ "key": 79, "title": "Open Cuica" },
+				{ "key": 52, "title": "Gun" },
+				{ "key": 40, "title": "Snare" },
+				{ "key": 28, "title": "Slap" }
+			]
+		},
+		"park": {
+			"long": [
+				{ "midi": 107, "pitch": 12, "title": "Koto" },
+				{ "midi": 53, "pitch": 12, "title": "Voice" },
+				{ "midi": 28, "pitch": -12, "title": "Muted Guitar" },
+				{ "midi": 1, "title": "Piano" },
+				{ "midi": 120, "title": "Fret" },
+				{ "midi": 34, "pitch": -24, "title": "Electric Bass" },
+				{ "midi": 8, "pitch": 12, "title": "Celesta" }
+			],
+			"short": [
+				{ "key": 39, "title": "Hand Clap" },
+				{ "key": 37, "title": "Side Stick" },
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 38, "title": "Snare" },
+				{ "key": 76, "title": "Block" }
+			]
+		},
+		"arena": {
+			"long": [
+				{ "midi": 34, "pitch": -12, "title": "Bass" },
+				{ "midi": 81, "title": "Lead2" },
+				{ "midi": 29, "pitch": -12, "title": "Guitar" },
+				{ "midi": 18, "title": "Organ" }
+			],
+			"short": [
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 54, "title": "Tambourine" },
+				{ "key": 35, "title": "BassDrum" },
+				{ "key": 40, "title": "Snare" },
+				{ "key": 55, "title": "Cymbal" },
+				{ "key": 43, "title": "Highfloor Tom" },
+				{ "key": 47, "title": "Low Mid-Tom" },
+				{ "key": 51, "title": "Ride Cymbal 1" }
+			]
+		},
+		"coliseum": {
+			"long": [
+				{ "midi": 34, "pitch": -12, "title": "Bass" },
+				{ "midi": 81, "title": "Lead2" },
+				{ "midi": 29, "pitch": -12, "title": "Guitar" },
+				{ "midi": 18, "title": "Organ" }
+			],
+			"short": [
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 54, "title": "Tambourine" },
+				{ "key": 35, "title": "BassDrum" },
+				{ "key": 40, "title": "Snare" },
+				{ "key": 55, "title": "Cymbal" },
+				{ "key": 43, "title": "Highfloor Tom" },
+				{ "key": 47, "title": "Low Mid-Tom" },
+				{ "key": 51, "title": "Ride Cymbal 1" }
+			]
+		},
+		"turbo": {
+			"long": [
+				{ "midi": 34, "pitch": -12, "title": "Bass" },
+				{ "midi": 81, "title": "Lead2" },
+				{ "midi": 29, "pitch": -12, "title": "Guitar" },
+				{ "midi": 18, "title": "Organ" }
+			],
+			"short": [
+				{ "key": 44, "title": "Pedal Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 54, "title": "Tambourine" },
+				{ "key": 35, "title": "BassDrum" },
+				{ "key": 40, "title": "Snare" },
+				{ "key": 55, "title": "Cymbal" },
+				{ "key": 43, "title": "Highfloor Tom" },
+				{ "key": 47, "title": "Low Mid-Tom" },
+				{ "key": 51, "title": "Ride Cymbal 1" }
+			]
+		},
+		"nitro": {
+			"long": [
+				{ "midi": 61, "pitch": -12, "title": "Brass" },
+				{ "midi": 30, "title": "Heavy Guitar" },
+				{ "midi": 33, "pitch": -24, "title": "Bass" },
+				{ "midi": 44, "title": "Tremlo" }
+			],
+			"short": [
+				{ "key": 0, "title": "Loop1" },
+				{ "key": 1, "title": "Loop2" },
+				{ "key": 2, "title": "Loop3" },
+				{ "key": 4, "title": "Loop4" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 40, "title": "Electric Snare Drum" },
+				{ "key": 38, "title": "Acoustic SnareDrum" }
+			]
+		},
+		"rampage": {
+			"long": [
+				{ "midi": 12, "title": "Marimba" },
+				{ "midi": 30, "title": "Heavy Guitar" },
+				{ "midi": 33, "pitch": -24, "title": "Bass" }
+			],
+			"short": [
+				{ "key": 0, "title": "Loop1" },
+				{ "key": 1, "title": "Loop2" },
+				{ "key": 2, "title": "Loop3" },
+				{ "key": 4, "title": "Loop4" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 40, "title": "Electric Snare Drum" },
+				{ "key": 38, "title": "Acoustic SnareDrum" },
+				{ "key": 43, "title": "High Floor Tom" },
+				{ "key": 45, "title": "Tom" },
+				{ "key": 72, "title": "ROAR" }
+			]
+		},
+		"parking": {
+			"long": [
+				{ "midi": 53, "pitch": 12, "title": "Voice" },
+				{ "midi": 30, "title": "Heavy Guitar" },
+				{ "midi": 33, "pitch": -24, "title": "Bass" }
+			],
+			"short": [
+				{ "key": 0, "title": "Loop1" },
+				{ "key": 1, "title": "Loop2" },
+				{ "key": 2, "title": "Loop3" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 40, "title": "Electric Snare Drum" },
+				{ "key": 38, "title": "Acoustic SnareDrum" }
+			]
+		},
+		"skull": {
+			"long": [
+				{ "midi": 30, "title": "Heavy Guitar" },
+				{ "midi": 33, "pitch": -24, "title": "Bass" },
+				{ "midi": 11, "title": "Vibraphone" }
+			],
+			"short": [
+				{ "key": 0, "title": "Loop1" },
+				{ "key": 1, "title": "Loop2" },
+				{ "key": 2, "title": "Loop3" },
+				{ "key": 3, "title": "Loop4" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 40, "title": "Electric Snare Drum" },
+				{ "key": 38, "title": "Acoustic SnareDrum" }
+			]
+		},
+		"bowl": {
+			"long": [
+			    { "midi": 7, "pitch": -12, "title": "Clavi" },
+				{ "midi": 30, "title": "Heavy Guitar" },
+				{ "midi": 33, "pitch": -24, "title": "Bass" }
+			],
+			"short": [
+				{ "key": 0, "title": "Loop1" },
+				{ "key": 1, "title": "Loop2" },
+				{ "key": 2, "title": "Loop3" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 40, "title": "Electric Snare Drum" },
+				{ "key": 38, "title": "Acoustic SnareDrum" }
+			]
+		},
+		"rocky": {
+			"long": [
+			    { "midi": 36, "pitch": -12, "title": "Guitar" },
+				{ "midi": 30, "title": "Heavy Guitar" },
+				{ "midi": 33, "pitch": -24, "title": "Bass" }
+			],
+			"short": [
+				{ "key": 0, "title": "Loop1" },
+				{ "key": 1, "title": "Loop2" },
+				{ "key": 2, "title": "Loop3" },
+				{ "key": 3, "title": "Loop4" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 40, "title": "Electric Snare Drum" },
+				{ "key": 38, "title": "Acoustic SnareDrum" }
+			]
+		},
+		"basement": {
+			"long": [
+				{ "midi": 12, "title": "Marimba" },
+				{ "midi": 30, "title": "Heavy Guitar" },
+				{ "midi": 33, "pitch": -24, "title": "Bass" }
+			],
+			"short": [
+				{ "key": 0, "title": "Loop1" },
+				{ "key": 1, "title": "Loop2" },
+				{ "key": 2, "title": "Loop3" },
+				{ "key": 4, "title": "Loop4" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 40, "title": "Electric Snare Drum" },
+				{ "key": 38, "title": "Acoustic SnareDrum" },
+				{ "key": 72, "title": "WEEEEEEEE???" }
+			]
+		},
+		"boss": {
+			"long": [
+				{ "midi": 30, "pitch": -12, "title": "Distorted Guitar" },
+				{ "midi": 12, "title": "Marimba" },
+				{ "midi": 33, "pitch": -24, "title": "Bass" },
+				{ "midi": 18, "pitch": -12, "title": "Organ" }
+			],
+			"short": [
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 49, "title": "Crash" },
+				{ "key": 36, "title": "Bass Drum" },
+				{ "key": 27, "title": "High Q" },
+				{ "key": 38, "title": "Snare" },
+				{ "key": 41, "title": "Low Floor Tom" },
+				{ "key": 45, "title": "Low Tom" }
+			]
+		},
+		"valley": {
+			"long": [
+				{ "midi": 18, "pitch": 12, "title": "Organ" },
+				{ "midi": 7, "title": "Clavi" },
+				{ "midi": 27, "title": "Electric Guitar" },
+				{ "midi": 60, "title": "French Horn" },
+				{ "midi": 29, "pitch": 12, "title": "Over Guitar" },
+				{ "midi": 30, "pitch": -24, "title": "Dist Guitar" },
+				{ "midi": 12, "title": "Marimba" },
+				{ "midi": 94, "pitch": -12, "title": "Choir" },
+				{ "midi": 114, "title": "Steel Drums" },
+				{ "midi": 34, "pitch": -12, "title": "Bass" },
+				{ "midi": 56, "title": "Trumpet" },
+				{ "midi": 14, "pitch": 12, "title": "Bell" },
+				{ "midi": 44, "title": "Tremlo" },
+				{ "midi": 16, "title": "Drawbar" }
+			],
+			"short": [
+				{ "key": 61, "title": "Low Bongo" },
+				{ "key": 51, "title": "Ride Cymbal" },
+				{ "key": 83, "title": "JingleBell" },
+				{ "key": 38, "title": "Acoustic Snare" },
+				{ "key": 40, "title": "Electric Snare" },
+				{ "key": 36, "title": "Loop" }
+			]
+		},
+		"character": {
+			"long": [
+				{ "midi": 15, "title": "Chord" },
+				{ "midi": 12, "title": "Marimba" },
+				{ "midi": 34, "pitch": -12, "title": "Bass" },
+				{ "midi": 56, "title": "Trumpet" }
+			],
+			"short": [
+				{ "key": 38, "title": "Snare" },
+				{ "key": 36, "title": "Loop" }
+			]
+		},
+		"intro": {
+			"long": [
+				{ "midi": 18, "pitch": 12, "title": "Organ" },
+				{ "midi": 58, "pitch": -12, "title": "Tuba" },
+				{ "midi": 38, "pitch": -12, "title": "Slap" },
+				{ "midi": 29, "pitch": -12, "title": "Over Guitar" },
+				{ "midi": 30, "pitch": -12, "title": "Dist Guitar" },
+				{ "midi": 46, "title": "Harp" },
+				{ "midi": 12, "pitch": 12, "title": "Marimba" },
+				{ "midi": 29, "pitch": -24, "title": "Over Guitar" },
+				{ "midi": 56, "title": "Trumpet" },
+				{ "midi": 118, "pitch": 24, "title": "Drum" },  
+				{ "midi": 32, "pitch": -12, "title": "Acoustic Bass" },  
+				{ "midi": 33, "pitch": -12, "title": "Electric Bass" },
+				{ "midi": 61, "pitch": 12, "title": "Brass" },
+				{ "midi": 61, "title": "Brass" }
+			],
+			"short": [
+				{ "key": 57, "title": "Crash" },
+				{ "key": 0, "title": "GuitarSample" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 36, "title": "BassDrum" },
+				{ "key": 74, "title": "Drum Roll" },
+				{ "key": 51, "title": "Ride Cymbal" },
+				{ "key": 78, "title": "Introstringsample" },
+				{ "key": 35, "title": "DrumLoop" }
+			]
+		}
+	}
+}

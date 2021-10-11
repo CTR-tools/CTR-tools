@@ -64,7 +64,6 @@ ipch/
 *.htm
 *.lev
 *.dae
-*.ply
 *.obj
 *.db
 bigfile

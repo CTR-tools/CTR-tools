@@ -1,0 +1,17 @@
+﻿ABCDEFGHIJKLMNOPQRSTUVWXYZ-043EQNZ
+АВСДЕГБНIЖКЛМИФРШЯПТЦЭЮХУЬ-ОЧЗЁЩЙЪ
+
+====================================
+
+to enable charswap support, rename this file to charswap.txt and make sure it's in the same folder with CTRFramework.dll
+
+charswap is used to simplify the translation process for languages that may alter original font chars to represent local characters.
+this example is based on russian bootleg translation by RGR
+
+1st line - source english chars
+2nd line - target language chars
+
+if multiple chars are present, 1st entry is used by default
+
+!!!IMPORTANT!!!
+make sure you're using UTF-8. you can change encoding in notepad in save file dialog or you can use notepad++ and pick convert to UTF-8 option in encoding menu.

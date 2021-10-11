@@ -1,0 +1,60 @@
+# Crash Team Racing SAMPLER.BIG master file list 
+# Matches demos in all regions
+
+# ===========0 = TRACKS SECTION=================
+
+000=levels\tracks\proto8\1P\data.lev
+001=levels\tracks\proto8\1P\data.vrm
+002=levels\tracks\proto8\2P\data.lev
+003=levels\tracks\proto8\2P\data.vrm
+004=levels\tracks\proto8\4P\data.lev
+005=levels\tracks\proto8\4P\data.vrm
+
+012=levels\tracks\desert2\1P\data.lev
+013=levels\tracks\desert2\1P\data.vrm
+014=levels\tracks\desert2\2P\data.lev
+015=levels\tracks\desert2\2P\data.vrm
+016=levels\tracks\desert2\4P\data.lev
+017=levels\tracks\desert2\4P\data.vrm
+
+030=levels\tracks\temple2\1P\data.lev
+031=levels\tracks\temple2\1P\data.vrm
+032=levels\tracks\temple2\2P\data.lev
+033=levels\tracks\temple2\2P\data.vrm
+034=levels\tracks\temple2\4P\data.lev
+035=levels\tracks\temple2\4P\data.vrm
+
+# ==========150 = OVERLAYS SECTION===============
+
+150=overlays\0150_04.bin
+151=overlays\0151_05.bin
+152=overlays\0152_06.bin
+153=overlays\0153_07.bin
+
+# ===========154 = MODEL PACKS SECTION===============
+
+154=packs\1P\data.mpk
+155=packs\1P\data.vrm
+156=packs\2P\data.mpk
+157=packs\2P\data.vrm
+182=packs\4P\data.mpk
+183=packs\4P\data.vrm
+
+# ==========184 = LOADING SCREENS SECTION============
+
+184=screens\intro0.tim
+185=screens\intro1.tim
+186=screens\intro2.tim
+187=screens\menu.tim
+188=screens\hint.tim
+
+189=screens\hint_local0.tim
+190=screens\hint_local1.tim
+191=screens\hint_local2.tim
+192=screens\hint_local3.tim
+193=screens\hint_local4.tim
+
+# ==========194 = JAPFONT SECTION===============
+
+194=packs\japfont\data.mpk
+195=packs\japfont\data.vrm

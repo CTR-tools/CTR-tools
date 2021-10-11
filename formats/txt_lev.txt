@@ -1,3 +1,6 @@
+please refer to ctr_lev.ksy for a full format documentation.
+
+
 How the game reads lev into memory:
 
 dword - lev file size
