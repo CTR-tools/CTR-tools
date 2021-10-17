@@ -224,6 +224,17 @@ namespace CTRFramework.Shared
                 values[2] * scale
                 );
         }
+        public Vector4b ReadVector4b()
+        {
+            byte[] values = ReadBytes(4);
+
+            return new Vector4b(
+                values[0],
+                values[1],
+                values[2],
+                values[3]
+                );
+        }
 
         public Vector2 ReadVector2s(float scale = 1.0f)
         {
