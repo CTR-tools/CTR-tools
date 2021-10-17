@@ -211,7 +211,7 @@ types:
   scene_header:
     doc: | 
       scene header, contains pointers to other data within the file and
-      variouis global data like starting grid, background colors, etc. 
+      various global data like starting grid, background colors, etc. 
     seq:
       - id: ptr_mesh_info
         type: u4
@@ -250,8 +250,8 @@ types:
       - id: ptr_restart_main
         type: u4
 
-      - id: some_data
-        type: somedata
+      - id: glow_gradient
+        type: gradient
         repeat: expr
         repeat-expr: 3
 
@@ -352,16 +352,16 @@ types:
         type: u4
         if: cnt_pointers >= 7
         
-  somedata:
+  gradient:
     seq:
-      - id: s1
-        type: u2
-      - id: s2
-        type: u2 
-      - id: s3
-        type: u4
-      - id: s4
-        type: u4
+      - id: from
+        type: s2
+      - id: to
+        type: s2
+      - id: color_from
+        type: color
+      - id: color_to
+        type: color
 
   instance:
     doc: |
@@ -498,7 +498,24 @@ types:
         type: u4
       - id: ptr4
         type: u4
-
+    instances:
+      ptr1data:
+        pos: ptr1 & 0xFFFFFFFC
+        size: 1
+        if: ptr1 != 0
+      ptr2data:
+        pos: ptr2 & 0xFFFFFFFC
+        size: 1
+        if: ptr2 != 0
+      ptr3data:
+        pos: ptr3 & 0xFFFFFFFC
+        size: 1
+        if: ptr3 != 0
+      ptr4data:
+        pos: ptr4 & 0xFFFFFFFC
+        type: u4
+        if: ptr4 != 0
+        
   vertex:
     doc: |
       describes a single vertex
@@ -642,8 +659,9 @@ types:
 
   texture_layout:
     doc: |
-      a stuct to describe vram region.
+      a struct to describe vram region.
       contains 4 UV coords, palette coord and texture page index
+      as well as bpp flag, maybe more?
     seq:
       - id: uv1
         type: vector2b
