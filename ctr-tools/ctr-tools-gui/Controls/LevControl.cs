@@ -61,7 +61,7 @@ namespace CTRTools.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-            }        
+            }
         }
 
         private void actionMoveAll(object sender, EventArgs e)

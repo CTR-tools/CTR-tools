@@ -63,7 +63,7 @@ namespace CTRTools.Controls
                 seq = CSEQ.FromFile(fn);
                 FillUI(fn);
             }
-            catch 
+            catch
             {
                 MessageBox.Show("Failed to read CTR sequence!");
             }

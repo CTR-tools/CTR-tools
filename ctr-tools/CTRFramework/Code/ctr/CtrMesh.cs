@@ -2,7 +2,6 @@
 using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -428,7 +427,7 @@ namespace CTRFramework
                 sb.AppendLine($"f {i * 3 + 1}/{i * 3 + 1} {i * 3 + 2}/{i * 3 + 2} {i * 3 + 3}/{i * 3 + 3}");
             }
 
-
+            /*
             StringBuilder bb = new StringBuilder();
 
             bb.AppendLine(matIndices.Count + "");
@@ -446,7 +445,7 @@ namespace CTRFramework
             }
 
             Helpers.WriteToFile(Path.Combine(Meta.BasePath, $"test_{name}.mtl"), bb.ToString());
-
+            */
 
             return sb.ToString();
         }

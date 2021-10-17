@@ -31,7 +31,7 @@ namespace CTRFramework
         public UIntPtr ptrIconsArray;  //0x40 - leads to the icon pack data
         public UIntPtr ptrRestartMain; //0x44 - looks like a restart point, but doesn't affect anything? maybe like play area bbox?
 
-        public SomeData[] someData; //0x48 - ??? 36 bytes
+        public Gradient[] glowGradients; //0x48 - renders glowing effect in papu's pyramid
         public Pose[] startGrid;    //0x6C - array of 8 starting locations (96 bytes = (6 * 2) * 8)
 
         public uint unkPtr4;        //0xCC
@@ -114,23 +114,15 @@ namespace CTRFramework
 
             ptrRestartMain = br.ReadUIntPtr();
 
-            someData = new SomeData[3];
+            glowGradients = new Gradient[3];
 
             for (int i = 0; i < 3; i++)
-            {
-                SomeData sd = new SomeData();
-                sd.Read(br);
-                someData[i] = sd;
-            }
+                glowGradients[i] = Gradient.FromReader(br);
 
             startGrid = new Pose[8];
 
             for (int i = 0; i < 8; i++)
-            {
-                Pose pos = new Pose(br);
-                startGrid[i] = pos;
-                //Console.WriteLine(startGrid[i].ToString());
-            }
+                startGrid[i] = Pose.FromReader(br);
 
             unkPtr4 = br.ReadUInt32();
             unkPtr5 = br.ReadUInt32();
@@ -237,8 +229,8 @@ namespace CTRFramework
             bw.Write(ptrIconsArray, patchTable);
             bw.Write(ptrRestartMain, patchTable);
 
-            for (int i = 0; i < someData.Length; i++)
-                someData[i].Write(bw);
+            for (int i = 0; i < glowGradients.Length; i++)
+                glowGradients[i].Write(bw);
 
             for (int i = 0; i < startGrid.Length; i++)
                 startGrid[i].Write(bw);

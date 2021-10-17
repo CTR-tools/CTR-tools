@@ -129,7 +129,7 @@
     <Compile Include="Code\shared\BoundingBox.cs" />
     <Compile Include="Code\shared\OBJ.cs" />
     <Compile Include="Code\shared\Pose.cs" />
-    <Compile Include="Code\shared\SomeData.cs" />
+    <Compile Include="Code\shared\Gradient.cs" />
     <Compile Include="Code\shared\Vectors\Vector3s.cs" />
     <Compile Include="Code\shared\Vectors\Vector4b.cs" />
     <Compile Include="Code\shared\Vectors\Vector4s.cs" />
