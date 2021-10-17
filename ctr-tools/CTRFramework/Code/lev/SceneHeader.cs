@@ -8,19 +8,19 @@ namespace CTRFramework
     {
         public static readonly int SizeOf = 0x1B0;
 
-        public UIntPtr ptrMeshInfo;    //0x0 - pointer to MeshInfo
-        public UIntPtr ptrSkybox;      //0x4 - pointer to SkyBox
-        public UIntPtr ptrTexArray;    //0x8 - leads to a weird array of pointers, every pointer group ends in 2 dwords - 0X0A, 0x00, those pointers lead to some array of 0x30 bytes
+        public UIntPtr ptrMeshInfo;     //0x0 - pointer to MeshInfo
+        public UIntPtr ptrSkybox;       //0x4 - pointer to SkyBox
+        public UIntPtr ptrAnimTex;      //0x8 - pointer to animated textures array
 
-        public int numInstances;    //0xC - number of model instances in the level (i.e. every single box, fruit, etc.)
-        public UIntPtr ptrInstances;   //0x10 - points to the 1st entry of the array of model instances
-        public int numModels;       //0x14 - number of actual models
-        public UIntPtr ptrModelsPtr;   //0x18 - pointer to the array of pointers to models. easy in c++, messy in c# 
+        public int numInstances;        //0xC - number of model instances in the level (i.e. every single box, fruit, etc.)
+        public UIntPtr ptrInstances;    //0x10 - points to the 1st entry of the array of model instances
+        public int numModels;           //0x14 - number of actual models
+        public UIntPtr ptrModelsPtr;    //0x18 - pointer to the array of pointers to models. easy in c++, messy in c# 
 
-        public uint unkPtr1;        //0x1C
-        public uint unkPtr2;        //0x20
+        public uint unkPtr1;            //0x1C
+        public uint unkPtr2;            //0x20
         public UIntPtr ptrInstancesPtr;    //0x24 - pointer to the array of pointers to model instances.
-        public uint unkPtr3;        //0x28
+        public uint unkPtr3;            //0x28
 
         public int null1;           //0x2C - assumed reserved
         public int null2;           //0x30 - assumed reserved
@@ -89,7 +89,7 @@ namespace CTRFramework
 
             ptrMeshInfo = br.ReadUIntPtr();
             ptrSkybox = br.ReadUIntPtr();
-            ptrTexArray = br.ReadUIntPtr();
+            ptrAnimTex = br.ReadUIntPtr();
 
             numInstances = br.ReadInt32();
             ptrInstances = br.ReadUIntPtr();
@@ -208,7 +208,7 @@ namespace CTRFramework
 
             bw.Write(ptrMeshInfo, patchTable);
             bw.Write(ptrSkybox, patchTable);
-            bw.Write(ptrTexArray, patchTable);
+            bw.Write(ptrAnimTex, patchTable);
 
             bw.Write(numInstances);
             bw.Write(ptrInstances, patchTable);

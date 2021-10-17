@@ -217,7 +217,7 @@ types:
         type: u4
       - id: ptr_skybox
         type: u4
-      - id: ptr_tex_array
+      - id: ptr_anim_tex
         type: u4
       - id: num_instances
         type: u4
