@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Globalization;
 
 namespace Kaitai
 {
@@ -382,7 +381,7 @@ namespace Kaitai
         {
             if (count < 0 || count > Int32.MaxValue)
                 throw new ArgumentOutOfRangeException("requested " + count + " bytes, while only non-negative int32 amount of bytes possible");
-            byte[] bytes = base.ReadBytes((int) count);
+            byte[] bytes = base.ReadBytes((int)count);
             if (bytes.Length < count)
                 throw new EndOfStreamException("requested " + count + " bytes, but got only " + bytes.Length + " bytes");
             return bytes;
@@ -578,7 +577,7 @@ namespace Kaitai
                     {
                         byte bits = data[i];
                         // http://stackoverflow.com/a/812039
-                        r[i] = (byte) ((bits << amount) | (bits >> (8 - amount)));
+                        r[i] = (byte)((bits << amount) | (bits >> (8 - amount)));
                     }
                     break;
                 default:
@@ -677,16 +676,20 @@ namespace Kaitai
             int al = a.Length;
             int bl = b.Length;
             int minLen = al < bl ? al : bl;
-            for (int i = 0; i < minLen; i++) {
+            for (int i = 0; i < minLen; i++)
+            {
                 int cmp = a[i] - b[i];
                 if (cmp != 0)
                     return cmp;
             }
 
             // Reached the end of at least one of the arrays
-            if (al == bl) {
+            if (al == bl)
+            {
                 return 0;
-            } else {
+            }
+            else
+            {
                 return al - bl;
             }
         }

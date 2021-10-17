@@ -41,7 +41,8 @@ namespace Kaitai
     /// switch, but nothing matches (although using endianness expression
     /// implies that there should be some positive result).
     /// </summary>
-    public class UndecidedEndiannessError : Exception {
+    public class UndecidedEndiannessError : Exception
+    {
         public UndecidedEndiannessError()
             : base("Unable to decide on endianness")
         {
@@ -61,7 +62,8 @@ namespace Kaitai
     /// Stores KSY source path, pointing to an element supposedly guilty of
     /// an error.
     /// </summary>
-    public class KaitaiStructError : Exception {
+    public class KaitaiStructError : Exception
+    {
         public KaitaiStructError(string msg, string srcPath)
             : base(srcPath + ": " + msg)
         {
@@ -75,7 +77,8 @@ namespace Kaitai
     /// Common ancestor for all validation failures. Stores pointer to
     /// KaitaiStream IO object which was involved in an error.
     /// </summary>
-    public class ValidationFailedError : KaitaiStructError {
+    public class ValidationFailedError : KaitaiStructError
+    {
         public ValidationFailedError(string msg, KaitaiStream io, string srcPath)
             : base("at pos " + io.Pos + ": validation failed: " + msg, srcPath)
         {
@@ -84,7 +87,8 @@ namespace Kaitai
 
         protected KaitaiStream io;
 
-        protected static string ByteArrayToHex(byte[] arr) {
+        protected static string ByteArrayToHex(byte[] arr)
+        {
             StringBuilder sb = new StringBuilder("[");
             for (int i = 0; i < arr.Length; i++)
             {
@@ -103,7 +107,8 @@ namespace Kaitai
     /// Signals validation failure: we required "actual" value to be equal to
     /// "expected", but it turned out that it's not.
     /// </summary>
-    public class ValidationNotEqualError : ValidationFailedError {
+    public class ValidationNotEqualError : ValidationFailedError
+    {
         public ValidationNotEqualError(byte[] expected, byte[] actual, KaitaiStream io, string srcPath)
             : base("not equal, expected " + ByteArrayToHex(expected) + ", but got " + ByteArrayToHex(actual), io, srcPath)
         {
@@ -122,7 +127,8 @@ namespace Kaitai
         protected Object actual;
     }
 
-    public class ValidationLessThanError : ValidationFailedError {
+    public class ValidationLessThanError : ValidationFailedError
+    {
         public ValidationLessThanError(byte[] min, byte[] actual, KaitaiStream io, string srcPath)
             : base("not in range, min " + ByteArrayToHex(min) + ", but got " + ByteArrayToHex(actual), io, srcPath)
         {
@@ -141,7 +147,8 @@ namespace Kaitai
         protected Object actual;
     }
 
-    public class ValidationGreaterThanError : ValidationFailedError {
+    public class ValidationGreaterThanError : ValidationFailedError
+    {
         public ValidationGreaterThanError(byte[] max, byte[] actual, KaitaiStream io, string srcPath)
             : base("not in range, max " + ByteArrayToHex(max) + ", but got " + ByteArrayToHex(actual), io, srcPath)
         {
@@ -160,7 +167,8 @@ namespace Kaitai
         protected Object actual;
     }
 
-    public class ValidationNotAnyOfError : ValidationFailedError {
+    public class ValidationNotAnyOfError : ValidationFailedError
+    {
         public ValidationNotAnyOfError(Object actual, KaitaiStream io, string srcPath)
             : base("not any of the list, got " + actual, io, srcPath)
         {
@@ -170,7 +178,8 @@ namespace Kaitai
         protected Object actual;
     }
 
-    public class ValidationExprError : ValidationFailedError {
+    public class ValidationExprError : ValidationFailedError
+    {
         public ValidationExprError(Object actual, KaitaiStream io, string srcPath)
             : base("not matching the expression, got " + actual, io, srcPath)
         {
