@@ -355,6 +355,10 @@ types:
       - id: ptr_credits_text
         type: u4
         if: cnt_pointers >= 7
+    instances:
+      text:
+        type: credits_text
+        pos: ptr_credits_text
         
   gradient:
     seq:
@@ -718,6 +722,25 @@ types:
         pos: ptr_build_type
         if: ptr_build_type != 0
 
+  credits_text:
+    doc: |
+      used in crashdance credits file
+    seq:
+      - id: chunk_size
+        type: u4
+      - id: num_entries
+        type: u4
+      - id: ptr_text
+        type: u4      
+        repeat: expr
+        repeat-expr: num_entries
+      - id: skip
+        type: u4
+      - id: text
+        type: strz
+        encoding: ascii
+        repeat: expr
+        repeat-expr: num_entries      
 
   vector2b:
     seq:
