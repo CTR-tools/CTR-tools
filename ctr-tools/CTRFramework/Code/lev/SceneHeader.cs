@@ -8,9 +8,9 @@ namespace CTRFramework
     {
         public static readonly int SizeOf = 0x1B0;
 
-        public UIntPtr ptrMeshInfo;     //0x0 - pointer to MeshInfo
-        public UIntPtr ptrSkybox;       //0x4 - pointer to SkyBox
-        public UIntPtr ptrAnimTex;      //0x8 - pointer to animated textures array
+        public PsxPtr ptrMeshInfo;      //0x0 - pointer to MeshInfo
+        public PsxPtr ptrSkybox;        //0x4 - pointer to SkyBox
+        public PsxPtr ptrAnimTex;       //0x8 - pointer to animated textures array
 
         public int numInstances;        //0xC - number of model instances in the level (i.e. every single box, fruit, etc.)
         public UIntPtr ptrInstances;    //0x10 - points to the 1st entry of the array of model instances
@@ -87,9 +87,9 @@ namespace CTRFramework
         {
             int dataStart = (int)br.BaseStream.Position;
 
-            ptrMeshInfo = br.ReadUIntPtr();
-            ptrSkybox = br.ReadUIntPtr();
-            ptrAnimTex = br.ReadUIntPtr();
+            ptrMeshInfo = PsxPtr.FromReader(br);
+            ptrSkybox = PsxPtr.FromReader(br);
+            ptrAnimTex = PsxPtr.FromReader(br);
 
             numInstances = br.ReadInt32();
             ptrInstances = br.ReadUIntPtr();
@@ -206,9 +206,9 @@ namespace CTRFramework
         {
             long dataStart = bw.BaseStream.Position;
 
-            bw.Write(ptrMeshInfo, patchTable);
-            bw.Write(ptrSkybox, patchTable);
-            bw.Write(ptrAnimTex, patchTable);
+            ptrMeshInfo.Write(bw, patchTable);
+            ptrSkybox.Write(bw, patchTable);
+            ptrAnimTex.Write(bw, patchTable);
 
             bw.Write(numInstances);
             bw.Write(ptrInstances, patchTable);
