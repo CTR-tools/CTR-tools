@@ -55,7 +55,7 @@ namespace CTRFramework
         public uint cntTrialData;       //0x130 - that's incorrect
         public PsxPtr ptrTrialData;     //0x134 - pointer to additional data referred to as "trialdata" for now
 
-        public uint cntu2;              //0x138 - 
+        public uint cntu2;              //0x138
         public uint ptru2;              //0x13C
 
         public uint numSpawnPts;        //0x140
@@ -67,7 +67,7 @@ namespace CTRFramework
         byte[] skip2;                   //0x150 - 16 bytes
 
         public Vector4b[] bgColor;      //0x160 - 4 background colors used in 2/4 background color modes (16 bytes = 4 * 4)
-        public uint skip2_unkPtr;       //0x170 - 
+        public uint skip2_unkPtr;       //0x170
 
         public uint numVcolAnim;        //0x174 - number of animated vertices data
         public PsxPtr ptrVcolAnim;      //0x178 - pointer to animated vertices data
@@ -216,23 +216,23 @@ namespace CTRFramework
             ptrAnimTex.Write(bw, patchTable);
 
             bw.Write(numInstances);
-            bw.Write(ptrInstances, patchTable);
+            ptrInstances.Write(bw, patchTable);
             bw.Write(numModels);
-            bw.Write(ptrModelsPtr, patchTable);
+            ptrModelsPtr.Write(bw, patchTable);
 
             bw.Write(unkPtr1);
             bw.Write(unkPtr2);
-            bw.Write(ptrInstancesPtr, patchTable);
+            ptrInstancesPtr.Write(bw, patchTable);
             bw.Write(unkPtr3);
 
             bw.Write(null1);
             bw.Write(null2);
 
             bw.Write(numWater);
-            bw.Write(ptrWater, patchTable);
-            bw.Write(ptrIcons, patchTable);
-            bw.Write(ptrIconsArray, patchTable);
-            bw.Write(ptrRestartMain, patchTable);
+            ptrWater.Write(bw, patchTable);
+            ptrIcons.Write(bw, patchTable);
+            ptrIconsArray.Write(bw, patchTable);
+            ptrRestartMain.Write(bw, patchTable);
 
             for (int i = 0; i < glowGradients.Length; i++)
                 glowGradients[i].Write(bw);
@@ -242,7 +242,7 @@ namespace CTRFramework
 
             bw.Write(unkPtr4);
             bw.Write(unkPtr5);
-            bw.Write(ptrLowTexArray, patchTable);
+            ptrLowTexArray.Write(bw, patchTable);
             backColor.Write(bw);
             bw.Write(bgMode);
 
