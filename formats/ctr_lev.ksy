@@ -363,9 +363,57 @@ types:
         type: u4
         if: cnt_pointers >= 7
     instances:
+      map:
+        type: u4
+        pos: ptr_map
+        if: cnt_pointers >= 1 and ptr_map != 0
+      post_cam:
+        type: u4
+        pos: ptr_post_cam
+        if: cnt_pointers >= 3 and ptr_post_cam != 0
+      intro_cam:
+        type: u4
+        pos: ptr_intro_cam
+        if: cnt_pointers >= 4 and ptr_intro_cam != 0
+      tropy_ghost:
+        type: ghost_data
+        pos: ptr_tropy_ghost
+        if: cnt_pointers >= 5 and ptr_tropy_ghost != 0
+      oxide_ghost:
+        type: ghost_data
+        pos: ptr_oxide_ghost
+        if: cnt_pointers >= 6 and ptr_oxide_ghost != 0
       text:
         type: credits_text
         pos: ptr_credits_text
+        if: cnt_pointers >= 7 and ptr_credits_text != 0
+
+  ghost_data:
+    doc: | 
+      ghost data used in time trial mode, same data saved to memcard
+    seq:
+      - id: magic
+        contents: [0xfc, 0xff]
+      - id: data_size
+        type: s2
+      - id: track_index
+        type: s2
+        #enum: tracks
+      - id: char_index
+        type: s2
+        #enum: chars
+      - id: unk2
+        type: s4
+      - id: unk3
+        type: s4
+      - id: unk4
+        type: s4
+      - id: ptrs
+        type: u4
+        repeat: expr
+        repeat-expr: 5
+      - id: data
+        size: data_size
         
   gradient:
     seq:

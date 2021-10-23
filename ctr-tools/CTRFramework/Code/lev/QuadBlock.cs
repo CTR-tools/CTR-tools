@@ -73,7 +73,7 @@ namespace CTRFramework
         public PsxPtr mosaicPtr3;
         public PsxPtr mosaicPtr4;
 
-        public List<Vector2> unk3 = new List<Vector2>();    //face normal vector or smth. 4*2 for mid + 2 for low
+        public List<Vector2> faceNormal = new List<Vector2>();    //face normal vector or smth. 4*2 for mid + 2 for low
 
         //additional data
         public TextureLayout texlow;
@@ -165,7 +165,7 @@ namespace CTRFramework
 
 
             for (int i = 0; i < 5; i++)
-                unk3.Add(br.ReadVector2s(1 / 4096f));
+                faceNormal.Add(br.ReadVector2s(1 / 4096f));
 
 
 
@@ -654,7 +654,7 @@ namespace CTRFramework
             bw.Write(ptrTexLow, patchTable);
             bw.Write(ptrAddVis, patchTable);
 
-            foreach (Vector2 v in unk3)
+            foreach (Vector2 v in faceNormal)
                 bw.WriteVector2s(v, 1 / 4096f);
 
             if (bw.BaseStream.Position - sizeCheck != SizeOf)
