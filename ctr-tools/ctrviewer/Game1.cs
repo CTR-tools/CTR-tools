@@ -1057,6 +1057,8 @@ namespace ctrviewer
             if (result == true && big == null)
                 big = BigFileReader.FromFile(eng.Settings.BigFileLocation);
 
+            GameConsole.Write(result ? $"Bigfile location: {eng.Settings.BigFileLocation}" : "Bigfile not found.");
+
             return result;
         }
 
