@@ -196,5 +196,19 @@ namespace CTRTools.Controls
         {
             MessageBox.Show("Done.");
         }
+
+        private void expandAll_Click(object sender, EventArgs e)
+        {
+            if (expandAll.Text == "Expand")
+            {
+                fileTree.ExpandAll();
+                expandAll.Text = "Collapse";
+            }
+            else
+            {
+                fileTree.CollapseAll();
+                expandAll.Text = "Expand";
+            }
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace CTRFramework
         public PsxPtr ptrLowTexArray;   //0xD4 - assumed to be a pointer to low textures array, there is no number of entries though
 
         public Vector4b backColor;      //0xD8 - base background color, used to clear the screen
-        public uint bgMode;             //0xDC - control background drawing mode, 1 color, 2 colors, 4 colors, gradient mode
+        public uint bgMode;             //0xDC - this actually toggles some render stuff, bit0 - gradient sky, bit1 - ???, bit2 - toggles between water and animated vertices?
 
         public PsxPtr ptrBuildStart;    //0xE0 - pointer to string, date, assumed visdata compilation start
         public PsxPtr ptrBuildEnd;      //0xE4 - pointer to string, date, assumed visdata compilation end
@@ -66,7 +66,11 @@ namespace CTRFramework
 
         byte[] skip2;                   //0x150 - 16 bytes
 
-        public Vector4b[] bgColor;      //0x160 - 4 background colors used in 2/4 background color modes (16 bytes = 4 * 4)
+        public Vector4b bgColorTop;     //0x160 - top background color
+        public Vector4b bgColorBottom;  //0x164 - bottom background color
+        public Vector4b gradColor;      //0x168 - some color used in sky gradient rendering
+        public uint color4;             //0x16C
+
         public uint skip2_unkPtr;       //0x170
 
         public uint numVcolAnim;        //0x174 - number of animated vertices data
@@ -158,10 +162,10 @@ namespace CTRFramework
 
             skip2 = br.ReadBytes(16);
 
-            bgColor = new Vector4b[4];
-
-            for (int i = 0; i < 4; i++)
-                bgColor[i] = new Vector4b(br);
+            bgColorTop = new Vector4b(br);
+            bgColorBottom = new Vector4b(br);
+            gradColor = new Vector4b(br);
+            color4 = br.ReadUInt32();
 
             skip2_unkPtr = br.ReadUInt32();
             numVcolAnim = br.ReadUInt32();
@@ -267,8 +271,10 @@ namespace CTRFramework
 
             bw.Write(skip2);
 
-            for (int i = 0; i < bgColor.Length; i++)
-                bgColor[i].Write(bw);
+            bgColorTop.Write(bw);
+            bgColorBottom.Write(bw);
+            gradColor.Write(bw);
+            bw.Write(color4);
 
             bw.Write(skip2_unkPtr);
 

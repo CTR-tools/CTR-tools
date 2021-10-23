@@ -537,32 +537,15 @@ namespace CTRFramework
             sb.AppendFormat("{0}: {1}\r\n", "visdata total", (visdata != null ? visdata.Count : 0));
             sb.AppendFormat("{0}: {1}\r\n", "visdata leaves", numLeaves);
             sb.AppendFormat("{0}: {1}\r\n", "visdata branches", numBranches);
+            sb.AppendLine($"bgmode: {header.bgMode}");
+            sb.AppendLine($"color4: {header.color4.ToString("X8")}");
+
             sb.AppendLine($"begin: {header.compilationBegins}");
             sb.AppendLine($"end: {header.compilationEnds}");
             sb.AppendLine($"File was compiled in: {Math.Round((header.compilationEnds - header.compilationBegins).TotalMinutes)} minutes");
 
             return sb.ToString();
         }
-
-        public string Statistics()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendFormat("{0},", verts.Count);
-            sb.AppendFormat("{0},", quads.Count);
-            sb.AppendFormat("{0},", quads.Count);
-            sb.AppendFormat("{0},", quads.Count * 2);
-            sb.AppendFormat("{0},", quads.Count * 4);
-            sb.AppendFormat("{0},", quads.Count * 4 * 2);
-            sb.AppendFormat("{0},", (skybox != null ? skybox.verts.Count : 0));
-            sb.AppendFormat("{0},", (skybox != null ? skybox.faces.Count : 0));
-            sb.AppendLine($"begin: {header.compilationBegins}");
-            sb.AppendLine($"end: {header.compilationEnds}");
-            sb.AppendLine($"File was compiled in: {Math.Round((header.compilationEnds - header.compilationBegins).TotalMinutes)} minutes");
-
-            return sb.ToString();
-        }
-
 
         public Dictionary<string, TextureLayout> GetTexturesList(Detail lod)
         {

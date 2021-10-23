@@ -30,7 +30,7 @@ namespace CTRTools.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
             this.button21 = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
@@ -69,7 +69,11 @@ namespace CTRTools.Controls
             this.button26 = new System.Windows.Forms.Button();
             this.button32 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.tabControl2.SuspendLayout();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -77,22 +81,25 @@ namespace CTRTools.Controls
             this.groupBox1.SuspendLayout();
             this.tabQuads.SuspendLayout();
             this.tabVisData.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
-            // tabControl2
+            // tabControl1
             // 
-            this.tabControl2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl2.Controls.Add(this.tabPickups);
-            this.tabControl2.Controls.Add(this.tabVerts);
-            this.tabControl2.Controls.Add(this.tabQuads);
-            this.tabControl2.Controls.Add(this.tabVisData);
-            this.tabControl2.Location = new System.Drawing.Point(3, 3);
-            this.tabControl2.Name = "tabControl2";
-            this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(634, 444);
-            this.tabControl2.TabIndex = 15;
+            this.tabControl1.Controls.Add(this.tabPickups);
+            this.tabControl1.Controls.Add(this.tabVerts);
+            this.tabControl1.Controls.Add(this.tabQuads);
+            this.tabControl1.Controls.Add(this.tabVisData);
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Location = new System.Drawing.Point(3, 3);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(634, 444);
+            this.tabControl1.TabIndex = 15;
             // 
             // tabPickups
             // 
@@ -519,6 +526,47 @@ namespace CTRTools.Controls
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.actionExportObj);
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.button8);
+            this.tabPage1.Controls.Add(this.button4);
+            this.tabPage1.Controls.Add(this.pictureBox1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(626, 418);
+            this.tabPage1.TabIndex = 5;
+            this.tabPage1.Text = "skyTab";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(6, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(274, 212);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(286, 6);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(118, 23);
+            this.button4.TabIndex = 1;
+            this.button4.Text = "load gradient";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(286, 35);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(118, 23);
+            this.button8.TabIndex = 2;
+            this.button8.Text = "save image";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // LevControl
             // 
             this.AllowDrop = true;
@@ -526,13 +574,13 @@ namespace CTRTools.Controls
             this.Controls.Add(this.button32);
             this.Controls.Add(this.button26);
             this.Controls.Add(this.button27);
-            this.Controls.Add(this.tabControl2);
+            this.Controls.Add(this.tabControl1);
             this.DoubleBuffered = true;
             this.Name = "LevControl";
             this.Size = new System.Drawing.Size(640, 480);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.LevControl_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.LevControl_DragEnter);
-            this.tabControl2.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
             this.tabPickups.ResumeLayout(false);
             this.tabPickups.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
@@ -544,6 +592,8 @@ namespace CTRTools.Controls
             this.tabQuads.ResumeLayout(false);
             this.tabVisData.ResumeLayout(false);
             this.tabVisData.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -551,7 +601,7 @@ namespace CTRTools.Controls
         #endregion
 
 
-        private TabControl tabControl2;
+        private TabControl tabControl1;
         private TabPage tabPickups;
         private Button button21;
         private NumericUpDown numericUpDown1;
@@ -590,5 +640,9 @@ namespace CTRTools.Controls
         private Button button28;
         private TextBox textBox2;
         private Button button1;
+        private TabPage tabPage1;
+        private Button button4;
+        private PictureBox pictureBox1;
+        private Button button8;
     }
 }

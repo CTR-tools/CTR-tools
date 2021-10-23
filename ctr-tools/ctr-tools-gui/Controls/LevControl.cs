@@ -573,5 +573,38 @@ namespace CTRTools.Controls
             if (fbd.ShowDialog() == DialogResult.OK)
                 scn.Export(fbd.SelectedPath, ExportFlags.All);
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+
+            Graphics g = Graphics.FromImage(pictureBox1.Image);
+
+            for (int i = 0; i < 3; i++)
+                g.FillRectangle(GetGradient(scn.header.glowGradients[i], 32), new Rectangle(0, 32 * i, 128, 32));
+
+            pictureBox1.Invalidate();
+        }
+
+        private System.Drawing.Drawing2D.LinearGradientBrush GetGradient(Gradient grad, int size)
+        {
+            Vector4b from = grad.ColorFrom;
+            Vector4b to = grad.ColorTo;
+
+            Color cfrom = Color.FromArgb(255, from.X, from.Y, from.Z);
+            Color cto = Color.FromArgb(255, to.X, to.Y, to.Z);
+
+             return new System.Drawing.Drawing2D.LinearGradientBrush(new Point(0, 0), new Point(0, size), cfrom, cto);
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                pictureBox1.Image.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
+            }
+        }
     }
 }

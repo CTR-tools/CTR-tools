@@ -7,10 +7,10 @@ namespace CTRFramework.Shared
 {
     public class Gradient : IReadWrite
     {
-        short From = 0;
-        short To = 0;
-        Vector4b ColorFrom = new Vector4b(0, 0, 0, 0);
-        Vector4b ColorTo = new Vector4b(0, 0, 0, 0);
+        public short From = 0;
+        public short To = 0;
+        public Vector4b ColorFrom = new Vector4b(0, 0, 0, 0);
+        public Vector4b ColorTo = new Vector4b(0, 0, 0, 0);
 
         public Gradient()
         {

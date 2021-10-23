@@ -39,6 +39,7 @@ namespace CTRTools.Controls
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.fbd = new System.Windows.Forms.FolderBrowserDialog();
             this.bigLoader = new System.ComponentModel.BackgroundWorker();
+            this.expandAll = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -88,13 +89,13 @@ namespace CTRTools.Controls
             this.fileTree.TabIndex = 5;
             this.fileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
-            // textBox4
+            // fileInfo
             // 
             this.fileInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fileInfo.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.fileInfo.Location = new System.Drawing.Point(0, 0);
             this.fileInfo.Multiline = true;
-            this.fileInfo.Name = "textBox4";
+            this.fileInfo.Name = "fileInfo";
             this.fileInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.fileInfo.Size = new System.Drawing.Size(360, 419);
             this.fileInfo.TabIndex = 7;
@@ -131,11 +132,23 @@ namespace CTRTools.Controls
             this.bigLoader.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bigLoader_DoWork);
             this.bigLoader.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bigLoader_RunWorkerCompleted);
             // 
+            // expandAll
+            // 
+            this.expandAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.expandAll.Location = new System.Drawing.Point(3, 453);
+            this.expandAll.Name = "expandAll";
+            this.expandAll.Size = new System.Drawing.Size(96, 24);
+            this.expandAll.TabIndex = 10;
+            this.expandAll.Text = "Expand";
+            this.expandAll.UseVisualStyleBackColor = true;
+            this.expandAll.Click += new System.EventHandler(this.expandAll_Click);
+            // 
             // BigFileControl
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.expandAll);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.actionExportAll);
             this.Controls.Add(this.actionLoadBig);
@@ -165,5 +178,6 @@ namespace CTRTools.Controls
         private OpenFileDialog ofd;
         private FolderBrowserDialog fbd;
         private System.ComponentModel.BackgroundWorker bigLoader;
+        private Button expandAll;
     }
 }

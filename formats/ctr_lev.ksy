@@ -307,10 +307,14 @@ types:
 
       - id: skip2
         size: 16
-      - id: bg_color
+      - id: bg_color_top
         type: color
-        repeat: expr
-        repeat-expr: 4
+      - id: bg_color_bottom
+        type: color
+      - id: grad_color
+        type: color
+      - id: color4
+        type: u4
       - id: skip2_unkptr_related_to_vcol_anim
         type: u4
       - id: num_vcanim
@@ -702,14 +706,17 @@ types:
         type: strz
         encoding: ascii
         pos: ptr_build_start
+        if: ptr_build_start != 0
       build_end:
         type: strz
         encoding: ascii
         pos: ptr_build_end
+        if: ptr_build_end != 0
       build_type:
         type: strz
         encoding: ascii
         pos: ptr_build_type
+        if: ptr_build_type != 0
 
 
   vector2b:
