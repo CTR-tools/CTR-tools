@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="LangTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PsxPtrTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CTRFramework\CTRFramework.csproj">
