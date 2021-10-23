@@ -15,27 +15,25 @@ namespace CTRFramework
         public bool isAnimated = false;
 
 
-        public CtrTex(BinaryReaderEx br, int mosaic)
+        public CtrTex(BinaryReaderEx br, PsxPtr ptr)
         {
-            Read(br, mosaic);
+            Read(br, ptr);
         }
 
-        public void Read(BinaryReaderEx br, int mosaic)
+        public void Read(BinaryReaderEx br, PsxPtr ptr)
         {
             int pos = (int)br.BaseStream.Position;
 
-            if ((pos & 2) > 0)
+            if (ptr.ExtraBits == HiddenBits.Bit1)
             {
                 Console.WriteLine("!!!");
                 Console.ReadKey();
             }
 
             //this apparently defines animated texture, really
-            if ((pos & 1) == 1)
+            if (ptr.ExtraBits == HiddenBits.Bit0)
             {
                 isAnimated = true;
-
-                br.BaseStream.Position -= 1;
 
                 uint texpos = br.ReadUInt32();
                 int numFrames = br.ReadInt16();
@@ -49,9 +47,9 @@ namespace CTRFramework
 
                 uint[] ptrs = br.ReadArrayUInt32(numFrames);
 
-                foreach (uint ptr in ptrs)
+                foreach (uint ptrAnimFrame in ptrs)
                 {
-                    br.Jump(ptr);
+                    br.Jump(ptrAnimFrame);
                     animframes.Add(TextureLayout.FromReader(br));
                 }
 

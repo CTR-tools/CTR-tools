@@ -50,14 +50,14 @@ namespace CTRFramework
 
         public byte[] drawOrderHigh = new byte[4];
 
-        public UIntPtr[] ptrTexMid = new UIntPtr[4];    //offsets to mid texture definition
+        public PsxPtr[] ptrTexMid = new PsxPtr[4];    //offsets to mid texture definition
 
         public BoundingBox bb;              //a box that bounds
 
         public TerrainFlags terrainFlag;
         public byte WeatherIntensity;
         public byte WeatherType;
-        public byte TerrainFlagUnknown; //almost always 0, only found in tiger temple and sewer speedway
+        public byte TerrainFlagUnknown;     //almost always 0, only found in tiger temple and sewer speedway
 
         public short id;
         public byte trackPos;
@@ -65,8 +65,8 @@ namespace CTRFramework
 
         //public byte[] midflags = new byte[2];
 
-        public UIntPtr ptrTexLow;                 //offset to LOD texture definition
-        public UIntPtr mosaicStruct;
+        public PsxPtr ptrTexLow;            //offset to LOD texture definition
+        public PsxPtr mosaicStruct;         //pointes to 4 extra visData structs, to be renamed
 
         public UIntPtr mosaicPtr1;
         public UIntPtr mosaicPtr2;
@@ -120,10 +120,13 @@ namespace CTRFramework
 
             for (int i = 0; i < 4; i++)
             {
-                ptrTexMid[i] = br.ReadUIntPtr();
+                ptrTexMid[i] = PsxPtr.FromReader(br);
 
-                if (Helpers.TestPointer(ptrTexMid[i].ToUInt32()) != 0)
-                    Helpers.Panic(this, PanicType.Assume, $"ptrTexMid[{i}] {ptrTexMid[i].ToUInt32().ToString("X8")} - {Helpers.TestPointer(ptrTexMid[i].ToUInt32()).ToString("x2")}");
+                if (ptrTexMid[i].ExtraBits != HiddenBits.None)
+                {
+                    Helpers.Panic(this, PanicType.Assume, $"ptrTexMid[{i}] {ptrTexMid.ToString()}");
+                }
+
                 // Console.ReadKey();
             }
 
@@ -148,21 +151,18 @@ namespace CTRFramework
 
             //midflags = br.ReadBytes(2);
 
-            ptrTexLow = (UIntPtr)br.ReadUInt32();
 
-            if (Helpers.TestPointer(ptrTexLow.ToUInt32()) != 0)
-            {
-                Console.WriteLine("ptrTexLow " + Helpers.TestPointer(ptrTexLow.ToUInt32()).ToString("x2"));
-                //Console.ReadKey();
-            }
+            ptrTexLow = PsxPtr.FromReader(br);
 
-            mosaicStruct = br.ReadUIntPtr();
+            if (ptrTexLow.ExtraBits != HiddenBits.None)
+                Helpers.Panic(this, PanicType.Assume, $"ptrTexLow {ptrTexLow.ToString()}");
 
-            if (Helpers.TestPointer(mosaicStruct.ToUInt32()) != 0)
-            {
-                Console.WriteLine("offset2 " + Helpers.TestPointer(mosaicStruct.ToUInt32()).ToString("x2"));
-                Console.ReadKey();
-            }
+
+            mosaicStruct = PsxPtr.FromReader(br);
+
+            if (mosaicStruct.ExtraBits != HiddenBits.None)
+                Helpers.Panic(this, PanicType.Assume, $"mosaicStruct {mosaicStruct.ToString()}");
+
 
             for (int i = 0; i < 5; i++)
                 unk3.Add(br.ReadVector2s(1 / 4096f));
@@ -186,18 +186,18 @@ namespace CTRFramework
             texlow = TextureLayout.FromReader(br);
 
 
-            foreach (uint u in ptrTexMid)
+            foreach (var ptr in ptrTexMid)
             {
-                if (u == 0)
+                if (ptr == PsxPtr.Zero)
                 {
-                    if (ptrTexLow != UIntPtr.Zero)
+                    if (ptrTexLow != PsxPtr.Zero)
                         Helpers.Panic(this, PanicType.Assume, $"Got low tex without mid tex at {br.HexPos()}.");
 
                     continue;
                 }
 
-                br.Jump(u);
-                tex.Add(new CtrTex(br, (int)mosaicStruct));
+                br.Jump(ptr);
+                tex.Add(new CtrTex(br, ptr));
             }
 
             if (mosaicStruct != UIntPtr.Zero)
@@ -226,6 +226,32 @@ namespace CTRFramework
             9, 8, 7,
             9, 4, 8
         };
+
+        public void ColTest(List<Vertex> vertices)
+        {
+            /*
+            Vector3 A = vertices[ind[0]].coord;
+            Vector3 B = vertices[ind[1]].coord;
+            Vector3 C = vertices[ind[2]].coord;
+            Vector3 D = vertices[ind[3]].coord;
+
+            Console.WriteLine(A);
+            Console.WriteLine(B);
+            Console.WriteLine(C);
+            Console.WriteLine(D);
+
+            Console.WriteLine("actual vals " + unk3[4]);
+
+            Vector3 cross1 = Vector3.Cross(B - A, C - A);
+            Vector3 cross2 = Vector3.Cross(D - B, C - B);
+
+            Console.WriteLine("guess1 " + cross1.Length());
+            Console.WriteLine("guess2 " + cross2.Length());
+
+            Console.WriteLine(Vector3.Normalize(cross1));
+            */
+
+        }
 
         private List<int[]> FaceIndices = new List<int[]>() {
             new int[] { 0, 4, 5, 6 },
@@ -610,7 +636,7 @@ namespace CTRFramework
             bw.Write(drawOrderHigh);
 
             for (int i = 0; i < 4; i++)
-                bw.Write(ptrTexMid[i], patchTable);
+                ptrTexMid[i].Write(bw, patchTable);
 
             bb.Write(bw);
 

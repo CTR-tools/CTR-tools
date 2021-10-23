@@ -143,12 +143,6 @@ namespace CTRFramework.Shared
             }
         }
 
-        public static byte TestPointer(uint ptr)
-        {
-            Console.WriteLine($"Testing ptr: {ptr.ToString("X8")} -> {((byte)(ptr & 3)).ToString("X2")}");
-            return (byte)(ptr & 3);
-        }
-
         /// <summary>
         /// Retrieves text contents as a single string.
         /// </summary>

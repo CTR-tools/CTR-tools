@@ -261,7 +261,6 @@ namespace CTRFramework.Shared
         public UIntPtr ReadUIntPtr()
         {
             uint ptr = ReadUInt32();
-            Helpers.TestPointer(ptr);
             return (UIntPtr)ptr;
         }
 
