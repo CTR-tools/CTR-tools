@@ -425,28 +425,28 @@ namespace ctrviewer
         }
 
 
-        private void LoadScenes(string[] lev)
+        private void LoadScenes(string[] filelist)
         {
-            if (lev == null)
-                lev = new string[] { };
+            if (filelist == null)
+                filelist = new string[] { };
 
             Scenes.Clear();
 
-            if (lev.Length == 0)
+            if (filelist.Length == 0)
             {
                 if (Directory.Exists(@"levels\"))
-                    lev = Directory.GetFiles(@"levels\", "*.lev");
+                    filelist = Directory.GetFiles(@"levels\", "*.lev");
             }
 
-            if (lev.Length == 0)
+            if (filelist.Length == 0)
             {
                 GameConsole.Write("no files");
                 return;
             }
 
-            foreach (string s in lev)
+            foreach (var filename in filelist)
             {
-                Scenes.Add(Scene.FromFile(s, false));
+                Scenes.Add(Scene.FromFile(filename, false));
             }
         }
 
