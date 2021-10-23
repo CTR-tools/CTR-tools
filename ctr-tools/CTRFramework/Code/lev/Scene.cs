@@ -94,7 +94,7 @@ namespace CTRFramework
             if (header == null)
                 throw new Exception("Scene header is null. Halt parsing.");
 
-            if (header.ptrMeshInfo != UIntPtr.Zero)
+            if (header.ptrMeshInfo != PsxPtr.Zero)
             {
                 mesh = new PtrWrap<MeshInfo>(header.ptrMeshInfo).Get(br);
                 quads = mesh.QuadBlocks;
@@ -192,7 +192,7 @@ namespace CTRFramework
             //read pickups
             for (int i = 0; i < header.numInstances; i++)
             {
-                br.Jump(header.ptrInstancesPtr + 4 * i);
+                br.Jump(header.ptrInstancesPtr.Address + 4 * i);
                 br.Jump(br.ReadUInt32());
 
                 pickups.Add(PickupHeader.FromReader(br));
@@ -224,25 +224,67 @@ namespace CTRFramework
                 Helpers.Panic(this, PanicType.Info, va.ToString());
             }
 
-            /*
-            quads = quads.OrderBy(o => o.mosaicPtr1).ToList();
+
+            if (sceneDebug)
+                SceneTests();
+        }
+
+        bool sceneDebug = false;
+
+        /// <summary>
+        /// A debug method for testing purposes, called in ReadScene.
+        /// </summary>
+        private void SceneTests()
+        {
+            //quads = quads.OrderBy(o => o.mosaicPtr1).ToList();
 
             StringBuilder sb = new StringBuilder();
 
+
+            int countadd = 0;
+            int countmid = 0;
+
             foreach (QuadBlock qb in quads)
             {
+                if (qb.ptrTexMid[0] == UIntPtr.Zero)
+                    countmid++;
+
+                if (qb.mosaicStruct != UIntPtr.Zero)
+                    countadd++;
+
+                sb.AppendLine($"ptr3 data: {qb.mosaicPtr4.ToUInt32() & 0xFFFFFFFC - qb.mosaicPtr3.ToUInt32() & 0xFFFFFFFC} ptr2 data: {qb.mosaicPtr3.ToUInt32() & 0xFFFFFFFC - qb.mosaicPtr1.ToUInt32() & 0xFFFFFFFC} ptr1 data: {qb.mosaicPtr1.ToUInt32() & 0xFFFFFFFC - qb.mosaicPtr2.ToUInt32() & 0xFFFFFFFC}");
+
+                /*
                 sb.AppendLine(
                     $"{qb.id.ToString("X4")}\t" +
-                    $"{(qb.mosaicPtr1 & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr1)})\t" +
-                    $"{(qb.mosaicPtr2 & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr2)})\t" +
-                    $"{(qb.mosaicPtr3 & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr3)})\t" +
-                    $"{(qb.mosaicPtr4 & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr4)})"
+                    $"{(qb.mosaicPtr1.ToUInt32() & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr1)})\t" +
+                    $"{(qb.mosaicPtr2.ToUInt32() & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr2)})\t" +
+                    $"{(qb.mosaicPtr3.ToUInt32() & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr3)})\t" +
+                    $"{(qb.mosaicPtr4.ToUInt32() & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr4)})"
                     );
+                */
+
+                /*
+                int pos = (int)br.BaseStream.Position;
+
+                br.Jump(qb.mosaicPtr4);
+
+                uint ptr4val = br.ReadUInt32();
+
+                sb.AppendLine("ptr4val: " + ptr4val.ToString("X8"));
+                
+
+                br.Jump(pos);
+                */
             }
 
             Helpers.WriteToFile(".\\mosaic_test.txt", sb.ToString());
 
-            */
+            foreach (var quad in quads)
+            {
+                //quad.ColTest(verts);
+                //Console.ReadKey();
+            }
         }
 
         /// <summary>
