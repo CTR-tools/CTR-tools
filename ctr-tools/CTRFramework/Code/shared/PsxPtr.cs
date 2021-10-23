@@ -69,6 +69,17 @@ namespace CTRFramework.Shared
             return this.value == other.value;
         }
 
+        //meh, implement iequatable they said.
+
+        public static bool operator ==(PsxPtr a, PsxPtr b)
+        {
+            return a.Equals(b);
+        }
+        public static bool operator !=(PsxPtr a, PsxPtr b)
+        {
+            return !a.Equals(b);
+        }
+
         public override string ToString()
         {
             return $"0x{Address.ToUInt32().ToString("X8")} [{ExtraBits}] <= ({value})";
