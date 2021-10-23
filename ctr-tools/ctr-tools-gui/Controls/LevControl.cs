@@ -337,23 +337,20 @@ namespace CTRTools.Controls
             }
         }
 
-
-
         private void SaveLEV()
         {
             using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(path)))
             {
-
                 bw.Jump(4);
 
                 scn.header.Write(bw);
 
-                bw.Jump(scn.header.ptrRestartPts + 4);
+                bw.Jump(scn.header.ptrRestartPts.Address + 4);
 
                 foreach (Pose pa in scn.restartPts)
                     pa.Write(bw);
 
-                bw.Jump(scn.header.ptrInstances + 4);
+                bw.Jump(scn.header.ptrInstances.Address + 4);
 
                 foreach (PickupHeader ph in scn.pickups)
                     ph.Write(bw);
@@ -370,7 +367,7 @@ namespace CTRTools.Controls
                 foreach (QuadBlock qb in scn.quads)
                     qb.Write(bw);
 
-                bw.Jump(scn.header.ptrVcolAnim + 4);
+                bw.Jump(scn.header.ptrVcolAnim.Address + 4);
 
                 foreach (VertexAnim vc in scn.vertanims)
                     vc.Write(bw);
@@ -380,7 +377,7 @@ namespace CTRTools.Controls
                 foreach (VisData v in scn.visdata)
                     v.Write(bw);
 
-                bw.Jump(scn.header.ptrAiNav + 4);
+                bw.Jump(scn.header.ptrAiNav.Address + 4);
                 scn.nav.Write(bw);
 
             }

@@ -13,36 +13,36 @@ namespace CTRFramework
         public PsxPtr ptrAnimTex;       //0x8 - pointer to animated textures array
 
         public int numInstances;        //0xC - number of model instances in the level (i.e. every single box, fruit, etc.)
-        public UIntPtr ptrInstances;    //0x10 - points to the 1st entry of the array of model instances
+        public PsxPtr ptrInstances;    //0x10 - points to the 1st entry of the array of model instances
         public int numModels;           //0x14 - number of actual models
-        public UIntPtr ptrModelsPtr;    //0x18 - pointer to the array of pointers to models. easy in c++, messy in c# 
+        public PsxPtr ptrModelsPtr;    //0x18 - pointer to the array of pointers to models. easy in c++, messy in c# 
 
         public uint unkPtr1;            //0x1C
         public uint unkPtr2;            //0x20
-        public UIntPtr ptrInstancesPtr;    //0x24 - pointer to the array of pointers to model instances.
+        public PsxPtr ptrInstancesPtr;    //0x24 - pointer to the array of pointers to model instances.
         public uint unkPtr3;            //0x28
 
         public int null1;           //0x2C - assumed reserved
         public int null2;           //0x30 - assumed reserved
 
         public uint numWater;       //0x34 - number of vertices treated as water
-        public UIntPtr ptrWater;       //0x38 - pointer to array of water entries
-        public UIntPtr ptrIcons;       //0x3C - lead to the icon pack header
-        public UIntPtr ptrIconsArray;  //0x40 - leads to the icon pack data
-        public UIntPtr ptrRestartMain; //0x44 - looks like a restart point, but doesn't affect anything? maybe like play area bbox?
+        public PsxPtr ptrWater;       //0x38 - pointer to array of water entries
+        public PsxPtr ptrIcons;       //0x3C - lead to the icon pack header
+        public PsxPtr ptrIconsArray;  //0x40 - leads to the icon pack data
+        public PsxPtr ptrRestartMain; //0x44 - looks like a restart point, but doesn't affect anything? maybe like play area bbox?
 
         public Gradient[] glowGradients; //0x48 - renders glowing effect in papu's pyramid
         public Pose[] startGrid;    //0x6C - array of 8 starting locations (96 bytes = (6 * 2) * 8)
 
         public uint unkPtr4;        //0xCC
         public uint unkPtr5;        //0xD0
-        public UIntPtr ptrLowTexArray; //0xD4 - assumed to be a pointer to low textures array, there is no number of entries though
+        public PsxPtr ptrLowTexArray; //0xD4 - assumed to be a pointer to low textures array, there is no number of entries though
         public Vector4b backColor;  //0xD8 - base background color, used to clear the screen
         public uint bgMode;         //0xDC - control background drawing mode, 1 color, 2 colors, 4 colors
 
-        public UIntPtr ptrBuildStart;  //0xE0 - pointer to string, date, assumed visdata compilation start
-        public UIntPtr ptrBuildEnd;    //0xE4 - pointer to string, date, assumed visdata compilation end
-        public UIntPtr ptrBuildType;   //0xE8 - pointer to string, assumed build type
+        public PsxPtr ptrBuildStart;  //0xE0 - pointer to string, date, assumed visdata compilation start
+        public PsxPtr ptrBuildEnd;    //0xE4 - pointer to string, date, assumed visdata compilation end
+        public PsxPtr ptrBuildType;   //0xE8 - pointer to string, assumed build type
 
         byte[] skip;                //0xEC - (7*8 = 56 bytes) assumed to be related to particles, contains particle gravity value
 
@@ -51,13 +51,13 @@ namespace CTRFramework
         public uint particleRenderMode;         //0x12C - assumed to control how particles are drawn
 
         public uint cntTrialData;   //0x130 - that's incorrect
-        public UIntPtr ptrTrialData;   //0x134 - pointer to additional data referred to as "trialdata" for now
+        public PsxPtr ptrTrialData;   //0x134 - pointer to additional data referred to as "trialdata" for now
         public uint cntu2;          //0x138 - 
         public uint ptru2;          //0x13C
         public uint numSpawnPts;    //0x140
-        public UIntPtr ptrSpawnPts;    //0x144
+        public PsxPtr ptrSpawnPts;    //0x144
         public uint numRestartPts;  //0x148 - number of restart points in the level
-        public UIntPtr ptrRestartPts;  //0x14C - points to the 1st entry in restart points array
+        public PsxPtr ptrRestartPts;  //0x14C - points to the 1st entry in restart points array
 
         byte[] skip2;               //0x150 - 16 bytes
 
@@ -65,11 +65,11 @@ namespace CTRFramework
         public uint skip2_unkPtr;   //0x170 - 
 
         public uint numVcolAnim;    //0x174 - number of animated vertices data
-        public UIntPtr ptrVcolAnim;    //0x178 - pointer to animated vertices data
+        public PsxPtr ptrVcolAnim;    //0x178 - pointer to animated vertices data
 
         byte[] skip23;              //0x17C - 12 bytes
 
-        public UIntPtr ptrAiNav;       //0x188 - pointer to bot path data
+        public PsxPtr ptrAiNav;       //0x188 - pointer to bot path data
 
         byte[] skip3;               //0x18C - 36 bytes
 
@@ -92,13 +92,13 @@ namespace CTRFramework
             ptrAnimTex = PsxPtr.FromReader(br);
 
             numInstances = br.ReadInt32();
-            ptrInstances = br.ReadUIntPtr();
+            ptrInstances = PsxPtr.FromReader(br);
             numModels = br.ReadInt32();
-            ptrModelsPtr = br.ReadUIntPtr();
+            ptrModelsPtr = PsxPtr.FromReader(br);
 
             unkPtr1 = br.ReadUInt32();
             unkPtr2 = br.ReadUInt32();
-            ptrInstancesPtr = br.ReadUIntPtr();
+            ptrInstancesPtr = PsxPtr.FromReader(br);
             unkPtr3 = br.ReadUInt32();
 
             null1 = br.ReadInt32();
@@ -108,11 +108,11 @@ namespace CTRFramework
                 Helpers.Panic(this, PanicType.Assume, "WARNING header.null1 = " + null1 + "; header.null2 = " + null2);
 
             numWater = br.ReadUInt32();
-            ptrWater = br.ReadUIntPtr();
-            ptrIcons = br.ReadUIntPtr();
-            ptrIconsArray = br.ReadUIntPtr();
+            ptrWater = PsxPtr.FromReader(br);
+            ptrIcons = PsxPtr.FromReader(br);
+            ptrIconsArray = PsxPtr.FromReader(br);
 
-            ptrRestartMain = br.ReadUIntPtr();
+            ptrRestartMain = PsxPtr.FromReader(br);
 
             glowGradients = new Gradient[3];
 
@@ -126,13 +126,13 @@ namespace CTRFramework
 
             unkPtr4 = br.ReadUInt32();
             unkPtr5 = br.ReadUInt32();
-            ptrLowTexArray = br.ReadUIntPtr();
+            ptrLowTexArray = PsxPtr.FromReader(br);
             backColor = new Vector4b(br);
 
             bgMode = br.ReadUInt32();
-            ptrBuildStart = br.ReadUIntPtr();
-            ptrBuildEnd = br.ReadUIntPtr();
-            ptrBuildType = br.ReadUIntPtr();
+            ptrBuildStart = PsxPtr.FromReader(br);
+            ptrBuildEnd = PsxPtr.FromReader(br);
+            ptrBuildType = PsxPtr.FromReader(br);
 
             skip = br.ReadBytes(0x38);
 
@@ -141,15 +141,15 @@ namespace CTRFramework
             particleRenderMode = br.ReadUInt32();
 
             cntTrialData = br.ReadUInt32();
-            ptrTrialData = br.ReadUIntPtr();
+            ptrTrialData = PsxPtr.FromReader(br);
             cntu2 = br.ReadUInt32();
             ptru2 = br.ReadUInt32();
 
             numSpawnPts = br.ReadUInt32();
-            ptrSpawnPts = br.ReadUIntPtr();
+            ptrSpawnPts = PsxPtr.FromReader(br);
 
             numRestartPts = br.ReadUInt32();
-            ptrRestartPts = br.ReadUIntPtr();
+            ptrRestartPts = PsxPtr.FromReader(br);
 
             skip2 = br.ReadBytes(16);
 
@@ -160,11 +160,11 @@ namespace CTRFramework
 
             skip2_unkPtr = br.ReadUInt32();
             numVcolAnim = br.ReadUInt32();
-            ptrVcolAnim = br.ReadUIntPtr();
+            ptrVcolAnim = PsxPtr.FromReader(br);
 
             skip23 = br.ReadBytes(12);
 
-            ptrAiNav = br.ReadUIntPtr();
+            ptrAiNav = PsxPtr.FromReader(br);
 
             skip3 = br.ReadBytes(0x24);
 
@@ -175,21 +175,21 @@ namespace CTRFramework
 
 
 
-            if (ptrBuildStart != UIntPtr.Zero)
+            if (ptrBuildStart != PsxPtr.Zero)
             {
                 br.Jump(ptrBuildStart);
                 compilationBegins = Helpers.ParseDate(br.ReadStringNT());
                 Console.WriteLine(compilationBegins);
             }
 
-            if (ptrBuildEnd != UIntPtr.Zero)
+            if (ptrBuildEnd != PsxPtr.Zero)
             {
                 br.Jump(ptrBuildEnd);
                 compilationEnds = Helpers.ParseDate(br.ReadStringNT());
                 Console.WriteLine(compilationEnds);
             }
 
-            if (ptrBuildType != UIntPtr.Zero)
+            if (ptrBuildType != PsxPtr.Zero)
             {
                 br.Jump(ptrBuildType);
                 Console.WriteLine(br.ReadStringNT());
