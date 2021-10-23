@@ -1,5 +1,6 @@
 ﻿using CTRFramework;
 using CTRFramework.Vram;
+using CTRFramework.Shared;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework.Graphics;
@@ -96,7 +97,7 @@ namespace ctrviewer.Loaders
                                     bool isAnimated = false;
                                     string texTag = "test";
 
-                                    if (qb.ptrTexMid[j] != UIntPtr.Zero)
+                                    if (qb.ptrTexMid[j] != PsxPtr.Zero)
                                     {
                                         isAnimated = qb.tex[j].isAnimated;
                                         if (texTag != "00000000")

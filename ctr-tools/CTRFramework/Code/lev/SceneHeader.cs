@@ -56,7 +56,7 @@ namespace CTRFramework
         public PsxPtr ptrTrialData;     //0x134 - pointer to additional data referred to as "trialdata" for now
 
         public uint cntu2;              //0x138
-        public uint ptru2;              //0x13C
+        public PsxPtr ptru2;            //0x13C
 
         public uint numSpawnPts;        //0x140
         public PsxPtr ptrSpawnPts;      //0x144
@@ -148,7 +148,7 @@ namespace CTRFramework
             cntTrialData = br.ReadUInt32();
             ptrTrialData = PsxPtr.FromReader(br);
             cntu2 = br.ReadUInt32();
-            ptru2 = br.ReadUInt32();
+            ptru2 = PsxPtr.FromReader(br);
 
             numSpawnPts = br.ReadUInt32();
             ptrSpawnPts = PsxPtr.FromReader(br);
@@ -246,9 +246,9 @@ namespace CTRFramework
             backColor.Write(bw);
             bw.Write(bgMode);
 
-            bw.Write(ptrBuildStart, patchTable);
-            bw.Write(ptrBuildEnd, patchTable);
-            bw.Write(ptrBuildType, patchTable);
+            ptrBuildStart.Write(bw, patchTable);
+            ptrBuildEnd.Write(bw, patchTable);
+            ptrBuildType.Write(bw, patchTable);
 
             bw.Write(skip);
 
@@ -257,13 +257,13 @@ namespace CTRFramework
             bw.Write(particleRenderMode);
 
             bw.Write(cntTrialData);
-            bw.Write(ptrTrialData, patchTable);
+            ptrTrialData.Write(bw, patchTable);
             bw.Write(cntu2);
-            bw.Write(ptru2);
+            ptru2.Write(bw, patchTable);
             bw.Write(numSpawnPts);
-            bw.Write(ptrSpawnPts, patchTable);
+            ptrSpawnPts.Write(bw, patchTable);
             bw.Write(numRestartPts);
-            bw.Write(ptrRestartPts, patchTable);
+            ptrRestartPts.Write(bw, patchTable);
 
             bw.Write(skip2);
 
@@ -273,12 +273,12 @@ namespace CTRFramework
             bw.Write(skip2_unkPtr);
 
             bw.Write(numVcolAnim);
-            bw.Write(ptrVcolAnim, patchTable);
+            ptrVcolAnim.Write(bw, patchTable);
 
             bw.Write(skip23);
 
 
-            bw.Write(ptrAiNav, patchTable);
+            ptrAiNav.Write(bw, patchTable);
 
             bw.Write(skip3);
 

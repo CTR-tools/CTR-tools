@@ -497,25 +497,25 @@ namespace ctrviewer
                     eng.sky = new MGLevel(Scenes[0].skybox);
             }
 
-            foreach (Scene s in Scenes)
+            foreach (Scene scene in Scenes)
             {
-                if (s.unkadv != null)
+                if (scene.unkadv != null)
                 {
-                    foreach (var pa in s.unkadv.smth)
+                    foreach (var pa in scene.unkadv.smth)
                         eng.instanced.Add(new InstancedModel("limecone", DataConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                 }
 
-                if (s.header.ptru2 != 0)
+                if (scene.header.ptru2 != PsxPtr.Zero)
                 {
-                    foreach (var v in s.posu2)
+                    foreach (var v in scene.posu2)
                     {
                         eng.instanced.Add(new InstancedModel("goldcone", DataConverter.ToVector3(v, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                     }
                 }
 
-                if (s.header.ptrTrialData != UIntPtr.Zero)
+                if (scene.header.ptrTrialData != PsxPtr.Zero)
                 {
-                    foreach (var v in s.posu1)
+                    foreach (var v in scene.posu1)
                     {
                         eng.instanced.Add(new InstancedModel("browncone", DataConverter.ToVector3(v.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                     }

@@ -18,6 +18,7 @@ namespace CTRFramework.Shared
         /// Call this if something unexpected happened.
         /// </summary>
         /// <param name="x">the object that wants to panic</param>
+        /// <param name="ptype">type of panic</param>
         /// <param name="msg">the message it wants to send</param>
         public static void Panic(object x, PanicType ptype, string msg)
         {
