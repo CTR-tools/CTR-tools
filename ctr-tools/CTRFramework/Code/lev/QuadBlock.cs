@@ -66,7 +66,7 @@ namespace CTRFramework
         //public byte[] midflags = new byte[2];
 
         public PsxPtr ptrTexLow;            //offset to LOD texture definition
-        public PsxPtr mosaicStruct;         //pointes to 4 extra visData structs, to be renamed
+        public PsxPtr ptrAddVis;         //pointes to 4 extra visData structs, to be renamed
 
         public PsxPtr mosaicPtr1;
         public PsxPtr mosaicPtr2;
@@ -158,10 +158,10 @@ namespace CTRFramework
                 Helpers.Panic(this, PanicType.Assume, $"ptrTexLow {ptrTexLow.ToString()}");
 
 
-            mosaicStruct = PsxPtr.FromReader(br);
+            ptrAddVis = PsxPtr.FromReader(br);
 
-            if (mosaicStruct.ExtraBits != HiddenBits.None)
-                Helpers.Panic(this, PanicType.Assume, $"mosaicStruct {mosaicStruct.ToString()}");
+            if (ptrAddVis.ExtraBits != HiddenBits.None)
+                Helpers.Panic(this, PanicType.Assume, $"mosaicStruct {ptrAddVis.ToString()}");
 
 
             for (int i = 0; i < 5; i++)
@@ -200,9 +200,9 @@ namespace CTRFramework
                 tex.Add(new CtrTex(br, ptr));
             }
 
-            if (mosaicStruct != UIntPtr.Zero)
+            if (ptrAddVis != UIntPtr.Zero)
             {
-                br.Jump(mosaicStruct);
+                br.Jump(ptrAddVis);
 
                 mosaicPtr1 = PsxPtr.FromReader(br);
                 mosaicPtr2 = PsxPtr.FromReader(br);
@@ -652,7 +652,7 @@ namespace CTRFramework
             //bw.Write(midflags);
 
             bw.Write(ptrTexLow, patchTable);
-            bw.Write(mosaicStruct, patchTable);
+            bw.Write(ptrAddVis, patchTable);
 
             foreach (Vector2 v in unk3)
                 bw.WriteVector2s(v, 1 / 4096f);

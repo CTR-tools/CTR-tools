@@ -154,7 +154,7 @@ namespace CTRTools.Controls
 
             foreach (QuadBlock qb in scn.quads)
             {
-                qb.mosaicStruct = PsxPtr.Zero;
+                qb.ptrAddVis = PsxPtr.Zero;
                 qb.ptrTexMid = new PsxPtr[] { PsxPtr.Zero, PsxPtr.Zero, PsxPtr.Zero, PsxPtr.Zero };
             }
         }

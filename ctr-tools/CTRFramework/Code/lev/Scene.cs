@@ -249,7 +249,7 @@ namespace CTRFramework
                 if (qb.ptrTexMid[0] == PsxPtr.Zero)
                     countmid++;
 
-                if (qb.mosaicStruct != PsxPtr.Zero)
+                if (qb.ptrAddVis != PsxPtr.Zero)
                     countadd++;
 
                 sb.AppendLine(

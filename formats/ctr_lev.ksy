@@ -82,6 +82,13 @@ types:
         pos: header.ptr_trial_data
         type: trial_data
         if: header.ptr_trial_data != 0
+        
+      spawn_inst:
+        pos: header.ptr_spawn_arrays2
+        type: spawn_type
+        repeat: expr
+        repeat-expr: header.cnt_spawn_arrays2
+        if: header.ptr_spawn_arrays2 != 0
 
       vcolors:
         pos: header.ptr_vcanim
@@ -469,7 +476,7 @@ types:
         type: u1
       - id: ptr_texture_low
         type: u4
-      - id: ptr_add_tex
+      - id: ptr_add_vis
         type: u4
       - id: unk_col_array
         type: u2
@@ -489,9 +496,9 @@ types:
         pos: ptr_texture_mid[3]
         type: ctr_tex
       add_tex:
-        pos: ptr_add_tex
+        pos: ptr_add_vis
         type: add_tex
-        if: ptr_add_tex != 0
+        if: ptr_add_vis != 0
 
   add_tex:
     doc: |
@@ -741,6 +748,13 @@ types:
         encoding: ascii
         repeat: expr
         repeat-expr: num_entries      
+
+  spawn_type:
+    seq:
+      - id: unk
+        type: u4
+      - id: ptr
+        type: u4
 
   vector2b:
     seq:
