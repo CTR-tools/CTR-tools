@@ -78,5 +78,10 @@ namespace CTRFramework.Shared
         {
             return me.Address;
         }
+
+        public long GetDifference(PsxPtr other)
+        {
+            return Math.Abs(this.Address.ToUInt32() - other.Address.ToUInt32());
+        }
     }
 }

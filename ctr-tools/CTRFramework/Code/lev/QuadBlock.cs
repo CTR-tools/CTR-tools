@@ -68,10 +68,10 @@ namespace CTRFramework
         public PsxPtr ptrTexLow;            //offset to LOD texture definition
         public PsxPtr mosaicStruct;         //pointes to 4 extra visData structs, to be renamed
 
-        public UIntPtr mosaicPtr1;
-        public UIntPtr mosaicPtr2;
-        public UIntPtr mosaicPtr3;
-        public UIntPtr mosaicPtr4;
+        public PsxPtr mosaicPtr1;
+        public PsxPtr mosaicPtr2;
+        public PsxPtr mosaicPtr3;
+        public PsxPtr mosaicPtr4;
 
         public List<Vector2> unk3 = new List<Vector2>();    //face normal vector or smth. 4*2 for mid + 2 for low
 
@@ -204,10 +204,10 @@ namespace CTRFramework
             {
                 br.Jump(mosaicStruct);
 
-                mosaicPtr1 = br.ReadUIntPtr();
-                mosaicPtr2 = br.ReadUIntPtr();
-                mosaicPtr3 = br.ReadUIntPtr();
-                mosaicPtr4 = br.ReadUIntPtr();
+                mosaicPtr1 = PsxPtr.FromReader(br);
+                mosaicPtr2 = PsxPtr.FromReader(br);
+                mosaicPtr3 = PsxPtr.FromReader(br);
+                mosaicPtr4 = PsxPtr.FromReader(br);
             }
 
             br.BaseStream.Position = texpos;

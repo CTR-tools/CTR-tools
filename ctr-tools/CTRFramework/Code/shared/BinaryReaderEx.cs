@@ -260,8 +260,7 @@ namespace CTRFramework.Shared
 
         public UIntPtr ReadUIntPtr()
         {
-            uint ptr = ReadUInt32();
-            return (UIntPtr)ptr;
+            return (UIntPtr)ReadUInt32();
         }
 
         public string HexPos()

@@ -246,13 +246,16 @@ namespace CTRFramework
 
             foreach (QuadBlock qb in quads)
             {
-                if (qb.ptrTexMid[0] == UIntPtr.Zero)
+                if (qb.ptrTexMid[0] == PsxPtr.Zero)
                     countmid++;
 
-                if (qb.mosaicStruct != UIntPtr.Zero)
+                if (qb.mosaicStruct != PsxPtr.Zero)
                     countadd++;
 
-                sb.AppendLine($"ptr3 data: {qb.mosaicPtr4.ToUInt32() & 0xFFFFFFFC - qb.mosaicPtr3.ToUInt32() & 0xFFFFFFFC} ptr2 data: {qb.mosaicPtr3.ToUInt32() & 0xFFFFFFFC - qb.mosaicPtr1.ToUInt32() & 0xFFFFFFFC} ptr1 data: {qb.mosaicPtr1.ToUInt32() & 0xFFFFFFFC - qb.mosaicPtr2.ToUInt32() & 0xFFFFFFFC}");
+                sb.AppendLine(
+                    $"ptr3 data: {qb.mosaicPtr4.GetDifference(qb.mosaicPtr3)} " +
+                    $"ptr2 data: {qb.mosaicPtr3.GetDifference(qb.mosaicPtr1)} " +
+                    $"ptr1 data: {qb.mosaicPtr1.GetDifference(qb.mosaicPtr2)}");
 
                 /*
                 sb.AppendLine(

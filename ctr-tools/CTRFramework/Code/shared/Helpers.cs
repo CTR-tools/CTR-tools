@@ -173,6 +173,5 @@ namespace CTRFramework.Shared
         {
             return GetTextFromResource(resource).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
         }
-
     }
 }
