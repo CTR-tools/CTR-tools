@@ -144,14 +144,14 @@ namespace ctrviewer.Engine.Render
                     if (textureEnabled)
                         if (ContentVault.Textures.ContainsKey(textureName))
                         {
-                            effect.Texture = ContentVault.Textures[textureName];
+                            effect.Texture = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
                             if (alpha != null)
                                 alpha.Texture = effect.Texture;
                         }
                         else
                         {
                             //Console.WriteLine("missing texture: " + textureName);
-                            effect.Texture = ContentVault.Textures["test"];
+                            effect.Texture = ContentVault.GetTexture("test", EngineSettings.Instance.UseTextureReplacements);
                             if (alpha != null)
                                 alpha.Texture = effect.Texture;
                         }

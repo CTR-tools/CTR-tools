@@ -9,12 +9,27 @@ namespace ctrviewer.Engine
     [Serializable]
     public class EngineSettings
     {
+        private static EngineSettings singleton = null;
+
+        public static EngineSettings Instance
+        {
+            get
+            {
+                if (singleton == null)
+                    singleton = EngineSettings.Load();
+
+                return singleton;
+            }
+        }
+
         public Point Resolution = Point.Zero;
 
         public string BigFileLocation = ".\\bigfile.big";
 
         public byte AntiAliasLevel { get; set; } = 4;
         public bool TextureFiltering { get; set; } = true;
+
+        public bool UseTextureReplacements { get; set; } = false;
         public bool VisData { get; set; } = false;
         public bool VisDataLeaves { get; set; } = false;
         public bool GenerateMips { get; set; } = true;

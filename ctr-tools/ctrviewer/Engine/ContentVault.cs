@@ -10,6 +10,7 @@ namespace ctrviewer.Engine
     public class ContentVault
     {
         public static Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();
+        public static Dictionary<string, Texture2D> ReplacementTextures = new Dictionary<string, Texture2D>();
         public static Dictionary<string, SoundEffect> Sounds = new Dictionary<string, SoundEffect>();
         public static Dictionary<string, TriList> Models = new Dictionary<string, TriList>();
 
@@ -37,6 +38,17 @@ namespace ctrviewer.Engine
             Textures.Add(name, texture);
             return true;
         }
+        public static bool AddReplacementTexture(string name, Texture2D texture)
+        {
+            if (ReplacementTextures.ContainsKey(name))
+            {
+                Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate replacement texture: '{name}'.");
+                return false;
+            }
+
+            ReplacementTextures.Add(name, texture);
+            return true;
+        }
 
         public static bool AddModel(string name, TriList model)
         {
@@ -57,8 +69,15 @@ namespace ctrviewer.Engine
 
             return Models[name];
         }
-        public static Texture2D GetTexture(string name)
+
+        public static Texture2D GetTexture(string name, bool useReplacements)
         {
+            if (useReplacements)
+            {
+                if (ReplacementTextures.ContainsKey(name))
+                    return ReplacementTextures[name];
+            }
+
             if (!Textures.ContainsKey(name))
                 return null;
 

@@ -363,16 +363,9 @@ namespace ctrviewer
                     bool alpha = false;
 
                     if (File.Exists(path))
-                    {
-                        if (!ContentVault.Textures.ContainsKey(t.Key))
-                        {
-                            ContentVault.Textures.Add(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path, out alpha) : Texture2D.FromFile(GraphicsDevice, path));
-                            continue;
-                        }
-                    }
+                        ContentVault.AddReplacementTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path, out alpha) : Texture2D.FromFile(GraphicsDevice, path));
 
-                    if (!ContentVault.Textures.ContainsKey(t.Key))
-                        ContentVault.Textures.Add(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
+                    ContentVault.AddTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
 
                     if (alpha)
                         if (!ContentVault.alphalist.Contains(t.Key))
@@ -773,6 +766,7 @@ namespace ctrviewer
                             case "toggle":
                                 switch (menu.SelectedItem.Param)
                                 {
+                                    case "newtex": eng.Settings.UseTextureReplacements = !eng.Settings.UseTextureReplacements; break;
                                     case "inst": eng.Settings.ShowModels = !eng.Settings.ShowModels; break;
                                     case "paths": eng.Settings.ShowBotsPath = !eng.Settings.ShowBotsPath; break;
                                     case "lod": eng.Settings.UseLowLod = !eng.Settings.UseLowLod; break;

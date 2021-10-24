@@ -107,6 +107,7 @@ namespace ctrviewer.Engine
             {
                 new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true),
                 new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true),
+                new MenuItem("toggle newtex".ToUpper(), "toggle", "newtex", true),
                 new MenuItem("toggle vertex lighting".ToUpper(), "toggle", "vcolor", true),
                 new MenuItem("toggle double sided".ToUpper(), "toggle", "nocull", true),
                 new MenuItem("toggle skybox".ToUpper(), "toggle", "sky", true),
