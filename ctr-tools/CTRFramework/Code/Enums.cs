@@ -17,10 +17,11 @@ namespace CTRFramework
     [Flags]
     public enum PanicType
     {
-        Error = 1 << 0,      //typically used to denote an event, that halts execution of current function to prevent crashing
-        Warning = 1 << 1,    //used to warn about unexpected code execution, i.e missing enum in switch case
-        Info = 1 << 2,       //general info
-        Assume = 1 << 3      //format assumptions or sanity checks
+        All = -1,           //all messages
+        Error = 1 << 0,     //typically used to denote an event, that halts execution of current function to prevent crashing
+        Warning = 1 << 1,   //used to warn about unexpected code execution, i.e missing enum in switch case
+        Info = 1 << 2,      //general info
+        Assume = 1 << 3,    //format assumptions or sanity checks
     }
 
     #endregion

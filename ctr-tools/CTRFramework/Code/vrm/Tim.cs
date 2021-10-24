@@ -272,6 +272,18 @@ namespace CTRFramework.Vram
             int width = (int)(tl.width * (bpp / 8.0f));
             int height = tl.height;
 
+            Helpers.Panic(this, PanicType.Assume, tl.width + " vs " + width + "|" + bpp + " " + (bpp / 8.0f) + " " + (tl.width * (bpp / 8.0f)));
+
+            //ahem, so this happens because 1 byte = 2 pixel and if it's uneven width, we have to move half-byte.
+            bool dirtyhack = false;
+
+            if (width % 2 == 1)
+            {
+                width++;
+                dirtyhack = true;
+            }
+
+
             Console.WriteLine(width + "x" + height);
 
             ushort[] buf = new ushort[(width / 2) * height];
@@ -282,6 +294,8 @@ namespace CTRFramework.Vram
 
             for (int i = 0; i < height; i++)
             {
+                Helpers.Panic(this, PanicType.Assume, $"ptr: {ptr}, i: {i}, i * width: {i * width}, width: {width}");
+
                 Buffer.BlockCopy(
                     this.data, ptr,
                     buf, i * width,
@@ -296,6 +310,9 @@ namespace CTRFramework.Vram
             x.data = buf;
 
             x.region = new Rectangle(tl.RealX, tl.RealY, tl.width / 4, tl.height);
+
+            if (dirtyhack)
+                x.region.Width++;
 
             x.clutregion = new Rectangle(tl.PalX * 16, tl.PalY, 16, 1);
             x.clutdata = GetCtrClut(tl);
@@ -359,19 +376,7 @@ namespace CTRFramework.Vram
         /// <returns></returns>
         public Bitmap GetTexture(TextureLayout tl, string path = "", string name = "")
         {
-
-            if (tl.Tag() == "768_241_36_510_15_7")
-            {
-                Console.WriteLine(tl.ToString());
-                try
-                {
-                    Tim x = GetTimTexture(tl);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message + "\r\n" + ex.ToString());
-                }
-            }
+            Helpers.Panic(this, PanicType.Assume, tl.ToString() + "" + "\r\n" + tl.frame.ToString());
 
             try
             {
@@ -396,7 +401,7 @@ namespace CTRFramework.Vram
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, PanicType.Error, "GetTexture fails: " + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
+                Helpers.Panic(this, PanicType.Error, tl.frame + "\r\n" + "GetTexture fails: " + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
                 return null;
             }
         }

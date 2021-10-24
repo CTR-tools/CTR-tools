@@ -1,6 +1,6 @@
 ﻿using CTRFramework;
-using CTRFramework.Vram;
 using CTRFramework.Shared;
+using CTRFramework.Vram;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework.Graphics;

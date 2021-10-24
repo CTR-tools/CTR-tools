@@ -594,7 +594,7 @@ namespace CTRTools.Controls
             Color cfrom = Color.FromArgb(255, from.X, from.Y, from.Z);
             Color cto = Color.FromArgb(255, to.X, to.Y, to.Z);
 
-             return new System.Drawing.Drawing2D.LinearGradientBrush(new Point(0, 0), new Point(0, size), cfrom, cto);
+            return new System.Drawing.Drawing2D.LinearGradientBrush(new Point(0, 0), new Point(0, size), cfrom, cto);
         }
 
         private void button8_Click(object sender, EventArgs e)

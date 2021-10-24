@@ -11,8 +11,8 @@ namespace CTRFramework.Shared
 
         public static string logpath = Path.Combine(Meta.BasePath, "ctrframework.log");
 
-        public static PanicLevel panicLevel = PanicLevel.Console;
-        public static PanicType panicType = PanicType.Assume | PanicType.Error;
+        public static PanicLevel panicLevel = PanicLevel.Console; //PanicLevel.File;
+        public static PanicType panicType = PanicType.Assume | PanicType.Error; //PanicType.All;
 
         /// <summary>
         /// Call this if something unexpected happened.
