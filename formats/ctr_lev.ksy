@@ -201,11 +201,11 @@ types:
         repeat: expr
         repeat-expr: num_vertex
       - id: faces
-        type: skybox_face_array(num_faces[_index])
+        type: skybox_segment(num_faces[_index])
         repeat: expr
         repeat-expr: 8
 
-  skybox_face_array:
+  skybox_segment:
     params:
       - id: num_entries
         type: u4
@@ -417,9 +417,9 @@ types:
         
   gradient:
     seq:
-      - id: from
+      - id: point_from
         type: s2
-      - id: to
+      - id: point_to
         type: s2
       - id: color_from
         type: color
