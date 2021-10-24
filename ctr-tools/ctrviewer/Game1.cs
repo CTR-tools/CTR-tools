@@ -352,20 +352,33 @@ namespace ctrviewer
         {
             GameConsole.Write("LoadTextures()");
 
+            string[] files = Directory.GetFiles(".\\newtex\\", "*.png", SearchOption.AllDirectories);
+
+            Dictionary<string, string> replacements = new Dictionary<string, string>();
+
+            foreach (var file in files)
+            {
+                string f = Path.GetFileNameWithoutExtension(file);
+
+                if (replacements.ContainsKey(f))
+                {
+                    GameConsole.Write($"Duplicate replacement: {file}");
+                    continue;
+                }
+
+                replacements.Add(f, file);
+            }
+
             foreach (Scene s in Scenes)
             {
                 foreach (var t in s.ctrvram.textures)
                 {
-
-                    //first look for texture replacement
-                    string path = $".\\newtex\\{t.Key}.png";
-
                     bool alpha = false;
 
-                    if (File.Exists(path))
-                        ContentVault.AddReplacementTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, path, out alpha) : Texture2D.FromFile(GraphicsDevice, path));
-
                     ContentVault.AddTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
+
+                    if (replacements.ContainsKey(t.Key))
+                        ContentVault.AddReplacementTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, replacements[t.Key], out alpha) : Texture2D.FromFile(GraphicsDevice, replacements[t.Key]));
 
                     if (alpha)
                         if (!ContentVault.alphalist.Contains(t.Key))
