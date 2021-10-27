@@ -364,7 +364,7 @@ types:
         if: cnt_pointers >= 7
     instances:
       map:
-        type: u4
+        type: map_coords
         pos: ptr_map
         if: cnt_pointers >= 1 and ptr_map != 0
       post_cam:
@@ -387,6 +387,21 @@ types:
         type: credits_text
         pos: ptr_credits_text
         if: cnt_pointers >= 7 and ptr_credits_text != 0
+
+  map_coords:
+    seq:
+      - id: v1 # ? some sort of scale
+        type: vector2s
+      - id: v2 # ? some sort of scale too, close to prev but negative
+        type: vector2s
+      - id: scale
+        type: vector2s
+      - id: position
+        type: vector2s
+      - id: mirror # 0, 1, 2, 3 - no, hor, vert, both
+        type: u2
+      - id: unk # hides top half if not null, why?
+        type: u2
 
   ghost_data:
     doc: | 
@@ -830,6 +845,13 @@ types:
         type: u2
       - id: z
         type: u2
+
+  vector2s:
+    seq:
+      - id: x
+        type: s2
+      - id: y
+        type: s2
 
   vector3s:
     seq:
