@@ -9,14 +9,6 @@ namespace CTRFramework.Vram
     {
         public List<Tim> Tims = new List<Tim>();
 
-        public static CtrVrm FromFile(string filename)
-        {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
-            {
-                return CtrVrm.FromReader(br);
-            }
-        }
-
         public CtrVrm()
         {
         }
@@ -33,19 +25,27 @@ namespace CTRFramework.Vram
                 for (int i = 0; i < 2; i++)
                 {
                     br.ReadInt32(); //data size
-                    Tims.Add(new Tim(br));
+                    Tims.Add(Tim.FromReader(br));
                 }
             }
             else
             {
                 br.BaseStream.Position = 0;
-                Tims.Add(new Tim(br));
+                Tims.Add(Tim.FromReader(br));
             }
         }
 
         public static CtrVrm FromReader(BinaryReaderEx br)
         {
             return new CtrVrm(br);
+        }
+
+        public static CtrVrm FromFile(string filename)
+        {
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            {
+                return FromReader(br);
+            }
         }
 
         public override string ToString()

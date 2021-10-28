@@ -62,8 +62,12 @@ namespace CTRFramework.Vram
         {
             using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(fn)))
             {
-                return new Tim(br);
+                return FromReader(br);
             }
+        }
+        public static Tim FromReader(BinaryReaderEx br)
+        {
+            return new Tim(br);
         }
 
         public Tim(BinaryReaderEx br)
