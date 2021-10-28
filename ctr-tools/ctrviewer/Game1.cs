@@ -505,10 +505,10 @@ namespace ctrviewer
 
             foreach (Scene scene in Scenes)
             {
-                if (scene.unkadv != null)
+                if (scene.spawnGroups != null)
                 {
-                    foreach (var pa in scene.unkadv.smth)
-                        eng.instanced.Add(new InstancedModel("limecone", DataConverter.ToVector3(pa.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                    foreach (var pa in scene.spawnGroups.Entries)
+                        eng.instanced.Add(new InstancedModel("limecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
                 }
 
                 if (scene.header.ptru2 != PsxPtr.Zero)
@@ -516,14 +516,6 @@ namespace ctrviewer
                     foreach (var v in scene.posu2)
                     {
                         eng.instanced.Add(new InstancedModel("goldcone", DataConverter.ToVector3(v, 0.01f), Vector3.Zero, new Vector3(0.03f)));
-                    }
-                }
-
-                if (scene.header.ptrTrialData != PsxPtr.Zero)
-                {
-                    foreach (var v in scene.posu1)
-                    {
-                        eng.instanced.Add(new InstancedModel("browncone", DataConverter.ToVector3(v.Position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
                     }
                 }
             }

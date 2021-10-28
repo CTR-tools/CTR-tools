@@ -26,7 +26,7 @@ namespace CTRFramework
         public List<CtrModel> Models = new List<CtrModel>();
         public SkyBox skybox;
         public Nav nav;
-        public UnkAdv unkadv;
+        public SpawnGroup spawnGroups;
         public TrialData trial;
         public IconPack iconpack;
 
@@ -80,7 +80,6 @@ namespace CTRFramework
         }
 
         public List<Vector3s> posu2 = new List<Vector3s>();
-        public List<Pose> posu1 = new List<Pose>();
 
         public void Read(BinaryReaderEx br)
         {
@@ -109,23 +108,10 @@ namespace CTRFramework
             iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
             trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
 
-            if (header.numSpawnPts > 0)
+            if (header.numSpawnGroups > 0)
             {
-                br.Jump(header.ptrSpawnPts);
-                unkadv = new UnkAdv(br, (int)header.numSpawnPts);
-            }
-
-            if (header.cntTrialData > 0)
-            {
-                br.Jump(header.ptrTrialData);
-
-                int cnt = br.ReadInt32();
-                int ptr = br.ReadInt32();
-
-                br.Jump(ptr);
-
-                for (int i = 0; i < cnt; i++)
-                    posu1.Add(new Pose(br));
+                br.Jump(header.ptrSpawnGroups);
+                spawnGroups = new SpawnGroup(br, (int)header.numSpawnGroups);
             }
 
 
@@ -712,7 +698,7 @@ namespace CTRFramework
             Models.Clear();
             skybox = null;
             nav = null;
-            unkadv = null;
+            spawnGroups = null;
             restartPts.Clear();
             ctrvram = null;
         }

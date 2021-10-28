@@ -4,18 +4,18 @@ using System.Collections.Generic;
 
 namespace CTRFramework
 {
-    public class UnkAdv
+    public class SpawnGroup
     {
-        public List<Pose> smth = new List<Pose>();
+        public List<Pose> Entries = new List<Pose>();
 
-        public UnkAdv(BinaryReaderEx br, int cnt)
+        public SpawnGroup(BinaryReaderEx br, int numGroups)
         {
-            int ttl = 0;
+            int numEntries = 0;
 
-            for (int i = 0; i < cnt; i++)
+            for (int i = 0; i < numGroups; i++)
             {
                 int c = br.ReadInt32();
-                ttl += c;
+                numEntries += c;
                 br.Seek(4);
 
                 Console.WriteLine(c);
@@ -25,10 +25,8 @@ namespace CTRFramework
             Console.WriteLine(br.BaseStream.Position.ToString("X8"));
             //Console.ReadKey();
 
-            for (int i = 0; i < ttl; i++)
-            {
-                smth.Add(new Pose(br));
-            }
+            for (int i = 0; i < numEntries; i++)
+                Entries.Add(Pose.FromReader(br));
         }
     }
 }

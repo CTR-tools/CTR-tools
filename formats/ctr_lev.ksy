@@ -302,9 +302,9 @@ types:
       - id: ptr_spawn_arrays2
         type: u4 
 
-      - id: cnt_spawn_arrays
+      - id: cnt_spawn_groups
         type: u4 
-      - id: ptr_spawn_arrays
+      - id: ptr_spawn_groups
         type: u4 
 
       - id: cnt_restart_pts
@@ -329,13 +329,21 @@ types:
       - id: ptr_vcanim
         type: u4
       - id: skip2_3
-        size: 12
-
+        size: 10
+        
+      - id: water_level
+        type: u2
       - id: ptr_ai_nav
         type: u4 
 
+      - id: skip_null
+        type: u4
+        
+      - id: unk_ptr6
+        type: u4
+        
       - id: skip3
-        size: 0x24
+        size: 0x1C
 
   trial_data:
     seq:

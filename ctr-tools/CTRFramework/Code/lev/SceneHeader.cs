@@ -58,8 +58,8 @@ namespace CTRFramework
         public uint cntu2;              //0x138
         public PsxPtr ptru2;            //0x13C
 
-        public uint numSpawnPts;        //0x140
-        public PsxPtr ptrSpawnPts;      //0x144
+        public uint numSpawnGroups;     //0x140 - number of spawn point groups, mainly used in adventure mode, also used for hazard paths
+        public PsxPtr ptrSpawnGroups;   //0x144 - pointer to the spawn point groups struct
 
         public uint numRestartPts;      //0x148 - number of restart points in the level
         public PsxPtr ptrRestartPts;    //0x14C - pointer to the array of restart points (used for cameras, mask grabs, warp orbs) 
@@ -154,8 +154,8 @@ namespace CTRFramework
             cntu2 = br.ReadUInt32();
             ptru2 = PsxPtr.FromReader(br);
 
-            numSpawnPts = br.ReadUInt32();
-            ptrSpawnPts = PsxPtr.FromReader(br);
+            numSpawnGroups = br.ReadUInt32();
+            ptrSpawnGroups = PsxPtr.FromReader(br);
 
             numRestartPts = br.ReadUInt32();
             ptrRestartPts = PsxPtr.FromReader(br);
@@ -264,8 +264,8 @@ namespace CTRFramework
             ptrTrialData.Write(bw, patchTable);
             bw.Write(cntu2);
             ptru2.Write(bw, patchTable);
-            bw.Write(numSpawnPts);
-            ptrSpawnPts.Write(bw, patchTable);
+            bw.Write(numSpawnGroups);
+            ptrSpawnGroups.Write(bw, patchTable);
             bw.Write(numRestartPts);
             ptrRestartPts.Write(bw, patchTable);
 
