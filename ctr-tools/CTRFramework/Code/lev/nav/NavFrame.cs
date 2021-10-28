@@ -2,12 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Numerics;
 
 namespace CTRFramework
 {
     public class NavFrame : IReadWrite
     {
-        public Vector3s position;
+        public Vector3 position;
         public Vector3s angle;
         public byte unk11;
         public byte unk12;
@@ -28,7 +29,7 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            position = new Vector3s(br);
+            position = br.ReadVector3s(1 / 100f);
             angle = new Vector3s(br);
             unk11 = br.ReadByte();
             unk12 = br.ReadByte();
@@ -40,7 +41,7 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            position.Write(bw);
+            bw.WriteVector3s(position, 1 / 100f);
             angle.Write(bw);
             bw.Write(unk11);
             bw.Write(unk12);

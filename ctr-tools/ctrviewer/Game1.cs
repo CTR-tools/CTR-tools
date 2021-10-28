@@ -558,11 +558,11 @@ namespace ctrviewer
                 if (s.nav.paths.Count == 3)
                 {
                     foreach (NavFrame n in s.nav.paths[0].frames)
-                        eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                        eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
                     foreach (NavFrame n in s.nav.paths[1].frames)
-                        eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                        eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
                     foreach (NavFrame n in s.nav.paths[2].frames)
-                        eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                        eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
                 }
             }
 

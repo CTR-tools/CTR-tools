@@ -318,6 +318,26 @@ namespace CTRFramework
             foreach (QuadBlock g in quads)
                 sb.AppendLine(g.ToObj(verts, lod, ref a, ref b));
 
+
+            if (header.ptrAiNav != PsxPtr.Zero)
+                for (int i = 0; i < nav.paths.Count; i++)
+                {
+                    sb.AppendLine($"o AiPath{i}");
+
+                    foreach (var frame in nav.paths[i].frames)
+                        sb.AppendLine($"v {frame.position.X} {frame.position.Y} {frame.position.Z}");
+
+                    string line = "l ";
+
+                    for (int j = 0; j < nav.paths[i].numFrames; j++)
+                        line += $"{a + j + 1} ";
+
+                    a += nav.paths[i].numFrames;
+
+                    sb.AppendLine(line);
+                }
+
+
             Helpers.WriteToFile(Path.Combine(path, $"{fname}.obj"), sb.ToString());
 
             sb.Clear();
