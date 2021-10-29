@@ -4,6 +4,8 @@ meta:
   title: Crash Team Racing (PS1) model file
   file-extension: ctr
   endian: le
+  
+doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_ctr.ksy
 
 seq:
   - id: data_size
@@ -16,7 +18,7 @@ seq:
   - id: ptr_map
     type: u4
     repeat: expr
-    repeat-expr: ptr_map_size / 4  
+    repeat-expr: ptr_map_size / 4
 
 types:
   ctr_model:
@@ -51,7 +53,9 @@ types:
       - id: billboard
         type: u2
       - id: scale
-        type: vector4s
+        type: vector3s
+      - id: padding
+        type: u2
       - id: ptr_cmd
         type: u4
       - id: ptr_verts
@@ -70,17 +74,26 @@ types:
         type: u4
     instances:
       commands:
-        type: s4
+        type: u4
         pos: ptr_cmd
         repeat: until
-        repeat-until: _ == -1
-      anim_ptr_map:
-        type: u4
+        repeat-until: _ == 0xFFFFFFFF
+      anims:
+        type: ctr_anim
         pos: ptr_anims
         repeat: expr
         repeat-expr: num_anims
-
+        
   ctr_anim:
+    seq:
+      - id: ptr
+        type: u4
+    instances:
+      data:
+        type: ctr_anim_data
+        pos: ptr
+
+  ctr_anim_data:
     seq:
       - id: name
         type: strz
@@ -92,14 +105,35 @@ types:
         type: u2
       - id: ptr_unk
         type: u4
-        
-  vector4s:
+      - id: vdata
+        type: ctr_anim_frame(frame_size)
+        repeat: expr
+        repeat-expr: num_frames2
+    instances:
+      num_frames2:
+        value: num_frames & 0x8000 == 0 ? num_frames : (num_frames & 0x7FFF) / 2 + 1
+
+  ctr_anim_frame:
+    params:
+      - id: frame_size
+        type: u4
+    seq:
+      - id: position
+        type: vector3s
+      - id: padding
+        type: u2
+      - id: skip
+        size: 16
+      - id: unk_render # ? unknown, values other than the original often ruin the model. maybe some drawing mode.
+        type: u4
+      - id: data
+        size: frame_size - 28
+
+  vector3s:
     seq:      
       - id: x
-        type: u2
+        type: s2
       - id: y
-        type: u2
+        type: s2
       - id: z
-        type: u2
-      - id: w
-        type: u2
+        type: s2

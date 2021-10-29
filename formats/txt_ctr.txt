@@ -95,9 +95,9 @@ basically defines texture page, quad UV coords and palette.
 
 
 # vertex data
-ushort - posX
-ushort - posY
-ushort - posZ
+short - posX
+short - posY
+short - posZ
 16 bytes - unknown, nothing changes visually
 int - unknown, values other than the original often ruin the model. maybe some drawing mode.
 vector3b[] - array of vertices, a byte per coord.
