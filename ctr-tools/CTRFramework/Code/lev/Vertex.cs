@@ -54,7 +54,7 @@ namespace CTRFramework
 
         public string ToObj()
         {
-            return $"v {coord.X} {coord.Y} {coord.Z} {(color.X / 255f).ToString("0.0##")} {(color.Y / 255f).ToString("0.0##")} {(color.Z / 255f).ToString("0.0##")}";
+            return $"v {coord.X} {coord.Y} {coord.Z} {(color.X / 255f).ToString("0.###")} {(color.Y / 255f).ToString("0.###")} {(color.Z / 255f).ToString("0.###")}";
         }
     }
 }

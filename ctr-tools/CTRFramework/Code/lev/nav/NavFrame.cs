@@ -1,8 +1,8 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Numerics;
+using System.Text;
 
 namespace CTRFramework
 {

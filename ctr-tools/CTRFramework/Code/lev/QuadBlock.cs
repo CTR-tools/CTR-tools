@@ -447,8 +447,8 @@ namespace CTRFramework
                         }
                         else
                         {
-                            sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
-                            sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
+                            sb.AppendLine(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
+                            sb.AppendLine(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
                         }
 
                         a += 4;
@@ -481,8 +481,8 @@ namespace CTRFramework
                                 }
                                 else
                                 {
-                                    sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
-                                    sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
+                                    sb.AppendLine(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
+                                    sb.AppendLine(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
                                 }
 
                                 sb.AppendLine();

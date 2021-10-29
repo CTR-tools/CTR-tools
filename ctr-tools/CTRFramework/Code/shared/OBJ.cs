@@ -187,15 +187,20 @@ namespace CTRFramework
             return $"{label} {totalv + 2}/{totalvt + 2} {totalv + 1}/{totalvt + 1} {totalv + 3}/{totalvt + 3} {totalv + 4}/{totalvt + 4}";
         }
 
+        static bool useNegativeIndexing = false;
+
         public static string ASCIIFace(string label, int totalv, int totalvt, int x, int y, int z, float xuv, float yuv, float zuv)
         {
-            return String.Format(
-                "{0} {1}/{2} {3}/{4} {5}/{6}\r\n",
-                label,
-                totalv + x, totalvt + xuv,
-                totalv + y, totalvt + yuv,
-                totalv + z, totalvt + zuv
-                );
+            //OBJ format supports negative indexing to avoid large index values
+            //meshlab imports wrong UVs, blender works fine
+            if (useNegativeIndexing)
+            {
+                return $"{label} {-x}/{-xuv} {-y}/{-yuv} {-z}/{-zuv}";
+            }
+            else
+            {
+                return $"{label} {totalv + x}/{totalvt + xuv} {totalv + y}/{totalvt + yuv} {totalv + z}/{totalvt + zuv}";
+            }
         }
     }
 }
