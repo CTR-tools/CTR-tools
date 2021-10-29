@@ -34,7 +34,7 @@ types:
       - id: ptr_meshes
         type: u2
     instances:
-      mesh_headers:
+      meshes:
         type: ctr_mesh
         pos: ptr_meshes
         repeat: expr
