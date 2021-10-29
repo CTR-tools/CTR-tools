@@ -52,9 +52,9 @@ namespace CTRFramework
             color_morph.Write(bw);
         }
 
-        public override string ToString()
+        public string ToObj()
         {
-            return $"v {coord.X} {coord.Y} {coord.Z} {color.X} {color.Y} {color.Z}";
+            return $"v {coord.X} {coord.Y} {coord.Z} {(color.X / 255f).ToString("0.0##")} {(color.Y / 255f).ToString("0.0##")} {(color.Z / 255f).ToString("0.0##")}";
         }
     }
 }

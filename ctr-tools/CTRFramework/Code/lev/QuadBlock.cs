@@ -435,7 +435,7 @@ namespace CTRFramework
 
                         foreach (Vertex vt in list)
                         {
-                            sb.AppendLine(vt.ToString());
+                            sb.AppendLine(vt.ToObj());
                             sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
                         }
 
@@ -469,7 +469,7 @@ namespace CTRFramework
 
                                 foreach (Vertex vt in list)
                                 {
-                                    sb.AppendLine(vt.ToString());
+                                    sb.AppendLine(vt.ToObj());
                                     sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
                                 }
 

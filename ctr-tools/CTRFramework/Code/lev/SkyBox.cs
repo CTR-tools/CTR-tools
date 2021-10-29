@@ -56,7 +56,7 @@ namespace CTRFramework
             StringBuilder sb = new StringBuilder();
 
             foreach (Vertex v in verts)
-                sb.Append(v.ToString() + "\r\n");
+                sb.Append(v.ToObj() + "\r\n");
 
             foreach (Vector4s tri in faces)
                 sb.AppendLine($"f {tri.X + 1} {tri.Z + 1} {tri.Y + 1}");
