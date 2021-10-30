@@ -180,11 +180,11 @@
   <howl>
     <entry>
       <region>NTSC-U</region>
-      <name>August 5th beta (the earliest known so far)</name>
+      <name>NTSC-U release</name>
       <banks>banknames.txt</banks>
       <samples>samplenames.txt</samples>
       <sequences>howlnames.txt</sequences>
-      <md5>f241501d880ee98112044236d7296d9c</md5>
+      <md5>269df8e697e879cb2254ff091f7aefc7</md5>
     </entry>
     
   </howl>

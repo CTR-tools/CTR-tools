@@ -42,6 +42,7 @@ namespace CTRTools.Controls
                 comboBox1.Items.AddRange(Meta.GetPatchList().ToArray());
             }
 
+            Howl.samplenames = Meta.LoadNumberedList("samplenames.txt");
         }
 
         private void LoadCseq(string fn)
