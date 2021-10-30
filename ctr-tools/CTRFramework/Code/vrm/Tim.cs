@@ -20,11 +20,11 @@ namespace CTRFramework.Vram
         public uint magic;
         public uint flags;
 
-        public uint clutsize;
+        public uint clutsize => (uint)clutdata.Length * 2 + 12;
         public Rectangle clutregion;
         public ushort[] clutdata;
 
-        public uint datasize;
+        public uint datasize => (uint)data.Length * 2 + 12;
 
         public Rectangle region;
 
@@ -81,7 +81,7 @@ namespace CTRFramework.Vram
             magic = 0x10;
             region = rect;
             data = new ushort[rect.Width * rect.Height];
-            datasize = (uint)(data.Length * 2 + 4 * 3);
+            //datasize = (uint)(data.Length * 2 + 4 * 3);
             flags = 2; //(((uint)bpp / 8) << 3) | 8;
         }
 
@@ -96,7 +96,7 @@ namespace CTRFramework.Vram
 
             if (hasClut)
             {
-                clutsize = br.ReadUInt32();
+                /*clutsize = */br.ReadUInt32();
                 clutregion.X = br.ReadUInt16();
                 clutregion.Y = br.ReadUInt16();
                 clutregion.Width = br.ReadUInt16();
@@ -104,7 +104,7 @@ namespace CTRFramework.Vram
                 clutdata = br.ReadArrayUInt16(clutregion.Width * clutregion.Height);
             }
 
-            datasize = br.ReadUInt32();
+            /*datasize = */br.ReadUInt32();
             region.X = br.ReadUInt16();
             region.Y = br.ReadUInt16();
             region.Width = br.ReadUInt16();
@@ -320,7 +320,7 @@ namespace CTRFramework.Vram
 
             x.clutregion = new Rectangle(tl.PalX * 16, tl.PalY, 16, 1);
             x.clutdata = GetCtrClut(tl);
-            x.clutsize = (uint)(x.clutregion.Width * 2 + 12);
+            //x.clutsize = (uint)(x.clutregion.Width * 2 + 12);
             x.flags = 8; //4 bit + pal = 8
 
             /*
@@ -470,8 +470,17 @@ namespace CTRFramework.Vram
                 for (int j = 0; j < i / 4; j++)
                     this.data[j] = (ushort)(newdata[j * 2] | newdata[j * 2 + 1] << 8);
 
-                this.clutdata = palette.ToArray();
             }
+
+            if (palette.Count < 16)
+            {
+                int x = palette.Count;
+
+                for (int g = 0; g < 16 - x; g++)
+                    palette.Add((ushort)0);
+            }
+
+            this.clutdata = palette.ToArray();
         }
 
 
@@ -555,14 +564,42 @@ namespace CTRFramework.Vram
             byte r = (byte)(((col >> 0) & 0x1F) << 3);
             byte g = (byte)(((col >> 5) & 0x1F) << 3);
             byte b = (byte)(((col >> 10) & 0x1F) << 3);
-            byte a = (byte)((col >> 15) * 255);
+            byte a = 0;
 
-            //um...
-            if (a != 255 && r == 0 && g == 0 & b == 0)
+            byte stp = (byte)((col >> 15));
+
+            /*
+            //https://www.psxdev.net/forum/viewtopic.php?t=953
+                Full-black without STP bit = Transparent (alpha = 0)
+                Non full-black without STP bit = Solid color (alpha = 255)
+
+                Full-black with STP bit = Semi-transparent black (alpha = 127)
+                Non full-black with STP bit = Semi-transparent color (alpha = 127)
+            */
+
+
+            if (stp == 0)
             {
-                r = 255;
-                g = 0;
+                if (r == 0 && g == 0 && b == 0)
+                {
+                    a = 0;
+                    r = 255;
+                    g = 0;
+                    b = 255;
+                }
+                else
+                {
+                    a = 255;
+                }
+            }
+            else
+            {
+                a = 127;
+                /*
+                r = 0;
+                g = 255;
                 b = 255;
+                */
             }
 
             return Color.FromArgb((useAlpha ? a : 255), r, g, b);
