@@ -70,9 +70,15 @@ namespace CTRFramework
 
             //so here's what's going on, instead of reading all pointers in a loop, we assume the 1st pointer is smallest, which is also where pointermap ends.
             //we get number of models and just read the array. this will shamelessly fail, if pointers are not sorted or models don't come after pointer map.
-            int numModels = (br.ReadInt32() - 4) / 4 - 1;
+            int firstModel = br.ReadInt32();
+            int numModels = 0;
 
-            br.Seek(-4); //go back
+            if (firstModel != 0)
+            {
+                numModels = (firstModel - 4) / 4 - 1;
+
+                br.Seek(-4); //go back
+            }
 
             List<uint> modelPtrs = br.ReadListUInt32(numModels);
 
@@ -101,7 +107,7 @@ namespace CTRFramework
 
             foreach (var model in Models)
             {
-                model.Export(path);
+                model.Export(path, tim);
                 model.Save(path);
             }
 

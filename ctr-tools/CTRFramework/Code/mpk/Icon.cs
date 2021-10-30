@@ -58,7 +58,7 @@ namespace CTRFramework
                 return;
             }
 
-            tim.GetTexture(tl).Save(Path.Combine(path, $"{Name}.png"), ImageFormat.Png);
+            tim.GetTexture(tl).Save(Path.Combine(path, $"{Name}_{tl.Tag()}.png"), ImageFormat.Png);
         }
     }
 }

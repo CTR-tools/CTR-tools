@@ -12,7 +12,7 @@ namespace CTRFramework.Vram
 
         public uint offset;
 
-        public List<Vector2b> uv = new List<Vector2b>();
+        public List<Vector2b> uv = new List<Vector2b>() { new Vector2b(0, 0), new Vector2b(0, 0), new Vector2b(0, 0), new Vector2b(0, 0) };
         public List<Vector2b> normuv = new List<Vector2b>();
 
         public ushort PalX;
@@ -125,7 +125,6 @@ namespace CTRFramework.Vram
 
         public TextureLayout()
         {
-
         }
 
         public static TextureLayout FromReader(BinaryReaderEx br, bool skipcheck = false)
@@ -144,6 +143,8 @@ namespace CTRFramework.Vram
 
         public void Read(BinaryReaderEx br)
         {
+            uv.Clear();
+
             offset = (uint)br.BaseStream.Position;
 
             uv.Add(new Vector2b(br));
@@ -214,6 +215,11 @@ namespace CTRFramework.Vram
         public override string ToString()
         {
             return $"offset: {offset.ToString("X8")}\r\n\tUV: ({uv[0].ToString()}, {uv[1].ToString()}, {uv[2].ToString()}, {uv[3].ToString()})\r\n\tpalette: ({PalX}, {PalY})\r\n\tpage: ({PageX}, {PageY})";
+        }
+
+        public string Dump()
+        {
+            return $"{PageX}\t{PageY}\t{min}\t{width}\t{height}\t{PalX}\t{PalY}\t{Tag()}";
         }
 
         public string ToObj()

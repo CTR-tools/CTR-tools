@@ -50,7 +50,7 @@ namespace CTRFramework
         /// Parses single line of OBJ file.
         /// </summary>
         /// <param name="line">OBJ line.</param>
-        public void ParseLine(string line)
+        private void ParseLine(string line)
         {
             line = line.Split('#')[0];
 

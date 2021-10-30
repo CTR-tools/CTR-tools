@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.IO;
 using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework
@@ -55,6 +56,8 @@ namespace CTRFramework
         public List<Vector4b> cols = new List<Vector4b>();
 
         public List<int> animPtrMap = new List<int>();
+
+        public byte[] trtire16 = new byte[] { 0x00, 0xD8, 0x00, 0x3F, 0x1F, 0xD8, 0x05, 0x00, 0x00, 0xF7, 0x1F, 0xF7 };
 
 
         public bool isTextured
@@ -480,12 +483,14 @@ namespace CTRFramework
         /// <param name="vertices">Vertex array.</param>
         /// <param name="colors">Color array.</param>
         /// <param name="faces">Face indices array.</param>
-        /// <returns>CtrHeader object.</returns>
+        /// <returns>CtrMesh object.</returns>
         public static CtrMesh FromRawData(string name, List<Vector3f> vertices, List<Vector4b> colors, List<Vector3i> faces)
         {
-            CtrMesh model = new CtrMesh();
-            model.name = name + "_hi";
-            model.lodDistance = -1;
+            CtrMesh mesh = new CtrMesh();
+            mesh.name = name + "_hi";
+            mesh.lodDistance = -1;
+
+            mesh.tl.Add(new TextureLayout());
 
             List<Vector4b> cc = new List<Vector4b>();
 
@@ -573,14 +578,14 @@ namespace CTRFramework
                 dVerts[i] -= bb.minf;
 
             //save converted offset to model
-            model.posOffset = new Vector4s(
+            mesh.posOffset = new Vector4s(
                 (short)(bb.minf.X / bb2.maxf.X * 255),
                 (short)(bb.minf.Y / bb2.maxf.Y * 255),
                 (short)(bb.minf.Z / bb2.maxf.Z * 255),
                 0);
 
             //save scale to model
-            model.scale = new Vector3(
+            mesh.scale = new Vector3(
                 bb2.maxf.X * 1000f,
                 bb2.maxf.Y * 1000f,
                 bb2.maxf.Z * 1000f
@@ -588,7 +593,7 @@ namespace CTRFramework
 
 
             //compress vertices to byte vector 
-            model.vtx.Clear();
+            mesh.vtx.Clear();
 
             foreach (var v in dVerts)
             {
@@ -598,20 +603,20 @@ namespace CTRFramework
                    (byte)(v.Y / bb2.maxf.Y * 255)
                     );
 
-                model.vtx.Add(vv);
+                mesh.vtx.Add(vv);
             }
 
 
             //save colors
             if (dColors.Count > 0)
             {
-                model.cols = dColors;
+                mesh.cols = dColors;
             }
             else
             {
-                model.cols.Add(new Vector4b(0x40, 0x40, 0x40, 0));
-                model.cols.Add(new Vector4b(0x80, 0x80, 0x80, 0));
-                model.cols.Add(new Vector4b(0xC0, 0xC0, 0xC0, 0));
+                mesh.cols.Add(new Vector4b(0x40, 0x40, 0x40, 0));
+                mesh.cols.Add(new Vector4b(0x80, 0x80, 0x80, 0));
+                mesh.cols.Add(new Vector4b(0xC0, 0xC0, 0xC0, 0));
             }
 
 
@@ -624,7 +629,7 @@ namespace CTRFramework
 
                 cmd[0] = new CtrDraw()
                 {
-                    texIndex = 0,
+                    texIndex = 1,
                     colorIndex = (byte)cfaces[i].X,
                     stackIndex = 87,
                     flags = CtrDrawFlags.s | CtrDrawFlags.d //| CtrDrawFlags.k
@@ -632,7 +637,7 @@ namespace CTRFramework
 
                 cmd[1] = new CtrDraw()
                 {
-                    texIndex = 0,
+                    texIndex = 1,
                     colorIndex = (byte)cfaces[i].Z,
                     stackIndex = 88,
                     flags = CtrDrawFlags.d //| CtrDrawFlags.k
@@ -640,22 +645,22 @@ namespace CTRFramework
 
                 cmd[2] = new CtrDraw()
                 {
-                    texIndex = 0,
+                    texIndex = 1,
                     colorIndex = (byte)cfaces[i].Y,
                     stackIndex = 89,
                     flags = CtrDrawFlags.d //| CtrDrawFlags.k
                 };
 
-                newlist.Add(model.vtx[vfaces[i].X]);
-                newlist.Add(model.vtx[vfaces[i].Z]);
-                newlist.Add(model.vtx[vfaces[i].Y]);
+                newlist.Add(mesh.vtx[vfaces[i].X]);
+                newlist.Add(mesh.vtx[vfaces[i].Z]);
+                newlist.Add(mesh.vtx[vfaces[i].Y]);
 
-                model.drawList.AddRange(cmd);
+                mesh.drawList.AddRange(cmd);
             }
 
-            model.vtx = newlist;
+            mesh.vtx = newlist;
 
-            return model;
+            return mesh;
         }
 
         /// <summary>
@@ -738,27 +743,27 @@ namespace CTRFramework
 
                     bw.Write(0xFFFFFFFF);
 
-
                     //write texturelayouts
-
                     if (tl.Count > 0)
                     {
                         bw.Jump(ptrTex + 4);
 
-                        pos = (int)bw.BaseStream.Position;
+                        pos = (int)bw.BaseStream.Position - 4;
 
                         for (int i = 0; i < tl.Count; i++)
                         {
                             //CtrModel.ptrs.Add((int)bw.BaseStream.Position - 4);
 
                             UIntPtr ptr = (UIntPtr)(pos + 4 * tl.Count + i * 12);
-                            bw.Write(ptr, null);
+                            bw.Write(ptr, patchTable);
                         }
 
                         foreach (var t in tl)
-                            t.Write(bw);
+                        {
+                            bw.Write(trtire16);
+                            //t.Write(bw);                    
+                        }
                     }
-
 
                     //write vertices
 
@@ -796,6 +801,27 @@ namespace CTRFramework
                     break;
 
                 default: Helpers.Panic(this, PanicType.Warning, $"unimplemented mode {mode.ToString()}"); break;
+            }
+        }
+
+        public void ExportTextures(string path, Tim vram = null)
+        {
+            if (vram == null)
+            {
+                Helpers.Panic(this, PanicType.Warning, $"No vram passed for '{name}'.");
+                return;
+            }
+
+            if (tl.Count > 0)
+            {
+                string texturepath = Path.Combine(path, name);
+
+                Helpers.CheckFolder(texturepath);
+
+                foreach (var tex in tl)
+                {
+                    vram.GetTexture(tex).Save(Path.Combine(texturepath, $"{tex.Tag()}.png"));
+                }
             }
         }
     }

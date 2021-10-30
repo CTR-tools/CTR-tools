@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using CTRFramework.Vram;
 using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework
@@ -85,7 +86,7 @@ namespace CTRFramework
         /// Exports all model lods to OBJ files.
         /// </summary>
         /// <param name="path">Path to export.</param>
-        public void Export(string path)
+        public void Export(string path, Tim vram = null)
         {
             int i = 0;
 
@@ -93,6 +94,8 @@ namespace CTRFramework
             {
                 string fn = Path.Combine(path, $"{name}.{entry.name}.{i.ToString("00")}{(entry.IsAnimated ? ".Animated" : "")}.obj");
                 Helpers.WriteToFile(fn, entry.ToObj());
+
+                entry.ExportTextures(path, vram);
 
                 i++;
             }
