@@ -44,6 +44,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cmd_tools", "cmd_tools", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTRFramework_Tests", "CTRFramework_Tests\CTRFramework_Tests.csproj", "{2F78E6DD-9F0D-48DE-9B6A-115F59FBB5CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vram_map", "vram_map\vram_map.csproj", "{2DEAF563-A41D-4034-B738-51855FBD47AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -124,6 +126,14 @@ Global
 		{2F78E6DD-9F0D-48DE-9B6A-115F59FBB5CE}.Release|x64.Build.0 = Release|x64
 		{2F78E6DD-9F0D-48DE-9B6A-115F59FBB5CE}.Release|x86.ActiveCfg = Release|x86
 		{2F78E6DD-9F0D-48DE-9B6A-115F59FBB5CE}.Release|x86.Build.0 = Release|x86
+		{2DEAF563-A41D-4034-B738-51855FBD47AE}.Debug|x64.ActiveCfg = Debug|x64
+		{2DEAF563-A41D-4034-B738-51855FBD47AE}.Debug|x64.Build.0 = Debug|x64
+		{2DEAF563-A41D-4034-B738-51855FBD47AE}.Debug|x86.ActiveCfg = Debug|x86
+		{2DEAF563-A41D-4034-B738-51855FBD47AE}.Debug|x86.Build.0 = Debug|x86
+		{2DEAF563-A41D-4034-B738-51855FBD47AE}.Release|x64.ActiveCfg = Release|x64
+		{2DEAF563-A41D-4034-B738-51855FBD47AE}.Release|x64.Build.0 = Release|x64
+		{2DEAF563-A41D-4034-B738-51855FBD47AE}.Release|x86.ActiveCfg = Release|x86
+		{2DEAF563-A41D-4034-B738-51855FBD47AE}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -134,6 +144,7 @@ Global
 		{190AB2B3-771E-4295-8536-9D0A41469BAC} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
 		{43F67739-B59B-49CF-A22A-F487AB1157E4} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
 		{712E662C-419B-42F9-A5A3-0027D91FE88E} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
+		{2DEAF563-A41D-4034-B738-51855FBD47AE} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E9B47DD5-5D7F-44E8-8DDD-E8D9058D81D2}

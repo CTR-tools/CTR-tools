@@ -1,0 +1,66 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using CTRFramework.Vram;
+using System.Drawing;
+
+namespace vram_map
+{
+    enum TimData
+    {
+        Name = 0,
+        Bpp = 1,
+        PageX = 2,
+        PageY = 3,
+        X = 4,
+        Y = 5,
+        Width = 6,
+        Height = 7,
+        PalX = 8,
+        PalY = 9
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            if (args.Length == 0)
+                return;
+
+            string[] lines = File.ReadAllLines(args[0]);
+
+            foreach (var line in lines)
+            {
+                if (line.Trim() == "")
+                    continue;
+
+                string[] values = line.Split(',');
+
+                string path = Path.Combine(Path.GetDirectoryName(args[0]), values[(int)TimData.Name]);
+
+                Bitmap bmp = (Bitmap)Bitmap.FromFile(path);
+
+                Tim tim = new Tim(new Rectangle(
+                    Int32.Parse(values[(int)TimData.PageX]) * 64 + Int32.Parse(values[(int)TimData.X]) / 4,
+                    Int32.Parse(values[(int)TimData.PageY]) * 256 + Int32.Parse(values[(int)TimData.Y]),
+                    bmp.Width / 4, bmp.Height));
+
+                Console.WriteLine(tim.region);
+
+                tim.flags = 1 << 3;
+
+                tim.clutregion = new Rectangle(
+                    Int32.Parse(values[(int)TimData.PalX]) * 16, 
+                    Int32.Parse(values[(int)TimData.PalY]),
+                    16, 1);
+
+                tim.LoadDataFromBitmap(path);
+
+                tim.Write(Path.ChangeExtension(path, ".tim"));
+            }
+        }
+    }
+}
