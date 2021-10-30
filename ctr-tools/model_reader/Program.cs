@@ -61,6 +61,19 @@ namespace model_reader
             string name = Path.GetFileNameWithoutExtension(filename);
             string ext = Path.GetExtension(filename).ToLower();
 
+            string vrampath = Path.ChangeExtension(filename, "vrm");
+
+            if (!File.Exists(vrampath))
+            {
+                vrampath = Path.Combine(Path.GetDirectoryName(filename), "shared.vrm");
+
+                if (!File.Exists(vrampath))
+                {
+                    Console.WriteLine("Warning! No vram file found.\r\nPlease put shared.vrm file with mpk you want to extract.");
+                    vrampath = "";
+                }
+            }
+
             switch (ext)
             {
                 case ".lev":
@@ -74,7 +87,7 @@ namespace model_reader
                 case ".dyn":
                     {
                         CtrModel d = CtrModel.FromFile(filename);
-                        d.Export(basepath);
+                        d.Export(basepath, CtrVrm.FromFile(vrampath).GetVram());
 
                         break;
                     }
@@ -95,19 +108,6 @@ namespace model_reader
                     }
                 case ".mpk":
                     {
-                        string vrampath = Path.ChangeExtension(filename, "vrm");
-
-                        if (!File.Exists(vrampath))
-                        {
-                            vrampath = Path.Combine(Path.GetDirectoryName(filename), "shared.vrm");
-
-                            if (!File.Exists(vrampath))
-                            {
-                                Console.WriteLine("Warning! No vram file found.\r\nPlease put shared.vrm file with mpk you want to extract.");
-                                vrampath = "";
-                            }
-                        }
-
                         ModelPack mpk = ModelPack.FromFile(filename);
                         mpk.Extract(Path.Combine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
 
