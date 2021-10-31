@@ -183,7 +183,7 @@
       <name>NTSC-U release</name>
       <banks>banknames.txt</banks>
       <samples>samplenames.txt</samples>
-      <sequences>howlnames.txt</sequences>
+      <sequences>HOWL</sequences>
       <md5>269df8e697e879cb2254ff091f7aefc7</md5>
     </entry>
     

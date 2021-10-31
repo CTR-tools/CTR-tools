@@ -104,7 +104,7 @@ namespace CTRFramework.Sound
                 Directory.CreateDirectory(vagpath);
 
                 //string vagname = vagpath + "\\" +  (name == null ?  (Howl.sampledict.ContainsKey(id) ? Howl.sampledict[id] : "sample_" + id.ToString("0000")) : name) + ".vag";
-                string vagname = vagpath + "\\" + Howl.GetName(id, Howl.samplenames);
+                string vagname = Path.Combine(vagpath, $"{Howl.GetName(id, Howl.samplenames)}.vag");
 
 
                 /*
@@ -138,6 +138,7 @@ namespace CTRFramework.Sound
         public void ExportAll(int bnum, string path, string path2 = null)
         {
             int i = 0;
+
             foreach (KeyValuePair<int, byte[]> s in samples)
             {
                 Export(s.Key, Howl.GetFreq(s.Key), path, path2, s.Key.ToString("0000") + "_" + s.Key.ToString("X4"));
