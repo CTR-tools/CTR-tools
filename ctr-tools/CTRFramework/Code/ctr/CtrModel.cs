@@ -236,7 +236,7 @@ namespace CTRFramework
             foreach (OBJ obj in objlist)
                 ctr.Entries.Add(CtrMesh.FromObj(obj.ObjectName, obj));
 
-            ctr.Name = objlist[0].ObjectName;
+            ctr.name = objlist[0].ObjectName;
 
             return ctr;
         }
@@ -261,7 +261,7 @@ namespace CTRFramework
             PlyResult ply = PlyHandler.FromFile(filename);
 
             CtrModel ctr = new CtrModel();
-            ctr.Name = Path.GetFileNameWithoutExtension(filename);
+            ctr.name = Path.GetFileNameWithoutExtension(filename);
             ctr.Entries.Add(CtrMesh.FromPly(ctr.Name, ply));
 
             return ctr;

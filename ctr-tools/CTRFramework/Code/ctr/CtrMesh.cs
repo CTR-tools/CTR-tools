@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Text;
 using System.IO;
 using ThreeDeeBear.Models.Ply;
+using System.ComponentModel;
 
 namespace CTRFramework
 {
@@ -43,6 +44,27 @@ namespace CTRFramework
                 return numAnims > 0;
             }
         }
+
+        #region [Component model]
+        [Browsable(true), DisplayName("Name"), Description(""), Category("CTR Mesh")]
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
+        [Browsable(true), DisplayName("LOD distance"), Description(""), Category("CTR Mesh")]
+        public short LodDistance
+        {
+            get => lodDistance;
+            set => lodDistance = value;
+        }
+        [Browsable(true), DisplayName("Scake"), Description(""), Category("CTR Mesh")]
+        public Vector3 Scale
+        {
+            get => scale;
+            set => scale = value;
+        }
+        #endregion
 
 
         //private int maxTex = 0;

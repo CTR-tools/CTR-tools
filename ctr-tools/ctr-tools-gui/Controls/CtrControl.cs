@@ -31,18 +31,29 @@ namespace CTRTools.Controls
         {
             try
             {
+                CtrModel model = new CtrModel();
+
                 switch (Path.GetExtension(filename).ToLower())
                 {
                     case ".obj":
                         OBJ obj = OBJ.FromFile(filename);
-                        ctr = CtrModel.FromObj(obj);
+                        model = CtrModel.FromObj(obj);
                         break;
                     case ".ply":
-                        ctr = CtrModel.FromPly(filename);
+                        model = CtrModel.FromPly(filename);
                         break;
                     default:
                         MessageBox.Show("Unsupported model.");
                         break;
+                }
+
+                if (ctr != null)
+                {
+                    ctr.Entries.AddRange(model.Entries);
+                }
+                else
+                {
+                    ctr = model;
                 }
 
                 UpdateUI();
@@ -56,11 +67,12 @@ namespace CTRTools.Controls
 
         private void UpdateUI()
         {
+            listBox1.Items.Clear();
+
             if (ctr != null)
             {
-                listBox1.Items.Clear();
-                foreach (var c in ctr.Entries)
-                    listBox1.Items.Add(c.name);
+                foreach (var model in ctr.Entries)
+                    listBox1.Items.Add(model.name);
 
                 propertyGrid1.SelectedObject = ctr;
             }
@@ -70,18 +82,18 @@ namespace CTRTools.Controls
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-            if (files.Length > 0)
+            foreach (var file in files)
             {
-                switch (Path.GetExtension(files[0]).ToLower())
+                switch (Path.GetExtension(file).ToLower())
                 {
                     case ".ctr":
                     case ".dyn":
-                        LoadCtr(files[0]);
+                        LoadCtr(file);
                         break;
 
                     case ".obj":
                     case ".ply":
-                        LoadModel(files[0]);
+                        LoadModel(file);
                         break;
 
                     default:
@@ -146,6 +158,32 @@ namespace CTRTools.Controls
                 if (fbd.ShowDialog() == DialogResult.OK)
                     ctr.ExportPly(fbd.SelectedPath);
             }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedIndex != -1)
+                propertyGrid1.SelectedObject = ctr.Entries[listBox1.SelectedIndex];
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            ctr = null;
+            propertyGrid1.SelectedObject = null;
+            UpdateUI();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (ctr != null)
+                propertyGrid1.SelectedObject = ctr;
+        }
+
+        private void propertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            int x = listBox1.SelectedIndex;
+            UpdateUI();
+            listBox1.SelectedIndex = x;
         }
     }
 }
