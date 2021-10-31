@@ -129,6 +129,8 @@
 110=levels\tracks\space\relic\data.vrm
 111=levels\tracks\space\relic\data.lev
 
+#renamed from alphalt1 to coco1
+
 112=levels\tracks\coco1\1P\data.vrm
 113=levels\tracks\coco1\1P\data.lev
 114=levels\tracks\coco1\2P\data.vrm
@@ -137,6 +139,8 @@
 117=levels\tracks\coco1\4P\data.lev
 118=levels\tracks\coco1\relic\data.vrm
 119=levels\tracks\coco1\relic\data.lev
+
+#renamed from alphalt2 to arena2
 
 120=levels\tracks\arena2\1P\data.vrm
 121=levels\tracks\arena2\1P\data.lev
@@ -263,21 +267,21 @@
 
 # ==========221 = OVERLAYS SECTION===============
 
-221=overlays\221_05.bin
-222=overlays\222_06.bin
-223=overlays\223_07.bin
-224=overlays\224_08.bin
+221=overlays\221_EndRaceMenu_CrystalChallenge.bin
+222=overlays\222_EndRaceMenu_ArcadeAdventure.bin
+223=overlays\223_EndRaceMenu_Relic.bin
+224=overlays\224_EndRaceMenu_TimeTrial.bin
+225=overlays\225_EndRaceMenu_BattleVS.bin
 
-225=overlays\225_09.bin
-226=overlays\226_0B.bin
-227=overlays\227_0C.bin
-228=overlays\228_0D.bin
-229=overlays\229_0E.bin
+226=overlays\226_Quadblock_1P.bin
+227=overlays\227_Quadblock_2P.bin
+228=overlays\228_Quadblock_3P.bin
+229=overlays\229_Quadblock_4P.bin
 
-230=overlays\230_10_main_menu.bin
-231=overlays\231_11_weapons.bin
-232=overlays\232_12_hub.bin
-233=overlays\233_13_podium.bin
+230=overlays\230_Threads_MainMenu.bin
+231=overlays\231_Threads_Racing.bin
+232=overlays\232_Threads_AdvHub.bin
+233=overlays\233_Threads_Cutscene.bin
 
 # ========234 = LOCALIZATION SECTION===============
 
@@ -686,8 +690,8 @@
 584=thumbs\battle7.str
 585=thumbs\null.str
 586=thumbs\tube1.str
-				  
-# ========587 = LOADING SCREENS SECTION===============				  
+
+# ========587 = LOADING SCREENS SECTION===============
 
 587=screen\title01_jap.tim
 588=screen\title01_pal.tim
@@ -698,12 +702,78 @@
 
 # ===========593 = CUTSCENES SECTION=================
 
-593=intro_box.vrm
-594=intro_box.lev
+593=cutscenes\intro_box\data.vrm
+594=cutscenes\intro_box\data.lev
+595=cutscenes\race_today\data.vrm
+596=cutscenes\race_today\data.lev
+597=cutscenes\race_today\data.ptr
+598=cutscenes\canyon_coco\data.vrm
+599=cutscenes\canyon_coco\data.lev
+600=cutscenes\canyon_coco\data.ptr
+601=cutscenes\pass_tiny\data.vrm
+602=cutscenes\pass_tiny\data.lev
+603=cutscenes\pass_tiny\data.ptr
+604=cutscenes\temple_polar\data.vrm
+605=cutscenes\temple_polar\data.lev
+606=cutscenes\temple_polar\data.ptr
+607=cutscenes\skyway_dingodile\data.vrm
+608=cutscenes\skyway_dingodile\data.lev
+609=cutscenes\skyway_dingodile\data.ptr
+610=cutscenes\sewer_cortex\data.vrm
+611=cutscenes\sewer_cortex\data.lev
+612=cutscenes\sewer_cortex\data.ptr
+613=cutscenes\oxide\data.vrm
+614=cutscenes\oxide\data.lev
+615=cutscenes\oxide\data.ptr
+616=cutscenes\sleeping_crash\data.vrm
+617=cutscenes\sleeping_crash\data.lev
+618=cutscenes\sleeping_crash\data.ptr
 
-# 595-660 here
-# i believe cutscenes are localized, but i didn't spend time figuring out exact languages.
-		
+619=cutscenes\last_oxide_intro\data.vrm
+620=cutscenes\last_oxide_intro\data.lev
+621=cutscenes\last_oxide_intro\data.ptr
+622=cutscenes\last_oxide_intro\data_french.vrm
+623=cutscenes\last_oxide_intro\data_french.lev
+624=cutscenes\last_oxide_intro\data_french.ptr
+625=cutscenes\last_oxide_intro\data_german.vrm
+626=cutscenes\last_oxide_intro\data_german.lev
+627=cutscenes\last_oxide_intro\data_german.ptr
+628=cutscenes\last_oxide_intro\data_italian.vrm
+629=cutscenes\last_oxide_intro\data_italian.lev
+630=cutscenes\last_oxide_intro\data_italian.ptr
+631=cutscenes\last_oxide_intro\data_spanish.vrm
+632=cutscenes\last_oxide_intro\data_spanish.lev
+633=cutscenes\last_oxide_intro\data_spanish.ptr
+634=cutscenes\last_oxide_intro\data_dutch.vrm
+635=cutscenes\last_oxide_intro\data_dutch.lev
+636=cutscenes\last_oxide_intro\data_dutch.ptr
+
+637=cutscenes\oxide01\data.vrm
+638=cutscenes\oxide01\data.lev
+639=cutscenes\oxide01\data_french.vrm
+640=cutscenes\oxide01\data_french.lev
+641=cutscenes\oxide01\data_german.vrm
+642=cutscenes\oxide01\data_german.lev
+643=cutscenes\oxide01\data_italian.vrm
+644=cutscenes\oxide01\data_italian.lev
+645=cutscenes\oxide01\data_spanish.vrm
+646=cutscenes\oxide01\data_spanish.lev
+647=cutscenes\oxide01\data_dutch.vrm
+648=cutscenes\oxide01\data_dutch.lev
+
+649=cutscenes\oxide02\data.vrm
+650=cutscenes\oxide02\data.lev
+651=cutscenes\oxide02\data_french.vrm
+652=cutscenes\oxide02\data_french.lev
+653=cutscenes\oxide02\data_german.vrm
+654=cutscenes\oxide02\data_german.lev
+655=cutscenes\oxide02\data_italian.vrm
+656=cutscenes\oxide02\data_italian.lev
+657=cutscenes\oxide02\data_spanish.vrm
+658=cutscenes\oxide02\data_spanish.lev
+659=cutscenes\oxide02\data_dutch.vrm
+660=cutscenes\oxide02\data_dutch.lev
+
 # ===========661 = CREDITS SECTION=================
 
 661=credits\crashdance\data.vrm
@@ -766,3 +836,6 @@
 718=credits\tawna4dance\data.vrm
 719=credits\tawna4dance\data.lev
 720=credits\tawna4dance\data.ptr
+
+721=null.vrm
+722=null.lev
