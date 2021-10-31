@@ -104,7 +104,6 @@ namespace CTRFramework.Sound.CSeq
                         //p = (byte)seq.shortSamples[pitch].info.Key;
                     }
                 }
-
                 else
                 {
                     if (evt == CSEQEvent.ChangePatch)
@@ -117,11 +116,13 @@ namespace CTRFramework.Sound.CSeq
                     {
                         try
                         {
-                            p += (byte)seq.samplesReverb[pitch].Pitch;
+                            p += (byte)seq.samplesReverb[CSEQ.ActiveInstrument].PitchShift;
+
                             //p += (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Pitch;
                         }
                         catch //(Exception ex)
                         {
+                           //System.Windows.Forms.MessageBox.Show("" + seq.samplesReverb.Count + " " + p);
                         }
                     }
                 }

@@ -265,8 +265,14 @@ namespace CTRTools.Controls
                 foreach (string s in files)
                 {
                     CSEQ c = CSEQ.FromFile(s);
-                    foreach (SampleDef sd in c.samples) if (!x.Contains(sd.Tag)) x.Add(sd.Tag);
-                    foreach (SampleDefReverb sd in c.samplesReverb) if (!x.Contains(sd.Tag)) x.Add(sd.Tag);
+
+                    foreach (SampleDef sd in c.samples) 
+                        if (!x.Contains(sd.Tag)) 
+                            x.Add(sd.Tag);
+
+                    foreach (SampleDefReverb sd in c.samplesReverb) 
+                        if (!x.Contains(sd.Tag))
+                            x.Add(sd.Tag);
                 }
 
                 x.Sort();

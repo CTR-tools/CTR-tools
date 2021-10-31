@@ -373,7 +373,7 @@ namespace CTRFramework
 
             foreach (var model in Models)
             {
-                model.Export(dir);
+                model.Export(dir, ctrvram);
                 model.Save(dir);
             }
         }

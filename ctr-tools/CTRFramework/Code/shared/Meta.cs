@@ -171,6 +171,9 @@ namespace CTRFramework.Shared
         */
         public static MetaInst GetMetaInst(string track, string inst, int x)
         {
+            if (midi == null)
+                Meta.LoadMidiJson();
+
             try
             {
                 //really?
