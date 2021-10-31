@@ -41,7 +41,6 @@ namespace howl
                     using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
                     {
                         Howl hwl = Howl.FromReader(br);
-                        Console.Write(hwl.ToString());
 
                         hwl.ExportCSEQ(path, br);
                         hwl.ExportAllSamples(path);

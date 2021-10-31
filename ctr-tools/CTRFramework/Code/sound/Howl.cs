@@ -4,23 +4,35 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
 using System.Xml;
 
 namespace CTRFramework.Sound
 {
+    public enum HowlVersion
+    {
+        UsDemo = 0x6F,
+        PalDemoOPSM = 0x71,
+        PalDemoSpyro = 0x72,
+        Proto = 0x7D,
+        Ntsc = 0x80
+    }
+
     public class Howl
     {
-        //Release rel;
-        string name;
-        string reg;
-
-        public int version;     //freezes the game if changed, game code tests against fixed number for some reason. maybe like version.
-
-
         public static Dictionary<int, string> seqnames = new Dictionary<int, string>();
         public static Dictionary<int, string> banknames = new Dictionary<int, string>();
         public static Dictionary<int, string> samplenames = new Dictionary<int, string>();
+
+        string name;
+        string reg;
+
+        public HowlVersion version;     //freezes the game if changed, game code tests against fixed number for some reason. maybe like version.
+
+        public static List<SampleDef> samplesSfx = new List<SampleDef>();
+        List<SampleDef> samplesEngineSfx = new List<SampleDef>();
+
+        public List<Bank> banks = new List<Bank>();
+        public List<CSEQ> sequences = new List<CSEQ>();
 
         public static string GetName(int x, Dictionary<int, string> dict)
         {
@@ -34,14 +46,12 @@ namespace CTRFramework.Sound
 
         List<ushort> unk = new List<ushort>();
 
-        public static List<SampleDef> samplesSfx = new List<SampleDef>();
-        List<SampleDef> samplesEngineSfx = new List<SampleDef>();
+
 
         List<int> ptrBanks = new List<int>();
         List<int> ptrSeqs = new List<int>();
 
-        public List<Bank> banks = new List<Bank>();
-        public List<CSEQ> sequences = new List<CSEQ>();
+
 
         public Howl()
         {
@@ -140,7 +150,7 @@ namespace CTRFramework.Sound
             if (new string(magic) != "HOWL")
                 throw new Exception("Not a CTR HOWL file.");
 
-            version = br.ReadInt32();
+            version = (HowlVersion)br.ReadInt32();
             int reserved1 = br.ReadInt32();
             int reserved2 = br.ReadInt32();
 
@@ -197,16 +207,32 @@ namespace CTRFramework.Sound
                 else
                     sequences[i].name = i.ToString("00");
             }
+
+            Console.Write(ToString());
         }
 
         public void ExportCSEQ(string path)
         {
+            Helpers.CheckFolder(path);
+
+            CSEQ.PatchMidi = true;
+            CSEQ.IgnoreVolume = true;
+
             foreach (var seq in sequences)
+            {
+                CSEQ.PatchName = seq.name;
+                seq.LoadMetaInstruments(seq.name);
+
                 seq.Save(Path.Combine(path, $"{seq.name}.cseq"));
+                seq.sequences[0].ExportMIDI(Path.Combine(path, $"{seq.name}.mid"), seq);
+            }
         }
 
         public void ExportCSEQ(string path, BinaryReaderEx br)
         {
+            CSEQ.PatchMidi = true;
+            CSEQ.IgnoreVolume = true;
+
             string pathBank = Path.Combine(path, "banks");
             Helpers.CheckFolder(pathBank);
 
@@ -257,6 +283,12 @@ namespace CTRFramework.Sound
                 byte[] data = br.ReadBytes(size);
                 Helpers.WriteToFile(fn, data);
 
+                CSEQ seq = CSEQ.FromFile(fn);
+                seq.name = seqnames[j];
+                CSEQ.PatchName = seq.name;
+                seq.LoadMetaInstruments(seq.name);
+                seq.sequences[0].ExportMIDI(Path.ChangeExtension(fn, ".mid"), seq);
+
                 j++;
             }
         }
@@ -286,7 +318,7 @@ namespace CTRFramework.Sound
 
         public override string ToString()
         {
-            return $"Samples: {samplesSfx.Count}\r\nBanks: {banks.Count}\r\nSequences: {sequences.Count}";
+            return $"Version: {version.ToString()}\r\nSamples: {samplesSfx.Count}\r\nBanks: {banks.Count}\r\nSequences: {sequences.Count}";
         }
     }
 }

@@ -45,13 +45,13 @@ namespace CTRTools.Controls
             Howl.samplenames = Meta.LoadNumberedList("samplenames.txt");
         }
 
-        private void LoadCseq(string fn)
+        private void LoadCseq(string filename)
         {
             //Log.Clear();
             sequenceBox.Items.Clear();
             trackBox.Items.Clear();
 
-            string name = Path.GetFileNameWithoutExtension(fn);
+            string name = Path.GetFileNameWithoutExtension(filename);
 
             for (int i = 0; i < comboBox1.Items.Count; i++)
             {
@@ -61,8 +61,8 @@ namespace CTRTools.Controls
 
             try
             {
-                seq = CSEQ.FromFile(fn);
-                FillUI(fn);
+                seq = CSEQ.FromFile(filename);
+                FillUI(filename);
             }
             catch
             {

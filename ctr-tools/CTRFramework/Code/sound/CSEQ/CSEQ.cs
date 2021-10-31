@@ -29,18 +29,9 @@ namespace CTRFramework.Sound.CSeq
 
         #endregion
 
-        #region [Constructors]
-
-        /// <summary>Empty CSEQ constructor.</summary>
+        #region [Constructors, factories]
         public CSEQ()
         {
-        }
-
-        /// <summary>CSEQ constructor.</summary>
-        /// <param name="fileName">CSEQ file name.</param>
-        public CSEQ(string fileName)
-        {
-            Read(fileName);
         }
 
         public CSEQ(BinaryReaderEx br)
@@ -48,23 +39,21 @@ namespace CTRFramework.Sound.CSeq
             Read(br);
         }
 
-        #endregion
-
-
-        /// <summary>Reads CSEQ from the file path given.</summary>
-        /// <param name="fileName">CSEQ file name.</param>
-        public bool Read(string fileName)
+        public static CSEQ FromReader(BinaryReaderEx br)
         {
-            path = Path.GetDirectoryName(fileName);
-            name = Path.GetFileNameWithoutExtension(fileName);
-
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(fileName)))
-            {
-                return Read(br);
-            }
+            return new CSEQ(br);
         }
 
-        public bool Read(BinaryReaderEx br)
+        public static CSEQ FromFile(string filename)
+        {
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            {
+                return FromReader(br);
+            }
+        }
+        #endregion
+
+        public void Read(BinaryReaderEx br)
         {
             long pos = br.BaseStream.Position;
 
@@ -100,25 +89,11 @@ namespace CTRFramework.Sound.CSeq
                 sequences.Add(Sequence.FromReader(br));
             }
 
-            LoadMetaInstruments(CSEQ.PatchName);
-
             if (br.BaseStream.Position - pos != size)
                 Helpers.Panic(this, PanicType.Warning, "CSEQ size mismatch!");
 
-            return true;
+            LoadMetaInstruments(CSEQ.PatchName);
         }
-
-
-        public static CSEQ FromFile(string filename)
-        {
-            return new CSEQ(filename);
-        }
-
-        public static CSEQ FromReader(BinaryReaderEx br)
-        {
-            return new CSEQ(br);
-        }
-
 
         public void LoadMetaInstruments(string song)
         {

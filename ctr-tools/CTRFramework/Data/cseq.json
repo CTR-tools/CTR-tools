@@ -374,7 +374,7 @@
 				{ "key": 38, "title": "Acoustic SnareDrum" }
 			]
 		},
-		"rampage": {
+		"rampage_ruins": {
 			"long": [
 				{ "midi": 12, "title": "Marimba" },
 				{ "midi": 30, "title": "Heavy Guitar" },
@@ -395,7 +395,7 @@
 				{ "key": 72, "title": "ROAR" }
 			]
 		},
-		"parking": {
+		"parking_lot": {
 			"long": [
 				{ "midi": 53, "pitch": 12, "title": "Voice" },
 				{ "midi": 30, "title": "Heavy Guitar" },
@@ -412,7 +412,7 @@
 				{ "key": 38, "title": "Acoustic SnareDrum" }
 			]
 		},
-		"skull": {
+		"skull_rock": {
 			"long": [
 				{ "midi": 30, "title": "Heavy Guitar" },
 				{ "midi": 33, "pitch": -24, "title": "Bass" },
@@ -430,7 +430,7 @@
 				{ "key": 38, "title": "Acoustic SnareDrum" }
 			]
 		},
-		"bowl": {
+		"north_bowl": {
 			"long": [
 			    { "midi": 7, "pitch": -12, "title": "Clavi" },
 				{ "midi": 30, "title": "Heavy Guitar" },
@@ -447,7 +447,7 @@
 				{ "key": 38, "title": "Acoustic SnareDrum" }
 			]
 		},
-		"rocky": {
+		"rocky_road": {
 			"long": [
 			    { "midi": 36, "pitch": -12, "title": "Guitar" },
 				{ "midi": 30, "title": "Heavy Guitar" },
@@ -465,7 +465,7 @@
 				{ "key": 38, "title": "Acoustic SnareDrum" }
 			]
 		},
-		"basement": {
+		"lab_basement": {
 			"long": [
 				{ "midi": 12, "title": "Marimba" },
 				{ "midi": 30, "title": "Heavy Guitar" },
@@ -484,7 +484,7 @@
 				{ "key": 72, "title": "WEEEEEEEE???" }
 			]
 		},
-		"boss": {
+		"boss_challenge": {
 			"long": [
 				{ "midi": 30, "pitch": -12, "title": "Distorted Guitar" },
 				{ "midi": 12, "title": "Marimba" },
@@ -502,7 +502,7 @@
 				{ "key": 45, "title": "Low Tom" }
 			]
 		},
-		"valley": {
+		"adv_gem_valley": {
 			"long": [
 				{ "midi": 18, "pitch": 12, "title": "Organ" },
 				{ "midi": 7, "title": "Clavi" },
@@ -528,7 +528,7 @@
 				{ "key": 36, "title": "Loop" }
 			]
 		},
-		"character": {
+		"character_select": {
 			"long": [
 				{ "midi": 15, "title": "Chord" },
 				{ "midi": 12, "title": "Marimba" },
