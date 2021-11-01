@@ -105,6 +105,7 @@ namespace CTRFramework
             vertanims = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
             skybox = new PtrWrap<SkyBox>(header.ptrSkybox).Get(br);
             nav = new PtrWrap<Nav>(header.ptrAiNav).Get(br);
+            //header.ptrAiNav = PsxPtr.Zero;
             iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
             trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
 
@@ -338,9 +339,9 @@ namespace CTRFramework
             {
                 if (tl.Position != 0)
                 {
-                    string texname = $"tex{lod.ToString()}\\{ tl.Tag()}.png";
+                    string texname = $"tex{lod.ToString()}\\{ tl.Tag}.png";
 
-                    sb.AppendLine($"newmtl {tl.Tag()}");
+                    sb.AppendLine($"newmtl {tl.Tag}");
                     sb.AppendLine("Kd 2.0 2.0 2.0"); //not sure if it actually works in obj, but it's what psx does
                     sb.AppendLine($"map_Kd {texname}\r\n");
 
@@ -354,7 +355,7 @@ namespace CTRFramework
                 }
                 else
                 {
-                    Helpers.Panic(this, PanicType.Warning, $"tl position == 0? {tl.Tag()}");
+                    Helpers.Panic(this, PanicType.Warning, $"tl position == 0? {tl.Tag}");
                 }
             }
 
@@ -511,7 +512,7 @@ namespace CTRFramework
                 Bitmap bb = new Bitmap(bmp.Width, bmp.Height);
                 Graphics g = Graphics.FromImage(bb);
                 g.DrawImage(bmp, new Point(0, 0));
-                bb.Save(Path.Combine(path, $"{tl.Tag()}.png"), System.Drawing.Imaging.ImageFormat.Png);
+                bb.Save(Path.Combine(path, $"{tl.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
             }
         }
 
@@ -562,15 +563,15 @@ namespace CTRFramework
                 foreach (var model in Models)
                     foreach (var entry in model.Entries)
                         foreach (TextureLayout tl in entry.tl)
-                            if (!tex.ContainsKey(tl.Tag()))
-                                tex.Add(tl.Tag(), tl);
+                            if (!tex.ContainsKey(tl.Tag))
+                                tex.Add(tl.Tag, tl);
 
                 if (iconpack != null)
                     foreach (var i in iconpack.Icons.Values)
                         if (i.tl != null)
                         {
-                            if (!tex.ContainsKey(i.tl.Tag()))
-                                tex.Add(i.tl.Tag(), i.tl);
+                            if (!tex.ContainsKey(i.tl.Tag))
+                                tex.Add(i.tl.Tag, i.tl);
                         }
                         else
                         {
@@ -586,23 +587,23 @@ namespace CTRFramework
                     {
                         case Detail.Low:
                             if (qb.ptrTexLow != UIntPtr.Zero)
-                                if (!tex.ContainsKey(qb.texlow.Tag()))
-                                    tex.Add(qb.texlow.Tag(), qb.texlow);
+                                if (!tex.ContainsKey(qb.texlow.Tag))
+                                    tex.Add(qb.texlow.Tag, qb.texlow);
                             break;
 
                         case Detail.Med:
                             foreach (CtrTex t in qb.tex)
                                 if (t.midlods[2].Position != 0)
-                                    if (!tex.ContainsKey(t.midlods[2].Tag()))
-                                        tex.Add(t.midlods[2].Tag(), t.midlods[2]);
+                                    if (!tex.ContainsKey(t.midlods[2].Tag))
+                                        tex.Add(t.midlods[2].Tag, t.midlods[2]);
                             break;
 
                         case Detail.High:
                             foreach (CtrTex t in qb.tex)
                                 foreach (var x in t.hi)
                                     if (x != null)
-                                        if (!tex.ContainsKey(x.Tag()))
-                                            tex.Add(x.Tag(), x);
+                                        if (!tex.ContainsKey(x.Tag))
+                                            tex.Add(x.Tag, x);
                             break;
                     }
                 }

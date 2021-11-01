@@ -276,7 +276,7 @@ namespace CTRFramework.Vram
             int width = (int)(tl.width * (bpp / 8.0f));
             int height = tl.height;
 
-            Helpers.Panic(this, PanicType.Assume, tl.width + " vs " + width + "|" + bpp + " " + (bpp / 8.0f) + " " + (tl.width * (bpp / 8.0f)));
+           // Helpers.Panic(this, PanicType.Assume, tl.width + " vs " + width + "|" + bpp + " " + (bpp / 8.0f) + " " + (tl.width * (bpp / 8.0f)));
 
             //ahem, so this happens because 1 byte = 2 pixel and if it's uneven width, we have to move half-byte.
             bool dirtyhack = false;
@@ -298,7 +298,7 @@ namespace CTRFramework.Vram
 
             for (int i = 0; i < height; i++)
             {
-                Helpers.Panic(this, PanicType.Assume, $"ptr: {ptr}, i: {i}, i * width: {i * width}, width: {width}");
+                //Helpers.Panic(this, PanicType.Assume, $"ptr: {ptr}, i: {i}, i * width: {i * width}, width: {width}");
 
                 Buffer.BlockCopy(
                     this.data, ptr,
@@ -380,7 +380,7 @@ namespace CTRFramework.Vram
         /// <returns></returns>
         public Bitmap GetTexture(TextureLayout tl, string path = "", string name = "")
         {
-            Helpers.Panic(this, PanicType.Assume, tl.ToString() + "" + "\r\n" + tl.frame.ToString());
+            //Helpers.Panic(this, PanicType.Assume, tl.ToString() + "" + "\r\n" + tl.frame.ToString());
 
             try
             {
@@ -397,8 +397,8 @@ namespace CTRFramework.Vram
                     Bitmap oldBmp = (Bitmap)Bitmap.FromStream(stream);
                     Bitmap newBmp = new Bitmap(oldBmp);
 
-                    if (!textures.ContainsKey(tl.Tag()))
-                        textures.Add(tl.Tag(), newBmp);
+                    if (!textures.ContainsKey(tl.Tag))
+                        textures.Add(tl.Tag, newBmp);
 
                     return newBmp;
                 }

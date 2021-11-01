@@ -439,7 +439,7 @@ namespace CTRFramework
                             sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
                         }
 
-                        sb.AppendLine("\r\nusemtl " + (ptrTexLow != UIntPtr.Zero ? texlow.Tag() : "default"));
+                        sb.AppendLine("\r\nusemtl " + (ptrTexLow != UIntPtr.Zero ? texlow.Tag : "default"));
 
                         if (objSaveQuads)
                         {
@@ -473,7 +473,7 @@ namespace CTRFramework
                                     sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
                                 }
 
-                                sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? tex[i].midlods[2].Tag() : "default"));
+                                sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? tex[i].midlods[2].Tag : "default"));
 
                                 if (objSaveQuads)
                                 {

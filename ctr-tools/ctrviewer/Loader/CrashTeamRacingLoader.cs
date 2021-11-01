@@ -44,7 +44,7 @@ namespace ctrviewer.Loaders
 
                                 TextureLayout t = qb.texlow;
 
-                                string texTag = t.Tag();
+                                string texTag = t.Tag;
 
                                 foreach (QuadFlags fl in (QuadFlags[])Enum.GetValues(typeof(QuadFlags)))
                                 {
@@ -101,7 +101,7 @@ namespace ctrviewer.Loaders
                                     {
                                         isAnimated = qb.tex[j].isAnimated;
                                         if (texTag != "00000000")
-                                            texTag = qb.tex[j].midlods[2].Tag();
+                                            texTag = qb.tex[j].midlods[2].Tag;
                                     }
 
                                     foreach (QuadFlags fl in (QuadFlags[])Enum.GetValues(typeof(QuadFlags)))

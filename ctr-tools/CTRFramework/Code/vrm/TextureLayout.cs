@@ -15,11 +15,15 @@ namespace CTRFramework.Vram
         public List<Vector2b> uv = new List<Vector2b>() { new Vector2b(0, 0), new Vector2b(0, 0), new Vector2b(0, 0), new Vector2b(0, 0) };
         public List<Vector2b> normuv = new List<Vector2b>();
 
-        public ushort PalX;
-        public ushort PalY;
+        public Point Palette;
 
-        public ushort PageX;
-        public ushort PageY;
+        public int PalX => Palette.X;
+        public int PalY => Palette.Y;
+
+        public Point Page;
+
+        public int PageX => Page.X;
+        public int PageY => Page.Y;
 
         public byte check;
 
@@ -50,60 +54,18 @@ namespace CTRFramework.Vram
             }
         }
 
-        public int width
-        {
-            get
-            {
-                return max.X - min.X + 1; //uv[1].X - uv[0].X + 1; }
-            }
-        }
+        public int width => max.X - min.X > 0 ? max.X - min.X + 1 : 0;
 
-        public int height
-        {
-            get
-            {
-                return max.Y - min.Y + 1;// return uv[3].Y - uv[0].Y + 1; }
-            }
-        }
+        public int height => max.Y - min.Y > 0 ? max.Y - min.Y + 1 : 0;
 
-        public int Position
-        {
-            get
-            {
-                return PageY * (CtrVrm.Height * CtrVrm.Width / 2) + min.Y * CtrVrm.Width + PageX * 64 + min.X / 4;
-            }
-        }
+        public int Position => PageY * (CtrVrm.Height * CtrVrm.Width / 2) + min.Y * CtrVrm.Width + PageX * 64 + min.X / 4;
 
-        public int PalPosition
-        {
-            get
-            {
-                return CtrVrm.Width * PalY + PalX * 16;
-            }
-        }
+        public int PalPosition => CtrVrm.Width * PalY + PalX * 16;
 
-        public int RealX
-        {
-            get
-            {
-                return PageX * 64 + min.X / 4;
-            }
-        }
-        public int RealY
-        {
-            get
-            {
-                return PageY * 256 + min.Y;
-            }
-        }
+        public int RealX => PageX * 64 + min.X / 4;
+        public int RealY => PageY * 256 + min.Y;
 
-        public Rectangle frame
-        {
-            get
-            {
-                return new Rectangle(RealX, RealY, width / 4, height);
-            }
-        }
+        public Rectangle frame => new Rectangle(RealX, RealY, width / 4, height);
 
         public TextureLayout(BinaryReaderEx br)
         {
@@ -151,15 +113,13 @@ namespace CTRFramework.Vram
 
             ushort buf = br.ReadUInt16();
 
-            PalX = (ushort)(buf & 0x3F);
-            PalY = (ushort)(buf >> 6);
+            Palette = new Point(buf & 0x3F, buf >> 6);
 
             uv.Add(new Vector2b(br));
 
             buf = br.ReadByte();
 
-            PageX = (ushort)(buf & 0xF);
-            PageY = (ushort)((buf >> 4) & 1);
+            Page = new Point(buf & 0xF, (buf >> 4) & 1);
 
             //i guess 2 bits here define bpp
             f1 = (byte)((buf >> 5) & 1);
@@ -198,19 +158,7 @@ namespace CTRFramework.Vram
         private string _tag = "";
 
         //meant to be unique
-        public string Tag()
-        {
-            if (_tag == "")
-                _tag = $"{RealX}_{RealY}_{PalX}_{PalY}_{width}_{height}";
-
-            return _tag;
-            // return offset.ToString("X8");
-
-            /*
-            return PageX.ToString("X2") + PageY.ToString("X2") + "_" +
-                PalX.ToString("X4") + PalY.ToString("X4") + "_" + uv[0].X.ToString("X2") + uv[0].Y.ToString("X2");
-                */
-        }
+        public string Tag => _tag == "" ? $"{RealX}_{RealY}_{PalX}_{PalY}_{width}_{height}" : _tag;
 
         public override string ToString()
         {
@@ -219,7 +167,7 @@ namespace CTRFramework.Vram
 
         public string Dump()
         {
-            return $"{PageX}\t{PageY}\t{min}\t{width}\t{height}\t{PalX}\t{PalY}\t{Tag()}";
+            return $"{PageX}\t{PageY}\t{min}\t{width}\t{height}\t{PalX}\t{PalY}\t{Tag}";
         }
 
         public string ToObj()
@@ -247,7 +195,7 @@ namespace CTRFramework.Vram
                     Math.Round(v.Y * 1.0, 3).ToString()
                 );
                 */
-            sb.AppendFormat("\r\nusemtl {0}\r\n", Tag());
+            sb.AppendFormat("\r\nusemtl {0}\r\n", Tag);
 
             return sb.ToString();
         }

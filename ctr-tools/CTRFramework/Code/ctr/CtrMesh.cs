@@ -58,7 +58,7 @@ namespace CTRFramework
             get => lodDistance;
             set => lodDistance = value;
         }
-        [Browsable(true), DisplayName("Scake"), Description(""), Category("CTR Mesh")]
+        [Browsable(true), DisplayName("Scale"), Description(""), Category("CTR Mesh")]
         public Vector3 Scale
         {
             get => scale;
@@ -409,8 +409,8 @@ namespace CTRFramework
 
             foreach (TextureLayout t in tl)
             {
-                if (!uniquetags.Contains(t.Tag()))
-                    uniquetags.Add(t.Tag());
+                if (!uniquetags.Contains(t.Tag))
+                    uniquetags.Add(t.Tag);
             }
 
             foreach (string t in uniquetags)
@@ -437,7 +437,7 @@ namespace CTRFramework
             {
                 if (matIndices[i] != null)
                 {
-                    sb.AppendLine($"usemtl {matIndices[i].Tag()}");
+                    sb.AppendLine($"usemtl {matIndices[i].Tag}");
                     sb.AppendLine(matIndices[i].ToObj());
                 }
                 else
@@ -449,7 +449,7 @@ namespace CTRFramework
                     sb.AppendLine($"vt 1 0");
                 }
 
-                sb.AppendLine($"f {i * 3 + 1}/{i * 3 + 1} {i * 3 + 2}/{i * 3 + 2} {i * 3 + 3}/{i * 3 + 3}");
+                sb.AppendLine($"f {i * 3 + 3}/{i * 3 + 3} {i * 3 + 2}/{i * 3 + 2} {i * 3 + 1}/{i * 3 + 1}");
             }
 
             /*
@@ -842,7 +842,7 @@ namespace CTRFramework
 
                 foreach (var tex in tl)
                 {
-                    vram.GetTexture(tex).Save(Path.Combine(texturepath, $"{tex.Tag()}.png"));
+                    vram.GetTexture(tex).Save(Path.Combine(texturepath, $"{tex.Tag}.png"));
                 }
             }
         }

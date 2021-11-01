@@ -26,7 +26,12 @@ namespace CTRFramework
             for (int i = 0; i < 3; i++)
             {
                 if (ptrs[i] != 0)
+                {
+                    //now this jump here is only needed for samplers.
+                    //is there any extra data in demos?
+                    br.Jump(ptrs[i]);
                     paths.Add(new AIPath(br));
+                }
             }
         }
 
