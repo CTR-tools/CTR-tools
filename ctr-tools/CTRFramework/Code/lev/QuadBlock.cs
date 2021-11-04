@@ -418,7 +418,7 @@ namespace CTRFramework
             };
         }
 
-        bool objSaveQuads = false;
+        bool objSaveQuads = true;
 
         public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b)
         {

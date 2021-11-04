@@ -39,7 +39,7 @@ namespace CTRFramework.Sound
             string result = $"{x.ToString("0000")}_{ x.ToString("X4")}";
 
             if (dict.ContainsKey(x))
-                result += dict[x];
+                result += "_" + dict[x];
 
             return result;
         }
@@ -122,6 +122,8 @@ namespace CTRFramework.Sound
 
         public void Write(BinaryWriterEx bw)
         {
+            Console.WriteLine("Writing HOWL...");
+
             bw.Write("HOWL".ToCharArray());
             bw.Write((int)version);
             bw.Seek(8);
@@ -151,7 +153,7 @@ namespace CTRFramework.Sound
 
             bw.Seek(2 * (Banks.Count + Songs.Count));
 
-            bw.Jump((int)((bw.BaseStream.Position + 2047) >> 11 << 11));
+            bw.JumpNextSector();
 
             List<uint> offsets = new List<uint>();
 
@@ -159,20 +161,22 @@ namespace CTRFramework.Sound
             {
                 offsets.Add((uint)bw.BaseStream.Position);
                 bank.Write(bw);
-                bw.Jump((int)((bw.BaseStream.Position + 2047) >> 11 << 11));
+                bw.JumpNextSector();
             }
 
             foreach (var song in Songs)
             {
                 offsets.Add((uint)bw.BaseStream.Position);
                 song.Write(bw);
-                bw.Jump((int)((bw.BaseStream.Position + 2047) >> 11 << 11));
+                bw.JumpNextSector();
             }
 
             bw.Jump(ptrs);
 
             foreach (var ptr in offsets)
                 bw.Write((short)(ptr / 2048));
+
+            Console.WriteLine("HOWL saved.");
         }
 
         public void Read(BinaryReaderEx br)
@@ -284,7 +288,7 @@ namespace CTRFramework.Sound
 
             Console.WriteLine("---");
 
-            string pathSeq = Path.Combine(path, "sequences");
+            string pathSeq = Path.Combine(path, "songs");
             Helpers.CheckFolder(pathSeq);
 
             int j = 0;

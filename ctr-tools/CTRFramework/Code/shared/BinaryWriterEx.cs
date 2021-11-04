@@ -31,6 +31,11 @@ namespace CTRFramework.Shared
             Seek(x, SeekOrigin.Current);
         }
 
+        public void JumpNextSector()
+        {
+            Jump((int)((BaseStream.Position + 2047) >> 11 << 11));
+        }
+
         public void WriteBig(int value)
         {
             byte[] x = BitConverter.GetBytes(value);

@@ -130,7 +130,7 @@ namespace CTRFramework.Sound
                 }
                 */
 
-                Console.WriteLine(vagname);
+                //Console.WriteLine(vagname);
 
                 using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(samples[id])))
                 {

@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Sound;
+using CTRFramework.Sound.CSeq;
 using System;
 using System.IO;
 
@@ -45,6 +46,8 @@ namespace howl
                         hwl.ExportCSEQ(path, br);
                         hwl.ExportAllSamples(path);
 
+                        //hwl.Save(Path.ChangeExtension(filename, ".hwl_test"));
+
                         Console.WriteLine("Done!");
                     }
                     break;
@@ -58,6 +61,11 @@ namespace howl
                 case ".xnf":
                     XaInfo xnf = XaInfo.FromFile(filename);
                     Console.WriteLine(xnf.ToString());
+                    break;
+
+                case ".cseq":
+                    CSEQ seq = CSEQ.FromFile(filename);
+                    seq.songs[0].ExportMIDI(Path.ChangeExtension(filename, ".mid"), seq);
                     break;
 
                 default:
