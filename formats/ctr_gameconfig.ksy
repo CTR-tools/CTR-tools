@@ -282,7 +282,7 @@ seq:
       00000002 - draw rain
       00000004 - draw confetti?
       00000008 - draw stars
-      00000010 - ?
+      00000010 - draw beaker rain
       00000020 - draw ctr models (instances?)
       00000040 - ?
       00000080 - probably wheels, but doesn't render without kart
