@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using CTRFramework.Vram;
 using System.Drawing;
+using CTRFramework.Shared;
 
 namespace vram_map
 {
@@ -31,6 +32,11 @@ namespace vram_map
                 return;
 
             string[] lines = File.ReadAllLines(args[0]);
+
+            StringBuilder sb = new StringBuilder();
+            int i = 0;
+
+            sb.AppendLine("[TIM Files]");
 
             foreach (var line in lines)
             {
@@ -59,8 +65,18 @@ namespace vram_map
 
                 tim.LoadDataFromBitmap(path);
 
-                tim.Write(Path.ChangeExtension(path, ".tim"));
+                string timpath = Path.ChangeExtension(path, ".tim");
+
+                tim.Write(timpath);
+
+                sb.AppendLine($"File_{i}={timpath}");
+
+                i++;
             }
+
+            sb.AppendLine("[Graphics Mode]\r\nWidth = 320\r\nHeight = 256");
+
+            File.WriteAllText("_shared.psx", sb.ToString());
         }
     }
 }
