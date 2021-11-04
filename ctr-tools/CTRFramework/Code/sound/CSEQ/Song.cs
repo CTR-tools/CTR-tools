@@ -6,7 +6,7 @@ using System.IO;
 
 namespace CTRFramework.Sound.CSeq
 {
-    public class Sequence
+    public class Song
     {
         public int BPM;
         public int TPQN;
@@ -14,18 +14,18 @@ namespace CTRFramework.Sound.CSeq
 
         public List<CTrack> tracks = new List<CTrack>();
 
-        public Sequence()
+        public Song()
         {
         }
 
-        public Sequence(BinaryReaderEx br)
+        public Song(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public static Sequence FromReader(BinaryReaderEx br)
+        public static Song FromReader(BinaryReaderEx br)
         {
-            return new Sequence(br);
+            return new Song(br);
         }
 
         //reads CSEQ from given binaryreader
@@ -51,12 +51,10 @@ namespace CTRFramework.Sound.CSeq
                 //jump to track offset
                 br.Jump(trackData + seqOffsets[i]);
 
-                //read track
-                CTrack t = new CTrack();
-                t.Read(br, i);
-
                 //add track to the list
-                tracks.Add(t);
+                tracks.Add(CTrack.FromReader(br));
+
+                tracks[i].Index = i;
             }
 
             return true;
@@ -112,7 +110,8 @@ namespace CTRFramework.Sound.CSeq
         public void Write(BinaryWriterEx bw)
         {
             //sanity check
-            if (tracks.Count > Byte.MaxValue) throw new IndexOutOfRangeException("Too many tracks, max 255.");
+            if (tracks.Count > Byte.MaxValue)
+                throw new IndexOutOfRangeException("Too many tracks, max 255.");
 
             bw.Write((byte)tracks.Count);
             bw.Write((short)BPM);
@@ -120,10 +119,12 @@ namespace CTRFramework.Sound.CSeq
 
             long offsetsarraypos = bw.BaseStream.Position;
 
-            foreach (CTrack ct in tracks)
-            {
-                bw.Write((short)0);
-            }
+            bw.Seek(tracks.Count * 2);
+
+            //foreach (CTrack ct in tracks)
+            //{
+            //   bw.Write((short)0);
+            //}
 
             if (tracks.Count % 2 == 0)
                 bw.Write((short)0);
@@ -131,10 +132,10 @@ namespace CTRFramework.Sound.CSeq
             List<long> offsets = new List<long>();
             long offsetstart = bw.BaseStream.Position;
 
-            foreach (CTrack ct in tracks)
+            foreach (var track in tracks)
             {
                 offsets.Add(bw.BaseStream.Position - offsetstart);
-                ct.WriteBytes(bw);
+                track.Write(bw);
             }
 
             long comeback = bw.BaseStream.Position;

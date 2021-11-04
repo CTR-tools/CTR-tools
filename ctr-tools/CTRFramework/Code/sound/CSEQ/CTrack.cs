@@ -9,19 +9,31 @@ namespace CTRFramework.Sound.CSeq
 {
     public class CTrack
     {
-        //meta
-        public string name = "default_name";
-        public string address = "";
-        public int trackNum = 0;
+        public string Name => $"Track_{Index.ToString("00")}{(isDrumTrack ? "_drums" : "")}";
+
+        //public string address = "";
+        public int Index = 0;
 
         public int instrument = 0;
         public bool isDrumTrack = false;
 
-        public List<Command> cmd = new List<Command>();
+        public List<Command> cseqEventCollection = new List<Command>();
 
         public CTrack()
         {
         }
+
+        public CTrack(BinaryReaderEx br)
+        {
+            Read(br);
+        }
+
+        public static CTrack FromReader(BinaryReaderEx br)
+        {
+            return new CTrack(br);
+        }
+
+
 
         public void Import(string filename)
         {
@@ -29,10 +41,10 @@ namespace CTRFramework.Sound.CSeq
             FromMidiEventList(midi.Events.GetTrackEvents(1).ToList());
         }
 
-        public void Read(BinaryReaderEx br, int num)
+        public void Read(BinaryReaderEx br)
         {
-            trackNum = num;
-            address = br.HexPos();
+            //trackNum = num;
+            //address = br.HexPos();
 
             switch (br.ReadInt16())
             {
@@ -48,38 +60,21 @@ namespace CTRFramework.Sound.CSeq
                 cx = new Command();
                 cx.Read(br);
 
-                if (cx.evt == CSEQEvent.ChangePatch)
+                if (cx.cseqEvent == CSEQEvent.ChangePatch)
                     instrument = cx.pitch;
 
-                cmd.Add(cx);
+                cseqEventCollection.Add(cx);
             }
-            while (cx.evt != CSEQEvent.EndTrack);
-
-            name = "Track_" + trackNum.ToString("00") + (isDrumTrack ? "_drum" : "");
+            while (cx.cseqEvent != CSEQEvent.Terminator);
         }
-
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append(address + "\r\n");
-
-            foreach (Command c in cmd)
-                sb.Append(c.ToString());
-
-            return sb.ToString();
-        }
-
 
         public void FromMidiEventList(List<MidiEvent> events)
         {
-            cmd.Clear();
+            cseqEventCollection.Clear();
 
             foreach (var evt in events)
-                cmd.Add(Command.FromMidiEvent(evt));
+                cseqEventCollection.Add(Command.FromMidiEvent(evt));
         }
-
 
         public List<MidiEvent> ToMidiEventList(int MPQN, int channel, CSEQ seq)
         {
@@ -88,7 +83,7 @@ namespace CTRFramework.Sound.CSeq
 
             int absTime = 0;
 
-            me.Add(new TextEvent(name, MetaEventType.SequenceTrackName, absTime));
+            me.Add(new TextEvent(Name, MetaEventType.SequenceTrackName, absTime));
             me.Add(new TempoEvent(MPQN, absTime));
 
             if (channel == 10)
@@ -99,9 +94,9 @@ namespace CTRFramework.Sound.CSeq
             }
 
             if (CSEQ.UseSampleVolumeForTracks && !CSEQ.IgnoreVolume)
-                me.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, seq.samplesReverb[instrument].Volume / 2));
+                me.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, (byte)(seq.samplesReverb[instrument].Volume * 128)));
 
-            foreach (Command c in cmd)
+            foreach (var c in cseqEventCollection)
             {
                 me.AddRange(c.ToMidiEvent(absTime, channel, seq, this));
                 absTime += c.wait;
@@ -110,15 +105,24 @@ namespace CTRFramework.Sound.CSeq
             return me;
         }
 
-
-        public void WriteBytes(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw)
         {
-            bw.Write(isDrumTrack ? (short)1 : (short)0);
+            bw.Write((short)(isDrumTrack ? 1 : 0));
 
-            foreach (Command c in cmd)
-            {
-                c.WriteBytes(bw);
-            }
+            foreach (var cseqEvent in cseqEventCollection)
+                cseqEvent.Write(bw);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            //sb.Append(address + "\r\n");
+
+            foreach (Command c in cseqEventCollection)
+                sb.Append(c.ToString());
+
+            return sb.ToString();
         }
     }
 }

@@ -67,12 +67,44 @@ namespace CTRFramework.Shared
 
         #endregion
 
+
+        public int FromTimeDelta(byte[] value)
+        {
+            int result = 0;
+
+            foreach (var v in value)
+            {
+                result <<= 7;
+                result |= v & 0x7F;
+            }
+
+            foreach (byte v in value)
+                Console.Write(v.ToString("X2"));
+
+            Console.WriteLine(" = " + result);
+
+            return result;
+        }
+
         /// <summary>
         /// Reads time-delta value from stream as found in MIDI format.
         /// </summary>
         /// <returns></returns>
         public int ReadTimeDelta()
         {
+            byte x = 0;
+            List<byte> bytes = new List<byte>();
+
+            do
+            {
+                x = ReadByte();
+                bytes.Add(x);
+            }
+            while ((x & 0x80) != 0);
+
+            return FromTimeDelta(bytes.ToArray());
+
+            /*
             int time = 0;
             byte next = 0;
             int ttltime = 0;
@@ -88,7 +120,7 @@ namespace CTRFramework.Shared
             }
             while (next != 0);
 
-            return ttltime;
+            return ttltime;*/
         }
 
         #region Big endian helpers

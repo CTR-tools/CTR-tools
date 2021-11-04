@@ -231,16 +231,12 @@ namespace CTRFramework.Shared
 
             return 0;
         }
-
     }
-
-
     public struct MetaInst
     {
-        public int Midi;
-        public int Pitch;
-        public int Key;
-        public string Title;
+        public int Midi { get; set; }
+        public int Pitch { get; set; }
+        public int Key { get; set; }
+        public string Title { get; set; }
     }
-
 }

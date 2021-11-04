@@ -64,9 +64,9 @@ namespace CTRTools.Controls
                 seq = CSEQ.FromFile(filename);
                 FillUI(filename);
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Failed to read CTR sequence!");
+                MessageBox.Show("Failed to read CTR sequence!\r\n" + ex.ToString());
             }
         }
 
@@ -84,7 +84,7 @@ namespace CTRTools.Controls
 
             int i = 0;
 
-            foreach (Sequence s in seq.sequences)
+            foreach (Song s in seq.songs)
             {
                 sequenceBox.Items.Add("Sequence_" + i.ToString("X2"));
                 i++;
@@ -92,7 +92,7 @@ namespace CTRTools.Controls
 
             TreeNode tn = new TreeNode("SampleDef");
 
-            foreach (SampleDef sd in seq.samples)
+            foreach (var sd in seq.samples)
             {
                 TreeNode tn1 = new TreeNode(sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""));
                 tn.Nodes.Add(tn1);
@@ -100,7 +100,7 @@ namespace CTRTools.Controls
 
             TreeNode tn2 = new TreeNode("SampleDefReverb");
 
-            foreach (SampleDefReverb sd in seq.samplesReverb)
+            foreach (var sd in seq.samplesReverb)
             {
                 TreeNode tn3 = new TreeNode(sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""));
                 tn2.Nodes.Add(tn3);
@@ -124,9 +124,11 @@ namespace CTRTools.Controls
 
             int i = 0;
 
-            foreach (CTrack c in seq.sequences[sequenceBox.SelectedIndex].tracks)
+            Song song = seq.songs[sequenceBox.SelectedIndex];
+
+            foreach (var track in song.tracks)
             {
-                trackBox.Items.Add(c.name);
+                trackBox.Items.Add(track.Name);
                 i++;
             }
 
@@ -139,7 +141,7 @@ namespace CTRTools.Controls
             int y = trackBox.SelectedIndex;
 
             if (x != -1 && y != -1)
-                this.trackInfoBox.Text = seq.sequences[x].tracks[y].ToString();
+                this.trackInfoBox.Text = seq.songs[x].tracks[y].ToString();
 
             tabControl1.SelectedIndex = 0;
         }
@@ -150,7 +152,7 @@ namespace CTRTools.Controls
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                seq.sequences[sequenceBox.SelectedIndex].ExportMIDI(sfd.FileName, seq);
+                seq.songs[sequenceBox.SelectedIndex].ExportMIDI(sfd.FileName, seq);
                 //seq.ToSFZ(Path.ChangeExtension(sfd.FileName, ".sfz"));
             }
 
@@ -266,11 +268,11 @@ namespace CTRTools.Controls
                 {
                     CSEQ c = CSEQ.FromFile(s);
 
-                    foreach (SampleDef sd in c.samples) 
+                    foreach (var sd in c.samples) 
                         if (!x.Contains(sd.Tag)) 
                             x.Add(sd.Tag);
 
-                    foreach (SampleDefReverb sd in c.samplesReverb) 
+                    foreach (var sd in c.samplesReverb) 
                         if (!x.Contains(sd.Tag))
                             x.Add(sd.Tag);
                 }
@@ -325,14 +327,14 @@ namespace CTRTools.Controls
             {
                 if (instrumentList.SelectedNode.Parent.Index == 1)
                 {
-                    SampleDef sd = seq.samples[instrumentList.SelectedNode.Index];
+                    var sd = seq.samples[instrumentList.SelectedNode.Index];
                     instrumentInfo.SelectedObject = sd;
                     x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : "") + ".wav";
                 }
 
                 if (instrumentList.SelectedNode.Parent.Index == 0)
                 {
-                    SampleDefReverb sd = seq.samplesReverb[instrumentList.SelectedNode.Index];
+                    var sd = seq.samplesReverb[instrumentList.SelectedNode.Index];
                     instrumentInfo.SelectedObject = sd;
                     x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : "") + ".wav";
                 }
@@ -373,7 +375,7 @@ namespace CTRTools.Controls
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    seq.sequences[x].tracks[y].Import(ofd.FileName);
+                    seq.songs[x].tracks[y].Import(ofd.FileName);
                 }
             }
 
@@ -456,13 +458,13 @@ namespace CTRTools.Controls
             {
                 MidiFile midi = new MidiFile(ofd.FileName);
 
-                Sequence newMidi = new Sequence();
+                Song newMidi = new Song();
 
                 for (int i = 0; i < midi.Tracks; i++)
                 {
                     CTrack track = new CTrack();
-                    track.trackNum = i;
-                    track.name = $"track_{i.ToString("00")}";
+                    track.Index = i;
+                    //track.name = $"track_{i.ToString("00")}";
                     track.FromMidiEventList(midi.Events.GetTrackEvents(i).ToList());
                     newMidi.tracks.Add(track);
                 }
@@ -470,16 +472,28 @@ namespace CTRTools.Controls
                 foreach (var x in newMidi.tracks)
                 {
                     Command c = new Command();
-                    c.evt = CSEQEvent.ChangePatch;
-                    c.pitch = (byte)x.trackNum;
+                    c.cseqEvent = CSEQEvent.ChangePatch;
+                    c.pitch = (byte)x.Index;
                     c.wait = 0;
-                    x.cmd.Insert(0, c);
+                    x.cseqEventCollection.Insert(0, c);
                 }
 
-                seq.sequences.Add(newMidi);
+                seq.songs.Add(newMidi);
 
                 FillUI(loadedfile);
             }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (seq == null)
+                return;
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Crash Team Racing CSEQ (*.cseq)|*.cseq";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+                seq.Save(sfd.FileName);
         }
     }
 }

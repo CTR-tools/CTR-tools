@@ -6,28 +6,31 @@ using System.Text;
 
 namespace CTRFramework.Sound.CSeq
 {
-    public class CSEQ
+    /// <summary>
+    /// Global CSEQ settings.
+    /// </summary>
+    public partial class CSEQ
+    {
+        public static bool USdemo = false;
+        public static bool PatchMidi = false;
+        public static bool IgnoreVolume = false;
+        public static bool UseSampleVolumeForTracks = true;
+
+        public static int ActiveInstrument = 0;
+        public static string PatchName = "";
+    }
+
+    public partial class CSEQ : IReadWrite
     {
         public string path;
         public string name;
 
-        public List<SampleDef> samples = new List<SampleDef>();
-        public List<SampleDefReverb> samplesReverb = new List<SampleDefReverb>();
-        public List<Sequence> sequences = new List<Sequence>();
+        public List<Instrument> samples = new List<Instrument>();
+        public List<Instrument> samplesReverb = new List<Instrument>();
+
+        public List<Song> songs = new List<Song>();
 
         public Bank bank = new Bank();
-
-        #region [CSEQ global settings]
-
-        public static bool USdemo = false;
-        public static bool PatchMidi = false;
-        public static bool IgnoreVolume = false;
-
-        public static int ActiveInstrument = 0;
-        public static string PatchName = "";
-        public static bool UseSampleVolumeForTracks = true;
-
-        #endregion
 
         #region [Constructors, factories]
         public CSEQ()
@@ -63,10 +66,10 @@ namespace CTRFramework.Sound.CSeq
             short seqCnt = br.ReadInt16();
 
             for (int i = 0; i < longCnt; i++)
-                samplesReverb.Add(SampleDefReverb.FromReader(br));
+                samplesReverb.Add(Instrument.FromReader(br));
 
             for (int i = 0; i < shortCnt; i++)
-                samples.Add(SampleDef.FromReader(br));
+                samples.Add(InstrumentShort.FromReader(br));
 
             //read offsets
             short[] seqPtrs = br.ReadArrayInt16(seqCnt);
@@ -86,30 +89,22 @@ namespace CTRFramework.Sound.CSeq
             for (int i = 0; i < seqCnt; i++)
             {
                 br.Jump(seqStart + seqPtrs[i]);
-                sequences.Add(Sequence.FromReader(br));
+                songs.Add(Song.FromReader(br));
             }
 
             if (br.BaseStream.Position - pos != size)
                 Helpers.Panic(this, PanicType.Warning, "CSEQ size mismatch!");
 
-            LoadMetaInstruments(CSEQ.PatchName);
+            LoadMetaInstruments(PatchName);
         }
 
         public void LoadMetaInstruments(string song)
         {
             for (int i = 0; i < samplesReverb.Count; i++)
-            {
-                MetaInst info = Meta.GetMetaInst(song, "long", i);
-                samplesReverb[i].MIDI = (byte)info.Midi;
-                samplesReverb[i].PitchShift = info.Pitch;
-            }
+                samplesReverb[i].metaInst = Meta.GetMetaInst(song, "long", i);
 
             for (int i = 0; i < samples.Count; i++)
-            {
-                MetaInst info = Meta.GetMetaInst(song, "short", i);
-                samples[i].MIDI = (byte)info.Key;
-                samples[i].PitchShift = info.Pitch;
-            }
+                samples[i].metaInst = Meta.GetMetaInst(song, "short", i);
         }
 
         public void LoadBank(string filename)
@@ -137,16 +132,11 @@ namespace CTRFramework.Sound.CSeq
 
         /// <summary>Saves CSEQ file.</summary>
         /// <param name="fileName">Target file name.</param>
-        public void Save(string fileName)
+        public void Save(string filename)
         {
-            Helpers.CheckFolder(Path.GetDirectoryName(fileName));
+            Helpers.CheckFolder(Path.GetDirectoryName(filename));
 
-            //sanity checks
-            if (samplesReverb.Count > Byte.MaxValue) throw new IndexOutOfRangeException("Too many instruments.");
-            if (samples.Count > Byte.MaxValue) throw new IndexOutOfRangeException("Too many instruments.");
-            if (sequences.Count > UInt16.MaxValue) throw new IndexOutOfRangeException("Too many sequences.");
-
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(fileName)))
+            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(filename)))
             {
                 Write(bw);
             }
@@ -156,42 +146,45 @@ namespace CTRFramework.Sound.CSeq
         /// Writes CSEQ file to stream using binary writer.
         /// </summary>
         /// <param name="bw">BinaryWriterEx instance.</param>
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
+            //sanity checks
+            if (samplesReverb.Count > Byte.MaxValue) 
+                throw new IndexOutOfRangeException("Too many instruments.");
+
+            if (samples.Count > Byte.MaxValue) 
+                throw new IndexOutOfRangeException("Too many percussion instruments.");
+
+            if (songs.Count > UInt16.MaxValue)
+                throw new IndexOutOfRangeException("Too many sequences.");
+
             bw.Write((int)0); //filesize, write in the end
             bw.Write((byte)samplesReverb.Count);
             bw.Write((byte)samples.Count);
-            bw.Write((short)sequences.Count);
+            bw.Write((short)songs.Count);
 
-            //System.Windows.Forms.MessageBox.Show(longSamples.Count + " " + shortSamples.Count);
+            foreach (var instrument in samplesReverb)
+                instrument.Write(bw);
 
-            foreach (var ls in samplesReverb)
-                ls.Write(bw);
-
-            foreach (var ss in samples)
-                ss.Write(bw);
+            foreach (var instrument in samples)
+                instrument.Write(bw);
 
             long offsetsarraypos = bw.BaseStream.Position;
 
             //it's meant to be like that
-            foreach (var seq in sequences)
-                bw.Write((short)0);
+            //foreach (var seq in sequences)
+            //    bw.Write((short)0);
+            bw.Seek(songs.Count * 2);
 
-            int p = 3;
-            if (USdemo) p = 1;
-
-            for (int i = 0; i < p; i++)
-            {
-                bw.Write((byte)0);
-            }
+            bw.Seek(USdemo ? 1 : 3);
 
             List<long> offsets = new List<long>();
             long offsetstart = bw.BaseStream.Position;
 
-            foreach (Sequence seq in sequences)
+            foreach (var song in songs)
             {
                 offsets.Add(bw.BaseStream.Position - offsetstart);
-                seq.Write(bw);
+                song.Write(bw);
             }
 
             bw.BaseStream.Position = offsetsarraypos;
@@ -207,12 +200,12 @@ namespace CTRFramework.Sound.CSeq
         {
             if (bank != null)
             {
-                foreach (SampleDef s in samples)
+                foreach (var s in samples)
                 {
                     bank.Export(s.SampleID, s.Frequency, path, name, s.Tag);
                 }
 
-                foreach (SampleDefReverb s in samplesReverb)
+                foreach (var s in samplesReverb)
                 {
                     bank.Export(s.SampleID, s.Frequency, path, name, s.Tag);
                 }

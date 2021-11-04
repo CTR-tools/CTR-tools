@@ -28,8 +28,8 @@ namespace CTRFramework.Sound
 
         public HowlVersion version;     //freezes the game if changed, game code tests against fixed number for some reason. maybe like version.
 
-        public static List<SampleDef> samplesSfx = new List<SampleDef>();
-        List<SampleDef> samplesEngineSfx = new List<SampleDef>();
+        public static List<InstrumentShort> samplesSfx = new List<InstrumentShort>();
+        List<InstrumentShort> samplesEngineSfx = new List<InstrumentShort>();
 
         public List<Bank> banks = new List<Bank>();
         public List<CSEQ> sequences = new List<CSEQ>();
@@ -177,8 +177,8 @@ namespace CTRFramework.Sound
                 unk.Add(br.ReadUInt16());
             }
 
-            samplesSfx = InstanceList<SampleDef>.FromReader(br, (uint)br.BaseStream.Position, numSfx);
-            samplesEngineSfx = InstanceList<SampleDef>.FromReader(br, (uint)br.BaseStream.Position, numEngineSfx);
+            samplesSfx = InstanceList<InstrumentShort>.FromReader(br, (uint)br.BaseStream.Position, numSfx);
+            samplesEngineSfx = InstanceList<InstrumentShort>.FromReader(br, (uint)br.BaseStream.Position, numEngineSfx);
 
 
             for (int i = 0; i < numBanks; i++)
@@ -224,7 +224,7 @@ namespace CTRFramework.Sound
                 seq.LoadMetaInstruments(seq.name);
 
                 seq.Save(Path.Combine(path, $"{seq.name}.cseq"));
-                seq.sequences[0].ExportMIDI(Path.Combine(path, $"{seq.name}.mid"), seq);
+                seq.songs[0].ExportMIDI(Path.Combine(path, $"{seq.name}.mid"), seq);
             }
         }
 
@@ -287,7 +287,7 @@ namespace CTRFramework.Sound
                 seq.name = seqnames[j];
                 CSEQ.PatchName = seq.name;
                 seq.LoadMetaInstruments(seq.name);
-                seq.sequences[0].ExportMIDI(Path.ChangeExtension(fn, ".mid"), seq);
+                seq.songs[0].ExportMIDI(Path.ChangeExtension(fn, ".mid"), seq);
 
                 j++;
             }
@@ -309,7 +309,7 @@ namespace CTRFramework.Sound
 
         public static int GetFreq(int sampleId)
         {
-            foreach (SampleDef sd in samplesSfx)
+            foreach (var sd in samplesSfx)
                 if (sd.SampleID == sampleId)
                     return sd.Frequency;
 

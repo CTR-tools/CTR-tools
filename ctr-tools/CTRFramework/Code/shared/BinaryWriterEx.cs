@@ -72,5 +72,44 @@ namespace CTRFramework.Shared
             WriteVector3s(value, scale);
             Write((short)0);
         }
+
+        public void WriteTimeDelta(uint value)
+        {
+            List<byte> buffer = new List<byte>();
+
+            do
+            {
+                buffer.Add((byte)(value & 0x7F));
+                value >>= 7;
+            }
+            while (value > 0);
+
+            buffer.Reverse();
+
+            for (int i = 0; i < buffer.Count - 1; i++)
+                buffer[i] |= 0x80;
+
+            Write(buffer.ToArray());
+
+            /*
+            int buffer = value & 0x7F;
+
+            while (value != (value >> 7))
+            {
+                value = value >> 7;
+                buffer <<= 8;
+                buffer |= ((value & 0x7F) | 0x80);
+            }
+
+            while (true)
+            {
+                Write((byte)buffer);
+                buffer >>= 8;
+                if ((buffer & 0x80) == 0)
+                    break;
+
+            }
+            */
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace CTRFramework.Sound
         public Bank()
         {
         }
+
         public Bank(BinaryReaderEx br)
         {
             Read(br);
@@ -139,7 +140,7 @@ namespace CTRFramework.Sound
         {
             int i = 0;
 
-            foreach (KeyValuePair<int, byte[]> s in samples)
+            foreach (var s in samples)
             {
                 Export(s.Key, Howl.GetFreq(s.Key), path, path2, s.Key.ToString("0000") + "_" + s.Key.ToString("X4"));
                 i++;
@@ -155,7 +156,7 @@ namespace CTRFramework.Sound
 
             int cnt = 0;
 
-            foreach (KeyValuePair<int, byte[]> s in samples)
+            foreach (var s in samples)
             {
                 sb.Append(s.ToString() + "\r\n");
                 cnt++;

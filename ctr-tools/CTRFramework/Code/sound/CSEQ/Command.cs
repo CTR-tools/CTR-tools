@@ -3,11 +3,11 @@ using NAudio.Midi;
 using System;
 using System.Collections.Generic;
 
-
 namespace CTRFramework.Sound.CSeq
 {
     public enum CSEQEvent
     {
+        Terminator = 0,
         NoteOff = 0x01,
         EndTrack2 = 0x02,
         EndTrack = 0x03,
@@ -24,7 +24,7 @@ namespace CTRFramework.Sound.CSeq
 
     public class Command
     {
-        public CSEQEvent evt = CSEQEvent.Error;
+        public CSEQEvent cseqEvent = CSEQEvent.Error;
         public byte pitch = 0;
         public byte velocity = 0;
         public int wait = 0;
@@ -34,18 +34,15 @@ namespace CTRFramework.Sound.CSeq
         public void Read(BinaryReaderEx br)
         {
             wait = br.ReadTimeDelta();
+            cseqEvent = (CSEQEvent)br.ReadByte();
 
-            byte op = br.ReadByte();
-
-            evt = (CSEQEvent)op;
-
-            switch (evt)
+            switch (cseqEvent)
             {
                 case CSEQEvent.Unknown4:
                 case CSEQEvent.Unknown8:
                     {
                         pitch = br.ReadByte();
-                        Console.Write(op.ToString("X2") + " found at " + br.HexPos() + "\r\n");
+                        Helpers.Panic(this, PanicType.Assume, $"{cseqEvent} found at {br.HexPos()}");
                         break;
                     }
 
@@ -66,14 +63,15 @@ namespace CTRFramework.Sound.CSeq
                         break;
                     }
                 case CSEQEvent.EndTrack:
+                case CSEQEvent.Terminator:
                     {
                         break;
                     }
 
                 default:
                     {
-                        evt = CSEQEvent.Error;
-                        Console.Write(op.ToString("X2") + " not recognized at " + br.HexPos() + "\r\n");
+                        cseqEvent = CSEQEvent.Error;
+                        Helpers.Panic(this, PanicType.Warning, $"{cseqEvent} not recognized at  {br.HexPos()}");
                         break;
                     }
             }
@@ -98,27 +96,23 @@ namespace CTRFramework.Sound.CSeq
             {
                 if (ct.isDrumTrack)
                 {
-                    if (evt == CSEQEvent.NoteOn || evt == CSEQEvent.NoteOff)
+                    if (cseqEvent == CSEQEvent.NoteOn || cseqEvent == CSEQEvent.NoteOff)
                     {
-                        p = (byte)seq.samples[pitch].MIDI;
-                        //p = (byte)seq.shortSamples[pitch].info.Key;
+                        p = (byte)seq.samples[pitch].metaInst.Key;
                     }
                 }
                 else
                 {
-                    if (evt == CSEQEvent.ChangePatch)
+                    if (cseqEvent == CSEQEvent.ChangePatch)
                     {
                         CSEQ.ActiveInstrument = pitch;
-                        p = (byte)seq.samplesReverb[pitch].MIDI;
-                        //p = (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Midi;
+                        p = (byte)seq.samplesReverb[pitch].metaInst.Midi;
                     }
-                    else if (evt == CSEQEvent.NoteOn || evt == CSEQEvent.NoteOff)
+                    else if (cseqEvent == CSEQEvent.NoteOn || cseqEvent == CSEQEvent.NoteOff)
                     {
                         try
                         {
-                            p += (byte)seq.samplesReverb[CSEQ.ActiveInstrument].PitchShift;
-
-                            //p += (byte)seq.longSamples[CSEQ.ActiveInstrument].info.Pitch;
+                            p += (byte)seq.samplesReverb[CSEQ.ActiveInstrument].metaInst.Pitch;
                         }
                         catch //(Exception ex)
                         {
@@ -128,7 +122,7 @@ namespace CTRFramework.Sound.CSeq
                 }
             }
 
-            switch (evt)
+            switch (cseqEvent)
             {
                 case CSEQEvent.NoteOn: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOn, p, velocity)); break;
                 case CSEQEvent.NoteOff: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOff, p, velocity)); break;
@@ -158,7 +152,7 @@ namespace CTRFramework.Sound.CSeq
             {
                 case MidiCommandCode.NoteOn:
                     {
-                        cmd.evt = CSEQEvent.NoteOn;
+                        cmd.cseqEvent = CSEQEvent.NoteOn;
 
                         var x = (NoteEvent)midi;
 
@@ -182,7 +176,7 @@ namespace CTRFramework.Sound.CSeq
                     }
                 case MidiCommandCode.NoteOff:
                     {
-                        cmd.evt = CSEQEvent.NoteOff;
+                        cmd.cseqEvent = CSEQEvent.NoteOff;
 
                         var x = (NoteEvent)midi;
 
@@ -214,41 +208,15 @@ namespace CTRFramework.Sound.CSeq
 
         public override string ToString()
         {
-            return String.Format("{0}t - {1}[p:{2}, v:{3}]\r\n", wait, evt.ToString(), pitch, velocity);
+            return String.Format("{0}t - {1}[p:{2}, v:{3}]\r\n", wait, cseqEvent.ToString(), pitch, velocity);
         }
 
-
-        public void WriteBytes(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw)
         {
+            bw.WriteTimeDelta((uint)wait);
+            bw.Write((byte)cseqEvent);
 
-            int value = wait;
-
-            int buffer = value & 0x7F;
-
-            while (value != (value >> 7))
-            {
-                value = value >> 7;
-                buffer <<= 8;
-                buffer |= ((value & 0x7F) | 0x80);
-            }
-
-            while (true)
-            {
-                bw.Write((byte)buffer);
-                if ((buffer & 0x80) > 0)
-                {
-                    buffer >>= 8;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-
-            bw.Write((byte)evt);
-
-            switch (evt)
+            switch (cseqEvent)
             {
                 case CSEQEvent.Unknown4:
                 case CSEQEvent.Unknown8:
