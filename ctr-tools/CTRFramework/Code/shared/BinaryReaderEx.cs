@@ -78,10 +78,10 @@ namespace CTRFramework.Shared
                 result |= v & 0x7F;
             }
 
-            foreach (byte v in value)
-                Console.Write(v.ToString("X2"));
+            //foreach (byte v in value)
+            //    Console.Write(v.ToString("X2"));
 
-            Console.WriteLine(" = " + result);
+            //Console.WriteLine(" = " + result);
 
             return result;
         }

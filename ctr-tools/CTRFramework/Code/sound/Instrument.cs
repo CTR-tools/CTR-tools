@@ -116,11 +116,11 @@ namespace CTRFramework.Sound
 
         public override void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.Write((byte)1);
+            bw.Write((byte)_magic1);
             bw.Write((byte)_volume);
             bw.Write((short)_freq);
             bw.Write((ushort)SampleID);
-            bw.Write((short)0);
+            bw.Write((short)_always0);
         }
     }
 }

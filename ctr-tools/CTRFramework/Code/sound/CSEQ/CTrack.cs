@@ -65,7 +65,7 @@ namespace CTRFramework.Sound.CSeq
 
                 cseqEventCollection.Add(cx);
             }
-            while (cx.cseqEvent != CSEQEvent.Terminator);
+            while (cx.cseqEvent != CSEQEvent.EndTrack);
         }
 
         public void FromMidiEventList(List<MidiEvent> events)

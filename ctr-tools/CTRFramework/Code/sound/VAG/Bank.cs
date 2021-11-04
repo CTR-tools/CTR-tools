@@ -83,7 +83,18 @@ namespace CTRFramework.Sound
             }
         }
 
+        public void Write(BinaryWriterEx bw)
+        {
+            bw.Write((short)samples.Keys.Count);
 
+            foreach (var sample in samples)
+                bw.Write((short)sample.Key);
+
+            bw.Jump((int)((bw.BaseStream.Position + 2047) >> 11 << 11));
+
+            foreach (var sample in samples)
+                bw.Write(sample.Value);
+        }
 
         public bool Contains(int key)
         {

@@ -158,6 +158,8 @@ namespace CTRFramework.Sound.CSeq
             if (songs.Count > UInt16.MaxValue)
                 throw new IndexOutOfRangeException("Too many sequences.");
 
+            int pos = (int)bw.BaseStream.Position;
+
             bw.Write((int)0); //filesize, write in the end
             bw.Write((byte)samplesReverb.Count);
             bw.Write((byte)samples.Count);
@@ -187,13 +189,18 @@ namespace CTRFramework.Sound.CSeq
                 song.Write(bw);
             }
 
+            int songEnd = (int)bw.BaseStream.Position;
+
             bw.BaseStream.Position = offsetsarraypos;
 
             foreach (long off in offsets)
                 bw.Write((short)off);
 
-            bw.BaseStream.Position = 0;
+            bw.Jump(pos);
+
             bw.Write((int)bw.BaseStream.Length);
+
+            bw.Jump(songEnd);
         }
 
         public void ExportSamples()

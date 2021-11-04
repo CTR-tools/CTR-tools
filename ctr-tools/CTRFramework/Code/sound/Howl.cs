@@ -31,8 +31,8 @@ namespace CTRFramework.Sound
         public static List<InstrumentShort> samplesSfx = new List<InstrumentShort>();
         List<InstrumentShort> samplesEngineSfx = new List<InstrumentShort>();
 
-        public List<Bank> banks = new List<Bank>();
-        public List<CSEQ> sequences = new List<CSEQ>();
+        public List<Bank> Banks = new List<Bank>();
+        public List<CSEQ> Songs = new List<CSEQ>();
 
         public static string GetName(int x, Dictionary<int, string> dict)
         {
@@ -52,7 +52,7 @@ namespace CTRFramework.Sound
         List<int> ptrSeqs = new List<int>();
 
 
-
+        #region [Constructors, Factories]
         public Howl()
         {
         }
@@ -74,6 +74,7 @@ namespace CTRFramework.Sound
                 return FromReader(br);
             }
         }
+        #endregion
 
         private void KnownFileCheck(BinaryReaderEx br)
         {
@@ -119,27 +120,60 @@ namespace CTRFramework.Sound
             Console.WriteLine("Unknown HOWL file.");
         }
 
+        public void Write(BinaryWriterEx bw)
+        {
+            bw.Write("HOWL".ToCharArray());
+            bw.Write((int)version);
+            bw.Seek(8);
 
+            bw.Write(unk.Count);
+            bw.Write(samplesSfx.Count);
+            bw.Write(samplesEngineSfx.Count);
 
-        /*
-         * 
-         * 
-         * Write
-         
-        bw.Write("HOWL".ToCharArray());
-            bw.Write(version);
-            bw.Write(reserved1);
-            bw.Write(reserved2);
+            bw.Write(Banks.Count);
+            bw.Write(Songs.Count);
 
-            bw.Write(cntUnk);
-            bw.Write(cntSfx);
-            bw.Write(cntEngineSfx);
+            bw.Write(0); //sampleDataSize
 
-            bw.Write(numBanks);
-            bw.Write(numSequences);
+            foreach (var value in unk)
+            {
+                bw.Write((short)0);
+                bw.Write(value);
+            }
 
-            bw.Write(sampleDataSize);
-         * */
+            foreach (var instrument in samplesSfx)
+                instrument.Write(bw);
+
+            foreach (var instrument in samplesEngineSfx)
+                instrument.Write(bw);
+
+            int ptrs = (int)bw.BaseStream.Position;
+
+            bw.Seek(2 * (Banks.Count + Songs.Count));
+
+            bw.Jump((int)((bw.BaseStream.Position + 2047) >> 11 << 11));
+
+            List<uint> offsets = new List<uint>();
+
+            foreach (var bank in Banks)
+            {
+                offsets.Add((uint)bw.BaseStream.Position);
+                bank.Write(bw);
+                bw.Jump((int)((bw.BaseStream.Position + 2047) >> 11 << 11));
+            }
+
+            foreach (var song in Songs)
+            {
+                offsets.Add((uint)bw.BaseStream.Position);
+                song.Write(bw);
+                bw.Jump((int)((bw.BaseStream.Position + 2047) >> 11 << 11));
+            }
+
+            bw.Jump(ptrs);
+
+            foreach (var ptr in offsets)
+                bw.Write((short)(ptr / 2048));
+        }
 
         public void Read(BinaryReaderEx br)
         {
@@ -191,21 +225,21 @@ namespace CTRFramework.Sound
             foreach (var ptr in ptrBanks)
             {
                 br.Jump(ptr);
-                banks.Add(new Bank(br));
+                Banks.Add(new Bank(br));
             }
 
             foreach (var ptr in ptrSeqs)
             {
                 br.Jump(ptr);
-                sequences.Add(CSEQ.FromReader(br));
+                Songs.Add(CSEQ.FromReader(br));
             }
 
-            for (int i = 0; i < sequences.Count; i++)
+            for (int i = 0; i < Songs.Count; i++)
             {
                 if (seqnames.ContainsKey(i))
-                    sequences[i].name = seqnames[i];
+                    Songs[i].name = seqnames[i];
                 else
-                    sequences[i].name = i.ToString("00");
+                    Songs[i].name = i.ToString("00");
             }
 
             Console.Write(ToString());
@@ -218,7 +252,7 @@ namespace CTRFramework.Sound
             CSEQ.PatchMidi = true;
             CSEQ.IgnoreVolume = true;
 
-            foreach (var seq in sequences)
+            foreach (var seq in Songs)
             {
                 CSEQ.PatchName = seq.name;
                 seq.LoadMetaInstruments(seq.name);
@@ -300,7 +334,7 @@ namespace CTRFramework.Sound
 
             int i = 0;
 
-            foreach (var bank in banks)
+            foreach (var bank in Banks)
             {
                 bank.ExportAll(i, output);
                 i++;
@@ -316,9 +350,19 @@ namespace CTRFramework.Sound
             return -1;
         }
 
+        public void Save(string filename)
+        {
+            Helpers.CheckFolder(Path.GetDirectoryName(filename));
+
+            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(filename)))
+            {
+                Write(bw);
+            }
+        }
+
         public override string ToString()
         {
-            return $"Version: {version.ToString()}\r\nSamples: {samplesSfx.Count}\r\nBanks: {banks.Count}\r\nSequences: {sequences.Count}";
+            return $"Version: {version.ToString()}\r\nSamples: {samplesSfx.Count}\r\nBanks: {Banks.Count}\r\nSequences: {Songs.Count}";
         }
     }
 }
