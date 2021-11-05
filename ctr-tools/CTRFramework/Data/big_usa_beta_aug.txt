@@ -239,18 +239,18 @@
 222=oxide_ship_2x.vrm
 223=oxide_ship_2x.lev
 
-230=main_menu.vrm
-231=main_menu.lev
+230=levels\menu_models\data.vrm
+231=levels\menu_models\data.lev
 
-232=japfont.vrm
-233=japfont.mpk
+232=packs\japfont.vrm
+233=packs\japfont.mpk
 
-234=lib\234_04.dll
-235=lib\235_05.dll
-236=lib\236_06.dll
-237=lib\237_07.dll
-238=lib\238_08.dll
-239=lib\239_09.dll
+234=overlays\234_04.dll
+235=overlays\235_05.dll
+236=overlays\236_06.dll
+237=overlays\237_07.dll
+238=overlays\238_08.dll
+239=overlays\239_09.dll
 
 240=lang\ja.lng
 241=lang\en.lng
@@ -277,8 +277,8 @@
 261=models\racers\fake_hi.ctr
 262=models\racers\oxide_hi.ctr
 
-263=ui_textures.vrm
-264=packs\264.mpk
+263=packs\shared.vrm
+264=packs\shared.mpk
 
 
 
@@ -350,14 +350,14 @@
 327=models\racers\fake_med.ctr
 328=models\racers\oxide_med.ctr
 
-329=packs\unknown\324.mpk
-330=packs\unknown\325.mpk
-331=packs\unknown\326.mpk
-332=packs\unknown\327.mpk
-333=packs\unknown\328.mpk
-334=packs\unknown\329.mpk
-335=packs\unknown\330.mpk
-336=packs\unknown\331.mpk
+329=packs\1P_gem_cups\324.mpk
+330=packs\1P_gem_cups\325.mpk
+331=packs\1P_gem_cups\326.mpk
+332=packs\1P_gem_cups\327.mpk
+333=packs\1P_gem_cups\328.mpk
+334=packs\1P_gem_cups\329.mpk
+335=packs\1P_gem_cups\330.mpk
+336=packs\1P_gem_cups\331_bosses.mpk
 
 337=models\racers\crash_low.ctr
 338=models\racers\cortex_low.ctr

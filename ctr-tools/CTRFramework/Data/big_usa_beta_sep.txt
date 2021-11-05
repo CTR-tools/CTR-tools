@@ -285,21 +285,21 @@
 
 # ==========245 = MAIN MENU/JAP FONT SECTION===============
 
-245=menu_models.vrm
-246=menu_models.lev
-247=adv_player_select.vrm
-248=adv_player_select.lev
-249=japfont.vrm
-250=japfont.mpk
+245=levels\menu_models\data.vrm
+246=levels\menu_models\data.lev
+247=levels\adv_player_select\data.vrm
+248=levels\adv_player_select\data.lev
+249=packs\japfont.vrm
+250=packs\japfont.mpk
 
-# =================251 = OVERLAY SECTION===================
+# =================251 = OVERLAYS SECTION===================
 
 251=overlays\251_05.bin
 252=overlays\252_06.bin
 253=overlays\253_07.bin
 254=overlays\254_08.bin
-
 255=overlays\255_09.bin
+
 256=overlays\256_0B.bin
 257=overlays\257_0C.bin
 258=overlays\258_0D.bin
