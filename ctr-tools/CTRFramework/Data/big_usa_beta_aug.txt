@@ -394,7 +394,8 @@
 367=packs\unknown_long\fake.mpk
 368=packs\unknown_long\oxide.mpk
 
-
+369=models\cutscenes1.vrm
+370=models\cutscenes2.vrm
 
 371=models\podium1.ctr
 372=models\podium2.ctr

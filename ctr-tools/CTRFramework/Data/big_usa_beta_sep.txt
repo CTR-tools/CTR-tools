@@ -466,7 +466,10 @@
 392=packs\unknown_long\fake.mpk
 393=packs\unknown_long\oxide.mpk
 
-# 394-395 - check
+# ==========394 = BOSS CUTSCENES/PODIUM VRAM=============
+
+394=models\cutscenes1.vrm
+395=models\cutscenes2.vrm
 
 # =========396 = PODIUM WIN ANIMS SECTION===============
 

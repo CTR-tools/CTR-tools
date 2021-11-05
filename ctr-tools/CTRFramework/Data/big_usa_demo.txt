@@ -3,6 +3,8 @@
 
 # ===========0 = TRACKS SECTION=================
 
+# there wasnt a relic/time trial variant of the map yet
+
 000=levels\tracks\proto8\1P\data.lev
 001=levels\tracks\proto8\1P\data.vrm
 002=levels\tracks\proto8\2P\data.lev

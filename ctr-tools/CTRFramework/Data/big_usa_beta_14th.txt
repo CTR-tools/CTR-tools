@@ -431,7 +431,8 @@
 382=packs\unknown_long\fake.mpk
 383=packs\unknown_long\oxide.mpk
 
-# 384-385 - check vrams
+384=models\cutscenes1.vrm
+385=models\cutscenes2.vrm
 
 386=models\trophy_win\crashdance.ctr
 387=models\trophy_win\crashdance2.ctr
