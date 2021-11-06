@@ -99,9 +99,12 @@ namespace ctrviewer.Loaders
 
                                     if (qb.ptrTexMid[j] != PsxPtr.Zero)
                                     {
-                                        isAnimated = qb.tex[j].isAnimated;
-                                        if (texTag != "00000000")
-                                            texTag = qb.tex[j].midlods[2].Tag;
+                                        if (qb.tex[j] != null)
+                                        {
+                                            isAnimated = qb.tex[j].isAnimated;
+                                            if (texTag != "00000000")
+                                                texTag = qb.tex[j].midlods[2].Tag;
+                                        }
                                     }
 
                                     foreach (var fl in (QuadFlags[])Enum.GetValues(typeof(QuadFlags)))

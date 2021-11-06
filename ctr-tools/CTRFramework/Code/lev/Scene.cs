@@ -604,6 +604,7 @@ namespace CTRFramework
 
                         case Detail.Med:
                             foreach (CtrTex t in qb.tex)
+                                if (t != null)
                                 if (t.midlods[2].Position != 0)
                                     if (!tex.ContainsKey(t.midlods[2].Tag))
                                         tex.Add(t.midlods[2].Tag, t.midlods[2]);
@@ -611,7 +612,8 @@ namespace CTRFramework
 
                         case Detail.High:
                             foreach (CtrTex t in qb.tex)
-                                foreach (var x in t.hi)
+                                if (t != null)
+                                    foreach (var x in t.hi)
                                     if (x != null)
                                         if (!tex.ContainsKey(x.Tag))
                                             tex.Add(x.Tag, x);

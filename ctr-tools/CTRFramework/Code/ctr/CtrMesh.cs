@@ -709,7 +709,7 @@ namespace CTRFramework
         /// <returns>CtrHeader object.</returns>
         public static CtrMesh FromObj(string name, OBJ obj)
         {
-            return CtrMesh.FromPly(name, obj.Result);
+            return FromPly(name, obj.Result);
         }
 
         public void ExportPly(string filename)

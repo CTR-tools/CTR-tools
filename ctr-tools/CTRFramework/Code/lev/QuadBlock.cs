@@ -78,7 +78,7 @@ namespace CTRFramework
         //additional data
         public TextureLayout texlow;
 
-        public List<CtrTex> tex = new List<CtrTex>();
+        public List<CtrTex> tex = new List<CtrTex>() { null, null, null, null };
 
 
         public bool isWater = false;
@@ -186,6 +186,8 @@ namespace CTRFramework
             texlow = TextureLayout.FromReader(br);
 
 
+            int cntr = 0;
+
             foreach (var ptr in ptrTexMid)
             {
                 if (ptr == PsxPtr.Zero)
@@ -197,7 +199,9 @@ namespace CTRFramework
                 }
 
                 br.Jump(ptr);
-                tex.Add(new CtrTex(br, ptr));
+                tex[cntr] = new CtrTex(br, ptr);
+
+                cntr++;
             }
 
             if (ptrAddVis != UIntPtr.Zero)
@@ -365,7 +369,9 @@ namespace CTRFramework
                     arrind = FaceIndices[i];
 
                     for (int j = 0; j < 4; j++)
+                    {
                         buf.Add(vertexArray[ind[arrind[j]]]);
+                    }
 
                     /*
                     for (int j = 0; j < 4; j++)
@@ -378,9 +384,10 @@ namespace CTRFramework
                     }
                     */
 
+
                     for (int j = 0; j < 4; j++)
                     {
-                        if (tex.Count > 0)
+                        if (tex[i] != null)
                         {
                             if (!tex[i].isAnimated)
                             {
@@ -405,10 +412,12 @@ namespace CTRFramework
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, PanicType.Error, "Can't export quad to MG. Give null.\r\n" + i + "\r\n" + ex.Message);
+                Helpers.Panic(this, PanicType.Error, "Can't export quad to MG. Give null.\r\n" + this.id.ToString("X8") + " " + this.pos.ToString("X8") + "\r\n" + ex.Message);
+                Console.ReadKey();
                 return null;
             }
         }
+    
 
         public int[] GetUVIndices2(int x, int y, int z, int w)
         {
@@ -473,7 +482,7 @@ namespace CTRFramework
                                     sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
                                 }
 
-                                sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? tex[i].midlods[2].Tag : "default"));
+                                sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? (tex[i] != null ? tex[i].midlods[2].Tag : "default") : "default"));
 
                                 if (objSaveQuads)
                                 {
