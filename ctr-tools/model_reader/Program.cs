@@ -80,7 +80,7 @@ namespace model_reader
                     {
                         Scene scn = Scene.FromFile(filename);
                         //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
-                        scn.Export(basepath, ExportFlags.All);
+                        scn.Export(Path.Combine(basepath, name), ExportFlags.All);
                         break;
                     }
                 case ".ctr":
