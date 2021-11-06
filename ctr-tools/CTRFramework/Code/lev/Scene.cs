@@ -83,7 +83,15 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            ReadScene(PatchedContainer.FromReader(br).GetReader());
+            try
+            {
+                ReadScene(PatchedContainer.FromReader(br).GetReader());
+            }
+            catch
+            {
+                //try to load scene without patch table
+                ReadScene(br);
+            }
         }
 
         public void ReadScene(BinaryReaderEx br)
@@ -540,7 +548,7 @@ namespace CTRFramework
             sb.AppendFormat("{0}: {1}\r\n", "lo tris", quads.Count * 2);
             sb.AppendFormat("{0}: {1}\r\n", "hi quads", quads.Count * 4);
             sb.AppendFormat("{0}: {1}\r\n", "hi tris", quads.Count * 4 * 2);
-            sb.AppendFormat("{0}: {1}\r\n", "skybox verts", (skybox != null ? skybox.verts.Count : 0));
+            sb.AppendFormat("{0}: {1}\r\n", "skybox verts", (skybox != null ? skybox.Vertices.Count : 0));
             sb.AppendFormat("{0}: {1}\r\n", "visdata total", (visdata != null ? visdata.Count : 0));
             sb.AppendFormat("{0}: {1}\r\n", "visdata leaves", numLeaves);
             sb.AppendFormat("{0}: {1}\r\n", "visdata branches", numBranches);

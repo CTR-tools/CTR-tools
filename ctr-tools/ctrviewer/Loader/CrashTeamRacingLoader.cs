@@ -49,28 +49,28 @@ namespace ctrviewer.Loaders
                                 foreach (QuadFlags fl in (QuadFlags[])Enum.GetValues(typeof(QuadFlags)))
                                 {
                                     if (qb.quadFlags.HasFlag(fl))
-                                        Push(flagq, fl.ToString(), monolist, "flag");
+                                        Push(trilists, fl.ToString(), monolist, TriListType.Flag, "flag");
                                 }
 
                                 if (qb.isWater)
                                 {
-                                    Push(waterq, "water", monolist);
+                                    Push(trilists, "water", monolist, TriListType.Water);
                                     continue;
                                 }
 
                                 if (qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                 {
-                                    Push(flagq, "invis", monolist);
+                                    Push(trilists, "invis", monolist, TriListType.Flag);
                                     continue;
                                 }
 
                                 if (ContentVault.alphalist.Contains(texTag))
                                 {
-                                    Push(alphaq, texTag, monolist);
+                                    Push(trilists, texTag, monolist, TriListType.Alpha);
                                 }
                                 else
                                 {
-                                    Push(normalq, texTag, monolist);
+                                    Push(trilists, texTag, monolist);
                                 }
                             }
                         }
@@ -91,8 +91,8 @@ namespace ctrviewer.Loaders
 
                                 if (vts != null)
                                 {
-                                    foreach (Vertex cv in vts)
-                                        monolist.Add(DataConverter.ToVptc(cv, cv.uv));
+                                    foreach (var vertex in vts)
+                                        monolist.Add(DataConverter.ToVptc(vertex, vertex.uv));
 
                                     bool isAnimated = false;
                                     string texTag = "test";
@@ -104,28 +104,32 @@ namespace ctrviewer.Loaders
                                             texTag = qb.tex[j].midlods[2].Tag;
                                     }
 
-                                    foreach (QuadFlags fl in (QuadFlags[])Enum.GetValues(typeof(QuadFlags)))
+                                    foreach (var fl in (QuadFlags[])Enum.GetValues(typeof(QuadFlags)))
                                     {
                                         if (qb.quadFlags.HasFlag(fl))
-                                            Push(flagq, fl.ToString(), monolist, "flag");
+                                            Push(flagq, fl.ToString(), monolist, TriListType.Flag, "flag");
                                     }
 
                                     if (qb.isWater)
                                     {
-                                        Push(waterq, "water", monolist);
+                                        Push(trilists, "water", monolist, TriListType.Water);
                                         continue;
                                     }
 
                                     if (qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                     {
-                                        Push(flagq, "invis", monolist);
+                                        Push(flagq, "invis", monolist, TriListType.Flag);
                                         continue;
                                     }
 
-                                    Push((isAnimated ? animatedq : (ContentVault.alphalist.Contains(texTag) ? alphaq : normalq)), texTag, monolist);
+                                    Push(trilists, texTag, monolist, 
+                                        (isAnimated ? TriListType.Animated : (ContentVault.alphalist.Contains(texTag) ? TriListType.Alpha : TriListType.Basic))
+                                        );
 
                                     if (isAnimated)
-                                        animatedq[texTag].ScrollingEnabled = true;
+                                        foreach (var ql in trilists)
+                                            if (ql.Value.type == TriListType.Animated)
+                                                trilists[texTag].ScrollingEnabled = true;
                                 }
                             }
                         }

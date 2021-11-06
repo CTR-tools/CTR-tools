@@ -5,8 +5,19 @@ using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
 {
+    public enum TriListType
+    {
+        Basic,
+        Water,
+        Animated,
+        Alpha,
+        Flag
+    }
+
     public class TriList : IRenderable
     {
+        public TriListType type = TriListType.Basic;
+
         public bool Sealed = false;
         public List<VertexPositionColorTexture> verts = new List<VertexPositionColorTexture>();
         private VertexPositionColorTexture[] verts_sealed;

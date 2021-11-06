@@ -32,13 +32,7 @@ namespace CTRFramework
             }
         }
 
-        public void ReadShort(BinaryReaderEx br)
-        {
-            coord = br.ReadVector3sPadded(1 / 100f);
-            color = new Vector4b(br);
-        }
-
-        public void Read(BinaryReaderEx br)
+        public virtual void Read(BinaryReaderEx br)
         {
             coord = br.ReadVector3sPadded(1 / 100f);
             color = new Vector4b(br);
@@ -55,6 +49,19 @@ namespace CTRFramework
         public string ToObj()
         {
             return $"v {coord.X} {coord.Y} {coord.Z} {(color.X / 255f).ToString("0.###")} {(color.Y / 255f).ToString("0.###")} {(color.Z / 255f).ToString("0.###")}";
+        }
+    }
+
+    public class VertexShort : Vertex
+    {
+        public VertexShort(BinaryReaderEx br) : base(br)
+        {
+        }
+
+        public override void Read(BinaryReaderEx br)
+        {
+            coord = br.ReadVector3sPadded(1 / 100f);
+            color = new Vector4b(br);
         }
     }
 }

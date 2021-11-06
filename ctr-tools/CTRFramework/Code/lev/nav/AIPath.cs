@@ -44,8 +44,8 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (NavFrame f in frames)
-                sb.AppendFormat("v {0}\r\n", f.position.ToString());
+            foreach (var frame in frames)
+                sb.AppendFormat("v {0}\r\n", frame.position.ToString());
 
             return sb.ToString();
         }
