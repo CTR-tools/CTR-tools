@@ -25,12 +25,12 @@ namespace CTRFramework.Sound.CSeq
         public string path;
         public string name;
 
-        public List<Instrument> samples = new List<Instrument>();
+        public List<InstrumentShort> samples = new List<InstrumentShort>();
         public List<Instrument> samplesReverb = new List<Instrument>();
 
-        public List<Song> songs = new List<Song>();
+        public List<Song> Songs = new List<Song>();
 
-        public Bank bank = new Bank();
+        public Bank Bank = new Bank();
 
         #region [Constructors, factories]
         public CSEQ()
@@ -58,7 +58,7 @@ namespace CTRFramework.Sound.CSeq
 
         public void Read(BinaryReaderEx br)
         {
-            long pos = br.BaseStream.Position;
+            long cseqStart = br.BaseStream.Position;
 
             int size = br.ReadInt32();
             byte longCnt = br.ReadByte();
@@ -89,11 +89,13 @@ namespace CTRFramework.Sound.CSeq
             for (int i = 0; i < seqCnt; i++)
             {
                 br.Jump(seqStart + seqPtrs[i]);
-                songs.Add(Song.FromReader(br));
+                Songs.Add(Song.FromReader(br));
             }
 
-            if (br.BaseStream.Position - pos != size)
-                Helpers.Panic(this, PanicType.Warning, "CSEQ size mismatch!");
+            int cseqEnd = (int)br.BaseStream.Position;
+
+            if (cseqEnd - cseqStart != size)
+                Helpers.Panic(this, PanicType.Warning, $"CSEQ size mismatch! {size} vs {cseqEnd - cseqStart}");
 
             LoadMetaInstruments(PatchName);
         }
@@ -109,7 +111,12 @@ namespace CTRFramework.Sound.CSeq
 
         public void LoadBank(string filename)
         {
-            bank = Bank.FromFile(filename);
+            Bank = Bank.FromFile(filename);
+        }
+
+        public void LoadBank(Bank bank)
+        {
+            Bank = bank;
         }
 
         /*
@@ -149,21 +156,21 @@ namespace CTRFramework.Sound.CSeq
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             //sanity checks
-            if (samplesReverb.Count > Byte.MaxValue) 
+            if (samplesReverb.Count > Byte.MaxValue)
                 throw new IndexOutOfRangeException("Too many instruments.");
 
-            if (samples.Count > Byte.MaxValue) 
+            if (samples.Count > Byte.MaxValue)
                 throw new IndexOutOfRangeException("Too many percussion instruments.");
 
-            if (songs.Count > UInt16.MaxValue)
+            if (Songs.Count > UInt16.MaxValue)
                 throw new IndexOutOfRangeException("Too many sequences.");
 
-            int pos = (int)bw.BaseStream.Position;
+            int cseqStart = (int)bw.BaseStream.Position;
 
             bw.Write((int)0); //filesize, write in the end
             bw.Write((byte)samplesReverb.Count);
             bw.Write((byte)samples.Count);
-            bw.Write((short)songs.Count);
+            bw.Write((short)Songs.Count);
 
             foreach (var instrument in samplesReverb)
                 instrument.Write(bw);
@@ -171,50 +178,46 @@ namespace CTRFramework.Sound.CSeq
             foreach (var instrument in samples)
                 instrument.Write(bw);
 
-            long offsetsarraypos = bw.BaseStream.Position;
+            long ptrTracks = bw.BaseStream.Position;
 
             //it's meant to be like that
             //foreach (var seq in sequences)
             //    bw.Write((short)0);
-            bw.Seek(songs.Count * 2);
+            bw.Seek(Songs.Count * 2 + (USdemo ? 1 : 3));
 
-            bw.Seek(USdemo ? 1 : 3);
-
-            List<long> offsets = new List<long>();
+            List<long> pointers = new List<long>();
             long offsetstart = bw.BaseStream.Position;
 
-            foreach (var song in songs)
+            foreach (var song in Songs)
             {
-                offsets.Add(bw.BaseStream.Position - offsetstart);
+                pointers.Add(bw.BaseStream.Position - offsetstart);
                 song.Write(bw);
             }
 
-            int songEnd = (int)bw.BaseStream.Position;
+            int cseqEnd = (int)bw.BaseStream.Position;
 
-            bw.BaseStream.Position = offsetsarraypos;
+            bw.Jump(ptrTracks);
 
-            foreach (long off in offsets)
-                bw.Write((short)off);
+            foreach (var ptr in pointers)
+                bw.Write((short)ptr);
 
-            bw.Jump(pos);
-
-            bw.Write((int)bw.BaseStream.Length);
-
-            bw.Jump(songEnd);
+            bw.Jump(cseqStart);
+            bw.Write(cseqEnd - cseqStart);
+            bw.Jump(cseqEnd);
         }
 
         public void ExportSamples()
         {
-            if (bank != null)
+            if (Bank != null)
             {
                 foreach (var s in samples)
                 {
-                    bank.Export(s.SampleID, s.Frequency, path, name, s.Tag);
+                    Bank.Export(s.SampleID, s.Frequency, path, name, s.Tag);
                 }
 
                 foreach (var s in samplesReverb)
                 {
-                    bank.Export(s.SampleID, s.Frequency, path, name, s.Tag);
+                    Bank.Export(s.SampleID, s.Frequency, path, name, s.Tag);
                 }
             }
         }
@@ -223,13 +226,13 @@ namespace CTRFramework.Sound.CSeq
         {
             foreach (var x in samplesReverb)
             {
-                if (!bank.Contains(x.SampleID))
+                if (!Bank.Contains(x.SampleID))
                     return false;
             }
 
             foreach (var x in samples)
             {
-                if (!bank.Contains(x.SampleID))
+                if (!Bank.Contains(x.SampleID))
                     return false;
             }
 
@@ -242,13 +245,13 @@ namespace CTRFramework.Sound.CSeq
 
             foreach (var x in samplesReverb)
             {
-                if (!bank.Contains(x.SampleID))
+                if (!Bank.Contains(x.SampleID))
                     sb.Append("long: " + x.SampleID + "\r\n");
             }
 
             foreach (var x in samples)
             {
-                if (!bank.Contains(x.SampleID))
+                if (!Bank.Contains(x.SampleID))
                     sb.Append("short: " + x.SampleID + "\r\n");
             }
 

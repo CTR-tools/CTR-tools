@@ -33,8 +33,6 @@ namespace CTRFramework.Sound.CSeq
             return new CTrack(br);
         }
 
-
-
         public void Import(string filename)
         {
             MidiFile midi = new MidiFile(filename);
@@ -43,6 +41,8 @@ namespace CTRFramework.Sound.CSeq
 
         public void Read(BinaryReaderEx br)
         {
+            cseqEventCollection.Clear();
+
             //trackNum = num;
             //address = br.HexPos();
 
@@ -53,19 +53,20 @@ namespace CTRFramework.Sound.CSeq
                 default: Console.WriteLine("drum value not boolean at " + br.HexPos()); break;
             }
 
-            Command cx;
-
             do
             {
-                cx = new Command();
-                cx.Read(br);
+                Command cmd = Command.FromReader(br);
 
-                if (cx.cseqEvent == CSEQEvent.ChangePatch)
-                    instrument = cx.pitch;
+                if (cmd.cseqEvent == CSEQEvent.ChangePatch)
+                    instrument = cmd.pitch;
 
-                cseqEventCollection.Add(cx);
+                cseqEventCollection.Add(cmd);
+
+                if (cmd.cseqEvent == CSEQEvent.EndTrack)
+                    break;
+
             }
-            while (cx.cseqEvent != CSEQEvent.EndTrack);
+            while (true);
         }
 
         public void FromMidiEventList(List<MidiEvent> events)

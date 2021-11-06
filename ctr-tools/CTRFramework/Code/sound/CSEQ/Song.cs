@@ -113,6 +113,8 @@ namespace CTRFramework.Sound.CSeq
             if (tracks.Count > Byte.MaxValue)
                 throw new IndexOutOfRangeException("Too many tracks, max 255.");
 
+            long songStart = bw.BaseStream.Position;
+
             bw.Write((byte)tracks.Count);
             bw.Write((short)BPM);
             bw.Write((short)TPQN);
@@ -121,31 +123,26 @@ namespace CTRFramework.Sound.CSeq
 
             bw.Seek(tracks.Count * 2);
 
-            //foreach (CTrack ct in tracks)
-            //{
-            //   bw.Write((short)0);
-            //}
-
             if (tracks.Count % 2 == 0)
                 bw.Write((short)0);
 
             List<long> offsets = new List<long>();
-            long offsetstart = bw.BaseStream.Position;
+            long ptrTracks = bw.BaseStream.Position;
 
             foreach (var track in tracks)
             {
-                offsets.Add(bw.BaseStream.Position - offsetstart);
+                offsets.Add(bw.BaseStream.Position - ptrTracks);
                 track.Write(bw);
             }
 
-            long comeback = bw.BaseStream.Position;
+            long songEnd = bw.BaseStream.Position;
 
-            bw.BaseStream.Position = offsetsarraypos;
+            bw.Jump(offsetsarraypos);
 
             foreach (long off in offsets)
                 bw.Write((short)off);
 
-            bw.BaseStream.Position = comeback;
+            bw.Jump(songEnd);
         }
     }
 }

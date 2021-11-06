@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 
 namespace CTRFramework.Sound.CSeq
-{ 
+{
     public class CseqRootEvent
     {
     }

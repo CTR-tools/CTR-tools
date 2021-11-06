@@ -135,7 +135,7 @@ namespace CTRFramework.Sound
             bw.Write(Banks.Count);
             bw.Write(Songs.Count);
 
-            bw.Write(0); //sampleDataSize
+            bw.Write(unk.Count * 4 + (samplesSfx.Count + samplesEngineSfx.Count) * 8 + (Banks.Count + Songs.Count) * 2); //sampleDataSize
 
             foreach (var value in unk)
             {
@@ -148,6 +148,8 @@ namespace CTRFramework.Sound
 
             foreach (var instrument in samplesEngineSfx)
                 instrument.Write(bw);
+
+
 
             int ptrs = (int)bw.BaseStream.Position;
 
@@ -174,7 +176,7 @@ namespace CTRFramework.Sound
             bw.Jump(ptrs);
 
             foreach (var ptr in offsets)
-                bw.Write((short)(ptr / 2048));
+                bw.Write((short)(ptr / Meta.SectorSize));
 
             Console.WriteLine("HOWL saved.");
         }
@@ -256,13 +258,13 @@ namespace CTRFramework.Sound
             CSEQ.PatchMidi = true;
             CSEQ.IgnoreVolume = true;
 
-            foreach (var seq in Songs)
+            foreach (var song in Songs)
             {
-                CSEQ.PatchName = seq.name;
-                seq.LoadMetaInstruments(seq.name);
+                CSEQ.PatchName = song.name;
+                song.LoadMetaInstruments(song.name);
 
-                seq.Save(Path.Combine(path, $"{seq.name}.cseq"));
-                seq.songs[0].ExportMIDI(Path.Combine(path, $"{seq.name}.mid"), seq);
+                song.Save(Path.Combine(path, $"{song.name}.cseq"));
+                song.Songs[0].ExportMIDI(Path.Combine(path, $"{song.name}.mid"), song);
             }
         }
 
@@ -325,7 +327,7 @@ namespace CTRFramework.Sound
                 seq.name = seqnames[j];
                 CSEQ.PatchName = seq.name;
                 seq.LoadMetaInstruments(seq.name);
-                seq.songs[0].ExportMIDI(Path.ChangeExtension(fn, ".mid"), seq);
+                seq.Songs[0].ExportMIDI(Path.ChangeExtension(fn, ".mid"), seq);
 
                 j++;
             }

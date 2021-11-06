@@ -31,6 +31,22 @@ namespace CTRFramework.Sound.CSeq
 
         public int absoluteTime = 0;
 
+        public Command()
+        {
+
+        }
+
+        public Command(BinaryReaderEx br)
+        {
+            Read(br);
+        }
+
+        public static Command FromReader(BinaryReaderEx br)
+        {
+            return new Command(br);
+        }
+
+
         public void Read(BinaryReaderEx br)
         {
             wait = br.ReadTimeDelta();
@@ -116,7 +132,7 @@ namespace CTRFramework.Sound.CSeq
                         }
                         catch //(Exception ex)
                         {
-                           //System.Windows.Forms.MessageBox.Show("" + seq.samplesReverb.Count + " " + p);
+                            //System.Windows.Forms.MessageBox.Show("" + seq.samplesReverb.Count + " " + p);
                         }
                     }
                 }

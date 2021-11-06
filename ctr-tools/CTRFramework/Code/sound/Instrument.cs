@@ -1,7 +1,6 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace CTRFramework.Sound
 {
@@ -10,6 +9,8 @@ namespace CTRFramework.Sound
     /// </summary>
     public class Instrument : IReadWrite
     {
+        public static readonly int SizeOf = 0x0C;
+
         protected byte _magic1;
         protected byte _volume;
         protected ushort _freq;
@@ -32,14 +33,16 @@ namespace CTRFramework.Sound
         public float Volume
         {
             get { return _volume / 255f; }
-            set {
+            set
+            {
                 if (_volume < 0)
                     _volume = 0;
 
                 if (_volume > 1)
                     _volume = 1;
 
-                _volume = (byte)(value * 255f); }
+                _volume = (byte)(value * 255f);
+            }
         }
 
         public Instrument()
@@ -92,11 +95,13 @@ namespace CTRFramework.Sound
     /// </summary>
     public class InstrumentShort : Instrument
     {
+        public static readonly new int SizeOf = 8;
+
         public InstrumentShort()
         {
         }
 
-        public InstrumentShort(BinaryReaderEx br) : base(br) 
+        public InstrumentShort(BinaryReaderEx br) : base(br)
         {
         }
 
