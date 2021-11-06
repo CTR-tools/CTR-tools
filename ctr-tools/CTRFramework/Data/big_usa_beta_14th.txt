@@ -277,7 +277,7 @@
 237=cutscenes\sleeping_crash\data.lev
 238=cutscenes\sleeping_crash\data.ptr
 
-# missing cutsecenes here
+# missing cutscenes here
 
 245=levels\menu_models\data.vrm
 246=levels\menu_models\data.lev
