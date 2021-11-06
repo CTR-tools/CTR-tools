@@ -355,21 +355,24 @@ namespace ctrviewer
         {
             GameConsole.Write("LoadTextures()");
 
-            string[] files = Directory.GetFiles(".\\newtex\\", "*.png", SearchOption.AllDirectories);
-
             Dictionary<string, string> replacements = new Dictionary<string, string>();
 
-            foreach (var file in files)
+            if (Directory.Exists("newtex"))
             {
-                string f = Path.GetFileNameWithoutExtension(file);
+                string[] files = Directory.GetFiles("newtex", "*.png", SearchOption.AllDirectories);
 
-                if (replacements.ContainsKey(f))
+                foreach (var file in files)
                 {
-                    GameConsole.Write($"Duplicate replacement: {file}");
-                    continue;
-                }
+                    string f = Path.GetFileNameWithoutExtension(file);
 
-                replacements.Add(f, file);
+                    if (replacements.ContainsKey(f))
+                    {
+                        GameConsole.Write($"Duplicate replacement: {file}");
+                        continue;
+                    }
+
+                    replacements.Add(f, file);
+                }
             }
 
             foreach (Scene s in Scenes)
