@@ -45,14 +45,14 @@ namespace ctrviewer.Engine
             return mono_v;
         }
 
-        public static TriList ToTriList(CTRFramework.CtrModel model)
+        public static TriList ToTriList(CTRFramework.CtrModel model, float scale = 1f)
         {
             GameConsole.Write(model.Name);
 
             List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
             foreach (var x in model.Entries[0].verts)
-                li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f));
+                li.Add(DataConverter.ToVptc(x, new Vector2b(0, 0), 0.01f * scale));
 
             TriList t = new TriList();
             t.textureEnabled = false;

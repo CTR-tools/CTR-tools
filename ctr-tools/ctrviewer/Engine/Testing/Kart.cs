@@ -6,89 +6,68 @@ using System;
 
 namespace ctrviewer.Engine.Testing
 {
-    class Kart : InstancedModel
+    public class Physics
     {
-        public Vector3 Position;
-        public Vector3 Angle;
-        public float Scale;
-        public string ModelName = "bluecone";
+        public static float MaxAcceleration = 0.01f;
+        public static float MaxSpeed = 0.25f;
+        public static float MaxTurningStep = 0.025f;
 
+        public static float Friction = 0.001f;
+        public static float BrakeFriction = 0.01f;
+    }
+
+    class Kart : InstancedModel
+    { 
         public float Speed = 0;
         public float Accel = 0;
-
-        public static float MaxAccel = 1;
-        public static float MaxSpeed = 20;
 
         public Kart()
         {
         }
 
-        public Kart(Vector3 pos, Vector3 ang)
+        public Kart(Vector3 pos, Vector3 rot)
         {
+            ModelName = "selectkart";
             Position = pos;
-            Angle = ang;
-        }
-
-        public Kart(string mn, Vector3 pos, Vector3 ang, float scale)
-        {
-            ModelName = mn;
-            Position = pos;
-            Angle = ang;
-            Scale = scale;
+            Rotation = rot;
         }
 
         public void Update(GameTime gameTime)
         {
             GamePadState gs = GamePad.GetState(Game1.activeGamePad);
+            KeyboardState ks = Keyboard.GetState();
 
-            if (gs.IsButtonDown(Buttons.A))
+            if (ks.IsKeyDown(Keys.Up))
+                Position.Y += 0.1f;
+
+            if (ks.IsKeyDown(Keys.Down))
+                Position.Y += -0.1f;
+
+            if (ks.IsKeyDown(Keys.A))
+                Rotation.X += Physics.MaxTurningStep * (Speed / Physics.MaxSpeed) * (ks.IsKeyDown(Keys.S) ? 2 : 1);
+
+            if (ks.IsKeyDown(Keys.D))
+                Rotation.X -= Physics.MaxTurningStep * (Speed / Physics.MaxSpeed) * (ks.IsKeyDown(Keys.S) ? 2 : 1);
+            
+
+            if (gs.IsButtonDown(Buttons.A) || ks.IsKeyDown(Keys.W))
             {
-                if (Accel != MaxAccel)
-                {
-                    Accel += 0.01f;
-
-                    if (Accel > MaxAccel)
-                        Accel = MaxAccel;
-                }
-
-                Speed += Accel;
+                Accel = Physics.MaxAcceleration;
             }
             else
             {
                 Accel = 0;
-
-                Speed -= 0.1f;
             }
 
-            if (Speed > MaxSpeed)
-                Speed = MaxSpeed;
+            Speed += Accel - (ks.IsKeyDown(Keys.S) ? Physics.BrakeFriction : Physics.Friction);
+
+            if (Speed > Physics.MaxSpeed)
+                Speed = Physics.MaxSpeed;
 
             if (Speed < 0)
                 Speed = 0;
 
-            Position += Vector3.Left * Speed;
-
-            //Position += new Vector3(-1f, 0, 0);
-
-            if (Speed == 0)
-                Accel = 0;
-        }
-
-
-        public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha, FirstPersonCamera camera)
-        {
-            effect.World = Matrix.CreateScale(Scale) * Matrix.CreateFromYawPitchRoll(Angle.X, Angle.Y, Angle.Z) * Matrix.CreateTranslation(Position);
-            effect.View = camera.ViewMatrix;
-            effect.Projection = camera.ProjectionMatrix;
-
-            if (ContentVault.Models.ContainsKey(ModelName))
-            {
-                ContentVault.Models[ModelName].Draw(graphics, effect, alpha);
-            }
-            else
-            {
-                Console.WriteLine(ModelName + " not loaded");
-            }
+            Position += Vector3.Transform(Vector3.Backward  * Speed, Matrix.CreateRotationY(Rotation.X));
         }
     }
 }

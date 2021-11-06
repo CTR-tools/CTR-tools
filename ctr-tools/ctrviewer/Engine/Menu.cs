@@ -244,6 +244,7 @@ namespace ctrviewer.Engine
             main.Add(new MenuItem("level options".ToUpper(), "link", "level", true));
             main.Add(new MenuItem("video options".ToUpper(), "link", "video", true));
             main.Add(new MenuItem("time of day".ToUpper(), "link", "tod", true));
+            main.Add(new MenuItem("kart mode".ToUpper(), "toggle", "kart", true));
             main.Add(new MenuItem("quit".ToUpper(), "exit", "", true));
 
             List<MenuItem> tod = new List<MenuItem>();

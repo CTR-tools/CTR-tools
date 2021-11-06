@@ -402,16 +402,27 @@ namespace ctrviewer
 
         private void TestLoadKart()
         {
-            if (!File.Exists("karts.lev"))
-                return;
+            Scene cc = new Scene();
 
-            Scene karts = Scene.FromFile("karts.lev");
+            if (big != null)
+            {
+                big.FileCursor = 218;
+                cc = big.ReadEntry().ParseAs<Scene>();
+            }
+            else
+            {
+                if (!File.Exists("karts.lev"))
+                    return;
+            }
 
-            foreach (CtrModel m in karts.Models)
-                if (!ContentVault.Models.ContainsKey(m.Name) && m.Name == "selectkart")
-                    ContentVault.Models.Add(m.Name, DataConverter.ToTriList(m));
+            if (cc == null)
+                Scene.FromFile("karts.lev");
 
-            //karts.Add(new Kart("selectkart", MGConverter.ToVector3(scn[0].header.startGrid[0].Position), Vector3.Left, 0.5f));
+            foreach (var model in cc.Models)
+            {
+                if (model.Name == "selectkart")
+                    ContentVault.AddModel(model.Name, DataConverter.ToTriList(model, 0.033f));
+            }
         }
 
         public void TestLoadExtrenalModels()
@@ -481,6 +492,10 @@ namespace ctrviewer
             TestLoadKart();
             TestLoadExtrenalModels();
 
+            if (Scenes.Count > 0 && karts.Count == 0)
+                karts.Add(new Kart( 
+                    DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position) + new Vector3(0, -0.38f, 0), 
+                    new Vector3(-(float)Math.PI / 2f, 0, 0)));
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -534,7 +549,7 @@ namespace ctrviewer
             foreach (Scene s in Scenes)
             {
                 foreach (var pa in s.header.startGrid)
-                    eng.instanced.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
+                    eng.paths.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
 
                 foreach (var ph in s.pickups)
                 {
@@ -658,6 +673,7 @@ namespace ctrviewer
         public static bool RenderEnabled = true;
         public static bool ControlsEnabled = true;
         public static bool IsDrawing = false;
+        public static bool KartMode = false;
         bool captureMouse = false;
 
         GamePadState oldgs = GamePad.GetState(activeGamePad);
@@ -668,6 +684,7 @@ namespace ctrviewer
 
         MouseState oldms = new MouseState();
         MouseState newms = new MouseState();
+
 
         protected override void Update(GameTime gameTime)
         {
@@ -694,8 +711,18 @@ namespace ctrviewer
             {
                 newmenu.Update(gameTime, new Point(newms.X, newms.Y));
 
-                foreach (Kart k in karts)
-                    k.Update(gameTime);
+                if (KartMode)
+                    foreach (Kart k in karts)
+                    {
+                        k.Update(gameTime);
+                        eng.Cameras[CameraType.DefaultCamera].Position = k.Position + new Vector3(0, 1.5f, 0) + 
+                            Vector3.Transform(Vector3.Forward * 3f, Matrix.CreateFromYawPitchRoll(k.Rotation.X, 0, -1.5f));
+
+                        eng.Cameras[CameraType.DefaultCamera].SetRotation((float)Math.PI + k.Rotation.X, 0);
+
+                        eng.Cameras[CameraType.SkyCamera].SetRotation((float)Math.PI + k.Rotation.X, 0);
+                    }
+
 
                 if (newgs.Buttons.Start == ButtonState.Pressed && newgs.Buttons.Back == ButtonState.Pressed)
                     Exit();
@@ -797,6 +824,7 @@ namespace ctrviewer
                                     case "stereo": eng.Settings.StereoPair = !eng.Settings.StereoPair; break;
                                     case "sky": eng.Settings.ShowSky = !eng.Settings.ShowSky; break;
                                     case "vsync": eng.Settings.VerticalSync = !eng.Settings.VerticalSync; break;
+                                    case "kart":KartMode = !KartMode; break;
                                     default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
                                 }
                                 break;
@@ -840,9 +868,17 @@ namespace ctrviewer
                     foreach (var im in eng.paths)
                         im.Update(gameTime);
 
-                    if (ControlsEnabled)
+                    if (KartMode)
                     {
-                        UpdateCameras(gameTime);
+                        eng.Cameras[CameraType.DefaultCamera].Update(gameTime, false, false, newms, oldms);
+                        eng.Cameras[CameraType.SkyCamera].Update(gameTime, false, false, newms, oldms);
+                    }
+                    else
+                    {
+                        if (ControlsEnabled)
+                        {
+                            UpdateCameras(gameTime);
+                        }
                     }
                 }
             }
@@ -988,8 +1024,9 @@ namespace ctrviewer
                         v.Draw(graphics, instanceEffect, null, cam);
 
                     //render karts
-                    foreach (Kart k in karts)
-                        k.Draw(graphics, instanceEffect, null, cam);
+                    //if (KartMode)
+                        foreach (Kart k in karts)
+                            k.Draw(graphics, instanceEffect, null, cam);
                 }
 
                 if (eng.Settings.ShowBotsPath)
@@ -1178,7 +1215,9 @@ namespace ctrviewer
                     0.5f);
 
 
-            //spriteBatch.DrawString(font, String.Format("sp: {0}\r\nac:{1}", karts[0].Speed, karts[0].Accel), new Vector2(20, 20), Color.Yellow);
+            if (KartMode)
+                if (karts.Count > 0)
+                    spriteBatch.DrawString(font, $"Kart mode: WASD - move, arrow keys - up/down, no collisions\r\nsp: {karts[0].Speed}", new Vector2(20, 20), Color.Yellow);
 
             if (eng.Settings.ShowConsole)
                 GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);
