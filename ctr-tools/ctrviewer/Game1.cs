@@ -271,6 +271,9 @@ namespace ctrviewer
             UpdateSplitscreenViewports();
 
             LoadCones();
+
+            LoadScenes(null);
+            LoadLevel();
         }
 
         public void LoadCones()
