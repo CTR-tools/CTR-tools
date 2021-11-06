@@ -401,8 +401,8 @@
 369=models\cutscenes1.vrm
 370=models\cutscenes2.vrm
 
-371=models\podium1.ctr
-372=models\podium2.ctr
+371=models\misc\podium1.ctr
+372=models\misc\podium2.ctr
 
 # podium models are incomplete in this build, some chars are missing
 
