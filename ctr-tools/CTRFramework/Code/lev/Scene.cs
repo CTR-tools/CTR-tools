@@ -292,11 +292,10 @@ namespace CTRFramework
         /// <param name="lod">LOD level (Detail enum)</param>
         private void ExportMesh(string path, Detail lod)
         {
-            Helpers.CheckFolder(path);
-
             if (quads.Count == 0)
                 return;
 
+            Helpers.CheckFolder(path);
 
             string fname = $"{name}_{lod.ToString()}";
 
@@ -347,7 +346,7 @@ namespace CTRFramework
             {
                 if (tl.Position != 0)
                 {
-                    string texname = $"tex{lod.ToString()}\\{ tl.Tag}.png";
+                    string texname = $"tex{lod}\\{tl.Tag}.png";
 
                     sb.AppendLine($"newmtl {tl.Tag}");
                     sb.AppendLine("Kd 2.0 2.0 2.0"); //not sure if it actually works in obj, but it's what psx does
@@ -367,7 +366,11 @@ namespace CTRFramework
                 }
             }
 
+            //importers will warn about missing texture here
+            //but this way it will apply default editor's placeholder texture
+            //usually checkerboard pattern or magenta filler
             sb.Append("newmtl default\r\n");
+            sb.Append("Map_Kd default.png\r\n");
 
             Helpers.WriteToFile(Path.Combine(path, $"{fname}.mtl"), sb.ToString());
 
