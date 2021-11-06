@@ -252,45 +252,45 @@
 213=levels\adventure\citadel_city\data.lev
 214=levels\adventure\citadel_city\data.ptr
 
-215=cutscenes\file01\data.vrm
-216=cutscenes\file01\data.lev
-217=cutscenes\file01\data.ptr
-218=cutscenes\file02\data.vrm
-219=cutscenes\file02\data.lev
-220=cutscenes\file02\data.ptr
-221=cutscenes\file03\data.vrm
-222=cutscenes\file03\data.lev
-223=cutscenes\file03\data.ptr
-224=cutscenes\file04\data.vrm
-225=cutscenes\file04\data.lev
-226=cutscenes\file04\data.ptr
-227=cutscenes\file05\data.vrm
-228=cutscenes\file05\data.lev
-229=cutscenes\file05\data.ptr
-230=cutscenes\file06\data.vrm
-231=cutscenes\file06\data.lev
-232=cutscenes\file06\data.ptr
-233=cutscenes\file07\data.vrm
-234=cutscenes\file07\data.lev
-235=cutscenes\file07\data.ptr
-236=cutscenes\file08\data.vrm
-237=cutscenes\file08\data.lev
-238=cutscenes\file08\data.ptr
+215=cutscenes\race_today\data.vrm
+216=cutscenes\race_today\data.lev
+217=cutscenes\race_today\data.ptr
+218=cutscenes\canyon_coco\data.vrm
+219=cutscenes\canyon_coco\data.lev
+220=cutscenes\canyon_coco\data.ptr
+221=cutscenes\pass_tiny\data.vrm
+222=cutscenes\pass_tiny\data.lev
+223=cutscenes\pass_tiny\data.ptr
+224=cutscenes\temple_polar\data.vrm
+225=cutscenes\temple_polar\data.lev
+226=cutscenes\temple_polar\data.ptr
+227=cutscenes\skyway_dingodile\data.vrm
+228=cutscenes\skyway_dingodile\data.lev
+229=cutscenes\skyway_dingodile\data.ptr
+230=cutscenes\sewer_cortex\data.vrm
+231=cutscenes\sewer_cortex\data.lev
+232=cutscenes\sewer_cortex\data.ptr
+233=cutscenes\oxide\data.vrm
+234=cutscenes\oxide\data.lev
+235=cutscenes\oxide\data.ptr
+236=cutscenes\sleeping_crash\data.vrm
+237=cutscenes\sleeping_crash\data.lev
+238=cutscenes\sleeping_crash\data.ptr
 
 # missing cutsecenes here
 
 245=levels\menu_models\data.vrm
 246=levels\menu_models\data.lev
 
-247=japfont.vrm
-248=japfont.mpk
+247=packs\japfont.vrm
+248=packs\japfont.mpk
 
-249=lib\234_04.dll
-250=lib\235_05.dll
-251=lib\236_06.dll
-252=lib\237_07.dll
-253=lib\238_08.dll
-254=lib\239_09.dll
+249=overlays\234_04.dll
+250=overlays\235_05.dll
+251=overlays\236_06.dll
+252=overlays\237_07.dll
+253=overlays\238_08.dll
+254=overlays\239_09.dll
 
 255=lang\ja.lng
 256=lang\en.lng
@@ -523,13 +523,13 @@
 
 # i guess reserved for thumbs?
 
-501=screens\scr01.tim
-502=screens\scr01.lev
-503=screens\scr02.tim
-504=screens\scr02.lev
-505=screens\scr03.tim
-506=screens\scr03.lev
-507=screens\scr04.tim
-508=screens\scr04.lev
-509=screens\scr05.tim
-510=screens\scr05.lev
+501=screen\intro0.tim
+502=screen\intro0.lev
+503=screen\intro1.tim
+504=screen\intro1.lev
+505=screen\intro2.tim
+506=screen\intro2.lev
+507=screen\menu.tim
+508=screen\menu.lev
+509=screen\hint.tim
+510=screen\hint.lev

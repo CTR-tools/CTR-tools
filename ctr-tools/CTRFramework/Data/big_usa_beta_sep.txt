@@ -294,21 +294,21 @@
 
 # =================251 = OVERLAYS SECTION===================
 
-251=overlays\251_05.bin
-252=overlays\252_06.bin
-253=overlays\253_07.bin
-254=overlays\254_08.bin
-255=overlays\255_09.bin
+251=overlays\221_EndRaceMenu_CrystalChallenge.bin
+252=overlays\222_EndRaceMenu_ArcadeAdventure.bin
+253=overlays\223_EndRaceMenu_Relic.bin
+254=overlays\224_EndRaceMenu_TimeTrial.bin
+255=overlays\225_EndRaceMenu_BattleVS.bin
 
-256=overlays\256_0B.bin
-257=overlays\257_0C.bin
-258=overlays\258_0D.bin
-259=overlays\259_0E.bin
+256=overlays\226_Quadblock_1P.bin
+257=overlays\227_Quadblock_2P.bin
+258=overlays\228_Quadblock_3P.bin
+259=overlays\229_Quadblock_4P.bin
 
-260=overlays\260_10.bin
-261=overlays\261_11.bin
-262=overlays\262_12.bin
-263=overlays\263_13.bin
+260=overlays\230_Threads_MainMenu.bin
+261=overlays\231_Threads_Racing.bin
+262=overlays\232_Threads_AdvHub.bin
+263=overlays\233_Threads_Cutscene.bin
 
 # ===========264 = LOCALIZATION SECTION=================
 

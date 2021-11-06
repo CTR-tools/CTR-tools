@@ -1,3 +1,6 @@
+# Crash Team Racing BIGFILE.BIG master file list 
+# Matches Aug 3rd beta
+
 000=levels\tracks\proto8\1P\data.vrm
 001=levels\tracks\proto8\1P\data.lev
 002=levels\tracks\proto8\2P\data.vrm
@@ -235,9 +238,10 @@
 208=levels\adventure\citadel_city\data.vrm
 209=levels\adventure\citadel_city\data.lev
 
+# intro cutscenes are missing
 
-222=oxide_ship_2x.vrm
-223=oxide_ship_2x.lev
+222=cutscenes\oxide.vrm
+223=cutscenes\oxide.lev
 
 230=levels\menu_models\data.vrm
 231=levels\menu_models\data.lev
@@ -400,6 +404,7 @@
 371=models\podium1.ctr
 372=models\podium2.ctr
 
+# podium models are incomplete in this build, some chars are missing
 
 373=models\trophy_win\crashdance.ctr
 375=models\trophy_win\tinydance.ctr
@@ -417,7 +422,6 @@
 400=models\trophy_lose\joedance.ctr
 403=models\trophy_lose\fakedance.ctr
 
-
 405=models\trophy_girl\tawna1dance.ctr
 406=models\trophy_girl\tawna2dance.ctr
 407=models\trophy_girl\tawna3dance.ctr
@@ -427,14 +431,15 @@
 411=models\trophy_girl\tawna3dance2.ctr
 412=models\trophy_girl\tawna4dance2.ctr
 
+# i guess reserved for thumbs?
 
-443=screens\scr01.tim
-444=screens\scr01.lev
-445=screens\scr02.tim
-446=screens\scr02.lev
-447=screens\scr03.tim
-448=screens\scr03.lev
-449=screens\scr04.tim
-450=screens\scr04.lev
-451=screens\scr05.tim
-452=screens\scr05.lev
+443=screen\intro0.tim
+444=screen\intro0.lev
+445=screen\intro1.tim
+446=screen\intro1.lev
+447=screen\intro2.tim
+448=screen\intro2.lev
+449=screen\menu.tim
+450=screen\menu.lev
+451=screen\hint.tim
+452=screen\hint.lev
