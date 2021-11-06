@@ -21,7 +21,7 @@ namespace CTRFramework
 
 
 
-    public class QuadBlock : IRead, IWrite
+    public class QuadBlock : IReadWrite
     {
         public static readonly int SizeOf = 0x5C;
 
@@ -358,7 +358,7 @@ namespace CTRFramework
 
                     if (i > 4 || i < 0)
                     {
-                        Helpers.Panic(this, PanicType.Warning, "Can't have more than 4 quads in a quad block.");
+                        Helpers.Panic(this, PanicType.Error, "Can't have more than 4 quads in a quad block.");
                         return null;
                     }
 
@@ -658,9 +658,7 @@ namespace CTRFramework
                 bw.WriteVector2s(v, 1 / 4096f);
 
             if (bw.BaseStream.Position - sizeCheck != SizeOf)
-            {
                 throw new Exception("QuadBlock: size mismatch.");
-            }
         }
     }
 }

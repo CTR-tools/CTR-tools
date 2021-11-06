@@ -96,7 +96,8 @@ namespace CTRFramework.Vram
 
             if (hasClut)
             {
-                /*clutsize = */br.ReadUInt32();
+                /*clutsize = */
+                br.ReadUInt32();
                 clutregion.X = br.ReadUInt16();
                 clutregion.Y = br.ReadUInt16();
                 clutregion.Width = br.ReadUInt16();
@@ -104,7 +105,8 @@ namespace CTRFramework.Vram
                 clutdata = br.ReadArrayUInt16(clutregion.Width * clutregion.Height);
             }
 
-            /*datasize = */br.ReadUInt32();
+            /*datasize = */
+            br.ReadUInt32();
             region.X = br.ReadUInt16();
             region.Y = br.ReadUInt16();
             region.Width = br.ReadUInt16();
@@ -276,7 +278,7 @@ namespace CTRFramework.Vram
             int width = (int)(tl.width * (bpp / 8.0f));
             int height = tl.height;
 
-           // Helpers.Panic(this, PanicType.Assume, tl.width + " vs " + width + "|" + bpp + " " + (bpp / 8.0f) + " " + (tl.width * (bpp / 8.0f)));
+            // Helpers.Panic(this, PanicType.Assume, tl.width + " vs " + width + "|" + bpp + " " + (bpp / 8.0f) + " " + (tl.width * (bpp / 8.0f)));
 
             //ahem, so this happens because 1 byte = 2 pixel and if it's uneven width, we have to move half-byte.
             bool dirtyhack = false;

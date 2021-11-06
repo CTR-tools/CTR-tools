@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using CTRFramework.Vram;
+﻿using CTRFramework.Vram;
+using System;
 using System.Drawing;
-using CTRFramework.Shared;
+using System.IO;
+using System.Text;
 
 namespace vram_map
 {
@@ -59,7 +55,7 @@ namespace vram_map
                 tim.flags = 1 << 3;
 
                 tim.clutregion = new Rectangle(
-                    Int32.Parse(values[(int)TimData.PalX]) * 16, 
+                    Int32.Parse(values[(int)TimData.PalX]) * 16,
                     Int32.Parse(values[(int)TimData.PalY]),
                     16, 1);
 

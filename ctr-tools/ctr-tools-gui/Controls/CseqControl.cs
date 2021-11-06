@@ -84,7 +84,7 @@ namespace CTRTools.Controls
 
             int i = 0;
 
-            foreach (Song s in seq.songs)
+            foreach (Song s in seq.Songs)
             {
                 sequenceBox.Items.Add("Sequence_" + i.ToString("X2"));
                 i++;
@@ -124,7 +124,7 @@ namespace CTRTools.Controls
 
             int i = 0;
 
-            Song song = seq.songs[sequenceBox.SelectedIndex];
+            Song song = seq.Songs[sequenceBox.SelectedIndex];
 
             foreach (var track in song.tracks)
             {
@@ -141,7 +141,7 @@ namespace CTRTools.Controls
             int y = trackBox.SelectedIndex;
 
             if (x != -1 && y != -1)
-                this.trackInfoBox.Text = seq.songs[x].tracks[y].ToString();
+                this.trackInfoBox.Text = seq.Songs[x].tracks[y].ToString();
 
             tabControl1.SelectedIndex = 0;
         }
@@ -152,7 +152,7 @@ namespace CTRTools.Controls
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                seq.songs[sequenceBox.SelectedIndex].ExportMIDI(sfd.FileName, seq);
+                seq.Songs[sequenceBox.SelectedIndex].ExportMIDI(sfd.FileName, seq);
                 //seq.ToSFZ(Path.ChangeExtension(sfd.FileName, ".sfz"));
             }
 
@@ -194,7 +194,7 @@ namespace CTRTools.Controls
 
             if (seq != null)
             {
-                seq.bank = bnk;
+                seq.Bank = bnk;
                 MessageBox.Show(seq.CheckBankForSamples() ? "samples OK!" : "samples missing");
                 trackInfoBox.Text = seq.ListMissingSamples();
             }
@@ -268,11 +268,11 @@ namespace CTRTools.Controls
                 {
                     CSEQ c = CSEQ.FromFile(s);
 
-                    foreach (var sd in c.samples) 
-                        if (!x.Contains(sd.Tag)) 
+                    foreach (var sd in c.samples)
+                        if (!x.Contains(sd.Tag))
                             x.Add(sd.Tag);
 
-                    foreach (var sd in c.samplesReverb) 
+                    foreach (var sd in c.samplesReverb)
                         if (!x.Contains(sd.Tag))
                             x.Add(sd.Tag);
                 }
@@ -375,7 +375,7 @@ namespace CTRTools.Controls
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    seq.songs[x].tracks[y].Import(ofd.FileName);
+                    seq.Songs[x].tracks[y].Import(ofd.FileName);
                 }
             }
 
@@ -478,7 +478,7 @@ namespace CTRTools.Controls
                     x.cseqEventCollection.Insert(0, c);
                 }
 
-                seq.songs.Add(newMidi);
+                seq.Songs.Add(newMidi);
 
                 FillUI(loadedfile);
             }
