@@ -35,11 +35,11 @@ namespace ctrviewer.Engine
         public static VertexPositionColorTexture ToVptc(CTRFramework.Vertex v, Vector2b uv, float scale = 1.0f)
         {
             VertexPositionColorTexture mono_v = new VertexPositionColorTexture();
-            mono_v.Position = ToVector3(v.coord, scale);
+            mono_v.Position = ToVector3(v.Position, scale);
             mono_v.Color = new Color(
-                v.color.X / 255f,
-                v.color.Y / 255f,
-                v.color.Z / 255f
+                v.Color.X / 255f,
+                v.Color.Y / 255f,
+                v.Color.Z / 255f
                 );
             mono_v.TextureCoordinate = new Microsoft.Xna.Framework.Vector2(uv.X / 255.0f, uv.Y / 255.0f);
             return mono_v;

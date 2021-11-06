@@ -364,9 +364,9 @@ namespace CTRFramework
                     for (int z = 3 - 1; z >= 0; z--)
                     {
                         Vertex v = new Vertex();
-                        v.coord = new Vector3(crd[1 + z].X, crd[z + 1].Y, crd[z + 1].Z);
-                        v.color = clr[1 + z];
-                        v.color_morph = v.color;
+                        v.Position = new Vector3(crd[1 + z].X, crd[z + 1].Y, crd[z + 1].Z);
+                        v.Color = clr[1 + z];
+                        v.MorphColor = v.Color;
                         verts.Add(v);
                     }
 
@@ -424,10 +424,10 @@ namespace CTRFramework
             {
                 //while the lev is scaled down by 100, ctr models are scaled down by 1000?
                 sb.AppendLine("v " +
-                    v.coord.X / 1000f + " " +
-                    v.coord.Y / 1000f + " " +
-                    v.coord.Z / 1000f + " " +
-                    v.color.ToString(VecFormat.Numbers));
+                    v.Position.X / 1000f + " " +
+                    v.Position.Y / 1000f + " " +
+                    v.Position.Z / 1000f + " " +
+                    v.Color.ToString(VecFormat.Numbers));
             }
 
             Console.WriteLine(matIndices.Count);
@@ -717,7 +717,7 @@ namespace CTRFramework
             PlyResult ply = new PlyResult(new List<Vector3f>(), new List<int>(), new List<Vector4b>());
 
             foreach (var v in verts)
-                ply.Vertices.Add(new Vector3f(v.coord.X, v.coord.Y, v.coord.Z));
+                ply.Vertices.Add(new Vector3f(v.Position.X, v.Position.Y, v.Position.Z));
         }
 
         /// <summary>

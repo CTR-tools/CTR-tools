@@ -121,8 +121,8 @@ namespace CTRTools.Controls
 
             foreach (Vertex v in scn.verts)
             {
-                v.color.Scale(0.12f, 0.21f, 0.32f, 1f);
-                v.color_morph.Scale(0.12f, 0.21f, 0.32f, 1f);
+                v.Color.Scale(0.12f, 0.21f, 0.32f, 1f);
+                v.MorphColor.Scale(0.12f, 0.21f, 0.32f, 1f);
             }
         }
 
@@ -332,7 +332,7 @@ namespace CTRTools.Controls
             {
                 foreach (Vertex v in scn.verts)
                 {
-                    v.color_morph = v.color;
+                    v.MorphColor = v.Color;
                 }
             }
         }

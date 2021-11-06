@@ -7,9 +7,9 @@ namespace CTRFramework
 {
     public class Vertex : IReadWrite
     {
-        public Vector3 coord;
-        public Vector4b color;
-        public Vector4b color_morph;
+        public Vector3 Position;
+        public Vector4b Color;
+        public Vector4b MorphColor;
 
         public Vector4b color_target;
         public Vector2b uv; //not used by CTR, added for convenience
@@ -27,28 +27,28 @@ namespace CTRFramework
         {
             switch (mode)
             {
-                case Vcolor.Default: color = col; break;
-                case Vcolor.Morph: color_morph = col; break;
+                case Vcolor.Default: Color = col; break;
+                case Vcolor.Morph: MorphColor = col; break;
             }
         }
 
         public virtual void Read(BinaryReaderEx br)
         {
-            coord = br.ReadVector3sPadded(1 / 100f);
-            color = new Vector4b(br);
-            color_morph = new Vector4b(br);
+            Position = br.ReadVector3sPadded(1 / 100f);
+            Color = new Vector4b(br);
+            MorphColor = new Vector4b(br);
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.WriteVector3sPadded(coord, 1 / 100f);
-            color.Write(bw);
-            color_morph.Write(bw);
+            bw.WriteVector3sPadded(Position, 1 / 100f);
+            Color.Write(bw);
+            MorphColor.Write(bw);
         }
 
         public string ToObj()
         {
-            return $"v {coord.X} {coord.Y} {coord.Z} {(color.X / 255f).ToString("0.###")} {(color.Y / 255f).ToString("0.###")} {(color.Z / 255f).ToString("0.###")}";
+            return $"v {Position.X} {Position.Y} {Position.Z} {(Color.X / 255f).ToString("0.###")} {(Color.Y / 255f).ToString("0.###")} {(Color.Z / 255f).ToString("0.###")}";
         }
     }
 
@@ -60,8 +60,8 @@ namespace CTRFramework
 
         public override void Read(BinaryReaderEx br)
         {
-            coord = br.ReadVector3sPadded(1 / 100f);
-            color = new Vector4b(br);
+            Position = br.ReadVector3sPadded(1 / 100f);
+            Color = new Vector4b(br);
         }
     }
 }
