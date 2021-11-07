@@ -75,7 +75,7 @@ namespace CTRFramework
             sb.Append(name + ": ");
 
             foreach (var entry in Entries)
-                sb.Append(entry.name + ", ");
+                sb.Append(entry.Name + ", ");
 
             sb.Append("\r\n");
 
@@ -92,7 +92,7 @@ namespace CTRFramework
 
             foreach (var entry in Entries)
             {
-                string fn = Path.Combine(path, $"{name}.{entry.name}.{i.ToString("00")}{(entry.IsAnimated ? ".Animated" : "")}.obj");
+                string fn = Path.Combine(path, $"{name}.{entry.Name}.{i.ToString("00")}{(entry.IsAnimated ? ".Animated" : "")}.obj");
                 Helpers.WriteToFile(fn, entry.ToObj());
 
                 entry.ExportTextures(path, vram);

@@ -13,7 +13,7 @@ namespace CTRFramework
 {
     public class CtrMesh : IRead
     {
-        public string name = "default_name";
+        public string Name { get; set; } = "default_name";
         public int unk0 = 0; //0?
         public short lodDistance = 1000;
         public short billboard = 0; //bit0 forces model to always face the camera, check other bits
@@ -46,12 +46,6 @@ namespace CTRFramework
         }
 
         #region [Component model]
-        [Browsable(true), DisplayName("Name"), Description(""), Category("CTR Mesh")]
-        public string Name
-        {
-            get => name;
-            set => name = value;
-        }
         [Browsable(true), DisplayName("LOD distance"), Description(""), Category("CTR Mesh")]
         public short LodDistance
         {
@@ -108,7 +102,7 @@ namespace CTRFramework
         /// <param name="br">BinaryReaderEx object.</param>
         public void Read(BinaryReaderEx br)
         {
-            name = br.ReadStringFixed(16);
+            Name = br.ReadStringFixed(16);
             unk0 = br.ReadInt32();
             lodDistance = br.ReadInt16();
             billboard = br.ReadInt16();
@@ -122,7 +116,7 @@ namespace CTRFramework
             ptrAnims = br.ReadUIntPtr();
             unk4 = br.ReadInt32();
 
-            Console.WriteLine($"CtrHeader: {name}");
+            Helpers.Panic(this, PanicType.Info, Name);
 
             if (unk0 != 0)
                 Helpers.Panic(this, PanicType.Assume, $"check unusual unk0 value = {unk0}");
@@ -401,7 +395,7 @@ namespace CTRFramework
             sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
             sb.AppendLine($"#{Meta.GetVersion()}");
             sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
-            sb.AppendLine($"mtllib test_{name}.mtl\r\n");
+            sb.AppendLine($"mtllib test_{Name}.mtl\r\n");
 
             sb.AppendLine("# textures used:");
 
@@ -419,7 +413,8 @@ namespace CTRFramework
             }
 
 
-            sb.AppendLine("o " + name);
+            sb.AppendLine("o " + Name);
+
             foreach (Vertex v in verts)
             {
                 //while the lev is scaled down by 100, ctr models are scaled down by 1000?
@@ -479,7 +474,7 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"name: {name}");
+            sb.AppendLine($"name: {Name}");
             sb.AppendLine($"unk0: {unk0}");
             sb.AppendLine($"lodDistance: {lodDistance}");
             sb.AppendLine($"billboard: {billboard}");
@@ -509,7 +504,7 @@ namespace CTRFramework
         public static CtrMesh FromRawData(string name, List<Vector3f> vertices, List<Vector4b> colors, List<Vector3i> faces)
         {
             CtrMesh mesh = new CtrMesh();
-            mesh.name = name + "_hi";
+            mesh.Name = name + "_hi";
             mesh.lodDistance = -1;
 
             mesh.tl.Add(new TextureLayout());
@@ -733,7 +728,7 @@ namespace CTRFramework
             {
                 case CtrWriteMode.Header:
                     pos = (int)bw.BaseStream.Position;
-                    bw.Write(name.ToCharArray().Take(16).ToArray());
+                    bw.Write(Name.ToCharArray().Take(16).ToArray());
                     bw.Jump(pos + 16);
                     bw.Write(unk0);
                     bw.Write(lodDistance);
@@ -783,7 +778,7 @@ namespace CTRFramework
                         foreach (var t in tl)
                         {
                             bw.Write(trtire16);
-                            //t.Write(bw);                    
+                            //t.Write(bw);
                         }
                     }
 
@@ -797,7 +792,7 @@ namespace CTRFramework
 
                     bw.Write(vrenderMode);
 
-                    Console.WriteLine(name);
+                    Console.WriteLine(Name);
 
                     foreach (var x in vtx)
                     {
@@ -822,7 +817,7 @@ namespace CTRFramework
 
                     break;
 
-                default: Helpers.Panic(this, PanicType.Warning, $"unimplemented mode {mode.ToString()}"); break;
+                default: Helpers.Panic(this, PanicType.Warning, $"unimplemented mode {mode}"); break;
             }
         }
 
@@ -830,13 +825,13 @@ namespace CTRFramework
         {
             if (vram == null)
             {
-                Helpers.Panic(this, PanicType.Warning, $"No vram passed for '{name}'.");
+                Helpers.Panic(this, PanicType.Warning, $"No vram passed for '{Name}'.");
                 return;
             }
 
             if (tl.Count > 0)
             {
-                string texturepath = Path.Combine(path, name);
+                string texturepath = Path.Combine(path, Name);
 
                 Helpers.CheckFolder(texturepath);
 

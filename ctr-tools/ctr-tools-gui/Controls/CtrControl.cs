@@ -72,7 +72,7 @@ namespace CTRTools.Controls
             if (ctr != null)
             {
                 foreach (var model in ctr.Entries)
-                    listBox1.Items.Add(model.name);
+                    listBox1.Items.Add(model.Name);
 
                 propertyGrid1.SelectedObject = ctr;
             }

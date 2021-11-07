@@ -675,7 +675,6 @@ namespace CTRFramework
         }
 
         private int levelShiftOffset = -52; // offset (found in Unity)
-        private int levelShiftDivide = 92; // one step width
 
         /// <summary>
         /// Return QuadBlocks associated with the leaf, make sure you pass a leaf and not a branch.
@@ -688,7 +687,7 @@ namespace CTRFramework
             if (!leaf.IsLeaf)
                 return leafQuadBlocks;
 
-            uint ptrQuadBlock = (uint)(((leaf.ptrQuadBlock) / levelShiftDivide) + levelShiftOffset);
+            uint ptrQuadBlock = (uint)(((leaf.ptrQuadBlock) / QuadBlock.SizeOf) + levelShiftOffset);
             uint numQuadBlock = leaf.numQuadBlock;
             for (int i = 0; i < numQuadBlock; i++)
             {
