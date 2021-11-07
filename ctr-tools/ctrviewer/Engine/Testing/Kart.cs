@@ -45,32 +45,31 @@ namespace ctrviewer.Engine.Testing
             return value * (float)gameTime.ElapsedGameTime.TotalMilliseconds * KartPhysics.TargetFps / 1000;
         }
 
-        public void Collide(List<QuadBlock> quads)
+        public void Collide(List<Scene> scenes)
         {
-            foreach (var quad in quads)
-            {
-                if (quad.quadFlags.HasFlag(QuadFlags.Ground) || quad.quadFlags.HasFlag(QuadFlags.Wall))
-                if (
-                    (quad.bb.numericMin.X <= Position.X) &&
-                    (quad.bb.numericMin.Y-1 <= Position.Y) &&
-                    (quad.bb.numericMin.Z <= Position.Z) &&
-                    (quad.bb.numericMax.X >= Position.X) &&
-                    (quad.bb.numericMax.Y+2 >= Position.Y) &&
-                    (quad.bb.numericMax.Z >= Position.Z)
-                    )
-                {
-                    GameConsole.Write($"collide with quad bb: {quad.bb} at {Position}");
-                        if (Position.Y <= quad.bb.numericMax.Y)
+            foreach (var scene in scenes)
+                foreach (var quad in scene.quads)
+                    if (quad.quadFlags.HasFlag(QuadFlags.Ground) || quad.quadFlags.HasFlag(QuadFlags.Wall))
+                        if (
+                            (quad.bb.numericMin.X <= Position.X) &&
+                            (quad.bb.numericMin.Y - Gravity * 2 <= Position.Y) &&
+                            (quad.bb.numericMin.Z <= Position.Z) &&
+                            (quad.bb.numericMax.X >= Position.X) &&
+                            (quad.bb.numericMax.Y + 1 + Gravity >= Position.Y) &&
+                            (quad.bb.numericMax.Z >= Position.Z)
+                            )
                         {
-                            Position.Y = quad.bb.numericMax.Y;
-                            Gravity = 0;
-                            return;
+                            GameConsole.Write($"collide with quad bb: {quad.bb} at {Position}");
+                            if (Position.Y <= quad.bb.numericMax.Y)
+                            {
+                                Position.Y = quad.bb.numericMax.Y;
+                                Gravity = 0;
+                                return;
+                            }
                         }
-                }
-            }
         }
 
-        public void Update(GameTime gameTime, List<QuadBlock> quads)
+        public void Update(GameTime gameTime, List<Scene> scenes)
         {
             GamePadState gs = GamePad.GetState(Game1.activeGamePad);
             KeyboardState ks = Keyboard.GetState();
@@ -120,16 +119,28 @@ namespace ctrviewer.Engine.Testing
 
                 Position.Y -= GetDelta(gameTime, Gravity);
 
-                Collide(quads);
+                Collide(scenes);
+
+                if (Gravity == 0 & ks.IsKeyDown(Keys.Space))
+                {
+                    Gravity = 0;
+                    Position.Y += GetDelta(gameTime, 2f);
+                }
             }
 
             //move up/down
 
             if (ks.IsKeyDown(Keys.PageUp) || gs.Buttons.LeftShoulder == ButtonState.Pressed)
+            {
+                Gravity = 0;
                 Position.Y += GetDelta(gameTime, 0.5f);
+            }
 
             if (ks.IsKeyDown(Keys.PageDown) || gs.Buttons.RightShoulder == ButtonState.Pressed)
+            {
+                Gravity = 0;
                 Position.Y += GetDelta(gameTime, -0.5f);
+            }
         }
     }
 }

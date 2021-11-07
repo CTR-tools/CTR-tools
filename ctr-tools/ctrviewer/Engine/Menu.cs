@@ -228,12 +228,12 @@ namespace ctrviewer.Engine
             menus.Add("battle_arenas", battle_arenas);
 
             List<MenuItem> adventure = new List<MenuItem>();
+            adventure.Add(new MenuItem("All at once".ToUpper(), "loadbigadv", "", true, intValue: -1));
             adventure.Add(new MenuItem("Gem Valley".ToUpper(), "loadbig", "", true, intValue: 200));
             adventure.Add(new MenuItem("N. Sanity Beach".ToUpper(), "loadbig", "", true, intValue: 203));
             adventure.Add(new MenuItem("Lost Ruins".ToUpper(), "loadbig", "", true, intValue: 206));
             adventure.Add(new MenuItem("Glacier Park".ToUpper(), "loadbig", "", true, intValue: 209));
             adventure.Add(new MenuItem("Citadel City".ToUpper(), "loadbig", "", true, intValue: 212));
-            adventure.Add(new MenuItem("All at once".ToUpper(), "loadbigadv", "", true, intValue: -1));
             adventure.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
             menus.Add("adventure", adventure);
 

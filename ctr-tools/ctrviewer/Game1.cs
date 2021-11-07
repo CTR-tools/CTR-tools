@@ -722,7 +722,7 @@ namespace ctrviewer
                     foreach (var kart in karts)
                     {
                         if (Scenes.Count > 0)
-                            kart.Update(gameTime, Scenes[0].quads);
+                            kart.Update(gameTime, Scenes);
 
                         eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0, 1.5f, 0) + 
                             Vector3.Transform(Vector3.Forward * 4f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -1f));
