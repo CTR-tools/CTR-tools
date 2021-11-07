@@ -1,7 +1,10 @@
 ﻿using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using System;
+using CTRFramework;
+using CTRFramework.Shared;
 
 namespace ctrviewer.Engine.Testing
 {
@@ -15,12 +18,16 @@ namespace ctrviewer.Engine.Testing
         public static float BrakeFriction = 0.01f;
 
         public static float TargetFps = 60;
+
+        public static float GravityStep = 0.01f;
+        public static float MaxGravity = 1f;
     }
 
     class Kart : InstancedModel
     { 
         public float Speed = 0;
         public float Accel = 0;
+        public float Gravity = 0;
 
         public Kart()
         {
@@ -38,18 +45,35 @@ namespace ctrviewer.Engine.Testing
             return value * (float)gameTime.ElapsedGameTime.TotalMilliseconds * KartPhysics.TargetFps / 1000;
         }
 
-        public void Update(GameTime gameTime)
+        public void Collide(List<QuadBlock> quads)
+        {
+            foreach (var quad in quads)
+            {
+                if (quad.quadFlags.HasFlag(QuadFlags.Ground) || quad.quadFlags.HasFlag(QuadFlags.Wall))
+                if (
+                    (quad.bb.numericMin.X <= Position.X) &&
+                    (quad.bb.numericMin.Y-1 <= Position.Y) &&
+                    (quad.bb.numericMin.Z <= Position.Z) &&
+                    (quad.bb.numericMax.X >= Position.X) &&
+                    (quad.bb.numericMax.Y+2 >= Position.Y) &&
+                    (quad.bb.numericMax.Z >= Position.Z)
+                    )
+                {
+                    GameConsole.Write($"collide with quad bb: {quad.bb} at {Position}");
+                        if (Position.Y <= quad.bb.numericMax.Y)
+                        {
+                            Position.Y = quad.bb.numericMax.Y;
+                            Gravity = 0;
+                            return;
+                        }
+                }
+            }
+        }
+
+        public void Update(GameTime gameTime, List<QuadBlock> quads)
         {
             GamePadState gs = GamePad.GetState(Game1.activeGamePad);
             KeyboardState ks = Keyboard.GetState();
-
-            //move up/down
-
-            if (ks.IsKeyDown(Keys.PageUp) || gs.Buttons.LeftShoulder == ButtonState.Pressed)
-                Position.Y += GetDelta(gameTime, 0.1f);
-
-            if (ks.IsKeyDown(Keys.PageDown) || gs.Buttons.RightShoulder == ButtonState.Pressed)
-                Position.Y += GetDelta(gameTime, -0.1f);
 
             //turning
 
@@ -83,6 +107,29 @@ namespace ctrviewer.Engine.Testing
             //move forward
 
             Position += Vector3.Transform(Vector3.Backward  * GetDelta(gameTime, Speed), Matrix.CreateRotationY(Rotation.X));
+
+
+            //apply gravity
+
+            if (!ks.IsKeyDown(Keys.PageUp) && !ks.IsKeyDown(Keys.PageDown))
+            {
+                Gravity += GetDelta(gameTime, KartPhysics.GravityStep);
+
+                if (Gravity > KartPhysics.MaxGravity)
+                    Gravity = KartPhysics.MaxGravity;
+
+                Position.Y -= GetDelta(gameTime, Gravity);
+
+                Collide(quads);
+            }
+
+            //move up/down
+
+            if (ks.IsKeyDown(Keys.PageUp) || gs.Buttons.LeftShoulder == ButtonState.Pressed)
+                Position.Y += GetDelta(gameTime, 0.5f);
+
+            if (ks.IsKeyDown(Keys.PageDown) || gs.Buttons.RightShoulder == ButtonState.Pressed)
+                Position.Y += GetDelta(gameTime, -0.5f);
         }
     }
 }

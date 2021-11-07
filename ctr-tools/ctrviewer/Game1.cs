@@ -493,9 +493,16 @@ namespace ctrviewer
             TestLoadExtrenalModels();
 
             if (Scenes.Count > 0 && karts.Count == 0)
-                karts.Add(new Kart( 
-                    DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position) + new Vector3(0, -0.38f, 0), 
+            {
+                karts.Add(new Kart(
+                    DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position),
                     new Vector3(-(float)Math.PI / 2f, 0, 0)));
+            }
+            
+            if (karts.Count > 0)
+            { 
+                karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
+            }
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -712,15 +719,17 @@ namespace ctrviewer
                 newmenu.Update(gameTime, new Point(newms.X, newms.Y));
 
                 if (KartMode)
-                    foreach (Kart k in karts)
+                    foreach (var kart in karts)
                     {
-                        k.Update(gameTime);
-                        eng.Cameras[CameraType.DefaultCamera].Position = k.Position + new Vector3(0, 1.5f, 0) + 
-                            Vector3.Transform(Vector3.Forward * 3f, Matrix.CreateFromYawPitchRoll(k.Rotation.X, 0, -1.5f));
+                        if (Scenes.Count > 0)
+                            kart.Update(gameTime, Scenes[0].quads);
 
-                        eng.Cameras[CameraType.DefaultCamera].SetRotation((float)Math.PI + k.Rotation.X, 0);
+                        eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0, 1.5f, 0) + 
+                            Vector3.Transform(Vector3.Forward * 4f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -1f));
 
-                        eng.Cameras[CameraType.SkyCamera].SetRotation((float)Math.PI + k.Rotation.X, 0);
+                        eng.Cameras[CameraType.DefaultCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
+
+                        eng.Cameras[CameraType.SkyCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
                     }
 
 
@@ -1218,7 +1227,7 @@ namespace ctrviewer
 
             if (KartMode)
                 if (karts.Count > 0)
-                    spriteBatch.DrawString(font, $"Kart mode: WASD - move, PageUp/PageDown - up/down, no collisions\r\nsp: {karts[0].Speed}", new Vector2(20, 20), Color.Yellow);
+                    spriteBatch.DrawString(font, $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {karts[0].Speed}", new Vector2(20, 20), Color.Yellow);
 
             if (eng.Settings.ShowConsole)
                 GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);

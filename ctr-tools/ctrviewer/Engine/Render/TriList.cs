@@ -67,7 +67,7 @@ namespace ctrviewer.Engine.Render
         {
             if (Sealed)
             {
-                Console.WriteLine("Trying to update sealed list.");
+                GameConsole.Write("Trying to update sealed list.");
                 return;
             }
 

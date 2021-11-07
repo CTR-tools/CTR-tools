@@ -132,7 +132,7 @@ namespace CTRFramework
 
 
 
-            bb = new BoundingBox(br);
+            bb = BoundingBox.FromReader(br);
 
             byte tf = br.ReadByte();
 

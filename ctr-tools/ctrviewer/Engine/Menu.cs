@@ -194,13 +194,13 @@ namespace ctrviewer.Engine
 
             menus.Add("cutscenes", new List<MenuItem>()
             {
-                new MenuItem("Intro Box".ToUpper(), "loadbig", "", true, intValue: 513),
+                new MenuItem("Intro Box (ND)".ToUpper(), "loadbig", "", true, intValue: 513),
                 new MenuItem("Race Today".ToUpper(), "loadbig", "", true, intValue: 515),
-                new MenuItem("Canyon Coco".ToUpper(), "loadbig", "", true, intValue: 518),
-                new MenuItem("Pass Tiny".ToUpper(), "loadbig", "", true, intValue: 521),
-                new MenuItem("Temple Polar".ToUpper(), "loadbig", "", true, intValue: 524),
-                new MenuItem("Skyway Dingodile".ToUpper(), "loadbig", "", true, intValue: 527),
-                new MenuItem("Sewer Cortex".ToUpper(), "loadbig", "", true, intValue: 530),
+                new MenuItem("Canyon/Coco".ToUpper(), "loadbig", "", true, intValue: 518),
+                new MenuItem("Pass/Tiny".ToUpper(), "loadbig", "", true, intValue: 521),
+                new MenuItem("Temple/Polar".ToUpper(), "loadbig", "", true, intValue: 524),
+                new MenuItem("Skyway/Dingodile".ToUpper(), "loadbig", "", true, intValue: 527),
+                new MenuItem("Sewer/Cortex".ToUpper(), "loadbig", "", true, intValue: 530),
                 new MenuItem("Oxide 1".ToUpper(), "loadbig", "", true, intValue: 533),
                 new MenuItem("Sleeping Crash".ToUpper(), "loadbig", "", true, intValue: 536),
                 new MenuItem("Oxide 2".ToUpper(), "loadbig", "", true, intValue: 539),

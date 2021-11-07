@@ -14,13 +14,11 @@ namespace ctrviewer.Engine
 
         public static void Write(string message)
         {
-            string[] lines = message.Split("\r\n");
-
-            foreach (var msg in lines)
+            foreach (var line in message.Split("\r\n"))
             {
-                Console.WriteLine(msg);
+                Console.WriteLine(line);
 
-                Lines.Add(msg);
+                Lines.Add(line);
                 if (Lines.Count > MaxLines)
                     Lines.RemoveAt(0);
             }

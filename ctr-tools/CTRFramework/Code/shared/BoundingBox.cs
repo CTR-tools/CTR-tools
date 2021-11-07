@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Numerics;
 
 namespace CTRFramework.Shared
 {
@@ -19,6 +20,9 @@ namespace CTRFramework.Shared
             get => max;
             set => Max = value;
         }
+
+        public Vector3 numericMin = Vector3.Zero;
+        public Vector3 numericMax = Vector3.Zero;
 
 
         private Vector3s min;
@@ -62,8 +66,18 @@ namespace CTRFramework.Shared
             Read(br);
         }
 
+        public static BoundingBox FromReader(BinaryReaderEx br)
+        {
+            return new BoundingBox(br);
+        }
+
         public void Read(BinaryReaderEx br)
         {
+            numericMin = br.ReadVector3s(1 / 100f);
+            numericMax = br.ReadVector3s(1 / 100f);
+
+            br.Seek(-2 * 3 * 2);
+
             min = new Vector3s(br);
             max = new Vector3s(br);
         }
@@ -85,7 +99,7 @@ namespace CTRFramework.Shared
 
         public override string ToString()
         {
-            return "BB: min " + minf.ToString() + " max " + maxf.ToString();
+            return "BB: min " + numericMin.ToString() + " max " + numericMax.ToString();
         }
 
         public BoundingBox Clone()
