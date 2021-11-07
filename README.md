@@ -1,7 +1,7 @@
 ![CTR-tools](ctr-tools-logo.png)
 
 [![GPLv2 License](https://img.shields.io/badge/License-GPL%20v2-green.svg)](https://opensource.org/licenses/GPL-2.0)
-[![Discord Chat](https://img.shields.io/discord/527135227546435584.svg)](https://discord.gg/56xm9Aj)
+[![Discord Chat](https://img.shields.io/discord/527135227546435584.svg)](https://discord.gg/whkuh2n)
 
 Various tools to operate Crash Team Racing (PS1) game files.
 
