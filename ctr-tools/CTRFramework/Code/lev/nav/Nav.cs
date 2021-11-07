@@ -8,17 +8,22 @@ namespace CTRFramework
     public class Nav : IReadWrite
     {
         public List<uint> ptrs = new List<uint>();
-        public List<AIPath> paths = new List<AIPath>();
+        public List<BotPath> paths = new List<BotPath>();
 
         public Nav()
         {
-
         }
 
         public Nav(BinaryReaderEx br)
         {
             Read(br);
         }
+
+        public static Nav FromReader(BinaryReaderEx br)
+        {
+            return new Nav(br);
+        }
+
         public void Read(BinaryReaderEx br)
         {
             ptrs = br.ReadListUInt32(3);
@@ -27,10 +32,8 @@ namespace CTRFramework
             {
                 if (ptrs[i] != 0)
                 {
-                    //now this jump here is only needed for samplers.
-                    //is there any extra data in demos?
                     br.Jump(ptrs[i]);
-                    paths.Add(new AIPath(br));
+                    paths.Add(new BotPath(br));
                 }
             }
         }
@@ -40,8 +43,35 @@ namespace CTRFramework
             foreach (uint p in ptrs)
                 bw.Write(p);
 
-            foreach (AIPath ai in paths)
+            foreach (BotPath ai in paths)
                 ai.Write(bw);
+        }
+
+        public string ToObj(ref int startindex)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            startindex += 1;
+
+            if (ptrs[0] != 0)
+            {
+                sb.AppendLine("o BotPathEasy");
+                sb.AppendLine(paths[0].ToObj(ref startindex));
+            }
+
+            if (ptrs[1] != 0)
+            {
+                sb.AppendLine("o BotPathMedium");
+                sb.AppendLine(paths[1].ToObj(ref startindex));
+            }
+
+            if (ptrs[2] != 0)
+            {
+                sb.AppendLine("o BotPathHard");
+                sb.AppendLine(paths[2].ToObj(ref startindex));
+            }
+
+            return sb.ToString();
         }
 
         public override string ToString()
@@ -51,7 +81,7 @@ namespace CTRFramework
             foreach (uint u in ptrs)
                 sb.AppendLine(u.ToString("X8"));
 
-            foreach (AIPath p in paths)
+            foreach (BotPath p in paths)
                 sb.AppendLine(p.ToString());
 
             return sb.ToString();

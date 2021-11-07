@@ -170,14 +170,14 @@ namespace CTRFramework.Vram
             return $"{PageX}\t{PageY}\t{min}\t{width}\t{height}\t{PalX}\t{PalY}\t{Tag}";
         }
 
-        public string ToObj()
+        public string ToObj(int numVerts = 4)
         {
             StringBuilder sb = new StringBuilder();
 
             //this is to avoid negative UV and make it clamp friendly
             int[] inds = new int[4] { 2, 3, 0, 1 };
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < numVerts; i++)
             {
                 sb.AppendFormat(
                     "vt {0} {1}\r\n",

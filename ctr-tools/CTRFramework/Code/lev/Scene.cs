@@ -208,9 +208,9 @@ namespace CTRFramework
                     if (ctr != null)
                         Models.Add(ctr);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Helpers.Panic(this, PanicType.Error, "Unexpected CtrModel crash.");
+                    Helpers.Panic(this, PanicType.Error, "Unexpected CtrModel crash." + ex.ToString());
                 }
             }
 
@@ -314,23 +314,7 @@ namespace CTRFramework
 
 
             if (header.ptrAiNav != PsxPtr.Zero)
-                for (int i = 0; i < nav.paths.Count; i++)
-                {
-                    sb.AppendLine($"o AiPath{i}");
-
-                    foreach (var frame in nav.paths[i].frames)
-                        sb.AppendLine($"v {frame.position.X} {frame.position.Y} {frame.position.Z}");
-
-                    string line = "l ";
-
-                    for (int j = 0; j < nav.paths[i].numFrames; j++)
-                        line += $"{a + j + 1} ";
-
-                    a += nav.paths[i].numFrames;
-
-                    sb.AppendLine(line);
-                }
-
+                sb.AppendLine(nav.ToObj(ref a));
 
             Helpers.WriteToFile(Path.Combine(path, $"{fname}.obj"), sb.ToString());
 

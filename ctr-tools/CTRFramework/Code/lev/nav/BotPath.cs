@@ -5,21 +5,20 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class AIPath : IReadWrite
+    public class BotPath : IReadWrite
     {
         public ushort version;
-        public ushort numFrames;
+        public int numFrames => (ushort)Frames.Count;
         public byte[] data;
         public NavFrame start;
 
-        public List<NavFrame> frames = new List<NavFrame>();
+        public List<NavFrame> Frames = new List<NavFrame>();
 
-        public AIPath()
+        public BotPath()
         {
-
         }
 
-        public AIPath(BinaryReaderEx br)
+        public BotPath(BinaryReaderEx br)
         {
             Read(br);
         }
@@ -29,9 +28,7 @@ namespace CTRFramework
 
             Helpers.Panic(this, PanicType.Info, $"Path version: 0x{version.ToString("X8")}");
 
-            numFrames = br.ReadUInt16();
-
-            Helpers.Panic(this, PanicType.Info, version.ToString("X8"));
+            int numFrames = br.ReadUInt16();
 
             switch (version)
             {
@@ -48,17 +45,27 @@ namespace CTRFramework
             }
 
             for (int i = 0; i < numFrames; i++)
-            {
-                frames.Add(new NavFrame(br));
-            }
+                Frames.Add(NavFrame.FromReader(br));
         }
 
-        public string ToObj()
+        public string ToObj(ref int startindex)
         {
+            if (numFrames == 0)
+                return "";
+
             StringBuilder sb = new StringBuilder();
 
-            foreach (var frame in frames)
-                sb.AppendFormat("v {0}\r\n", frame.position.ToString());
+            foreach (var frame in Frames)
+                sb.AppendLine($"v {frame.position.X} {frame.position.Y} {frame.position.Z}");
+
+            sb.Append("\r\nl ");
+
+            for (int i = 0; i < numFrames; i++)
+                sb.Append($"{startindex + i} ");
+
+            sb.AppendLine($"{startindex}");
+
+            startindex += numFrames;
 
             return sb.ToString();
         }
@@ -72,7 +79,7 @@ namespace CTRFramework
 
             sb.AppendLine("start: " + start.ToString());
 
-            foreach (NavFrame nv in frames)
+            foreach (NavFrame nv in Frames)
             {
                 sb.AppendLine(nv.ToString());
             }
@@ -88,7 +95,7 @@ namespace CTRFramework
             bw.Write(data);
             start.Write(bw);
 
-            foreach (NavFrame f in frames)
+            foreach (NavFrame f in Frames)
             {
                 f.Write(bw);
             }

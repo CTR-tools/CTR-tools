@@ -93,7 +93,7 @@
     <Compile Include="Code\lang\CharSwap.cs" />
     <Compile Include="Code\lev\CtrTex.cs" />
     <Compile Include="Code\lev\nav\Nav.cs" />
-    <Compile Include="Code\lev\nav\AIPath.cs" />
+    <Compile Include="Code\lev\nav\BotPath.cs" />
     <Compile Include="Code\lev\TrialData.cs" />
     <Compile Include="Code\lev\SpawnGroup.cs" />
     <Compile Include="Code\lev\VertexAnim.cs" />

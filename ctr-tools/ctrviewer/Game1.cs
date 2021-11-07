@@ -1,7 +1,7 @@
 ﻿using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Shared;
-using CTRFramework.Sound;
+using CTRFramework.Sound; 
 using CTRFramework.Vram;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Render;
@@ -406,7 +406,7 @@ namespace ctrviewer
 
             if (big != null)
             {
-                big.FileCursor = 218;
+                big.FileCursor = 216;//218;
                 cc = big.ReadEntry().ParseAs<Scene>();
             }
             else
@@ -419,10 +419,7 @@ namespace ctrviewer
                 Scene.FromFile("karts.lev");
 
             foreach (var model in cc.Models)
-            {
-                if (model.Name == "selectkart")
-                    ContentVault.AddModel(model.Name, DataConverter.ToTriList(model, 0.033f));
-            }
+                ContentVault.AddModel(model.Name, DataConverter.ToTriList(model, 0.1f));
         }
 
         public void TestLoadExtrenalModels()
@@ -558,17 +555,31 @@ namespace ctrviewer
                 foreach (var pa in s.header.startGrid)
                     eng.paths.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
 
+                for (int i = 0; i < 8; i++)
+                {
+                    eng.instanced.Add(new InstancedModel(
+                       ((CharIndex)i).ToString().ToLower(),
+                       DataConverter.ToVector3(s.header.startGrid[i].Position),
+                       new Vector3(
+                           s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
+                            s.header.startGrid[i].Rotation.X * (float)Math.PI * 2,
+                            s.header.startGrid[i].Rotation.Z * (float)Math.PI * 2),
+                       new Vector3(1f)
+                        )
+                        );
+                }
+
                 foreach (var ph in s.pickups)
                 {
                     eng.instanced.Add(new InstancedModel(
-                        ph.ModelName,
+                        (ph.ModelName == "warppad" ? "beam" : ph.ModelName),
                         DataConverter.ToVector3(ph.Pose.Position),
                         new Vector3(
                             (float)(ph.Pose.Rotation.Y * Math.PI * 2f),
                             (float)(ph.Pose.Rotation.X * Math.PI * 2f),
                             (float)(ph.Pose.Rotation.Z * Math.PI * 2f)
                         ),
-                        new Vector3(ph.Scale.Y, ph.Scale.X, ph.Scale.Z)
+                        new Vector3(ph.Scale.Y, ph.Scale.X, ph.Scale.Z) * (ph.ModelName == "warppad" ? 0.33f : 1)
                         ));
                 }
 
@@ -577,11 +588,11 @@ namespace ctrviewer
 
                 if (s.nav.paths.Count == 3)
                 {
-                    foreach (NavFrame n in s.nav.paths[0].frames)
+                    foreach (NavFrame n in s.nav.paths[0].Frames)
                         eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
-                    foreach (NavFrame n in s.nav.paths[1].frames)
+                    foreach (NavFrame n in s.nav.paths[1].Frames)
                         eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
-                    foreach (NavFrame n in s.nav.paths[2].frames)
+                    foreach (NavFrame n in s.nav.paths[2].Frames)
                         eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
                 }
             }
@@ -724,7 +735,7 @@ namespace ctrviewer
                         if (Scenes.Count > 0)
                             kart.Update(gameTime, Scenes);
 
-                        eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0, 1.5f, 0) + 
+                        eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0, 2f, 0) + 
                             Vector3.Transform(Vector3.Forward * 4f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -1f));
 
                         eng.Cameras[CameraType.DefaultCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
@@ -1227,7 +1238,12 @@ namespace ctrviewer
 
             if (KartMode)
                 if (karts.Count > 0)
-                    spriteBatch.DrawString(font, $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {karts[0].Speed}", new Vector2(20, 20), Color.Yellow);
+                    spriteBatch.DrawString(font, $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {karts[0].Speed}", new Vector2(20, 20), Color.Yellow,
+                    0,
+                    Vector2.Zero,
+                    graphics.GraphicsDevice.Viewport.Height / 1080f,
+                    SpriteEffects.None,
+                    0.5f);
 
             if (eng.Settings.ShowConsole)
                 GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);

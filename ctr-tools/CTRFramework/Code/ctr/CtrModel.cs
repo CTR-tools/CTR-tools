@@ -62,7 +62,7 @@ namespace CTRFramework
             name = br.ReadStringFixed(16);
             gameEvent = (CTREvent)br.ReadInt16();
             int numEntries = br.ReadInt16();
-            UIntPtr ptrHeaders = br.ReadUIntPtr();
+            br.Jump(PsxPtr.FromReader(br));
 
             for (int i = 0; i < numEntries; i++)
                 Entries.Add(CtrMesh.FromReader(br));
@@ -90,10 +90,16 @@ namespace CTRFramework
         {
             int i = 0;
 
+            path = Path.Combine(path, Name);
+            Helpers.CheckFolder(path);
+
             foreach (var entry in Entries)
             {
-                string fn = Path.Combine(path, $"{name}.{entry.Name}.{i.ToString("00")}{(entry.IsAnimated ? ".Animated" : "")}.obj");
-                Helpers.WriteToFile(fn, entry.ToObj());
+                string name = $"{Name}.{entry.Name}.{i.ToString("00")}{(entry.IsAnimated ? ".Animated" : "")}";
+                string fn = Path.Combine(path, $"{name}.obj");
+
+                Helpers.WriteToFile(fn, entry.ToObj(name));
+                Helpers.WriteToFile(Path.ChangeExtension(fn, ".mtl"), entry.ToMtl());
 
                 entry.ExportTextures(path, vram);
 

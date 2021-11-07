@@ -281,9 +281,9 @@ namespace CTRTools.Controls
             {
                 if (scn.nav != null)
                 {
-                    foreach (AIPath ai in scn.nav.paths)
+                    foreach (BotPath ai in scn.nav.paths)
                     {
-                        foreach (NavFrame f in ai.frames)
+                        foreach (NavFrame f in ai.Frames)
                         {
                             f.unk11 = 0;
                             f.unk2 = 0;

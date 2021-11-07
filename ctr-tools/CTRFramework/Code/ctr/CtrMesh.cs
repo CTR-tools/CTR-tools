@@ -107,11 +107,13 @@ namespace CTRFramework
             lodDistance = br.ReadInt16();
             billboard = br.ReadInt16();
             scale = br.ReadVector3sPadded();
+
             ptrCmd = br.ReadUIntPtr();
             ptrVerts = br.ReadUIntPtr();
             ptrTex = br.ReadUIntPtr();
             ptrClut = br.ReadUIntPtr();
             unk3 = br.ReadInt32();
+
             numAnims = br.ReadInt32();
             ptrAnims = br.ReadUIntPtr();
             unk4 = br.ReadInt32();
@@ -217,7 +219,11 @@ namespace CTRFramework
             br.Jump(ptrTex);
             uint[] texptrs = br.ReadArrayUInt32(maxt);
 
-            Console.WriteLine("texptrs: " + texptrs.Length);
+            Helpers.Panic(this, PanicType.Info, "texptrs: " + texptrs.Length);
+            foreach (var u in texptrs)
+            {
+                Helpers.Panic(this, PanicType.Info, "ptr: " + u.ToString("X8"));
+            }
 
             foreach (uint t in texptrs)
             {
@@ -227,6 +233,9 @@ namespace CTRFramework
                 tl.Add(tx);
                 Console.WriteLine(tx.ToString());
             }
+
+            foreach (var t in tl)
+                t.NormalizeUV();
 
             Console.WriteLine("tlcnt: " + tl.Count);
 
@@ -307,8 +316,17 @@ namespace CTRFramework
             //process all commands
             foreach (CtrDraw d in drawList)
             {
-                //curtl = d.texIndex == 0 ? null : tl[d.texIndex - 1];
-                //Console.WriteLine(tl.Count + " " + d.texIndex);
+                //try
+                {
+                  //  curtl = d.texIndex == 0 ? null : tl[d.texIndex - 1];
+                  //  Console.WriteLine(tl.Count + " " + d.texIndex);
+                }
+                //catch
+                {
+                   // Helpers.Panic(this, PanicType.Error, "MOMMA MIA!");
+                   // Console.ReadKey();
+
+                }
 
 
                 //if we got no stack vertex flag
@@ -354,12 +372,18 @@ namespace CTRFramework
                 //if we got 3 indices in tristrip (0,1,2)
                 if (stripLength >= 2)
                 {
+                   // matIndices.Add(d.texIndex == 0 ? null : tl[d.texIndex - 1]);
+
                     //read 3 vertices and push to the array
                     for (int z = 3 - 1; z >= 0; z--)
                     {
                         Vertex v = new Vertex();
                         v.Position = new Vector3(crd[1 + z].X, crd[z + 1].Y, crd[z + 1].Z);
                         v.Color = clr[1 + z];
+
+                        //if (d.texIndex != 0)
+                        //    v.uv = tl[d.texIndex - 1].uv[1 + z];
+
                         v.MorphColor = v.Color;
                         verts.Add(v);
                     }
@@ -371,8 +395,6 @@ namespace CTRFramework
                         verts[verts.Count - 1] = verts[verts.Count - 2];
                         verts[verts.Count - 2] = v;
                     }
-
-                    matIndices.Add(tlb[3]);
                 }
 
                 stripLength++;
@@ -388,14 +410,14 @@ namespace CTRFramework
         /// Exports CTR model data to OBJ format.
         /// </summary>
         /// <returns>OBJ text as string.</returns>
-        public string ToObj()
+        public string ToObj(string filename)
         {
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
             sb.AppendLine($"#{Meta.GetVersion()}");
             sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
-            sb.AppendLine($"mtllib test_{Name}.mtl\r\n");
+            sb.AppendLine($"mtllib {filename}.mtl\r\n");
 
             sb.AppendLine("# textures used:");
 
@@ -430,18 +452,18 @@ namespace CTRFramework
 
             for (int i = 0; i < verts.Count / 3; i++)
             {
-                if (matIndices[i] != null)
+               // if (matIndices[i] != null)
                 {
-                    sb.AppendLine($"usemtl {matIndices[i].Tag}");
-                    sb.AppendLine(matIndices[i].ToObj());
+               //     sb.AppendLine($"usemtl {matIndices[i].Tag}");
+               //     sb.AppendLine(matIndices[i].ToObj());
                 }
-                else
+               // else
                 {
                     sb.AppendLine($"usemtl no_texture");
                     sb.AppendLine($"vt 0 0");
                     sb.AppendLine($"vt 0 1");
                     sb.AppendLine($"vt 1 1");
-                    sb.AppendLine($"vt 1 0");
+                   // sb.AppendLine($"vt 1 0");
                 }
 
                 sb.AppendLine($"f {i * 3 + 3}/{i * 3 + 3} {i * 3 + 2}/{i * 3 + 2} {i * 3 + 1}/{i * 3 + 1}");
@@ -819,6 +841,23 @@ namespace CTRFramework
 
                 default: Helpers.Panic(this, PanicType.Warning, $"unimplemented mode {mode}"); break;
             }
+        }
+
+        public string ToMtl()
+        {
+            if (tl.Count == 0)
+                return "";
+
+            StringBuilder sb = new StringBuilder();
+            
+            foreach (var tex in tl)
+            {
+                sb.AppendLine($"newmtl {tex.Tag}");
+                sb.AppendLine($"Map_Kd {Name}\\{tex.Tag}.png");
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
         }
 
         public void ExportTextures(string path, Tim vram = null)

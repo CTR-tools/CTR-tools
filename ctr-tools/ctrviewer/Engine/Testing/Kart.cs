@@ -35,7 +35,7 @@ namespace ctrviewer.Engine.Testing
 
         public Kart(Vector3 pos, Vector3 rot)
         {
-            ModelName = "selectkart";
+            ModelName = "cortex";
             Position = pos;
             Rotation = rot;
         }

@@ -8,6 +8,8 @@ namespace CTRFramework
 {
     public class NavFrame : IReadWrite
     {
+        public static readonly int SizeOf = 0x20;
+
         public Vector3 position;
         public Vector3s angle;
         public byte unk11;
@@ -19,12 +21,16 @@ namespace CTRFramework
 
         public NavFrame()
         {
-
         }
 
         public NavFrame(BinaryReaderEx br)
         {
             Read(br);
+        }
+
+        public static NavFrame FromReader(BinaryReaderEx br)
+        {
+            return new NavFrame(br);
         }
 
         public void Read(BinaryReaderEx br)

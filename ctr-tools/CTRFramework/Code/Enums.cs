@@ -169,7 +169,7 @@ namespace CTRFramework
         OutOfBounds = 1 << 4,   //check
         NeverUsed = 1 << 5,     //??
         TriggerScript = 1 << 6, //turbo pads, but not only. maybe quad has a linked script?
-        Reverb = 1 << 7,        //used in various indoor areas or tunnels
+        Reverb = 1 << 7,        //reverberation (echo), used in various indoor areas or tunnels
         KickersToo = 1 << 8,    //??
         KillRacer = 1 << 9,     //these quads trigger mask
         TikiMouth = 1 << 10,    //only spotted on tiger temple
@@ -284,7 +284,8 @@ namespace CTRFramework
         ShockwaveGreen = 0x45,
         BeakerRed = 0x46,
         BeakerGreen = 0x47,
-
+        BeakerBreakRed = 0x48, // from demo
+        BeakerBreakGreed = 0x49, // from demo
         SisHead = 0x4A,
 
         PassSeal = 0x4C, //76
