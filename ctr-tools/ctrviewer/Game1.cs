@@ -838,7 +838,8 @@ namespace ctrviewer
                     }
 
                     if ((newgs.Buttons.B == ButtonState.Pressed && newgs.Buttons.B != oldgs.Buttons.B) ||
-                        (newgs.Buttons.Y == ButtonState.Pressed && newgs.Buttons.Y != oldgs.Buttons.Y))
+                        (newgs.Buttons.Y == ButtonState.Pressed && newgs.Buttons.Y != oldgs.Buttons.Y) || 
+                        newkb.IsKeyDown(Keys.Back) && newkb.IsKeyDown(Keys.Back) != oldkb.IsKeyDown(Keys.Back))
                     {
                         bool togglemenu = true;
 
@@ -1217,7 +1218,7 @@ namespace ctrviewer
 
             if (KartMode)
                 if (karts.Count > 0)
-                    spriteBatch.DrawString(font, $"Kart mode: WASD - move, arrow keys - up/down, no collisions\r\nsp: {karts[0].Speed}", new Vector2(20, 20), Color.Yellow);
+                    spriteBatch.DrawString(font, $"Kart mode: WASD - move, PageUp/PageDown - up/down, no collisions\r\nsp: {karts[0].Speed}", new Vector2(20, 20), Color.Yellow);
 
             if (eng.Settings.ShowConsole)
                 GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);
