@@ -30,9 +30,22 @@ namespace CTRFramework
             Helpers.Panic(this, PanicType.Info, $"Path version: 0x{version.ToString("X8")}");
 
             numFrames = br.ReadUInt16();
-            data = br.ReadBytes(4 * 18); //0x4c = total header size
 
-            start = new NavFrame(br);
+            Helpers.Panic(this, PanicType.Info, version.ToString("X8"));
+
+            switch (version)
+            {
+                case 0xECFD:
+                    data = br.ReadBytes(4 * 18); //0x4c = total header size
+                    start = new NavFrame(br);
+                    break;
+                case 0xFEFD:
+                    data = br.ReadBytes(4);
+                    break;
+                default:
+                    Helpers.Panic(this, PanicType.Warning, "Unknown bot path version.");
+                    break;
+            }
 
             for (int i = 0; i < numFrames; i++)
             {
