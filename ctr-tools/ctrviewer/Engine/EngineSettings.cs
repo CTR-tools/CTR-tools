@@ -37,6 +37,7 @@ namespace ctrviewer.Engine
         public bool ShowBotsPath { get; set; } = false;
         public bool ShowModels { get; set; } = true;
         public bool StereoPair { get; set; } = false;
+        public string PlayerModel { get; set; } = "crash";
         public int StereoPairSeparation { get; set; } = 20;
         public bool ShowCamPos { get; set; } = false;
         public bool UseLowLod { get; set; } = false;

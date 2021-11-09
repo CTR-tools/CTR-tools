@@ -166,6 +166,7 @@ namespace ctrviewer
             instanceEffect = new BasicEffect(graphics.GraphicsDevice);
             instanceEffect.VertexColorEnabled = true;
             instanceEffect.TextureEnabled = false;
+            instanceEffect.DiffuseColor = eng.Settings.VertexLighting ? TimeOfDay * 0.5f : new Vector3(1f);
         }
 
         public void UpdateVSync()
@@ -406,17 +407,14 @@ namespace ctrviewer
 
             if (big != null)
             {
-                big.FileCursor = 216;//218;
+                big.FileCursor = 216; //menu_models.lev
                 cc = big.ReadEntry().ParseAs<Scene>();
             }
             else
             {
-                if (!File.Exists("karts.lev"))
-                    return;
+                if (File.Exists("menu_models.lev"))
+                    cc = Scene.FromFile("menu_models.lev");
             }
-
-            if (cc == null)
-                Scene.FromFile("karts.lev");
 
             foreach (var model in cc.Models)
                 ContentVault.AddModel(model.Name, DataConverter.ToTriList(model, 0.1f));
@@ -499,6 +497,7 @@ namespace ctrviewer
             if (karts.Count > 0)
             { 
                 karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
+                karts[0].ModelName = eng.Settings.PlayerModel;
             }
 
             Stopwatch sw = new Stopwatch();
@@ -555,19 +554,20 @@ namespace ctrviewer
                 foreach (var pa in s.header.startGrid)
                     eng.paths.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
 
-                for (int i = 0; i < 8; i++)
-                {
-                    eng.instanced.Add(new InstancedModel(
-                       ((CharIndex)i).ToString().ToLower(),
-                       DataConverter.ToVector3(s.header.startGrid[i].Position),
-                       new Vector3(
-                           s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
-                            s.header.startGrid[i].Rotation.X * (float)Math.PI * 2,
-                            s.header.startGrid[i].Rotation.Z * (float)Math.PI * 2),
-                       new Vector3(1f)
-                        )
-                        );
-                }
+                if (loadedLevel != -1)
+                    for (int i = 0; i < 8; i++)
+                    {
+                        eng.instanced.Add(new InstancedModel(
+                           ((CharIndex)i).ToString().ToLower(),
+                           DataConverter.ToVector3(s.header.startGrid[i].Position),
+                           new Vector3(
+                               s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
+                                s.header.startGrid[i].Rotation.X * (float)Math.PI * 2,
+                                s.header.startGrid[i].Rotation.Z * (float)Math.PI * 2),
+                           new Vector3(1f)
+                            )
+                            );
+                    }
 
                 foreach (var ph in s.pickups)
                 {
@@ -732,15 +732,18 @@ namespace ctrviewer
                 if (KartMode)
                     foreach (var kart in karts)
                     {
-                        if (Scenes.Count > 0)
-                            kart.Update(gameTime, Scenes);
+                        if (!menu.Visible)
+                            if (Scenes.Count > 0)
+                            {
+                                kart.Update(gameTime, Scenes);
 
-                        eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0, 2f, 0) + 
-                            Vector3.Transform(Vector3.Forward * 4f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -1f));
+                                eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0, 2f, 0) +
+                                    Vector3.Transform(Vector3.Forward * 4f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -1f));
 
-                        eng.Cameras[CameraType.DefaultCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
+                                eng.Cameras[CameraType.DefaultCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
 
-                        eng.Cameras[CameraType.SkyCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
+                                eng.Cameras[CameraType.SkyCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
+                            }
                     }
 
 
@@ -805,6 +808,18 @@ namespace ctrviewer
                                 break;
                             case "loadbigadv":
                                 LoadLevelsFromBig(200, 203, 206, 209, 212);
+                                break;
+                            case "setlod1":
+                                SetLodAndReload(LevelType.P1);
+                                break;
+                            case "setlod2":
+                                SetLodAndReload(LevelType.P2);
+                                break;
+                            case "setlod4":
+                                SetLodAndReload(LevelType.P4);
+                                break;
+                            case "setlodtt":
+                                SetLodAndReload(LevelType.TT);
                                 break;
                             case "tod_day":
                                 SetTimeOfDay(PreferredTimeOfDay.Day);
@@ -1125,12 +1140,28 @@ namespace ctrviewer
             return result;
         }
 
+
+        private void SetLodAndReload(LevelType ltype = LevelType.P1)
+        {
+            levelType = ltype;
+
+            if (loadedLevel != -1)
+                LoadLevelsFromBig(loadedLevel);
+        }
+
+        int loadedLevel = -1;
+
         /// <summary>
         /// Loads scenes from BIG file.
         /// </summary>
         /// <param name="absId">Array of absolute file indices.</param>
         private void LoadLevelsFromBig(params int[] absId)
         {
+            loadedLevel = absId.Length > 1 ? -1 : absId[0];
+
+            if (loadedLevel > 200)
+                loadedLevel = -1;
+
             //test whether big file is ready
             if (big == null && !FindBigFile())
             {

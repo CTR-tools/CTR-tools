@@ -149,10 +149,10 @@ namespace ctrviewer.Engine
 
             menus.Add("level_type", new List<MenuItem>()
             {
-                new MenuItem("1 player".ToUpper(), "setleveltype", "", true, intValue: 0),
-                new MenuItem("2 players".ToUpper(), "setleveltype", "", true, intValue: 1),
-                new MenuItem("4 players".ToUpper(), "setleveltype", "", true, intValue: 2),
-                new MenuItem("relic race".ToUpper(), "setleveltype", "", true, intValue: 3),
+                new MenuItem("1 player".ToUpper(), "setlod1", "", true, intValue: 0),
+                new MenuItem("2 players".ToUpper(), "setlod2", "", true, intValue: 1),
+                new MenuItem("4 players".ToUpper(), "setlod4", "", true, intValue: 2),
+                new MenuItem("relic race".ToUpper(), "setlodtt", "", true, intValue: 3),
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
