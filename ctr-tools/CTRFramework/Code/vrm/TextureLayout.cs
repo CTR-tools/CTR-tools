@@ -6,6 +6,22 @@ using System.Text;
 
 namespace CTRFramework.Vram
 {
+    public enum BlendingMode
+    {
+        Translucent = 0,
+        Additive = 1,
+        Subtractive = 2,
+        Standard = 3
+    }
+
+    public enum BitDepth
+    {
+        Bit4 = 0,
+        Bit8 = 1,
+        Bit16 = 2,
+        Bit24 = 3
+    }
+
     public class TextureLayout : IRead
     {
         public static readonly int SizeOf = 0x0C;
@@ -25,12 +41,9 @@ namespace CTRFramework.Vram
         public int PageX => Page.X;
         public int PageY => Page.Y;
 
-        public byte check;
+        public BlendingMode blendingMode;
+        public BitDepth bpp;
 
-
-        public byte f1;
-        public byte f2;
-        public byte f3;
 
         public Point min
         {
@@ -117,22 +130,17 @@ namespace CTRFramework.Vram
 
             uv.Add(new Vector2b(br));
 
-            buf = br.ReadByte();
+            buf = br.ReadUInt16();
 
             Page = new Point(buf & 0xF, (buf >> 4) & 1);
 
-            //i guess 2 bits here define bpp
-            f1 = (byte)((buf >> 5) & 1);
-            f2 = (byte)((buf >> 6) & 1);
-            f3 = (byte)((buf >> 7) & 1);
-            check = br.ReadByte();
+            blendingMode = (BlendingMode)((buf >> 5) & 3);
+            bpp = (BitDepth)((buf >> 7) & 3);
 
-            //checking page byte 2 if it's ever not 0
-            if (check != 0)
-            {
-                Helpers.Panic(this, PanicType.Assume, offset.ToString("X8") + $"page 2nd byte != 0: {check}");
-                //Console.ReadKey();
-            }
+            byte rest = (byte)((buf >> 9) & 0x7F);
+
+            if (rest != 0)
+                Helpers.Panic(this, PanicType.Assume, $"rest = {rest}");
 
             uv.Add(new Vector2b(br));
             uv.Add(new Vector2b(br));

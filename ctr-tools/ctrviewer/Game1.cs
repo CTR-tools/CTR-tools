@@ -735,6 +735,9 @@ namespace ctrviewer
                         if (!menu.Visible)
                             if (Scenes.Count > 0)
                             {
+                                if (newkb.IsKeyDown(Keys.R) && !oldkb.IsKeyDown(Keys.R))
+                                    kart.Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
+
                                 kart.Update(gameTime, Scenes);
 
                                 eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0, 2f, 0) +

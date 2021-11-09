@@ -112,7 +112,16 @@ namespace ctrviewer.Loaders
                                         if (qb.quadFlags.HasFlag(fl))
                                             Push(flagq, fl.ToString(), monolist, TriListType.Flag, "flag");
                                     }
-
+                                    
+                                    if (qb.tex != null)
+                                        if (qb.tex.Count > j)
+                                            if (qb.tex[j] != null)
+                                                if (qb.tex[j].midlods[2].blendingMode == BlendingMode.Additive)
+                                                {
+                                                    Push(trilists, "additive", monolist, TriListType.Additive);
+                                                    continue;
+                                                }
+                                    
                                     if (qb.isWater)
                                     {
                                         Push(trilists, "water", monolist, TriListType.Water);

@@ -127,6 +127,11 @@ namespace ctrviewer.Engine.Render
                         ql.Value.Draw(graphics, effect, null);
             }
 
+                //foreach (var ql in waterq)
+                foreach (var ql in trilists)
+                    if (ql.Value.type == TriListType.Additive)
+                        ql.Value.Draw(graphics, effect, null);
+
             if (!Game1.HideInvisible)
             {
                 if (flagq.ContainsKey("invis"))

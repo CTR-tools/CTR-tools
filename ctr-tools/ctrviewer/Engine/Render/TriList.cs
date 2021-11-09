@@ -11,6 +11,7 @@ namespace ctrviewer.Engine.Render
         Water,
         Animated,
         Alpha,
+        Additive,
         Flag
     }
 
@@ -150,6 +151,12 @@ namespace ctrviewer.Engine.Render
             {
                 if (verts.Count > 0)
                 {
+                    switch (type)
+                    {
+                        case TriListType.Additive: graphics.GraphicsDevice.BlendState = BlendState.Additive; break;
+                        default: graphics.GraphicsDevice.BlendState = BlendState.Opaque; break;
+                    }
+
                     effect.TextureEnabled = textureEnabled;
 
                     if (textureEnabled)

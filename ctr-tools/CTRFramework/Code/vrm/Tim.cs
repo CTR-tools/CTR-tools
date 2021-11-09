@@ -269,8 +269,18 @@ namespace CTRFramework.Vram
         {
             int bpp = 4;
 
-            if (tl.f1 > 0 && tl.f2 > 0 && tl.f3 > 0)
-                bpp = 8;
+            switch (tl.bpp)
+            {
+                case BitDepth.Bit4: bpp = 4; break;
+                case BitDepth.Bit8: bpp = 8; break;
+                case BitDepth.Bit16: bpp = 16; break;
+                case BitDepth.Bit24: bpp = 24; break;
+            }
+
+            int palsize = bpp == 8 ? 256 : (bpp == 4 ? 16 : 0);
+
+            //if (tl.f1 > 0 && tl.f2 > 0 && tl.f3 > 0)
+            //    bpp = 8;
 
             //Directory.CreateDirectory(path);
 
@@ -320,7 +330,7 @@ namespace CTRFramework.Vram
             if (dirtyhack)
                 x.region.Width++;
 
-            x.clutregion = new Rectangle(tl.PalX * 16, tl.PalY, 16, 1);
+            x.clutregion = new Rectangle(tl.PalX * palsize, tl.PalY, palsize, 1);
             x.clutdata = GetCtrClut(tl);
             //x.clutsize = (uint)(x.clutregion.Width * 2 + 12);
             x.flags = 8; //4 bit + pal = 8
