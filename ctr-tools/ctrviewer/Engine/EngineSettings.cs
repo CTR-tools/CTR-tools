@@ -194,7 +194,7 @@ namespace ctrviewer.Engine
 
             XmlWriterSettings settings = new XmlWriterSettings() { Indent = true };
 
-            using (XmlWriter sw = XmlWriter.Create(filename, settings) )
+            using (XmlWriter sw = XmlWriter.Create(filename, settings))
             {
                 XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
                 ns.Add("", "");

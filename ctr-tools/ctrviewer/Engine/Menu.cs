@@ -178,7 +178,7 @@ namespace ctrviewer.Engine
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
-            menus.Add("bonus_levels", new List <MenuItem>
+            menus.Add("bonus_levels", new List<MenuItem>
             {
                 new MenuItem("Oxide Station".ToUpper(), "loadbig", "", true, intValue: 13 * 8),
                 new MenuItem("Turbo Track".ToUpper(), "loadbig", "", true, intValue: 17 * 8),

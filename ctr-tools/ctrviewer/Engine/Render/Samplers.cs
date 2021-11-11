@@ -40,7 +40,8 @@ namespace ctrviewer.Engine.Render
 
         public static void Refresh()
         {
-            DefaultSampler = new SamplerState() {
+            DefaultSampler = new SamplerState()
+            {
                 Filter = EngineSettings.Instance.EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear,
                 MipMapLevelOfDetailBias = -10,
                 AddressU = TextureAddressMode.Clamp,

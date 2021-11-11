@@ -318,13 +318,13 @@ namespace CTRFramework
             {
                 //try
                 {
-                  //  curtl = d.texIndex == 0 ? null : tl[d.texIndex - 1];
-                  //  Console.WriteLine(tl.Count + " " + d.texIndex);
+                    //  curtl = d.texIndex == 0 ? null : tl[d.texIndex - 1];
+                    //  Console.WriteLine(tl.Count + " " + d.texIndex);
                 }
                 //catch
                 {
-                   // Helpers.Panic(this, PanicType.Error, "MOMMA MIA!");
-                   // Console.ReadKey();
+                    // Helpers.Panic(this, PanicType.Error, "MOMMA MIA!");
+                    // Console.ReadKey();
 
                 }
 
@@ -372,7 +372,7 @@ namespace CTRFramework
                 //if we got 3 indices in tristrip (0,1,2)
                 if (stripLength >= 2)
                 {
-                   // matIndices.Add(d.texIndex == 0 ? null : tl[d.texIndex - 1]);
+                    // matIndices.Add(d.texIndex == 0 ? null : tl[d.texIndex - 1]);
 
                     //read 3 vertices and push to the array
                     for (int z = 3 - 1; z >= 0; z--)
@@ -452,18 +452,18 @@ namespace CTRFramework
 
             for (int i = 0; i < verts.Count / 3; i++)
             {
-               // if (matIndices[i] != null)
+                // if (matIndices[i] != null)
                 {
-               //     sb.AppendLine($"usemtl {matIndices[i].Tag}");
-               //     sb.AppendLine(matIndices[i].ToObj());
+                    //     sb.AppendLine($"usemtl {matIndices[i].Tag}");
+                    //     sb.AppendLine(matIndices[i].ToObj());
                 }
-               // else
+                // else
                 {
                     sb.AppendLine($"usemtl no_texture");
                     sb.AppendLine($"vt 0 0");
                     sb.AppendLine($"vt 0 1");
                     sb.AppendLine($"vt 1 1");
-                   // sb.AppendLine($"vt 1 0");
+                    // sb.AppendLine($"vt 1 0");
                 }
 
                 sb.AppendLine($"f {i * 3 + 3}/{i * 3 + 3} {i * 3 + 2}/{i * 3 + 2} {i * 3 + 1}/{i * 3 + 1}");
@@ -849,7 +849,7 @@ namespace CTRFramework
                 return "";
 
             StringBuilder sb = new StringBuilder();
-            
+
             foreach (var tex in tl)
             {
                 sb.AppendLine($"newmtl {tex.Tag}");

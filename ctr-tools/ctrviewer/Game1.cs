@@ -530,9 +530,9 @@ namespace ctrviewer
                     DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position),
                     new Vector3(-(float)Math.PI / 2f, 0, 0)));
             }
-            
+
             if (karts.Count > 0)
-            { 
+            {
                 karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
                 karts[0].ModelName = eng.Settings.PlayerModel;
             }
@@ -914,7 +914,7 @@ namespace ctrviewer
                     }
 
                     if ((newgs.Buttons.B == ButtonState.Pressed && newgs.Buttons.B != oldgs.Buttons.B) ||
-                        (newgs.Buttons.Y == ButtonState.Pressed && newgs.Buttons.Y != oldgs.Buttons.Y) || 
+                        (newgs.Buttons.Y == ButtonState.Pressed && newgs.Buttons.Y != oldgs.Buttons.Y) ||
                         KeyboardHandler.IsPressed(Keys.Back))
                     {
                         bool togglemenu = true;
@@ -1092,8 +1092,8 @@ namespace ctrviewer
 
                     //render karts
                     //if (KartMode)
-                        foreach (Kart k in karts)
-                            k.Draw(graphics, instanceEffect, null, cam);
+                    foreach (Kart k in karts)
+                        k.Draw(graphics, instanceEffect, null, cam);
                 }
 
                 if (eng.Settings.ShowBotsPath)

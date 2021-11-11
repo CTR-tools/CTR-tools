@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
@@ -30,6 +29,8 @@ namespace ctrviewer.Engine.Render
         public bool ScrollingEnabled = false;
         public bool CullingEnabled = true;
         public string textureName = "";
+        private Texture2D texture;
+        private Texture2D replacement;
         private short[] indices;
 
         float lerp = 0;
@@ -124,6 +125,9 @@ namespace ctrviewer.Engine.Render
             verts.AddRange(v);
             textureEnabled = te;
             textureName = name;
+
+            texture = ContentVault.GetTexture(textureName, false);
+            replacement = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
         }
 
         public TriList(TriList t)
@@ -166,7 +170,7 @@ namespace ctrviewer.Engine.Render
             if (textureEnabled)
                 if (ContentVault.Textures.ContainsKey(textureName))
                 {
-                    effect.Texture = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
+                    effect.Texture = replacement;
                     if (alpha != null)
                         alpha.Texture = effect.Texture;
                 }

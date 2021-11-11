@@ -1,10 +1,8 @@
-﻿using ctrviewer.Engine.Render;
+﻿using CTRFramework;
+using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System;
-using CTRFramework;
-using CTRFramework.Shared;
 
 namespace ctrviewer.Engine.Testing
 {
@@ -119,7 +117,7 @@ namespace ctrviewer.Engine.Testing
 
             //move forward
 
-            Position += Vector3.Transform(Vector3.Backward  * GetDelta(gameTime, Speed), Matrix.CreateRotationY(Rotation.X));
+            Position += Vector3.Transform(Vector3.Backward * GetDelta(gameTime, Speed), Matrix.CreateRotationY(Rotation.X));
 
 
             //apply gravity

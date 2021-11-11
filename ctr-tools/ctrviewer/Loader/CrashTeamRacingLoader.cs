@@ -139,7 +139,7 @@ namespace ctrviewer.Loaders
 
                                     bool isAlpha = ContentVault.alphalist.Contains(texTag);
 
-                                    Push(Trilists, texTag, monolist, 
+                                    Push(Trilists, texTag, monolist,
                                         (isAnimated ? TriListType.Animated : (isAlpha ? TriListType.Alpha : TriListType.Basic)), blendState
                                         );
 

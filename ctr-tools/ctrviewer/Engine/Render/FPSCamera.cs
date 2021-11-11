@@ -83,7 +83,7 @@ namespace ctrviewer.Engine.Render
 
 
                 if (
-                    KeyboardHandler.AreAllDown(Keys.W, Keys.A) || 
+                    KeyboardHandler.AreAllDown(Keys.W, Keys.A) ||
                     KeyboardHandler.AreAllDown(Keys.W, Keys.D) ||
                     KeyboardHandler.AreAllDown(Keys.S, Keys.A) ||
                     KeyboardHandler.AreAllDown(Keys.S, Keys.D)

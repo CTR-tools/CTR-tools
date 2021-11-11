@@ -48,7 +48,7 @@ namespace ctrviewer.Engine.Render
         {
             if (model == null)
                 return;
-            
+
             effect.World = Matrix.CreateScale(Scale) * Matrix.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z) * Matrix.CreateTranslation(Position);
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ProjectionMatrix;

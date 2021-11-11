@@ -95,9 +95,9 @@ namespace ctrviewer.Engine.Render
             Samplers.SetToDevice(graphics, EngineSampler.Animated);
 
             //foreach (var ql in animatedq)
-                foreach (var ql in Trilists)
-                    if (ql.Value.type == TriListType.Animated)
-                        ql.Value.Draw(graphics, effect, null);
+            foreach (var ql in Trilists)
+                if (ql.Value.type == TriListType.Animated)
+                    ql.Value.Draw(graphics, effect, null);
 
             Samplers.SetToDevice(graphics, EngineSampler.Default);
 
@@ -145,7 +145,7 @@ namespace ctrviewer.Engine.Render
                 ql.Value.Seal();
 
             foreach (var ql in flagq)
-                ql.Value.Seal();    
+                ql.Value.Seal();
         }
     }
 }

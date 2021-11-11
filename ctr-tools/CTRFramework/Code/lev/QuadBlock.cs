@@ -417,7 +417,7 @@ namespace CTRFramework
                 return null;
             }
         }
-    
+
 
         public int[] GetUVIndices2(int x, int y, int z, int w)
         {
