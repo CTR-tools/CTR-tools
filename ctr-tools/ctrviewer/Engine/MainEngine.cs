@@ -86,7 +86,17 @@ namespace ctrviewer.Engine
 
         public void Update(GameTime gameTime)
         {
+            foreach (var mg in MeshHigh)
+                mg.Update(gameTime);
 
+            foreach (var mg in MeshLow)
+                mg.Update(gameTime);
+
+            foreach (var im in instanced)
+                im.Update(gameTime);
+
+            foreach (var im in paths)
+                im.Update(gameTime);
         }
 
         public void Clear()

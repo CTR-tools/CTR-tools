@@ -90,15 +90,15 @@ namespace ctrviewer.Engine.Testing
 
             //turning
 
-            if (KeyboardHandler.IsDown(Keys.A) || gs.DPad.Left == ButtonState.Pressed)
-                Rotation.X += GetDelta(gameTime, KartPhysics.MaxTurningStep * (Speed / KartPhysics.MaxSpeed) * (KeyboardHandler.IsDown(Keys.S) ? 2 : 1));
+            if (KeyboardHandler.IsAnyDown(Keys.A, Keys.Left) || gs.DPad.Left == ButtonState.Pressed)
+                Rotation.X += GetDelta(gameTime, KartPhysics.MaxTurningStep * (Speed / KartPhysics.MaxSpeed) * (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? 2 : 1));
 
-            if (KeyboardHandler.IsDown(Keys.D) || gs.DPad.Right == ButtonState.Pressed)
-                Rotation.X -= GetDelta(gameTime, KartPhysics.MaxTurningStep * (Speed / KartPhysics.MaxSpeed) * (KeyboardHandler.IsDown(Keys.S) ? 2 : 1));
+            if (KeyboardHandler.IsAnyDown(Keys.D, Keys.Right) || gs.DPad.Right == ButtonState.Pressed)
+                Rotation.X -= GetDelta(gameTime, KartPhysics.MaxTurningStep * (Speed / KartPhysics.MaxSpeed) * (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? 2 : 1));
 
             //udate accel value
 
-            if (gs.IsButtonDown(Buttons.A) || KeyboardHandler.IsDown(Keys.W) || gs.Buttons.A == ButtonState.Pressed)
+            if (gs.IsButtonDown(Buttons.A) || KeyboardHandler.IsAnyDown(Keys.W, Keys.Up) || gs.Buttons.A == ButtonState.Pressed)
             {
                 Accel = KartPhysics.MaxAcceleration;
             }
@@ -109,7 +109,7 @@ namespace ctrviewer.Engine.Testing
 
             //update speed value
 
-            Speed += GetDelta(gameTime, Accel - (KeyboardHandler.IsDown(Keys.S) ? KartPhysics.BrakeFriction : KartPhysics.Friction));
+            Speed += GetDelta(gameTime, Accel - (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? KartPhysics.BrakeFriction : KartPhysics.Friction));
 
             if (Speed > KartPhysics.MaxSpeed)
                 Speed = KartPhysics.MaxSpeed;

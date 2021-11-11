@@ -178,12 +178,13 @@ namespace ctrviewer.Engine
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
-            List<MenuItem> bonus_levels = new List<MenuItem>();
-            bonus_levels.Add(new MenuItem("Oxide Station".ToUpper(), "loadbig", "", true, intValue: 13 * 8));
-            bonus_levels.Add(new MenuItem("Turbo Track".ToUpper(), "loadbig", "", true, intValue: 17 * 8));
-            bonus_levels.Add(new MenuItem("Character selection".ToUpper(), "loadbig", "", true, intValue: 217));
-            bonus_levels.Add(new MenuItem("back".ToUpper(), "link", "cupmenu", true));
-            menus.Add("bonus_levels", bonus_levels);
+            menus.Add("bonus_levels", new List <MenuItem>
+            {
+                new MenuItem("Oxide Station".ToUpper(), "loadbig", "", true, intValue: 13 * 8),
+                new MenuItem("Turbo Track".ToUpper(), "loadbig", "", true, intValue: 17 * 8),
+                new MenuItem("Character selection".ToUpper(), "loadbig", "", true, intValue: 217),
+                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+             });
 
             List<MenuItem> battle_arenas = new List<MenuItem>();
             battle_arenas.Add(new MenuItem("Nitro Court".ToUpper(), "loadbig", "", true, intValue: 18 * 8));
@@ -216,12 +217,12 @@ namespace ctrviewer.Engine
             main.Add(new MenuItem("kart mode".ToUpper(), "toggle", "kart", true));
             main.Add(new MenuItem("quit".ToUpper(), "exit", "", true));
 
-            List<MenuItem> tod = new List<MenuItem>();
-            tod.Add(new MenuItem("day".ToUpper(), "tod_day", "", true));
-            tod.Add(new MenuItem("evening".ToUpper(), "tod_evening", "", true));
-            tod.Add(new MenuItem("night".ToUpper(), "tod_night", "", true));
-            tod.Add(new MenuItem("back".ToUpper(), "link", "main", true));
-            menus.Add("tod", tod);
+            menus.Add("tod", new List<MenuItem>() {
+                new MenuItem("day".ToUpper(), "tod_day", "", true),
+                new MenuItem("evening".ToUpper(), "tod_evening", "", true),
+                new MenuItem("night".ToUpper(), "tod_night", "", true),
+                new MenuItem("back".ToUpper(), "link", "main", true)
+            });
 
             menus.Add("main", main);
 
@@ -254,6 +255,9 @@ namespace ctrviewer.Engine
 
         public void Update(GamePadState oldstate, GamePadState newstate)
         {
+            if (!Visible)
+                return;
+
             if ((newstate.DPad.Up == ButtonState.Pressed && newstate.DPad.Up != oldstate.DPad.Up) || KeyboardHandler.IsAnyPressed(Keys.W, Keys.Up)) Previous();
             if ((newstate.DPad.Down == ButtonState.Pressed && newstate.DPad.Down != oldstate.DPad.Down) || KeyboardHandler.IsAnyPressed(Keys.S, Keys.Down)) Next();
 

@@ -933,17 +933,7 @@ namespace ctrviewer
                 }
                 else
                 {
-                    foreach (var mg in eng.MeshHigh)
-                        mg.Update(gameTime);
-
-                    foreach (var mg in eng.MeshLow)
-                        mg.Update(gameTime);
-
-                    foreach (var im in eng.instanced)
-                        im.Update(gameTime);
-
-                    foreach (var im in eng.paths)
-                        im.Update(gameTime);
+                    eng.Update(gameTime);
 
                     if (eng.Settings.KartMode)
                     {
