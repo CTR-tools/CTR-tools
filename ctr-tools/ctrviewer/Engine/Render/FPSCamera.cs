@@ -69,36 +69,31 @@ namespace ctrviewer.Engine.Render
 
             if (move && Game.IsActive)
             {
-                KeyboardState keyState = Keyboard.GetState();
                 GamePadState padState = GamePad.GetState(Game1.activeGamePad);
 
 
-                if (keyState.IsKeyDown(Keys.W) || padState.DPad.Up == ButtonState.Pressed)
+                if (KeyboardHandler.IsDown(Keys.W) || padState.DPad.Up == ButtonState.Pressed)
                     moveVector += Vector3.Forward;
-                if (keyState.IsKeyDown(Keys.S) || padState.DPad.Down == ButtonState.Pressed)
+                if (KeyboardHandler.IsDown(Keys.S) || padState.DPad.Down == ButtonState.Pressed)
                     moveVector += Vector3.Backward;
-                if (keyState.IsKeyDown(Keys.D) || padState.DPad.Right == ButtonState.Pressed)
+                if (KeyboardHandler.IsDown(Keys.D) || padState.DPad.Right == ButtonState.Pressed)
                     moveVector += Vector3.Right;
-                if (keyState.IsKeyDown(Keys.A) || padState.DPad.Left == ButtonState.Pressed)
+                if (KeyboardHandler.IsDown(Keys.A) || padState.DPad.Left == ButtonState.Pressed)
                     moveVector += Vector3.Left;
 
 
-                if (keyState.IsKeyDown(Keys.W) && keyState.IsKeyDown(Keys.A))
-                    moveVector *= 0.7f;
-
-                if (keyState.IsKeyDown(Keys.W) && keyState.IsKeyDown(Keys.D))
-                    moveVector *= 0.7f;
-
-                if (keyState.IsKeyDown(Keys.S) && keyState.IsKeyDown(Keys.A))
-                    moveVector *= 0.7f;
-
-                if (keyState.IsKeyDown(Keys.S) && keyState.IsKeyDown(Keys.D))
+                if (
+                    KeyboardHandler.AreAllDown(Keys.W, Keys.A) || 
+                    KeyboardHandler.AreAllDown(Keys.W, Keys.D) ||
+                    KeyboardHandler.AreAllDown(Keys.S, Keys.A) ||
+                    KeyboardHandler.AreAllDown(Keys.S, Keys.D)
+                    )
                     moveVector *= 0.7f;
 
 
-                if (keyState.IsKeyDown(Keys.Q))
+                if (KeyboardHandler.IsDown(Keys.Q))
                     moveVector += Vector3.Up;
-                if (keyState.IsKeyDown(Keys.Z))
+                if (KeyboardHandler.IsDown(Keys.Z))
                     moveVector += Vector3.Down;
 
                 moveVector *= 33f;
@@ -120,7 +115,7 @@ namespace ctrviewer.Engine.Render
 
                 moveVector += new Vector3(padState.ThumbSticks.Left.X / 100f, 0, -padState.ThumbSticks.Left.Y / 100f);
 
-                if (keyState.IsKeyDown(Keys.LeftShift) || padState.Buttons.A == ButtonState.Pressed)
+                if (KeyboardHandler.IsDown(Keys.LeftShift) || padState.Buttons.A == ButtonState.Pressed)
                     moveVector *= 2;
 
                 speedScale -= padState.Triggers.Left / 20f;
@@ -136,13 +131,13 @@ namespace ctrviewer.Engine.Render
                 //moveVector *= (1 + padState.Triggers.Right * 3);
 
 
-                if (keyState.IsKeyDown(Keys.Left))
+                if (KeyboardHandler.IsDown(Keys.Left))
                     leftRightRot += rotationSpeed * amount * 20;
-                if (keyState.IsKeyDown(Keys.Right))
+                if (KeyboardHandler.IsDown(Keys.Right))
                     leftRightRot -= rotationSpeed * amount * 20;
-                if (keyState.IsKeyDown(Keys.Up))
+                if (KeyboardHandler.IsDown(Keys.Up))
                     upDownRot += rotationSpeed * amount * 20;
-                if (keyState.IsKeyDown(Keys.Down))
+                if (KeyboardHandler.IsDown(Keys.Down))
                     upDownRot -= rotationSpeed * amount * 20;
             }
 

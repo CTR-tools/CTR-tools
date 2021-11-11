@@ -1,7 +1,7 @@
 ﻿using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Shared;
-using CTRFramework.Sound; 
+using CTRFramework.Sound;
 using CTRFramework.Vram;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Render;
@@ -734,11 +734,9 @@ namespace ctrviewer
         GamePadState oldgs = GamePad.GetState(activeGamePad);
         GamePadState newgs = GamePad.GetState(activeGamePad);
 
-        KeyboardState oldkb = new KeyboardState();
-        KeyboardState newkb = new KeyboardState();
-
         MouseState oldms = new MouseState();
         MouseState newms = new MouseState();
+
 
         int screenshotstaken = 0;
 
@@ -753,29 +751,22 @@ namespace ctrviewer
         {
             Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
 
+            KeyboardHandler.Update();
+
             //if (loading == null)
             //    LoadGame();
 
-            //x += 0.01f ;
-            //if (x > Math.PI * 2)
-            //    x = 0;
-            //camera.SetRotation(x, y);
-            //Console.WriteLine(x);
 
             oldgs = newgs;
-            oldkb = newkb;
             oldms = newms;
 
             newms = Mouse.GetState();
             newgs = GamePad.GetState(activeGamePad);
-            newkb = Keyboard.GetState();
 
             if (IsActive)
             {
-                if (newkb.IsKeyDown(Keys.PrintScreen) && !oldkb.IsKeyDown(Keys.PrintScreen))
-                {
+                if (KeyboardHandler.IsPressed(Keys.PrintScreen))
                     TakeScreenShot();
-                }
 
                 newmenu.Update(gameTime, new Point(newms.X, newms.Y));
 
@@ -785,7 +776,7 @@ namespace ctrviewer
                         if (!menu.Visible)
                             if (Scenes.Count > 0)
                             {
-                                if (newkb.IsKeyDown(Keys.R) && !oldkb.IsKeyDown(Keys.R))
+                                if (KeyboardHandler.IsPressed(Keys.R))
                                     kart.Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
 
                                 kart.Update(gameTime, Scenes);
@@ -817,31 +808,27 @@ namespace ctrviewer
                         eng.Settings.StereoPairSeparation = 130;
                 }
 
-                if ((newkb.IsKeyDown(Keys.Enter) && newkb.IsKeyDown(Keys.RightAlt)) && !(oldkb.IsKeyDown(Keys.Enter) && newkb.IsKeyDown(Keys.RightAlt)))
+                if (KeyboardHandler.IsComboPressed(Keys.RightAlt, Keys.Enter))
                 {
                     eng.Settings.Windowed = !eng.Settings.Windowed;
                 }
 
-                if (
-                    (newkb.IsKeyDown(Keys.OemTilde) && !oldkb.IsKeyDown(Keys.OemTilde)) ||
-                    (newgs.IsButtonDown(Buttons.Back) && !oldgs.IsButtonDown(Buttons.Back))
-                   )
+                if (KeyboardHandler.IsPressed(Keys.OemTilde) || (newgs.IsButtonDown(Buttons.Back) && !oldgs.IsButtonDown(Buttons.Back)))
                 {
                     eng.Settings.ShowConsole = !eng.Settings.ShowConsole;
                 }
 
-                if (newkb.IsKeyDown(Keys.OemMinus)) eng.Settings.FieldOfView--;
-                if (newkb.IsKeyDown(Keys.OemPlus)) eng.Settings.FieldOfView++;
+                if (KeyboardHandler.IsDown(Keys.OemMinus)) eng.Settings.FieldOfView--;
+                if (KeyboardHandler.IsDown(Keys.OemPlus)) eng.Settings.FieldOfView++;
 
-                if ((newgs.Buttons.Start == ButtonState.Pressed && oldgs.Buttons.Start != newgs.Buttons.Start) ||
-                    (newkb.IsKeyDown(Keys.Escape) && newkb.IsKeyDown(Keys.Escape) != oldkb.IsKeyDown(Keys.Escape)))
+                if ((newgs.Buttons.Start == ButtonState.Pressed && oldgs.Buttons.Start != newgs.Buttons.Start) || KeyboardHandler.IsPressed(Keys.Escape))
                 {
                     menu.Visible = !menu.Visible;
                 }
 
                 if (menu.Visible)
                 {
-                    menu.Update(oldgs, newgs, oldkb, newkb);
+                    menu.Update(oldgs, newgs);
 
                     //currentflag = menu.items.Find(x => x.Title == "current flag: {0}").rangeval;
 
@@ -928,7 +915,7 @@ namespace ctrviewer
 
                     if ((newgs.Buttons.B == ButtonState.Pressed && newgs.Buttons.B != oldgs.Buttons.B) ||
                         (newgs.Buttons.Y == ButtonState.Pressed && newgs.Buttons.Y != oldgs.Buttons.Y) || 
-                        newkb.IsKeyDown(Keys.Back) && newkb.IsKeyDown(Keys.Back) != oldkb.IsKeyDown(Keys.Back))
+                        KeyboardHandler.IsPressed(Keys.Back))
                     {
                         bool togglemenu = true;
 

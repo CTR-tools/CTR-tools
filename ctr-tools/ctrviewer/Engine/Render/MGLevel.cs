@@ -11,6 +11,8 @@ namespace ctrviewer.Engine.Render
         public Dictionary<string, TriList> Trilists = new Dictionary<string, TriList>();
         public Dictionary<string, TriList> flagq = new Dictionary<string, TriList>();
 
+        public BoundingBox boundingBox = new BoundingBox();
+
         public MGLevel()
         {
         }

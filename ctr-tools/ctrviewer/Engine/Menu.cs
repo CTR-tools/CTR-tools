@@ -252,18 +252,12 @@ namespace ctrviewer.Engine
             //ContentVault.Sounds["menu_up"].Play(0.15f, 0, 0);
         }
 
-
-        public bool IsPressed(Keys key, KeyboardState oldkb, KeyboardState newkb)
+        public void Update(GamePadState oldstate, GamePadState newstate)
         {
-            return newkb.IsKeyDown(key) && oldkb.IsKeyDown(key) != newkb.IsKeyDown(key);
-        }
+            if ((newstate.DPad.Up == ButtonState.Pressed && newstate.DPad.Up != oldstate.DPad.Up) || KeyboardHandler.IsAnyPressed(Keys.W, Keys.Up)) Previous();
+            if ((newstate.DPad.Down == ButtonState.Pressed && newstate.DPad.Down != oldstate.DPad.Down) || KeyboardHandler.IsAnyPressed(Keys.S, Keys.Down)) Next();
 
-        public void Update(GamePadState oldstate, GamePadState newstate, KeyboardState oldkb, KeyboardState newkb)
-        {
-            if ((newstate.DPad.Up == ButtonState.Pressed && newstate.DPad.Up != oldstate.DPad.Up) || IsPressed(Keys.W, oldkb, newkb) || IsPressed(Keys.Up, oldkb, newkb)) Previous();
-            if ((newstate.DPad.Down == ButtonState.Pressed && newstate.DPad.Down != oldstate.DPad.Down) || IsPressed(Keys.S, oldkb, newkb) || IsPressed(Keys.Down, oldkb, newkb)) Next();
-
-            if (newstate.DPad.Left == ButtonState.Pressed && newstate.DPad.Left != oldstate.DPad.Left || IsPressed(Keys.A, oldkb, newkb) || IsPressed(Keys.Left, oldkb, newkb))
+            if (newstate.DPad.Left == ButtonState.Pressed && newstate.DPad.Left != oldstate.DPad.Left || KeyboardHandler.IsAnyPressed(Keys.A, Keys.Left))
             {
                 if (SelectedItem.sType == SwitchType.Range)
                 {
@@ -274,7 +268,7 @@ namespace ctrviewer.Engine
                     Game1.currentflag = SelectedItem.rangeval;
                 }
             }
-            if ((newstate.DPad.Right == ButtonState.Pressed && newstate.DPad.Right != oldstate.DPad.Right) || IsPressed(Keys.D, oldkb, newkb) || IsPressed(Keys.Right, oldkb, newkb))
+            if ((newstate.DPad.Right == ButtonState.Pressed && newstate.DPad.Right != oldstate.DPad.Right) || KeyboardHandler.IsAnyPressed(Keys.D, Keys.Right))
             {
                 if (SelectedItem.sType == SwitchType.Range)
                 {
@@ -285,7 +279,7 @@ namespace ctrviewer.Engine
                     Game1.currentflag = SelectedItem.rangeval;
                 }
             }
-            if ((newstate.Buttons.A == ButtonState.Pressed && newstate.Buttons.A != oldstate.Buttons.A) || IsPressed(Keys.Enter, oldkb, newkb) || IsPressed(Keys.Space, oldkb, newkb))
+            if ((newstate.Buttons.A == ButtonState.Pressed && newstate.Buttons.A != oldstate.Buttons.A) || KeyboardHandler.IsAnyPressed(Keys.Enter, Keys.Space))
                 if (SelectedItem.Enabled)
                     Exec = true;
         }

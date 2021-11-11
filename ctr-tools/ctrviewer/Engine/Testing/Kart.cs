@@ -87,19 +87,18 @@ namespace ctrviewer.Engine.Testing
         public void Update(GameTime gameTime, List<Scene> scenes)
         {
             GamePadState gs = GamePad.GetState(Game1.activeGamePad);
-            KeyboardState ks = Keyboard.GetState();
 
             //turning
 
-            if (ks.IsKeyDown(Keys.A) || gs.DPad.Left == ButtonState.Pressed)
-                Rotation.X += GetDelta(gameTime, KartPhysics.MaxTurningStep * (Speed / KartPhysics.MaxSpeed) * (ks.IsKeyDown(Keys.S) ? 2 : 1));
+            if (KeyboardHandler.IsDown(Keys.A) || gs.DPad.Left == ButtonState.Pressed)
+                Rotation.X += GetDelta(gameTime, KartPhysics.MaxTurningStep * (Speed / KartPhysics.MaxSpeed) * (KeyboardHandler.IsDown(Keys.S) ? 2 : 1));
 
-            if (ks.IsKeyDown(Keys.D) || gs.DPad.Right == ButtonState.Pressed)
-                Rotation.X -= GetDelta(gameTime, KartPhysics.MaxTurningStep * (Speed / KartPhysics.MaxSpeed) * (ks.IsKeyDown(Keys.S) ? 2 : 1));
+            if (KeyboardHandler.IsDown(Keys.D) || gs.DPad.Right == ButtonState.Pressed)
+                Rotation.X -= GetDelta(gameTime, KartPhysics.MaxTurningStep * (Speed / KartPhysics.MaxSpeed) * (KeyboardHandler.IsDown(Keys.S) ? 2 : 1));
 
             //udate accel value
 
-            if (gs.IsButtonDown(Buttons.A) || ks.IsKeyDown(Keys.W) || gs.Buttons.A == ButtonState.Pressed)
+            if (gs.IsButtonDown(Buttons.A) || KeyboardHandler.IsDown(Keys.W) || gs.Buttons.A == ButtonState.Pressed)
             {
                 Accel = KartPhysics.MaxAcceleration;
             }
@@ -110,7 +109,7 @@ namespace ctrviewer.Engine.Testing
 
             //update speed value
 
-            Speed += GetDelta(gameTime, Accel - (ks.IsKeyDown(Keys.S) ? KartPhysics.BrakeFriction : KartPhysics.Friction));
+            Speed += GetDelta(gameTime, Accel - (KeyboardHandler.IsDown(Keys.S) ? KartPhysics.BrakeFriction : KartPhysics.Friction));
 
             if (Speed > KartPhysics.MaxSpeed)
                 Speed = KartPhysics.MaxSpeed;
@@ -125,7 +124,7 @@ namespace ctrviewer.Engine.Testing
 
             //apply gravity
 
-            if (!ks.IsKeyDown(Keys.PageUp) && !ks.IsKeyDown(Keys.PageDown))
+            if (!KeyboardHandler.IsDown(Keys.PageUp) && !KeyboardHandler.IsDown(Keys.PageDown))
             {
                 Gravity += GetDelta(gameTime, KartPhysics.GravityStep);
 
@@ -136,7 +135,7 @@ namespace ctrviewer.Engine.Testing
 
                 Collide(scenes);
 
-                if (Gravity == 0 & ks.IsKeyDown(Keys.Space))
+                if (Gravity == 0 & KeyboardHandler.IsDown(Keys.Space))
                 {
                     Gravity = 0;
                     Position.Y += GetDelta(gameTime, 2f);
@@ -145,13 +144,13 @@ namespace ctrviewer.Engine.Testing
 
             //move up/down
 
-            if (ks.IsKeyDown(Keys.PageUp) || gs.Buttons.LeftShoulder == ButtonState.Pressed)
+            if (KeyboardHandler.IsDown(Keys.PageUp) || gs.Buttons.LeftShoulder == ButtonState.Pressed)
             {
                 Gravity = 0;
                 Position.Y += GetDelta(gameTime, 0.5f);
             }
 
-            if (ks.IsKeyDown(Keys.PageDown) || gs.Buttons.RightShoulder == ButtonState.Pressed)
+            if (KeyboardHandler.IsDown(Keys.PageDown) || gs.Buttons.RightShoulder == ButtonState.Pressed)
             {
                 Gravity = 0;
                 Position.Y += GetDelta(gameTime, -0.5f);
