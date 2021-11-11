@@ -12,38 +12,6 @@ namespace ctrviewer.Engine
         None, Toggle, Range, Set
     }
 
-    public class MenuItem
-    {
-        public string Title;
-        public string Action;
-        public string Param;
-        public int Value;
-        public bool Enabled;
-        public float Width;
-        public SwitchType sType;
-
-        public int rangeval;
-        public int rangemax;
-
-        public MenuItem(string t, string a, string p, bool e, SwitchType st = SwitchType.None, int rmax = 0, int intValue = 0)
-        {
-            Title = t;
-            Action = a;
-            Param = p;
-            Enabled = e;
-            sType = st;
-            rangeval = 0;
-            rangemax = rmax;
-            Value = intValue;
-        }
-
-        public void CalcWidth(SpriteFont font)
-        {
-            Width = font.MeasureString(Title).X;
-        }
-    }
-
-
     class Menu
     {
         public static Dictionary<string, List<MenuItem>> menus = new Dictionary<string, List<MenuItem>>();
@@ -106,7 +74,6 @@ namespace ctrviewer.Engine
             menus.Add("level", new List<MenuItem>()
             {
                 new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true),
-                new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true),
                 new MenuItem("toggle newtex".ToUpper(), "toggle", "newtex", true),
                 new MenuItem("toggle vertex lighting".ToUpper(), "toggle", "vcolor", true),
                 new MenuItem("toggle double sided".ToUpper(), "toggle", "nocull", true),
@@ -127,6 +94,8 @@ namespace ctrviewer.Engine
                 new MenuItem("toggle fullscreen".ToUpper(), "toggle", "window", true),
                 new MenuItem("toggle vsync/fps lock".ToUpper(), "toggle", "vsync", true),
                 new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true),
+                new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true),
+                new MenuItem("internal psx resolution".ToUpper(), "toggle", "psxres", true),
                 new MenuItem("toggle stereoscopic 3D mode".ToUpper(), "toggle", "stereo", true),
                 new MenuItem("toggle mipmap generation on load".ToUpper(), "toggle", "genmips", true),
                 new MenuItem("show camera position".ToUpper(), "toggle", "campos", true),

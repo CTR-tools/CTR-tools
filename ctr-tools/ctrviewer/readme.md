@@ -23,6 +23,7 @@ You can also use x360ce for DirectInput devices.
 * force quit: select+start (back+start on xbox)/alt-f4
 * fov change: +/-
 * fullscreen toggle: alt+enter
+* take screenshot: print screen (screenshots folder)
 
 ## Kart mode
 A simplistic kart mode is added for fun. Do not expect too much, it isn't intended to be a playable game or anything.

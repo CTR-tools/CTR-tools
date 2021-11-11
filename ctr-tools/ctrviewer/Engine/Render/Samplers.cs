@@ -14,13 +14,8 @@ namespace ctrviewer.Engine.Render
         Default, Wireframe, DoubleSided
     }
 
-    class Samplers
+    public class Samplers
     {
-        public static bool EnableWireframe = false;
-        public static bool EnableFiltering = true;
-
-
-
         public static SamplerState DefaultSampler = new SamplerState();
         public static SamplerState AnimatedSampler = new SamplerState();
 
@@ -43,21 +38,21 @@ namespace ctrviewer.Engine.Render
             DoubleSidedRasterizer.CullMode = CullMode.None;
         }
 
-
         public static void Refresh()
         {
-            DefaultSampler = new SamplerState();
-            DefaultSampler.Filter = EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear;
-            DefaultSampler.MipMapLevelOfDetailBias = -10;
+            DefaultSampler = new SamplerState() {
+                Filter = EngineSettings.Instance.EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear,
+                MipMapLevelOfDetailBias = -10,
+                AddressU = TextureAddressMode.Clamp,
+                AddressV = TextureAddressMode.Clamp
+            };
 
-            DefaultSampler.AddressU = TextureAddressMode.Clamp;
-            DefaultSampler.AddressV = TextureAddressMode.Clamp;
-
-            AnimatedSampler = new SamplerState();
-            AnimatedSampler.Filter = EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear;
-
-            AnimatedSampler.AddressU = TextureAddressMode.Clamp;
-            AnimatedSampler.AddressV = TextureAddressMode.Wrap;
+            AnimatedSampler = new SamplerState()
+            {
+                Filter = EngineSettings.Instance.EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear,
+                AddressU = TextureAddressMode.Clamp,
+                AddressV = TextureAddressMode.Wrap,
+            };
         }
 
         public static void SetToDevice(GraphicsDeviceManager graphics, EngineRasterizer rasterizer)

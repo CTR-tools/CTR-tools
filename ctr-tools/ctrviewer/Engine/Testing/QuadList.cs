@@ -137,7 +137,7 @@ namespace ctrviewer.Engine.Testing
                         );
                     }
 
-                    if (Samplers.EnableWireframe)
+                    if (EngineSettings.Instance.DrawWireframe)
                     {
                         effect.TextureEnabled = false;
 

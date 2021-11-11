@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.IO;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace ctrviewer.Engine
@@ -24,6 +25,20 @@ namespace ctrviewer.Engine
 
         public Point Resolution = Point.Zero;
 
+        private bool _internalPSXResolution = false;
+        public bool InternalPSXResolution
+        {
+            get
+            {
+                return _internalPSXResolution;
+            }
+            set
+            {
+                _internalPSXResolution = value;
+                onInternalPsxResolutionChanged?.Invoke();
+            }
+        }
+
         public string BigFileLocation = ".\\bigfile.big";
 
         public byte AntiAliasLevel { get; set; } = 4;
@@ -36,6 +51,23 @@ namespace ctrviewer.Engine
         public bool ShowSky { get; set; } = true;
         public bool ShowBotsPath { get; set; } = false;
         public bool ShowModels { get; set; } = true;
+        public bool KartMode { get; set; } = false;
+        public bool DrawWireframe { get; set; } = false;
+
+        private bool _enableFiltering = true;
+        public bool EnableFiltering
+        {
+            get
+            {
+                return _enableFiltering;
+            }
+            set
+            {
+                _enableFiltering = value;
+                onFilteringChanged?.Invoke();
+            }
+        }
+
         public bool StereoPair { get; set; } = false;
         public string PlayerModel { get; set; } = "crash";
         public int StereoPairSeparation { get; set; } = 20;
@@ -134,6 +166,10 @@ namespace ctrviewer.Engine
         public delegate void DelegateNoArgs();
 
         [XmlIgnore]
+        public DelegateNoArgs onFilteringChanged = null;
+        [XmlIgnore]
+        public DelegateNoArgs onInternalPsxResolutionChanged = null;
+        [XmlIgnore]
         public DelegateNoArgs onWindowedChanged = null;
         [XmlIgnore]
         public DelegateNoArgs onVertexLightingChanged = null;
@@ -148,7 +184,7 @@ namespace ctrviewer.Engine
         {
         }
 
-        public void Save(string filename = "")
+        public static void Save(string filename = "")
         {
             if (filename == "")
             {
@@ -156,13 +192,15 @@ namespace ctrviewer.Engine
                 filename = Meta.SettingsFile;
             }
 
-            using (StreamWriter sw = new StreamWriter(File.Create(filename)))
+            XmlWriterSettings settings = new XmlWriterSettings() { Indent = true };
+
+            using (XmlWriter sw = XmlWriter.Create(filename, settings) )
             {
                 XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
                 ns.Add("", "");
 
-                XmlSerializer x = new XmlSerializer(this.GetType());
-                x.Serialize(sw, this, ns);
+                XmlSerializer x = new XmlSerializer(Instance.GetType());
+                x.Serialize(sw, Instance, ns);
                 sw.Flush();
                 sw.Close();
             }

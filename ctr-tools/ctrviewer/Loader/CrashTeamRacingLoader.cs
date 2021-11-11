@@ -49,28 +49,28 @@ namespace ctrviewer.Loaders
                                 foreach (QuadFlags fl in (QuadFlags[])Enum.GetValues(typeof(QuadFlags)))
                                 {
                                     if (qb.quadFlags.HasFlag(fl))
-                                        Push(trilists, fl.ToString(), monolist, TriListType.Flag, "flag");
+                                        Push(Trilists, fl.ToString(), monolist, TriListType.Flag, null, "flag");
                                 }
 
                                 if (qb.isWater)
                                 {
-                                    Push(trilists, "water", monolist, TriListType.Water);
+                                    Push(Trilists, "water", monolist, TriListType.Water);
                                     continue;
                                 }
 
                                 if (qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
                                 {
-                                    Push(trilists, "invis", monolist, TriListType.Flag);
+                                    Push(Trilists, "invis", monolist, TriListType.Flag);
                                     continue;
                                 }
 
                                 if (ContentVault.alphalist.Contains(texTag))
                                 {
-                                    Push(trilists, texTag, monolist, TriListType.Alpha);
+                                    Push(Trilists, texTag, monolist, TriListType.Alpha);
                                 }
                                 else
                                 {
-                                    Push(trilists, texTag, monolist);
+                                    Push(Trilists, texTag, monolist);
                                 }
                             }
                         }
@@ -96,6 +96,7 @@ namespace ctrviewer.Loaders
 
                                     bool isAnimated = false;
                                     string texTag = "test";
+                                    BlendState blendState = BlendState.Opaque;
 
                                     if (qb.ptrTexMid[j] != PsxPtr.Zero)
                                     {
@@ -104,27 +105,24 @@ namespace ctrviewer.Loaders
                                             isAnimated = qb.tex[j].isAnimated;
                                             if (texTag != "00000000")
                                                 texTag = qb.tex[j].midlods[2].Tag;
+
+                                            switch (qb.tex[j].midlods[2].blendingMode)
+                                            {
+                                                case BlendingMode.Additive: blendState = BlendState.Additive; break;
+                                                case BlendingMode.Translucent: blendState = BlendState.AlphaBlend; break;
+                                            }
                                         }
                                     }
 
                                     foreach (var fl in (QuadFlags[])Enum.GetValues(typeof(QuadFlags)))
                                     {
                                         if (qb.quadFlags.HasFlag(fl))
-                                            Push(flagq, fl.ToString(), monolist, TriListType.Flag, "flag");
+                                            Push(flagq, fl.ToString(), monolist, TriListType.Flag, BlendState.Additive, "flag");
                                     }
-                                    
-                                    if (qb.tex != null)
-                                        if (qb.tex.Count > j)
-                                            if (qb.tex[j] != null)
-                                                if (qb.tex[j].midlods[2].blendingMode == BlendingMode.Additive)
-                                                {
-                                                    Push(trilists, "additive", monolist, TriListType.Additive);
-                                                    continue;
-                                                }
-                                    
+
                                     if (qb.isWater)
                                     {
-                                        Push(trilists, "water", monolist, TriListType.Water);
+                                        Push(Trilists, "water", monolist, TriListType.Water);
                                         continue;
                                     }
 
@@ -134,14 +132,16 @@ namespace ctrviewer.Loaders
                                         continue;
                                     }
 
-                                    Push(trilists, texTag, monolist, 
-                                        (isAnimated ? TriListType.Animated : (ContentVault.alphalist.Contains(texTag) ? TriListType.Alpha : TriListType.Basic))
+                                    bool isAlpha = ContentVault.alphalist.Contains(texTag);
+
+                                    Push(Trilists, texTag, monolist, 
+                                        (isAnimated ? TriListType.Animated : (isAlpha ? TriListType.Alpha : TriListType.Basic)), blendState
                                         );
 
                                     if (isAnimated)
-                                        foreach (var ql in trilists)
+                                        foreach (var ql in Trilists)
                                             if (ql.Value.type == TriListType.Animated)
-                                                trilists[texTag].ScrollingEnabled = true;
+                                                Trilists[texTag].ScrollingEnabled = true;
                                 }
                             }
                         }

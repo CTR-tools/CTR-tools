@@ -23,21 +23,36 @@ namespace ctrviewer.Engine.Testing
         public static float MaxGravity = 1f;
     }
 
+    enum Power
+    {
+        Gravity,
+        EngineForward,
+        EngineBackward,
+        Jump,
+        SteerLeft,
+        SteerRight,
+        DriftLeft,
+        DriftRight
+    }
+
     class Kart : InstancedModel
-    { 
+    {
+        Dictionary<Power, Vector3> Powers = new Dictionary<Power, Vector3>();
+
         public float Speed = 0;
         public float Accel = 0;
         public float Gravity = 0;
 
-        public Kart()
+        public Kart(Vector3 pos, Vector3 rot) : base("crash", pos, rot, Vector3.One)
         {
-        }
-
-        public Kart(Vector3 pos, Vector3 rot)
-        {
-            ModelName = "crash";
-            Position = pos;
-            Rotation = rot;
+            Powers.Add(Power.Gravity, Vector3.Down * KartPhysics.MaxGravity);
+            Powers.Add(Power.EngineBackward, Vector3.Zero);
+            Powers.Add(Power.EngineForward, Vector3.Zero);
+            Powers.Add(Power.SteerLeft, Vector3.Zero);
+            Powers.Add(Power.SteerRight, Vector3.Zero);
+            Powers.Add(Power.DriftLeft, Vector3.Zero);
+            Powers.Add(Power.DriftRight, Vector3.Zero);
+            Powers.Add(Power.Jump, Vector3.Zero);
         }
 
         public float GetDelta(GameTime gameTime, float value)

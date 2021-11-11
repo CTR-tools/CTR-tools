@@ -92,8 +92,11 @@ namespace ctrviewer
 
             UpdateSplitscreenViewports();
 
+            UpdateInternalResolution();
+
             graphics.IsFullScreen = !eng.Settings.Windowed;
             graphics.ApplyChanges();
+
 
             GameConsole.Write($"SwitchDisplayMode(): {graphics.PreferredBackBufferWidth}x{graphics.PreferredBackBufferHeight}");
         }
@@ -180,6 +183,9 @@ namespace ctrviewer
         {
             graphics.PreferMultiSampling = !graphics.PreferMultiSampling;
             graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
+
+            if (screenBuffer != null)
+                screenBuffer.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
         }
 
         public void SetTimeOfDay(PreferredTimeOfDay tod)
@@ -203,6 +209,34 @@ namespace ctrviewer
             UpdateEffects();
         }
 
+        RenderTarget2D screenBuffer;
+
+        public void SetInternalResolution(int width = 0, int height = 0)
+        {
+            if (width == 0 || height == 0)
+            {
+                width = graphics.PreferredBackBufferWidth;
+                height = graphics.PreferredBackBufferHeight;
+            }
+
+            screenBuffer = new RenderTarget2D(
+                GraphicsDevice,
+                width,
+                height,
+                true,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24
+                );
+        }
+
+        public void UpdateInternalResolution()
+        {
+            if (EngineSettings.Instance.InternalPSXResolution)
+                SetInternalResolution(512, 240);
+            else
+                SetInternalResolution();
+        }
+
         protected override void Initialize()
         {
             eng = new MainEngine(this);
@@ -211,11 +245,14 @@ namespace ctrviewer
             eng.Settings.onVertexLightingChanged += UpdateEffects;
             eng.Settings.onAntiAliasChanged += UpdateAntiAlias;
             eng.Settings.onVerticalSyncChanged += UpdateVSync;
+            eng.Settings.onInternalPsxResolutionChanged += UpdateInternalResolution;
+            eng.Settings.onFilteringChanged += Samplers.Refresh;
 
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             UpdateAntiAlias();
             UpdateVSync();
             graphics.ApplyChanges();
+
 
             IsMouseVisible = false;
 
@@ -691,7 +728,7 @@ namespace ctrviewer
         public static bool RenderEnabled = true;
         public static bool ControlsEnabled = true;
         public static bool IsDrawing = false;
-        public static bool KartMode = false;
+
         bool captureMouse = false;
 
         GamePadState oldgs = GamePad.GetState(activeGamePad);
@@ -703,6 +740,14 @@ namespace ctrviewer
         MouseState oldms = new MouseState();
         MouseState newms = new MouseState();
 
+        int screenshotstaken = 0;
+
+        private void TakeScreenShot()
+        {
+            Helpers.CheckFolder(Path.Combine(Meta.BasePath, "screenshots"));
+            screenBuffer.SaveAsJpeg(File.Create($"screenshots\\{screenshotstaken.ToString("0000")}_{DateTime.Now.ToString("ddMMyy_hhmmss")}.jpg"), screenBuffer.Width, screenBuffer.Height);
+            screenshotstaken++;
+        }
 
         protected override void Update(GameTime gameTime)
         {
@@ -727,9 +772,14 @@ namespace ctrviewer
 
             if (IsActive)
             {
+                if (newkb.IsKeyDown(Keys.PrintScreen) && !oldkb.IsKeyDown(Keys.PrintScreen))
+                {
+                    TakeScreenShot();
+                }
+
                 newmenu.Update(gameTime, new Point(newms.X, newms.Y));
 
-                if (KartMode)
+                if (eng.Settings.KartMode)
                     foreach (var kart in karts)
                     {
                         if (!menu.Visible)
@@ -854,15 +904,16 @@ namespace ctrviewer
                                     case "visbox": eng.Settings.VisData = !eng.Settings.VisData; break;
                                     case "nocull": ForceNoCulling = !ForceNoCulling; break;
                                     case "visboxleaf": eng.Settings.VisDataLeaves = !eng.Settings.VisDataLeaves; break;
-                                    case "filter": Samplers.EnableFiltering = !Samplers.EnableFiltering; Samplers.Refresh(); break;
-                                    case "wire": Samplers.EnableWireframe = !Samplers.EnableWireframe; break;
+                                    case "filter": eng.Settings.EnableFiltering = !eng.Settings.EnableFiltering; break;
+                                    case "wire": eng.Settings.DrawWireframe = !eng.Settings.DrawWireframe; break;
                                     case "genmips": eng.Settings.GenerateMips = !eng.Settings.GenerateMips; break;
                                     case "window": eng.Settings.Windowed = !eng.Settings.Windowed; break;
                                     case "vcolor": eng.Settings.VertexLighting = !eng.Settings.VertexLighting; break;
                                     case "stereo": eng.Settings.StereoPair = !eng.Settings.StereoPair; break;
                                     case "sky": eng.Settings.ShowSky = !eng.Settings.ShowSky; break;
                                     case "vsync": eng.Settings.VerticalSync = !eng.Settings.VerticalSync; break;
-                                    case "kart":KartMode = !KartMode; break;
+                                    case "kart": eng.Settings.KartMode = !eng.Settings.KartMode; break;
+                                    case "psxres": eng.Settings.InternalPSXResolution = !eng.Settings.InternalPSXResolution; break;
                                     default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
                                 }
                                 break;
@@ -907,7 +958,7 @@ namespace ctrviewer
                     foreach (var im in eng.paths)
                         im.Update(gameTime);
 
-                    if (KartMode)
+                    if (eng.Settings.KartMode)
                     {
                         eng.Cameras[CameraType.DefaultCamera].Update(gameTime, false, false, newms, oldms);
                         eng.Cameras[CameraType.SkyCamera].Update(gameTime, false, false, newms, oldms);
@@ -1206,8 +1257,10 @@ namespace ctrviewer
             //remember we're busy drawing stuff
             IsDrawing = true;
 
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+
+            GraphicsDevice.SetRenderTarget(screenBuffer);
             GraphicsDevice.Clear(eng.BackgroundColor);
-            spriteBatch.Begin();
 
             if (eng.Settings.StereoPair)
             {
@@ -1226,6 +1279,14 @@ namespace ctrviewer
             {
                 DrawLevel();
             }
+
+            GraphicsDevice.SetRenderTarget(null);
+
+            spriteBatch.Draw(screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+
+            spriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp);
 
             menu.Draw(GraphicsDevice, spriteBatch, font, tint);
 
@@ -1270,7 +1331,7 @@ namespace ctrviewer
                     0.5f);
 
 
-            if (KartMode)
+            if (eng.Settings.KartMode)
                 if (karts.Count > 0)
                     spriteBatch.DrawString(font, $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {karts[0].Speed}", new Vector2(20, 20), Color.Yellow,
                     0,
@@ -1345,7 +1406,7 @@ namespace ctrviewer
 
         protected override void OnExiting(Object sender, EventArgs args)
         {
-            eng.Settings.Save();
+            EngineSettings.Save();
             base.OnExiting(sender, args);
         }
     }

@@ -15,7 +15,7 @@ namespace ctrviewer.Engine
 
     public partial class MainEngine : IDisposable
     {
-        public EngineSettings settings;
+        public EngineSettings Settings => EngineSettings.Instance;
 
         public Dictionary<CameraType, FirstPersonCamera> Cameras = new Dictionary<CameraType, FirstPersonCamera>();
 
@@ -39,16 +39,24 @@ namespace ctrviewer.Engine
         public MainEngine(Game game)
         {
             InitializeCameras(game);
+            UpdateFOV();
+            Subscribe();
+        }
 
+        public void Subscribe()
+        {
             Settings.onFieldOfViewChanged += UpdateFOV;
+        }
+
+        public void Unsubscribe()
+        {
+            Settings.onFieldOfViewChanged -= UpdateFOV;
         }
 
         public void InitializeCameras(Game game)
         {
-            Cameras.Add(CameraType.DefaultCamera, new FirstPersonCamera(game));
-            Cameras.Add(CameraType.LeftEyeCamera, new FirstPersonCamera(game));
-            Cameras.Add(CameraType.RightEyeCamera, new FirstPersonCamera(game));
-            Cameras.Add(CameraType.SkyCamera, new FirstPersonCamera(game));
+            foreach (var camera in (CameraType[])Enum.GetValues(typeof(CameraType)))
+                Cameras.Add(camera, new FirstPersonCamera(game));
         }
 
         public void UpdateProjectionMatrices()
@@ -95,9 +103,8 @@ namespace ctrviewer.Engine
 
         public void Dispose()
         {
-            Settings.Save();
-            Settings.onFieldOfViewChanged -= UpdateFOV;
-
+            EngineSettings.Save();
+            Unsubscribe();
             Cameras.Clear();
             this.Clear();
         }
