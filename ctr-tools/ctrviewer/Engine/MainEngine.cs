@@ -1,7 +1,10 @@
 ﻿using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using CTRFramework.Shared;
+using System.IO;
 
 namespace ctrviewer.Engine
 {
@@ -16,6 +19,8 @@ namespace ctrviewer.Engine
     public partial class MainEngine : IDisposable
     {
         public EngineSettings Settings => EngineSettings.Instance;
+
+        public RenderTarget2D screenBuffer;
 
         public Dictionary<CameraType, FirstPersonCamera> Cameras = new Dictionary<CameraType, FirstPersonCamera>();
 
@@ -41,6 +46,16 @@ namespace ctrviewer.Engine
             InitializeCameras(game);
             UpdateFOV();
             Subscribe();
+        }
+
+
+        int screenshotstaken = 0;
+
+        public void TakeScreenShot()
+        {
+            Helpers.CheckFolder(Path.Combine(Meta.BasePath, "screenshots"));
+            screenBuffer.SaveAsJpeg(File.Create($"screenshots\\{screenshotstaken.ToString("0000")}_{DateTime.Now.ToString("ddMMyy_hhmmss")}.jpg"), screenBuffer.Width, screenBuffer.Height);
+            screenshotstaken++;
         }
 
         public void Subscribe()

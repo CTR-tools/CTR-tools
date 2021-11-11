@@ -184,8 +184,8 @@ namespace ctrviewer
             graphics.PreferMultiSampling = !graphics.PreferMultiSampling;
             graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
 
-            if (screenBuffer != null)
-                screenBuffer.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
+            if (eng.screenBuffer != null)
+                eng.screenBuffer.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
         }
 
         public void SetTimeOfDay(PreferredTimeOfDay tod)
@@ -209,8 +209,6 @@ namespace ctrviewer
             UpdateEffects();
         }
 
-        RenderTarget2D screenBuffer;
-
         public void SetInternalResolution(int width = 0, int height = 0)
         {
             if (width == 0 || height == 0)
@@ -219,7 +217,7 @@ namespace ctrviewer
                 height = graphics.PreferredBackBufferHeight;
             }
 
-            screenBuffer = new RenderTarget2D(
+            eng.screenBuffer = new RenderTarget2D(
                 GraphicsDevice,
                 width,
                 height,
@@ -738,15 +736,6 @@ namespace ctrviewer
         MouseState newms = new MouseState();
 
 
-        int screenshotstaken = 0;
-
-        private void TakeScreenShot()
-        {
-            Helpers.CheckFolder(Path.Combine(Meta.BasePath, "screenshots"));
-            screenBuffer.SaveAsJpeg(File.Create($"screenshots\\{screenshotstaken.ToString("0000")}_{DateTime.Now.ToString("ddMMyy_hhmmss")}.jpg"), screenBuffer.Width, screenBuffer.Height);
-            screenshotstaken++;
-        }
-
         protected override void Update(GameTime gameTime)
         {
             Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
@@ -766,7 +755,7 @@ namespace ctrviewer
             if (IsActive)
             {
                 if (KeyboardHandler.IsPressed(Keys.PrintScreen))
-                    TakeScreenShot();
+                    eng.TakeScreenShot();
 
                 newmenu.Update(gameTime, new Point(newms.X, newms.Y));
 
@@ -1045,9 +1034,6 @@ namespace ctrviewer
             eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true, newms, oldms);
         }
 
-
-        //public static bool twoSided = false;
-
         private void DrawLevel(FirstPersonCamera cam = null)
         {
             if (!RenderEnabled) return;
@@ -1171,7 +1157,6 @@ namespace ctrviewer
             return result;
         }
 
-
         private void SetLodAndReload(LevelType ltype = LevelType.P1)
         {
             levelType = ltype;
@@ -1236,7 +1221,7 @@ namespace ctrviewer
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
 
-            GraphicsDevice.SetRenderTarget(screenBuffer);
+            GraphicsDevice.SetRenderTarget(eng.screenBuffer);
             GraphicsDevice.Clear(eng.BackgroundColor);
 
             if (eng.Settings.StereoPair)
@@ -1259,7 +1244,7 @@ namespace ctrviewer
 
             GraphicsDevice.SetRenderTarget(null);
 
-            spriteBatch.Draw(screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            spriteBatch.Draw(eng.screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
 
             spriteBatch.End();
 

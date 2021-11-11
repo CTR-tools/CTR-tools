@@ -148,7 +148,6 @@ namespace ctrviewer.Engine.Render
             return indices;
         }
 
-
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
             if (indices == null || verts == null)
@@ -231,7 +230,6 @@ namespace ctrviewer.Engine.Render
             }
 
             Samplers.SetToDevice(graphics, EngineRasterizer.Default);
-
         }
     }
 }
