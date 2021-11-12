@@ -75,6 +75,12 @@
 /processorParam:Quality=Best
 /build:sfx/menu_up.wav
 
+#begin shaders/16bits.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:shaders/16bits.fx
+
 #begin test.png
 /importer:TextureImporter
 /processor:TextureProcessor

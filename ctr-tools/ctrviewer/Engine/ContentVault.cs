@@ -13,8 +13,22 @@ namespace ctrviewer.Engine
         public static Dictionary<string, Texture2D> ReplacementTextures = new Dictionary<string, Texture2D>();
         public static Dictionary<string, SoundEffect> Sounds = new Dictionary<string, SoundEffect>();
         public static Dictionary<string, TriList> Models = new Dictionary<string, TriList>();
+        public static Dictionary<string, Effect> Shaders = new Dictionary<string, Effect>();
 
         public static List<string> alphalist = new List<string>();
+
+        public static bool AddShader(string name, Effect shader)
+        {
+            if (Shaders.ContainsKey(name))
+            {
+                Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate shader: '{name}'.");
+                return false;
+            }
+
+            Shaders.Add(name, shader);
+            return true;
+        }
+
         public static bool AddSound(string name, SoundEffect sound)
         {
             if (Sounds.ContainsKey(name))
@@ -60,6 +74,14 @@ namespace ctrviewer.Engine
 
             Models.Add(name, model);
             return true;
+        }
+
+        public static Effect GetShader(string name)
+        {
+            if (!Shaders.ContainsKey(name))
+                return null;
+
+            return Shaders[name];
         }
 
         public static TriList GetModel(string name)

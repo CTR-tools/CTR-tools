@@ -287,6 +287,9 @@ namespace ctrviewer
             ContentVault.AddSound("menu_up", Content.Load<SoundEffect>("sfx\\menu_up"));
             ContentVault.AddSound("menu_down", Content.Load<SoundEffect>("sfx\\menu_down"));
 
+            ContentVault.AddShader("16bits", Content.Load<Effect>("shaders\\16bits"));
+
+
             LoadGenericTextures();
             effect.Texture = ContentVault.Textures["test"];
             //effect.TextureEnabled = true;
@@ -1247,7 +1250,7 @@ namespace ctrviewer
             {
                 GraphicsDevice.SetRenderTarget(null);
 
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, effect: ContentVault.GetShader("16bits"));
                 spriteBatch.Draw(eng.screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
                 spriteBatch.End();
             }
