@@ -1219,9 +1219,10 @@ namespace ctrviewer
             //remember we're busy drawing stuff
             IsDrawing = true;
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
 
-            GraphicsDevice.SetRenderTarget(eng.screenBuffer);
+            if (EngineSettings.Instance.InternalPSXResolution)
+                GraphicsDevice.SetRenderTarget(eng.screenBuffer);
+
             GraphicsDevice.Clear(eng.BackgroundColor);
 
             if (eng.Settings.StereoPair)
@@ -1242,11 +1243,14 @@ namespace ctrviewer
                 DrawLevel();
             }
 
-            GraphicsDevice.SetRenderTarget(null);
+            if (EngineSettings.Instance.InternalPSXResolution)
+            {
+                GraphicsDevice.SetRenderTarget(null);
 
-            spriteBatch.Draw(eng.screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
-
-            spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+                spriteBatch.Draw(eng.screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+                spriteBatch.End();
+            }
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp);
 
