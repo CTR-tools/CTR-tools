@@ -129,7 +129,7 @@ namespace ctrviewer.Engine.Render
             //foreach (var ql in alphaq)
             foreach (var ql in Trilists)
                 if (ql.Value.type == TriListType.Alpha)
-                    ql.Value.Draw(graphics, effect, null);
+                    ql.Value.Draw(graphics, effect, alpha);
         }
 
         public void DrawSky(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)

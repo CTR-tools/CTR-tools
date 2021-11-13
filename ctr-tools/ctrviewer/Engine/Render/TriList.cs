@@ -53,16 +53,37 @@ namespace ctrviewer.Engine.Render
         {
         }
 
+        public TriList(List<VertexPositionColorTexture> v, bool te = false, string name = "")
+        {
+            verts.AddRange(v);
+            textureEnabled = te;
+            textureName = name;
+
+            texture = ContentVault.GetTexture(textureName, false);
+            replacement = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
+        }
+
+        public TriList(TriList t)
+        {
+            verts.AddRange(t.verts);
+            textureEnabled = t.textureEnabled;
+            textureName = t.textureName;
+            GenerateIndices();
+        }
+
+
         public void Seal()
         {
             indices = GenerateIndices().ToArray();
             verts_sealed = verts.ToArray();
             Sealed = true;
+            /*
             for (int i = 0; i < numVerts; i++)
             {
                 beginColor.Add(verts[i].Color);
                 endColor.Add(Color.White);
             }
+            */
         }
 
         public void PushTri(List<VertexPositionColorTexture> lv)
@@ -104,6 +125,7 @@ namespace ctrviewer.Engine.Render
                 }
             }
 
+            /*
             if (vColAnimEnabled)
             {
                 for (int i = 0; i < numVerts; i++)
@@ -118,24 +140,7 @@ namespace ctrviewer.Engine.Render
                 lerp -= 1;
                 forward = !forward;
             }
-        }
-
-        public TriList(List<VertexPositionColorTexture> v, bool te, string name = "")
-        {
-            verts.AddRange(v);
-            textureEnabled = te;
-            textureName = name;
-
-            texture = ContentVault.GetTexture(textureName, false);
-            replacement = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
-        }
-
-        public TriList(TriList t)
-        {
-            verts.AddRange(t.verts);
-            textureEnabled = t.textureEnabled;
-            textureName = t.textureName;
-            GenerateIndices();
+            */
         }
 
         public List<short> GenerateIndices()
@@ -169,14 +174,14 @@ namespace ctrviewer.Engine.Render
             if (textureEnabled)
                 if (ContentVault.Textures.ContainsKey(textureName))
                 {
-                    effect.Texture = replacement;
+                    effect.Texture = EngineSettings.Instance.UseTextureReplacements ? replacement : texture;
                     if (alpha != null)
                         alpha.Texture = effect.Texture;
                 }
                 else
                 {
                     //Console.WriteLine("missing texture: " + textureName);
-                    effect.Texture = ContentVault.GetTexture("test", EngineSettings.Instance.UseTextureReplacements);
+                    effect.Texture = ContentVault.GetTexture("test", false);
                     if (alpha != null)
                         alpha.Texture = effect.Texture;
                 }

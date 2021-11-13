@@ -28,23 +28,21 @@ namespace CTRFramework
 
             br.Seek(6);
 
-            if (cnt > 4)
+            if (cnt >= 4)
             {
-                br.Jump(ptrs[4]);
+                br.Jump(ptrs[3]);
 
                 br.Seek(1);
 
                 StringBuilder sb = new StringBuilder();
-                do
+
+                for (int i = 0; i < 291; i++)
                 {
                     Vertex v = new Vertex();
-                    v.coord = br.ReadVector3sPadded(1 / 100f);
+                    v.Position = br.ReadVector3s(1 / 100f);
 
-                    br.Seek(2);
-
-                    sb.AppendFormat("v {0}\r\n", v.coord.ToString());
+                    sb.AppendFormat($"v {v.Position.X} {v.Position.Y} {v.Position.Z}\r\n");
                 }
-                while (br.BaseStream.Position < ptrs[5]);
 
                 //Helpers.WriteToFile(".\\test.obj", sb.ToString());
             }

@@ -538,6 +538,24 @@ namespace ctrviewer
                 karts[0].ModelName = eng.Settings.PlayerModel;
             }
 
+            /*
+            if (Directory.Exists("custom"))
+            {
+                string[] files = Directory.GetFiles("custom", "*");
+
+                foreach (var file in files)
+                {
+                    try
+                    {
+                        eng.MeshHigh.Add(RawLevelLoader.FromFile(file));
+                    }
+                    catch
+                    {
+                        GameConsole.Write($"Failed to import {file}.");
+                    }
+                }
+            }
+            */
             Stopwatch sw = new Stopwatch();
             sw.Start();
 

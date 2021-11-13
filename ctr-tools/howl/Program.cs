@@ -46,6 +46,7 @@ namespace howl
                         hwl.ExportCSEQ(path, br);
                         hwl.ExportAllSamples(path);
 
+                        //hwl.Banks[1].samples[0x1ae] = hwl.Banks[1].samples[0x143];
                         //hwl.Save(Path.ChangeExtension(filename, ".hwl_test"));
 
                         Console.WriteLine("Done!");
@@ -65,7 +66,7 @@ namespace howl
 
                 case ".cseq":
                     CSEQ seq = CSEQ.FromFile(filename);
-                    seq.songs[0].ExportMIDI(Path.ChangeExtension(filename, ".mid"), seq);
+                    seq.Songs[0].ExportMIDI(Path.ChangeExtension(filename, ".mid"), seq);
                     break;
 
                 default:

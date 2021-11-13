@@ -37,12 +37,12 @@ namespace ThreeDeeBear.Models.Ply
             sb.AppendLine("property uchar green");
             sb.AppendLine("property uchar blue");
 
-            sb.AppendLine($"element face {Triangles.Count}");
+            sb.AppendLine($"element face {Triangles.Count / 3}");
             sb.AppendLine("property list uchar uint vertex_indices");
             sb.AppendLine("end_header");
 
             foreach (var v in Vertices)
-                sb.AppendLine($"{v.X} {v.Y} {v.Z}");
+                sb.AppendLine($"{v.X} {v.Y} {v.Z} 0 0 0");
 
             for (int i = 0; i < Triangles.Count / 3; i++)
                 sb.AppendLine($"3 {Triangles[i * 3]} {Triangles[i * 3 + 1]} {Triangles[i * 3] + 2}");
