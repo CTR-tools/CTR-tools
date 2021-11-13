@@ -5,21 +5,23 @@ meta:
   file-extension: hwl
   endian: le
 
+doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_hwl.ksy
+
 seq:
   - id: header
     type: howl_hdr
   - id: unk_array
-    type: array1
+    type: ptr_array # ?
     repeat: expr
-    repeat-expr: header.cnt4
-  - id: sample1
-    type: sample
+    repeat-expr: header.num_ptr_array
+  - id: sfx_instruments
+    type: instrument
     repeat: expr
-    repeat-expr: header.cnt81
-  - id: sample2
-    type: sample
+    repeat-expr: header.num_sfx_instruments
+  - id: engine_instruments
+    type: instrument
     repeat: expr
-    repeat-expr: header.cnt82
+    repeat-expr: header.num_engine_instruments
   - id: banks
     type: bank_inst
     repeat: expr
@@ -33,21 +35,21 @@ types:
 
   howl_hdr:
     seq:
-      - id: magic
+      - id: magic # HOWL char string
         size: 4
         type: strz
         encoding: ascii
-      - id: unk1
+      - id: version # const in game code
         type: u4
-      - id: null1
+      - id: reserved1
         type: u4
-      - id: null2
+      - id: reserved2
         type: u4
-      - id: cnt4
+      - id: num_ptr_array # ?
         type: u4
-      - id: cnt81
+      - id: num_sfx_instruments
         type: u4
-      - id: cnt82
+      - id: num_engine_instruments
         type: u4
       - id: cnt_banks
         type: u4
@@ -56,14 +58,14 @@ types:
       - id: sample_data_size
         type: u4
 
-  array1: 
+  ptr_array:
     seq:
       - id: val1
         type: u2
       - id: val2
         type: u2
-        
-  sample: 
+
+  instrument:
     seq:
       - id: unk1
         type: u1
@@ -75,7 +77,7 @@ types:
         type: u2
       - id: unk2
         type: u2
-        
+
   bank_inst:
     seq:
       - id: ptr
@@ -83,7 +85,8 @@ types:
     instances:
       bank:
         type: bank
-        pos: ptr * 0x800      
+        pos: ptr * 0x800
+
   bank:
     seq:
       - id: cnt_samps
@@ -92,7 +95,7 @@ types:
         type: u2
         repeat: expr
         repeat-expr: cnt_samps
-        
+
   cseq_inst:
     seq:
       - id: ptr
