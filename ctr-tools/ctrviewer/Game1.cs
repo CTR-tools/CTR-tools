@@ -538,7 +538,7 @@ namespace ctrviewer
                 karts[0].ModelName = eng.Settings.PlayerModel;
             }
 
-            /*
+            
             if (Directory.Exists("custom"))
             {
                 string[] files = Directory.GetFiles("custom", "*");
@@ -555,7 +555,7 @@ namespace ctrviewer
                     }
                 }
             }
-            */
+            
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
@@ -741,9 +741,6 @@ namespace ctrviewer
         }
 
         public bool updatemouse = false;
-        public static bool ForceNoCulling = false;
-        public static bool HideInvisible = true;
-        public static bool HideWater = false;
         public static bool RenderEnabled = true;
         public static bool ControlsEnabled = true;
         public static bool IsDrawing = false;
@@ -894,12 +891,12 @@ namespace ctrviewer
                                     case "paths": eng.Settings.ShowBotsPath = !eng.Settings.ShowBotsPath; break;
                                     case "lod": eng.Settings.UseLowLod = !eng.Settings.UseLowLod; break;
                                     case "antialias": eng.Settings.AntiAlias = !eng.Settings.AntiAlias; break;
-                                    case "invis": HideInvisible = !HideInvisible; break;
-                                    case "water": HideWater = !HideWater; break;
+                                    case "invis": eng.Settings.HideInvisible = !eng.Settings.HideInvisible; break;
+                                    case "water": eng.Settings.HideWater = !eng.Settings.HideWater; break;
                                     case "console": eng.Settings.ShowConsole = !eng.Settings.ShowConsole; break;
                                     case "campos": eng.Settings.ShowCamPos = !eng.Settings.ShowCamPos; break;
                                     case "visbox": eng.Settings.VisData = !eng.Settings.VisData; break;
-                                    case "nocull": ForceNoCulling = !ForceNoCulling; break;
+                                    case "nocull": eng.Settings.ForceNoCulling = !eng.Settings.ForceNoCulling; break;
                                     case "visboxleaf": eng.Settings.VisDataLeaves = !eng.Settings.VisDataLeaves; break;
                                     case "filter": eng.Settings.EnableFiltering = !eng.Settings.EnableFiltering; break;
                                     case "wire": eng.Settings.DrawWireframe = !eng.Settings.DrawWireframe; break;

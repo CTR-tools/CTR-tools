@@ -12,7 +12,7 @@ namespace CTRFramework.Vram
     /// Please note this is super hacky implementation of PSX Tim format hardcoded for 4 bits used in Crash Team Racing.
     /// You can load any tim files, but overall code will not work properly with anything other than 4 bits.
     /// </summary>
-    public class Tim : IRead
+    public class Tim : IReadWrite
     {
         public Dictionary<string, Bitmap> textures = new Dictionary<string, Bitmap>();
 
@@ -29,6 +29,8 @@ namespace CTRFramework.Vram
         public Rectangle region;
 
         public ushort[] data;
+
+        private uint packedFlags => (uint)((int)bpp | ((hasClut ? 1 : 0) << 3));
 
         public BitDepth bpp = BitDepth.Bit16;
 
@@ -137,13 +139,10 @@ namespace CTRFramework.Vram
             }
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write(magic);
-
-            int flags = (int)((int)bpp | ((hasClut ? 1 : 0) << 3));
-
-            bw.Write(flags);
+            bw.Write(packedFlags);
 
             if (hasClut)
             {
@@ -387,7 +386,7 @@ namespace CTRFramework.Vram
         /// <returns>Bitmap</returns>
         public Bitmap GetTexture(TextureLayout tl, string path = "", string name = "")
         {
-            //Helpers.Panic(this, PanicType.Assume, tl.ToString() + "" + "\r\n" + tl.frame.ToString());
+            Helpers.Panic(this, PanicType.Debug, $"GetTexture()\r\n{tl.ToString()}");
 
             try
             {
@@ -489,9 +488,6 @@ namespace CTRFramework.Vram
 
             this.clutdata = palette.ToArray();
         }
-
-
-
 
         public byte[] FixBitmapData(byte[] b, int width, int height)
         {

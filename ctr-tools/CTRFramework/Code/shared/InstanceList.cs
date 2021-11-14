@@ -73,11 +73,14 @@ namespace CTRFramework.Shared
 
     public class Instance<T> where T : IRead, new()
     {
-        public static T FromReader(BinaryReaderEx br, uint pos)
+        public static T FromReader(BinaryReaderEx br, uint pos = 0)
         {
-            br.Jump(pos);
+            if (pos != 0)
+                br.Jump(pos);
+
             T t = new T();
             t.Read(br);
+
             return t;
         }
 

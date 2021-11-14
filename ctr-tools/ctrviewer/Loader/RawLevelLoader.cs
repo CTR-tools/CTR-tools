@@ -51,14 +51,14 @@ namespace ctrviewer.Loaders
                 {
                     monolist.Clear();
 
-                    int val = random.Next(128 - 32) + 64;
+                    int val = random.Next(128 - 32) + 32 * 2;
 
                     foreach (var i in face.Indices)
                     {
                         monolist.Add(
                             new VertexPositionColorTexture(
                                 Convert(mesh.Vertices[i]),
-                                new Color(val, val, val),
+                                new Color(val, val, val) * (1.25f - mesh.Vertices[i].Y / 10f),
                                 new Vector2(0,0)
                                 )
                             );

@@ -122,7 +122,7 @@ namespace ctrviewer.Engine.Testing
                                 alpha.Texture = effect.Texture;
                         }
 
-                    if (!CullingEnabled || Game1.ForceNoCulling)
+                    if (!CullingEnabled || EngineSettings.Instance.ForceNoCulling)
                         Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
 
                     foreach (var pass in (alpha != null ? alpha.CurrentTechnique.Passes : effect.CurrentTechnique.Passes))

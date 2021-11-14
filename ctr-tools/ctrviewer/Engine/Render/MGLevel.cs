@@ -109,7 +109,7 @@ namespace ctrviewer.Engine.Render
 
             effect.Alpha = 0.5f;
 
-            if (!Game1.HideWater)
+            if (!EngineSettings.Instance.HideWater)
             {
                 //foreach (var ql in waterq)
                 foreach (var ql in Trilists)
@@ -117,7 +117,7 @@ namespace ctrviewer.Engine.Render
                         ql.Value.Draw(graphics, effect, null);
             }
 
-            if (!Game1.HideInvisible)
+            if (!EngineSettings.Instance.HideInvisible)
             {
                 if (flagq.ContainsKey("invis"))
                     flagq["invis"].Draw(graphics, effect, null);

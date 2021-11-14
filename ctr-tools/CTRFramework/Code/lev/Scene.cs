@@ -96,7 +96,7 @@ namespace CTRFramework
 
         public void ReadScene(BinaryReaderEx br)
         {
-            header = Instance<SceneHeader>.FromReader(br, 0);
+            header = Instance<SceneHeader>.FromReader(br);
 
             if (header == null)
                 throw new Exception("Scene header is null. Halt parsing.");
@@ -113,7 +113,6 @@ namespace CTRFramework
             vertanims = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
             skybox = new PtrWrap<SkyBox>(header.ptrSkybox).Get(br);
             nav = new PtrWrap<Nav>(header.ptrAiNav).Get(br);
-            //header.ptrAiNav = PsxPtr.Zero;
             iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
             trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
 
@@ -239,6 +238,25 @@ namespace CTRFramework
             int countadd = 0;
             int countmid = 0;
 
+            int x = 0;
+            int y = 0;
+            int z = 0;
+
+
+            foreach (var node in visdata)
+            {
+                if (!node.IsLeaf)
+                {
+                    if (node.divX > 0) x++;
+                    if (node.divY > 0) y++;
+                    if (node.divZ > 0) z++;
+                }
+            }
+
+            Console.WriteLine($"numx={x} numy={y} numz={z}");
+            Console.ReadKey();
+
+            
             foreach (QuadBlock qb in quads)
             {
                 if (qb.ptrTexMid[0] == PsxPtr.Zero)
@@ -277,7 +295,7 @@ namespace CTRFramework
             }
 
             Helpers.WriteToFile(".\\mosaic_test.txt", sb.ToString());
-
+            
             foreach (var quad in quads)
             {
                 //quad.ColTest(verts);

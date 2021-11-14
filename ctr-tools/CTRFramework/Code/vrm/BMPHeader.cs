@@ -17,14 +17,14 @@ namespace CTRFramework.Vram
         int width = 0;
         int height = 0;
         ushort numPlanes = 1;
-        ushort bpp = 4;
+        public ushort bpp = 4;
         uint compression = 0;
 
         uint bitmapSize = 0;
         uint ppix = 0xEC4;
         uint ppiy = 0xEC4;
-        uint numColors = 16;
-        uint numColorsImportant = 16;
+        public uint numColors = 16;
+        uint numColorsImportant => numColors;
 
         byte[] palette = new byte[0];
         byte[] data = new byte[0];
@@ -37,7 +37,6 @@ namespace CTRFramework.Vram
             height = h;
 
             numColors = numCols;
-            numColorsImportant = numCols;
             palette = new byte[numCols * 4];
 
             bpp = bits;
