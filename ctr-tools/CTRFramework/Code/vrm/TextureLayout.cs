@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Numerics;
 
 namespace CTRFramework.Vram
 {
@@ -22,14 +23,19 @@ namespace CTRFramework.Vram
         Bit24 = 3
     }
 
-    public class TextureLayout : IRead
+    public class TextureLayout : IReadWrite
     {
+        #region properties
+
         public static readonly int SizeOf = 0x0C;
 
         public uint offset;
 
-        public List<Vector2b> uv = new List<Vector2b>() { new Vector2b(0, 0), new Vector2b(0, 0), new Vector2b(0, 0), new Vector2b(0, 0) };
-        public List<Vector2b> normuv = new List<Vector2b>();
+        public List<Vector2> uv = new List<Vector2>() { new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0) };
+        public List<Vector2> normuv = new List<Vector2>();
+
+        //public List<Vector2b> uv = new List<Vector2b>() { new Vector2b(0, 0), new Vector2b(0, 0), new Vector2b(0, 0), new Vector2b(0, 0) };
+        //public List<Vector2b> normuv = new List<Vector2b>();
 
         public Point Palette;
 
@@ -50,8 +56,8 @@ namespace CTRFramework.Vram
             get
             {
                 return new Point(
-                    Math.Min(Math.Min(uv[0].X, uv[1].X), Math.Min(uv[2].X, uv[3].X)),
-                    Math.Min(Math.Min(uv[0].Y, uv[1].Y), Math.Min(uv[2].Y, uv[3].Y))
+                    (int)Math.Round(Math.Min(Math.Min(uv[0].X, uv[1].X), Math.Min(uv[2].X, uv[3].X))),
+                     (int)Math.Round(Math.Min(Math.Min(uv[0].Y, uv[1].Y), Math.Min(uv[2].Y, uv[3].Y)))
                     );
             }
         }
@@ -61,8 +67,8 @@ namespace CTRFramework.Vram
             get
             {
                 return new Point(
-                    Math.Max(Math.Max(uv[0].X, uv[1].X), Math.Max(uv[2].X, uv[3].X)),
-                    Math.Max(Math.Max(uv[0].Y, uv[1].Y), Math.Max(uv[2].Y, uv[3].Y))
+                     (int)Math.Round(Math.Max(Math.Max(uv[0].X, uv[1].X), Math.Max(uv[2].X, uv[3].X))),
+                     (int)Math.Round(Math.Max(Math.Max(uv[0].Y, uv[1].Y), Math.Max(uv[2].Y, uv[3].Y)))
                     );
             }
         }
@@ -80,6 +86,10 @@ namespace CTRFramework.Vram
 
         public Rectangle frame => new Rectangle(RealX, RealY, width / 4, height);
 
+        private ushort packedPageData => (ushort)(PageX & PageY << 4 & (int)blendingMode << 5 & (int)bpp << 7);
+
+        #endregion
+
         public TextureLayout(BinaryReaderEx br)
         {
             Read(br);
@@ -89,9 +99,9 @@ namespace CTRFramework.Vram
         {
             normuv.Clear();
 
-            foreach (Vector2b v in uv)
+            foreach (var v in uv)
             {
-                Vector2b n = new Vector2b(0, 0);
+                Vector2 n = new Vector2(0, 0);
                 n.X = (byte)(Helpers.Normalize(min.X, max.X, v.X) * 255);
                 n.Y = (byte)(Helpers.Normalize(min.Y, max.Y, v.Y) * 255);
                 normuv.Add(n);
@@ -122,13 +132,13 @@ namespace CTRFramework.Vram
 
             offset = (uint)br.BaseStream.Position;
 
-            uv.Add(new Vector2b(br));
+            uv.Add(br.ReadVector2b());
 
             ushort buf = br.ReadUInt16();
 
             Palette = new Point(buf & 0x3F, buf >> 6);
 
-            uv.Add(new Vector2b(br));
+            uv.Add(br.ReadVector2b());
 
             buf = br.ReadUInt16();
 
@@ -142,22 +152,10 @@ namespace CTRFramework.Vram
             if (rest != 0)
                 Helpers.Panic(this, PanicType.Assume, $"rest = {rest}");
 
-            uv.Add(new Vector2b(br));
-            uv.Add(new Vector2b(br));
+            uv.Add(br.ReadVector2b());
+            uv.Add(br.ReadVector2b());
 
             NormalizeUV();
-
-            //Console.WriteLine($"{Tag()}: f1 f2 f3 {f1} {f2} {f3}");
-
-            /*
-            //apparently some textures uses 8 bit mode, or even 16 bit color. must be a flag somewhere.
-            if (offset == 0x0004B5B8 || offset == 0x0004B5E8 || offset == 0x0004B6A8 || offset == 0x0004B3D8)
-            {
-
-                Console.WriteLine(ToString());
-                //Console.ReadKey();
-            }
-            */
 
             if (br.BaseStream.Position - offset != SizeOf)
                 throw new Exception("TextureLayout: size mismatch");
@@ -208,15 +206,14 @@ namespace CTRFramework.Vram
             return sb.ToString();
         }
 
-        public void Write(BinaryWriterEx bw)
-        {
-            //filler, add valid value
-            uv[0].Write(bw);
-            bw.Write((ushort)0);
-            uv[1].Write(bw);
-            bw.Write((ushort)0);
-            uv[2].Write(bw);
-            uv[3].Write(bw);
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        { 
+            bw.WriteVector2b(uv[0]);
+            bw.Write(Palette.X & Palette.Y << 6);
+            bw.WriteVector2b(uv[1]);
+            bw.Write(packedPageData);
+            bw.WriteVector2b(uv[2]);
+            bw.WriteVector2b(uv[3]);
         }
     }
 }

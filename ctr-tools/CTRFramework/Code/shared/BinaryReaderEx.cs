@@ -238,6 +238,15 @@ namespace CTRFramework.Shared
         #endregion
 
         #region Vectors
+
+        public Vector2 ReadVector2b(float scale = 1.0f)
+        {
+            return new Vector2(
+                ReadByte() * scale,
+                ReadByte() * scale
+                );
+        }
+
         public Vector3 ReadVector3sPadded(float scale = 1.0f)
         {
             short[] values = ReadArrayInt16(4);

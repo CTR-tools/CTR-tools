@@ -286,12 +286,12 @@ namespace CTRFramework
 
             for (int i = 0; i < inds.Length / 6; i++)
             {
-                buf[i * 6 + 0].uv = new Vector2b(0, 1);
-                buf[i * 6 + 1].uv = new Vector2b(1, 0);
-                buf[i * 6 + 2].uv = new Vector2b(0, 0);
-                buf[i * 6 + 3].uv = new Vector2b(0, 1);
-                buf[i * 6 + 4].uv = new Vector2b(1, 1);
-                buf[i * 6 + 5].uv = new Vector2b(1, 0);
+                buf[i * 6 + 0].uv = new Vector2(0, 1);
+                buf[i * 6 + 1].uv = new Vector2(1, 0);
+                buf[i * 6 + 2].uv = new Vector2(0, 0);
+                buf[i * 6 + 3].uv = new Vector2(0, 1);
+                buf[i * 6 + 4].uv = new Vector2(1, 1);
+                buf[i * 6 + 5].uv = new Vector2(1, 0);
             }
 
             return buf;
@@ -402,7 +402,7 @@ namespace CTRFramework
                         }
                         else
                         {
-                            buf[j].uv = new Vector2b(0, 0);//new Vector2b((byte)((j & 3) >> 1), (byte)(j & 1));
+                            buf[j].uv = new Vector2(0, 0);//new Vector2b((byte)((j & 3) >> 1), (byte)(j & 1));
                         }
                     }
 
