@@ -48,11 +48,11 @@ namespace vram_map
                 Tim tim = new Tim(new Rectangle(
                     Int32.Parse(values[(int)TimData.PageX]) * 64 + Int32.Parse(values[(int)TimData.X]) / 4,
                     Int32.Parse(values[(int)TimData.PageY]) * 256 + Int32.Parse(values[(int)TimData.Y]),
-                    bmp.Width / 4, bmp.Height));
+                    bmp.Width / 4, bmp.Height), BitDepth.Bit4);
 
                 Console.WriteLine(tim.region);
 
-                tim.flags = 1 << 3;
+                //tim.flags = 1 << 3;
 
                 tim.clutregion = new Rectangle(
                     Int32.Parse(values[(int)TimData.PalX]) * 16,

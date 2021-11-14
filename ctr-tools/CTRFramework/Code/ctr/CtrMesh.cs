@@ -83,7 +83,6 @@ namespace CTRFramework
 
         public CtrMesh()
         {
-
         }
 
         public CtrMesh(BinaryReaderEx br)
@@ -201,12 +200,10 @@ namespace CTRFramework
                     if (draw.texIndex - 1 > maxt)
                         maxt = draw.texIndex;
 
-                Console.WriteLine(draw.ToString());
+                Helpers.Panic(this, PanicType.Info, draw.ToString());
             }
 
-            Console.WriteLine("maxv: " + maxv);
-            Console.WriteLine("maxc: " + maxc);
-            Console.WriteLine("maxt: " + maxt);
+            Helpers.Panic(this, PanicType.Info, $"maxv: {maxv}\r\nmaxc: {maxc}\r\nmaxt: {maxt}\r\n");
 
             //int ppos = (int)br.BaseStream.Position;
 
@@ -227,17 +224,16 @@ namespace CTRFramework
 
             foreach (uint t in texptrs)
             {
-                Console.WriteLine(t.ToString("X8"));
+                Helpers.Panic(this, PanicType.Info, t.ToString("X8"));
+
                 br.Jump(t);
                 TextureLayout tx = TextureLayout.FromReader(br);
                 tl.Add(tx);
-                Console.WriteLine(tx.ToString());
+
+                Helpers.Panic(this, PanicType.Info, tx.ToString());
             }
 
-            foreach (var t in tl)
-                t.NormalizeUV();
-
-            Console.WriteLine("tlcnt: " + tl.Count);
+            Helpers.Panic(this, PanicType.Info, "tlcnt: " + tl.Count);
 
 
 
@@ -248,7 +244,7 @@ namespace CTRFramework
 
                 posOffset = new Vector4s(br);
 
-                Console.WriteLine(posOffset);
+                Helpers.Panic(this, PanicType.Info, posOffset.ToString());
 
                 br.Seek(16);
 
@@ -266,7 +262,7 @@ namespace CTRFramework
 
                 CtrAnim anim = CtrAnim.FromReader(br);
 
-                Console.WriteLine(anim.name + " " + anim.numFrames);
+                Helpers.Panic(this, PanicType.Info, anim.Name + " " + anim.numFrames);
 
                 posOffset = new Vector4s(br);
 
@@ -274,7 +270,7 @@ namespace CTRFramework
 
                 vrenderMode = br.ReadInt32();
 
-                Console.WriteLine("anime!");
+                Helpers.Panic(this, PanicType.Info, "anime!");
 
                 if (anim.someOffset != 0)
                 {
@@ -289,7 +285,7 @@ namespace CTRFramework
                 vtx.Add(new Vector3b(br));
 
             foreach (var v in vtx)
-                Console.WriteLine(v.ToString(VecFormat.Hex));
+                Helpers.Panic(this, PanicType.Info, v.ToString(VecFormat.Hex));
 
 
             List<Vector3s> vfixed = new List<Vector3s>();
@@ -447,8 +443,8 @@ namespace CTRFramework
                     v.Color.ToString(VecFormat.Numbers));
             }
 
-            Console.WriteLine(matIndices.Count);
-            Console.WriteLine(verts.Count / 3);
+            Helpers.Panic(this, PanicType.Info, $"{matIndices.Count}");
+            Helpers.Panic(this, PanicType.Info, $"{verts.Count / 3}");
 
             for (int i = 0; i < verts.Count / 3; i++)
             {
@@ -492,6 +488,27 @@ namespace CTRFramework
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Creates meaterial file for OBJ.
+        /// </summary>
+        /// <returns>MTL file contents.</returns>
+        public string ToMtl()
+        {
+            if (tl.Count == 0)
+                return "";
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var tex in tl)
+            {
+                sb.AppendLine($"newmtl {tex.Tag}");
+                sb.AppendLine($"Map_Kd {Name}\\{tex.Tag}.png");
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -512,8 +529,6 @@ namespace CTRFramework
 
             return sb.ToString();
         }
-
-
 
         /// <summary>
         /// Builds CTR model from raw data arrays.
@@ -776,9 +791,7 @@ namespace CTRFramework
                     bw.Write(cmdNum);
 
                     foreach (var c in drawList)
-                    {
-                        bw.Write(c.GetValue());
-                    }
+                        bw.Write(c.Value);
 
                     bw.Write(0xFFFFFFFF);
 
@@ -814,15 +827,15 @@ namespace CTRFramework
 
                     bw.Write(vrenderMode);
 
-                    Console.WriteLine(Name);
+                    Helpers.Panic(this, PanicType.Info, Name);
 
                     foreach (var x in vtx)
                     {
                         x.Write(bw);
-                        Console.WriteLine(x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2"));
+                        Helpers.Panic(this, PanicType.Info, x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2"));
                     }
 
-                    Console.WriteLine("---");
+                    Helpers.Panic(this, PanicType.Info, "---");
 
 
                     //write clut
@@ -833,7 +846,7 @@ namespace CTRFramework
                     {
                         x.W = 0;
                         x.Write(bw);
-                        Console.WriteLine(x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2") + x.W.ToString("X2"));
+                        Helpers.Panic(this, PanicType.Info, x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2") + x.W.ToString("X2"));
                     }
 
 
@@ -843,23 +856,11 @@ namespace CTRFramework
             }
         }
 
-        public string ToMtl()
-        {
-            if (tl.Count == 0)
-                return "";
-
-            StringBuilder sb = new StringBuilder();
-
-            foreach (var tex in tl)
-            {
-                sb.AppendLine($"newmtl {tex.Tag}");
-                sb.AppendLine($"Map_Kd {Name}\\{tex.Tag}.png");
-                sb.AppendLine();
-            }
-
-            return sb.ToString();
-        }
-
+        /// <summary>
+        /// Exports all textures
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="vram"></param>
         public void ExportTextures(string path, Tim vram = null)
         {
             if (vram == null)
@@ -875,9 +876,7 @@ namespace CTRFramework
                 Helpers.CheckFolder(texturepath);
 
                 foreach (var tex in tl)
-                {
                     vram.GetTexture(tex).Save(Path.Combine(texturepath, $"{tex.Tag}.png"));
-                }
             }
         }
     }

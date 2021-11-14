@@ -80,7 +80,7 @@ namespace CTRFramework.Sound.CSeq
             //checking whether it's 0 or not
             for (int i = 0; i < p; i++)
                 if (br.ReadByte() != 0)
-                    Console.WriteLine("unknown 3 bytes block - not null at " + br.HexPos());
+                    Helpers.Panic(this, PanicType.Warning, "unknown 3 bytes block - not null at " + br.HexPos());
 
             //saving sequence data offset
             int seqStart = (int)br.BaseStream.Position;

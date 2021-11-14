@@ -14,6 +14,7 @@ namespace CTRFramework.Shared
         public Gradient()
         {
         }
+
         public Gradient(BinaryReaderEx br)
         {
             Read(br);
@@ -42,11 +43,7 @@ namespace CTRFramework.Shared
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append($"From: {From} To: {To}");
-
-            return sb.ToString();
+            return $"From: {From} To: {To}";
         }
     }
 }

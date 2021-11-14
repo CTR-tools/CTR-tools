@@ -7,7 +7,7 @@ namespace CTRFramework
     public class SkyBox : IRead
     {
         public List<Vertex> Vertices = new List<Vertex>();
-        public List<Vector4s> faces = new List<Vector4s>();
+        public List<Vector4s> Faces = new List<Vector4s>();
 
         public SkyBox()
         {
@@ -36,13 +36,13 @@ namespace CTRFramework
 
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < sizes[i]; j++)
-                    faces.Add(new Vector4s(br));
+                    Faces.Add(new Vector4s(br));
 
-            for (int j = 0; j < faces.Count; j++)
+            for (int j = 0; j < Faces.Count; j++)
             {
-                faces[j].X /= 0xC;
-                faces[j].Y /= 0xC;
-                faces[j].Z /= 0xC;
+                Faces[j].X /= 0xC;
+                Faces[j].Y /= 0xC;
+                Faces[j].Z /= 0xC;
             }
         }
 
@@ -53,7 +53,7 @@ namespace CTRFramework
             foreach (var vertex in Vertices)
                 sb.AppendLine(vertex.ToObj());
 
-            foreach (var tri in faces)
+            foreach (var tri in Faces)
                 sb.AppendLine($"f {tri.X + 1} {tri.Z + 1} {tri.Y + 1}");
 
             return sb.ToString();

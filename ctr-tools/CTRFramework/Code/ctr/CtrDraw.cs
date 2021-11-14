@@ -1,33 +1,32 @@
 ﻿using System;
+using CTRFramework.Shared;
 
 namespace CTRFramework
 {
     public class CtrDraw
     {
-        public uint value = 0;
-
         public CtrDrawFlags flags;
         public byte stackIndex;
         public byte colorIndex;
         public byte texIndex;
 
+        public uint Value => PackValue();
+
         public CtrDraw()
         {
         }
 
-        public CtrDraw(uint x)
+        public CtrDraw(uint value)
         {
-            value = x;
+            flags = (CtrDrawFlags)(value >> (8 * 3) & 0xFF);
+            stackIndex = (byte)(value >> 16 & 0xFF);
+            colorIndex = (byte)(value >> 9 & 0x7F);
+            texIndex = (byte)(value & 0x1FF);
 
-            flags = (CtrDrawFlags)(x >> (8 * 3) & 0xFF);
-            stackIndex = (byte)(x >> 16 & 0xFF);
-            colorIndex = (byte)(x >> 9 & 0x7F);
-            texIndex = (byte)(x & 0x1FF);
-
-            Console.WriteLine(value.ToString("X8") + " " + GetValue().ToString("X8") + " " + ToString());
+            Helpers.Panic(this, PanicType.Debug, value.ToString("X8") + " <-> " + Value.ToString("X8") + " " + ToString());
         }
 
-        public uint GetValue()
+        private uint PackValue()
         {
             uint packbackvalue = 0;
 
@@ -41,7 +40,7 @@ namespace CTRFramework
 
         public override string ToString()
         {
-            return $"[{value.ToString("X8")}] " +
+            return $"[{Value.ToString("X8")}] " +
                 (flags.HasFlag(CtrDrawFlags.b4) ? "4" : "_") +
                 (flags.HasFlag(CtrDrawFlags.b3) ? "3" : "_") +
                 (flags.HasFlag(CtrDrawFlags.v) ? "v" : "_") +

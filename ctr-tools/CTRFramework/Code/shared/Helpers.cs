@@ -11,31 +11,31 @@ namespace CTRFramework.Shared
 
         public static string logpath = Path.Combine(Meta.BasePath, "ctrframework.log");
 
-        public static PanicLevel panicLevel = PanicLevel.Silent; //PanicLevel.File;
-        public static PanicType panicType = PanicType.Assume | PanicType.Error; //PanicType.All;
+        public static PanicLevel panicLevel = PanicLevel.Console; //PanicLevel.File;
+        public static PanicType panicType = PanicType.All;
 
         /// <summary>
         /// Call this if something unexpected happened.
         /// </summary>
-        /// <param name="x">the object that wants to panic</param>
-        /// <param name="ptype">type of panic</param>
-        /// <param name="msg">the message it wants to send</param>
-        public static void Panic(object x, PanicType ptype, string msg)
+        /// <param name="sender">the object that wants to panic</param>
+        /// <param name="panicType">type of panic</param>
+        /// <param name="message">the message it wants to send</param>
+        public static void Panic(object sender, PanicType panicType, string message)
         {
-            Panic(x.GetType().Name, ptype, msg);
+            Panic(sender.GetType().Name, panicType, message);
         }
 
         /// <summary>
         /// Call this if something unexpected happened.
         /// </summary>
         /// <param name="x">summary text</param>
-        /// <param name="msg">message text</param>
-        public static void Panic(string sender, PanicType ptype, string msg)
+        /// <param name="message">message text</param>
+        public static void Panic(string sender, PanicType panicType, string message)
         {
             if (panicLevel.HasFlag(PanicLevel.Silent))
                 return;
 
-            string message = $"{ptype}\t{sender}:\t{msg}";
+            message = $"{panicType}\t{sender}:\t{message}";
 
             if (panicLevel.HasFlag(PanicLevel.File))
                 File.AppendAllText(logpath, $"{DateTime.Now}\t{message}\r\n");
@@ -48,7 +48,7 @@ namespace CTRFramework.Shared
                     Console.ReadKey();
             }
 
-            if (panicLevel.HasFlag(PanicLevel.Exception) && ptype.HasFlag(PanicType.Error))
+            if (panicLevel.HasFlag(PanicLevel.Exception) && panicType.HasFlag(PanicType.Error))
                 throw new Exception(message);
         }
 
@@ -74,7 +74,6 @@ namespace CTRFramework.Shared
                 return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
             }
         }
-
 
         //avoids excessive fragmentation
         public static void WriteToFile(string fileName, string content, System.Text.Encoding encoding = null)

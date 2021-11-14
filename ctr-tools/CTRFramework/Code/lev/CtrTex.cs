@@ -62,20 +62,23 @@ namespace CTRFramework
             //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
             //Console.ReadKey();
 
-            //if (mosaic != 0)
-            {
-                ptrHi = br.ReadUInt32();
 
-                if (Scene.ReadHiTex)
-                    //loosely assume we got a valid pointer
-                    if (ptrHi > 0x30000 && ptrHi < 0xB0000)
-                    {
-                        br.Jump(ptrHi);
+            Helpers.Panic(this, PanicType.Debug, midlods[2].Tag);
 
-                        for (int i = 0; i < 16; i++)
-                            hi[i] = TextureLayout.FromReader(br);
-                    }
-            }
+            ptrHi = br.ReadUInt32();
+
+            Helpers.Panic(this, PanicType.Debug, "hiptr: " + ptrHi.ToString("X8"));
+
+            if (Scene.ReadHiTex)
+                //loosely assume we got a valid pointer
+                if (ptrHi > 0x30000 && ptrHi < 0xB0000)
+                {
+                    br.Jump(ptrHi);
+
+                    for (int i = 0; i < 16; i++)
+                        hi[i] = TextureLayout.FromReader(br);
+                }
+
         }
     }
 }

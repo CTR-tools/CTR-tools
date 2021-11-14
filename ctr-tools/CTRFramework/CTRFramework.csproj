@@ -86,6 +86,7 @@
     <Compile Include="Code\big\BigEntry.cs" />
     <Compile Include="Code\big\BigFileReader.cs" />
     <Compile Include="Code\ctr\CtrAnim.cs" />
+    <Compile Include="Code\ctr\CtrFrame.cs" />
     <Compile Include="Code\ctr\CtrMesh.cs" />
     <Compile Include="Code\ctr\CtrModel.cs" />
     <Compile Include="Code\ctr\CtrDraw.cs" />
@@ -132,7 +133,7 @@
     <Compile Include="Code\shared\BoundingBox.cs" />
     <Compile Include="Code\shared\OBJ.cs" />
     <Compile Include="Code\shared\Pose.cs" />
-    <Compile Include="Code\shared\Gradient.cs" />
+    <Compile Include="Code\lev\Gradient.cs" />
     <Compile Include="Code\shared\Vectors\Vector3s.cs" />
     <Compile Include="Code\shared\Vectors\Vector4b.cs" />
     <Compile Include="Code\shared\Vectors\Vector4s.cs" />

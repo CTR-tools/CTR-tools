@@ -38,12 +38,12 @@ namespace ctrviewer.Engine.Render
             skybox.textureEnabled = false;
             skybox.ScrollingEnabled = false;
 
-            for (int i = 0; i < sb.faces.Count; i++)
+            for (int i = 0; i < sb.Faces.Count; i++)
             {
                 List<VertexPositionColorTexture> tri = new List<VertexPositionColorTexture>();
-                tri.Add(DataConverter.ToVptc(sb.Vertices[(int)sb.faces[i].X], new CTRFramework.Shared.Vector2b(0, 0)));
-                tri.Add(DataConverter.ToVptc(sb.Vertices[(int)sb.faces[i].Y], new CTRFramework.Shared.Vector2b(0, 0)));
-                tri.Add(DataConverter.ToVptc(sb.Vertices[(int)sb.faces[i].Z], new CTRFramework.Shared.Vector2b(0, 0)));
+                tri.Add(DataConverter.ToVptc(sb.Vertices[(int)sb.Faces[i].X], new CTRFramework.Shared.Vector2b(0, 0)));
+                tri.Add(DataConverter.ToVptc(sb.Vertices[(int)sb.Faces[i].Y], new CTRFramework.Shared.Vector2b(0, 0)));
+                tri.Add(DataConverter.ToVptc(sb.Vertices[(int)sb.Faces[i].Z], new CTRFramework.Shared.Vector2b(0, 0)));
 
                 skybox.PushTri(tri);
             }

@@ -188,6 +188,8 @@ namespace CTRFramework
 
             int cntr = 0;
 
+            Helpers.Panic(this, PanicType.Debug, id.ToString("X8"));
+
             foreach (var ptr in ptrTexMid)
             {
                 if (ptr == PsxPtr.Zero)

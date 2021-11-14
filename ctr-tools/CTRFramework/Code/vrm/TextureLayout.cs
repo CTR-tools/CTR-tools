@@ -71,9 +71,9 @@ namespace CTRFramework.Vram
 
         public int height => max.Y - min.Y > 0 ? max.Y - min.Y + 1 : 0;
 
-        public int Position => PageY * (CtrVrm.Height * CtrVrm.Width / 2) + min.Y * CtrVrm.Width + PageX * 64 + min.X / 4;
+        public int Position => PageY * (CtrVrm.region.Height * CtrVrm.region.Width / 2) + min.Y * CtrVrm.region.Width + PageX * 64 + min.X / 4;
 
-        public int PalPosition => CtrVrm.Width * PalY + PalX * 16;
+        public int PalPosition => CtrVrm.region.Width * PalY + PalX * 16;
 
         public int RealX => PageX * 64 + min.X / 4;
         public int RealY => PageY * 256 + min.Y;

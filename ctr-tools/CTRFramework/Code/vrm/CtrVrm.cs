@@ -58,12 +58,11 @@ namespace CTRFramework.Vram
             return result;
         }
 
-        public static int Width = 1024;
-        public static int Height = 512;
+        public static Rectangle region = new Rectangle(0, 0, 1024, 512);
 
         public Tim GetVram()
         {
-            Tim buffer = new Tim(new Rectangle(0, 0, Width, Height));
+            Tim buffer = new Tim(region, BitDepth.Bit16);
 
             foreach (var tim in Tims)
                 buffer.DrawTim(tim);

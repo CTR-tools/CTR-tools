@@ -41,7 +41,7 @@ namespace CTRFramework.Big
                 }
                 catch
                 {
-                    Console.WriteLine("Unable to access the file.");
+                    Helpers.Panic(this, PanicType.Info, $"Unable to access the file: {path}");
                 }
             }
         }

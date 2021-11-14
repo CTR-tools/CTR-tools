@@ -148,29 +148,6 @@ namespace CTRFramework
             return sb.ToString();
         }
 
-        public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b, List<QuadBlock> qb)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            if (IsLeaf)
-            {
-                sb.AppendFormat("g vis_{0}\r\n", id.ToString("X4"));
-                sb.AppendFormat("o vis_{0}\r\n\r\n", id.ToString("X4"));
-
-                foreach (QuadBlock q in qb)
-                {
-                    for (uint i = ptrQuadBlock; i <= ptrQuadBlock + numQuadBlock * 0x5C; i += 0x5C)
-                        if (q.pos == i)
-                        {
-                            sb.Append(q.ToObj(v, detail, ref a, ref b));
-                        }
-                }
-            }
-
-            return sb.ToString();
-        }
-
-
         public override string ToString()
         {
             return $"id = {id} | flag = {flag} | ptr = {ptrQuadBlock.ToString("X8")}\r\n\t{bbox.ToString()}\r\n\t";

@@ -1,37 +1,60 @@
 ﻿using CTRFramework.Shared;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
 namespace CTRFramework
 {
-    public class CtrAnim
+    public class CtrAnim : IReadWrite
     {
-        public string name;
-        public short numFrames;
+        public string Name;
+        public short numFrames => (short)frames.Count;
         public short frameSize;
         public int someOffset;//??
+        public bool duplicateFrames = false;
 
         List<byte[]> frames = new List<byte[]>();
-
-        public CtrAnim(BinaryReaderEx br)
-        {
-            name = br.ReadStringFixed(16);
-            // br.BaseStream.Position.ToString("X8");
-            // Console.WriteLine(name + " woah");
-            // Console.ReadKey();
-            numFrames = br.ReadInt16(); //negative value defines amount of render frames in 60fps (duplicated anim frames)
-            if (numFrames < 0)
-                numFrames = (short)-(numFrames / 2);
-
-            frameSize = br.ReadInt16();
-            someOffset = br.ReadInt32();
-
-            //for (int i = 0; i < (numFrames > 0 ? numFrames : -numFrames; i++)
-            //   frames.Add(br.ReadBytes(frameSize));
-        }
 
         public static CtrAnim FromReader(BinaryReaderEx br)
         {
             return new CtrAnim(br);
+        }
+
+        public CtrAnim(BinaryReaderEx br)
+        {
+            Read(br);
+        }
+
+        public void Read(BinaryReaderEx br)
+        {
+            Name = br.ReadStringFixed(16);
+
+            int numFrames = br.ReadInt16(); //bit15 defines amount of render frames in 60fps (duplicated anim frames)
+
+            if ((numFrames & 0x8000) > 0)
+                duplicateFrames = true;
+
+            numFrames &= 0x7fff;
+
+            frameSize = br.ReadInt16();
+            someOffset = br.ReadInt32();
+
+            for (int i = 0; i < numFrames; i++)
+                frames.Add(br.ReadBytes(frameSize));
+        }
+
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable)
+        {
+            if (Name.Length > 16)
+                Helpers.Panic(this, PanicType.Warning, $"Name too long, will be truncated: {Name}");
+
+            bw.Write(Name.ToCharArray().Take(16).ToArray());
+            bw.Write(numFrames & (duplicateFrames ? 1 : 0 ) << 15);
+            bw.Write(frameSize);
+            bw.Write(someOffset);
+
+            foreach (var frames in frames)
+                bw.Write(frames);
         }
     }
 }

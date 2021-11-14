@@ -37,6 +37,8 @@ namespace ctrviewer.Engine.Testing
     {
         Dictionary<Power, Vector3> Powers = new Dictionary<Power, Vector3>();
 
+        Vector3 oldPosition;
+
         public float Speed = 0;
         public float Accel = 0;
         public float Gravity = 0;
@@ -73,17 +75,45 @@ namespace ctrviewer.Engine.Testing
                             )
                         {
                             GameConsole.Write($"collide with quad bb: {quad.bb} at {Position}");
+
+                            for (int i = 0; i < 4; i++)
+                            {
+
+                                List<Vertex> vertices = quad.GetVertexListq(scene.verts, i);
+
+                                Vector3 p1 = DataConverter.ToVector3(vertices[0].Position);
+                                Vector3 p2 = DataConverter.ToVector3(vertices[1].Position);
+                                Vector3 p3 = DataConverter.ToVector3(vertices[2].Position);
+                                Vector3 p4 = DataConverter.ToVector3(vertices[3].Position);
+                                
+
+
+                                var ab = p1 - p2;
+                                var cb = p3 - p2;
+
+                                ab.Normalize();
+                                cb.Normalize();
+                                
+                                var normal = Vector3.Cross(ab, cb);
+
+                            }
+
+
+                            
                             if (Position.Y <= quad.bb.numericMax.Y)
                             {
                                 Position.Y = quad.bb.numericMax.Y;
                                 Gravity = 0;
                                 return;
                             }
+                            
                         }
         }
 
         public void Update(GameTime gameTime, List<Scene> scenes)
         {
+            oldPosition = Position;
+
             GamePadState gs = GamePad.GetState(Game1.activeGamePad);
 
             //turning

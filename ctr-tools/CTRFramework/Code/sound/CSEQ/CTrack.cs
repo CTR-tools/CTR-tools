@@ -46,12 +46,13 @@ namespace CTRFramework.Sound.CSeq
             //trackNum = num;
             //address = br.HexPos();
 
-            switch (br.ReadInt16())
-            {
-                case 0: isDrumTrack = false; break;
-                case 1: isDrumTrack = true; break;
-                default: Console.WriteLine("drum value not boolean at " + br.HexPos()); break;
-            }
+            int trackType = br.ReadInt16();
+
+            if (trackType != 0 && trackType != 1)
+                Helpers.Panic(this, PanicType.Warning, "track type value not boolean at " + br.HexPos());
+
+            if (trackType == 1)
+                isDrumTrack = true;
 
             do
             {

@@ -35,7 +35,7 @@ namespace ctrviewer.Loaders
             {
                 case Detail.Low:
                     {
-                        Console.WriteLine("doin low");
+                        Helpers.Panic(this, PanicType.Info, "doin low");
 
                         foreach (QuadBlock qb in s.quads)
                         {
@@ -85,7 +85,7 @@ namespace ctrviewer.Loaders
 
                 case Detail.Med:
                     {
-                        Console.WriteLine("doin med");
+                        Helpers.Panic(this, PanicType.Info, "doin med");
 
                         foreach (QuadBlock qb in s.quads)
                         {

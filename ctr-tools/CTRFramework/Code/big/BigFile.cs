@@ -64,7 +64,7 @@ namespace CTRFramework.Big
             if (!File.Exists(filename))
                 throw new Exception($"File doesn't exist: {filename}");
 
-            Console.WriteLine($"Loading BIG from: {filename}");
+            Helpers.Panic(this, PanicType.Info, $"Loading BIG from: {filename}");
 
             using (BigFileReader b = BigFileReader.FromFile(filename))
             {
@@ -74,7 +74,7 @@ namespace CTRFramework.Big
                 }
             }
 
-            Console.WriteLine("BIG loaded.");
+            Helpers.Panic(this, PanicType.Info, "BIG loaded.");
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace CTRFramework.Big
         /// <param name="path">Folder to extract files to.</param>
         public void Extract(string path)
         {
-            Console.WriteLine($"Exporting BIG to: {path}");
-            Console.WriteLine($"{Entries.Count} files:");
+            Helpers.Panic(this, PanicType.Info, $"Exporting BIG to: {path}");
+            Helpers.Panic(this, PanicType.Info, $"{Entries.Count} files:");
 
             StringBuilder biglist = new StringBuilder();
 
@@ -120,7 +120,7 @@ namespace CTRFramework.Big
 
             Helpers.WriteToFile(Path.ChangeExtension(path, "txt"), biglist.ToString());
 
-            Console.WriteLine("\r\nDone.");
+            Helpers.Panic(this, PanicType.Info, "\r\nDone.");
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace CTRFramework.Big
             Stopwatch sw = new Stopwatch();
             sw.Start();
 
-            Console.WriteLine($"we'll need {TotalSize / 1024.0f / 1024.0f}MB for {Entries.Count} files:");
+            Helpers.Panic(this, PanicType.Info, $"we'll need {TotalSize / 1024.0f / 1024.0f}MB for {Entries.Count} files:");
 
             byte[] final_big = new byte[TotalSize];
 
@@ -165,14 +165,14 @@ namespace CTRFramework.Big
                     bw.Write(c.Size);
                 }
 
-                Console.WriteLine("Dumping to disk...");
+                Helpers.Panic(this, PanicType.Info, "Dumping to disk...");
 
                 Helpers.WriteToFile(filename, final_big);
             }
 
             sw.Stop();
 
-            Console.WriteLine($"BIG file created in {sw.Elapsed.TotalSeconds}");
+            Helpers.Panic(this, PanicType.Info, $"BIG file created in {sw.Elapsed.TotalSeconds}");
         }
     }
 }

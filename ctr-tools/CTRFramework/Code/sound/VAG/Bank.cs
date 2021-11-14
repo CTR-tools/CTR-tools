@@ -78,7 +78,7 @@ namespace CTRFramework.Sound
                 }
                 else
                 {
-                    Console.WriteLine("dupe key: {0}", info[i]);
+                    Helpers.Panic(this, PanicType.Warning, $"dupe key: {info[i]}");
                 }
             }
         }

@@ -14,11 +14,9 @@ namespace CTRFramework.Vram
     /// </summary>
     public class Tim : IRead
     {
-
         public Dictionary<string, Bitmap> textures = new Dictionary<string, Bitmap>();
 
-        public uint magic;
-        public uint flags;
+        const uint magic = 0x10;
 
         public uint clutsize => (uint)clutdata.Length * 2 + 12;
         public Rectangle clutregion;
@@ -29,28 +27,20 @@ namespace CTRFramework.Vram
         public Rectangle region;
 
         public ushort[] data;
-        public ushort[] realdata;
 
-        public byte bpp
-        {
+        public BitDepth bpp = BitDepth.Bit16;
+
+        public bool hasClut {
             get
             {
-                switch (flags & 3)
+                switch (bpp)
                 {
-                    case 0: return 4;
-                    case 1: return 8;
-                    case 2: return 16;
-                    case 3: return 24;
-                    default: return 0;
+                    case BitDepth.Bit4:
+                    case BitDepth.Bit8: return true;
+                    case BitDepth.Bit16:
+                    case BitDepth.Bit24:
+                    default: return false;
                 }
-            }
-        }
-
-        public bool hasClut
-        {
-            get
-            {
-                return (((flags >> 3) & 1) == 1);
             }
         }
 
@@ -76,13 +66,13 @@ namespace CTRFramework.Vram
         }
 
 
-        public Tim(Rectangle rect)
+        public Tim(Rectangle rect, BitDepth bitDepth)
         {
-            magic = 0x10;
             region = rect;
+            bpp = bitDepth;
             data = new ushort[rect.Width * rect.Height];
-            //datasize = (uint)(data.Length * 2 + 4 * 3);
-            flags = 2; //(((uint)bpp / 8) << 3) | 8;
+
+            Helpers.Panic(this, PanicType.Debug, "lemao what? " + rect.Width * rect.Height +  data.Length);
         }
 
         /// <summary>
@@ -91,27 +81,45 @@ namespace CTRFramework.Vram
         /// <param name="br">BinaryReader.</param>
         public void Read(BinaryReaderEx br)
         {
-            magic = br.ReadUInt32();
-            flags = br.ReadUInt32();
+            if (br.ReadUInt32() != magic)
+                Console.WriteLine("Houston! magic mismatch");
+
+            uint flags = br.ReadUInt32();
+
+            switch (flags & 3)
+            {
+                case 0: bpp = BitDepth.Bit4; break;
+                case 1: bpp = BitDepth.Bit8; break;
+                case 2: bpp = BitDepth.Bit16; break;
+                case 3: bpp = BitDepth.Bit24; break;
+            }
+
+            Helpers.Panic(this, PanicType.Info, bpp + " " + hasClut);
+
+            if ((((flags >> 3) & 1) == 1) != hasClut)
+                Console.WriteLine("Houston! bpp and clut mismatch.");
 
             if (hasClut)
             {
-                /*clutsize = */
-                br.ReadUInt32();
+                uint _clutsize = br.ReadUInt32();
                 clutregion.X = br.ReadUInt16();
                 clutregion.Y = br.ReadUInt16();
                 clutregion.Width = br.ReadUInt16();
                 clutregion.Height = br.ReadUInt16();
                 clutdata = br.ReadArrayUInt16(clutregion.Width * clutregion.Height);
+
+                if (_clutsize != clutsize)
+                    Console.WriteLine("Houston! clutsize mismatch.");
             }
 
-            /*datasize = */
-            br.ReadUInt32();
+            uint _datasize = br.ReadUInt32();
             region.X = br.ReadUInt16();
             region.Y = br.ReadUInt16();
             region.Width = br.ReadUInt16();
             region.Height = br.ReadUInt16();
             data = br.ReadArrayUInt16(region.Width * region.Height);
+            if (_datasize != datasize)
+                Console.WriteLine($"Houston! datasize mismatch. {_datasize} {datasize}");
         }
 
         /// <summary>
@@ -123,7 +131,8 @@ namespace CTRFramework.Vram
             using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(s)))
             {
                 bw.Write(magic);
-                bw.Write(flags);
+
+                bw.Write((int)bpp & ((hasClut ? 1 : 0) << 3));
 
                 if (hasClut)
                 {
@@ -158,23 +167,25 @@ namespace CTRFramework.Vram
         /// <param name="src">Source TIM to draw.</param>
         public void DrawTim(Tim src)
         {
-            if (src.data == null)
+            if (src == null)
             {
-                Helpers.Panic(this, PanicType.Error, "Passed TIM is null.");
+                Helpers.Panic(this, PanicType.Warning, "Passed TIM is null.");
                 return;
             }
 
-            //int dstptr = (this.region.Width * src.region.Y + src.region.X) * 2;
-
+            if (src.data == null)
+            {
+                Helpers.Panic(this, PanicType.Warning, "Nothing to draw.");
+                return;
+            }
 
             int srcptr = 0;
             int dstptr = this.region.Width * src.region.Y * 2 + src.region.X * 2;
 
             for (int i = 0; i < src.region.Height; i++)
-
             {
-                //Console.WriteLine(srcptr + "\t" + dstptr);
-                //Console.ReadKey();
+                Helpers.Panic(this, PanicType.Debug, "writing tim line " + i);
+                Helpers.Panic(this, PanicType.Debug, src.data.Length + " " + this.data.Length);
 
                 Buffer.BlockCopy(
                     src.data, srcptr,
@@ -185,27 +196,30 @@ namespace CTRFramework.Vram
                 srcptr += src.region.Width * 2;
             }
 
-            if (src.clutdata == null)
+            if (src.hasClut)
             {
-                Helpers.Panic(this, PanicType.Error, "clutdata is missing");
-                return;
-            }
+                if (src.clutdata == null)
+                {
+                    Helpers.Panic(this, PanicType.Warning, "clutdata is missing");
+                    return;
+                }
 
-            Buffer.BlockCopy(
-                src.clutdata, 0,
-                this.data, (this.region.Width * src.clutregion.Y + src.clutregion.X) * 2,
-                src.clutdata.Length * 2); //keep in mind there will be leftover garbage if palette is less than 16 colors.
+                Buffer.BlockCopy(
+                    src.clutdata, 0,
+                    this.data, (this.region.Width * src.clutregion.Y + src.clutregion.X) * 2,
+                    src.clutdata.Length * 2); //keep in mind there will be leftover garbage if palette is less than 16 colors.
+            }
         }
 
         /// <summary>
         /// Saves current TIM as 4-bit BMP using BMPHeader.
         /// </summary>
-        /// <param name="s">Filename.</param>
+        /// <param name="filename">Filename.</param>
         /// <param name="pal">Palette.</param>
-        public void SaveBMP(string s, byte[] pal)
+        public void SaveBMP(string filename, byte[] pal)
         {
-            s = Path.ChangeExtension(s, ".bmp");
-            Helpers.WriteToFile(s, SaveBMPToStream(pal));
+            filename = Path.ChangeExtension(filename, ".bmp");
+            Helpers.WriteToFile(filename, SaveBMPToStream(pal));
         }
 
         public byte[] SaveBMPToStream(byte[] pal)
@@ -317,11 +331,11 @@ namespace CTRFramework.Vram
                     buf, i * width,
                     width);
 
-                ptr += CtrVrm.Width * 2;
+                ptr += CtrVrm.region.Width * 2;
             }
 
 
-            Tim x = new Tim(tl.frame);
+            Tim x = new Tim(tl.frame, tl.bpp);
 
             x.data = buf;
 
@@ -333,7 +347,7 @@ namespace CTRFramework.Vram
             x.clutregion = new Rectangle(tl.PalX * palsize, tl.PalY, palsize, 1);
             x.clutdata = GetCtrClut(tl);
             //x.clutsize = (uint)(x.clutregion.Width * 2 + 12);
-            x.flags = 8; //4 bit + pal = 8
+            //x.flags = 8; //4 bit + pal = 8
 
             /*
             Rectangle r = x.clutregion;
@@ -375,9 +389,9 @@ namespace CTRFramework.Vram
             }
 
 
-            Tim tim = new Tim(new Rectangle(x, y, w, h));
+            Tim tim = new Tim(new Rectangle(x, y, w, h), BitDepth.Bit16);
             tim.data = buf;
-            tim.flags = 2; //4 bit + pal = 8
+            //tim.flags = 2; //4 bit + pal = 8
 
             return tim;
         }
@@ -633,5 +647,4 @@ namespace CTRFramework.Vram
             return Convert16(val, useAlpha);
         }
     }
-
 }

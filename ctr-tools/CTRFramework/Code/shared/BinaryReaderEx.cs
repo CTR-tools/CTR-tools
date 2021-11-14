@@ -218,9 +218,11 @@ namespace CTRFramework.Shared
             }
             while (c != 0);
 
-            Console.WriteLine(System.Text.Encoding.Default.GetString(bytes.ToArray()));
+            string result = System.Text.Encoding.Default.GetString(bytes.ToArray());
 
-            return System.Text.Encoding.Default.GetString(bytes.ToArray());
+            Helpers.Panic(this, PanicType.Debug, result);
+
+            return result;
         }
 
         public string ReadFixedStringPtr(UIntPtr ptr, int length)

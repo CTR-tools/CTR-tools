@@ -98,7 +98,7 @@ namespace CTRFramework.Big
             {
                 if (md5.ToLower() == el["md5"].InnerText.ToLower())
                 {
-                    Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.\r\nUsing {el["list"].InnerText}");
+                    Helpers.Panic(this, PanicType.Info, $"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.\r\nUsing {el["list"].InnerText}");
                     names = Meta.GetBigList(el["list"].InnerText);
                     return;
                 }
@@ -108,13 +108,13 @@ namespace CTRFramework.Big
             {
                 if (TotalFiles == Int32.Parse(el["num"].InnerText))
                 {
-                    Console.WriteLine($"Using {el["list"].InnerText}");
+                    Helpers.Panic(this, PanicType.Info, $"Using {el["list"].InnerText}");
                     names = Meta.GetBigList(el["list"].InnerText);
                     return;
                 }
             }
 
-            Console.WriteLine("Unknown BIG file.");
+            Helpers.Panic(this, PanicType.Info, "Unknown BIG file.");
         }
 
         /// <summary>
