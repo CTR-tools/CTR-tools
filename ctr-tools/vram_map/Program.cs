@@ -63,7 +63,7 @@ namespace vram_map
 
                 string timpath = Path.ChangeExtension(path, ".tim");
 
-                tim.Write(timpath);
+                tim.Save(timpath);
 
                 sb.AppendLine($"File_{i}={timpath}");
 

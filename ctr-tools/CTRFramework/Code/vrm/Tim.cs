@@ -18,11 +18,13 @@ namespace CTRFramework.Vram
 
         const uint magic = 0x10;
 
-        public uint clutsize => (uint)clutdata.Length * 2 + 12;
+        public uint Filesize => 8 + clutsize + datasize;
+
+        public uint clutsize => clutdata != null ? (uint)clutdata.Length * 2 + 12 : 0;
         public Rectangle clutregion;
         public ushort[] clutdata;
 
-        public uint datasize => (uint)data.Length * 2 + 12;
+        public uint datasize => data != null ? (uint)data.Length * 2 + 12 : 0;
 
         public Rectangle region;
 
@@ -55,6 +57,7 @@ namespace CTRFramework.Vram
                 return FromReader(br);
             }
         }
+
         public static Tim FromReader(BinaryReaderEx br)
         {
             return new Tim(br);
@@ -65,14 +68,13 @@ namespace CTRFramework.Vram
             Read(br);
         }
 
-
         public Tim(Rectangle rect, BitDepth bitDepth)
         {
             region = rect;
             bpp = bitDepth;
             data = new ushort[rect.Width * rect.Height];
 
-            Helpers.Panic(this, PanicType.Debug, "lemao what? " + rect.Width * rect.Height +  data.Length);
+            Helpers.Panic(this, PanicType.Debug, "lemao what? " + rect.Width * rect.Height + " " + data.Length);
         }
 
         /// <summary>
@@ -118,6 +120,7 @@ namespace CTRFramework.Vram
             region.Width = br.ReadUInt16();
             region.Height = br.ReadUInt16();
             data = br.ReadArrayUInt16(region.Width * region.Height);
+
             if (_datasize != datasize)
                 Console.WriteLine($"Houston! datasize mismatch. {_datasize} {datasize}");
         }
@@ -125,33 +128,41 @@ namespace CTRFramework.Vram
         /// <summary>
         /// Writes current TIM to file.
         /// </summary>
-        /// <param name="s">Filename.</param>
-        public void Write(string s)
+        /// <param name="filename">Filename.</param>
+        public void Save(string filename)
         {
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(s)))
+            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(filename)))
             {
-                bw.Write(magic);
+                Write(bw);
+            }
+        }
 
-                bw.Write((int)bpp & ((hasClut ? 1 : 0) << 3));
+        public void Write(BinaryWriterEx bw)
+        {
+            bw.Write(magic);
 
-                if (hasClut)
-                {
-                    bw.Write(clutsize);
-                    bw.Write((short)clutregion.X);
-                    bw.Write((short)clutregion.Y);
-                    bw.Write((short)clutregion.Width);
-                    bw.Write((short)clutregion.Height);
-                    foreach (ushort u in clutdata) bw.Write(u);
-                }
+            int flags = (int)((int)bpp | ((hasClut ? 1 : 0) << 3));
 
-                bw.Write(datasize);
-                bw.Write((short)region.X);
-                bw.Write((short)region.Y);
-                bw.Write((short)region.Width);
-                bw.Write((short)region.Height);
-                foreach (ushort u in data)
+            bw.Write(flags);
+
+            if (hasClut)
+            {
+                bw.Write(clutsize);
+                bw.Write((short)clutregion.X);
+                bw.Write((short)clutregion.Y);
+                bw.Write((short)clutregion.Width);
+                bw.Write((short)clutregion.Height);
+                foreach (ushort u in clutdata) 
                     bw.Write(u);
             }
+
+            bw.Write(datasize);
+            bw.Write((short)region.X);
+            bw.Write((short)region.Y);
+            bw.Write((short)region.Width);
+            bw.Write((short)region.Height);
+            foreach (ushort u in data)
+                bw.Write(u);
         }
 
         public override string ToString()
@@ -180,12 +191,22 @@ namespace CTRFramework.Vram
             }
 
             int srcptr = 0;
-            int dstptr = this.region.Width * src.region.Y * 2 + src.region.X * 2;
+            int dstptr = (this.region.Width * src.region.Y + src.region.X) * 2;
 
+            //copy pixel data, keep in mind, it copies bytes, while array is short, thus * 2 is required
             for (int i = 0; i < src.region.Height; i++)
             {
-                Helpers.Panic(this, PanicType.Debug, "writing tim line " + i);
-                Helpers.Panic(this, PanicType.Debug, src.data.Length + " " + this.data.Length);
+                if (dstptr > this.data.Length * 2)
+                {
+                    Helpers.Panic(this, PanicType.Error, "Destination tim data overflow...");
+                    return;
+                }
+
+                if (srcptr > src.data.Length * 2)
+                {
+                    Helpers.Panic(this, PanicType.Error, "Source tim data overflow...");
+                    return;
+                }
 
                 Buffer.BlockCopy(
                     src.data, srcptr,
@@ -281,117 +302,77 @@ namespace CTRFramework.Vram
         /// <returns>Tim object.</returns>
         public Tim GetTimTexture(TextureLayout tl)
         {
-            int bpp = 4;
-
-            switch (tl.bpp)
-            {
-                case BitDepth.Bit4: bpp = 4; break;
-                case BitDepth.Bit8: bpp = 8; break;
-                case BitDepth.Bit16: bpp = 16; break;
-                case BitDepth.Bit24: bpp = 24; break;
-            }
-
-            int palsize = bpp == 8 ? 256 : (bpp == 4 ? 16 : 0);
-
-            //if (tl.f1 > 0 && tl.f2 > 0 && tl.f3 > 0)
-            //    bpp = 8;
-
-            //Directory.CreateDirectory(path);
-
-            //int width = (tl.width / 4) * 2;
-            int width = (int)(tl.width * (bpp / 8.0f));
-            int height = tl.height;
-
-            // Helpers.Panic(this, PanicType.Assume, tl.width + " vs " + width + "|" + bpp + " " + (bpp / 8.0f) + " " + (tl.width * (bpp / 8.0f)));
-
             //ahem, so this happens because 1 byte = 2 pixel and if it's uneven width, we have to move half-byte.
+            /*
             bool dirtyhack = false;
 
             if (width % 2 == 1)
             {
                 width++;
                 dirtyhack = true;
+                return null;
             }
+            */
 
+            //if (dirtyhack)
+            //    x.region.Width++;
 
-            Console.WriteLine(width + "x" + height);
+            Helpers.Panic(this, PanicType.Debug, tl.width + "x" + tl.height);
 
-            ushort[] buf = new ushort[(width / 2) * height];
-
-            //Console.WriteLine(width + "x" + height);
+            Tim tim = new Tim(tl.Frame, tl.bpp);
+            tim.data = new ushort[tl.width * tl.height];
 
             int ptr = tl.Position * 2; // tl.PageY * 1024 * (1024 * 2 / 16) + tl.frame.Y * 1024 + tl.PageX * (1024 * 2 / 16) + tl.frame.X;
 
-            for (int i = 0; i < height; i++)
+            for (int i = 0; i < tl.height; i++)
             {
                 //Helpers.Panic(this, PanicType.Assume, $"ptr: {ptr}, i: {i}, i * width: {i * width}, width: {width}");
 
                 Buffer.BlockCopy(
                     this.data, ptr,
-                    buf, i * width,
-                    width);
+                    tim.data, i * tl.width * 2,
+                    tl.width * 2);
 
-                ptr += CtrVrm.region.Width * 2;
+                ptr += this.region.Width * 2;
+
+                if (ptr > this.data.Length * 2)
+                {
+                    Helpers.Panic(this, PanicType.Error, "tim read overflow");
+                }
+            }
+
+            if (tim.hasClut)
+            {
+                tim.clutregion = new Rectangle(tl.PalX * 16, tl.PalY, tl.expectedPalSize, 1);
+                tim.clutdata = GetCtrClut(tl);
             }
 
 
-            Tim x = new Tim(tl.frame, tl.bpp);
+            Helpers.CheckFolder(Path.Combine(Meta.BasePath, "tims"));
+            tim.Save(Path.Combine(Meta.BasePath, $"tims\\{tl.Tag}.tim"));
 
-            x.data = buf;
-
-            x.region = new Rectangle(tl.RealX, tl.RealY, tl.width / 4, tl.height);
-
-            if (dirtyhack)
-                x.region.Width++;
-
-            x.clutregion = new Rectangle(tl.PalX * palsize, tl.PalY, palsize, 1);
-            x.clutdata = GetCtrClut(tl);
-            //x.clutsize = (uint)(x.clutregion.Width * 2 + 12);
-            //x.flags = 8; //4 bit + pal = 8
-
-            /*
-            Rectangle r = x.clutregion;
-
-            if (r.Width % 4 != 0)
-                r.Width += 16;
-
-            Tim x2 = new Tim(r);
-            x2.DrawTim(x);
-            */
-
-            //Console.WriteLine(x.clutdata.Length);
-
-            return x;
+            return tim;
         }
 
 
-        public Tim GetTrueColorTexture(Rectangle r)
-        {
-            return GetTrueColorTexture(r.X, r.Y, r.Width, r.Height);
-        }
+        public Tim GetTrueColorTexture(Rectangle r) => GetTrueColorTexture(r.X, r.Y, r.Width, r.Height);
 
         public Tim GetTrueColorTexture(int x, int y, int w, int h)
         {
-            ushort[] buf = new ushort[w * h];
+            Tim tim = new Tim(new Rectangle(x, y, w, h), BitDepth.Bit16);
+            tim.data = new ushort[w * h];
 
-            //Console.WriteLine(width + "x" + height);
-
-            int ptr = 1024 * y + x; // tl.PageY * 1024 * (1024 * 2 / 16) + tl.frame.Y * 1024 + tl.PageX * (1024 * 2 / 16) + tl.frame.X;
+            int ptr = 1024 * y + x;
 
             for (int i = 0; i < h; i++)
             {
                 Buffer.BlockCopy(
                     this.data, ptr * 2,
-                    buf, i * w * 2,
+                    tim.data, i * w * 2,
                     w * 2);
 
                 ptr += 1024;
             }
-
-
-            Tim tim = new Tim(new Rectangle(x, y, w, h), BitDepth.Bit16);
-            tim.data = buf;
-            //tim.flags = 2; //4 bit + pal = 8
 
             return tim;
         }
@@ -403,7 +384,7 @@ namespace CTRFramework.Vram
         /// <param name="tl"></param>
         /// <param name="path"></param>
         /// <param name="name"></param>
-        /// <returns></returns>
+        /// <returns>Bitmap</returns>
         public Bitmap GetTexture(TextureLayout tl, string path = "", string name = "")
         {
             //Helpers.Panic(this, PanicType.Assume, tl.ToString() + "" + "\r\n" + tl.frame.ToString());
@@ -431,7 +412,7 @@ namespace CTRFramework.Vram
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, PanicType.Error, tl.frame + "\r\n" + "GetTexture fails: " + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
+                Helpers.Panic(this, PanicType.Error, tl.Frame + "\r\n" + "GetTexture fails: " + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
                 return null;
             }
         }
@@ -533,21 +514,25 @@ namespace CTRFramework.Vram
             return b;
         }
 
-
         /// <summary>
         /// Returns PS1 palette (CLUT) for corresponding texture layout.
         /// </summary>
         /// <param name="tl">Texture layout data.</param>
         public ushort[] GetCtrClut(TextureLayout tl)
         {
-            ushort[] buf = new ushort[16];
+            ushort[] buf = new ushort[tl.expectedPalSize];
 
-            int ptr = tl.PalPosition * 2;
+            if (tl.expectedPalSize > 0)
+            {
+                int ptr = tl.PalPosition * 2;
 
-            Buffer.BlockCopy(
-                this.data, ptr,
-                buf, 0,
-                16 * 2);
+                Helpers.Panic(this, PanicType.Debug, $"{tl.PalPosition} x {CtrVrm.region.Width} * {tl.PalY} + {tl.PalX} * 16");
+
+                Buffer.BlockCopy(
+                    this.data, ptr,
+                    buf, 0,
+                    buf.Length * 2);
+            }
 
             return buf;
         }

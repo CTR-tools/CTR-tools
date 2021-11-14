@@ -50,6 +50,35 @@ namespace CTRFramework.Vram
         public BlendingMode blendingMode;
         public BitDepth bpp;
 
+        public int stretch
+        {
+            get
+            {
+                switch (bpp)
+                {
+                    case BitDepth.Bit4: return 4;
+                    case BitDepth.Bit8: return 2;
+                    case BitDepth.Bit24: throw new Exception("no supported");
+                    case BitDepth.Bit16:
+                    default: return 1;
+                }
+            }
+        }
+
+        public int expectedPalSize
+        {
+            get
+            {
+                switch (bpp)
+                {
+                    case BitDepth.Bit4: return 16;
+                    case BitDepth.Bit8: return 256;
+                    case BitDepth.Bit24:
+                    case BitDepth.Bit16:
+                    default: return 0;
+                }
+            }
+        }
 
         public Point min
         {
@@ -73,18 +102,18 @@ namespace CTRFramework.Vram
             }
         }
 
-        public int width => max.X - min.X > 0 ? max.X - min.X + 1 : 0;
+        public int width => (max.X - min.X) / stretch + 1;
 
-        public int height => max.Y - min.Y > 0 ? max.Y - min.Y + 1 : 0;
+        public int height => max.Y - min.Y + 1;
 
-        public int Position => PageY * (CtrVrm.region.Height * CtrVrm.region.Width / 2) + min.Y * CtrVrm.region.Width + PageX * 64 + min.X / 4;
+        public int Position => RealY * CtrVrm.region.Width + RealX; //PageY * (CtrVrm.region.Height * CtrVrm.region.Width / 2) + min.Y * CtrVrm.region.Width + PageX * 64 + min.X / stretch;
 
-        public int PalPosition => CtrVrm.region.Width * PalY + PalX * 16;
+        public int PalPosition => PalY * CtrVrm.region.Width + PalX * 16;
 
-        public int RealX => PageX * 64 + min.X / 4;
+        public int RealX => PageX * 64 + min.X / stretch;
         public int RealY => PageY * 256 + min.Y;
 
-        public Rectangle frame => new Rectangle(RealX, RealY, width / 4, height);
+        public Rectangle Frame => new Rectangle(RealX, RealY, width, height);
 
         private ushort packedPageData => (ushort)(PageX & PageY << 4 & (int)blendingMode << 5 & (int)bpp << 7);
 

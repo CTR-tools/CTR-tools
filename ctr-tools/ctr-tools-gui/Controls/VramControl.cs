@@ -72,13 +72,10 @@ namespace CTRTools.Controls
 
                 List<Tim> tims = new List<Tim>();
 
-                throw new Exception("reimplement frames via ctrvram2");
-                //foreach (var r in CtrVrm2.frames)
-                //{
-                //    tims.Add(ctr.GetTrueColorTexture(r));
-                //}
+                //throw new Exception("reimplement frames via ctrvram2");
+                tims.Add(ctr.GetTrueColorTexture(new Rectangle(512, 0, 384, 256)));
+                tims.Add(ctr.GetTrueColorTexture(new Rectangle(512, 256, 512, 256)));
 
-                string tempFile = Path.Combine(pathFileParent, "temp.tim");
                 string vramFile = Path.ChangeExtension(pathFile.Text, ".vrm");
 
                 Helpers.BackupFile(vramFile);
@@ -88,22 +85,14 @@ namespace CTRTools.Controls
                 {
                     bw.Write((int)0x20);
 
-                    foreach (Tim tim in tims)
+                    foreach (var tim in tims)
                     {
-                        tim.Write(tempFile);
-                        byte[] x = File.ReadAllBytes(tempFile);
-
-                        bw.Write(x.Length);
-                        bw.Write(x);
+                        bw.Write(tim.Filesize);
+                        tim.Write(bw);
                     }
 
                     bw.Write((int)0);
-
-                    bw.Flush();
-                    bw.Close();
                 }
-
-                File.Delete(tempFile);
 
                 //ctr.GetTrueColorTexture(512, 0, 384, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x01.tim"));
                 //ctr.GetTrueColorTexture(512, 256, 512, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x02.tim"));
