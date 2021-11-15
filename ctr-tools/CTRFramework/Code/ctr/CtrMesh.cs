@@ -550,7 +550,7 @@ namespace CTRFramework
 
             foreach (var c in colors)
             {
-                System.Drawing.Color cl = Tim.Convert16(Tim.ConvertTo16(System.Drawing.Color.FromArgb(c.W, c.Z, c.Y, c.X)), false);
+                System.Drawing.Color cl = Tim.Convert16(Tim.ConvertTo16(System.Drawing.Color.FromArgb(c.W, c.Z, c.Y, c.X)));
 
                 if (cl.R == 255 && cl.G == 0 && cl.B == 255)
                     cl = System.Drawing.Color.Black;

@@ -316,21 +316,21 @@ namespace CTRFramework.Vram
             //if (dirtyhack)
             //    x.region.Width++;
 
-            Helpers.Panic(this, PanicType.Debug, tl.width + "x" + tl.height);
+            Helpers.Panic(this, PanicType.Debug, tl.Width + "x" + tl.Height);
 
             Tim tim = new Tim(tl.Frame, tl.bpp);
-            tim.data = new ushort[tl.width * tl.height];
+            tim.data = new ushort[tl.Width * tl.Height];
 
             int ptr = tl.Position * 2; // tl.PageY * 1024 * (1024 * 2 / 16) + tl.frame.Y * 1024 + tl.PageX * (1024 * 2 / 16) + tl.frame.X;
 
-            for (int i = 0; i < tl.height; i++)
+            for (int i = 0; i < tl.Height; i++)
             {
                 //Helpers.Panic(this, PanicType.Assume, $"ptr: {ptr}, i: {i}, i * width: {i * width}, width: {width}");
 
                 Buffer.BlockCopy(
                     this.data, ptr,
-                    tim.data, i * tl.width * 2,
-                    tl.width * 2);
+                    tim.data, i * tl.Width * 2,
+                    tl.Width * 2);
 
                 ptr += this.region.Width * 2;
 
@@ -348,6 +348,8 @@ namespace CTRFramework.Vram
 
 
             Helpers.CheckFolder(Path.Combine(Meta.BasePath, "tims"));
+            //tim.Save(Path.Combine(Meta.BasePath, $"tims\\{tl.Tag}.tim"));
+            tim.ConvertTo16Bit();
             tim.Save(Path.Combine(Meta.BasePath, $"tims\\{tl.Tag}.tim"));
 
             return tim;
@@ -376,6 +378,70 @@ namespace CTRFramework.Vram
             return tim;
         }
 
+        /// <summary>
+        /// This converts paletted TIM to real 16 bit color TIM.
+        /// </summary>
+        public void ConvertTo16Bit()
+        {
+            if (bpp == BitDepth.Bit16)
+            {
+                Helpers.Panic(this, PanicType.Info, "No need to convert this TIM.");
+                return;
+            }
+
+            ushort[] buffer = new ushort[0];
+
+            //these 2 blocks for 4 and 8 bits can be merged with a few extra vars, do later
+
+            if (bpp == BitDepth.Bit4)
+            {
+                buffer = new ushort[region.Width * 4 * region.Height];
+
+                for (int w = 0; w < region.Width; w++)
+                    for (int h = 0; h < region.Height; h++)
+                    {
+                        int value = data[h * region.Width + w];
+
+                        int p1 = (value >> 0) & 0xF;
+                        int p2 = (value >> 4) & 0xF;
+                        int p3 = (value >> 8) & 0xF;
+                        int p4 = (value >> 12) & 0xF;
+
+                        buffer[h * region.Width * 4 + w * 4 + 0] = clutdata[p1];
+                        buffer[h * region.Width * 4 + w * 4 + 1] = clutdata[p2];
+                        buffer[h * region.Width * 4 + w * 4 + 2] = clutdata[p3];
+                        buffer[h * region.Width * 4 + w * 4 + 3] = clutdata[p4];
+                    }
+
+                region.Width *= 4;
+            }
+
+            if (bpp == BitDepth.Bit8)
+            {
+                buffer = new ushort[region.Width * 2 * region.Height];
+
+                for (int w = 0; w < region.Width; w++)
+                    for (int h = 0; h < region.Height; h++)
+                    {
+                        int value = data[h * region.Width + w];
+
+                        int p1 = (value >> 0) & 0xFF;
+                        int p2 = (value >> 8) & 0xFF;
+
+                        buffer[h * region.Width * 2 + w * 2 + 0] = clutdata[p1];
+                        buffer[h * region.Width * 2 + w * 2 + 1] = clutdata[p2];
+                    }
+
+                region.Width *= 2;
+            }
+
+            data = buffer;
+            clutdata = null;
+
+            bpp = BitDepth.Bit16;
+
+        }
+
 
         /// <summary>
         /// Returns bitmap object.
@@ -398,6 +464,22 @@ namespace CTRFramework.Vram
                     return new Bitmap(1, 1);
                 }
 
+                x.ConvertTo16Bit();
+
+                Bitmap bmp = new Bitmap(x.region.Width, x.region.Height);
+
+                for (int i = 0; i < bmp.Width; i++)
+                    for (int j = 0; j < bmp.Height; j++)
+                    {
+                        bmp.SetPixel(i, j, Convert16(x.data[j * bmp.Width + i]));
+                    }
+
+                if (!textures.ContainsKey(tl.Tag))
+                    textures.Add(tl.Tag, bmp);
+
+                return bmp;
+
+                /*
                 using (MemoryStream stream = new MemoryStream(x.SaveBMPToStream(CtrClutToBmpPalette(x.clutdata))))
                 {
                     Bitmap oldBmp = (Bitmap)Bitmap.FromStream(stream);
@@ -408,10 +490,12 @@ namespace CTRFramework.Vram
 
                     return newBmp;
                 }
+                */
             }
             catch (Exception ex)
             {
                 Helpers.Panic(this, PanicType.Error, tl.Frame + "\r\n" + "GetTexture fails: " + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
+                Console.ReadKey();
                 return null;
             }
         }
@@ -546,7 +630,7 @@ namespace CTRFramework.Vram
 
             for (int i = 0; i < 16; i++)
             {
-                Color c = Convert16(clut[i], true);
+                Color c = Convert16(clut[i]);
 
                 // palbmp.SetPixel(i, pals, c);
 
@@ -566,7 +650,7 @@ namespace CTRFramework.Vram
         /// <param name="col">16 bit ushort color value.</param>
         /// <param name="useAlpha">Defines whether alpha value should be preserved.</param>
         /// <returns></returns>
-        public static Color Convert16(ushort col, bool useAlpha)
+        public static Color Convert16(ushort col)
         {
             byte r = (byte)(((col >> 0) & 0x1F) << 3);
             byte g = (byte)(((col >> 5) & 0x1F) << 3);
@@ -584,15 +668,22 @@ namespace CTRFramework.Vram
                 Non full-black with STP bit = Semi-transparent color (alpha = 127)
             */
 
+            /*
+               //http://problemkaputt.de/psx-spx.htm
+                0-4   Red       (0..31)         ;\Color 0000h        = Fully-Transparent
+                5-9   Green     (0..31)         ; Color 0001h..7FFFh = Non-Transparent
+                10-14 Blue      (0..31)         ; Color 8000h..FFFFh = Semi-Transparent (*)
+                15    Semi Transparency Flag    ;/(*) or Non-Transparent for opaque commands
+             */
 
             if (stp == 0)
             {
                 if (r == 0 && g == 0 && b == 0)
                 {
                     a = 0;
-                    r = 255;
+                    r = 0;
                     g = 0;
-                    b = 255;
+                    b = 0;
                 }
                 else
                 {
@@ -609,7 +700,7 @@ namespace CTRFramework.Vram
                 */
             }
 
-            return Color.FromArgb((useAlpha ? a : 255), r, g, b);
+            return Color.FromArgb(a, r, g, b);
         }
 
         public static ushort ConvertTo16(Color c)
@@ -622,10 +713,10 @@ namespace CTRFramework.Vram
             return (ushort)((r >> 3 << 10) | (g >> 3 << 5) | (b >> 3 << 0));
         }
 
-        public static Color Convert16(byte[] b, bool useAlpha)
+        public static Color Convert16(byte[] b)
         {
             ushort val = BitConverter.ToUInt16(b, 0);
-            return Convert16(val, useAlpha);
+            return Convert16(val);
         }
     }
 }

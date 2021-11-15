@@ -46,7 +46,7 @@ namespace bash_dat
 
                 for (int j = 0; j < numCols; j++)
                 {
-                    palette.Add(Tim.Convert16(br.ReadUInt16(), false));
+                    palette.Add(Tim.Convert16(br.ReadUInt16()));
                 }
 
                 pals.Add(palette);

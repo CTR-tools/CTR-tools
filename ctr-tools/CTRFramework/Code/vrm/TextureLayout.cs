@@ -34,8 +34,6 @@ namespace CTRFramework.Vram
         public List<Vector2> uv = new List<Vector2>() { new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0) };
         public List<Vector2> normuv = new List<Vector2>();
 
-        //public List<Vector2b> uv = new List<Vector2b>() { new Vector2b(0, 0), new Vector2b(0, 0), new Vector2b(0, 0), new Vector2b(0, 0) };
-        //public List<Vector2b> normuv = new List<Vector2b>();
 
         public Point Palette;
 
@@ -102,9 +100,9 @@ namespace CTRFramework.Vram
             }
         }
 
-        public int width => (max.X - min.X) / stretch + 1;
+        public int Width => (max.X - min.X) / stretch + 1;
 
-        public int height => max.Y - min.Y + 1;
+        public int Height => max.Y - min.Y + 1;
 
         public int Position => RealY * CtrVrm.region.Width + RealX; //PageY * (CtrVrm.region.Height * CtrVrm.region.Width / 2) + min.Y * CtrVrm.region.Width + PageX * 64 + min.X / stretch;
 
@@ -113,28 +111,20 @@ namespace CTRFramework.Vram
         public int RealX => PageX * 64 + min.X / stretch;
         public int RealY => PageY * 256 + min.Y;
 
-        public Rectangle Frame => new Rectangle(RealX, RealY, width, height);
+        public Rectangle Frame => new Rectangle(RealX, RealY, Width, Height);
 
         private ushort packedPageData => (ushort)(PageX & PageY << 4 & (int)blendingMode << 5 & (int)bpp << 7);
+
+        private string _tag = "";
+
+        //meant to be unique
+        public string Tag => _tag == "" ? $"{RealX}_{RealY}_{PalX}_{PalY}_{Width * stretch}_{Height}" : _tag;
 
         #endregion
 
         public TextureLayout(BinaryReaderEx br)
         {
             Read(br);
-        }
-
-        public void NormalizeUV()
-        {
-            normuv.Clear();
-
-            foreach (var v in uv)
-            {
-                Vector2 n = new Vector2(0, 0);
-                n.X = (byte)(Helpers.Normalize(min.X, max.X, v.X) * 255);
-                n.Y = (byte)(Helpers.Normalize(min.Y, max.Y, v.Y) * 255);
-                normuv.Add(n);
-            }
         }
 
         public TextureLayout()
@@ -190,10 +180,18 @@ namespace CTRFramework.Vram
                 throw new Exception("TextureLayout: size mismatch");
         }
 
-        private string _tag = "";
+        public void NormalizeUV()
+        {
+            normuv.Clear();
 
-        //meant to be unique
-        public string Tag => _tag == "" ? $"{RealX}_{RealY}_{PalX}_{PalY}_{width * stretch}_{height}" : _tag;
+            foreach (var v in uv)
+            {
+                Vector2 n = new Vector2(0, 0);
+                n.X = (byte)(Helpers.Normalize(min.X, max.X, v.X) * 255);
+                n.Y = (byte)(Helpers.Normalize(min.Y, max.Y, v.Y) * 255);
+                normuv.Add(n);
+            }
+        }
 
         public override string ToString()
         {
@@ -202,7 +200,7 @@ namespace CTRFramework.Vram
 
         public string Dump()
         {
-            return $"{PageX}\t{PageY}\t{min}\t{width * stretch}\t{height}\t{PalX}\t{PalY}\t{Tag}";
+            return $"{PageX}\t{PageY}\t{min}\t{Width * stretch}\t{Height}\t{PalX}\t{PalY}\t{Tag}";
         }
 
         public string ToObj(int numVerts = 4)
