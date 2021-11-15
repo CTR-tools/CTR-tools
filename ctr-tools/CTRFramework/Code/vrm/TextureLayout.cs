@@ -195,7 +195,13 @@ namespace CTRFramework.Vram
 
         public override string ToString()
         {
-            return $"offset: {offset.ToString("X8")}\r\n\tUV: ({uv[0].ToString()}, {uv[1].ToString()}, {uv[2].ToString()}, {uv[3].ToString()})\r\n\tpalette: ({PalX}, {PalY})\r\n\tpage: ({PageX}, {PageY})";
+            return 
+                $"offset: {offset.ToString("X8")}\r\n\t" +
+                $"UV: ({uv[0].ToString()}, {uv[1].ToString()}, {uv[2].ToString()}, {uv[3].ToString()})\r\n\t" +
+                $"palette: ({PalX}, {PalY})\r\n\t" +
+                $"page: ({PageX}, {PageY})\r\n\t" +
+                $"bpp: {bpp}\r\n\t" +
+                $"blend: {blendingMode}";
         }
 
         public string Dump()

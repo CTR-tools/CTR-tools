@@ -150,6 +150,22 @@ namespace CTRFramework
                         for (int i = z; i < z + node.numQuadBlock; i++)
                             quads[i].isWater = true;
                     }
+
+                    if (node.flag.HasFlag(VisDataFlags.Unk3))
+                    {
+                        int z = (int)((node.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
+
+                        for (int i = z; i < z + node.numQuadBlock; i++)
+                            quads[i].unk3set = true;
+                    }
+
+                    if (node.flag.HasFlag(VisDataFlags.Unk7))
+                    {
+                        int z = (int)((node.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
+
+                        for (int i = z; i < z + node.numQuadBlock; i++)
+                            quads[i].unk4set = true;
+                    }
                 }
             }
 
@@ -230,30 +246,21 @@ namespace CTRFramework
         /// </summary>
         private void SceneTests()
         {
-            //quads = quads.OrderBy(o => o.mosaicPtr1).ToList();
 
             StringBuilder sb = new StringBuilder();
-
 
             int countadd = 0;
             int countmid = 0;
 
-            int x = 0;
-            int y = 0;
-            int z = 0;
-
+            int waterleaf = 0;
+            int waterbranch = 0;
 
             foreach (var node in visdata)
             {
-                if (!node.IsLeaf)
-                {
-                    if (node.divX > 0) x++;
-                    if (node.divY > 0) y++;
-                    if (node.divZ > 0) z++;
-                }
+                if (!node.IsLeaf && node.flag != 0) waterbranch++;
             }
 
-            Console.WriteLine($"numx={x} numy={y} numz={z}");
+            Console.WriteLine($"waterleaf={waterleaf} waterbranch={waterbranch}");
             Console.ReadKey();
 
             
@@ -329,7 +336,6 @@ namespace CTRFramework
 
             foreach (QuadBlock g in quads)
                 sb.AppendLine(g.ToObj(verts, lod, ref a, ref b));
-
 
             if (header.ptrAiNav != PsxPtr.Zero)
                 sb.AppendLine(nav.ToObj(ref a));

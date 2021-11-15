@@ -37,28 +37,38 @@ namespace CTRFramework
 
         public long pos;
 
+        //0x00
+
         //9 indices in vertex array, that form 4 quads, see above.
         public short[] ind = new short[9];
+
+        //0x12
         public QuadFlags quadFlags;
 
         public uint bitvalue;
 
+        //0x14
         //these values are contained in bitvalue, mask is 8b5b5b5b5b4z where b is bit and z is empty. or is it?
         public byte drawOrderLow;
         public FaceFlags[] faceFlags = new FaceFlags[4];
         public uint extradata;
 
+        //0x18
         public byte[] drawOrderHigh = new byte[4];
 
+        //0x1C
         public PsxPtr[] ptrTexMid = new PsxPtr[4];    //offsets to mid texture definition
 
+        //0x2C
         public BoundingBox bb;              //a box that bounds
 
+        //0x38
         public TerrainFlags terrainFlag;
         public byte WeatherIntensity;
         public byte WeatherType;
         public byte TerrainFlagUnknown;     //almost always 0, only found in tiger temple and sewer speedway
 
+        //0x3C
         public short id;
         public byte trackPos;
         public byte midunk;
@@ -82,6 +92,9 @@ namespace CTRFramework
 
 
         public bool isWater = false;
+
+        public bool unk3set = false;
+        public bool unk4set = false;
 
         public QuadBlock()
         {

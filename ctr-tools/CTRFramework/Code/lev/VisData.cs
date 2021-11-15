@@ -58,6 +58,9 @@ namespace CTRFramework
             if (unk0 != 0)
                 Helpers.Panic(this, PanicType.Assume, $"unk0 is not null: {unk0.ToString("X2")}");
 
+            if (!IsLeaf && flag != VisDataFlags.None)
+                Helpers.Panic(this, PanicType.Assume, $"branches assumed to have no flags, yet: {((int)flag).ToString("X8")}");
+
             if (flag.HasFlag(VisDataFlags.Leaf)) counter[0]++;
             if (flag.HasFlag(VisDataFlags.Water)) counter[1]++;
             if (flag.HasFlag(VisDataFlags.Unk2)) counter[2]++;

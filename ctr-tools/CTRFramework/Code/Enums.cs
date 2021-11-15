@@ -190,10 +190,10 @@ namespace CTRFramework
         Leaf = 1 << 0,
         Water = 1 << 1,
         Unk2 = 1 << 2,
-        Unk3 = 1 << 3, // subdiv
-        Unk4 = 1 << 4, // subdiv
-        Unk5 = 1 << 5,
-        Unk6 = 1 << 6,
+        Unk3 = 1 << 3, // subdiv?
+        Unk4 = 1 << 4, // subdiv?
+        Unk5 = 1 << 5, // additive blended?
+        Unk6 = 1 << 6, // hidden? dont render at all?
         Unk7 = 1 << 7
     }
 

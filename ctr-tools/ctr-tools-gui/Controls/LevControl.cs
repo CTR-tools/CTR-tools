@@ -341,6 +341,7 @@ namespace CTRTools.Controls
         {
             using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(path)))
             {
+                /*
                 bw.Jump(4);
 
                 scn.header.Write(bw);
@@ -371,15 +372,16 @@ namespace CTRTools.Controls
 
                 foreach (VertexAnim vc in scn.vertanims)
                     vc.Write(bw);
+                */
 
                 bw.Jump(scn.mesh.ptrVisData + 4);
-
+                
                 foreach (VisData v in scn.visdata)
                     v.Write(bw);
-
+                /*
                 bw.Jump(scn.header.ptrAiNav.Address + 4);
                 scn.nav.Write(bw);
-
+                */
             }
         }
 
@@ -605,6 +607,18 @@ namespace CTRTools.Controls
             {
                 pictureBox1.Image.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
             }
+        }
+
+        private void button18_Click_1(object sender, EventArgs e)
+        {
+            if (scn == null)
+                return;
+
+            foreach (VisData v in scn.visdata)
+            {
+                v.flag = v.flag | VisDataFlags.Leaf & VisDataFlags.Unk4;
+            }
+
         }
     }
 }

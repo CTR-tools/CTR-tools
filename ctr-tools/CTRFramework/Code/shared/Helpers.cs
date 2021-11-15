@@ -48,7 +48,7 @@ namespace CTRFramework.Shared
                     Console.ReadKey();
             }
 
-            if (panicLevel.HasFlag(PanicLevel.Exception) && panicType.HasFlag(PanicType.Error))
+            if (panicLevel.HasFlag(PanicLevel.Exception))
                 throw new Exception(message);
         }
 

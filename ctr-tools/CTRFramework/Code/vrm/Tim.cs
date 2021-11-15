@@ -518,7 +518,7 @@ namespace CTRFramework.Vram
 
             byte[] newdata = new byte[bitmap.Width * bitmap.Height / 2];
 
-            BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             //create data buffer 
             byte[] bytes = new byte[data.Height * data.Stride];
@@ -655,7 +655,7 @@ namespace CTRFramework.Vram
             byte r = (byte)(((col >> 0) & 0x1F) << 3);
             byte g = (byte)(((col >> 5) & 0x1F) << 3);
             byte b = (byte)(((col >> 10) & 0x1F) << 3);
-            byte a = 0;
+            byte a = 255;
 
             byte stp = (byte)((col >> 15));
 
@@ -667,6 +667,19 @@ namespace CTRFramework.Vram
                 Full-black with STP bit = Semi-transparent black (alpha = 127)
                 Non full-black with STP bit = Semi-transparent color (alpha = 127)
             */
+
+
+            //blending modes, might not correspond to ctr modes??
+            //0: 0.5 x Back +0.5 x Forward
+            //1: 1.0 x Back +1.0 x Forward
+            //2: 1.0 x Back -1.0 x Forward
+            //3: 1.0 x Back +0.25 x Forward
+
+            //and ctr:
+            //00 = mult (50%)
+            //01 = add
+            //10 = sub
+            //11 = normal render
 
             /*
                //http://problemkaputt.de/psx-spx.htm
@@ -692,7 +705,8 @@ namespace CTRFramework.Vram
             }
             else
             {
-                a = 127;
+                //if (blendingMode != BlendingMode.Standard)
+                    a = 127;
                 /*
                 r = 0;
                 g = 255;
