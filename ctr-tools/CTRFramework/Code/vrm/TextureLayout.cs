@@ -193,7 +193,7 @@ namespace CTRFramework.Vram
         private string _tag = "";
 
         //meant to be unique
-        public string Tag => _tag == "" ? $"{RealX}_{RealY}_{PalX}_{PalY}_{width}_{height}" : _tag;
+        public string Tag => _tag == "" ? $"{RealX}_{RealY}_{PalX}_{PalY}_{width * stretch}_{height}" : _tag;
 
         public override string ToString()
         {
@@ -202,7 +202,7 @@ namespace CTRFramework.Vram
 
         public string Dump()
         {
-            return $"{PageX}\t{PageY}\t{min}\t{width}\t{height}\t{PalX}\t{PalY}\t{Tag}";
+            return $"{PageX}\t{PageY}\t{min}\t{width * stretch}\t{height}\t{PalX}\t{PalY}\t{Tag}";
         }
 
         public string ToObj(int numVerts = 4)
