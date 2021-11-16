@@ -213,7 +213,9 @@ namespace CTRFramework.Shared
         {
             List<char> chars = new List<char>();
 
-            int limit = 256;
+            int limit = 1024;
+
+            char accent = '\0';
 
             do
             {
@@ -223,15 +225,38 @@ namespace CTRFramework.Shared
                     break;
 
                 if (c == 1)
-                    chars.Add(japaneseCharset[0xBD - 0x80]);
+                    accent = '\u3099';
+                //chars.Add(japaneseCharset[0xBD - 0x80]);
                 else if (c == 2)
-                    chars.Add(japaneseCharset[0xBC - 0x80]);
+                    accent = '\u309A';
+                //chars.Add(japaneseCharset[0xBC - 0x80]);
                 else if (c < 0x80)
+                {
                     chars.Add((char)c);
+                    if (accent != '\0')
+                    {
+                        chars.Add(accent);
+                        accent = '\0';
+                    }
+                }
                 else if (forceKatakana && c >= 0x80 && c <= 0xB7)
+                {
                     chars.Add(japaneseCharset[c - 0x80 + 0x40]);
+                    if (accent != '\0')
+                    {
+                        chars.Add(accent);
+                        accent = '\0';
+                    }
+                }
                 else
+                {
                     chars.Add(japaneseCharset[c - 0x80]);
+                    if (accent != '\0')
+                    {
+                        chars.Add(accent);
+                        accent = '\0';
+                    }
+                }
 
                 limit--;
 
@@ -245,7 +270,12 @@ namespace CTRFramework.Shared
 
             string result = new string(chars.ToArray());// System.Text.Encoding.GetEncoding(932).GetString(bytes.ToArray());
 
-            //Helpers.Panic(this, PanicType.Debug, result);
+            result = result.Normalize(System.Text.NormalizationForm.FormC);
+
+            Helpers.Panic(this, PanicType.Debug, result);
+
+            if (limit == 0)
+                Console.ReadKey();
 
             return result;
         }

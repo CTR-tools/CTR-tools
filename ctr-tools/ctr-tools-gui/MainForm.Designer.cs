@@ -243,6 +243,7 @@
             // 
             // levControl
             // 
+            this.levControl.AllowDrop = true;
             this.levControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.levControl.Location = new System.Drawing.Point(0, 0);
             this.levControl.Name = "levControl";

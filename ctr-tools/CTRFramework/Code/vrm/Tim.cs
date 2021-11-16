@@ -347,10 +347,10 @@ namespace CTRFramework.Vram
             }
 
 
-            Helpers.CheckFolder(Path.Combine(Meta.BasePath, "tims"));
+            //Helpers.CheckFolder(Path.Combine(Meta.BasePath, "tims"));
             //tim.Save(Path.Combine(Meta.BasePath, $"tims\\{tl.Tag}.tim"));
             tim.ConvertTo16Bit();
-            tim.Save(Path.Combine(Meta.BasePath, $"tims\\{tl.Tag}.tim"));
+            //tim.Save(Path.Combine(Meta.BasePath, $"tims\\{tl.Tag}.tim"));
 
             return tim;
         }

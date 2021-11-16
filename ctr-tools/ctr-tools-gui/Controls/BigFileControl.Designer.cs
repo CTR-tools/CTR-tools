@@ -134,7 +134,7 @@ namespace CTRTools.Controls
             // 
             // expandAll
             // 
-            this.expandAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.expandAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.expandAll.Location = new System.Drawing.Point(3, 453);
             this.expandAll.Name = "expandAll";
             this.expandAll.Size = new System.Drawing.Size(96, 24);
