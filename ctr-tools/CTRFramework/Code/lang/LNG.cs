@@ -9,14 +9,18 @@ namespace CTRFramework.Lang
 {
     public class LNG : IReadWrite, IDisposable
     {
+        private readonly string missing = "MISSING MSG";
+        public bool ForceKatakana = false;
+
         public List<string> Entries = new List<string>();
 
         public LNG()
         {
         }
 
-        public LNG(BinaryReaderEx br)
+        public LNG(BinaryReaderEx br, bool forceKatakana = false)
         {
+            ForceKatakana = forceKatakana;
             Read(br);
         }
 
@@ -36,8 +40,14 @@ namespace CTRFramework.Lang
             foreach (uint u in offsets)
             {
                 br.Jump(u);
-                Entries.Add(br.ReadStringNT().Replace((char)0x0D, '|'));
+                Entries.Add(br.ReadStringNT(ForceKatakana).Replace((char)0x0D, '|'));
                 // | is considered new line in the entry. used for long strings.
+            }
+
+            for (int i = 0; i < Entries.Count; i++)
+            {
+                if (Entries[i] == missing)
+                    Entries[i] = null;
             }
         }
 
@@ -46,11 +56,11 @@ namespace CTRFramework.Lang
         /// </summary>
         /// <param name="filename">Source file name.</param>
         /// <returns>LNG object.</returns>
-        public static LNG FromFile(string filename)
+        public static LNG FromFile(string filename, bool forceKatana = false)
         {
             using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                return new LNG(br);
+                return new LNG(br, forceKatana);
             }
         }
 
@@ -67,6 +77,8 @@ namespace CTRFramework.Lang
             for (int i = 0; i < lng.Entries.Count; i++)
             {
                 lng.Entries[i] = lng.Entries[i].Split(';')[0].Trim();
+                if (lng.Entries[i] == "null")
+                    lng.Entries[i] = null;
             }
 
             if (trySwap)
@@ -109,23 +121,17 @@ namespace CTRFramework.Lang
                 }
             }
 
-            Helpers.WriteToFile(filename, ToString());
+            Helpers.WriteToFile(filename, ToString(), Encoding.UTF8);
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
 
-            foreach (var entry in Entries)
-            {
-                if (entry != Entries.Last())
-                {
-                    sb.AppendLine(entry);
-                    continue;
-                }
-
-                sb.Append(entry);
-            }
+            for (int i = 0; i < Entries.Count - 1; i++)
+                sb.AppendLine(Entries[i] == null ? "null" : Entries[i]);
+            
+            sb.Append(Entries[Entries.Count-1] == null ? "null" : Entries[Entries.Count-1]);
 
             return sb.ToString();
         }
@@ -151,8 +157,9 @@ namespace CTRFramework.Lang
             List<string> dEntries = new List<string>();
 
             foreach (var entry in Entries)
-                if (!dEntries.Contains(entry))
-                    dEntries.Add(entry);
+                if (entry != null)
+                    if (!dEntries.Contains(entry))
+                        dEntries.Add(entry);
 
             var list = new Dictionary<string, int>();
 
@@ -170,9 +177,10 @@ namespace CTRFramework.Lang
             bw.Jump(((bw.BaseStream.Position / 4) + 1) * 4);
 
             int lastoff = (int)bw.BaseStream.Position;
+            int ptrMissing = lastoff + Entries.Count * 4;
 
             foreach (var entry in Entries)
-                bw.Write(list[entry]);
+                bw.Write(entry == null ? ptrMissing : list[entry]);
 
             bw.Write("MISSING MSG\0".ToCharArray());
 

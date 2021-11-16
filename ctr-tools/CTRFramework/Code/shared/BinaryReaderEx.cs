@@ -202,25 +202,50 @@ namespace CTRFramework.Shared
             return new string(ReadChars(num)).Split('\0')[0];
         }
 
+
+        string japaneseCharset = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんぁぃぅぇぉゃゅょっ〜「」。、ﾟﾞ・?アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンァィゥェォャュョッ?????????";
+
         /// <summary>
         /// Reads chars 1 by 1 until 0 is met.
         /// </summary>
         /// <returns></returns>
-        public string ReadStringNT()
+        public string ReadStringNT(bool forceKatakana = false)
         {
-            byte c;
-            List<byte> bytes = new List<byte>();
+            List<char> chars = new List<char>();
+
+            int limit = 256;
 
             do
             {
-                c = ReadByte();
-                if (c != 0) bytes.Add(c);
+                byte c = ReadByte();
+
+                if (c == 0)
+                    break;
+
+                if (c == 1)
+                    chars.Add(japaneseCharset[0xBD - 0x80]);
+                else if (c == 2)
+                    chars.Add(japaneseCharset[0xBC - 0x80]);
+                else if (c < 0x80)
+                    chars.Add((char)c);
+                else if (forceKatakana && c >= 0x80 && c <= 0xB7)
+                    chars.Add(japaneseCharset[c - 0x80 + 0x40]);
+                else
+                    chars.Add(japaneseCharset[c - 0x80]);
+
+                limit--;
+
+                if (limit == 0)
+                {
+                    Helpers.Panic(this, PanicType.Warning, "string too long, maybe error?");
+                    break;
+                }
             }
-            while (c != 0);
+            while (true);
 
-            string result = System.Text.Encoding.Default.GetString(bytes.ToArray());
+            string result = new string(chars.ToArray());// System.Text.Encoding.GetEncoding(932).GetString(bytes.ToArray());
 
-            Helpers.Panic(this, PanicType.Debug, result);
+            //Helpers.Panic(this, PanicType.Debug, result);
 
             return result;
         }
