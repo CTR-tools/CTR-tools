@@ -209,19 +209,23 @@ namespace CTRFramework.Vram
             return $"{PageX}\t{PageY}\t{min}\t{Width * stretch}\t{Height}\t{PalX}\t{PalY}\t{Tag}";
         }
 
+        //this aint actually ever used for obj export...
         public string ToObj(int numVerts = 4)
         {
             StringBuilder sb = new StringBuilder();
 
             //this is to avoid negative UV and make it clamp friendly
-            int[] inds = new int[4] { 2, 3, 0, 1 };
+            int[] inds = new int[4] { 0, 1, 2, 3 };
+
+            if (numVerts == 4)
+                inds = new int[4] { 2, 3, 0, 1 };
 
             for (int i = 0; i < numVerts; i++)
             {
                 sb.AppendFormat(
                     "vt {0} {1}\r\n",
-                    normuv[inds[i]].X,
-                    normuv[inds[i]].Y
+                    normuv[inds[i]].X / 255f,
+                    normuv[inds[i]].Y / 255f
                 );
             }
 

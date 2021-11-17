@@ -197,7 +197,7 @@ namespace CTRFramework
 
                 //find max index, but 0 means no texture.
                 if (draw.texIndex > 0)
-                    if (draw.texIndex - 1 > maxt)
+                    if (draw.texIndex > maxt)
                         maxt = draw.texIndex;
 
                 Helpers.Panic(this, PanicType.Info, draw.ToString());
@@ -287,7 +287,6 @@ namespace CTRFramework
             foreach (var v in vtx)
                 Helpers.Panic(this, PanicType.Info, v.ToString(VecFormat.Hex));
 
-
             List<Vector3s> vfixed = new List<Vector3s>();
 
             foreach (var v in vtx)
@@ -312,17 +311,14 @@ namespace CTRFramework
             //process all commands
             foreach (CtrDraw d in drawList)
             {
-                //try
+                if (d.texIndex - 1 >= maxt)
                 {
-                    //  curtl = d.texIndex == 0 ? null : tl[d.texIndex - 1];
-                    //  Console.WriteLine(tl.Count + " " + d.texIndex);
+                    Helpers.Panic(this, PanicType.Error, $"tex index overflow. texindex = {d.texIndex} maxt = {maxt} tl.count = {tl.Count}");
+                    break;
                 }
-                //catch
-                {
-                    // Helpers.Panic(this, PanicType.Error, "MOMMA MIA!");
-                    // Console.ReadKey();
 
-                }
+                //add texture to the list, null if no texture
+                curtl = d.texIndex == 0 ? null : tl[d.texIndex - 1];
 
 
                 //if we got no stack vertex flag
@@ -345,12 +341,12 @@ namespace CTRFramework
                 clr[2] = clr[3];
                 clr[3] = cols[d.colorIndex];
 
-                /*
+                
                 tlb[0] = tlb[1];
                 tlb[1] = tlb[2];
                 tlb[2] = tlb[3];
                 tlb[3] = (d.texIndex == 0 ? null : tl[d.texIndex - 1]);
-                */
+                
 
                 if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
@@ -368,19 +364,17 @@ namespace CTRFramework
                 //if we got 3 indices in tristrip (0,1,2)
                 if (stripLength >= 2)
                 {
-                    // matIndices.Add(d.texIndex == 0 ? null : tl[d.texIndex - 1]);
-
                     //read 3 vertices and push to the array
                     for (int z = 3 - 1; z >= 0; z--)
                     {
                         Vertex v = new Vertex();
                         v.Position = new Vector3(crd[1 + z].X, crd[z + 1].Y, crd[z + 1].Z);
                         v.Color = clr[1 + z];
-
-                        //if (d.texIndex != 0)
-                        //    v.uv = tl[d.texIndex - 1].uv[1 + z];
-
                         v.MorphColor = v.Color;
+
+                        if (d.texIndex != 0)
+                            v.uv = tl[d.texIndex - 1].normuv[z];
+
                         verts.Add(v);
                     }
 
@@ -391,6 +385,8 @@ namespace CTRFramework
                         verts[verts.Count - 1] = verts[verts.Count - 2];
                         verts[verts.Count - 2] = v;
                     }
+
+                    matIndices.Add(d.texIndex != 0 ? tl[d.texIndex - 1] : null);
                 }
 
                 stripLength++;
@@ -400,6 +396,19 @@ namespace CTRFramework
                 verts.Reverse(i * 3, 3);
 
             br.Jump(returnto);
+        }
+
+        public List<string> GetDistinctTags()
+        {
+            List<string> dist = new List<string>();
+
+            foreach (var t in tl)
+            {
+                if (!dist.Contains(t.Tag))
+                    dist.Add(t.Tag);
+            }
+
+            return dist;
         }
 
         /// <summary>
@@ -413,22 +422,9 @@ namespace CTRFramework
             sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
             sb.AppendLine($"#{Meta.GetVersion()}");
             sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
-            sb.AppendLine($"mtllib {filename}.mtl\r\n");
-
-            sb.AppendLine("# textures used:");
-
-            List<string> uniquetags = new List<string>();
-
-            foreach (TextureLayout t in tl)
-            {
-                if (!uniquetags.Contains(t.Tag))
-                    uniquetags.Add(t.Tag);
-            }
-
-            foreach (string t in uniquetags)
-            {
-                sb.AppendLine($"# {t}.png");
-            }
+            
+            if (tl.Count > 0)
+                sb.AppendLine($"mtllib {filename}.mtl\r\n");
 
 
             sb.AppendLine("o " + Name);
@@ -448,12 +444,18 @@ namespace CTRFramework
 
             for (int i = 0; i < verts.Count / 3; i++)
             {
-                // if (matIndices[i] != null)
+                 if (matIndices[i] != null)
                 {
-                    //     sb.AppendLine($"usemtl {matIndices[i].Tag}");
-                    //     sb.AppendLine(matIndices[i].ToObj());
+                    //sb.AppendLine(matIndices[i].ToObj(3));
+
+                    sb.AppendLine($"usemtl {matIndices[i].Tag}");
+
+                    for (int j = 0; j < 3; j++)
+                    {
+                        sb.AppendLine($"vt {verts[i * 3 + j].uv.X / 255f} {-verts[i * 3 + j].uv.Y / 255f}");
+                    }
                 }
-                // else
+                 else
                 {
                     sb.AppendLine($"usemtl no_texture");
                     sb.AppendLine($"vt 0 0");
@@ -464,26 +466,6 @@ namespace CTRFramework
 
                 sb.AppendLine($"f {i * 3 + 3}/{i * 3 + 3} {i * 3 + 2}/{i * 3 + 2} {i * 3 + 1}/{i * 3 + 1}");
             }
-
-            /*
-            StringBuilder bb = new StringBuilder();
-
-            bb.AppendLine(matIndices.Count + "");
-
-            foreach (var tl in matIndices)
-            {
-                if (tl != null)
-                {
-                    string texname = $"texModels\\{tl.Tag()}.png";
-
-                    bb.AppendLine($"newmtl {tl.Tag()}");
-                    bb.AppendLine("Kd 2.0 2.0 2.0"); //not sure if it actually works in obj, but it's what psx does
-                    bb.AppendLine($"map_Kd {texname}\r\n");
-                }
-            }
-
-            Helpers.WriteToFile(Path.Combine(Meta.BasePath, $"test_{name}.mtl"), bb.ToString());
-            */
 
             return sb.ToString();
         }
@@ -499,12 +481,16 @@ namespace CTRFramework
 
             StringBuilder sb = new StringBuilder();
 
-            foreach (var tex in tl)
+            foreach (var tex in GetDistinctTags())
             {
-                sb.AppendLine($"newmtl {tex.Tag}");
-                sb.AppendLine($"Map_Kd {Name}\\{tex.Tag}.png");
+                sb.AppendLine($"newmtl {tex}");
+                sb.AppendLine($"map_Kd {Name}\\{tex}.png");
                 sb.AppendLine();
             }
+
+            sb.AppendLine($"newmtl no_texture");
+            sb.AppendLine($"map_Kd {Name}\\default.png");
+            sb.AppendLine();
 
             return sb.ToString();
         }

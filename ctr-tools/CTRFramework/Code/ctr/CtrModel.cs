@@ -99,7 +99,8 @@ namespace CTRFramework
                 string fn = Path.Combine(path, $"{name}.obj");
 
                 Helpers.WriteToFile(fn, entry.ToObj(name));
-                Helpers.WriteToFile(Path.ChangeExtension(fn, ".mtl"), entry.ToMtl());
+                if (entry.tl.Count > 0)
+                    Helpers.WriteToFile(Path.ChangeExtension(fn, ".mtl"), entry.ToMtl());
 
                 entry.ExportTextures(path, vram);
 
