@@ -35,19 +35,19 @@ namespace bash_dat
             u21 = br.ReadInt16();
             u22 = br.ReadInt16();
 
-            ptrVerts = (int)(br.BaseStream.Position + br.ReadInt32());
-            ptrModel = (int)(br.BaseStream.Position + br.ReadInt32());
-            ptrAfterVerts = (int)(br.BaseStream.Position + br.ReadInt32());
+            ptrVerts = (int)(br.Position + br.ReadInt32());
+            ptrModel = (int)(br.Position + br.ReadInt32());
+            ptrAfterVerts = (int)(br.Position + br.ReadInt32());
 
             int numVerts = (ptrAfterVerts - ptrVerts - 0x14) / 8;
 
-            ptrSmthElse = (int)(br.BaseStream.Position + br.ReadInt32());
-            ptrSmthElse2 = (int)(br.BaseStream.Position + br.ReadInt32());
-            ptrLast = (int)(br.BaseStream.Position + br.ReadInt32());
+            ptrSmthElse = (int)(br.Position + br.ReadInt32());
+            ptrSmthElse2 = (int)(br.Position + br.ReadInt32());
+            ptrLast = (int)(br.Position + br.ReadInt32());
 
             br.ReadBytes(12);
 
-            int pos = (int)br.BaseStream.Position;
+            int pos = (int)br.Position;
 
             br.Jump(ptrVerts + 0x14);
 

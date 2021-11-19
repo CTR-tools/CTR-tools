@@ -276,8 +276,8 @@ namespace CTRFramework.Shared
 
             Helpers.Panic(this, PanicType.Debug, result);
 
-            if (limit == 0)
-                Console.ReadKey();
+            //if (limit == 0)
+                //Console.ReadKey();
 
             return result;
         }

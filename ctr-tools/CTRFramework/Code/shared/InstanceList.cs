@@ -25,11 +25,10 @@ namespace CTRFramework.Shared
             if (Pointer.ToUInt32() > br.BaseStream.Length)
                 throw new OverflowException("Trying to read out of stream bounds.");
 
-            int pos = (int)br.BaseStream.Position;
+            int pos = (int)br.Position;
 
             T t = Instance<T>.FromReader(br, Pointer.ToUInt32());
-
-            br.BaseStream.Position = pos;
+            br.Jump(pos);
 
             return t;
         }
@@ -42,11 +41,11 @@ namespace CTRFramework.Shared
             if (Pointer.ToUInt32() > br.BaseStream.Length)
                 throw new OverflowException("Trying to read out of stream bounds.");
 
-            int pos = (int)br.BaseStream.Position;
+            int pos = (int)br.Position;
 
             List<T> t = InstanceList<T>.FromReader(br, Pointer.ToUInt32(), count);
 
-            br.BaseStream.Position = pos;
+            br.Jump(pos);
 
             return t;
         }

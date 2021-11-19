@@ -126,7 +126,7 @@ namespace CTRFramework
                 Helpers.Panic(this, PanicType.Assume, $"check unusual billboard value = {billboard}");
 
 
-            int returnto = (int)br.BaseStream.Position;
+            int returnto = (int)br.Position;
 
             br.Jump(ptrAnims);
 
@@ -192,7 +192,7 @@ namespace CTRFramework
 
             Helpers.Panic(this, PanicType.Info, $"maxv: {maxv}\r\nmaxc: {maxc}\r\nmaxt: {maxt}\r\n");
 
-            //int ppos = (int)br.BaseStream.Position;
+            //int ppos = (int)br.Position;
 
             br.Jump(ptrClut);
             for (int k = 0; k <= maxc; k++)

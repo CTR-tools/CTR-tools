@@ -30,7 +30,7 @@ namespace CTRFramework.Vram
             }
             else
             {
-                br.BaseStream.Position = 0;
+                br.Jump(0);
                 Tims.Add(Tim.FromReader(br));
             }
         }

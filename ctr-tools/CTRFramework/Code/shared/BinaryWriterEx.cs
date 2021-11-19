@@ -7,6 +7,7 @@ namespace CTRFramework.Shared
 {
     public class BinaryWriterEx : BinaryWriter
     {
+        public long Position => BaseStream.Position;
 
         public BinaryWriterEx(MemoryStream ms) : base(ms)
         {

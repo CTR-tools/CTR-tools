@@ -43,7 +43,7 @@ namespace CTRFramework.Sound.CSeq
                 br.ReadInt16();
 
             //save current position to read tracks
-            int trackData = (int)br.BaseStream.Position;
+            int trackData = (int)br.Position;
 
             //loop through all tracks
             for (int i = 0; i < trackNum; i++)

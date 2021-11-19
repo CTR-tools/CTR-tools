@@ -27,7 +27,7 @@ namespace CTRFramework
             using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(data)))
             {
                 int size = br.ReadInt32();
-                br.BaseStream.Position = size + 4;
+                br.Jump(size + 4);
                 int size2 = br.ReadInt32();
 
                 //if size mismatch, assume it's demo

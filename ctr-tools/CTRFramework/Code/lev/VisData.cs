@@ -49,7 +49,7 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            pos = (int)br.BaseStream.Position;
+            pos = (int)br.Position;
 
             flag = (VisDataFlags)br.ReadByte();
             unk0 = br.ReadByte();

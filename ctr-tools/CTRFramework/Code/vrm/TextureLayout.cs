@@ -56,7 +56,7 @@ namespace CTRFramework.Vram
                 {
                     case BitDepth.Bit4: return 4;
                     case BitDepth.Bit8: return 2;
-                    case BitDepth.Bit24: throw new Exception("no supported");
+                    case BitDepth.Bit24: Helpers.Panic(this, PanicType.Error, "24 bits not supported"); return 1;
                     case BitDepth.Bit16:
                     default: return 1;
                 }
@@ -141,7 +141,7 @@ namespace CTRFramework.Vram
                 return null;
             }
 
-            br.BaseStream.Position -= 4;
+            br.Seek(-4);
             return new TextureLayout(br);
         }
 
@@ -149,7 +149,7 @@ namespace CTRFramework.Vram
         {
             uv.Clear();
 
-            offset = (uint)br.BaseStream.Position;
+            offset = (uint)br.Position;
 
             uv.Add(br.ReadVector2b());
 
@@ -176,8 +176,8 @@ namespace CTRFramework.Vram
 
             NormalizeUV();
 
-            if (br.BaseStream.Position - offset != SizeOf)
-                throw new Exception("TextureLayout: size mismatch");
+            if (br.Position - offset != SizeOf)
+                Helpers.Panic(this, PanicType.Error, "size mismatch");
         }
 
         public void NormalizeUV()
@@ -197,7 +197,7 @@ namespace CTRFramework.Vram
         {
             return 
                 $"offset: {offset.ToString("X8")}\r\n\t" +
-                $"UV: ({uv[0].ToString()}, {uv[1].ToString()}, {uv[2].ToString()}, {uv[3].ToString()})\r\n\t" +
+                $"UV: ({uv[0]}, {uv[1]}, {uv[2]}, {uv[3]})\r\n\t" +
                 $"palette: ({PalX}, {PalY})\r\n\t" +
                 $"page: ({PageX}, {PageY})\r\n\t" +
                 $"bpp: {bpp}\r\n\t" +

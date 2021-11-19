@@ -7,16 +7,6 @@ using System.Text;
 
 namespace CTRFramework
 {
-    [Flags]
-    public enum BlockFlags
-    {
-        None = 0,
-        Bit0 = 1 << 0,
-        Bit1 = 1 << 1,
-        Bit2 = 1 << 2,
-        Bit3 = 1 << 3
-    }
-
     public struct FaceFlags
     {
         public RotateFlipType rotateFlipType;
@@ -63,13 +53,13 @@ namespace CTRFramework
             faceFlags[1].packedValue << (8 + 1 * 5) |
             faceFlags[2].packedValue << (8 + 2 * 5) |
             faceFlags[3].packedValue << (8 + 3 * 5) |
-            (int)blockFlags << 8 + 5 * 4);
+            (doubleSided ? 1 : 0) << 8 + 5 * 4);
 
         //0x14
         //these values are contained in packedFaceData, mask is 8b5b5b5b5b4z where b is bit and z is empty. or is it?
         public byte drawOrderLow;
         public FaceFlags[] faceFlags = new FaceFlags[4];
-        public BlockFlags blockFlags;
+        public bool doubleSided = false;
 
         //0x18
         public byte[] drawOrderHigh = new byte[4];
@@ -126,7 +116,7 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            BaseAddress = br.BaseStream.Position;
+            BaseAddress = br.Position;
 
             for (int i = 0; i < 9; i++)
                 ind[i] = br.ReadInt16();
@@ -143,10 +133,12 @@ namespace CTRFramework
                 faceFlags[i] = new FaceFlags(val);
             }
 
-            blockFlags = (BlockFlags)((buf >> 28) & 0xF);
+            doubleSided = ((buf >> 28) & 1) > 0;
 
-            if (!blockFlags.HasFlag(BlockFlags.Bit3) & blockFlags != BlockFlags.None)
-                Helpers.Panic(this, PanicType.Assume, $"gotcha! blockflags -> {((int)blockFlags).ToString("X8")}");
+            byte extradata = (byte)(buf >> 29);
+
+            if (extradata > 0)
+                Helpers.Panic(this, PanicType.Assume, $"gotcha! blockflags -> {(extradata).ToString("X2")}");
 
             if (buf != packedFaceData)
                 Helpers.Panic(this, PanicType.Error, $"{buf.ToString("X8")}, {packedFaceData.ToString("X8")}");
@@ -201,7 +193,7 @@ namespace CTRFramework
 
 
             //read texture layouts
-            int texpos = (int)br.BaseStream.Position;
+            int texpos = (int)br.Position;
 
             br.Jump(ptrTexLow);
             texlow = TextureLayout.FromReader(br);
@@ -222,7 +214,7 @@ namespace CTRFramework
                 }
 
                 br.Jump(ptr);
-                tex[cntr] = new CtrTex(br, ptr, (int)blockFlags);
+                tex[cntr] = new CtrTex(br, ptr);
 
                 cntr++;
             }
@@ -237,7 +229,7 @@ namespace CTRFramework
                 mosaicPtr4 = PsxPtr.FromReader(br);
             }
 
-            br.BaseStream.Position = texpos;
+            br.Jump(texpos);
         }
 
 
@@ -341,7 +333,7 @@ namespace CTRFramework
                     if (buf.Count != 4)
                     {
                         Helpers.Panic(this, PanicType.Error, "not a quad! " + buf.Count);
-                        Console.ReadKey();
+                        //Console.ReadKey();
                     }
 
                     return buf;
@@ -440,7 +432,7 @@ namespace CTRFramework
             catch (Exception ex)
             {
                 Helpers.Panic(this, PanicType.Error, "Can't export quad to MG. Give null.\r\n" + this.id.ToString("X8") + " " + this.BaseAddress.ToString("X8") + "\r\n" + ex.Message);
-                Console.ReadKey();
+                //Console.ReadKey();
                 return null;
             }
         }

@@ -218,8 +218,8 @@ namespace CTRFramework.Sound
                 unk.Add(br.ReadUInt16());
             }
 
-            samplesSfx = InstanceList<InstrumentShort>.FromReader(br, (uint)br.BaseStream.Position, numSfx);
-            samplesEngineSfx = InstanceList<InstrumentShort>.FromReader(br, (uint)br.BaseStream.Position, numEngineSfx);
+            samplesSfx = InstanceList<InstrumentShort>.FromReader(br, (uint)br.Position, numSfx);
+            samplesEngineSfx = InstanceList<InstrumentShort>.FromReader(br, (uint)br.Position, numEngineSfx);
 
 
             for (int i = 0; i < numBanks; i++)
@@ -279,7 +279,7 @@ namespace CTRFramework.Sound
 
             for (int i = 0; i < ptrBanks.Count - 1; i++)
             {
-                br.BaseStream.Position = ptrBanks[i];
+                br.Jump(ptrBanks[i]);
 
                 string fn = String.Format($"{i.ToString("00")}_{(banknames.ContainsKey(i) ? banknames[i] : "bank")}.bnk");
                 Console.WriteLine("Extracting " + fn);
@@ -296,7 +296,7 @@ namespace CTRFramework.Sound
 
             int j = 0;
 
-            foreach (int i in ptrSeqs)
+            foreach (int ptrSeq in ptrSeqs)
             {
                 string fn = "";
 
@@ -317,9 +317,9 @@ namespace CTRFramework.Sound
 
                 fn = Path.Combine(pathSeq, fn);
 
-                br.BaseStream.Position = i;
+                br.Jump(ptrSeq);
                 int size = br.ReadInt32();
-                br.BaseStream.Position = i;
+                br.Jump(ptrSeq);
 
                 byte[] data = br.ReadBytes(size);
                 Helpers.WriteToFile(fn, data);

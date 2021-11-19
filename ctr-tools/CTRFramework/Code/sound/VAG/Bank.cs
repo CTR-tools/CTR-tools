@@ -6,7 +6,6 @@ using System.Text;
 
 namespace CTRFramework.Sound
 {
-
     public class Bank
     {
         public static Dictionary<int, string> banknames = new Dictionary<int, string>();
@@ -31,7 +30,7 @@ namespace CTRFramework.Sound
         {
             using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                return new Bank(br);
+                return Bank.FromReader(br);
             }
         }
 
@@ -42,11 +41,11 @@ namespace CTRFramework.Sound
 
         public void Read(BinaryReaderEx br)
         {
-            int bankoffset = (int)br.BaseStream.Position;
+            int bankoffset = (int)br.Position;
             int sampCnt = br.ReadInt16();
             short[] info = br.ReadArrayInt16(sampCnt);
 
-            br.BaseStream.Position = bankoffset + 0x800;
+            br.Jump(bankoffset + 0x800);
 
             int sample_start = 0;
             int sample_end = 0;
@@ -56,11 +55,9 @@ namespace CTRFramework.Sound
 
             for (int i = 0; i < sampCnt; i++)
             {
-                sample_start = (int)br.BaseStream.Position;
+                sample_start = (int)br.Position;
 
-                br.BaseStream.Position += 16;
-
-                //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
+                br.Seek(16);
 
                 do
                 {
@@ -68,9 +65,9 @@ namespace CTRFramework.Sound
                 }
                 while (!frameIsEmpty(buf));
 
-                sample_end = (int)br.BaseStream.Position;
+                sample_end = (int)br.Position;
 
-                br.BaseStream.Position = sample_start;
+                br.Jump(sample_start);
 
                 if (!samples.ContainsKey(info[i]))
                 {

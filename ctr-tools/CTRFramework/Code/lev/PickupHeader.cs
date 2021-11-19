@@ -80,7 +80,7 @@ namespace CTRFramework
 
             unk1 = br.ReadUInt32();
 
-            br.BaseStream.Position += 4 * 3;
+            br.Seek(4 * 3);
 
             pose = Pose.FromReader(br);
 

@@ -7,8 +7,6 @@ namespace CTRFramework
 {
     public class CtrTex
     {
-        public int numHighTex = 0;
-
         public TextureLayout[] midlods = new TextureLayout[3];
         public TextureLayout[] hi = new TextureLayout[16];
         public List<TextureLayout> animframes = new List<TextureLayout>(); //this actually has several lods too
@@ -17,20 +15,19 @@ namespace CTRFramework
         public bool isAnimated = false;
 
 
-        public CtrTex(BinaryReaderEx br, PsxPtr ptr, int numhi)
+        public CtrTex(BinaryReaderEx br, PsxPtr ptr)
         {
-            numHighTex = numhi;
             Read(br, ptr);
         }
 
         public void Read(BinaryReaderEx br, PsxPtr ptr)
         {
-            int pos = (int)br.BaseStream.Position;
+            int pos = (int)br.Position;
 
             if (ptr.ExtraBits == HiddenBits.Bit1)
             {
                 Console.WriteLine("!!!");
-                Console.ReadKey();
+                //Console.ReadKey();
             }
 
             //this apparently defines animated texture, really
@@ -62,15 +59,12 @@ namespace CTRFramework
             for (int i = 0; i < 3; i++)
                 midlods[i] = TextureLayout.FromReader(br);
 
-            //Console.WriteLine(br.BaseStream.Position.ToString("X8"));
+            //Console.WriteLine(br.Position.ToString("X8"));
             //Console.ReadKey();
 
-
             Helpers.Panic(this, PanicType.Debug, midlods[2].Tag);
-            Helpers.Panic(this, PanicType.Debug, "" + numHighTex);
 
-
-            if (numHighTex > 0 & Scene.ReadHiTex)
+            if (Scene.ReadHiTex)
             {
                 ptrHi = br.ReadUInt32();
 
@@ -82,7 +76,7 @@ namespace CTRFramework
                     {
                         br.Jump(ptrHi);
 
-                        for (int i = 0; i < numHighTex; i++)
+                        for (int i = 0; i < 16; i++)
                             hi[i] = TextureLayout.FromReader(br);
                     }
             }

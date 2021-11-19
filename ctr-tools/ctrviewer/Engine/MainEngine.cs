@@ -54,7 +54,10 @@ namespace ctrviewer.Engine
         public void TakeScreenShot()
         {
             Helpers.CheckFolder(Path.Combine(Meta.BasePath, "screenshots"));
-            screenBuffer.SaveAsJpeg(File.Create($"screenshots\\{screenshotstaken.ToString("0000")}_{DateTime.Now.ToString("ddMMyy_hhmmss")}.jpg"), screenBuffer.Width, screenBuffer.Height);
+            using (FileStream fs = File.Create($"screenshots\\{screenshotstaken.ToString("0000")}_{DateTime.Now.ToString("ddMMyy_hhmmss")}.png"))
+            {
+                screenBuffer.SaveAsPng(fs, screenBuffer.Width, screenBuffer.Height);
+            }
             screenshotstaken++;
         }
 

@@ -18,12 +18,8 @@ namespace CTRFramework
                 numEntries += c;
                 br.Seek(4);
 
-                Console.WriteLine(c);
-                Console.WriteLine(br.BaseStream.Position.ToString("X8"));
+                Helpers.Panic(this, PanicType.Debug, $"{br.HexPos()} {c}");
             }
-
-            Console.WriteLine(br.BaseStream.Position.ToString("X8"));
-            //Console.ReadKey();
 
             for (int i = 0; i < numEntries; i++)
                 Entries.Add(Pose.FromReader(br));

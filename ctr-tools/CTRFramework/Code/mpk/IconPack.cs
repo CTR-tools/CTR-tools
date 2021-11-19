@@ -37,7 +37,7 @@ namespace CTRFramework
 
             for (int i = 0; i < numTex; i++)
             {
-                uint iconpos = (uint)br.BaseStream.Position;
+                uint iconpos = (uint)br.Position;
 
                 Icon icon = Icon.FromReader(br);
 

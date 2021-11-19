@@ -886,28 +886,28 @@ namespace ctrviewer
                             case "toggle":
                                 switch (menu.SelectedItem.Param)
                                 {
-                                    case "newtex": eng.Settings.UseTextureReplacements = !eng.Settings.UseTextureReplacements; break;
-                                    case "inst": eng.Settings.ShowModels = !eng.Settings.ShowModels; break;
-                                    case "paths": eng.Settings.ShowBotsPath = !eng.Settings.ShowBotsPath; break;
-                                    case "lod": eng.Settings.UseLowLod = !eng.Settings.UseLowLod; break;
-                                    case "antialias": eng.Settings.AntiAlias = !eng.Settings.AntiAlias; break;
-                                    case "invis": eng.Settings.HideInvisible = !eng.Settings.HideInvisible; break;
-                                    case "water": eng.Settings.HideWater = !eng.Settings.HideWater; break;
-                                    case "console": eng.Settings.ShowConsole = !eng.Settings.ShowConsole; break;
-                                    case "campos": eng.Settings.ShowCamPos = !eng.Settings.ShowCamPos; break;
-                                    case "visbox": eng.Settings.VisData = !eng.Settings.VisData; break;
-                                    case "nocull": eng.Settings.ForceNoCulling = !eng.Settings.ForceNoCulling; break;
-                                    case "visboxleaf": eng.Settings.VisDataLeaves = !eng.Settings.VisDataLeaves; break;
-                                    case "filter": eng.Settings.EnableFiltering = !eng.Settings.EnableFiltering; break;
-                                    case "wire": eng.Settings.DrawWireframe = !eng.Settings.DrawWireframe; break;
-                                    case "genmips": eng.Settings.GenerateMips = !eng.Settings.GenerateMips; break;
-                                    case "window": eng.Settings.Windowed = !eng.Settings.Windowed; break;
-                                    case "vcolor": eng.Settings.VertexLighting = !eng.Settings.VertexLighting; break;
-                                    case "stereo": eng.Settings.StereoPair = !eng.Settings.StereoPair; break;
-                                    case "sky": eng.Settings.ShowSky = !eng.Settings.ShowSky; break;
-                                    case "vsync": eng.Settings.VerticalSync = !eng.Settings.VerticalSync; break;
-                                    case "kart": eng.Settings.KartMode = !eng.Settings.KartMode; break;
-                                    case "psxres": eng.Settings.InternalPSXResolution = !eng.Settings.InternalPSXResolution; break;
+                                    case "newtex": eng.Settings.UseTextureReplacements ^= true; break;
+                                    case "inst": eng.Settings.ShowModels ^= true; break;
+                                    case "paths": eng.Settings.ShowBotsPath ^= true; break;
+                                    case "lod": eng.Settings.UseLowLod ^= true; break;
+                                    case "antialias": eng.Settings.AntiAlias ^= true; break;
+                                    case "invis": eng.Settings.HideInvisible ^= true; break;
+                                    case "water": eng.Settings.HideWater ^= true; break;
+                                    case "console": eng.Settings.ShowConsole ^= true; break;
+                                    case "campos": eng.Settings.ShowCamPos ^= true; break;
+                                    case "visbox": eng.Settings.VisData ^= true; break;
+                                    case "nocull": eng.Settings.ForceNoCulling ^= true; break;
+                                    case "visboxleaf": eng.Settings.VisDataLeaves ^= true; break;
+                                    case "filter": eng.Settings.EnableFiltering ^= true; break;
+                                    case "wire": eng.Settings.DrawWireframe ^= true; break;
+                                    case "genmips": eng.Settings.GenerateMips ^= true; break;
+                                    case "window": eng.Settings.Windowed ^= true; break;
+                                    case "vcolor": eng.Settings.VertexLighting ^= true; break;
+                                    case "stereo": eng.Settings.StereoPair ^= true; break;
+                                    case "sky": eng.Settings.ShowSky ^= true; break;
+                                    case "vsync": eng.Settings.VerticalSync ^= true; break;
+                                    case "kart": eng.Settings.KartMode ^= true; break;
+                                    case "psxres": eng.Settings.InternalPSXResolution ^= true; break;
                                     default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
                                 }
                                 break;

@@ -58,7 +58,7 @@ namespace CTRFramework.Sound.CSeq
 
         public void Read(BinaryReaderEx br)
         {
-            long cseqStart = br.BaseStream.Position;
+            long cseqStart = br.Position;
 
             int size = br.ReadInt32();
             byte longCnt = br.ReadByte();
@@ -83,7 +83,7 @@ namespace CTRFramework.Sound.CSeq
                     Helpers.Panic(this, PanicType.Warning, "unknown 3 bytes block - not null at " + br.HexPos());
 
             //saving sequence data offset
-            int seqStart = (int)br.BaseStream.Position;
+            int seqStart = (int)br.Position;
 
             //loop through all sequences
             for (int i = 0; i < seqCnt; i++)
@@ -92,7 +92,7 @@ namespace CTRFramework.Sound.CSeq
                 Songs.Add(Song.FromReader(br));
             }
 
-            int cseqEnd = (int)br.BaseStream.Position;
+            int cseqEnd = (int)br.Position;
 
             if (cseqEnd - cseqStart != size)
                 Helpers.Panic(this, PanicType.Warning, $"CSEQ size mismatch! {size} vs {cseqEnd - cseqStart}");

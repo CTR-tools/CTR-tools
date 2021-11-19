@@ -94,7 +94,7 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            int dataStart = (int)br.BaseStream.Position;
+            int dataStart = (int)br.Position;
 
             ptrMeshInfo = PsxPtr.FromReader(br);
             ptrSkybox = PsxPtr.FromReader(br);
@@ -177,7 +177,7 @@ namespace CTRFramework
 
             skip3 = br.ReadBytes(0x24);
 
-            long dataEnd = br.BaseStream.Position;
+            long dataEnd = br.Position;
 
             if (dataEnd - dataStart != SizeOf)
                 throw new Exception("SceneHeader: size mismatch");
