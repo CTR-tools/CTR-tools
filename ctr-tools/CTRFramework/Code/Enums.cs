@@ -99,6 +99,7 @@ namespace CTRFramework
     [Flags]
     public enum ExportFlags
     {
+        None = 0,
         MeshLow = 1 << 0,
         TexLow = 1 << 1,
         MeshMed = 1 << 2,

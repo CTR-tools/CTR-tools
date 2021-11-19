@@ -117,7 +117,7 @@ namespace CTRFramework
             ptrAnims = br.ReadUIntPtr();
             unk4 = br.ReadInt32();
 
-            Helpers.Panic(this, PanicType.Info, Name);
+            Helpers.Panic(this, PanicType.Info, $"Mesh: {Name}");
 
             if (unk0 != 0)
                 Helpers.Panic(this, PanicType.Assume, $"check unusual unk0 value = {unk0}");
@@ -157,19 +157,6 @@ namespace CTRFramework
             }
             while (x != 0xFFFFFFFF);
 
-            //should read anims here
-
-            /*
-            if (numAnims > 0)
-            {
-                for (int f = 0; f < numAnims; f++)
-                {
-                    br.Jump(ptrAnims + f * 4);
-                    br.Jump(br.ReadInt32());
-                    anims.Add(new CTRAnim(br));
-                }
-            }
-            */
 
             TextureLayout curtl;
 
@@ -200,7 +187,7 @@ namespace CTRFramework
                     if (draw.texIndex > maxt)
                         maxt = draw.texIndex;
 
-                Helpers.Panic(this, PanicType.Info, draw.ToString());
+                Helpers.Panic(this, PanicType.Debug, draw.ToString());
             }
 
             Helpers.Panic(this, PanicType.Info, $"maxv: {maxv}\r\nmaxc: {maxc}\r\nmaxt: {maxt}\r\n");
@@ -216,24 +203,24 @@ namespace CTRFramework
             br.Jump(ptrTex);
             uint[] texptrs = br.ReadArrayUInt32(maxt);
 
-            Helpers.Panic(this, PanicType.Info, "texptrs: " + texptrs.Length);
+            Helpers.Panic(this, PanicType.Debug, "texptrs: " + texptrs.Length);
             foreach (var u in texptrs)
             {
-                Helpers.Panic(this, PanicType.Info, "ptr: " + u.ToString("X8"));
+                Helpers.Panic(this, PanicType.Debug, "ptr: " + u.ToString("X8"));
             }
 
             foreach (uint t in texptrs)
             {
-                Helpers.Panic(this, PanicType.Info, t.ToString("X8"));
+                Helpers.Panic(this, PanicType.Debug, t.ToString("X8"));
 
                 br.Jump(t);
                 TextureLayout tx = TextureLayout.FromReader(br);
                 tl.Add(tx);
 
-                Helpers.Panic(this, PanicType.Info, tx.ToString());
+                Helpers.Panic(this, PanicType.Debug, tx.ToString());
             }
 
-            Helpers.Panic(this, PanicType.Info, "tlcnt: " + tl.Count);
+            Helpers.Panic(this, PanicType.Debug, "tlcnt: " + tl.Count);
 
 
 
@@ -241,51 +228,42 @@ namespace CTRFramework
             if (!IsAnimated)
             {
                 br.Jump(ptrVerts);
-
-                posOffset = new Vector4s(br);
-
-                Helpers.Panic(this, PanicType.Info, posOffset.ToString());
-
-                br.Seek(16);
-
-                vrenderMode = br.ReadInt32();
-
-                if (!(new List<int> { 0x1C, 0x22 }).Contains(vrenderMode))
-                {
-                    Helpers.Panic(this, PanicType.Assume, $"check vrender {vrenderMode.ToString("X8")}");
-                }
             }
             else
             {
+                for (int i = 0; i < numAnims; i++)
+                {
+                    br.Jump(animPtrMap[i]);
+                    anims.Add(CtrAnim.FromReader(br));
+                }
+
                 //jump to first animation, read header and jump to vertex garbage
                 br.Jump(animPtrMap[0]);
-
-                CtrAnim anim = CtrAnim.FromReader(br);
-
-                Helpers.Panic(this, PanicType.Info, anim.Name + " " + anim.numFrames);
-
-                posOffset = new Vector4s(br);
-
-                br.Seek(16);
-
-                vrenderMode = br.ReadInt32();
-
-                Helpers.Panic(this, PanicType.Info, "anime!");
-
-                if (anim.someOffset != 0)
-                {
-                    br.Jump(returnto);
-                    return;
-                }
-                //Console.ReadKey();
             }
+
+
+
+            posOffset = new Vector4s(br);
+
+            Helpers.Panic(this, PanicType.Debug, posOffset.ToString());
+
+            br.Seek(16);
+
+            vrenderMode = br.ReadInt32();
+
+            if (!(new List<int> { 0x1C, 0x22 }).Contains(vrenderMode))
+            {
+                Helpers.Panic(this, PanicType.Assume, $"check vrender {vrenderMode.ToString("X8")}");
+            }
+
+            Console.WriteLine(maxv);
 
             //read vertices
             for (int k = 0; k < maxv; k++)
                 vtx.Add(new Vector3b(br));
 
             foreach (var v in vtx)
-                Helpers.Panic(this, PanicType.Info, v.ToString(VecFormat.Hex));
+                Helpers.Panic(this, PanicType.Debug, v.ToString(VecFormat.Hex));
 
             List<Vector3s> vfixed = new List<Vector3s>();
 
@@ -309,7 +287,7 @@ namespace CTRFramework
             int stripLength = 0;
 
             //process all commands
-            foreach (CtrDraw d in drawList)
+            foreach (var d in drawList)
             {
                 if (d.texIndex - 1 >= maxt)
                 {
@@ -439,8 +417,8 @@ namespace CTRFramework
                     v.Color.ToString(VecFormat.Numbers));
             }
 
-            Helpers.Panic(this, PanicType.Info, $"{matIndices.Count}");
-            Helpers.Panic(this, PanicType.Info, $"{verts.Count / 3}");
+            Helpers.Panic(this, PanicType.Debug, $"{matIndices.Count}");
+            Helpers.Panic(this, PanicType.Debug, $"{verts.Count / 3}");
 
             for (int i = 0; i < verts.Count / 3; i++)
             {
@@ -595,7 +573,7 @@ namespace CTRFramework
             //check for clut overflow
             if (dColors.Count > clutlimit)
             {
-                Helpers.Panic("CtrHeader", PanicType.Info, "More than 128 distinct colors! Truncating...");
+                Helpers.Panic("CtrHeader", PanicType.Warning, "More than 128 distinct colors! Truncating...");
                 dColors = dColors.GetRange(0, clutlimit);
 
                 foreach (var x in cfaces)
@@ -813,15 +791,15 @@ namespace CTRFramework
 
                     bw.Write(vrenderMode);
 
-                    Helpers.Panic(this, PanicType.Info, Name);
+                    Helpers.Panic(this, PanicType.Debug, Name);
 
                     foreach (var x in vtx)
                     {
                         x.Write(bw);
-                        Helpers.Panic(this, PanicType.Info, x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2"));
+                        Helpers.Panic(this, PanicType.Debug, x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2"));
                     }
 
-                    Helpers.Panic(this, PanicType.Info, "---");
+                    Helpers.Panic(this, PanicType.Debug, "---");
 
 
                     //write clut
@@ -832,7 +810,7 @@ namespace CTRFramework
                     {
                         x.W = 0;
                         x.Write(bw);
-                        Helpers.Panic(this, PanicType.Info, x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2") + x.W.ToString("X2"));
+                        Helpers.Panic(this, PanicType.Debug, x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2") + x.W.ToString("X2"));
                     }
 
 

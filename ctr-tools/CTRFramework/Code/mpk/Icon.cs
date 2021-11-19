@@ -52,6 +52,8 @@ namespace CTRFramework
 
         public void Save(string path, Tim tim)
         {
+            Helpers.CheckFolder(path);
+
             if (tim == null)
             {
                 Helpers.Panic(this, PanicType.Error, "Passed null vram.");

@@ -7,6 +7,8 @@ namespace CTRFramework
 {
     public class CtrTex
     {
+        public int numHighTex = 0;
+
         public TextureLayout[] midlods = new TextureLayout[3];
         public TextureLayout[] hi = new TextureLayout[16];
         public List<TextureLayout> animframes = new List<TextureLayout>(); //this actually has several lods too
@@ -15,8 +17,9 @@ namespace CTRFramework
         public bool isAnimated = false;
 
 
-        public CtrTex(BinaryReaderEx br, PsxPtr ptr)
+        public CtrTex(BinaryReaderEx br, PsxPtr ptr, int numhi)
         {
+            numHighTex = numhi;
             Read(br, ptr);
         }
 
@@ -64,20 +67,25 @@ namespace CTRFramework
 
 
             Helpers.Panic(this, PanicType.Debug, midlods[2].Tag);
+            Helpers.Panic(this, PanicType.Debug, "" + numHighTex);
 
-            ptrHi = br.ReadUInt32();
 
-            Helpers.Panic(this, PanicType.Debug, "hiptr: " + ptrHi.ToString("X8"));
+            if (numHighTex > 0 & Scene.ReadHiTex)
+            {
+                ptrHi = br.ReadUInt32();
 
-            if (Scene.ReadHiTex)
-                //loosely assume we got a valid pointer
-                if (ptrHi > 0x30000 && ptrHi < 0xB0000)
-                {
-                    br.Jump(ptrHi);
+                Helpers.Panic(this, PanicType.Debug, "hiptr: " + ptrHi.ToString("X8"));
 
-                    for (int i = 0; i < 16; i++)
-                        hi[i] = TextureLayout.FromReader(br);
-                }
+                if (Scene.ReadHiTex)
+                    //loosely assume we got a valid pointer
+                    if (ptrHi > 0x30000 && ptrHi < 0xB0000)
+                    {
+                        br.Jump(ptrHi);
+
+                        for (int i = 0; i < numHighTex; i++)
+                            hi[i] = TextureLayout.FromReader(br);
+                    }
+            }
 
         }
     }

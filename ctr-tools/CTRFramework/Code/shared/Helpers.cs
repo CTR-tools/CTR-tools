@@ -12,7 +12,7 @@ namespace CTRFramework.Shared
         public static string logpath = Path.Combine(Meta.BasePath, "ctrframework.log");
 
         public static PanicLevel panicLevel = PanicLevel.Console; //PanicLevel.File;
-        public static PanicType panicType = PanicType.All;
+        public static PanicType panicType = PanicType.Info | PanicType.Warning | PanicType.Error; //PanicType.All;
 
         /// <summary>
         /// Call this if something unexpected happened.
@@ -30,28 +30,30 @@ namespace CTRFramework.Shared
         /// </summary>
         /// <param name="x">summary text</param>
         /// <param name="message">message text</param>
-        public static void Panic(string sender, PanicType panicType, string message)
+        public static void Panic(string sender, PanicType pType, string message)
         {
             if (panicLevel.HasFlag(PanicLevel.Silent))
                 return;
 
-            message = $"{panicType}\t{sender}:\t{message}";
+            message = $"{pType}\t{sender}:\t{message}";
 
             if (panicLevel.HasFlag(PanicLevel.File))
                 File.AppendAllText(logpath, $"{DateTime.Now}\t{message}\r\n");
 
             if (panicLevel.HasFlag(PanicLevel.Console))
             {
-                Console.WriteLine(message);
+                if (panicType.HasFlag(pType))
+                {
+                    Console.WriteLine(message);
 
-                if (panicLevel.HasFlag(PanicLevel.Pause))
-                    Console.ReadKey();
+                    if (panicLevel.HasFlag(PanicLevel.Pause))
+                        Console.ReadKey();
+                }
             }
 
             if (panicLevel.HasFlag(PanicLevel.Exception))
                 throw new Exception(message);
         }
-
 
         public static float Normalize(float min, float max, float val)
         {
@@ -104,10 +106,10 @@ namespace CTRFramework.Shared
             }
         }
 
-        public static DateTime ParseDate(string s)
+        public static DateTime ParseDate(string input)
         {
-            DateTime result = DateTime.ParseExact(s.Replace("  ", " "), "ddd MMM d HH:mm:ss yyyy", CultureInfo.InvariantCulture);
-            Console.WriteLine(result.ToString());
+            DateTime result = DateTime.ParseExact(input.Replace("  ", " "), "ddd MMM d HH:mm:ss yyyy", CultureInfo.InvariantCulture);
+            Helpers.Panic("Helpers.ParseDate", PanicType.Debug, result.ToString());
             return result;
         }
 

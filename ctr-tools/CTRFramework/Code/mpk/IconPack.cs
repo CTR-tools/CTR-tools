@@ -2,6 +2,8 @@
 using CTRFramework.Vram;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
+using System.IO;
 
 namespace CTRFramework
 {
@@ -19,6 +21,11 @@ namespace CTRFramework
             Read(br);
         }
 
+        public static IconPack FromReader(BinaryReaderEx br)
+        {
+            return new IconPack(br);
+        }
+
         public void Read(BinaryReaderEx br)
         {
             int numTex = br.ReadInt32();
@@ -30,14 +37,16 @@ namespace CTRFramework
 
             for (int i = 0; i < numTex; i++)
             {
+                uint iconpos = (uint)br.BaseStream.Position;
+
                 Icon icon = Icon.FromReader(br);
 
                 if (!Icons.ContainsKey(icon.Name))
                 {
                     Icons.Add(icon.Name, icon);
 
-                    if (!IconsPtrDict.ContainsKey((uint)br.BaseStream.Position))
-                        IconsPtrDict.Add((uint)br.BaseStream.Position, icon);
+                    if (!IconsPtrDict.ContainsKey(iconpos))
+                        IconsPtrDict.Add(iconpos, icon);
                 }
             }
 
@@ -69,7 +78,7 @@ namespace CTRFramework
         {
             if (tim == null)
             {
-                Helpers.Panic(this, PanicType.Error, "Passed null vram.");
+                Helpers.Panic(this, PanicType.Warning, "Passed null vram to IconPack.");
                 return;
             }
 
@@ -77,6 +86,41 @@ namespace CTRFramework
 
             foreach (var icon in Icons.Values)
                 icon.Save(path, tim);
+
+            //GetFonts(tim).Save(Path.Combine(path, "largefont.png"), System.Drawing.Imaging.ImageFormat.Png);
+        }
+
+        public Bitmap GetFonts(Tim tim)
+        {
+            if (!Groups.ContainsKey("largefont"))
+                return null;
+
+            List<Bitmap> glyphs = new List<Bitmap>();
+
+            //populate glyph array
+            foreach (var iconname in Groups["largefont"])
+                glyphs.Add(tim.GetTexture(Icons[iconname].tl));
+
+            
+            Bitmap bmp = new Bitmap(160, 80);
+            Graphics g = Graphics.FromImage(bmp);
+
+            int x = 0;
+            int y = 0;
+
+            for (int i = 0; i < 49; i++)
+            {
+                g.DrawImage(glyphs[i], x * 16, y * 16);
+
+                x++;
+                if (x >= 10)
+                {
+                    x = 0;
+                    y++;
+                }
+            }
+
+            return bmp;
         }
 
         public override string ToString()

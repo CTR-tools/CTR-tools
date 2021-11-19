@@ -78,16 +78,16 @@ namespace model_reader
             {
                 case ".lev":
                     {
-                        Scene scn = Scene.FromFile(filename);
+                        var scene = Scene.FromFile(filename);
                         //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
-                        scn.Export(Path.Combine(basepath, name), ExportFlags.All);
+                        scene.Export(Path.Combine(basepath, name), ExportFlags.All);
                         break;
                     }
                 case ".ctr":
                 case ".dyn":
                     {
-                        CtrModel d = CtrModel.FromFile(filename);
-                        d.Export(basepath, CtrVrm.FromFile(vrampath).GetVram());
+                        var model = CtrModel.FromFile(filename);
+                        model.Export(basepath, vrampath == "" ? null : CtrVrm.FromFile(vrampath).GetVram());
 
                         break;
                     }

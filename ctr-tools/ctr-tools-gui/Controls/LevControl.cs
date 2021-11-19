@@ -387,55 +387,6 @@ namespace CTRTools.Controls
 
         private void button18_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CTR VRAM file|*.vrm";
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                Tim buf = CtrVrm.FromFile(ofd.FileName).GetVram();
-                Bitmap bmp = new Bitmap(160, 80);
-                Graphics g = Graphics.FromImage(bmp);
-
-                using (BinaryReaderEx br2 = new BinaryReaderEx(File.Open("ui_map", FileMode.Open)))
-                {
-                    int z = br2.ReadInt32();
-                    List<CTRFramework.Icon> list = new List<CTRFramework.Icon>();
-
-                    for (int i = 0; i < 50; i++)
-                        list.Add(new CTRFramework.Icon(br2));
-
-
-                    int x = 0;
-                    int y = 0;
-
-                    foreach (CTRFramework.Icon map in list)
-                    {
-                        Bitmap b = buf.GetTexture(map.tl, "tex", map.Name);
-
-                        g.DrawImage(b, x * 16, y * 16);
-
-                        x++;
-                        if (x >= 10)
-                        {
-                            x = 0;
-                            y++;
-                        }
-                    }
-
-                    bmp.Save("font.png", System.Drawing.Imaging.ImageFormat.Png);
-                }
-
-                /*
-                    Dictionary<string, TextureLayout> tex = scn.GetTexturesList();
-                    MessageBox.Show(tex.Count.ToString());
-                }
-                */
-
-                buf.SaveBMP("test.bmp", BMPHeader.GrayScalePalette(16));
-                //buf.palbmp.Save("palletes.png", System.Drawing.Imaging.ImageFormat.Png);
-
-                Process.Start("font.png");
-            }
         }
 
         private void button30_Click(object sender, EventArgs e)
@@ -454,14 +405,14 @@ namespace CTRTools.Controls
             {
                 foreach (Pose pa in scn.header.startGrid)
                 {
-                    pa.Position += new Vector3(1000, 0, 0);
-                    pa.Rotation += new Vector3(2048, 0, 0);
+                    pa.Move(new Vector3(1000, 0, 0));
+                    pa.Rotate(new Vector3(0.5f, 0, 0));
                 }
 
                 scn.restartPts.Reverse();
 
                 foreach (Pose pa in scn.restartPts)
-                    pa.Rotation += new Vector3(2048, 0, 0);
+                    pa.Rotate(new Vector3(0.5f, 0, 0));
 
 
                 foreach (QuadBlock qb in scn.quads)

@@ -66,15 +66,15 @@ namespace ctrviewer.Engine.Testing
                 foreach (var quad in scene.quads)
                     if (quad.quadFlags.HasFlag(QuadFlags.Ground) || quad.quadFlags.HasFlag(QuadFlags.Wall))
                         if (
-                            (quad.bb.numericMin.X <= Position.X) &&
-                            (quad.bb.numericMin.Y - Gravity * 2 <= Position.Y) &&
-                            (quad.bb.numericMin.Z <= Position.Z) &&
-                            (quad.bb.numericMax.X >= Position.X) &&
-                            (quad.bb.numericMax.Y + 1 + Gravity >= Position.Y) &&
-                            (quad.bb.numericMax.Z >= Position.Z)
+                            (quad.bbox.numericMin.X <= Position.X) &&
+                            (quad.bbox.numericMin.Y - Gravity * 2 <= Position.Y) &&
+                            (quad.bbox.numericMin.Z <= Position.Z) &&
+                            (quad.bbox.numericMax.X >= Position.X) &&
+                            (quad.bbox.numericMax.Y + 1 + Gravity >= Position.Y) &&
+                            (quad.bbox.numericMax.Z >= Position.Z)
                             )
                         {
-                            GameConsole.Write($"collide with quad bb: {quad.bb} at {Position}");
+                            GameConsole.Write($"collide with quad bb: {quad.bbox} at {Position}");
 
                             for (int i = 0; i < 4; i++)
                             {
@@ -100,9 +100,9 @@ namespace ctrviewer.Engine.Testing
 
 
                             
-                            if (Position.Y <= quad.bb.numericMax.Y)
+                            if (Position.Y <= quad.bbox.numericMax.Y)
                             {
-                                Position.Y = quad.bb.numericMax.Y;
+                                Position.Y = quad.bbox.numericMax.Y;
                                 Gravity = 0;
                                 return;
                             }

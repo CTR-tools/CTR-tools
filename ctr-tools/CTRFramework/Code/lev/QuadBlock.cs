@@ -7,10 +7,22 @@ using System.Text;
 
 namespace CTRFramework
 {
+    [Flags]
+    public enum BlockFlags
+    {
+        None = 0,
+        Bit0 = 1 << 0,
+        Bit1 = 1 << 1,
+        Bit2 = 1 << 2,
+        Bit3 = 1 << 3
+    }
+
     public struct FaceFlags
     {
         public RotateFlipType rotateFlipType;
         public FaceMode faceMode;
+
+        public byte packedValue => (byte)((int)rotateFlipType | (byte)faceMode << 3);
 
         public FaceFlags(byte x)
         {
@@ -24,6 +36,7 @@ namespace CTRFramework
     public class QuadBlock : IReadWrite
     {
         public static readonly int SizeOf = 0x5C;
+        public long BaseAddress;
 
         /*
          * 0--4--1
@@ -35,8 +48,6 @@ namespace CTRFramework
          * 2--8--3
          */
 
-        public long pos;
-
         //0x00
 
         //9 indices in vertex array, that form 4 quads, see above.
@@ -45,13 +56,20 @@ namespace CTRFramework
         //0x12
         public QuadFlags quadFlags;
 
-        public uint bitvalue;
+        public uint packedFaceData =>
+            (uint)(
+            drawOrderLow |
+            faceFlags[0].packedValue << (8 + 0 * 5) |
+            faceFlags[1].packedValue << (8 + 1 * 5) |
+            faceFlags[2].packedValue << (8 + 2 * 5) |
+            faceFlags[3].packedValue << (8 + 3 * 5) |
+            (int)blockFlags << 8 + 5 * 4);
 
         //0x14
-        //these values are contained in bitvalue, mask is 8b5b5b5b5b4z where b is bit and z is empty. or is it?
+        //these values are contained in packedFaceData, mask is 8b5b5b5b5b4z where b is bit and z is empty. or is it?
         public byte drawOrderLow;
         public FaceFlags[] faceFlags = new FaceFlags[4];
-        public uint extradata;
+        public BlockFlags blockFlags;
 
         //0x18
         public byte[] drawOrderHigh = new byte[4];
@@ -60,7 +78,7 @@ namespace CTRFramework
         public PsxPtr[] ptrTexMid = new PsxPtr[4];    //offsets to mid texture definition
 
         //0x2C
-        public BoundingBox bb;              //a box that bounds
+        public BoundingBox bbox;              //a box that bounds
 
         //0x38
         public TerrainFlags terrainFlag;
@@ -108,26 +126,30 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            pos = br.BaseStream.Position;
+            BaseAddress = br.BaseStream.Position;
 
             for (int i = 0; i < 9; i++)
                 ind[i] = br.ReadInt16();
 
             quadFlags = (QuadFlags)br.ReadUInt16();
 
-            bitvalue = br.ReadUInt32(); //big endian or little??
+            uint buf = br.ReadUInt32(); //big endian or little??
+
+            drawOrderLow = (byte)(buf & 0xFF);
+
+            for (int i = 0; i < 4; i++)
             {
-                drawOrderLow = (byte)(bitvalue & 0xFF);
-
-                for (int i = 0; i < 4; i++)
-                {
-                    byte val = (byte)((bitvalue >> 8 + 5 * i) & 0x1F);
-                    faceFlags[i] = new FaceFlags(val);
-                }
-
-                //extradata = (byte)(bitvalue & 0xF0000000 >> 28);
-                extradata = (bitvalue & 0xFFF);
+                byte val = (byte)((buf >> 8 + 5 * i) & 0x1F);
+                faceFlags[i] = new FaceFlags(val);
             }
+
+            blockFlags = (BlockFlags)((buf >> 28) & 0xF);
+
+            if (!blockFlags.HasFlag(BlockFlags.Bit3) & blockFlags != BlockFlags.None)
+                Helpers.Panic(this, PanicType.Assume, $"gotcha! blockflags -> {((int)blockFlags).ToString("X8")}");
+
+            if (buf != packedFaceData)
+                Helpers.Panic(this, PanicType.Error, $"{buf.ToString("X8")}, {packedFaceData.ToString("X8")}");
 
             drawOrderHigh = br.ReadBytes(4);
 
@@ -136,16 +158,10 @@ namespace CTRFramework
                 ptrTexMid[i] = PsxPtr.FromReader(br);
 
                 if (ptrTexMid[i].ExtraBits != HiddenBits.None)
-                {
                     Helpers.Panic(this, PanicType.Assume, $"ptrTexMid[{i}] {ptrTexMid.ToString()}");
-                }
-
-                // Console.ReadKey();
             }
 
-
-
-            bb = BoundingBox.FromReader(br);
+            bbox = BoundingBox.FromReader(br);
 
             byte tf = br.ReadByte();
 
@@ -158,11 +174,8 @@ namespace CTRFramework
             TerrainFlagUnknown = br.ReadByte();
 
             id = br.ReadInt16();
-
             trackPos = br.ReadByte();
             midunk = br.ReadByte();
-
-            //midflags = br.ReadBytes(2);
 
 
             ptrTexLow = PsxPtr.FromReader(br);
@@ -180,17 +193,12 @@ namespace CTRFramework
             for (int i = 0; i < 5; i++)
                 faceNormal.Add(br.ReadVector2s(1 / 4096f));
 
+            //done reading
+
+            if (br.Position - BaseAddress != SizeOf)
+                Helpers.Panic(this, PanicType.Error, "SizeOf mismatch!");
 
 
-            /*
-            //this is some value per tirangle
-            foreach(var val in unk3)
-            {
-                Console.WriteLine(val.X / 4096f + " " + val.Y / 4096f);
-            }
-            */
-
-            //struct done
 
             //read texture layouts
             int texpos = (int)br.BaseStream.Position;
@@ -214,7 +222,7 @@ namespace CTRFramework
                 }
 
                 br.Jump(ptr);
-                tex[cntr] = new CtrTex(br, ptr);
+                tex[cntr] = new CtrTex(br, ptr, (int)blockFlags);
 
                 cntr++;
             }
@@ -343,6 +351,9 @@ namespace CTRFramework
                     int[] arrind;
                     int[] uvinds;
 
+                    uvinds = GetUVIndices2(1, 2, 3, 4);
+
+                   
                     switch (faceFlags[i].rotateFlipType)
                     {
                         case RotateFlipType.None: uvinds = GetUVIndices2(1, 2, 3, 4); break;
@@ -355,8 +366,8 @@ namespace CTRFramework
                         case RotateFlipType.FlipRotate270: uvinds = GetUVIndices2(1, 3, 2, 4); break;
                         default: throw new Exception("Impossible rotatefliptype.");
                     }
-
-
+                    
+                    
                     switch (faceFlags[i].faceMode)
                     {
                         case FaceMode.SingleUV1:
@@ -373,6 +384,7 @@ namespace CTRFramework
                                 break;
                             }
                     }
+                    
 
 
                     if (i > 4 || i < 0)
@@ -427,7 +439,7 @@ namespace CTRFramework
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, PanicType.Error, "Can't export quad to MG. Give null.\r\n" + this.id.ToString("X8") + " " + this.pos.ToString("X8") + "\r\n" + ex.Message);
+                Helpers.Panic(this, PanicType.Error, "Can't export quad to MG. Give null.\r\n" + this.id.ToString("X8") + " " + this.BaseAddress.ToString("X8") + "\r\n" + ex.Message);
                 Console.ReadKey();
                 return null;
             }
@@ -516,7 +528,7 @@ namespace CTRFramework
                             }
                             else
                             {
-                                Helpers.Panic(this, PanicType.Error, $"something's wrong with quadblock {id} at {pos.ToString("X8")}, happens in secret2_4p and temple2_4p");
+                                Helpers.Panic(this, PanicType.Error, $"something's wrong with quadblock {id} at {BaseAddress.ToString("X8")}, happens in secret2_4p and temple2_4p");
                             }
                         }
 
@@ -656,13 +668,13 @@ namespace CTRFramework
             //bw.Write(unk1);
 
             // bw.Write(drawOrderLow);
-            bw.Write(bitvalue);
+            bw.Write(packedFaceData);
             bw.Write(drawOrderHigh);
 
             for (int i = 0; i < 4; i++)
                 ptrTexMid[i].Write(bw, patchTable);
 
-            bb.Write(bw);
+            bbox.Write(bw);
 
             bw.Write((byte)terrainFlag);
             bw.Write(WeatherIntensity);

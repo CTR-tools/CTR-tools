@@ -10,32 +10,27 @@ namespace CTRFramework
         public byte colorIndex;
         public byte texIndex;
 
-        public uint Value => PackValue();
+        public uint Value =>
+            (uint)((byte)flags << 24) |
+            (uint)(stackIndex << 16) |
+            (uint)(colorIndex << 9) |
+            texIndex;
 
         public CtrDraw()
         {
         }
 
-        public CtrDraw(uint value)
+        public CtrDraw(uint input)
         {
-            flags = (CtrDrawFlags)(value >> (8 * 3) & 0xFF);
-            stackIndex = (byte)(value >> 16 & 0xFF);
-            colorIndex = (byte)(value >> 9 & 0x7F);
-            texIndex = (byte)(value & 0x1FF);
+            flags = (CtrDrawFlags)(input >> (8 * 3) & 0xFF);
+            stackIndex = (byte)(input >> 16 & 0xFF);
+            colorIndex = (byte)(input >> 9 & 0x7F);
+            texIndex = (byte)(input & 0x1FF);
 
-            Helpers.Panic(this, PanicType.Debug, value.ToString("X8") + " <-> " + Value.ToString("X8") + " " + ToString());
-        }
+            if (input != Value)
+                Helpers.Panic(this, PanicType.Error, $"cmd value pack fails: {input.ToString("X8")} <-!!!-> {Value.ToString("X8")}");
 
-        private uint PackValue()
-        {
-            uint packbackvalue = 0;
-
-            packbackvalue |= (uint)((byte)flags << 24);
-            packbackvalue |= (uint)(stackIndex << 16);
-            packbackvalue |= (uint)(colorIndex << 9);
-            packbackvalue |= (uint)(texIndex);
-
-            return packbackvalue;
+            Helpers.Panic(this, PanicType.Debug, ToString());
         }
 
         public override string ToString()

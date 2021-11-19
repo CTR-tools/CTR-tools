@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Numerics;
 
 namespace CTRFramework.Shared
@@ -9,24 +8,8 @@ namespace CTRFramework.Shared
     {
         public static Pose Zero = new Pose(Vector3.Zero, Vector3.Zero);
 
-        private Vector3 position;
-        private Vector3 rotation;
-
-        #region ComponentModel
-        [CategoryAttribute("Values"), DescriptionAttribute("Position vector.")]
-        public Vector3 Position
-        {
-            get => position;
-            set => position = value;
-        }
-
-        [CategoryAttribute("Values"), DescriptionAttribute("Rotation vector.")]
-        public Vector3 Rotation
-        {
-            get => rotation;
-            set => rotation = value;
-        }
-        #endregion
+        public Vector3 Position { get; set; } = Vector3.Zero;
+        public Vector3 Rotation { get; set; } = Vector3.Zero;
 
         public Pose()
         {
@@ -44,35 +27,32 @@ namespace CTRFramework.Shared
 
         public void Move(Vector3 move)
         {
-            position += move;
+            Position += move;
         }
 
         public void Rotate(Vector3 rot)
         {
-            rotation += rot;
+            Rotation += rot;
         }
 
         public Pose(Vector3 pos, Vector3 ang)
         {
-            position = pos;
-            rotation = ang;
+            Position = pos;
+            Rotation = ang;
         }
 
         public void Read(BinaryReaderEx br)
         {
-            position = br.ReadVector3s(1 / 100f);
-            rotation = br.ReadVector3s(1 / 4096f);
+            Position = br.ReadVector3s(1 / 100f);
+            Rotation = br.ReadVector3s(1 / 4096f);
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.WriteVector3s(position, 1 / 100f);
-            bw.WriteVector3s(rotation, 1 / 4096f);
+            bw.WriteVector3s(Position, 1 / 100f);
+            bw.WriteVector3s(Rotation, 1 / 4096f);
         }
 
-        public override string ToString()
-        {
-            return $"Pos: {position} Rot: {rotation}";
-        }
+        public override string ToString() => $"Pos: {Position} Rot: {Rotation}";
     }
 }

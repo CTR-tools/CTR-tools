@@ -159,7 +159,7 @@ namespace CTRFramework
                             quads[i].unk3set = true;
                     }
 
-                    if (node.flag.HasFlag(VisDataFlags.Unk7))
+                    if (node.flag.HasFlag(VisDataFlags.Unk4))
                     {
                         int z = (int)((node.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
 
@@ -334,8 +334,8 @@ namespace CTRFramework
             int a = 0;
             int b = 0;
 
-            foreach (QuadBlock g in quads)
-                sb.AppendLine(g.ToObj(verts, lod, ref a, ref b));
+            foreach (var quad in quads)
+                sb.AppendLine(quad.ToObj(verts, lod, ref a, ref b));
 
             if (header.ptrAiNav != PsxPtr.Zero)
                 sb.AppendLine(nav.ToObj(ref a));
@@ -357,7 +357,7 @@ namespace CTRFramework
                     string texname = $"tex{lod}\\{tl.Tag}.png";
 
                     sb.AppendLine($"newmtl {tl.Tag}");
-                    sb.AppendLine("Kd 2.0 2.0 2.0"); //not sure if it actually works in obj, but it's what psx does
+                    sb.AppendLine("Kd 1.0 1.0 1.0");
                     sb.AppendLine($"map_Kd {texname}\r\n");
 
                     if (!File.Exists(Path.Combine(path, texname)))
@@ -374,9 +374,12 @@ namespace CTRFramework
                 }
             }
 
-            //importers will warn about missing texture here
-            //but this way it will apply default editor's placeholder texture
-            //usually checkerboard pattern or magenta filler
+            /*
+                importers will warn about missing texture here
+                but this way it will apply default editor's placeholder texture
+                usually checkerboard pattern or magenta filler
+            */
+
             sb.Append("newmtl default\r\n");
             sb.Append("Map_Kd default.png\r\n");
 
@@ -406,74 +409,32 @@ namespace CTRFramework
 
         public void Export(string path, ExportFlags flags)
         {
-            Console.WriteLine($"Exporting to: {path}");
+            Helpers.Panic(this, PanicType.Info, $"Exporting scene to: {path}");
 
             if (path.Contains(" "))
-                Console.WriteLine("Warning, the selected path contains space in its name.\r\nThis may affect material import in certain applications.\r\n");
+                Helpers.Panic(this, PanicType.Info, "Warning, the selected path contains space in its name.\r\nThis may affect material import in certain applications.\r\n");
 
             if (flags.HasFlag(ExportFlags.MeshLow)) ExportMesh(path, Detail.Low);
             if (flags.HasFlag(ExportFlags.TexLow)) ExportTextures(path, Detail.Low);
 
-            Console.WriteLine("Low mesh: done.");
+            Helpers.Panic(this, PanicType.Info, "Low mesh: done.");
 
             if (flags.HasFlag(ExportFlags.MeshMed)) ExportMesh(path, Detail.Med);
             if (flags.HasFlag(ExportFlags.TexMed)) ExportTextures(path, Detail.Med);
 
-            Console.WriteLine("Mid mesh: done.");
+            Helpers.Panic(this, PanicType.Info, "Mid mesh: done.");
 
             //not implemented, should return subdivided mesh. not sure if needed.
             //if (flags.HasFlag(ExportFlags.MeshHigh)) ExportMesh(path, Detail.High);
             if (flags.HasFlag(ExportFlags.TexHigh)) ExportTextures(path, Detail.High);
 
-            Console.WriteLine("High mesh: done.");
+            Helpers.Panic(this, PanicType.Info, "High mesh: done.");
 
             if (flags.HasFlag(ExportFlags.Models)) ExportModels(path);
             if (flags.HasFlag(ExportFlags.TexModels)) ExportTextures(path, Detail.Models);
             if (flags.HasFlag(ExportFlags.SkyBox)) ExportSkyBox(path);
 
-            Console.WriteLine("Additional models: done.");
-
-            /*
-            foreach (QuadBlock qb in quads)
-            {
-                string x = ".\\textures\\" + qb.id.ToString("X8") + "\\";
-
-                Helpers.CheckFolder(x);
-
-                ctrvram.GetTexture(qb.texlow).Save(x + "low_" + qb.texlow.Tag() + ".png");
-
-                foreach (CtrTex ct in qb.tex)
-                {
-                    foreach (TextureLayout tl in ct.midlods)
-                    {
-                        try
-                        {
-                            ctrvram.GetTexture(tl).Save(x + "med_" + tl.Tag() + ".png");
-                        }
-                        catch
-                        {
-                            File.WriteAllText(x + "error.txt", $"error med: quad - {qb.pos.ToString("X8")}, texlayout: {tl.Position.ToString("X8")}\r\n");
-                        }
-                    }
-
-                    int i = 0;
-
-                    foreach (TextureLayout tl in ct.hi)
-                    {
-                        try
-                        {
-                            ctrvram.GetTexture(tl).Save(x + "hi_" + i + "_" + tl.Tag() + ".png");
-                        }
-                        catch
-                        {
-                            File.WriteAllText(x + "error.txt", $"error med: quad - {qb.pos.ToString("X8")}, texlayout: {tl.Position.ToString("X8")}\r\n");
-                        }
-
-                        i++;
-                    }
-                }  
-            }
-            */
+            Helpers.Panic(this, PanicType.Info, "Additional models: done.");
         }
 
 
@@ -507,32 +468,21 @@ namespace CTRFramework
         {
             if (ctrvram == null)
             {
-                Console.WriteLine("No vram found. Make sure to copy vram file along with lev.");
+                Helpers.Panic(this, PanicType.Info, "No export textures as no vram found.\r\nMake sure VRM file is in the same folder.");
                 return;
             }
 
-            // ctrvram.SaveBMP("lol.bmp", BMPHeader.GrayScalePalette(16));
+            Helpers.Panic(this, PanicType.Debug, ctrvram.ToString());
 
-            Console.WriteLine(ctrvram.ToString());
-            Console.WriteLine("Exporting textures...");
+            Helpers.Panic(this, PanicType.Info, "Exporting textures...");
 
-            path = Path.Combine(path, $"tex{lod.ToString()}");
+            path = Path.Combine(path, $"tex{lod}");
             Helpers.CheckFolder(path);
 
-            foreach (TextureLayout tl in GetTexturesList(lod).Values)
-            {
-                Bitmap bmp = ctrvram.GetTexture(tl, path);
-                if (bmp == null)
-                {
-                    Console.WriteLine("Missing texture.");
-                    continue;
-                }
+            foreach (var tl in GetTexturesList(lod).Values)
+                ctrvram?.GetTexture(tl, path)?.Save(Path.Combine(path, $"{tl.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
 
-                Bitmap bb = new Bitmap(bmp.Width, bmp.Height);
-                Graphics g = Graphics.FromImage(bb);
-                g.DrawImage(bmp, new Point(0, 0));
-                bb.Save(Path.Combine(path, $"{tl.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
-            }
+            Helpers.Panic(this, PanicType.Info, "Textures done.");
         }
 
         public override string ToString()

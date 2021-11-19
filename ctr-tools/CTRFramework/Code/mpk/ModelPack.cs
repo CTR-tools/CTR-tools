@@ -12,7 +12,7 @@ namespace CTRFramework
 
         IconPack iconPack;
         public List<CtrModel> Models = new List<CtrModel>();
-        public List<UIntPtr> PointerMap = new List<UIntPtr>();
+        public List<UIntPtr> PatchTable = new List<UIntPtr>();
 
         public ModelPack()
         {
@@ -47,14 +47,14 @@ namespace CTRFramework
                         }
                     }
 
-                    PointerMap.Clear();
+                    PatchTable.Clear();
 
                     br.Jump(size + 4);
 
                     int ptrMapSize = br.ReadInt32();
 
                     for (int i = 0; i < ptrMapSize / 4; i++)
-                        PointerMap.Add(br.ReadUIntPtr());
+                        PatchTable.Add(br.ReadUIntPtr());
                 }
             }
         }
@@ -103,15 +103,16 @@ namespace CTRFramework
 
         public void Extract(string path, Tim tim)
         {
-            iconPack.Extract(Path.Combine(path, "textures"), tim);
+            string modelsPath = Path.Combine(path, "models");
+            string texturesPath = Path.Combine(path, "textures");
+
+            iconPack.Extract(texturesPath, tim);
 
             foreach (var model in Models)
             {
-                model.Export(path, tim);
-                model.Save(path);
+                model.Export(modelsPath, tim);
+                model.Save(modelsPath);
             }
-
-            Console.WriteLine("Models done!");
         }
     }
 }

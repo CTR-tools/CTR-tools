@@ -301,32 +301,15 @@ namespace CTRFramework.Vram
         /// <returns>Tim object.</returns>
         public Tim GetTimTexture(TextureLayout tl)
         {
-            //ahem, so this happens because 1 byte = 2 pixel and if it's uneven width, we have to move half-byte.
-            /*
-            bool dirtyhack = false;
-
-            if (width % 2 == 1)
-            {
-                width++;
-                dirtyhack = true;
-                return null;
-            }
-            */
-
-            //if (dirtyhack)
-            //    x.region.Width++;
-
             Helpers.Panic(this, PanicType.Debug, tl.Width + "x" + tl.Height);
 
             Tim tim = new Tim(tl.Frame, tl.bpp);
             tim.data = new ushort[tl.Width * tl.Height];
 
-            int ptr = tl.Position * 2; // tl.PageY * 1024 * (1024 * 2 / 16) + tl.frame.Y * 1024 + tl.PageX * (1024 * 2 / 16) + tl.frame.X;
+            int ptr = tl.Position * 2;
 
             for (int i = 0; i < tl.Height; i++)
             {
-                //Helpers.Panic(this, PanicType.Assume, $"ptr: {ptr}, i: {i}, i * width: {i * width}, width: {width}");
-
                 Buffer.BlockCopy(
                     this.data, ptr,
                     tim.data, i * tl.Width * 2,
@@ -335,9 +318,7 @@ namespace CTRFramework.Vram
                 ptr += this.region.Width * 2;
 
                 if (ptr > this.data.Length * 2)
-                {
-                    Helpers.Panic(this, PanicType.Error, "tim read overflow");
-                }
+                    Helpers.Panic(this, PanicType.Error, $"tim read overflow\r\n{tl}");
             }
 
             if (tim.hasClut)
@@ -346,11 +327,8 @@ namespace CTRFramework.Vram
                 tim.clutdata = GetCtrClut(tl);
             }
 
-
-            //Helpers.CheckFolder(Path.Combine(Meta.BasePath, "tims"));
-            //tim.Save(Path.Combine(Meta.BasePath, $"tims\\{tl.Tag}.tim"));
-            tim.ConvertTo16Bit();
-            //tim.Save(Path.Combine(Meta.BasePath, $"tims\\{tl.Tag}.tim"));
+            if (bpp != BitDepth.Bit16)
+                tim.ConvertTo16Bit();
 
             return tim;
         }
@@ -385,9 +363,11 @@ namespace CTRFramework.Vram
         {
             if (bpp == BitDepth.Bit16)
             {
-                Helpers.Panic(this, PanicType.Info, "No need to convert this TIM.");
+                Helpers.Panic(this, PanicType.Debug, "No need to convert this TIM.");
                 return;
             }
+
+            Helpers.Panic(this, PanicType.Debug, "Converting TIM to 16 bits.");
 
             ushort[] buffer = new ushort[0];
 
@@ -439,7 +419,6 @@ namespace CTRFramework.Vram
             clutdata = null;
 
             bpp = BitDepth.Bit16;
-
         }
 
 

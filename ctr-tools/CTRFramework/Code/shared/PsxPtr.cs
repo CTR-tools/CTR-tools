@@ -59,7 +59,7 @@ namespace CTRFramework.Shared
         /// </summary>
         /// <param name="bw">BinaryWriterEx instance.</param>
         /// <param name="patchTable">Patch table to update.</param>
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write((UIntPtr)value, patchTable);
         }

@@ -10,7 +10,7 @@ namespace CTRFramework
         public string Name;
         public short numFrames => (short)frames.Count;
         public short frameSize;
-        public int someOffset;//??
+        public int ptrUnk;//??
         public bool duplicateFrames = false;
 
         List<byte[]> frames = new List<byte[]>();
@@ -37,7 +37,7 @@ namespace CTRFramework
             numFrames &= 0x7fff;
 
             frameSize = br.ReadInt16();
-            someOffset = br.ReadInt32();
+            ptrUnk = br.ReadInt32();
 
             for (int i = 0; i < numFrames; i++)
                 frames.Add(br.ReadBytes(frameSize));
@@ -51,7 +51,7 @@ namespace CTRFramework
             bw.Write(Name.ToCharArray().Take(16).ToArray());
             bw.Write(numFrames & (duplicateFrames ? 1 : 0 ) << 15);
             bw.Write(frameSize);
-            bw.Write(someOffset);
+            bw.Write(ptrUnk);
 
             foreach (var frames in frames)
                 bw.Write(frames);
