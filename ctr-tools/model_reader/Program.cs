@@ -78,7 +78,7 @@ namespace model_reader
             {
                 case ".lev":
                     {
-                        var scene = Scene.FromFile(filename);
+                        var scene = CtrScene.FromFile(filename);
                         //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
                         scene.Export(Path.Combine(basepath, name), ExportFlags.All);
                         break;

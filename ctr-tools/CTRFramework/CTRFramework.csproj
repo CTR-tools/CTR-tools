@@ -117,7 +117,7 @@
     <Compile Include="Code\mpk\ModelPack.cs" />
     <Compile Include="Code\mpk\Icon.cs" />
     <Compile Include="Code\shared\InstanceList.cs" />
-    <Compile Include="Code\lev\Scene.cs" />
+    <Compile Include="Code\lev\CtrScene.cs" />
     <Compile Include="Code\lev\SceneHeader.cs" />
     <Compile Include="Code\lev\MeshInfo.cs" />
     <Compile Include="Code\lev\PickupHeader.cs" />

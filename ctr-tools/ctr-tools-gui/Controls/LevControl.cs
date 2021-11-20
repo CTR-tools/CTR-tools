@@ -13,7 +13,7 @@ namespace CTRTools.Controls
 {
     public partial class LevControl : UserControl
     {
-        Scene scn;
+        CtrScene scn;
 
         public LevControl()
         {
@@ -49,7 +49,7 @@ namespace CTRTools.Controls
             {
                 path = filename;
                 Helpers.BackupFile(path);
-                scn = Scene.FromFile(path);
+                scn = CtrScene.FromFile(path);
 
                 propertyGrid1.SelectedObject = null;
 
@@ -256,7 +256,7 @@ namespace CTRTools.Controls
 
         private void SaveLEV()
         {
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(path)))
+            using (var bw = new BinaryWriterEx(File.OpenWrite(path)))
             {
                 //update scene data with controls data
                 scn.verts = vertexArrayControl1.VertexArray;
@@ -357,7 +357,7 @@ namespace CTRTools.Controls
                     {
                         LNG lng = LNG.FromFile(ofd1.FileName);
 
-                        using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(ofd2.FileName)))
+                        using (var br = new BinaryReaderEx(File.OpenRead(ofd2.FileName)))
                         {
                             br.Jump(0x74280);
 
@@ -425,7 +425,7 @@ namespace CTRTools.Controls
             if (path != "")
             {
                 Helpers.RestoreFile(path);
-                scn = Scene.FromFile(path);
+                scn = CtrScene.FromFile(path);
             }
         }
 
@@ -487,7 +487,7 @@ namespace CTRTools.Controls
 
         private void scaleButton_Click(object sender, EventArgs e)
         {
-            float scale = 0.75f;
+            float scale = 0.5f;
 
             foreach (var vertex in vertexArrayControl1.VertexArray)
             {

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class Scene : IRead, IDisposable
+    public class CtrScene : IRead, IDisposable
     {
         public static bool ReadHiTex = true;
 
@@ -35,16 +35,16 @@ namespace CTRFramework
         public CtrVrm vram;
         public Tim ctrvram;
 
-        public Scene()
+        public CtrScene()
         {
         }
 
-        public Scene(string filename, Tim vram = null)
+        public CtrScene(string filename, Tim vram = null)
         {
             path = filename;
             name = Path.GetFileNameWithoutExtension(filename);
 
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 Read(br);
             }
@@ -73,10 +73,10 @@ namespace CTRFramework
             LoadTextures();
         }
 
-        public static Scene FromFile(string filename, bool readHi = true)
+        public static CtrScene FromFile(string filename, bool readHi = true)
         {
-            Scene.ReadHiTex = readHi;
-            return new Scene(filename);
+            CtrScene.ReadHiTex = readHi;
+            return new CtrScene(filename);
         }
 
         public List<Vector3s> posu2 = new List<Vector3s>();
@@ -494,10 +494,17 @@ namespace CTRFramework
         {
             int numLeaves = 0;
             int numBranches = 0;
+            uint maxQuads = 0;
+            uint minQuads = 9999;
 
             foreach (var v in visdata)
             {
-                if (v.IsLeaf) numLeaves++;
+                if (v.IsLeaf)
+                {
+                    numLeaves++;
+                    if (v.numQuadBlock > maxQuads) maxQuads = v.numQuadBlock;
+                    if (v.numQuadBlock < minQuads) minQuads = v.numQuadBlock;
+                }
                 if (!v.IsLeaf) numBranches++;
             }
 
@@ -512,7 +519,9 @@ namespace CTRFramework
             sb.AppendFormat("{0}: {1}\r\n", "skybox verts", (skybox != null ? skybox.Vertices.Count : 0));
             sb.AppendFormat("{0}: {1}\r\n", "visdata total", (visdata != null ? visdata.Count : 0));
             sb.AppendFormat("{0}: {1}\r\n", "visdata leaves", numLeaves);
-            sb.AppendFormat("{0}: {1}\r\n", "visdata branches", numBranches);
+            sb.AppendLine($"minblocks in leaf: {minQuads}");
+            sb.AppendLine($"maxblocks in leaf: {maxQuads}");
+
             sb.AppendLine($"bgmode: {header.bgMode}");
             sb.AppendLine($"color4: {header.color4.ToString("X8")}");
 
@@ -563,9 +572,9 @@ namespace CTRFramework
                         case Detail.Med:
                             foreach (CtrTex t in qb.tex)
                                 if (t != null)
-                                    if (t.midlods[2].Position != 0)
-                                        if (!tex.ContainsKey(t.midlods[2].Tag))
-                                            tex.Add(t.midlods[2].Tag, t.midlods[2]);
+                                    if (t.lod2.Position != 0)
+                                        if (!tex.ContainsKey(t.lod2.Tag))
+                                            tex.Add(t.lod2.Tag, t.lod2);
                             break;
 
                         case Detail.High:

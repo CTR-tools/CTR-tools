@@ -58,7 +58,7 @@ namespace CTRFramework.Lang
         /// <returns>LNG object.</returns>
         public static LNG FromFile(string filename, bool forceKatana = false)
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 return new LNG(br, forceKatana);
             }
@@ -142,7 +142,7 @@ namespace CTRFramework.Lang
         /// <param name="filename">Target file name.</param>
         public void Save(string filename)
         {
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(filename)))
+            using (var bw = new BinaryWriterEx(File.Create(filename)))
             {
                 Write(bw);
             }

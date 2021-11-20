@@ -40,6 +40,7 @@ namespace CTRTools.Controls
             this.fbd = new System.Windows.Forms.FolderBrowserDialog();
             this.bigLoader = new System.ComponentModel.BackgroundWorker();
             this.expandAll = new System.Windows.Forms.Button();
+            this.bigVersion = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -145,11 +146,20 @@ namespace CTRTools.Controls
             this.expandAll.UseVisualStyleBackColor = true;
             this.expandAll.Click += new System.EventHandler(this.expandAll_Click);
             // 
+            // bigVersion
+            // 
+            this.bigVersion.AutoSize = true;
+            this.bigVersion.Location = new System.Drawing.Point(105, 459);
+            this.bigVersion.Name = "bigVersion";
+            this.bigVersion.Size = new System.Drawing.Size(0, 13);
+            this.bigVersion.TabIndex = 11;
+            // 
             // BigFileControl
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.bigVersion);
             this.Controls.Add(this.expandAll);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.actionExportAll);
@@ -166,6 +176,7 @@ namespace CTRTools.Controls
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -181,5 +192,6 @@ namespace CTRTools.Controls
         private FolderBrowserDialog fbd;
         private System.ComponentModel.BackgroundWorker bigLoader;
         private Button expandAll;
+        private Label bigVersion;
     }
 }

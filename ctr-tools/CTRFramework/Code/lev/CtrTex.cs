@@ -7,7 +7,10 @@ namespace CTRFramework
 {
     public class CtrTex
     {
-        public TextureLayout[] midlods = new TextureLayout[3];
+        public TextureLayout lod0 = new TextureLayout();
+        public TextureLayout lod1 = new TextureLayout();
+        public TextureLayout lod2 = new TextureLayout();
+
         public TextureLayout[] hi = new TextureLayout[16];
         public List<TextureLayout> animframes = new List<TextureLayout>(); //this actually has several lods too
 
@@ -56,21 +59,24 @@ namespace CTRFramework
                 br.Jump(texpos);
             }
 
-            for (int i = 0; i < 3; i++)
-                midlods[i] = TextureLayout.FromReader(br);
+            lod0 = TextureLayout.FromReader(br);
+            lod1 = TextureLayout.FromReader(br);
+            lod2 = TextureLayout.FromReader(br);
 
             //Console.WriteLine(br.Position.ToString("X8"));
             //Console.ReadKey();
 
-            Helpers.Panic(this, PanicType.Debug, midlods[2].Tag);
+            Helpers.Panic(this, PanicType.Debug, lod0.Tag);
+            Helpers.Panic(this, PanicType.Debug, lod1.Tag);
+            Helpers.Panic(this, PanicType.Debug, lod2.Tag);
 
-            if (Scene.ReadHiTex)
+            if (CtrScene.ReadHiTex)
             {
                 ptrHi = br.ReadUInt32();
 
                 Helpers.Panic(this, PanicType.Debug, "hiptr: " + ptrHi.ToString("X8"));
 
-                if (Scene.ReadHiTex)
+                if (CtrScene.ReadHiTex)
                     //loosely assume we got a valid pointer
                     if (ptrHi > 0x30000 && ptrHi < 0xB0000)
                     {

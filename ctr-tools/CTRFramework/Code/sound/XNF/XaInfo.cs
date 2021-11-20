@@ -46,7 +46,7 @@ namespace CTRFramework.Sound
         /// <returns></returns>
         public static XaInfo FromFile(string filename)
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 XaInfo xa = XaInfo.FromReader(br);
                 xa.RootPath = Path.GetDirectoryName(filename);
@@ -127,7 +127,7 @@ namespace CTRFramework.Sound
         /// <param name="filename">Target file name.</param>
         public void Save(string filename)
         {
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(filename)))
+            using (var bw = new BinaryWriterEx(File.Create(filename)))
             {
                 Write(bw);
             }

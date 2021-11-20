@@ -42,7 +42,7 @@ namespace ctrviewer
         SpriteFont font;
 
         //ctr scenes
-        List<Scene> Scenes = new List<Scene>();
+        List<CtrScene> Scenes = new List<CtrScene>();
 
         BigFileReader big;
         Howl howl;
@@ -380,7 +380,7 @@ namespace ctrviewer
             IsLoading = false;
         }
 
-        private void LoadStuff(List<Scene> scenes)
+        private void LoadStuff(List<CtrScene> scenes)
         {
             IsLoading = true;
 
@@ -416,7 +416,7 @@ namespace ctrviewer
                 }
             }
 
-            foreach (Scene s in Scenes)
+            foreach (var s in Scenes)
             {
                 foreach (var t in s.ctrvram.textures)
                 {
@@ -443,17 +443,17 @@ namespace ctrviewer
 
         private void TestLoadKart()
         {
-            Scene cc = new Scene();
+            CtrScene cc = new CtrScene();
 
             if (big != null)
             {
                 big.FileCursor = 216; //menu_models.lev
-                cc = big.ReadEntry().ParseAs<Scene>();
+                cc = big.ReadEntry().ParseAs<CtrScene>();
             }
             else
             {
                 if (File.Exists("menu_models.lev"))
-                    cc = Scene.FromFile("menu_models.lev");
+                    cc = CtrScene.FromFile("menu_models.lev");
             }
 
             foreach (var model in cc.Models)
@@ -504,7 +504,7 @@ namespace ctrviewer
 
             foreach (var filename in filelist)
             {
-                Scenes.Add(Scene.FromFile(filename, false));
+                Scenes.Add(CtrScene.FromFile(filename, false));
             }
         }
 
@@ -569,7 +569,7 @@ namespace ctrviewer
 
             GameConsole.Write("textures extracted at: " + sw.Elapsed.TotalSeconds);
 
-            foreach (Scene s in Scenes)
+            foreach (var s in Scenes)
             {
                 eng.MeshHigh.Add(CrashTeamRacingLoader.FromScene(s, Detail.Med));
                 eng.MeshLow.Add(CrashTeamRacingLoader.FromScene(s, Detail.Low));
@@ -585,7 +585,7 @@ namespace ctrviewer
                     eng.sky = new MGLevel(Scenes[0].skybox);
             }
 
-            foreach (Scene scene in Scenes)
+            foreach (var scene in Scenes)
             {
                 if (scene.spawnGroups != null)
                 {
@@ -607,7 +607,7 @@ namespace ctrviewer
                 foreach (var model in scene.Models)
                     ContentVault.AddModel(model.Name, DataConverter.ToTriList(model));
 
-            foreach (Scene s in Scenes)
+            foreach (var s in Scenes)
             {
                 foreach (var pa in s.header.startGrid)
                     eng.paths.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
@@ -657,7 +657,7 @@ namespace ctrviewer
 
             GameConsole.Write("extracted dynamics an bsp at: " + sw.Elapsed.TotalSeconds);
 
-            foreach (Scene s in Scenes)
+            foreach (var s in Scenes)
             {
                 if (s.visdata.Count > 0)
                     BspPopulate(s.visdata[0], s, 0);
@@ -691,7 +691,7 @@ namespace ctrviewer
             new Color(0.0f,0.0f,0.0f,1.0f)
         };
 
-        private void BspPopulate(VisData visDat, Scene scene, int level)
+        private void BspPopulate(VisData visDat, CtrScene scene, int level)
         {
             List<VisData> childVisData = scene.GetVisDataChildren(visDat); // if node has children get those children
             if (childVisData.Count > 0)  // has any children?
@@ -1205,7 +1205,7 @@ namespace ctrviewer
                 return;
             }
 
-            List<Scene> scenes = new List<Scene>();
+            List<CtrScene> scenes = new List<CtrScene>();
 
             for (int i = 0; i < absId.Length; i++)
             {
@@ -1225,7 +1225,7 @@ namespace ctrviewer
                 if (Path.GetExtension(big.GetFilename()) != ".lev")
                     return;
 
-                Scene scene = big.ReadEntry().ParseAs<Scene>();
+                CtrScene scene = big.ReadEntry().ParseAs<CtrScene>();
                 scene.SetVram(vrm);
 
                 scenes.Add(scene);

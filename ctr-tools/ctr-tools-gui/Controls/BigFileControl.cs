@@ -1,6 +1,7 @@
 ﻿using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Lang;
+using CTRFramework.Vram;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -168,19 +169,29 @@ namespace CTRTools.Controls
                     switch (Path.GetExtension(en.Name).ToLower())
                     {
                         case ".lng":
-                            LNG lng = en.ParseAs<LNG>();
+                            var lng = en.ParseAs<LNG>();
                             fileInfo.Lines = lng.Entries.ToArray();
                             break;
 
                         case ".lev":
-                            Scene lev = en.ParseAs<Scene>();
+                            var lev = en.ParseAs<CtrScene>();
                             fileInfo.Text = lev.ToString();
                             break;
 
                         case ".ctr":
-                            PatchedContainer pc = en.ParseAs<PatchedContainer>();
-                            CtrModel ctr = CtrModel.FromReader(pc.GetReader());
+                            var pc = en.ParseAs<PatchedContainer>();
+                            var ctr = CtrModel.FromReader(pc.GetReader());
                             fileInfo.Text = ctr.ToString();
+                            break;
+
+                        case ".vrm":
+                            var vrm = en.ParseAs<CtrVrm>();
+                            fileInfo.Text = vrm.ToString();
+                            break;
+
+                        case ".tim":
+                            var tim = en.ParseAs<Tim>();
+                            fileInfo.Text = tim.ToString();
                             break;
                     }
                 }

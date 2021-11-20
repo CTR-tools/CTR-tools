@@ -54,7 +54,7 @@ namespace CTRFramework.Vram
 
         public static Tim FromFile(string fn)
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(fn)))
+            using (var br = new BinaryReaderEx(File.OpenRead(fn)))
             {
                 return FromReader(br);
             }
@@ -133,7 +133,7 @@ namespace CTRFramework.Vram
         /// <param name="filename">Filename.</param>
         public void Save(string filename)
         {
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(filename)))
+            using (var bw = new BinaryWriterEx(File.OpenWrite(filename)))
             {
                 Write(bw);
             }
@@ -246,7 +246,7 @@ namespace CTRFramework.Vram
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                using (BinaryWriterEx bw = new BinaryWriterEx(ms))
+                using (var bw = new BinaryWriterEx(ms))
                 {
                     BMPHeader bh = new BMPHeader();
                     bh.Update(region.Width * 4, region.Height, 16, 4);

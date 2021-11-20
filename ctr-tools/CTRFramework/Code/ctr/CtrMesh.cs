@@ -222,6 +222,12 @@ namespace CTRFramework
 
             Helpers.Panic(this, PanicType.Debug, "tlcnt: " + tl.Count);
 
+            foreach (var t in tl)
+            {
+                t.uv[3] = t.uv[2];
+                t.NormalizeUV();
+            }
+
 
 
             //if static model

@@ -34,19 +34,19 @@ namespace CTRTools.Controls
                 return;
             }
 
-            using (Scene scn = Scene.FromFile(pathFile.Text))
+            using (var scene = CtrScene.FromFile(pathFile.Text))
             {
-                Tim ctr = scn.ctrvram;
+                var vrm = scene.ctrvram;
 
                 //dumping vram before the change
                 if (optionDebugVram.Checked)
                     //only dump if file doesn't exist (to compare to earliest version of vram)
                     if (!File.Exists(Path.Combine(pathFileParent, "test_old.bmp")))
-                        ctr.SaveBMP(Path.Combine(pathFileParent, "test_old.bmp"), BMPHeader.GrayScalePalette(16));
+                        vrm.SaveBMP(Path.Combine(pathFileParent, "test_old.bmp"), BMPHeader.GrayScalePalette(16));
 
-                Dictionary<string, TextureLayout> list = scn.GetTexturesList();
+                var list = scene.GetTexturesList();
 
-                foreach (string s in Directory.GetFiles(pathFolder.Text, "*.png"))
+                foreach (var s in Directory.GetFiles(pathFolder.Text, "*.png"))
                 {
                     string tag = Path.GetFileNameWithoutExtension(s);
 
@@ -54,34 +54,34 @@ namespace CTRTools.Controls
 
                     if (!list.ContainsKey(tag))
                     {
-                        Helpers.Panic(ctr, PanicType.Warning, "unknown texture entry");
+                        Helpers.Panic(vrm, PanicType.Warning, "unknown texture entry");
                         continue;
                     }
 
-                    Tim newtex = ctr.GetTimTexture(list[tag]);
+                    Tim newtex = vrm.GetTimTexture(list[tag]);
                     newtex.LoadDataFromBitmap(s);
 
-                    ctr.DrawTim(newtex);
+                    vrm.DrawTim(newtex);
 
                     Console.WriteLine("done.");
                 }
 
                 if (optionDebugVram.Checked)
-                    ctr.SaveBMP(Path.Combine(pathFileParent, "test_new.bmp"), BMPHeader.GrayScalePalette(16));
+                    vrm.SaveBMP(Path.Combine(pathFileParent, "test_new.bmp"), BMPHeader.GrayScalePalette(16));
 
 
                 List<Tim> tims = new List<Tim>();
 
                 //throw new Exception("reimplement frames via ctrvram2");
-                tims.Add(ctr.GetTrueColorTexture(new Rectangle(512, 0, 384, 256)));
-                tims.Add(ctr.GetTrueColorTexture(new Rectangle(512, 256, 512, 256)));
+                tims.Add(vrm.GetTrueColorTexture(new Rectangle(512, 0, 384, 256)));
+                tims.Add(vrm.GetTrueColorTexture(new Rectangle(512, 256, 512, 256)));
 
                 string vramFile = Path.ChangeExtension(pathFile.Text, ".vrm");
 
                 Helpers.BackupFile(vramFile);
                 File.Delete(vramFile);
 
-                using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(vramFile)))
+                using (var bw = new BinaryWriterEx(File.Create(vramFile)))
                 {
                     bw.Write((int)0x20);
 
@@ -110,7 +110,7 @@ namespace CTRTools.Controls
                 return;
             }
 
-            using (Scene s = Scene.FromFile(pathFile.Text))
+            using (var s = CtrScene.FromFile(pathFile.Text))
             {
                 if (optionTexHigh.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texHigh"), Detail.High);
                 if (optionTexMed.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texMed"), Detail.Med);
@@ -209,13 +209,13 @@ namespace CTRTools.Controls
                 return;
             }
 
-            using (Scene scn = Scene.FromFile(pathFile.Text))
+            using (var scn = CtrScene.FromFile(pathFile.Text))
             {
                 Tim ctr = scn.ctrvram;
 
                 try
                 {
-                    using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(StringToByteArrayFastest(textBox1.Text))))
+                    using (var br = new BinaryReaderEx(new MemoryStream(StringToByteArrayFastest(textBox1.Text))))
                     {
                         TextureLayout tl = new TextureLayout(br);
                         pictureBox1.Image = ctr.GetTexture(tl);

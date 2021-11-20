@@ -39,7 +39,7 @@ namespace howl
             switch (ext)
             {
                 case ".hwl":
-                    using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+                    using (var br = new BinaryReaderEx(File.OpenRead(filename)))
                     {
                         Howl hwl = Howl.FromReader(br);
 

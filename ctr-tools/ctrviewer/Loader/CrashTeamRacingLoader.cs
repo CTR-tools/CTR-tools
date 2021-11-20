@@ -11,17 +11,17 @@ namespace ctrviewer.Loaders
 {
     public class CrashTeamRacingLoader : MGLevel
     {
-        public CrashTeamRacingLoader(Scene s, Detail detail)
+        public CrashTeamRacingLoader(CtrScene s, Detail detail)
         {
             LoadCrashTeamRacingScene(s, detail);
         }
 
-        public static MGLevel FromScene(Scene s, Detail detail)
+        public static MGLevel FromScene(CtrScene s, Detail detail)
         {
             return new CrashTeamRacingLoader(s, detail);
         }
 
-        private void LoadCrashTeamRacingScene(Scene s, Detail detail)
+        private void LoadCrashTeamRacingScene(CtrScene s, Detail detail)
         {
             boundingBox = new Microsoft.Xna.Framework.BoundingBox(
                 DataConverter.ToVector3(s.visdata[0].bbox.numericMin),
@@ -102,16 +102,17 @@ namespace ctrviewer.Loaders
                                     bool isAnimated = false;
                                     string texTag = "test";
                                     BlendState blendState = BlendState.Opaque;
+                                    BlendingMode bmode = BlendingMode.Standard;
 
                                     if (qb.ptrTexMid[j] != PsxPtr.Zero)
                                     {
                                         if (qb.tex[j] != null)
                                         {
                                             isAnimated = qb.tex[j].isAnimated;
-                                            if (texTag != "00000000")
-                                                texTag = qb.tex[j].midlods[2].Tag;
+                                            texTag = qb.tex[j].lod2.Tag;
+                                            bmode = qb.tex[j].lod2.blendingMode;
 
-                                            switch (qb.tex[j].midlods[2].blendingMode)
+                                            switch (bmode)
                                             {
                                                 case BlendingMode.Additive: blendState = BlendState.Additive; break;
                                                 case BlendingMode.Translucent: blendState = BlendState.AlphaBlend; break;
@@ -137,7 +138,7 @@ namespace ctrviewer.Loaders
                                         continue;
                                     }
 
-                                    bool isAlpha = ContentVault.alphalist.Contains(texTag);
+                                    bool isAlpha = ContentVault.alphalist.Contains(texTag) || bmode != BlendingMode.Standard;
 
                                     Push(Trilists, texTag, monolist,
                                         (isAnimated ? TriListType.Animated : (isAlpha ? TriListType.Alpha : TriListType.Basic)), blendState

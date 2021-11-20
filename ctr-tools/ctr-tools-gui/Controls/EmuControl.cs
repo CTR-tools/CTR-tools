@@ -9,7 +9,7 @@ namespace CTRTools.Controls
     public partial class EmuControl : UserControl
     {
         string path;
-        Scene scn;
+        CtrScene scn;
 
         Mem m;
         Char c;
@@ -122,7 +122,7 @@ namespace CTRTools.Controls
 
             MeshInfo mi;
 
-            using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(meshinfodata)))
+            using (var br = new BinaryReaderEx(new MemoryStream(meshinfodata)))
             {
                 mi = new MeshInfo(br);
             }

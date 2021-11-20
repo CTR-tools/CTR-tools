@@ -37,7 +37,7 @@ namespace CTRFramework_Tests
         {
             GenerateTestData();
 
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(filenameTest)))
+            using (var bw = new BinaryWriterEx(File.OpenWrite(filenameTest)))
             {
                 foreach (var ptr in initial)
                 {
@@ -57,7 +57,7 @@ namespace CTRFramework_Tests
         {
             Console.WriteLine("Verification pointers:");
 
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filenameTest)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filenameTest)))
             {
                 for (int i = 0; i < initial.Count; i++)
                 {

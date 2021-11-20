@@ -24,7 +24,7 @@ namespace CTRFramework
 
             byte[] data = File.ReadAllBytes(s);
 
-            using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(data)))
+            using (var br = new BinaryReaderEx(new MemoryStream(data)))
             {
                 int size = br.ReadInt32();
                 br.Jump(size + 4);
@@ -41,7 +41,7 @@ namespace CTRFramework
                 {
                     using (MemoryStream ms = new MemoryStream(data, 4, size))
                     {
-                        using (BinaryReaderEx br2 = new BinaryReaderEx(ms))
+                        using (var br2 = new BinaryReaderEx(ms))
                         {
                             Read(br2);
                         }

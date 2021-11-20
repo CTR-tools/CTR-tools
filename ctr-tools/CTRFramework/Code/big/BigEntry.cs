@@ -54,7 +54,7 @@ namespace CTRFramework.Big
 
         public T ParseAs<T>() where T : IRead, new()
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(Data)))
+            using (var br = new BinaryReaderEx(new MemoryStream(Data)))
             {
                 return Instance<T>.FromReader(br, 0);
             }

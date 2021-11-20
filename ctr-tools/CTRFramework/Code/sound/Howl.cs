@@ -70,7 +70,7 @@ namespace CTRFramework.Sound
 
         public static Howl FromFile(string filename)
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 return FromReader(br);
             }
@@ -361,7 +361,7 @@ namespace CTRFramework.Sound
         {
             Helpers.CheckFolder(Path.GetDirectoryName(filename));
 
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(filename)))
+            using (var bw = new BinaryWriterEx(File.OpenWrite(filename)))
             {
                 Write(bw);
             }

@@ -60,7 +60,7 @@ namespace ctrviewer.Engine.Testing
             return value * (float)gameTime.ElapsedGameTime.TotalMilliseconds * KartPhysics.TargetFps / 1000;
         }
 
-        public void Collide(List<Scene> scenes)
+        public void Collide(List<CtrScene> scenes)
         {
             foreach (var scene in scenes)
                 foreach (var quad in scene.quads)
@@ -110,7 +110,7 @@ namespace ctrviewer.Engine.Testing
                         }
         }
 
-        public void Update(GameTime gameTime, List<Scene> scenes)
+        public void Update(GameTime gameTime, List<CtrScene> scenes)
         {
             oldPosition = Position;
 

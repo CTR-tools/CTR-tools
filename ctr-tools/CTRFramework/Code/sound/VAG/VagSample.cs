@@ -41,7 +41,7 @@ namespace CTRFramework.Sound
         /// <returns></returns>
         public static VagSample FromFile(string filename)
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 return VagSample.FromReader(br);
             }
@@ -92,7 +92,7 @@ namespace CTRFramework.Sound
         /// <param name="filename">Target file name.</param>
         public void Save(string filename)
         {
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(filename)))
+            using (var bw = new BinaryWriterEx(File.Create(filename)))
             {
                 Write(bw);
             }
@@ -131,7 +131,7 @@ namespace CTRFramework.Sound
         /// <param name="filename">Target WAV filename.</param>
         public void ExportWav(string filename)
         {
-            using (BinaryWriterEx wav = new BinaryWriterEx(File.Create(filename)))
+            using (var wav = new BinaryWriterEx(File.Create(filename)))
             {
                 wav.Write("RIFF".ToCharArray());
                 wav.Write((int)0);

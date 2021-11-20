@@ -42,7 +42,7 @@ namespace CTRFramework.Vram
 
         public static CtrVrm FromFile(string filename)
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 return FromReader(br);
             }

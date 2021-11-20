@@ -290,7 +290,7 @@ namespace CTRFramework
         };
         */
 
-        public List<Vertex> GetVertexList(Scene s)
+        public List<Vertex> GetVertexList(CtrScene s)
         {
             List<Vertex> buf = new List<Vertex>();
 
@@ -410,7 +410,7 @@ namespace CTRFramework
                         {
                             if (!tex[i].isAnimated)
                             {
-                                buf[j].uv = tex[i].midlods[2].normuv[uvinds[j] - 1];
+                                buf[j].uv = tex[i].lod2.normuv[uvinds[j] - 1];
                             }
                             else
                             {
@@ -501,7 +501,7 @@ namespace CTRFramework
                                     sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
                                 }
 
-                                sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? (tex[i] != null ? tex[i].midlods[2].Tag : "default") : "default"));
+                                sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? (tex[i] != null ? tex[i].lod2.Tag : "default") : "default"));
 
                                 if (objSaveQuads)
                                 {
@@ -581,7 +581,7 @@ namespace CTRFramework
                             {
                                 if (tex.Count == 4)
                                 {
-                                    sb.AppendLine(tex[i].midlods[2].ToObj());
+                                    sb.AppendLine(tex[i].lod2.ToObj());
                                 }
                                 else
                                 {

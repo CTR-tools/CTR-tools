@@ -9,6 +9,8 @@ namespace CTRFramework.Big
 {
     public class BigFileReader : BinaryReaderEx
     {
+        public string Version = "Unknown.";
+
         public int FileCursor = -1;
 
         private int totalFiles = 0;
@@ -98,7 +100,8 @@ namespace CTRFramework.Big
             {
                 if (md5.ToLower() == el["md5"].InnerText.ToLower())
                 {
-                    Helpers.Panic(this, PanicType.Info, $"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.\r\nUsing {el["list"].InnerText}");
+                    Version = $"{el["name"].InnerText} [{el["region"].InnerText}]";
+                    Helpers.Panic(this, PanicType.Info, $"{md5}\r\n{Version} detected.\r\nUsing {el["list"].InnerText}");
                     names = Meta.GetBigList(el["list"].InnerText);
                     return;
                 }

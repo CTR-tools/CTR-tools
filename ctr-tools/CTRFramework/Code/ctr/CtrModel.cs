@@ -118,7 +118,7 @@ namespace CTRFramework
         /// <param name="filename">Target file name.</param>
         public void Save(string path, string filename)
         {
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.Create(Path.Combine(path, filename))))
+            using (var bw = new BinaryWriterEx(File.Create(Path.Combine(path, filename))))
             {
                 Write(bw);
             }
@@ -210,7 +210,7 @@ namespace CTRFramework
         /// <returns>CtrModel object.</returns>
         public static CtrModel FromFile(string filename, bool usePatchCon = true)
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 return FromReader(br, true);
             }

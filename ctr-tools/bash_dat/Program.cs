@@ -88,9 +88,9 @@ namespace bash_dat
             {
                 Dictionary<int, string> filelist = Meta.LoadNumberedList("bash_filelist.txt");
 
-                using (BinaryReaderEx hdr = new BinaryReaderEx(File.Open(filename, FileMode.Open)))
+                using (var hdr = new BinaryReaderEx(File.Open(filename, FileMode.Open)))
                 {
-                    using (BinaryReaderEx dat = new BinaryReaderEx(File.Open(datapath, FileMode.Open)))
+                    using (var dat = new BinaryReaderEx(File.Open(datapath, FileMode.Open)))
                     {
                         string magic = hdr.ReadStringFixed(8);
 
@@ -176,7 +176,7 @@ namespace bash_dat
 
         static void LoadTextureFile(string filename)
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 TexPak x = new TexPak(br);
 
@@ -216,7 +216,7 @@ namespace bash_dat
 
                     b.UpdateData(pal, Tim.FixPixelOrder(t.data));
 
-                    using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite($"{path}\\tex_" + num + (bad ? "_badpal" : "") + ".bmp")))
+                    using (var bw = new BinaryWriterEx(File.OpenWrite($"{path}\\tex_" + num + (bad ? "_badpal" : "") + ".bmp")))
                     {
                         b.Write(bw);
                     }
@@ -230,7 +230,7 @@ namespace bash_dat
         {
             List<BashMesh> models = new List<BashMesh>();
 
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 br.Jump(0x54);
 

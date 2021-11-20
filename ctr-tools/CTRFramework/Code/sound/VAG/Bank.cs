@@ -28,7 +28,7 @@ namespace CTRFramework.Sound
 
         public static Bank FromFile(string filename)
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 return Bank.FromReader(br);
             }
@@ -129,7 +129,7 @@ namespace CTRFramework.Sound
 
                 //Console.WriteLine(vagname);
 
-                using (BinaryReaderEx br = new BinaryReaderEx(new MemoryStream(samples[id])))
+                using (var br = new BinaryReaderEx(new MemoryStream(samples[id])))
                 {
                     VagSample vag = new VagSample();
                     if (freq != -1)

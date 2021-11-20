@@ -50,7 +50,7 @@ namespace CTRFramework
 
         public void Save(string filename)
         {
-            using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(filename)))
+            using (var bw = new BinaryWriterEx(File.OpenWrite(filename)))
             {
                 Write(bw);
             }
@@ -58,7 +58,7 @@ namespace CTRFramework
 
         public static PatchedContainer FromFile(string filename)
         {
-            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 return FromReader(br);
             }
