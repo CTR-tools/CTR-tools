@@ -1,7 +1,7 @@
 ﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace CTRFramework
 {
@@ -49,7 +49,7 @@ namespace CTRFramework
                 Helpers.Panic(this, PanicType.Warning, $"Name too long, will be truncated: {Name}");
 
             bw.Write(Name.ToCharArray().Take(16).ToArray());
-            bw.Write(numFrames & (duplicateFrames ? 1 : 0 ) << 15);
+            bw.Write(numFrames & (duplicateFrames ? 1 : 0) << 15);
             bw.Write(frameSize);
             bw.Write(ptrUnk);
 

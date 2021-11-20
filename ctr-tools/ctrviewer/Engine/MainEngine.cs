@@ -1,9 +1,9 @@
-﻿using ctrviewer.Engine.Render;
+﻿using CTRFramework.Shared;
+using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using CTRFramework.Shared;
 using System.IO;
 
 namespace ctrviewer.Engine

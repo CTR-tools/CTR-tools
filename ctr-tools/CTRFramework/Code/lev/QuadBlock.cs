@@ -345,7 +345,7 @@ namespace CTRFramework
 
                     uvinds = GetUVIndices2(1, 2, 3, 4);
 
-                   
+
                     switch (faceFlags[i].rotateFlipType)
                     {
                         case RotateFlipType.None: uvinds = GetUVIndices2(1, 2, 3, 4); break;
@@ -358,8 +358,8 @@ namespace CTRFramework
                         case RotateFlipType.FlipRotate270: uvinds = GetUVIndices2(1, 3, 2, 4); break;
                         default: throw new Exception("Impossible rotatefliptype.");
                     }
-                    
-                    
+
+
                     switch (faceFlags[i].faceMode)
                     {
                         case FaceMode.SingleUV1:
@@ -376,7 +376,7 @@ namespace CTRFramework
                                 break;
                             }
                     }
-                    
+
 
 
                     if (i > 4 || i < 0)

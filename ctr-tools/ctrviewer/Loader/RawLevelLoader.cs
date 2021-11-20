@@ -1,10 +1,10 @@
-﻿using ctrviewer.Engine;
+﻿using Assimp;
+using ctrviewer.Engine;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using Assimp;
 using System;
+using System.Collections.Generic;
 
 namespace ctrviewer.Loaders
 {
@@ -59,12 +59,12 @@ namespace ctrviewer.Loaders
                             new VertexPositionColorTexture(
                                 Convert(mesh.Vertices[i]),
                                 new Color(val, val, val) * (1.25f - mesh.Vertices[i].Y / 10f),
-                                new Vector2(0,0)
+                                new Vector2(0, 0)
                                 )
                             );
 
                         //VertexPositionColorTexture v = monolist[0];
-                       // monolist[0] = monolist[1];
+                        // monolist[0] = monolist[1];
                         //monolist[1] = v;
                     }
 

@@ -130,8 +130,8 @@ namespace CTRFramework.Lang
 
             for (int i = 0; i < Entries.Count - 1; i++)
                 sb.AppendLine(Entries[i] == null ? "null" : Entries[i]);
-            
-            sb.Append(Entries[Entries.Count-1] == null ? "null" : Entries[Entries.Count-1]);
+
+            sb.Append(Entries[Entries.Count - 1] == null ? "null" : Entries[Entries.Count - 1]);
 
             return sb.ToString();
         }

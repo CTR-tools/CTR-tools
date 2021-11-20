@@ -34,7 +34,8 @@ namespace CTRFramework.Vram
 
         public BitDepth bpp = BitDepth.Bit16;
 
-        public bool hasClut {
+        public bool hasClut
+        {
             get
             {
                 switch (bpp)
@@ -151,7 +152,7 @@ namespace CTRFramework.Vram
                 bw.Write((short)clutregion.Y);
                 bw.Write((short)clutregion.Width);
                 bw.Write((short)clutregion.Height);
-                foreach (ushort u in clutdata) 
+                foreach (ushort u in clutdata)
                     bw.Write(u);
             }
 
@@ -685,7 +686,7 @@ namespace CTRFramework.Vram
             else
             {
                 //if (blendingMode != BlendingMode.Standard)
-                    a = 127;
+                a = 127;
                 /*
                 r = 0;
                 g = 255;

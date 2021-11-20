@@ -325,12 +325,12 @@ namespace CTRFramework
                 clr[2] = clr[3];
                 clr[3] = cols[d.colorIndex];
 
-                
+
                 tlb[0] = tlb[1];
                 tlb[1] = tlb[2];
                 tlb[2] = tlb[3];
                 tlb[3] = (d.texIndex == 0 ? null : tl[d.texIndex - 1]);
-                
+
 
                 if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
@@ -406,7 +406,7 @@ namespace CTRFramework
             sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
             sb.AppendLine($"#{Meta.GetVersion()}");
             sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
-            
+
             if (tl.Count > 0)
                 sb.AppendLine($"mtllib {filename}.mtl\r\n");
 
@@ -428,7 +428,7 @@ namespace CTRFramework
 
             for (int i = 0; i < verts.Count / 3; i++)
             {
-                 if (matIndices[i] != null)
+                if (matIndices[i] != null)
                 {
                     //sb.AppendLine(matIndices[i].ToObj(3));
 
@@ -439,7 +439,7 @@ namespace CTRFramework
                         sb.AppendLine($"vt {verts[i * 3 + j].uv.X / 255f} {-verts[i * 3 + j].uv.Y / 255f}");
                     }
                 }
-                 else
+                else
                 {
                     sb.AppendLine($"usemtl no_texture");
                     sb.AppendLine($"vt 0 0");

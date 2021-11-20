@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.Numerics;
+using System.Text;
 
 namespace CTRFramework.Vram
 {
@@ -195,7 +195,7 @@ namespace CTRFramework.Vram
 
         public override string ToString()
         {
-            return 
+            return
                 $"offset: {offset.ToString("X8")}\r\n\t" +
                 $"UV: ({uv[0]}, {uv[1]}, {uv[2]}, {uv[3]})\r\n\t" +
                 $"palette: ({PalX}, {PalY})\r\n\t" +
@@ -244,7 +244,7 @@ namespace CTRFramework.Vram
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
-        { 
+        {
             bw.WriteVector2b(uv[0]);
             bw.Write(Palette.X & Palette.Y << 6);
             bw.WriteVector2b(uv[1]);

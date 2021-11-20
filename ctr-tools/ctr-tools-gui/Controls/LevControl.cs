@@ -261,7 +261,7 @@ namespace CTRTools.Controls
                 //update scene data with controls data
                 scn.verts = vertexArrayControl1.VertexArray;
 
-                
+
                 bw.Jump(4);
 
                 scn.header.Write(bw);
@@ -284,7 +284,7 @@ namespace CTRTools.Controls
                 foreach (var vert in scn.verts)
                     vert.Write(bw);
 
-                
+
                 bw.Jump(scn.mesh.ptrQuadBlocks + 4);
 
                 foreach (var qb in scn.quads)
@@ -299,7 +299,7 @@ namespace CTRTools.Controls
                 */
 
                 bw.Jump(scn.mesh.ptrVisData + 4);
-                
+
                 foreach (var vis in scn.visdata)
                     vis.Write(bw);
 
@@ -505,20 +505,20 @@ namespace CTRTools.Controls
                     quad.faceNormal[i] /= (scale * scale);
                 }
             }
-            
+
 
             foreach (var vis in scn.visdata)
             {
-                 vis.bbox.Min.Scale(scale);
-                 vis.bbox.Max.Scale(scale);
+                vis.bbox.Min.Scale(scale);
+                vis.bbox.Max.Scale(scale);
             }
 
-            
+
             foreach (var pos in scn.header.startGrid)
             {
                 pos.Position *= scale;
             }
-            
+
             foreach (var pos in scn.restartPts)
             {
                 pos.Position *= scale;

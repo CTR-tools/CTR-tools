@@ -85,7 +85,7 @@ namespace ctrviewer.Engine.Testing
                                 Vector3 p2 = DataConverter.ToVector3(vertices[1].Position);
                                 Vector3 p3 = DataConverter.ToVector3(vertices[2].Position);
                                 Vector3 p4 = DataConverter.ToVector3(vertices[3].Position);
-                                
+
 
 
                                 var ab = p1 - p2;
@@ -93,20 +93,20 @@ namespace ctrviewer.Engine.Testing
 
                                 ab.Normalize();
                                 cb.Normalize();
-                                
+
                                 var normal = Vector3.Cross(ab, cb);
 
                             }
 
 
-                            
+
                             if (Position.Y <= quad.bbox.numericMax.Y)
                             {
                                 Position.Y = quad.bbox.numericMax.Y;
                                 Gravity = 0;
                                 return;
                             }
-                            
+
                         }
         }
 

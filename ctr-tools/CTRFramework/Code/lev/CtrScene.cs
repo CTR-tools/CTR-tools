@@ -263,7 +263,7 @@ namespace CTRFramework
             Console.WriteLine($"waterleaf={waterleaf} waterbranch={waterbranch}");
             Console.ReadKey();
 
-            
+
             foreach (QuadBlock qb in quads)
             {
                 if (qb.ptrTexMid[0] == PsxPtr.Zero)
@@ -302,7 +302,7 @@ namespace CTRFramework
             }
 
             Helpers.WriteToFile(".\\mosaic_test.txt", sb.ToString());
-            
+
             foreach (var quad in quads)
             {
                 //quad.ColTest(verts);

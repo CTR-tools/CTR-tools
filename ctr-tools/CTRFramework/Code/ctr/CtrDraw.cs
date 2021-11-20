@@ -1,5 +1,4 @@
-﻿using System;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 
 namespace CTRFramework
 {

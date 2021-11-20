@@ -540,7 +540,7 @@ namespace ctrviewer
                 karts[0].ModelName = eng.Settings.PlayerModel;
             }
 
-            
+
             if (Directory.Exists("custom"))
             {
                 string[] files = Directory.GetFiles("custom", "*");
@@ -557,7 +557,7 @@ namespace ctrviewer
                     }
                 }
             }
-            
+
             Stopwatch sw = new Stopwatch();
             sw.Start();
 

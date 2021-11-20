@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CTRFramework;
+using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using CTRFramework;
-using CTRFramework.Shared;
 
 namespace CTRTools.Controls
 {

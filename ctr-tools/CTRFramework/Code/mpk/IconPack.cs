@@ -1,9 +1,8 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
-using System.IO;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -101,7 +100,7 @@ namespace CTRFramework
             foreach (var iconname in Groups["largefont"])
                 glyphs.Add(tim.GetTexture(Icons[iconname].tl));
 
-            
+
             Bitmap bmp = new Bitmap(160, 80);
             Graphics g = Graphics.FromImage(bmp);
 
