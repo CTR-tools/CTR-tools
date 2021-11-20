@@ -21,7 +21,7 @@ namespace CTRFramework.Big
         {
             get
             {
-                Jump(FileCursor * 8 + 4);
+                Jump(FileCursor * 8 + 12);
                 return ReadInt32();
             }
         }

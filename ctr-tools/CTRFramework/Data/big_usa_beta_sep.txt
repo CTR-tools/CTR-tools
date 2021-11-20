@@ -129,6 +129,8 @@
 110=levels\tracks\space\relic\data.vrm
 111=levels\tracks\space\relic\data.lev
 
+# coco1 name is taken from demo, final build calls it alphalt1
+
 112=levels\tracks\coco1\1P\data.vrm
 113=levels\tracks\coco1\1P\data.lev
 114=levels\tracks\coco1\2P\data.vrm
@@ -137,6 +139,8 @@
 117=levels\tracks\coco1\4P\data.lev
 118=levels\tracks\coco1\relic\data.vrm
 119=levels\tracks\coco1\relic\data.lev
+
+# arena2 name is taken from demo, final build calls it alphalt2
 
 120=levels\tracks\arena2\1P\data.vrm
 121=levels\tracks\arena2\1P\data.lev
@@ -282,6 +286,7 @@
 240=cutscenes\last_oxide_intro\data.lev
 241=cutscenes\last_oxide_intro\data.ptr
 
+#242-244 - unknown empty slots
 
 # ==========245 = MAIN MENU/JAP FONT SECTION===============
 

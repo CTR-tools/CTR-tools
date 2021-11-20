@@ -48,7 +48,8 @@ namespace CTRFramework.Big
 
         public void Save(string path)
         {
-            Helpers.WriteToFile(Path.Combine(path, Name), Data);
+            if (Data.Length > 0)
+                Helpers.WriteToFile(Path.Combine(path, Name), Data);
         }
 
         public T ParseAs<T>() where T : IRead, new()

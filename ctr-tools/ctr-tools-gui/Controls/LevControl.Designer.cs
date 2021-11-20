@@ -34,7 +34,7 @@ namespace CTRTools.Controls
             this.tabPickups = new System.Windows.Forms.TabPage();
             this.scaleButton = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.button3 = new System.Windows.Forms.Button();
+            this.moveAllButton = new System.Windows.Forms.Button();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabVerts = new System.Windows.Forms.TabPage();
@@ -96,7 +96,7 @@ namespace CTRTools.Controls
             // 
             this.tabPickups.Controls.Add(this.scaleButton);
             this.tabPickups.Controls.Add(this.numericUpDown1);
-            this.tabPickups.Controls.Add(this.button3);
+            this.tabPickups.Controls.Add(this.moveAllButton);
             this.tabPickups.Controls.Add(this.trackBar1);
             this.tabPickups.Controls.Add(this.propertyGrid1);
             this.tabPickups.Location = new System.Drawing.Point(4, 22);
@@ -139,19 +139,20 @@ namespace CTRTools.Controls
             0,
             0});
             // 
-            // button3
+            // moveAllButton
             // 
-            this.button3.Location = new System.Drawing.Point(117, 28);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(89, 23);
-            this.button3.TabIndex = 16;
-            this.button3.Text = "move all";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.actionMoveAll);
+            this.moveAllButton.Location = new System.Drawing.Point(117, 28);
+            this.moveAllButton.Name = "moveAllButton";
+            this.moveAllButton.Size = new System.Drawing.Size(89, 23);
+            this.moveAllButton.TabIndex = 16;
+            this.moveAllButton.Text = "Move all";
+            this.moveAllButton.UseVisualStyleBackColor = true;
+            this.moveAllButton.Click += new System.EventHandler(this.moveAllButton_Click);
             // 
             // trackBar1
             // 
-            this.trackBar1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.trackBar1.Location = new System.Drawing.Point(3, 3);
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Orientation = System.Windows.Forms.Orientation.Vertical;
@@ -166,9 +167,9 @@ namespace CTRTools.Controls
             this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.propertyGrid1.Location = new System.Drawing.Point(214, 2);
+            this.propertyGrid1.Location = new System.Drawing.Point(214, 3);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(406, 365);
+            this.propertyGrid1.Size = new System.Drawing.Size(409, 412);
             this.propertyGrid1.TabIndex = 14;
             // 
             // tabVerts
@@ -506,7 +507,7 @@ namespace CTRTools.Controls
         private TabControl tabControl1;
         private TabPage tabPickups;
         private NumericUpDown numericUpDown1;
-        private Button button3;
+        private Button moveAllButton;
         private TrackBar trackBar1;
         private PropertyGrid propertyGrid1;
         private TabPage tabVerts;

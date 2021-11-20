@@ -67,7 +67,7 @@ namespace CTRTools.Controls
             }
         }
 
-        private void actionMoveAll(object sender, EventArgs e)
+        private void moveAllButton_Click(object sender, EventArgs e)
         {
             if (scn != null)
             {

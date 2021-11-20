@@ -52,6 +52,9 @@ namespace CTRTools.Controls
 
             while (Reader.NextFile())
             {
+                if (Reader.FileSize == 0)
+                    continue;
+
                 string[] s = Reader.GetFilename().Split('\\');
 
                 TreeNode curnode = tn;
@@ -175,16 +178,9 @@ namespace CTRTools.Controls
                             break;
 
                         case ".ctr":
-                            try
-                            {
-                                PatchedContainer pc = en.ParseAs<PatchedContainer>();
-                                CtrModel ctr = CtrModel.FromReader(pc.GetReader());
-                                fileInfo.Text = ctr.ToString();
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show($"this fails? {ex.Message}\r\n{ex}");
-                            }
+                            PatchedContainer pc = en.ParseAs<PatchedContainer>();
+                            CtrModel ctr = CtrModel.FromReader(pc.GetReader());
+                            fileInfo.Text = ctr.ToString();
                             break;
                     }
                 }
