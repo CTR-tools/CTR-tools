@@ -175,8 +175,16 @@ namespace CTRTools.Controls
                             break;
 
                         case ".ctr":
-                            CtrModel ctr = en.ParseAs<CtrModel>();
-                            fileInfo.Text = ctr.ToString();
+                            try
+                            {
+                                PatchedContainer pc = en.ParseAs<PatchedContainer>();
+                                CtrModel ctr = CtrModel.FromReader(pc.GetReader());
+                                fileInfo.Text = ctr.ToString();
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"this fails? {ex.Message}\r\n{ex}");
+                            }
                             break;
                     }
                 }
@@ -194,7 +202,6 @@ namespace CTRTools.Controls
 
         private void bigLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            MessageBox.Show("Done.");
         }
 
         private void expandAll_Click(object sender, EventArgs e)
@@ -209,6 +216,10 @@ namespace CTRTools.Controls
                 fileTree.CollapseAll();
                 expandAll.Text = "Expand";
             }
+        }
+
+        private void fileTree_MouseClick(object sender, MouseEventArgs e)
+        {
         }
     }
 }

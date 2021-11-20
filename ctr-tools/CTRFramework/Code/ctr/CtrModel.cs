@@ -39,18 +39,25 @@ namespace CTRFramework
         {
         }
 
-        public CtrModel(string filename)
+        public CtrModel(BinaryReaderEx br)
         {
-            path = filename;
-
-            PatchedContainer cnt = PatchedContainer.FromFile(filename);
+            PatchedContainer cnt = PatchedContainer.FromReader(br);
             Read(cnt.GetReader());
             PatchTable = cnt.PatchTable;
         }
 
-        public CtrModel(BinaryReaderEx br)
+        public CtrModel(BinaryReaderEx br, bool usePatchCon)
         {
-            Read(br);
+            if (usePatchCon)
+            {
+                PatchedContainer cnt = PatchedContainer.FromReader(br);
+                Read(cnt.GetReader());
+                PatchTable = cnt.PatchTable;
+            }
+            else
+            {
+                Read(br);
+            }
         }
 
         /// <summary>
@@ -60,26 +67,13 @@ namespace CTRFramework
         public void Read(BinaryReaderEx br)
         {
             name = br.ReadStringFixed(16);
+
             gameEvent = (CTREvent)br.ReadInt16();
             int numEntries = br.ReadInt16();
             br.Jump(PsxPtr.FromReader(br));
 
             for (int i = 0; i < numEntries; i++)
                 Entries.Add(CtrMesh.FromReader(br));
-        }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append(name + ": ");
-
-            foreach (var entry in Entries)
-                sb.Append(entry.Name + ", ");
-
-            sb.Append("\r\n");
-
-            return sb.ToString();
         }
 
         /// <summary>
@@ -214,9 +208,12 @@ namespace CTRFramework
         /// </summary>
         /// <param name="filename"></param>
         /// <returns>CtrModel object.</returns>
-        public static CtrModel FromFile(string filename)
+        public static CtrModel FromFile(string filename, bool usePatchCon = true)
         {
-            return new CtrModel(filename);
+            using (BinaryReaderEx br = new BinaryReaderEx(File.OpenRead(filename)))
+            {
+                return FromReader(br, true);
+            }
         }
 
 
@@ -225,9 +222,9 @@ namespace CTRFramework
         /// </summary>
         /// <param name="br">BinaryReaderEx object.</param>
         /// <returns>CtrModel object.</returns>
-        public static CtrModel FromReader(BinaryReaderEx br)
+        public static CtrModel FromReader(BinaryReaderEx br, bool usePatchCon = false)
         {
-            return new CtrModel(br);
+            return new CtrModel(br, usePatchCon);
         }
 
 
@@ -278,6 +275,20 @@ namespace CTRFramework
         {
             foreach (var entry in Entries)
                 entry.ExportPly(Path.Combine(path, $"{Name}.ply"));
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"Model: {name} (thread: {gameEvent})");
+
+            foreach (var entry in Entries)
+                sb.Append(entry.ToString());
+
+            sb.Append("\r\n");
+
+            return sb.ToString();
         }
     }
 }

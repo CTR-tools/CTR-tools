@@ -473,27 +473,6 @@ namespace CTRFramework
             return sb.ToString();
         }
 
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine($"name: {Name}");
-            sb.AppendLine($"unk0: {unk0}");
-            sb.AppendLine($"lodDistance: {lodDistance}");
-            sb.AppendLine($"billboard: {billboard}");
-            sb.AppendLine($"scale: {scale.ToString()}");
-            sb.AppendLine($"ptrCmd: {ptrCmd.ToUInt32().ToString("X8")}");
-            sb.AppendLine($"ptrVerts: {ptrVerts.ToUInt32().ToString("X8")}");
-            sb.AppendLine($"ptrTex: {ptrTex.ToUInt32().ToString("X8")}");
-            sb.AppendLine($"ptrClut: {ptrClut.ToUInt32().ToString("X8")}");
-            sb.AppendLine($"unk3: {unk3}");
-            sb.AppendLine($"numAnims: {numAnims}");
-            sb.AppendLine($"ptrAnims: {ptrAnims.ToUInt32().ToString("X8")}");
-            sb.AppendLine($"unk4: {unk4.ToString("X8")}");
-
-            return sb.ToString();
-        }
-
         /// <summary>
         /// Builds CTR model from raw data arrays.
         /// </summary>
@@ -842,6 +821,34 @@ namespace CTRFramework
                 foreach (var tex in tl)
                     vram.GetTexture(tex).Save(Path.Combine(texturepath, $"{tex.Tag}.png"));
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"\tMesh: {Name}");
+
+            /*
+            sb.AppendLine($"unk0: {unk0}");
+            sb.AppendLine($"lodDistance: {lodDistance}");
+            sb.AppendLine($"billboard: {billboard}");
+            sb.AppendLine($"scale: {scale.ToString()}");
+
+            sb.AppendLine($"ptrCmd: {ptrCmd.ToUInt32().ToString("X8")}");
+            sb.AppendLine($"ptrVerts: {ptrVerts.ToUInt32().ToString("X8")}");
+            sb.AppendLine($"ptrTex: {ptrTex.ToUInt32().ToString("X8")}");
+            sb.AppendLine($"ptrClut: {ptrClut.ToUInt32().ToString("X8")}");
+            sb.AppendLine($"unk3: {unk3}");
+            sb.AppendLine($"numAnims: {numAnims}");
+            sb.AppendLine($"ptrAnims: {ptrAnims.ToUInt32().ToString("X8")}");
+            sb.AppendLine($"unk4: {unk4.ToString("X8")}");
+            */
+
+            foreach (var entry in anims)
+                sb.AppendLine($"\t\t{entry.Name} ({entry.numFrames} frames)");
+
+            return sb.ToString();
         }
     }
 }

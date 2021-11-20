@@ -88,6 +88,7 @@ namespace CTRTools.Controls
             this.fileTree.Size = new System.Drawing.Size(258, 419);
             this.fileTree.TabIndex = 5;
             this.fileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.fileTree.MouseClick += new System.Windows.Forms.MouseEventHandler(this.fileTree_MouseClick);
             // 
             // fileInfo
             // 

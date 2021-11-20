@@ -63,7 +63,7 @@ namespace CTRTools.Controls
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"kek {ex.Message}\r\n{ex}");
+                MessageBox.Show($"{ex.Message}\r\n{ex}");
             }
         }
 

@@ -5,10 +5,14 @@ using System.IO;
 
 namespace CTRFramework
 {
-    public class PatchedContainer
+    public class PatchedContainer : IReadWrite
     {
         public byte[] Data;
         public List<UIntPtr> PatchTable = new List<UIntPtr>();
+
+        public PatchedContainer()
+        {
+        }
 
         public PatchedContainer(BinaryReaderEx br)
         {
@@ -35,7 +39,7 @@ namespace CTRFramework
             }
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write(Data.Length);
             bw.Write(Data);
