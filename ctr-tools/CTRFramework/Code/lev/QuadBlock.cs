@@ -53,7 +53,7 @@ namespace CTRFramework
             faceFlags[1].packedValue << (8 + 1 * 5) |
             faceFlags[2].packedValue << (8 + 2 * 5) |
             faceFlags[3].packedValue << (8 + 3 * 5) |
-            (doubleSided ? 1 : 0) << 8 + 5 * 4);
+            (doubleSided ? 1 : 0) << 31);
 
         //0x14
         //these values are contained in packedFaceData, mask is 8b5b5b5b5b4z where b is bit and z is empty. or is it?
@@ -133,11 +133,11 @@ namespace CTRFramework
                 faceFlags[i] = new FaceFlags(val);
             }
 
-            doubleSided = ((buf >> 28) & 1) > 0;
+            doubleSided = ((buf >> 31) & 1) > 0;
 
-            byte extradata = (byte)(buf >> 29);
+            byte extradata = (byte)(buf >> 28);
 
-            if (extradata > 0)
+            if (extradata > 0 && extradata != 8)
                 Helpers.Panic(this, PanicType.Assume, $"gotcha! blockflags -> {(extradata).ToString("X2")}");
 
             if (buf != packedFaceData)
@@ -150,7 +150,7 @@ namespace CTRFramework
                 ptrTexMid[i] = PsxPtr.FromReader(br);
 
                 if (ptrTexMid[i].ExtraBits != HiddenBits.None)
-                    Helpers.Panic(this, PanicType.Assume, $"ptrTexMid[{i}] {ptrTexMid.ToString()}");
+                    Helpers.Panic(this, PanicType.Assume, $"ptrTexMid[{i}] {ptrTexMid[i].ToString()}");
             }
 
             bbox = BoundingBox.FromReader(br);

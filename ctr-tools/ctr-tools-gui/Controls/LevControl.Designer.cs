@@ -32,11 +32,13 @@ namespace CTRTools.Controls
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
+            this.scaleButton = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.button3 = new System.Windows.Forms.Button();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabVerts = new System.Windows.Forms.TabPage();
+            this.vertexArrayControl1 = new CTRTools.Controls.VertexArrayControl();
             this.tabQuads = new System.Windows.Forms.TabPage();
             this.button25 = new System.Windows.Forms.Button();
             this.button20 = new System.Windows.Forms.Button();
@@ -58,12 +60,11 @@ namespace CTRTools.Controls
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.button8 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button27 = new System.Windows.Forms.Button();
             this.button26 = new System.Windows.Forms.Button();
             this.button32 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.vertexArrayControl1 = new CTRTools.Controls.VertexArrayControl();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -93,6 +94,7 @@ namespace CTRTools.Controls
             // 
             // tabPickups
             // 
+            this.tabPickups.Controls.Add(this.scaleButton);
             this.tabPickups.Controls.Add(this.numericUpDown1);
             this.tabPickups.Controls.Add(this.button3);
             this.tabPickups.Controls.Add(this.trackBar1);
@@ -104,6 +106,16 @@ namespace CTRTools.Controls
             this.tabPickups.TabIndex = 0;
             this.tabPickups.Text = "Pickup headers";
             this.tabPickups.UseVisualStyleBackColor = true;
+            // 
+            // scaleButton
+            // 
+            this.scaleButton.Location = new System.Drawing.Point(117, 57);
+            this.scaleButton.Name = "scaleButton";
+            this.scaleButton.Size = new System.Drawing.Size(89, 23);
+            this.scaleButton.TabIndex = 18;
+            this.scaleButton.Text = "scale 0.75";
+            this.scaleButton.UseVisualStyleBackColor = true;
+            this.scaleButton.Click += new System.EventHandler(this.scaleButton_Click);
             // 
             // numericUpDown1
             // 
@@ -169,6 +181,17 @@ namespace CTRTools.Controls
             this.tabVerts.TabIndex = 1;
             this.tabVerts.Text = "Vertex array";
             this.tabVerts.UseVisualStyleBackColor = true;
+            // 
+            // vertexArrayControl1
+            // 
+            this.vertexArrayControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.vertexArrayControl1.BackColor = System.Drawing.Color.Transparent;
+            this.vertexArrayControl1.Location = new System.Drawing.Point(6, 6);
+            this.vertexArrayControl1.Name = "vertexArrayControl1";
+            this.vertexArrayControl1.Size = new System.Drawing.Size(614, 409);
+            this.vertexArrayControl1.TabIndex = 0;
             // 
             // tabQuads
             // 
@@ -397,6 +420,14 @@ namespace CTRTools.Controls
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(6, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(274, 212);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // button27
             // 
             this.button27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -440,25 +471,6 @@ namespace CTRTools.Controls
             this.button1.Text = "Export OBJ";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.actionExportObj);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(6, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(274, 212);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
-            // vertexArrayControl1
-            // 
-            this.vertexArrayControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.vertexArrayControl1.BackColor = System.Drawing.Color.Transparent;
-            this.vertexArrayControl1.Location = new System.Drawing.Point(6, 6);
-            this.vertexArrayControl1.Name = "vertexArrayControl1";
-            this.vertexArrayControl1.Size = new System.Drawing.Size(614, 409);
-            this.vertexArrayControl1.TabIndex = 0;
             // 
             // LevControl
             // 
@@ -525,5 +537,6 @@ namespace CTRTools.Controls
         private Button button8;
         private Button button18;
         private VertexArrayControl vertexArrayControl1;
+        private Button scaleButton;
     }
 }

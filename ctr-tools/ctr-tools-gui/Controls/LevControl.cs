@@ -261,16 +261,18 @@ namespace CTRTools.Controls
                 //update scene data with controls data
                 scn.verts = vertexArrayControl1.VertexArray;
 
-                /*
+                
                 bw.Jump(4);
 
                 scn.header.Write(bw);
 
+
                 bw.Jump(scn.header.ptrRestartPts.Address + 4);
 
-                foreach (Pose pa in scn.restartPts)
-                    pa.Write(bw);
+                foreach (var pose in scn.restartPts)
+                    pose.Write(bw);
 
+                /*
                 bw.Jump(scn.header.ptrInstances.Address + 4);
 
                 foreach (PickupHeader ph in scn.pickups)
@@ -282,11 +284,13 @@ namespace CTRTools.Controls
                 foreach (var vert in scn.verts)
                     vert.Write(bw);
 
-                /*
+                
                 bw.Jump(scn.mesh.ptrQuadBlocks + 4);
 
-                foreach (QuadBlock qb in scn.quads)
+                foreach (var qb in scn.quads)
                     qb.Write(bw);
+
+                /*
 
                 bw.Jump(scn.header.ptrVcolAnim.Address + 4);
 
@@ -296,8 +300,9 @@ namespace CTRTools.Controls
 
                 bw.Jump(scn.mesh.ptrVisData + 4);
                 
-                foreach (VisData v in scn.visdata)
-                    v.Write(bw);
+                foreach (var vis in scn.visdata)
+                    vis.Write(bw);
+
                 /*
                 bw.Jump(scn.header.ptrAiNav.Address + 4);
                 scn.nav.Write(bw);
@@ -478,6 +483,46 @@ namespace CTRTools.Controls
                 v.flag = v.flag | VisDataFlags.Leaf & VisDataFlags.Unk4;
             }
 
+        }
+
+        private void scaleButton_Click(object sender, EventArgs e)
+        {
+            float scale = 0.75f;
+
+            foreach (var vertex in vertexArrayControl1.VertexArray)
+            {
+                vertex.Position *= scale;
+            }
+
+            foreach (var quad in scn.quads)
+            {
+                quad.bbox.Max.Scale(scale);
+                quad.bbox.Min.Scale(scale);
+
+                for (int i = 0; i < quad.faceNormal.Count; i++)
+                {
+                    //no idea why this works
+                    quad.faceNormal[i] /= (scale * scale);
+                }
+            }
+            
+
+            foreach (var vis in scn.visdata)
+            {
+                 vis.bbox.Min.Scale(scale);
+                 vis.bbox.Max.Scale(scale);
+            }
+
+            
+            foreach (var pos in scn.header.startGrid)
+            {
+                pos.Position *= scale;
+            }
+            
+            foreach (var pos in scn.restartPts)
+            {
+                pos.Position *= scale;
+            }
         }
     }
 }

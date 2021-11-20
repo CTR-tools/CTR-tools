@@ -7,7 +7,8 @@ namespace CTRFramework
 {
     public class VisData : IReadWrite
     {
-        public int pos;
+        public static readonly int SizeOf = 0x20;
+        public int BaseAddress;
 
         public VisDataFlags flag;
         public byte unk0;
@@ -49,7 +50,7 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            pos = (int)br.Position;
+            BaseAddress = (int)br.Position;
 
             flag = (VisDataFlags)br.ReadByte();
             unk0 = br.ReadByte();
@@ -71,7 +72,7 @@ namespace CTRFramework
             if (flag.HasFlag(VisDataFlags.Unk7)) counter[7]++;
 
             id = br.ReadUInt16();
-            bbox = new BoundingBox(br);
+            bbox = BoundingBox.FromReader(br);
 
             if (!IsLeaf)
             {
@@ -86,16 +87,19 @@ namespace CTRFramework
                 //test leaf assumptions
 
                 if (!(divX == 4096 || divX == 0))
-                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {pos.ToString("X8")} divX = {divX.ToString("X8")}");
+                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {BaseAddress.ToString("X8")} divX = {divX.ToString("X8")}");
 
                 if (!(divY == 4096 || divY == 0))
-                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {pos.ToString("X8")} divY = {divY.ToString("X8")}");
+                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {BaseAddress.ToString("X8")} divY = {divY.ToString("X8")}");
 
                 if (!(divZ == 4096 || divZ == 0))
-                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {pos.ToString("X8")} divZ = {divZ.ToString("X8")}");
+                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {BaseAddress.ToString("X8")} divZ = {divZ.ToString("X8")}");
+
+                if (unk != 0)
+                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {BaseAddress.ToString("X8")} unk = {unk.ToString("X8")}");
 
                 if (unk1 != 0)
-                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {pos.ToString("X8")} unk1 = {unk1.ToString("X8")}");
+                    Helpers.Panic(this, PanicType.Assume, $"{flag} {IsLeaf} {BaseAddress.ToString("X8")} unk1 = {unk1.ToString("X8")}");
             }
             else
             {
@@ -108,13 +112,14 @@ namespace CTRFramework
                     Helpers.Panic(this, PanicType.Assume, "reserved is not 0: " + reserved.ToString("X8"));
             }
 
-
-            //Console.WriteLine($"{flag.ToString("X4")}\t{numQuadBlock.ToString("0000")}\t{ptrQuadBlock.ToString("X8")}");
-            //Console.ReadKey();
+            if (br.Position - BaseAddress != SizeOf)
+                Helpers.Panic(this, PanicType.Error, "visdata sizeof mismatch");
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
+            var pos = bw.Position;
+
             bw.Write((byte)flag);
             bw.Write(unk0);
             bw.Write(id);
@@ -137,18 +142,9 @@ namespace CTRFramework
                 bw.Write(numQuadBlock);
                 bw.Write(ptrQuadBlock);
             }
-        }
 
-
-        public string ToObj()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine($"o vis_{id}");
-            sb.AppendLine($"v {bbox.Min.ToString(VecFormat.Numbers)}");
-            sb.AppendLine($"v {bbox.Max.ToString(VecFormat.Numbers)}");
-
-            return sb.ToString();
+            if (bw.Position - pos != SizeOf)
+                Helpers.Panic(this, PanicType.Error, "visdata sizeof mismatch");
         }
 
         public override string ToString()

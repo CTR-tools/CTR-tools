@@ -67,6 +67,13 @@ namespace CTRFramework.Shared
             bw.Write(z);
         }
 
+        public void Scale(float value = 1.0f)
+        {
+            x = (short)Math.Floor(x * value);
+            y = (short)Math.Floor(y * value);
+            z = (short)Math.Floor(z * value);
+        }
+
         public override string ToString()
         {
             return ToString(VecFormat.Braced);

@@ -30,6 +30,7 @@ namespace CTRTools.Controls
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.rainbowButton = new System.Windows.Forms.Button();
             this.darkenButton = new System.Windows.Forms.Button();
             this.blueSlider = new System.Windows.Forms.TrackBar();
@@ -43,7 +44,6 @@ namespace CTRTools.Controls
             this.applyColorsButton = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.cd = new System.Windows.Forms.ColorDialog();
-            this.label3 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.blueSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.greenSlider)).BeginInit();
@@ -72,6 +72,15 @@ namespace CTRTools.Controls
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Vertex colors";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 263);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(123, 13);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "Randomize vertex colors";
             // 
             // rainbowButton
             // 
@@ -191,15 +200,6 @@ namespace CTRTools.Controls
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(480, 355);
             this.textBox3.TabIndex = 12;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 263);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(123, 13);
-            this.label3.TabIndex = 18;
-            this.label3.Text = "Randomize vertex colors";
             // 
             // VertexArrayControl
             // 
