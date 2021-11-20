@@ -35,7 +35,8 @@ namespace CTRFramework.Shared
             if (panicLevel.HasFlag(PanicLevel.Silent))
                 return;
 
-            message = $"{pType}\t{sender}:\t{message}";
+            if (pType != PanicType.Info)
+                message = $"{pType}\t{sender}:\t{message}";
 
             if (panicLevel.HasFlag(PanicLevel.File))
                 File.AppendAllText(logpath, $"{DateTime.Now}\t{message}\r\n");
