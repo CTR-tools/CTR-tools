@@ -1,10 +1,8 @@
 ﻿using CTRFramework;
 using CTRFramework.Lang;
 using CTRFramework.Shared;
-using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Numerics;
@@ -60,6 +58,8 @@ namespace CTRTools.Controls
                     propertyGrid1.SelectedObject = scn.pickups[0];
                     trackBar1.Maximum = scn.pickups.Count - 1;
                 }
+
+                vertexArrayControl1.VertexArray = scn.verts;
             }
             catch (Exception ex)
             {
@@ -82,52 +82,6 @@ namespace CTRTools.Controls
         }
 
 
-        Color vertexcolor1 = Color.Gray;
-        Color vertexcolor2 = Color.Gray;
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (scn == null) return;
-
-            foreach (Vertex v in scn.verts)
-            {
-                v.SetColor(new Vector4b(vertexcolor1), Vcolor.Default);
-                v.SetColor(new Vector4b(vertexcolor2), Vcolor.Morph);
-            }
-        }
-
-        private void button24_Click(object sender, EventArgs e)
-        {
-            ColorDialog cd = new ColorDialog();
-
-            if (cd.ShowDialog() == DialogResult.OK)
-            {
-                vertexcolor1 = cd.Color;
-                button24.BackColor = vertexcolor1;
-            }
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            ColorDialog cd = new ColorDialog();
-
-            if (cd.ShowDialog() == DialogResult.OK)
-            {
-                vertexcolor2 = cd.Color;
-                button5.BackColor = vertexcolor2;
-            }
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            if (scn == null) return;
-
-            foreach (Vertex v in scn.verts)
-            {
-                v.Color.Scale(0.12f, 0.21f, 0.32f, 1f);
-                v.MorphColor.Scale(0.12f, 0.21f, 0.32f, 1f);
-            }
-        }
 
         private void button9_Click(object sender, EventArgs e)
         {
@@ -299,51 +253,14 @@ namespace CTRTools.Controls
             }
         }
 
-        private void button22_Click(object sender, EventArgs e)
-        {
-            if (scn != null)
-            {
-
-                StringBuilder sb = new StringBuilder();
-
-                foreach (VertexAnim vc in scn.vertanims)
-                {
-                    sb.Append(vc.ToString() + "\r\n");
-                    vc.RandomizeColors(scn.vertanims[0].unk1, scn.vertanims[0].unk2);
-                }
-
-                textBox3.Text = sb.ToString();
-            }
-        }
-
-        private void button21_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd1 = new OpenFileDialog();
-
-            if (ofd1.ShowDialog() == DialogResult.OK)
-            {
-                using (BinaryReaderEx br = new BinaryReaderEx(File.Open(ofd1.FileName, FileMode.Open)))
-                {
-                    Mcs m = new Mcs(br);
-                }
-            }
-        }
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-            if (scn != null)
-            {
-                foreach (Vertex v in scn.verts)
-                {
-                    v.MorphColor = v.Color;
-                }
-            }
-        }
 
         private void SaveLEV()
         {
             using (BinaryWriterEx bw = new BinaryWriterEx(File.OpenWrite(path)))
             {
+                //update scene data with controls data
+                scn.verts = vertexArrayControl1.VertexArray;
+
                 /*
                 bw.Jump(4);
 
@@ -358,14 +275,14 @@ namespace CTRTools.Controls
 
                 foreach (PickupHeader ph in scn.pickups)
                     ph.Write(bw);
-
+                */
 
                 bw.Jump(scn.mesh.ptrVertices + 4);
 
-                foreach (Vertex v in scn.verts)
-                    v.Write(bw);
+                foreach (var vert in scn.verts)
+                    vert.Write(bw);
 
-
+                /*
                 bw.Jump(scn.mesh.ptrQuadBlocks + 4);
 
                 foreach (QuadBlock qb in scn.quads)
@@ -386,18 +303,6 @@ namespace CTRTools.Controls
                 scn.nav.Write(bw);
                 */
             }
-        }
-
-        private void button18_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void button30_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void button31_Click(object sender, EventArgs e)
-        {
         }
 
         private void button25_Click(object sender, EventArgs e)

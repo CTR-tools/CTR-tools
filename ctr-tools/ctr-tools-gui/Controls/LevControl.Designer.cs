@@ -32,22 +32,11 @@ namespace CTRTools.Controls
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
-            this.button21 = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.button3 = new System.Windows.Forms.Button();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabVerts = new System.Windows.Forms.TabPage();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button22 = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button24 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.tabQuads = new System.Windows.Forms.TabPage();
             this.button25 = new System.Windows.Forms.Button();
             this.button20 = new System.Windows.Forms.Button();
@@ -62,24 +51,24 @@ namespace CTRTools.Controls
             this.button9 = new System.Windows.Forms.Button();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tabVisData = new System.Windows.Forms.TabPage();
+            this.button18 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
             this.button28 = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.button8 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button27 = new System.Windows.Forms.Button();
             this.button26 = new System.Windows.Forms.Button();
             this.button32 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.button18 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.vertexArrayControl1 = new CTRTools.Controls.VertexArrayControl();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.tabVerts.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.tabQuads.SuspendLayout();
             this.tabVisData.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -104,7 +93,6 @@ namespace CTRTools.Controls
             // 
             // tabPickups
             // 
-            this.tabPickups.Controls.Add(this.button21);
             this.tabPickups.Controls.Add(this.numericUpDown1);
             this.tabPickups.Controls.Add(this.button3);
             this.tabPickups.Controls.Add(this.trackBar1);
@@ -116,17 +104,6 @@ namespace CTRTools.Controls
             this.tabPickups.TabIndex = 0;
             this.tabPickups.Text = "Pickup headers";
             this.tabPickups.UseVisualStyleBackColor = true;
-            // 
-            // button21
-            // 
-            this.button21.Location = new System.Drawing.Point(117, 139);
-            this.button21.Name = "button21";
-            this.button21.Size = new System.Drawing.Size(89, 26);
-            this.button21.TabIndex = 19;
-            this.button21.Text = "memcard save";
-            this.button21.UseVisualStyleBackColor = true;
-            this.button21.Visible = false;
-            this.button21.Click += new System.EventHandler(this.button21_Click);
             // 
             // numericUpDown1
             // 
@@ -184,9 +161,7 @@ namespace CTRTools.Controls
             // 
             // tabVerts
             // 
-            this.tabVerts.Controls.Add(this.textBox3);
-            this.tabVerts.Controls.Add(this.button22);
-            this.tabVerts.Controls.Add(this.groupBox1);
+            this.tabVerts.Controls.Add(this.vertexArrayControl1);
             this.tabVerts.Location = new System.Drawing.Point(4, 22);
             this.tabVerts.Name = "tabVerts";
             this.tabVerts.Padding = new System.Windows.Forms.Padding(3);
@@ -194,111 +169,6 @@ namespace CTRTools.Controls
             this.tabVerts.TabIndex = 1;
             this.tabVerts.Text = "Vertex array";
             this.tabVerts.UseVisualStyleBackColor = true;
-            // 
-            // textBox3
-            // 
-            this.textBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox3.Location = new System.Drawing.Point(268, 6);
-            this.textBox3.Multiline = true;
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(352, 406);
-            this.textBox3.TabIndex = 11;
-            // 
-            // button22
-            // 
-            this.button22.Location = new System.Drawing.Point(15, 185);
-            this.button22.Name = "button22";
-            this.button22.Size = new System.Drawing.Size(234, 23);
-            this.button22.TabIndex = 10;
-            this.button22.Text = "Randomize vertex anim";
-            this.button22.UseVisualStyleBackColor = true;
-            this.button22.Click += new System.EventHandler(this.button22_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.button24);
-            this.groupBox1.Controls.Add(this.button7);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.button6);
-            this.groupBox1.Controls.Add(this.button5);
-            this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Location = new System.Drawing.Point(6, 6);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(256, 173);
-            this.groupBox1.TabIndex = 9;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Vertex colors";
-            // 
-            // button24
-            // 
-            this.button24.Location = new System.Drawing.Point(9, 43);
-            this.button24.Name = "button24";
-            this.button24.Size = new System.Drawing.Size(75, 23);
-            this.button24.TabIndex = 12;
-            this.button24.Text = "main color";
-            this.button24.UseVisualStyleBackColor = true;
-            this.button24.Click += new System.EventHandler(this.button24_Click);
-            // 
-            // button7
-            // 
-            this.button7.Location = new System.Drawing.Point(6, 138);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(156, 23);
-            this.button7.TabIndex = 12;
-            this.button7.Text = "morph color = normal color";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 27);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(91, 13);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Single color mode";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 77);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(119, 13);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Night mode (click once)";
-            // 
-            // button6
-            // 
-            this.button6.Location = new System.Drawing.Point(6, 93);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 9;
-            this.button6.Text = "Darken";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
-            // 
-            // button5
-            // 
-            this.button5.Location = new System.Drawing.Point(87, 43);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 8;
-            this.button5.Text = "morph color";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(168, 43);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "apply";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // tabQuads
             // 
@@ -455,6 +325,16 @@ namespace CTRTools.Controls
             this.tabVisData.Text = "VisData";
             this.tabVisData.UseVisualStyleBackColor = true;
             // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(138, 12);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(75, 23);
+            this.button18.TabIndex = 33;
+            this.button18.Text = "button18";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click_1);
+            // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(129, 3);
@@ -517,14 +397,6 @@ namespace CTRTools.Controls
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(6, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(274, 212);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
             // button27
             // 
             this.button27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -569,15 +441,24 @@ namespace CTRTools.Controls
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.actionExportObj);
             // 
-            // button18
+            // pictureBox1
             // 
-            this.button18.Location = new System.Drawing.Point(138, 12);
-            this.button18.Name = "button18";
-            this.button18.Size = new System.Drawing.Size(75, 23);
-            this.button18.TabIndex = 33;
-            this.button18.Text = "button18";
-            this.button18.UseVisualStyleBackColor = true;
-            this.button18.Click += new System.EventHandler(this.button18_Click_1);
+            this.pictureBox1.Location = new System.Drawing.Point(6, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(274, 212);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
+            // vertexArrayControl1
+            // 
+            this.vertexArrayControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.vertexArrayControl1.BackColor = System.Drawing.Color.Transparent;
+            this.vertexArrayControl1.Location = new System.Drawing.Point(6, 6);
+            this.vertexArrayControl1.Name = "vertexArrayControl1";
+            this.vertexArrayControl1.Size = new System.Drawing.Size(614, 409);
+            this.vertexArrayControl1.TabIndex = 0;
             // 
             // LevControl
             // 
@@ -598,9 +479,6 @@ namespace CTRTools.Controls
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.tabVerts.ResumeLayout(false);
-            this.tabVerts.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.tabQuads.ResumeLayout(false);
             this.tabVisData.ResumeLayout(false);
             this.tabVisData.PerformLayout();
@@ -615,21 +493,11 @@ namespace CTRTools.Controls
 
         private TabControl tabControl1;
         private TabPage tabPickups;
-        private Button button21;
         private NumericUpDown numericUpDown1;
         private Button button3;
         private TrackBar trackBar1;
         private PropertyGrid propertyGrid1;
         private TabPage tabVerts;
-        private TextBox textBox3;
-        private Button button22;
-        private GroupBox groupBox1;
-        private Button button7;
-        private Label label2;
-        private Label label1;
-        private Button button6;
-        private Button button5;
-        private Button button2;
         private TabPage tabQuads;
         private Button button25;
         private Button button20;
@@ -643,7 +511,6 @@ namespace CTRTools.Controls
         private Button button10;
         private Button button9;
         private CheckedListBox checkedListBox1;
-        private Button button24;
         private Button button27;
         private Button button26;
         private Button button32;
@@ -657,5 +524,6 @@ namespace CTRTools.Controls
         private PictureBox pictureBox1;
         private Button button8;
         private Button button18;
+        private VertexArrayControl vertexArrayControl1;
     }
 }

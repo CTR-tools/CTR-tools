@@ -35,7 +35,6 @@ namespace CTRFramework.Shared
             W = (byte)(W * w);
         }
 
-
         public Vector4b(Color c)
         {
             X = c.R;
