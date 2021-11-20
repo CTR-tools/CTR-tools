@@ -238,7 +238,7 @@ namespace CTRFramework
                 }
 
                 //jump to first animation, read header and jump to vertex garbage
-                br.Jump(animPtrMap[0]);
+                br.Jump(animPtrMap[0] + 0x18);
             }
 
 
