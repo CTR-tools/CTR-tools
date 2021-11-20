@@ -251,6 +251,8 @@ namespace ctrviewer
             UpdateVSync();
             graphics.ApplyChanges();
 
+            Window.AllowUserResizing = true;
+
 
             IsMouseVisible = false;
 
@@ -490,8 +492,8 @@ namespace ctrviewer
 
             if (filelist.Length == 0)
             {
-                if (Directory.Exists(@"levels\"))
-                    filelist = Directory.GetFiles(@"levels\", "*.lev");
+                if (Directory.Exists("levels"))
+                    filelist = Directory.GetFiles("levels", "*.lev");
             }
 
             if (filelist.Length == 0)
@@ -1140,16 +1142,16 @@ namespace ctrviewer
                 {
                     result = true;
                 }
-                else if (File.Exists(".\\bigfile.big"))
+                else if (File.Exists("bigfile.big"))
                 {
-                    eng.Settings.BigFileLocation = ".\\bigfile.big";
+                    eng.Settings.BigFileLocation = "bigfile.big";
                     result = true;
                 }
                 else //scan drives
                 {
                     var drv = DriveInfo.GetDrives();
 
-                    GameConsole.Write("drives: " + drv.Length);
+                    GameConsole.Write($"drives: {drv.Length}");
 
                     result = false;
 
@@ -1296,7 +1298,7 @@ namespace ctrviewer
             //spriteBatch.DrawString(font, $"{newms.ToString()}", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString($"{newms.ToString()}").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
 
-            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Keyboard.GetState().IsKeyDown(Keys.OemPlus))
+            if (KeyboardHandler.IsAnyDown(Keys.OemMinus, Keys.OemPlus))
                 spriteBatch.DrawString(font, String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
 
             if (GamePad.GetState(0).Triggers.Left > 0 || GamePad.GetState(0).Triggers.Right > 0)

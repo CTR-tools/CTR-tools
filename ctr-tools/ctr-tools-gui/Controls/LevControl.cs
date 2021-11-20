@@ -20,7 +20,6 @@ namespace CTRTools.Controls
         public LevControl()
         {
             InitializeComponent();
-            this.DoubleBuffered = true;
 
             checkedListBox1.Items.AddRange(Enum.GetNames(typeof(QuadFlags)));
             checkedListBox2.Items.AddRange(Enum.GetNames(typeof(VisDataFlags)));
@@ -54,13 +53,17 @@ namespace CTRTools.Controls
                 Helpers.BackupFile(path);
                 scn = Scene.FromFile(path);
 
-                Text = $"CTR-tools-gui - {path}";
-                propertyGrid1.SelectedObject = scn.pickups[0];
-                trackBar1.Maximum = scn.pickups.Count - 1;
+                propertyGrid1.SelectedObject = null;
+
+                if (scn.pickups.Count > 0)
+                {
+                    propertyGrid1.SelectedObject = scn.pickups[0];
+                    trackBar1.Maximum = scn.pickups.Count - 1;
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"kek {ex.Message}\r\n{ex}");
             }
         }
 

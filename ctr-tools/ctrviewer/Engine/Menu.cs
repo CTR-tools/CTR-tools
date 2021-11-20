@@ -71,6 +71,8 @@ namespace ctrviewer.Engine
 
         public void LoadMenuItems()
         {
+
+            #region menuitems
             menus.Add("level", new List<MenuItem>()
             {
                 new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true),
@@ -223,6 +225,8 @@ namespace ctrviewer.Engine
                 new MenuItem("night".ToUpper(), "tod_night", "", true),
                 new MenuItem("back".ToUpper(), "link", "main", true)
             });
+
+#endregion
 
             menus.Add("main", main);
 
