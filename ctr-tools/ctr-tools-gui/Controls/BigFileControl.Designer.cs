@@ -148,6 +148,7 @@ namespace CTRTools.Controls
             // 
             // bigVersion
             // 
+            this.bigVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.bigVersion.AutoSize = true;
             this.bigVersion.Location = new System.Drawing.Point(105, 459);
             this.bigVersion.Name = "bigVersion";

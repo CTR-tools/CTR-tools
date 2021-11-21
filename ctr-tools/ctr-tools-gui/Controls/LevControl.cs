@@ -272,18 +272,15 @@ namespace CTRTools.Controls
                 foreach (var pose in scn.restartPts)
                     pose.Write(bw);
 
-                /*
                 bw.Jump(scn.header.ptrInstances.Address + 4);
 
                 foreach (PickupHeader ph in scn.pickups)
                     ph.Write(bw);
-                */
 
                 bw.Jump(scn.mesh.ptrVertices + 4);
 
                 foreach (var vert in scn.verts)
                     vert.Write(bw);
-
 
                 bw.Jump(scn.mesh.ptrQuadBlocks + 4);
 
@@ -482,16 +479,20 @@ namespace CTRTools.Controls
             {
                 v.flag = v.flag | VisDataFlags.Leaf & VisDataFlags.Unk4;
             }
-
         }
 
         private void scaleButton_Click(object sender, EventArgs e)
         {
-            float scale = 0.5f;
+            float scale = 1.5f;
 
-            foreach (var vertex in vertexArrayControl1.VertexArray)
+            foreach (var vertex in scn.verts)
             {
                 vertex.Position *= scale;
+            }
+
+            foreach (var pickup in scn.pickups)
+            {
+                pickup.Pose.Position *= scale;
             }
 
             foreach (var quad in scn.quads)

@@ -15,7 +15,7 @@ namespace ctrviewer.Engine.Render
 
         private bool ShouldRotate = false;
 
-        private static List<string> rotated = new List<string>() { "c", "t", "r", "fruit" };
+        private static List<string> rotated = new List<string>() { "c", "t", "r", "fruit", "crystal" };
 
         public InstancedModel()
         {

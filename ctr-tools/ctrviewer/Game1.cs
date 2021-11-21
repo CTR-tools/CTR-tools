@@ -540,7 +540,8 @@ namespace ctrviewer
                 karts[0].ModelName = eng.Settings.PlayerModel;
             }
 
-
+            /*
+            //loads custom models using assimp
             if (Directory.Exists("custom"))
             {
                 string[] files = Directory.GetFiles("custom", "*");
@@ -557,6 +558,7 @@ namespace ctrviewer
                     }
                 }
             }
+            */
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -612,20 +614,18 @@ namespace ctrviewer
                 foreach (var pa in s.header.startGrid)
                     eng.paths.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
 
-                if (loadedLevel != -1)
                     for (int i = 0; i < 8; i++)
-                    {
-                        eng.instanced.Add(new InstancedModel(
-                           ((CharIndex)i).ToString().ToLower(),
-                           DataConverter.ToVector3(s.header.startGrid[i].Position),
-                           new Vector3(
-                               s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
-                                s.header.startGrid[i].Rotation.X * (float)Math.PI * 2,
-                                s.header.startGrid[i].Rotation.Z * (float)Math.PI * 2),
-                           new Vector3(1f)
-                            )
-                            );
-                    }
+                        if (s.header.startGrid[i].Position != System.Numerics.Vector3.Zero)
+                            eng.instanced.Add(new InstancedModel(
+                               ((CharIndex)i).ToString().ToLower(),
+                               DataConverter.ToVector3(s.header.startGrid[i].Position),
+                               new Vector3(
+                                    s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
+                                    s.header.startGrid[i].Rotation.X * (float)Math.PI * 2,
+                                    s.header.startGrid[i].Rotation.Z * (float)Math.PI * 2),
+                               new Vector3(1f)
+                                )
+                                );
 
                 foreach (var ph in s.pickups)
                 {

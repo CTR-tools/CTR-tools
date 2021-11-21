@@ -46,9 +46,9 @@ namespace CTRFramework
             MorphColor.Write(bw);
         }
 
-        public string ToObj()
+        public string ToObj(float scale = 1.0f)
         {
-            return $"v {Position.X} {Position.Y} {Position.Z} {(Color.X / 255f).ToString("0.###")} {(Color.Y / 255f).ToString("0.###")} {(Color.Z / 255f).ToString("0.###")}";
+            return $"v {Position.X * scale} {Position.Y * scale} {Position.Z * scale} {(Color.X / 255f).ToString("0.###")} {(Color.Y / 255f).ToString("0.###")} {(Color.Z / 255f).ToString("0.###")}";
         }
     }
 

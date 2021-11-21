@@ -413,14 +413,10 @@ namespace CTRFramework
 
             sb.AppendLine("o " + Name);
 
-            foreach (Vertex v in verts)
+            foreach (var v in verts)
             {
                 //while the lev is scaled down by 100, ctr models are scaled down by 1000?
-                sb.AppendLine("v " +
-                    v.Position.X / 1000f + " " +
-                    v.Position.Y / 1000f + " " +
-                    v.Position.Z / 1000f + " " +
-                    v.Color.ToString(VecFormat.Numbers));
+                sb.AppendLine(v.ToObj(1 / 1000f));
             }
 
             Helpers.Panic(this, PanicType.Debug, $"{matIndices.Count}");
@@ -493,7 +489,7 @@ namespace CTRFramework
             mesh.Name = name + "_hi";
             mesh.lodDistance = -1;
 
-            mesh.tl.Add(new TextureLayout());
+            //mesh.tl.Add(new TextureLayout());
 
             List<Vector4b> cc = new List<Vector4b>();
 
@@ -632,7 +628,7 @@ namespace CTRFramework
 
                 cmd[0] = new CtrDraw()
                 {
-                    texIndex = 1,
+                    texIndex = 0,
                     colorIndex = (byte)cfaces[i].X,
                     stackIndex = 87,
                     flags = CtrDrawFlags.s | CtrDrawFlags.d //| CtrDrawFlags.k
@@ -640,7 +636,7 @@ namespace CTRFramework
 
                 cmd[1] = new CtrDraw()
                 {
-                    texIndex = 1,
+                    texIndex = 0,
                     colorIndex = (byte)cfaces[i].Z,
                     stackIndex = 88,
                     flags = CtrDrawFlags.d //| CtrDrawFlags.k
@@ -648,7 +644,7 @@ namespace CTRFramework
 
                 cmd[2] = new CtrDraw()
                 {
-                    texIndex = 1,
+                    texIndex = 0,
                     colorIndex = (byte)cfaces[i].Y,
                     stackIndex = 89,
                     flags = CtrDrawFlags.d //| CtrDrawFlags.k

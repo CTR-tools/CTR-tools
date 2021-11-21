@@ -109,9 +109,23 @@
       <list>big_usa_demo.txt</list>
       <md5>efb66723fe589d9cd3321d109a34dfd9</md5>
     </entry>
-	
-	
-    <entry>
+	<entry>
+		<format>big</format>
+		<region>PAL</region>
+		<name>euro demo?? confirm</name>
+		<list>big_usa_demo.txt</list>
+		<md5>ab0d9915ab0c2282df14288ca3a6aa65</md5>
+	</entry>
+
+	<entry>
+		<format>big</format>
+		<region>NTSC-U</region>
+		<name>us demo?? confirm</name>
+		<list>big_usa_demo.txt</list>
+		<md5>4d292c60c9438a9713735565ccb788d5</md5>
+	</entry>
+	  
+	<entry>
       <format>big</format>
       <region>PAL</region>
       <name>Release</name>

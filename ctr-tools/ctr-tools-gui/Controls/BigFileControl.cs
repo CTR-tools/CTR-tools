@@ -209,6 +209,7 @@ namespace CTRTools.Controls
 
         private void bigLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            bigVersion.Text = Reader.Version;
         }
 
         private void expandAll_Click(object sender, EventArgs e)
