@@ -168,6 +168,8 @@ namespace ctrviewer.Engine.Render
             }
 
             graphics.GraphicsDevice.BlendState = blendState;
+            if (type == TriListType.Water)
+                graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             effect.TextureEnabled = textureEnabled;
 
@@ -189,12 +191,21 @@ namespace ctrviewer.Engine.Render
             if (!CullingEnabled || EngineSettings.Instance.ForceNoCulling)
                 Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
 
+            if (type == TriListType.Water || type == TriListType.Flag)
+            {
+                effect.Alpha = 0.5f;
+                if (alpha != null)
+                    alpha.Alpha = 0.5f;
+            }
+
+            /*
             if (blendState == BlendState.AlphaBlend)
             {
                 effect.Alpha = 1f;
                 if (alpha != null)
                     alpha.Alpha = 1f;
-            }
+            }*/
+
 
             foreach (var pass in (alpha != null ? alpha.CurrentTechnique.Passes : effect.CurrentTechnique.Passes))
             {
@@ -208,12 +219,21 @@ namespace ctrviewer.Engine.Render
                 );
             }
 
+            if (type == TriListType.Water || type == TriListType.Flag)
+            {
+                effect.Alpha = 1f;
+                if (alpha != null)
+                    alpha.Alpha = 1f;
+            }
+
+            /*
             if (blendState == BlendState.AlphaBlend)
             {
                 effect.Alpha = 1f;
                 if (alpha != null)
                     alpha.Alpha = 1f;
             }
+            */
 
             if (EngineSettings.Instance.DrawWireframe)
             {
