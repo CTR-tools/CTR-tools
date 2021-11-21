@@ -43,8 +43,11 @@ namespace CTRFramework
             foreach (uint p in ptrs)
                 bw.Write(p);
 
-            foreach (BotPath ai in paths)
-                ai.Write(bw);
+            for (int i = 0; i < ptrs.Count; i++)
+            {
+                bw.Jump(ptrs[i] + 4);
+                paths[i].Write(bw, patchTable);
+            }
         }
 
         public string ToObj(ref int startindex)

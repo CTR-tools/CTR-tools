@@ -757,8 +757,8 @@ namespace CTRFramework
 
                         foreach (var t in tl)
                         {
-                            bw.Write(trtire16);
-                            //t.Write(bw);
+                            //bw.Write(trtire16);
+                            t.Write(bw);
                         }
                     }
 

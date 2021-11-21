@@ -8,7 +8,7 @@ namespace CTRFramework
     public class BotPath : IReadWrite
     {
         public ushort version;
-        public int numFrames => (ushort)Frames.Count;
+        public ushort numFrames => (ushort)Frames.Count;
         public byte[] data;
         public NavFrame start;
 
@@ -22,6 +22,7 @@ namespace CTRFramework
         {
             Read(br);
         }
+
         public void Read(BinaryReaderEx br)
         {
             version = br.ReadUInt16();
@@ -48,6 +49,29 @@ namespace CTRFramework
                 Frames.Add(NavFrame.FromReader(br));
         }
 
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        {
+            bw.Write(version);
+            bw.Write(numFrames);
+
+            switch (version)
+            {
+                case 0xECFD:
+                    bw.Write(data);
+                    start.Write(bw);
+                    break;
+                case 0xFEFD:
+                    bw.Write(data);
+                    break;
+                default:
+                    Helpers.Panic(this, PanicType.Warning, "Unknown bot path version.");
+                    break;
+            }
+
+            foreach (var frame in Frames)
+                frame.Write(bw);
+        }
+
         public string ToObj(ref int startindex)
         {
             if (numFrames == 0)
@@ -70,7 +94,6 @@ namespace CTRFramework
             return sb.ToString();
         }
 
-
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -85,20 +108,6 @@ namespace CTRFramework
             }
 
             return sb.ToString();
-        }
-
-
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
-        {
-            bw.Write(version);
-            bw.Write(numFrames);
-            bw.Write(data);
-            start.Write(bw);
-
-            foreach (NavFrame f in Frames)
-            {
-                f.Write(bw);
-            }
         }
     }
 }

@@ -32,6 +32,7 @@ namespace CTRTools.Controls
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
+            this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.scaleButton = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.moveAllButton = new System.Windows.Forms.Button();
@@ -65,8 +66,10 @@ namespace CTRTools.Controls
             this.button26 = new System.Windows.Forms.Button();
             this.button32 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.tabVerts.SuspendLayout();
@@ -94,11 +97,13 @@ namespace CTRTools.Controls
             // 
             // tabPickups
             // 
+            this.tabPickups.Controls.Add(this.propertyGrid1);
+            this.tabPickups.Controls.Add(this.label1);
+            this.tabPickups.Controls.Add(this.trackBar2);
             this.tabPickups.Controls.Add(this.scaleButton);
             this.tabPickups.Controls.Add(this.numericUpDown1);
             this.tabPickups.Controls.Add(this.moveAllButton);
             this.tabPickups.Controls.Add(this.trackBar1);
-            this.tabPickups.Controls.Add(this.propertyGrid1);
             this.tabPickups.Location = new System.Drawing.Point(4, 22);
             this.tabPickups.Name = "tabPickups";
             this.tabPickups.Padding = new System.Windows.Forms.Padding(3);
@@ -107,19 +112,30 @@ namespace CTRTools.Controls
             this.tabPickups.Text = "Pickup headers";
             this.tabPickups.UseVisualStyleBackColor = true;
             // 
+            // trackBar2
+            // 
+            this.trackBar2.Location = new System.Drawing.Point(56, 74);
+            this.trackBar2.Maximum = 200;
+            this.trackBar2.Name = "trackBar2";
+            this.trackBar2.Size = new System.Drawing.Size(152, 45);
+            this.trackBar2.TabIndex = 19;
+            this.trackBar2.TickFrequency = 25;
+            this.trackBar2.Value = 100;
+            this.trackBar2.Scroll += new System.EventHandler(this.trackBar2_Scroll);
+            // 
             // scaleButton
             // 
-            this.scaleButton.Location = new System.Drawing.Point(117, 57);
+            this.scaleButton.Location = new System.Drawing.Point(56, 45);
             this.scaleButton.Name = "scaleButton";
-            this.scaleButton.Size = new System.Drawing.Size(89, 23);
+            this.scaleButton.Size = new System.Drawing.Size(152, 23);
             this.scaleButton.TabIndex = 18;
-            this.scaleButton.Text = "scale 0.75";
+            this.scaleButton.Text = "Scale by 100%";
             this.scaleButton.UseVisualStyleBackColor = true;
             this.scaleButton.Click += new System.EventHandler(this.scaleButton_Click);
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(117, 3);
+            this.numericUpDown1.Location = new System.Drawing.Point(56, 9);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -131,7 +147,7 @@ namespace CTRTools.Controls
             0,
             -2147483648});
             this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(89, 20);
+            this.numericUpDown1.Size = new System.Drawing.Size(59, 20);
             this.numericUpDown1.TabIndex = 17;
             this.numericUpDown1.Value = new decimal(new int[] {
             100,
@@ -141,7 +157,7 @@ namespace CTRTools.Controls
             // 
             // moveAllButton
             // 
-            this.moveAllButton.Location = new System.Drawing.Point(117, 28);
+            this.moveAllButton.Location = new System.Drawing.Point(119, 6);
             this.moveAllButton.Name = "moveAllButton";
             this.moveAllButton.Size = new System.Drawing.Size(89, 23);
             this.moveAllButton.TabIndex = 16;
@@ -473,6 +489,15 @@ namespace CTRTools.Controls
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.actionExportObj);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(57, 122);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(151, 39);
+            this.label1.TabIndex = 20;
+            this.label1.Text = "Please note:\r\nscaling too much will cause\r\nsevere visibility/collision issues";
+            // 
             // LevControl
             // 
             this.AllowDrop = true;
@@ -489,6 +514,7 @@ namespace CTRTools.Controls
             this.tabControl1.ResumeLayout(false);
             this.tabPickups.ResumeLayout(false);
             this.tabPickups.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.tabVerts.ResumeLayout(false);
@@ -539,5 +565,7 @@ namespace CTRTools.Controls
         private Button button18;
         private VertexArrayControl vertexArrayControl1;
         private Button scaleButton;
+        private TrackBar trackBar2;
+        private Label label1;
     }
 }

@@ -72,7 +72,5 @@ namespace CTRFramework
 
             return sb.ToString();
         }
-
-
     }
 }

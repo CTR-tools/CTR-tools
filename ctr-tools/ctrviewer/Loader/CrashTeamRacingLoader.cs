@@ -23,10 +23,11 @@ namespace ctrviewer.Loaders
 
         private void LoadCrashTeamRacingScene(CtrScene s, Detail detail)
         {
-            boundingBox = new Microsoft.Xna.Framework.BoundingBox(
-                DataConverter.ToVector3(s.visdata[0].bbox.numericMin),
-                DataConverter.ToVector3(s.visdata[0].bbox.numericMax)
-                );
+            if (s.visdata.Count > 0)
+                boundingBox = new Microsoft.Xna.Framework.BoundingBox(
+                    DataConverter.ToVector3(s.visdata[0].bbox.numericMin),
+                    DataConverter.ToVector3(s.visdata[0].bbox.numericMax)
+                    );
 
             List<VertexPositionColorTexture> monolist = new List<VertexPositionColorTexture>();
             List<CTRFramework.Vertex> vts = new List<Vertex>();

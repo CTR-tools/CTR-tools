@@ -300,10 +300,8 @@ namespace CTRTools.Controls
                 foreach (var vis in scn.visdata)
                     vis.Write(bw);
 
-                /*
                 bw.Jump(scn.header.ptrAiNav.Address + 4);
                 scn.nav.Write(bw);
-                */
             }
         }
 
@@ -483,7 +481,7 @@ namespace CTRTools.Controls
 
         private void scaleButton_Click(object sender, EventArgs e)
         {
-            float scale = 1.5f;
+            float scale = trackBar2.Value / 100f;
 
             foreach (var vertex in scn.verts)
             {
@@ -493,6 +491,7 @@ namespace CTRTools.Controls
             foreach (var pickup in scn.pickups)
             {
                 pickup.Pose.Position *= scale;
+                pickup.Scale *= scale;
             }
 
             foreach (var quad in scn.quads)
@@ -524,6 +523,19 @@ namespace CTRTools.Controls
             {
                 pos.Position *= scale;
             }
+
+            foreach (var nav in scn.nav.paths)
+            {
+                nav.start.position *= scale;
+
+                foreach (var frame in nav.Frames)
+                    frame.position *= scale;
+            }
+        }
+
+        private void trackBar2_Scroll(object sender, EventArgs e)
+        {
+            scaleButton.Text = $"Scale by {trackBar2.Value}%";
         }
     }
 }
