@@ -67,7 +67,7 @@ namespace CTRFramework
             if (flag.HasFlag(VisDataFlags.Unk3)) counter[3]++;
             if (flag.HasFlag(VisDataFlags.Unk4)) counter[4]++;
             if (flag.HasFlag(VisDataFlags.Unk5)) counter[5]++;
-            if (flag.HasFlag(VisDataFlags.Unk6)) counter[6]++;
+            if (flag.HasFlag(VisDataFlags.Hidden)) counter[6]++;
             if (flag.HasFlag(VisDataFlags.Unk7)) counter[7]++;
 
             id = br.ReadUInt16();

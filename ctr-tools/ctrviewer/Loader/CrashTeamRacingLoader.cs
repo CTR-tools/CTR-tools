@@ -103,8 +103,8 @@ namespace ctrviewer.Loaders
                                     bool isAnimated = false;
                                     string texTag = "test";
 
-                                    //BlendState blendState = BlendState.Opaque;
-                                    //BlendingMode bmode = BlendingMode.Standard;
+                                    BlendState blendState = BlendState.Opaque;
+                                    BlendingMode bmode = BlendingMode.Standard;
 
                                     if (qb.ptrTexMid[j] != PsxPtr.Zero)
                                     {
@@ -112,13 +112,13 @@ namespace ctrviewer.Loaders
                                         {
                                             isAnimated = qb.tex[j].isAnimated;
                                             texTag = qb.tex[j].lod2.Tag;
-                                            //bmode = qb.tex[j].lod2.blendingMode;
+                                            bmode = qb.tex[j].lod2.blendingMode;
 
-                                            /*
+                                            
                                             switch (bmode)
                                             {
                                                 case BlendingMode.Additive: blendState = BlendState.Additive; break;
-                                            }*/
+                                            }
                                         }
                                     }
 
@@ -134,9 +134,9 @@ namespace ctrviewer.Loaders
                                         continue;
                                     }
 
-                                    if (qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
+                                    if (qb.isHidden)
                                     {
-                                        Push(flagq, "invis", monolist, TriListType.Flag);
+                                        Push(flagq, "invis", monolist, TriListType.Flag, BlendState.Additive, "test");
                                         continue;
                                     }
 
@@ -144,7 +144,7 @@ namespace ctrviewer.Loaders
 
                                     Push(Trilists, texTag, monolist,
                                         (isAnimated ? TriListType.Animated : (isAlpha ? TriListType.Alpha : TriListType.Basic)), 
-                                        isAlpha ? BlendState.AlphaBlend : BlendState.Opaque
+                                        blendState == BlendState.Additive ? BlendState.Additive : (isAlpha ? BlendState.AlphaBlend : BlendState.Opaque)//isAlpha ? (blendState == BlendState.Additive ? blendState : BlendState.Opaque) : BlendState.Opaque
                                         );
 
                                     if (isAnimated)

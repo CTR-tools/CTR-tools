@@ -125,7 +125,7 @@ namespace ctrviewer.Engine.Render
                 byte R = bytes[i * 4 + 2];
                 byte A = bytes[i * 4 + 3];
 
-                if (A == 0)
+                if (A != 255)
                     alpha = true;
 
                 if (B == 255 && G == 0 && R == 255)

@@ -98,11 +98,9 @@ namespace CTRFramework
 
         public List<CtrTex> tex = new List<CtrTex>() { null, null, null, null };
 
-
+        //these are taken from visdataflags
         public bool isWater = false;
-
-        public bool unk3set = false;
-        public bool unk4set = false;
+        public bool isHidden = false;
 
         public QuadBlock()
         {
@@ -452,8 +450,8 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible"));
-            sb.AppendFormat("o piece_{0}\r\n\r\n", id.ToString("X4"));
+            sb.AppendLine($"g {(isHidden ? "invisible" : "visible")}");
+            sb.AppendLine($"o piece_{id.ToString("X4")}\r\n");
 
             switch (detail)
             {
@@ -468,6 +466,8 @@ namespace CTRFramework
                         }
 
                         sb.AppendLine("\r\nusemtl " + (ptrTexLow != UIntPtr.Zero ? texlow.Tag : "default"));
+
+
 
                         if (objSaveQuads)
                         {
@@ -502,6 +502,8 @@ namespace CTRFramework
                                 }
 
                                 sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? (tex[i] != null ? tex[i].lod2.Tag : "default") : "default"));
+                                //sb.AppendLine($"\r\nusemtl {midunk.ToString("X2")}");
+
 
                                 if (objSaveQuads)
                                 {

@@ -451,7 +451,7 @@ namespace CTRFramework.Vram
                 for (int i = 0; i < bmp.Width; i++)
                     for (int j = 0; j < bmp.Height; j++)
                     {
-                        bmp.SetPixel(i, j, Convert16(x.data[j * bmp.Width + i]));
+                        bmp.SetPixel(i, j, Convert16(x.data[j * bmp.Width + i], tl.blendingMode));
                     }
 
                 if (!textures.ContainsKey(tl.Tag))
@@ -630,7 +630,7 @@ namespace CTRFramework.Vram
         /// <param name="col">16 bit ushort color value.</param>
         /// <param name="useAlpha">Defines whether alpha value should be preserved.</param>
         /// <returns></returns>
-        public static Color Convert16(ushort col)
+        public static Color Convert16(ushort col, BlendingMode blend = BlendingMode.Standard)
         {
             byte r = (byte)(((col >> 0) & 0x1F) << 3);
             byte g = (byte)(((col >> 5) & 0x1F) << 3);
@@ -685,8 +685,14 @@ namespace CTRFramework.Vram
             }
             else
             {
-                //if (blendingMode != BlendingMode.Standard)
-                a = 127;
+                if (blend != BlendingMode.Standard)
+                {
+                    a = 127;
+                    if (blend == BlendingMode.Additive)
+                        a = 254; //silly but works. this is to avoid alpha sorting problems. should be properly rewritten via shaders.
+                }
+
+
                 /*
                 r = 0;
                 g = 255;
@@ -707,10 +713,10 @@ namespace CTRFramework.Vram
             return (ushort)((r >> 3 << 10) | (g >> 3 << 5) | (b >> 3 << 0));
         }
 
-        public static Color Convert16(byte[] b)
+        public static Color Convert16(byte[] b, BlendingMode blend = BlendingMode.Standard)
         {
             ushort val = BitConverter.ToUInt16(b, 0);
-            return Convert16(val);
+            return Convert16(val, blend);
         }
     }
 }

@@ -151,20 +151,12 @@ namespace CTRFramework
                             quads[i].isWater = true;
                     }
 
-                    if (node.flag.HasFlag(VisDataFlags.Unk3))
+                    if (node.flag.HasFlag(VisDataFlags.Hidden))
                     {
                         int z = (int)((node.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
 
                         for (int i = z; i < z + node.numQuadBlock; i++)
-                            quads[i].unk3set = true;
-                    }
-
-                    if (node.flag.HasFlag(VisDataFlags.Unk4))
-                    {
-                        int z = (int)((node.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
-
-                        for (int i = z; i < z + node.numQuadBlock; i++)
-                            quads[i].unk4set = true;
+                            quads[i].isHidden = true;
                     }
                 }
             }
@@ -335,7 +327,7 @@ namespace CTRFramework
             int b = 0;
 
             foreach (var quad in quads)
-                sb.AppendLine(quad.ToObj(verts, lod, ref a, ref b));
+                    sb.AppendLine(quad.ToObj(verts, lod, ref a, ref b));
 
             if (header.ptrAiNav != PsxPtr.Zero)
                 sb.AppendLine(nav.ToObj(ref a));
@@ -357,7 +349,6 @@ namespace CTRFramework
                     string texname = $"tex{lod}\\{tl.Tag}.png";
 
                     sb.AppendLine($"newmtl {tl.Tag}");
-                    sb.AppendLine("Kd 1.0 1.0 1.0");
                     sb.AppendLine($"map_Kd {texname}\r\n");
 
                     if (!File.Exists(Path.Combine(path, texname)))
@@ -373,6 +364,23 @@ namespace CTRFramework
                     Helpers.Panic(this, PanicType.Warning, $"tl position == 0? {tl.Tag}");
                 }
             }
+
+            /*
+             //generates bunch of labeled textures for each byte value
+            Helpers.CheckFolder(Path.Combine(path, "midunk"));
+
+            for (int i = 0; i < 256; i++)
+            {
+                sb.AppendLine($"newmtl {i.ToString("X2")}");
+                sb.AppendLine($"map_Kd midunk\\{i.ToString("X2")}.png\r\n");
+
+                Bitmap bmp = new Bitmap(64, 64);
+                Graphics graphics = Graphics.FromImage(bmp);
+                graphics.FillRectangle(Brushes.White, new Rectangle(0, 0, 64, 64));
+                graphics.DrawString(i.ToString("X2"), new Font("Consolas", 24, FontStyle.Bold), Brushes.Black, new Point(0, 0));
+                bmp.Save(Path.Combine(path, $"midunk\\{i.ToString("X2")}.png"));
+            }
+            */
 
             /*
                 importers will warn about missing texture here
@@ -508,6 +516,16 @@ namespace CTRFramework
                 if (!v.IsLeaf) numBranches++;
             }
 
+            Dictionary<int, int> midunkstats = new Dictionary<int, int>();
+
+            foreach (var quad in quads)
+            {
+                if (!midunkstats.ContainsKey(quad.midunk))
+                    midunkstats.Add(quad.midunk, 0);
+
+                midunkstats[quad.midunk]++;
+            }
+
             StringBuilder sb = new StringBuilder();
 
             sb.AppendFormat("{0}: {1}\r\n", "verts", verts.Count);
@@ -521,6 +539,11 @@ namespace CTRFramework
             sb.AppendFormat("{0}: {1}\r\n", "visdata leaves", numLeaves);
             sb.AppendLine($"minblocks in leaf: {minQuads}");
             sb.AppendLine($"maxblocks in leaf: {maxQuads}");
+
+            foreach (var kvp in midunkstats)
+            {
+                sb.AppendLine($"{kvp.Key.ToString("X2")}: {kvp.Value}");
+            }
 
             sb.AppendLine($"bgmode: {header.bgMode}");
             sb.AppendLine($"color4: {header.color4.ToString("X8")}");
