@@ -107,6 +107,9 @@ namespace CTRFramework
                 quads = mesh.QuadBlocks;
                 verts = mesh.Vertices;
                 visdata = mesh.VisData;
+
+                //foreach (var quad in quads)
+                    //quad.GenerateCtrQuads(verts);
             }
 
             restartPts = new PtrWrap<Pose>(header.ptrRestartPts).GetList(br, header.numRestartPts);
@@ -489,6 +492,24 @@ namespace CTRFramework
 
             foreach (var tl in GetTexturesList(lod).Values)
                 ctrvram?.GetTexture(tl, path)?.Save(Path.Combine(path, $"{tl.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
+            
+            foreach (var quad in quads)
+            {
+                foreach (var tex in quad.tex)
+                {
+                    try
+                    {
+                        string file = Path.Combine(path, $"{tex.ptrHi.ToString("X8")}.png");
+                        if (!File.Exists(file))
+                            tex.GetHiBitmap(ctrvram)?.Save(file, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("oh no");
+                    }
+                }
+            }
+
 
             Helpers.Panic(this, PanicType.Info, "Textures done.");
         }

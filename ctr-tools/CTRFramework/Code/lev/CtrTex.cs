@@ -2,6 +2,7 @@
 using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace CTRFramework
 {
@@ -22,6 +23,28 @@ namespace CTRFramework
         {
             Read(br, ptr);
         }
+
+        public Bitmap GetHiBitmap(Tim vram)
+        {
+            if (hi[0] != null)
+            {
+                int x = hi[0].stretch * hi[0].Width;
+                int y = hi[0].Height;
+
+                Bitmap bmp = new Bitmap(x * 4, y * 4);
+                Graphics g = Graphics.FromImage(bmp);
+
+                for (int i = 0; i < 16; i++)
+                {
+                    if (hi[i] != null)
+                        g.DrawImage(vram.GetTexture(hi[i]), (i % 4) * x, (i / 4) * y);
+                }
+
+                return bmp;
+            }
+            else return null;
+        }
+
 
         public void Read(BinaryReaderEx br, PsxPtr ptr)
         {
