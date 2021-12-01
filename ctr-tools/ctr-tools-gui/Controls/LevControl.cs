@@ -476,7 +476,7 @@ namespace CTRTools.Controls
 
             foreach (VisData v in scn.visdata)
             {
-                v.flag = v.flag | VisDataFlags.Leaf & VisDataFlags.Unk4;
+                v.flag = v.flag | VisDataFlags.Leaf & VisDataFlags.Subdiv4x2;
             }
         }
 
@@ -550,16 +550,7 @@ namespace CTRTools.Controls
 
             foreach (var quad in scn.quads)
             {
-                if (!quad.visDataFlags.HasFlag(VisDataFlags.Unk3) && !quad.visDataFlags.HasFlag(VisDataFlags.Unk4))
-                    quad.SetFaceColor(scn.verts, new Vector4b(255, 0, 255, 0));
-
-                if (!quad.visDataFlags.HasFlag(VisDataFlags.Unk3) && quad.visDataFlags.HasFlag(VisDataFlags.Unk4))
-                    quad.SetFaceColor(scn.verts, new Vector4b(0, 255, 0, 0));
-
-                if (quad.visDataFlags.HasFlag(VisDataFlags.Unk3) && !quad.visDataFlags.HasFlag(VisDataFlags.Unk4))
-                    quad.SetFaceColor(scn.verts, new Vector4b(0, 0, 255, 0));
-
-                if (quad.visDataFlags.HasFlag(VisDataFlags.Unk3) && quad.visDataFlags.HasFlag(VisDataFlags.Unk4))
+                if (quad.visDataFlags.HasFlag(VisDataFlags.Subdiv4x2))
                     quad.SetFaceColor(scn.verts, new Vector4b(255, 0, 0, 0));
             }
         }

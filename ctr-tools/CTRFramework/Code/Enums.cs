@@ -182,17 +182,16 @@ namespace CTRFramework
         InvisibleTriggers = 1 << 15 //invisible stuff like triggers
     }
 
-    //bit0 defines if entry is leaf or branch
-    //other bits assumed to only be used 1 at a time.
+
     [Flags]
     public enum VisDataFlags
     {
         None = 0,
-        Leaf = 1 << 0,
-        Water = 1 << 1,
-        Unk2 = 1 << 2,      // ??
-        Unk3 = 1 << 3,      // subdiv?
-        Unk4 = 1 << 4,      // subdiv?
+        Leaf = 1 << 0,      // defines if entry is leaf or branch, other bits assumed to only be used 1 at a time (? check)
+        Water = 1 << 1,     // renders quads node as water
+        Unk2 = 1 << 2,      // ?? caps on cove bridge
+        Subdiv4x1 = 1 << 3, // reduces 4x4 subdivision to 4x1
+        Subdiv4x2 = 1 << 4, // reduces 4x4 subdivision to 4x2
         Unk5 = 1 << 5,      // additive blended?
         Hidden = 1 << 6,    // doesn't render child quads
         Unk7 = 1 << 7,      // ??

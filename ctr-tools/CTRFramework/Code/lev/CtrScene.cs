@@ -150,6 +150,9 @@ namespace CTRFramework
 
                     for (int i = z; i < z + node.numQuadBlock; i++)
                         quads[i].visDataFlags = node.flag;
+
+                    //if (node.flag.HasFlag(VisDataFlags.Unk4))
+                     //   throw new Exception("gotcha!");
                 }
             }
 

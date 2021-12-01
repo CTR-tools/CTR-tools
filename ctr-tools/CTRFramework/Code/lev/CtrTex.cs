@@ -34,9 +34,20 @@ namespace CTRFramework
             int width = 0;
             int height = 0;
 
+            int numhtex = 4;
             int numvtex = 4;
-            if (qb.visDataFlags.HasFlag(VisDataFlags.Unk3))
+
+            if (qb.visDataFlags.HasFlag(VisDataFlags.Subdiv4x1))
+            {
+                numhtex = 4;
+                numvtex = 1;
+            }
+
+            if (qb.visDataFlags.HasFlag(VisDataFlags.Subdiv4x2))
+            {
+                numhtex = 4;
                 numvtex = 2;
+            }
 
             for (int i = 0; i < 16; i++)
             {
@@ -47,7 +58,7 @@ namespace CTRFramework
                 }
             }
 
-            Bitmap bmp = new Bitmap(width * 4, height * numvtex);
+            Bitmap bmp = new Bitmap(width * numhtex, height * numvtex);
             Graphics gr = Graphics.FromImage(bmp);
 
             gr.SmoothingMode = SmoothingMode.HighQuality;
