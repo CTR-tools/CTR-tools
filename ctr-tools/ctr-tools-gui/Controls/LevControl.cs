@@ -8,6 +8,7 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace CTRTools.Controls
 {
@@ -536,6 +537,31 @@ namespace CTRTools.Controls
         private void trackBar2_Scroll(object sender, EventArgs e)
         {
             scaleButton.Text = $"Scale by {trackBar2.Value}%";
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            if (scn == null)
+                return;
+
+            foreach (var quad in scn.quads)
+            {
+                if (!quad.visDataFlags.HasFlag(VisDataFlags.Unk3) && !quad.visDataFlags.HasFlag(VisDataFlags.Unk4))
+                    quad.SetFaceColor(scn.verts, new Vector4b(255, 0, 255, 0));
+
+                if (!quad.visDataFlags.HasFlag(VisDataFlags.Unk3) && quad.visDataFlags.HasFlag(VisDataFlags.Unk4))
+                    quad.SetFaceColor(scn.verts, new Vector4b(0, 255, 0, 0));
+
+                if (quad.visDataFlags.HasFlag(VisDataFlags.Unk3) && !quad.visDataFlags.HasFlag(VisDataFlags.Unk4))
+                    quad.SetFaceColor(scn.verts, new Vector4b(0, 0, 255, 0));
+
+                if (quad.visDataFlags.HasFlag(VisDataFlags.Unk3) && quad.visDataFlags.HasFlag(VisDataFlags.Unk4))
+                    quad.SetFaceColor(scn.verts, new Vector4b(255, 0, 0, 0));
+            }
         }
     }
 }

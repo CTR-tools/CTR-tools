@@ -32,12 +32,13 @@ namespace CTRTools.Controls
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPickups = new System.Windows.Forms.TabPage();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.label1 = new System.Windows.Forms.Label();
             this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.scaleButton = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.moveAllButton = new System.Windows.Forms.Button();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabVerts = new System.Windows.Forms.TabPage();
             this.vertexArrayControl1 = new CTRTools.Controls.VertexArrayControl();
             this.tabQuads = new System.Windows.Forms.TabPage();
@@ -66,7 +67,7 @@ namespace CTRTools.Controls
             this.button26 = new System.Windows.Forms.Button();
             this.button32 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPickups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
@@ -97,6 +98,7 @@ namespace CTRTools.Controls
             // 
             // tabPickups
             // 
+            this.tabPickups.Controls.Add(this.button2);
             this.tabPickups.Controls.Add(this.propertyGrid1);
             this.tabPickups.Controls.Add(this.label1);
             this.tabPickups.Controls.Add(this.trackBar2);
@@ -111,6 +113,25 @@ namespace CTRTools.Controls
             this.tabPickups.TabIndex = 0;
             this.tabPickups.Text = "Pickup headers";
             this.tabPickups.UseVisualStyleBackColor = true;
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertyGrid1.Location = new System.Drawing.Point(214, 3);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(409, 412);
+            this.propertyGrid1.TabIndex = 14;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(57, 122);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(151, 39);
+            this.label1.TabIndex = 20;
+            this.label1.Text = "Please note:\r\nscaling too much will cause\r\nsevere visibility/collision issues";
             // 
             // trackBar2
             // 
@@ -177,16 +198,6 @@ namespace CTRTools.Controls
             this.trackBar1.TabIndex = 15;
             this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
-            // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.propertyGrid1.Location = new System.Drawing.Point(214, 3);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(409, 412);
-            this.propertyGrid1.TabIndex = 14;
             // 
             // tabVerts
             // 
@@ -489,14 +500,15 @@ namespace CTRTools.Controls
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.actionExportObj);
             // 
-            // label1
+            // button2
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(57, 122);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(151, 39);
-            this.label1.TabIndex = 20;
-            this.label1.Text = "Please note:\r\nscaling too much will cause\r\nsevere visibility/collision issues";
+            this.button2.Location = new System.Drawing.Point(60, 176);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(72, 26);
+            this.button2.TabIndex = 21;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
             // LevControl
             // 
@@ -567,5 +579,6 @@ namespace CTRTools.Controls
         private Button scaleButton;
         private TrackBar trackBar2;
         private Label label1;
+        private Button button2;
     }
 }

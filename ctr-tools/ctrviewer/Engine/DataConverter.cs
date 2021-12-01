@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using CTRFramework;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,7 +33,7 @@ namespace ctrviewer.Engine
             return new Color(s.X, s.Y, s.Z, s.W);
         }
 
-        public static VertexPositionColorTexture ToVptc(CTRFramework.Vertex v, System.Numerics.Vector2 uv, float scale = 1.0f)
+        public static VertexPositionColorTexture ToVptc(Vertex v, System.Numerics.Vector2 uv, float scale = 1.0f)
         {
             VertexPositionColorTexture mono_v = new VertexPositionColorTexture();
             mono_v.Position = ToVector3(v.Position, scale);
@@ -45,14 +46,14 @@ namespace ctrviewer.Engine
             return mono_v;
         }
 
-        public static TriList ToTriList(CTRFramework.CtrModel model, float scale = 1f)
+        public static TriList ToTriList(CtrModel model, float scale = 1f)
         {
             GameConsole.Write(model.Name);
 
             List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
 
             foreach (var x in model.Entries[0].verts)
-                li.Add(DataConverter.ToVptc(x, new System.Numerics.Vector2(0, 0), 0.01f * scale));
+                li.Add(DataConverter.ToVptc(x, x.uv, 0.01f * scale));
 
             TriList t = new TriList();
             t.textureEnabled = false;

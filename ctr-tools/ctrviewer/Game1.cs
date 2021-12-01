@@ -72,11 +72,7 @@ namespace ctrviewer
 
         public Game1()
         {
-            GameConsole.Write($"ctrviewer - {version}");
-
-            Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
-            graphics.HardwareModeSwitch = false;
         }
 
         public void SwitchDisplayMode()
@@ -237,6 +233,12 @@ namespace ctrviewer
 
         protected override void Initialize()
         {
+            GameConsole.Write($"ctrviewer - {version}");
+
+            Content.RootDirectory = "Content";
+
+            graphics.HardwareModeSwitch = false;
+
             eng = new MainEngine(this);
 
             eng.Settings.onWindowedChanged += SwitchDisplayMode;
@@ -573,7 +575,8 @@ namespace ctrviewer
 
             foreach (var s in Scenes)
             {
-                eng.MeshHigh.Add(CrashTeamRacingLoader.FromScene(s, Detail.Med));
+                eng.MeshHigh.Add(CrashTeamRacingLoader.FromScene(s, Detail.High));
+                eng.MeshMed.Add(CrashTeamRacingLoader.FromScene(s, Detail.Med));
                 eng.MeshLow.Add(CrashTeamRacingLoader.FromScene(s, Detail.Low));
             }
 
@@ -1113,7 +1116,7 @@ namespace ctrviewer
             //Samplers.SetToDevice(graphics, EngineRasterizer.Default);
 
             //render level mesh depending on lod
-            foreach (MGLevel qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshHigh))
+            foreach (MGLevel qb in (eng.Settings.UseLowLod ? eng.MeshMed : eng.MeshHigh))
                 qb.Draw(graphics, effect, alphaTestEffect);
 
 

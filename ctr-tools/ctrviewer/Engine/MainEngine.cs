@@ -30,6 +30,7 @@ namespace ctrviewer.Engine
 
         //hi and low scenes converted to monogame
         public List<MGLevel> MeshHigh = new List<MGLevel>();
+        public List<MGLevel> MeshMed = new List<MGLevel>();
         public List<MGLevel> MeshLow = new List<MGLevel>();
 
         //bounding boxes for visdata
@@ -104,7 +105,7 @@ namespace ctrviewer.Engine
 
         public void Update(GameTime gameTime)
         {
-            foreach (var mg in MeshHigh)
+            foreach (var mg in MeshMed)
                 mg.Update(gameTime);
 
             foreach (var mg in MeshLow)
@@ -122,6 +123,7 @@ namespace ctrviewer.Engine
             sky = null;
             instanced.Clear();
             MeshHigh.Clear();
+            MeshMed.Clear();
             MeshLow.Clear();
             paths.Clear();
             ContentVault.Clear();

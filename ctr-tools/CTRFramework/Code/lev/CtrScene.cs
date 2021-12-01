@@ -146,21 +146,10 @@ namespace CTRFramework
             {
                 if (node.IsLeaf)
                 {
-                    if (node.flag.HasFlag(VisDataFlags.Water))
-                    {
-                        int z = (int)((node.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
+                    int z = (int)((node.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
 
-                        for (int i = z; i < z + node.numQuadBlock; i++)
-                            quads[i].isWater = true;
-                    }
-
-                    if (node.flag.HasFlag(VisDataFlags.Hidden))
-                    {
-                        int z = (int)((node.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
-
-                        for (int i = z; i < z + node.numQuadBlock; i++)
-                            quads[i].isHidden = true;
-                    }
+                    for (int i = z; i < z + node.numQuadBlock; i++)
+                        quads[i].visDataFlags = node.flag;
                 }
             }
 
@@ -330,7 +319,7 @@ namespace CTRFramework
             int b = 0;
 
             foreach (var quad in quads)
-                    sb.AppendLine(quad.ToObj(verts, lod, ref a, ref b));
+                sb.AppendLine(quad.ToObj(verts, lod, ref a, ref b));
 
             if (header.ptrAiNav != PsxPtr.Zero)
                 sb.AppendLine(nav.ToObj(ref a));
@@ -492,23 +481,22 @@ namespace CTRFramework
 
             foreach (var tl in GetTexturesList(lod).Values)
                 ctrvram?.GetTexture(tl, path)?.Save(Path.Combine(path, $"{tl.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
-            
-            foreach (var quad in quads)
-            {
-                foreach (var tex in quad.tex)
-                {
-                    try
+
+            if (lod == Detail.High)
+                foreach (var quad in quads)
+                    foreach (var tex in quad.tex)
                     {
-                        string file = Path.Combine(path, $"{tex.ptrHi.ToString("X8")}.png");
-                        if (!File.Exists(file))
-                            tex.GetHiBitmap(ctrvram)?.Save(file, System.Drawing.Imaging.ImageFormat.Png);
+                        try
+                        {
+                            string file = Path.Combine(path, $"{tex.lod2.Tag}.png");
+                            if (!File.Exists(file))
+                                tex.GetHiBitmap(ctrvram, quad)?.Save(file, System.Drawing.Imaging.ImageFormat.Png);
+                        }
+                        catch
+                        {
+                            Console.WriteLine("oh no");
+                        }
                     }
-                    catch
-                    {
-                        Console.WriteLine("oh no");
-                    }
-                }
-            }
 
 
             Helpers.Panic(this, PanicType.Info, "Textures done.");

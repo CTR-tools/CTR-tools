@@ -28,17 +28,17 @@ namespace CTRFramework.Vram
         #region properties
 
         public static readonly int SizeOf = 0x0C;
-
         public uint offset;
 
-        public List<Vector2> uv = new List<Vector2>() { new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0), new Vector2(0, 0) };
+        public List<Vector2> uv = new List<Vector2>() { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
         public List<Vector2> normuv = new List<Vector2>();
-
 
         public Point Palette;
 
         public int PalX => Palette.X;
         public int PalY => Palette.Y;
+
+        private ushort packedPalette => (ushort)(Palette.X & Palette.Y << 6);
 
         public Point Page;
 
@@ -47,6 +47,8 @@ namespace CTRFramework.Vram
 
         public BlendingMode blendingMode;
         public BitDepth bpp;
+
+        private ushort packedPageData => (ushort)(PageX & PageY << 4 & (byte)blendingMode << 5 & (byte)bpp << 7);
 
         public int stretch
         {
@@ -113,8 +115,6 @@ namespace CTRFramework.Vram
 
         public Rectangle Frame => new Rectangle(RealX, RealY, Width, Height);
 
-        private ushort packedPageData => (ushort)(PageX & PageY << 4 & (int)blendingMode << 5 & (int)bpp << 7);
-
         private string _tag = "";
 
         //meant to be unique
@@ -122,13 +122,13 @@ namespace CTRFramework.Vram
 
         #endregion
 
+        public TextureLayout()
+        {
+        }
+
         public TextureLayout(BinaryReaderEx br)
         {
             Read(br);
-        }
-
-        public TextureLayout()
-        {
         }
 
         public static TextureLayout FromReader(BinaryReaderEx br, bool skipcheck = false)
@@ -245,12 +245,17 @@ namespace CTRFramework.Vram
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
+            int offset = (int)bw.Position;
+
             bw.WriteVector2b(uv[0]);
-            bw.Write(Palette.X & Palette.Y << 6);
+            bw.Write(packedPalette);
             bw.WriteVector2b(uv[1]);
             bw.Write(packedPageData);
             bw.WriteVector2b(uv[2]);
             bw.WriteVector2b(uv[3]);
+
+            if (bw.Position - offset != SizeOf)
+                Helpers.Panic(this, PanicType.Error, "size mismatch");
         }
     }
 }

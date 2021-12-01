@@ -28,6 +28,10 @@ namespace CTRFramework
         public static readonly int SizeOf = 0x5C;
         public long BaseAddress;
 
+        //this is copied from bsp tree
+        public VisDataFlags visDataFlags = VisDataFlags.None;
+        public List<CtrQuad> MidQuads = new List<CtrQuad>();
+
         /*
          * 0--4--1
          * | /| /|
@@ -98,10 +102,6 @@ namespace CTRFramework
 
         public List<CtrTex> tex = new List<CtrTex>() { null, null, null, null };
 
-        //these are taken from visdataflags
-        public bool isWater = false;
-        public bool isHidden = false;
-
         public QuadBlock()
         {
         }
@@ -109,6 +109,29 @@ namespace CTRFramework
         public QuadBlock(BinaryReaderEx br)
         {
             Read(br);
+        }
+
+        public void GenerateCtrQuads(List<Vertex> vertices)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                var quad = new CtrQuad()
+                {
+                    FaceMode = faceFlags[i].faceMode,
+                    RotateFlipType = faceFlags[i].rotateFlipType,
+                    DrawingOrder = drawOrderHigh[i],
+                    FaceNormal = faceNormal[i],
+                    Texture = tex[i],
+                    Vertices = new Vertex[4] {
+                        vertices[ind[FaceIndices[i][0]]],
+                        vertices[ind[FaceIndices[i][1]]],
+                        vertices[ind[FaceIndices[i][2]]],
+                        vertices[ind[FaceIndices[i][3]]]
+                    }
+                };
+
+                MidQuads.Add(quad);
+            }
         }
 
 
@@ -187,8 +210,6 @@ namespace CTRFramework
 
             if (br.Position - BaseAddress != SizeOf)
                 Helpers.Panic(this, PanicType.Error, "SizeOf mismatch!");
-
-
 
             //read texture layouts
             int texpos = (int)br.Position;
@@ -450,7 +471,7 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"g {(isHidden ? "invisible" : "visible")}");
+            sb.AppendLine($"g {(visDataFlags.HasFlag(VisDataFlags.Hidden) ? "invisible" : "visible")}");
             sb.AppendLine($"o piece_{id.ToString("X4")}\r\n");
 
             switch (detail)
@@ -486,10 +507,14 @@ namespace CTRFramework
                     }
                 case Detail.Med:
                     {
-
                         for (int i = 0; i < 4; i++)
                         {
+                            //sb.AppendLine(MidQuads[i].ToObj(ref a));
+                            
+                            
                             List<Vertex> list = GetVertexListq(v, i);
+
+                            List<Vertex> subdiv = Helpers.Subdivide(list);
 
                             //this normally shouldn't be null
                             if (list != null)
@@ -497,14 +522,19 @@ namespace CTRFramework
 
                                 foreach (Vertex vt in list)
                                 {
-                                    sb.AppendLine(vt.ToObj());
-                                    sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
+                                    //sb.AppendLine(vt.ToObj());
+                                    //sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
+                                }
+
+                                foreach (var subvert in subdiv)
+                                {
+                                    sb.AppendLine(subvert.ToObj());
                                 }
 
                                 sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? (tex[i] != null ? tex[i].lod2.Tag : "default") : "default"));
                                 //sb.AppendLine($"\r\nusemtl {midunk.ToString("X2")}");
 
-
+                                /*
                                 if (objSaveQuads)
                                 {
                                     sb.Append(OBJ.ASCIIQuad("f", a, b));
@@ -514,16 +544,30 @@ namespace CTRFramework
                                     sb.AppendLine(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
                                     sb.AppendLine(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
                                 }
+                                */
 
                                 sb.AppendLine();
 
-                                b += 4;
-                                a += 4;
+                                //b += 4;
+                                //a += 4;
+
+                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 1, 6, 5, 0, 0, 0));
+                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 5, 6, 7, 0, 0, 0));
+                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 5, 7, 2, 0, 0, 0));
+                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 2, 7, 8, 0, 0, 0));
+                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 6, 3, 7, 0, 0, 0));
+                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 7, 3, 9, 0, 0, 0));
+                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 7, 9, 8, 0, 0, 0));
+                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 8, 9, 4, 0, 0, 0));
+
+                                a += 9;
                             }
                             else
                             {
                                 Helpers.Panic(this, PanicType.Error, $"something's wrong with quadblock {id} at {BaseAddress.ToString("X8")}, happens in secret2_4p and temple2_4p");
                             }
+
+                            
                         }
 
                         break;
@@ -531,6 +575,15 @@ namespace CTRFramework
             }
 
             return sb.ToString();
+        }
+
+        public void SetFaceColor(List<Vertex> vertices, Vector4b color)
+        {
+            foreach (var index in ind)
+            {
+                vertices[index].Color = color;
+                vertices[index].MorphColor = color;
+            }
         }
 
         /*

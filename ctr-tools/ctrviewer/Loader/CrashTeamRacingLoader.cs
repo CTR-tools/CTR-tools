@@ -58,13 +58,13 @@ namespace ctrviewer.Loaders
                                         Push(Trilists, fl.ToString(), monolist, TriListType.Flag, null, "flag");
                                 }
 
-                                if (qb.isWater)
+                                if (qb.visDataFlags.HasFlag(VisDataFlags.Water))
                                 {
                                     Push(Trilists, "water", monolist, TriListType.Water);
                                     continue;
                                 }
 
-                                if (qb.quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
+                                if (qb.visDataFlags.HasFlag(VisDataFlags.Hidden))
                                 {
                                     Push(Trilists, "invis", monolist, TriListType.Flag);
                                     continue;
@@ -114,7 +114,7 @@ namespace ctrviewer.Loaders
                                             texTag = qb.tex[j].lod2.Tag;
                                             bmode = qb.tex[j].lod2.blendingMode;
 
-                                            
+
                                             switch (bmode)
                                             {
                                                 case BlendingMode.Additive: blendState = BlendState.Additive; break;
@@ -128,13 +128,13 @@ namespace ctrviewer.Loaders
                                             Push(flagq, fl.ToString(), monolist, TriListType.Flag, BlendState.Additive, "flag");
                                     }
 
-                                    if (qb.isWater)
+                                    if (qb.visDataFlags.HasFlag(VisDataFlags.Water))
                                     {
                                         Push(Trilists, "water", monolist, TriListType.Water);
                                         continue;
                                     }
 
-                                    if (qb.isHidden)
+                                    if (qb.visDataFlags.HasFlag(VisDataFlags.Hidden))
                                     {
                                         Push(flagq, "invis", monolist, TriListType.Flag, BlendState.Additive, "test");
                                         continue;
@@ -143,7 +143,7 @@ namespace ctrviewer.Loaders
                                     bool isAlpha = ContentVault.alphalist.Contains(texTag);
 
                                     Push(Trilists, texTag, monolist,
-                                        (isAnimated ? TriListType.Animated : (isAlpha ? TriListType.Alpha : TriListType.Basic)), 
+                                        (isAnimated ? TriListType.Animated : (isAlpha ? TriListType.Alpha : TriListType.Basic)),
                                         blendState == BlendState.Additive ? BlendState.Additive : (isAlpha ? BlendState.AlphaBlend : BlendState.Opaque)//isAlpha ? (blendState == BlendState.Additive ? blendState : BlendState.Opaque) : BlendState.Opaque
                                         );
 
@@ -151,6 +151,65 @@ namespace ctrviewer.Loaders
                                         foreach (var ql in Trilists)
                                             if (ql.Value.type == TriListType.Animated)
                                                 Trilists[texTag].ScrollingEnabled = true;
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+
+                case Detail.High:
+                    {
+                        Helpers.Panic(this, PanicType.Info, "doin hi");
+
+                        foreach (QuadBlock qb in s.quads)
+                        {
+                            for (int j = 0; j < 4; j++)
+                            {
+                                monolist.Clear();
+                                vts = qb.GetVertexListq(s.verts, j);
+
+                                List<Vertex> subdiv = Helpers.Subdivide(vts);
+
+                                if (vts != null)
+                                {
+                                    monolist.Add(DataConverter.ToVptc(subdiv[0], subdiv[0].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[4], subdiv[4].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[5], subdiv[5].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[6], subdiv[6].uv));
+
+                                    bool isAnimated = false;
+                                    string texTag = (qb?.tex[j]?.lod2 == null ? "test" : qb.tex[j].lod2.Tag);
+
+                                    Push(Trilists, texTag, monolist, TriListType.Basic, BlendState.Opaque);
+
+                                    monolist.Clear();
+
+                                    monolist.Add(DataConverter.ToVptc(subdiv[4], subdiv[4].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[1], subdiv[1].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[6], subdiv[6].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[7], subdiv[7].uv));
+
+                                    Push(Trilists, texTag, monolist, TriListType.Basic, BlendState.Opaque);
+
+                                    monolist.Clear();
+
+                                    monolist.Add(DataConverter.ToVptc(subdiv[5], subdiv[5].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[6], subdiv[6].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[2], subdiv[2].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[8], subdiv[8].uv));
+
+                                    Push(Trilists, texTag, monolist, TriListType.Basic, BlendState.Opaque);
+
+                                    monolist.Clear();
+
+                                    monolist.Add(DataConverter.ToVptc(subdiv[6], subdiv[6].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[7], subdiv[7].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[8], subdiv[8].uv));
+                                    monolist.Add(DataConverter.ToVptc(subdiv[3], subdiv[3].uv));
+
+                                    Push(Trilists, texTag, monolist, TriListType.Basic, BlendState.Opaque);
+
                                 }
                             }
                         }

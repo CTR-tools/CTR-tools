@@ -3,6 +3,8 @@ using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 
 namespace CTRFramework
 {
@@ -24,25 +26,49 @@ namespace CTRFramework
             Read(br, ptr);
         }
 
-        public Bitmap GetHiBitmap(Tim vram)
+        public Bitmap GetHiBitmap(Tim vram, QuadBlock qb)
         {
-            if (hi[0] != null)
+            if (hi[0] == null)
+                return null;
+
+            int width = 0;
+            int height = 0;
+
+            int numvtex = 4;
+            if (qb.visDataFlags.HasFlag(VisDataFlags.Unk3))
+                numvtex = 2;
+
+            for (int i = 0; i < 16; i++)
             {
-                int x = hi[0].stretch * hi[0].Width;
-                int y = hi[0].Height;
-
-                Bitmap bmp = new Bitmap(x * 4, y * 4);
-                Graphics g = Graphics.FromImage(bmp);
-
-                for (int i = 0; i < 16; i++)
+                if (hi[i] != null)
                 {
-                    if (hi[i] != null)
-                        g.DrawImage(vram.GetTexture(hi[i]), (i % 4) * x, (i / 4) * y);
+                    if (hi[i].stretch * hi[0].Width > width) width = hi[0].stretch * hi[0].Width;
+                    if (hi[i].Height > height) height = hi[0].Height;
                 }
-
-                return bmp;
             }
-            else return null;
+
+            Bitmap bmp = new Bitmap(width * 4, height * numvtex);
+            Graphics gr = Graphics.FromImage(bmp);
+
+            gr.SmoothingMode = SmoothingMode.HighQuality;
+            gr.InterpolationMode = InterpolationMode.NearestNeighbor;
+            gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            gr.CompositingMode = CompositingMode.SourceCopy;
+
+            var attributes = new ImageAttributes();
+            attributes.SetWrapMode(WrapMode.TileFlipXY);
+
+            for (int i = 0; i < numvtex * 4; i++)
+            {
+                if (hi[i] != null)
+                {
+                    Bitmap b = vram.GetTexture(hi[i]);
+                    gr.DrawImage(b, new Rectangle((i % 4) * width, (i / 4) * height, width, height), 0, 0, b.Width, b.Height, GraphicsUnit.Pixel, attributes);
+                }
+            }
+
+            return bmp;
+
         }
 
 

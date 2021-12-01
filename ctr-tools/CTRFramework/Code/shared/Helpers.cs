@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
+using System.Numerics;
 
 namespace CTRFramework.Shared
 {
@@ -174,6 +176,55 @@ namespace CTRFramework.Shared
         public static string[] GetLinesFromResource(string resource)
         {
             return GetTextFromResource(resource).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        }
+
+        public static List<Vertex> Subdivide(List<Vertex> vertices)
+        {
+            if (vertices.Count != 4)
+            {
+                Panic("Subdivide", PanicType.Warning, "cannot subdivide if not 4 vertices");
+                return null;
+            }
+
+            List<Vertex> result = new List<Vertex>();
+
+            for (int i = 0; i < 9; i++)
+                result.Add(new Vertex());
+
+            result[0] = vertices[0];
+            result[1] = vertices[1];
+            result[2] = vertices[2];
+            result[3] = vertices[3];
+
+            result[4] = GetAverageVertex(vertices[0], vertices[1]); // 0 and 1
+            result[5] = GetAverageVertex(vertices[0], vertices[2]); // 0 and 2
+
+            result[7] = GetAverageVertex(vertices[1], vertices[3]); // 1 and 3
+            result[8] = GetAverageVertex(vertices[2], vertices[3]); // 2 and 3
+
+            result[6] = GetAverageVertex(result[5], result[7]); // new 3 and 5 or new 1 and 7
+
+            return result;
+        }
+
+        public static Vertex GetAverageVertex(Vertex a, Vertex b)
+        {
+            return new Vertex()
+            {
+                Position = (a.Position + b.Position) / 2,
+                Color = new Vector4b(
+                    (byte)((a.Color.X + b.Color.X) / 2),
+                    (byte)((a.Color.Y + b.Color.Y) / 2),
+                    (byte)((a.Color.Z + b.Color.Z) / 2),
+                    (byte)((a.Color.W + b.Color.W) / 2)
+                    ),
+                MorphColor = new Vector4b(
+                    (byte)((a.Color.X + b.Color.X) / 2),
+                    (byte)((a.Color.Y + b.Color.Y) / 2),
+                    (byte)((a.Color.Z + b.Color.Z) / 2),
+                    (byte)((a.Color.W + b.Color.W) / 2)
+                    ),
+            };
         }
     }
 }

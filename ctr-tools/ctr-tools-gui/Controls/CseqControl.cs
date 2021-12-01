@@ -303,8 +303,7 @@ namespace CTRTools.Controls
 
         private void exportSamplesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (seq != null)
-                seq.ExportSamples();
+            seq?.ExportSamples();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
