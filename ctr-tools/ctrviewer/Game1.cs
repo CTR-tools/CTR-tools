@@ -6,6 +6,7 @@ using CTRFramework.Vram;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Render;
 using ctrviewer.Engine.Testing;
+using ctrviewer.Engine.Gui;
 using ctrviewer.Loaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -15,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace ctrviewer
 {
@@ -299,7 +302,7 @@ namespace ctrviewer
             //effect.TextureEnabled = true;
 
             tint = new Texture2D(GraphicsDevice, 1, 1);
-            tint.SetData(new Color[] { Color.Black });
+            tint.SetData(new Color[] { Color.White });
 
             //load fonts
             GameConsole.Font = Content.Load<SpriteFont>("debug");
@@ -311,12 +314,92 @@ namespace ctrviewer
             menu = new Menu(font);
             MenuRootComponent.Font = font;
 
+            menu.Find("wire").Click += ToggleWireFrame;
+            menu.Find("newtex").Click += ToggleReplacements;
+            menu.Find("vcolor").Click += ToggleVertexColors;
+            menu.Find("nocull").Click += ToggleBackfaceCulling;
+            menu.Find("skybox").Click += ToggleSkybox;
+            menu.Find("water").Click += ToggleWater;
+            menu.Find("invis").Click += ToggleInvisible;
+            menu.Find("inst").Click += ToggleGameObjects;
+            menu.Find("paths").Click += ToggleBotPaths;
+
+            menu.Find("window").Click += ToggleWindowed;
+
+            foreach (var level in Enum.GetNames(typeof(Level)))
+            {
+                MenuItem item = menu.Find(level.ToString());
+                if (item != null)
+                    item.Click += LoadLevelAsync;
+            }
+
             UpdateSplitscreenViewports();
 
             LoadCones();
 
             LoadScenes(null);
             LoadLevel();
+        }
+
+        public void ToggleWindowed(object sender, EventArgs args)
+        {
+            eng.Settings.Windowed = (sender as BoolMenuItem).Value;
+        }
+
+        public async void LoadLevelAsync(object sender, EventArgs args)
+        {
+            IsLoading = true;
+
+            Task loadlevel = new Task(() => { LoadLevelsFromBig((sender as IntMenuItem).Value); } );
+            loadlevel.Start();
+
+            await loadlevel;
+
+            IsLoading = false;
+        }
+
+        public void ToggleWireFrame(object sender, EventArgs args)
+        {
+            eng.Settings.DrawWireframe = (sender as BoolMenuItem).Value;
+        }
+
+        public void ToggleReplacements(object sender, EventArgs args)
+        {
+            eng.Settings.UseTextureReplacements = (sender as BoolMenuItem).Value;
+        }
+
+        public void ToggleVertexColors(object sender, EventArgs args)
+        {
+            eng.Settings.VertexLighting = (sender as BoolMenuItem).Value;
+        }
+
+        public void ToggleBackfaceCulling(object sender, EventArgs args)
+        {
+            eng.Settings.BackFaceCulling = (sender as BoolMenuItem).Value;
+        }
+
+        public void ToggleSkybox(object sender, EventArgs args)
+        {
+           eng.Settings.ShowSky = (sender as BoolMenuItem).Value;
+        }
+
+        public void ToggleWater(object sender, EventArgs args)
+        {
+            eng.Settings.ShowWater = (sender as BoolMenuItem).Value;
+        }
+
+        public void ToggleInvisible(object sender, EventArgs args)
+        {
+            eng.Settings.ShowInvisible = (sender as BoolMenuItem).Value;
+        }
+        public void ToggleGameObjects(object sender, EventArgs args)
+        {
+            eng.Settings.ShowModels = (sender as BoolMenuItem).Value;
+        }
+
+        public void ToggleBotPaths(object sender, EventArgs args)
+        {
+            eng.Settings.ShowBotPaths = (sender as BoolMenuItem).Value;
         }
 
         public void LoadCones()
@@ -371,32 +454,17 @@ namespace ctrviewer
 
         bool IsLoading = false;
 
-        private void LoadStuff(string[] scenes)
-        {
-            IsLoading = true;
-
-            LoadScenes(scenes);
-            LoadLevel();
-            ResetCamera();
-
-            IsLoading = false;
-        }
-
         private void LoadStuff(List<CtrScene> scenes)
         {
-            IsLoading = true;
-
-            Scenes.Clear();
             Scenes = scenes;
             LoadLevel();
             ResetCamera();
-
-            IsLoading = false;
         }
 
         private void LoadTextures()
         {
             GameConsole.Write("LoadTextures()");
+            loadingStatus = "replacement textures";
 
             Dictionary<string, string> replacements = new Dictionary<string, string>();
 
@@ -420,8 +488,13 @@ namespace ctrviewer
 
             foreach (var s in Scenes)
             {
+                int x = s.ctrvram.textures.Count;
+                int i = 0;
+
                 foreach (var t in s.ctrvram.textures)
                 {
+                    loadingStatus = $"scene textures: {i}/{x}";
+
                     bool alpha = false;
 
                     ContentVault.AddTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
@@ -432,6 +505,8 @@ namespace ctrviewer
                     if (alpha)
                         if (!ContentVault.alphalist.Contains(t.Key))
                             ContentVault.alphalist.Add(t.Key);
+
+                    i++;
                 }
             }
         }
@@ -514,6 +589,8 @@ namespace ctrviewer
         {
             GameConsole.Write("LoadLevel()");
 
+            loadingStatus = "begin";
+
             RenderEnabled = false;
 
             //wait for the end of frame, in case we are still rendering.
@@ -572,6 +649,8 @@ namespace ctrviewer
             LoadTextures();
 
             GameConsole.Write("textures extracted at: " + sw.Elapsed.TotalSeconds);
+
+            loadingStatus = "converting scenes";
 
             foreach (var s in Scenes)
             {
@@ -846,6 +925,8 @@ namespace ctrviewer
 
                     if (menu.Exec)
                     {
+                        menu.SelectedItem.DoClick();
+
                         switch (menu.SelectedItem.Action)
                         {
                             case "close":
@@ -891,25 +972,16 @@ namespace ctrviewer
                             case "toggle":
                                 switch (menu.SelectedItem.Param)
                                 {
-                                    case "newtex": eng.Settings.UseTextureReplacements ^= true; break;
-                                    case "inst": eng.Settings.ShowModels ^= true; break;
-                                    case "paths": eng.Settings.ShowBotsPath ^= true; break;
                                     case "lod": eng.Settings.UseLowLod ^= true; break;
                                     case "antialias": eng.Settings.AntiAlias ^= true; break;
-                                    case "invis": eng.Settings.HideInvisible ^= true; break;
-                                    case "water": eng.Settings.HideWater ^= true; break;
                                     case "console": eng.Settings.ShowConsole ^= true; break;
                                     case "campos": eng.Settings.ShowCamPos ^= true; break;
                                     case "visbox": eng.Settings.VisData ^= true; break;
-                                    case "nocull": eng.Settings.ForceNoCulling ^= true; break;
                                     case "visboxleaf": eng.Settings.VisDataLeaves ^= true; break;
                                     case "filter": eng.Settings.EnableFiltering ^= true; break;
-                                    case "wire": eng.Settings.DrawWireframe ^= true; break;
                                     case "genmips": eng.Settings.GenerateMips ^= true; break;
                                     case "window": eng.Settings.Windowed ^= true; break;
-                                    case "vcolor": eng.Settings.VertexLighting ^= true; break;
                                     case "stereo": eng.Settings.StereoPair ^= true; break;
-                                    case "sky": eng.Settings.ShowSky ^= true; break;
                                     case "vsync": eng.Settings.VerticalSync ^= true; break;
                                     case "kart": eng.Settings.KartMode ^= true; break;
                                     case "psxres": eng.Settings.InternalPSXResolution ^= true; break;
@@ -933,7 +1005,7 @@ namespace ctrviewer
 
                         foreach (MenuItem m in menu.items)
                         {
-                            if (m.Action == "link" && m.Title == "BACK")
+                            if (m.Action == "link" && m.Text == "BACK")
                             {
                                 menu.SetMenu(font, m.Param);
                                 togglemenu = false;
@@ -1091,7 +1163,7 @@ namespace ctrviewer
                 v.Draw(graphics, instanceEffect, null, cam);
 
 
-            if (eng.Settings.ShowModels || eng.Settings.ShowBotsPath)
+            if (eng.Settings.ShowModels || eng.Settings.ShowBotPaths)
             {
                 if (eng.Settings.ShowModels)
                 {
@@ -1105,7 +1177,7 @@ namespace ctrviewer
                         k.Draw(graphics, instanceEffect, null, cam);
                 }
 
-                if (eng.Settings.ShowBotsPath)
+                if (eng.Settings.ShowBotPaths)
                 {
                     //render bot paths
                     foreach (var v in eng.paths)
@@ -1189,6 +1261,7 @@ namespace ctrviewer
         }
 
         int loadedLevel = -1;
+        string loadingStatus = "done";
 
         /// <summary>
         /// Loads scenes from BIG file.
@@ -1237,11 +1310,39 @@ namespace ctrviewer
             LoadStuff(scenes);
         }
 
+        public static Color CtrMainFontColor = Color.Yellow;
+
+        /*
+        //this can only be used with custom version of spritebatch that accepts color array and assigns individual corner vcolors
+        public static Color[] CtrMainFontColor = new Color[4] { 
+            new Color(255, 192, 0, 0),
+            new Color(255, 192, 0, 0),
+            Color.Red,
+            Color.Red
+        };
+        */
+
         protected override void Draw(GameTime gameTime)
         {
-            //remember we're busy drawing stuff
             IsDrawing = true;
 
+            if (IsLoading)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(tint, new Rectangle(
+                    0,
+                    graphics.PreferredBackBufferHeight / 2 - 10,
+                    graphics.PreferredBackBufferWidth,
+                    96
+                    ), Color.Black);
+                spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), CtrMainFontColor);
+                spriteBatch.DrawString(font, loadingStatus, new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString(loadingStatus).X / 2), graphics.PreferredBackBufferHeight / 2 + 40), CtrMainFontColor);
+                spriteBatch.End();
+
+                IsDrawing = false;
+
+                return;
+            }
 
             if (EngineSettings.Instance.InternalPSXResolution)
                 GraphicsDevice.SetRenderTarget(eng.screenBuffer);
@@ -1279,10 +1380,6 @@ namespace ctrviewer
 
             menu.Draw(GraphicsDevice, spriteBatch, font, tint);
 
-
-            if (IsLoading)
-                spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
-
             if (Scenes.Count == 0 && !IsLoading)
                 spriteBatch.DrawString(font,
                     "Crash Team Racing level viewer\r\n\r\n" +
@@ -1291,7 +1388,7 @@ namespace ctrviewer
                     "or put BIGFILE.BIG in root folder,\r\n" +
                     "or insert/mount CTR CD and use load level menu.",
                     new Vector2(20 * graphics.GraphicsDevice.Viewport.Height / 1080f, 20 * graphics.GraphicsDevice.Viewport.Height / 1080f),
-                    Color.Yellow,
+                    CtrMainFontColor,
                     0,
                     Vector2.Zero,
                     graphics.GraphicsDevice.Viewport.Height / 1080f,
@@ -1302,17 +1399,17 @@ namespace ctrviewer
 
 
             if (KeyboardHandler.IsAnyDown(Keys.OemMinus, Keys.OemPlus))
-                spriteBatch.DrawString(font, String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##"))).X - 20, 20), Color.Yellow);
+                spriteBatch.DrawString(font, String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##"))).X - 20, 20), CtrMainFontColor);
 
             if (GamePad.GetState(0).Triggers.Left > 0 || GamePad.GetState(0).Triggers.Right > 0)
                 spriteBatch.DrawString(
                     font,
                     $"Speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}",
                     new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString($"Speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}").X - 20, 20),
-                    Color.Yellow);
+                    CtrMainFontColor);
 
             if (eng.Settings.ShowCamPos)
-                spriteBatch.DrawString(font, $"({eng.Cameras[CameraType.DefaultCamera].Position.X.ToString("0.00")}, {eng.Cameras[CameraType.DefaultCamera].Position.Y.ToString("0.00")}, {eng.Cameras[CameraType.DefaultCamera].Position.Z.ToString("0.00")})", new Vector2(20, 20), Color.Yellow,
+                spriteBatch.DrawString(font, $"({eng.Cameras[CameraType.DefaultCamera].Position.X.ToString("0.00")}, {eng.Cameras[CameraType.DefaultCamera].Position.Y.ToString("0.00")}, {eng.Cameras[CameraType.DefaultCamera].Position.Z.ToString("0.00")})", new Vector2(20, 20), CtrMainFontColor,
                     0,
                     Vector2.Zero,
                     graphics.GraphicsDevice.Viewport.Height / 1080f,
@@ -1322,7 +1419,7 @@ namespace ctrviewer
 
             if (eng.Settings.KartMode)
                 if (karts.Count > 0)
-                    spriteBatch.DrawString(font, $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {karts[0].Speed}", new Vector2(20, 20), Color.Yellow,
+                    spriteBatch.DrawString(font, $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {karts[0].Speed}", new Vector2(20, 20), CtrMainFontColor,
                     0,
                     Vector2.Zero,
                     graphics.GraphicsDevice.Viewport.Height / 1080f,

@@ -49,10 +49,10 @@ namespace ctrviewer.Engine
         public bool VisDataLeaves { get; set; } = false;
         public bool GenerateMips { get; set; } = true;
         public bool ShowSky { get; set; } = true;
-        public bool ForceNoCulling { get; set; } = true;
-        public bool HideWater { get; set; } = false;
-        public bool HideInvisible { get; set; } = true;
-        public bool ShowBotsPath { get; set; } = false;
+        public bool BackFaceCulling { get; set; } = true;
+        public bool ShowWater { get; set; } = true;
+        public bool ShowInvisible { get; set; } = false;
+        public bool ShowBotPaths { get; set; } = false;
         public bool ShowModels { get; set; } = true;
         public bool KartMode { get; set; } = false;
         public bool DrawWireframe { get; set; } = false;

@@ -188,7 +188,7 @@ namespace ctrviewer.Engine.Render
                         alpha.Texture = effect.Texture;
                 }
 
-            if (!CullingEnabled || EngineSettings.Instance.ForceNoCulling)
+            if (!CullingEnabled || !EngineSettings.Instance.BackFaceCulling)
                 Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
 
             if (type == TriListType.Water || type == TriListType.Flag)

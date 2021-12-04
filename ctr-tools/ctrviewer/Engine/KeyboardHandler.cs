@@ -13,6 +13,10 @@ namespace ctrviewer.Engine
             newState = Keyboard.GetState();
         }
 
+        public static bool IsAltPressed => IsAnyDown(Keys.LeftAlt, Keys.RightAlt);
+        public static bool IsShiftPressed => IsAnyDown(Keys.LeftShift, Keys.RightShift);
+        public static bool IsControlPressed => IsAnyDown(Keys.LeftControl, Keys.RightControl);
+
         public static bool IsComboPressed(Keys helperkey, Keys key)
         {
             return IsDown(helperkey) && IsPressed(key);

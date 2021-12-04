@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 
-namespace ctrviewer.Engine
+namespace ctrviewer.Engine.Gui
 {
     public enum SwitchType
     {
@@ -15,6 +15,8 @@ namespace ctrviewer.Engine
     class Menu
     {
         public static Dictionary<string, List<MenuItem>> menus = new Dictionary<string, List<MenuItem>>();
+
+        public static SpriteFont Font = null;
 
 
         public Vector2 Position = new Vector2(0.5f, 0.35f);
@@ -42,14 +44,28 @@ namespace ctrviewer.Engine
 
         private int selection;
 
+        public MenuItem Find(string name)
+        {
+            foreach (var items in menus.Values)
+            {
+                foreach (var item in items)
+                    if (item.Name == name)
+                        return item;
+            }
+
+            //not found
+            return null;
+        }
+
         public Menu(SpriteFont font)
         {
             selection = 0;
 
             LoadMenuItems();
 
-            foreach (MenuItem m in items)
-                m.CalcWidth(font);
+            Font = font;
+
+            CalcWidth();
         }
 
         public void SetMenu(SpriteFont font)
@@ -59,33 +75,39 @@ namespace ctrviewer.Engine
 
         public void SetMenu(SpriteFont font, string name)
         {
+            Font = font;
+
             if (!menus.ContainsKey(name))
                 throw new Exception("missing menu! " + name);
 
             items = menus[name];
             selection = 0;
 
-            foreach (MenuItem m in items)
-                m.CalcWidth(font);
+            CalcWidth();
+        }
+
+        public void CalcWidth()
+        {
+            foreach (var item in items)
+                item.CalcWidth();
         }
 
         public void LoadMenuItems()
         {
-
             #region menuitems
             menus.Add("level", new List<MenuItem>()
             {
-                new MenuItem("toggle wireframe".ToUpper(), "toggle", "wire", true),
-                new MenuItem("toggle newtex".ToUpper(), "toggle", "newtex", true),
-                new MenuItem("toggle vertex lighting".ToUpper(), "toggle", "vcolor", true),
-                new MenuItem("toggle double sided".ToUpper(), "toggle", "nocull", true),
-                new MenuItem("toggle skybox".ToUpper(), "toggle", "sky", true),
-                new MenuItem("toggle water".ToUpper(), "toggle", "water", true),
-                new MenuItem("toggle invisible".ToUpper(), "toggle", "invis", true),
+                new BoolMenuItem(EngineSettings.Instance.DrawWireframe) { Text = "Wireframe", Name = "wire" },
+                new BoolMenuItem(EngineSettings.Instance.UseTextureReplacements) { Text = "Texture Replacements", Name = "newtex" },
+                new BoolMenuItem(EngineSettings.Instance.VertexLighting) { Text = "Vertex Lighting", Name = "vcolor" },
+                new BoolMenuItem(EngineSettings.Instance.BackFaceCulling) { Text = "Backface Culling", Name = "nocull" },
+                new BoolMenuItem(EngineSettings.Instance.ShowSky) { Text = "Sky Box", Name = "skybox"},
+                new BoolMenuItem(EngineSettings.Instance.ShowWater) { Text = "Water", Name = "water"},
+                new BoolMenuItem(EngineSettings.Instance.ShowInvisible) { Text = "Invisible Meshes", Name = "invis"},
                 new MenuItem("toggle visdata".ToUpper(), "toggle", "visbox", true),
                 new MenuItem("visdata leaves only".ToUpper(), "toggle", "visboxleaf", true),
-                new MenuItem("toggle game objects".ToUpper(), "toggle", "inst", true),
-                new MenuItem("toggle paths".ToUpper(), "toggle", "paths", true),
+                new BoolMenuItem(EngineSettings.Instance.ShowModels) { Text = "Game Objects", Name = "inst"},
+                new BoolMenuItem(EngineSettings.Instance.ShowBotPaths) { Text = "Bot Paths", Name = "paths"},
                 new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true),
                 new MenuItem("<< quadflag: {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15),
                 new MenuItem("back".ToUpper(), "link", "main", true)
@@ -93,7 +115,7 @@ namespace ctrviewer.Engine
 
             menus.Add("video", new List<MenuItem>()
             {
-                new MenuItem("toggle fullscreen".ToUpper(), "toggle", "window", true),
+                new BoolMenuItem(EngineSettings.Instance.Windowed) { Text = "Fullscreen", Name = "window", Inverted = true },
                 new MenuItem("toggle vsync/fps lock".ToUpper(), "toggle", "vsync", true),
                 new MenuItem("toggle antialias".ToUpper(), "toggle", "antialias", true),
                 new MenuItem("toggle filtering".ToUpper(), "toggle", "filter", true),
@@ -129,37 +151,37 @@ namespace ctrviewer.Engine
 
             menus.Add("cup_wumpa", new List<MenuItem>()
             {
-                new MenuItem("Crash Cove".ToUpper(), "loadbig", "", true, intValue: 3 * 8),
-                new MenuItem("Tiger Temple".ToUpper(), "loadbig", "", true, intValue: 4 * 8),
-                new MenuItem("Blizzard Bluff".ToUpper(), "loadbig", "", true, intValue: 2 * 8),
-                new MenuItem("Coco Park".ToUpper(), "loadbig", "", true, intValue: 14 * 8),
+                new IntMenuItem((int)Level.CrashCove * 8) { Text = "Crash Cove", Name = Level.CrashCove.ToString() },
+                new IntMenuItem((int)Level.TigerTemple * 8) { Text = "Tiger Temple", Name = Level.TigerTemple.ToString() },
+                new IntMenuItem((int)Level.BlizzardBluff * 8) { Text = "Blizzard Bluff", Name = Level.BlizzardBluff.ToString() },
+                new IntMenuItem((int)Level.CocoPark * 8) { Text = "Coco Park", Name = Level.CocoPark.ToString() },
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
             menus.Add("cup_cryst", new List<MenuItem>()
             {
-                new MenuItem("Roo's Tubes".ToUpper(), "loadbig", "", true, intValue: 6 * 8),
-                new MenuItem("Dingo Canyon".ToUpper(), "loadbig", "", true, intValue: 0 * 8),
-                new MenuItem("Dragon Mines".ToUpper(), "loadbig", "", true, intValue: 1 * 8),
-                new MenuItem("Sewer Speedway".ToUpper(), "loadbig", "", true, intValue: 8 * 8),
+                new IntMenuItem((int)Level.RooTubes * 8) { Text = "Roo's Tubes", Name = Level.RooTubes.ToString() },
+                new IntMenuItem((int)Level.DingoCanyon * 8) { Text = "Dingo Canyon", Name = Level.DingoCanyon.ToString()  },
+                new IntMenuItem((int)Level.DragonMines * 8) { Text = "Dragon Mines", Name = Level.DragonMines.ToString() },
+                new IntMenuItem((int)Level.SewerSpeedway * 8) { Text = "Sewer Speedway", Name = Level.SewerSpeedway.ToString() },
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
             menus.Add("cup_nitro", new List<MenuItem>()
             {
-                new MenuItem("Mystery Caves".ToUpper(), "loadbig", "", true, intValue: 9 * 8),
-                new MenuItem("Papu's Pyramid".ToUpper(), "loadbig", "", true, intValue: 5 * 8),
-                new MenuItem("Cortex Castle".ToUpper(), "loadbig", "", true, intValue: 10 * 8),
-                new MenuItem("Tiny Arena".ToUpper(), "loadbig", "", true, intValue: 15 * 8),
+                new IntMenuItem((int)Level.MysteryCaves * 8) { Text = "Mystery Caves", Name = Level.MysteryCaves.ToString() },
+                new IntMenuItem((int)Level.PapuPyramid * 8) { Text = "Papu's Pyramid", Name = Level.PapuPyramid.ToString()  },
+                new IntMenuItem((int)Level.CortexCastle * 8) { Text = "Cortex Castle", Name = Level.CortexCastle.ToString() },
+                new IntMenuItem((int)Level.TinyArena * 8) { Text = "Tiny Arena", Name = Level.TinyArena.ToString() },
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
             menus.Add("cup_crash", new List<MenuItem>()
             {
-                new MenuItem("Polar Pass".ToUpper(), "loadbig", "", true, intValue: 12 * 8),
-                new MenuItem("N. Gin Labs".ToUpper(), "loadbig", "", true, intValue: 11 * 8),
-                new MenuItem("Hot Air Skyway".ToUpper(), "loadbig", "", true, intValue: 7 * 8),
-                new MenuItem("Slide Coliseum".ToUpper(), "loadbig", "", true, intValue: 16 * 8),
+                new IntMenuItem((int)Level.PolarPass * 8) { Text = "Polar Pass", Name = Level.PolarPass.ToString() },
+                new IntMenuItem((int)Level.NGinLabs * 8) { Text = "N. Gin Labs", Name = Level.NGinLabs.ToString()  },
+                new IntMenuItem((int)Level.HotAirSkyway * 8) { Text = "Hot Air Skyway", Name = Level.HotAirSkyway.ToString() },
+                new IntMenuItem((int)Level.SlideColiseum * 8) { Text = "Slide Coliseum", Name = Level.SlideColiseum.ToString() },
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
@@ -287,7 +309,8 @@ namespace ctrviewer.Engine
                     Game1.currentflag = SelectedItem.rangeval;
                 }
             }
-            if ((newstate.Buttons.A == ButtonState.Pressed && newstate.Buttons.A != oldstate.Buttons.A) || KeyboardHandler.IsAnyPressed(Keys.Enter, Keys.Space))
+
+            if ((newstate.Buttons.A == ButtonState.Pressed && newstate.Buttons.A != oldstate.Buttons.A) || KeyboardHandler.IsAnyPressed(Keys.Enter, Keys.Space) && !KeyboardHandler.IsAltPressed)
                 if (SelectedItem.Enabled)
                     Exec = true;
         }
@@ -296,27 +319,43 @@ namespace ctrviewer.Engine
 
         public void Draw(GraphicsDevice gd, SpriteBatch g, SpriteFont fnt, Texture2D background)
         {
+            g.GraphicsDevice.BlendState = BlendState.Opaque;
+
             if (!Visible) return;
 
             float scale = gd.Viewport.Height / 1080f;
 
-            //g.Begin(depthStencilState: DepthStencilState.None);
-
-            g.Draw(background, gd.Viewport.Bounds, Color.White * 0.25f);
+            g.Draw(background, gd.Viewport.Bounds, Color.Black * 0.25f);
 
             int i = 0;
 
             Vector2 loc = new Vector2(gd.Viewport.Width, gd.Viewport.Height) * Position;
 
+            float maxwidth = 0;
+
+            foreach (var m in items)
+                if (m.Width > maxwidth)
+                    maxwidth = m.Width;
+
+            maxwidth *= 1.25f;
+
+            if (maxwidth < gd.Viewport.Width / 3)
+                maxwidth = gd.Viewport.Width / 3;
+
             foreach (MenuItem m in items)
             {
-                string s = (m.sType == SwitchType.Range ? String.Format(m.Title, ((QuadFlags)(1 << Game1.currentflag)).ToString(), m.rangeval) : m.Title.ToUpper()); //m.Title.ToUpper(), 
+                string s = (m.sType == SwitchType.Range ? String.Format(m.Text, ((QuadFlags)(1 << Game1.currentflag)).ToString(), m.rangeval) : m.ToString()) ; //m.Title.ToUpper(), 
+
+                Vector2 backloc = loc - new Vector2(maxwidth / 2 * scale, 0);
+
+                g.Draw(background, new Rectangle((int)backloc.X, (int)backloc.Y - 2, (int)(maxwidth * scale), (int)(40 * scale)), 
+                    i == Selection ? new Color(128, 0, 0, 128) : new Color(0, 0, 0, 128));
 
                 g.DrawString(fnt, s, loc + shadow_offset - new Vector2(m.Width / 2 * scale, 0), Color.Black,
-                   0, new Vector2(0, 0), scale, SpriteEffects.None, 0.5f);
+                   0, new Vector2(0, 0), scale, SpriteEffects.None, 1.0f);
 
                 g.DrawString(fnt, s, loc - new Vector2(m.Width / 2 * scale, 0),
-                    (i == selection ? (m.Enabled ? Color.Red : Color.DarkRed) : (m.Enabled ? Color.White : Color.Gray)),
+                   Game1.CtrMainFontColor,// (i == selection ? (m.Enabled ? Color.Red : Color.DarkRed) : (m.Enabled ? Color.White : Color.Gray)),
                    0, new Vector2(0, 0), scale, SpriteEffects.None, 0.5f);
 
                 loc += new Vector2(0, 40 * scale);

@@ -122,7 +122,7 @@ namespace ctrviewer.Engine.Testing
                                 alpha.Texture = effect.Texture;
                         }
 
-                    if (!CullingEnabled || EngineSettings.Instance.ForceNoCulling)
+                    if (!CullingEnabled || !EngineSettings.Instance.BackFaceCulling)
                         Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
 
                     foreach (var pass in (alpha != null ? alpha.CurrentTechnique.Passes : effect.CurrentTechnique.Passes))
