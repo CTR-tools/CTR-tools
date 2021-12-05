@@ -23,10 +23,10 @@ namespace ctrviewer
 {
     public enum LevelType
     {
-        P1 = 0,
-        P2 = 1,
-        P4 = 2,
-        TT = 3
+        Lod1P = 0,
+        Lod2P = 1,
+        Lod4P = 2,
+        LodRelic = 3
     }
 
     public enum PreferredTimeOfDay
@@ -71,7 +71,7 @@ namespace ctrviewer
 
         public static bool BigFileExists = false;
 
-        public LevelType levelType = LevelType.P1;
+        public LevelType levelType = LevelType.Lod1P;
 
         public Game1()
         {
@@ -96,6 +96,8 @@ namespace ctrviewer
             graphics.IsFullScreen = !eng.Settings.Windowed;
             graphics.ApplyChanges();
 
+            if (menu != null)
+                (menu.Find("window") as BoolMenuItem).Value = eng.Settings.Windowed;
 
             GameConsole.Write($"SwitchDisplayMode(): {graphics.PreferredBackBufferWidth}x{graphics.PreferredBackBufferHeight}");
         }
@@ -310,6 +312,18 @@ namespace ctrviewer
 
             BigFileExists = FindBigFile();
 
+            UpdateSplitscreenViewports();
+
+            InitMenu();
+
+            LoadCones();
+
+            LoadScenes(null);
+            LoadLevel();
+        }
+
+        public void InitMenu()
+        {
             //loadmenu
             menu = new Menu(font);
             MenuRootComponent.Font = font;
@@ -323,8 +337,14 @@ namespace ctrviewer
             menu.Find("invis").Click += ToggleInvisible;
             menu.Find("inst").Click += ToggleGameObjects;
             menu.Find("paths").Click += ToggleBotPaths;
+            menu.Find("visbox").Click += ToggleVisData;
+            menu.Find("visboxleaf").Click += ToggleVisDataLeaves;
 
             menu.Find("window").Click += ToggleWindowed;
+            menu.Find("intpsx").Click += ToggleInternalPsxResolution;
+            menu.Find("vsync").Click += ToggleVsync;
+            menu.Find("antialias").Click += ToggleAntialias;
+            menu.Find("filter").Click += ToggleFiltering;
 
             foreach (var level in Enum.GetNames(typeof(Level)))
             {
@@ -333,29 +353,76 @@ namespace ctrviewer
                     item.Click += LoadLevelAsync;
             }
 
-            UpdateSplitscreenViewports();
+            foreach (var name in new string[] {
+                "charselect",
+                "gemvalley",
+                "nsanity",
+                "lostruins",
+                "glacierpark",
+                "citadelcity",
+                "allhubs"
+            })
+                menu.Find(name).Click += LoadLevelAsync;
 
-            LoadCones();
-
-            LoadScenes(null);
-            LoadLevel();
+            foreach (var lod in Enum.GetNames(typeof(LevelType)))
+                menu.Find(lod.ToString()).Click += SetLodAndReload;
         }
 
         public void ToggleWindowed(object sender, EventArgs args)
         {
             eng.Settings.Windowed = (sender as BoolMenuItem).Value;
         }
+        public void ToggleVsync(object sender, EventArgs args)
+        {
+            eng.Settings.VerticalSync = (sender as BoolMenuItem).Value;
+        }
+        public void ToggleAntialias(object sender, EventArgs args)
+        {
+            eng.Settings.AntiAlias = (sender as BoolMenuItem).Value;
+        }
+        public void ToggleFiltering(object sender, EventArgs args)
+        {
+            eng.Settings.EnableFiltering = (sender as BoolMenuItem).Value;
+        }
 
         public async void LoadLevelAsync(object sender, EventArgs args)
         {
             IsLoading = true;
 
-            Task loadlevel = new Task(() => { LoadLevelsFromBig((sender as IntMenuItem).Value); } );
+            Task loadlevel = new Task(() =>
+            {
+                int levelId = (sender as IntMenuItem).Value;
+                if (levelId > -1)
+                    LoadLevelsFromBig(levelId);
+                else
+                    LoadLevelsFromBig(200, 203, 206, 209, 212);
+            });
+
             loadlevel.Start();
 
             await loadlevel;
 
             IsLoading = false;
+        }
+
+        public void SetLodAndReload(object sender, EventArgs args)
+        {
+            SetLodAndReload((LevelType)(sender as IntMenuItem).Value);
+        }
+
+        public void ToggleVisData(object sender, EventArgs args)
+        {
+            eng.Settings.VisData = (sender as BoolMenuItem).Value;
+            (menu.Find("visboxleaf") as BoolMenuItem).Enabled = eng.Settings.VisData;
+        }
+        public void ToggleVisDataLeaves(object sender, EventArgs args)
+        {
+            eng.Settings.VisDataLeaves = (sender as BoolMenuItem).Value;
+        }
+
+        public void ToggleInternalPsxResolution(object sender, EventArgs args)
+        {
+            eng.Settings.InternalPSXResolution = (sender as BoolMenuItem).Value;
         }
 
         public void ToggleWireFrame(object sender, EventArgs args)
@@ -453,13 +520,6 @@ namespace ctrviewer
 
 
         bool IsLoading = false;
-
-        private void LoadStuff(List<CtrScene> scenes)
-        {
-            Scenes = scenes;
-            LoadLevel();
-            ResetCamera();
-        }
 
         private void LoadTextures()
         {
@@ -901,7 +961,7 @@ namespace ctrviewer
 
                 if (KeyboardHandler.IsComboPressed(Keys.RightAlt, Keys.Enter))
                 {
-                    eng.Settings.Windowed = !eng.Settings.Windowed;
+                    eng.Settings.Windowed ^= true;
                 }
 
                 if (KeyboardHandler.IsPressed(Keys.OemTilde) || (newgs.IsButtonDown(Buttons.Back) && !oldgs.IsButtonDown(Buttons.Back)))
@@ -925,34 +985,13 @@ namespace ctrviewer
 
                     if (menu.Exec)
                     {
-                        menu.SelectedItem.DoClick();
-
                         switch (menu.SelectedItem.Action)
                         {
                             case "close":
                                 menu.Visible = false;
                                 break;
-                            //case "load":
-                            //    LoadGame();
-                            //    InMenu = false;
-                            //    break;
                             case "loadbig":
                                 LoadLevelsFromBig(menu.SelectedItem.Value);//, 0, 2); 
-                                break;
-                            case "loadbigadv":
-                                LoadLevelsFromBig(200, 203, 206, 209, 212);
-                                break;
-                            case "setlod1":
-                                SetLodAndReload(LevelType.P1);
-                                break;
-                            case "setlod2":
-                                SetLodAndReload(LevelType.P2);
-                                break;
-                            case "setlod4":
-                                SetLodAndReload(LevelType.P4);
-                                break;
-                            case "setlodtt":
-                                SetLodAndReload(LevelType.TT);
                                 break;
                             case "tod_day":
                                 SetTimeOfDay(PreferredTimeOfDay.Day);
@@ -965,9 +1004,6 @@ namespace ctrviewer
                                 break;
                             case "link":
                                 menu.SetMenu(font);
-                                break;
-                            case "setleveltype":
-                                levelType = (LevelType)menu.SelectedItem.Value;
                                 break;
                             case "toggle":
                                 switch (menu.SelectedItem.Param)
@@ -1252,7 +1288,7 @@ namespace ctrviewer
             return result;
         }
 
-        private void SetLodAndReload(LevelType ltype = LevelType.P1)
+        private void SetLodAndReload(LevelType ltype = LevelType.Lod1P)
         {
             levelType = ltype;
 
@@ -1305,9 +1341,14 @@ namespace ctrviewer
                 scene.SetVram(vrm);
 
                 scenes.Add(scene);
+
+                loadingStatus = $"scenes: {i}/{absId.Length}";
             }
 
-            LoadStuff(scenes);
+            Scenes = scenes;
+
+            LoadLevel();
+            ResetCamera();
         }
 
         public static Color CtrMainFontColor = Color.Yellow;
@@ -1386,7 +1427,8 @@ namespace ctrviewer
                     "No levels loaded.\r\n" +
                     "Put LEV/VRM files in levels folder,\r\n" +
                     "or put BIGFILE.BIG in root folder,\r\n" +
-                    "or insert/mount CTR CD and use load level menu.",
+                    "or insert/mount CTR CD and use load level menu.\r\n\r\n" +
+                    "Press ESC to open menu.",
                     new Vector2(20 * graphics.GraphicsDevice.Viewport.Height / 1080f, 20 * graphics.GraphicsDevice.Viewport.Height / 1080f),
                     CtrMainFontColor,
                     0,

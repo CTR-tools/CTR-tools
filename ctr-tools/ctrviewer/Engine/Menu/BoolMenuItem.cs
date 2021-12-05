@@ -24,13 +24,12 @@ namespace ctrviewer.Engine.Gui
 
         public bool Value
         {
-            get { return Inverted ? !_value : _value; }
+            get { return _value; }
             set {
-                _value = Inverted ? !value : value;
+                _value = value;
             }
         }
 
-        public bool Inverted = false;
         public BoolType DisplayType = BoolType.OnOff;
 
         private string BoolDisplayValue()
@@ -48,7 +47,7 @@ namespace ctrviewer.Engine.Gui
 
         public BoolMenuItem(bool InitValue)
         {
-            _value = Inverted ? !InitValue : InitValue;
+            _value = InitValue;
         }
 
         public override string ToString()

@@ -39,10 +39,7 @@ namespace CTRFramework.Big
             return $"file_{FileCursor.ToString("0000")}.bin";
         }
 
-        private int fileDefPtr
-        {
-            get => 8 + FileCursor * 8;
-        }
+        private int fileDefPtr => 8 + FileCursor * 8;
 
         public BigFileReader(Stream stream) : base(stream)
         {
