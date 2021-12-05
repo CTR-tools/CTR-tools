@@ -185,23 +185,30 @@ namespace CTRFramework.Shared
                 return null;
             }
 
-            List<Vertex> result = new List<Vertex>();
+            List<Vertex> temp = new List<Vertex>();
 
             for (int i = 0; i < 9; i++)
-                result.Add(new Vertex());
+                temp.Add(new Vertex());
 
-            result[0] = vertices[0];
-            result[1] = vertices[1];
-            result[2] = vertices[2];
-            result[3] = vertices[3];
+            temp[0] = vertices[0];
+            temp[1] = vertices[1];
+            temp[2] = vertices[2];
+            temp[3] = vertices[3];
 
-            result[4] = GetAverageVertex(vertices[0], vertices[1]); // 0 and 1
-            result[5] = GetAverageVertex(vertices[0], vertices[2]); // 0 and 2
+            temp[4] = GetAverageVertex(vertices[0], vertices[1]); // 0 and 1
+            temp[5] = GetAverageVertex(vertices[0], vertices[2]); // 0 and 2
 
-            result[7] = GetAverageVertex(vertices[1], vertices[3]); // 1 and 3
-            result[8] = GetAverageVertex(vertices[2], vertices[3]); // 2 and 3
+            temp[7] = GetAverageVertex(vertices[1], vertices[3]); // 1 and 3
+            temp[8] = GetAverageVertex(vertices[2], vertices[3]); // 2 and 3
 
-            result[6] = GetAverageVertex(result[5], result[7]); // new 3 and 5 or new 1 and 7
+            temp[6] = GetAverageVertex(temp[5], temp[7]); // new 3 and 5 or new 1 and 7
+
+            List<Vertex> result = new List<Vertex>();
+
+            result.AddRange(new Vertex[] { temp[0], temp[4], temp[5], temp[6] });
+            result.AddRange(new Vertex[] { temp[4], temp[1], temp[6], temp[7] });
+            result.AddRange(new Vertex[] { temp[5], temp[6], temp[2], temp[8] });
+            result.AddRange(new Vertex[] { temp[6], temp[7], temp[8], temp[3] });
 
             return result;
         }

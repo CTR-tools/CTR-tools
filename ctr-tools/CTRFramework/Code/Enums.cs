@@ -83,6 +83,22 @@ namespace CTRFramework
         hub5
     }
 
+    public enum Cutscenes
+    {
+        IntroBox = 0,
+        RaceToday,
+        CanyonCoco,
+        PassTiny,
+        TemplePolar,
+        SkywayDingodile,
+        SewerCortex,
+        Oxide1,
+        SleepingCrash,
+        Oxide2,
+        Oxide3,
+        Oxide4
+    }
+
     [Flags]
     public enum CtrDrawFlags
     {

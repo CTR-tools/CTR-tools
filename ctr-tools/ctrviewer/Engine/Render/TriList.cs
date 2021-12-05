@@ -107,7 +107,10 @@ namespace ctrviewer.Engine.Render
             }
 
             if (lv != null)
-                verts.AddRange(new List<VertexPositionColorTexture>() { lv[0], lv[1], lv[2], lv[2], lv[1], lv[3] });
+            {
+                for (int i = 0; i < lv.Count / 4; i ++)
+                    verts.AddRange(new List<VertexPositionColorTexture>() { lv[0 + i * 4], lv[1 + i * 4], lv[2 + i * 4], lv[2 + i * 4], lv[1 + i * 4], lv[3 + i * 4] });
+            }
         }
 
         bool forward = true;

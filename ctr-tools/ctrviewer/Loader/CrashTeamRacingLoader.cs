@@ -6,6 +6,7 @@ using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace ctrviewer.Loaders
 {
@@ -171,45 +172,21 @@ namespace ctrviewer.Loaders
 
                                 List<Vertex> subdiv = Helpers.Subdivide(vts);
 
+                                List<Vertex> evenmore = new List<Vertex>();
+                                evenmore.AddRange(Helpers.Subdivide(new List<Vertex> { subdiv[0], subdiv[1], subdiv[2], subdiv[3] }));
+                                evenmore.AddRange(Helpers.Subdivide(new List<Vertex> { subdiv[4], subdiv[5], subdiv[6], subdiv[7] }));
+                                evenmore.AddRange(Helpers.Subdivide(new List<Vertex> { subdiv[8], subdiv[9], subdiv[10], subdiv[11] }));
+                                evenmore.AddRange(Helpers.Subdivide(new List<Vertex> { subdiv[12], subdiv[13], subdiv[14], subdiv[15] }));
+
                                 if (vts != null)
                                 {
-                                    monolist.Add(DataConverter.ToVptc(subdiv[0], subdiv[0].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[4], subdiv[4].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[5], subdiv[5].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[6], subdiv[6].uv));
+                                    foreach (var x in evenmore)
+                                        monolist.Add(DataConverter.ToVptc(x, Vector2.Zero));
 
                                     bool isAnimated = false;
                                     string texTag = (qb?.tex[j]?.lod2 == null ? "test" : qb.tex[j].lod2.Tag);
 
                                     Push(Trilists, texTag, monolist, TriListType.Basic, BlendState.Opaque);
-
-                                    monolist.Clear();
-
-                                    monolist.Add(DataConverter.ToVptc(subdiv[4], subdiv[4].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[1], subdiv[1].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[6], subdiv[6].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[7], subdiv[7].uv));
-
-                                    Push(Trilists, texTag, monolist, TriListType.Basic, BlendState.Opaque);
-
-                                    monolist.Clear();
-
-                                    monolist.Add(DataConverter.ToVptc(subdiv[5], subdiv[5].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[6], subdiv[6].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[2], subdiv[2].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[8], subdiv[8].uv));
-
-                                    Push(Trilists, texTag, monolist, TriListType.Basic, BlendState.Opaque);
-
-                                    monolist.Clear();
-
-                                    monolist.Add(DataConverter.ToVptc(subdiv[6], subdiv[6].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[7], subdiv[7].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[8], subdiv[8].uv));
-                                    monolist.Add(DataConverter.ToVptc(subdiv[3], subdiv[3].uv));
-
-                                    Push(Trilists, texTag, monolist, TriListType.Basic, BlendState.Opaque);
-
                                 }
                             }
                         }

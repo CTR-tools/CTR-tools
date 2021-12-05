@@ -186,20 +186,20 @@ namespace ctrviewer.Engine.Gui
 
             menus.Add("cutscenes", new List<MenuItem>()
             {
-                new MenuItem("Intro Box (ND)".ToUpper(), "loadbig", "", true, intValue: 513),
-                new MenuItem("Race Today".ToUpper(), "loadbig", "", true, intValue: 515),
-                new MenuItem("Canyon/Coco".ToUpper(), "loadbig", "", true, intValue: 518),
-                new MenuItem("Pass/Tiny".ToUpper(), "loadbig", "", true, intValue: 521),
-                new MenuItem("Temple/Polar".ToUpper(), "loadbig", "", true, intValue: 524),
-                new MenuItem("Skyway/Dingodile".ToUpper(), "loadbig", "", true, intValue: 527),
-                new MenuItem("Sewer/Cortex".ToUpper(), "loadbig", "", true, intValue: 530),
-                new MenuItem("Oxide 1".ToUpper(), "loadbig", "", true, intValue: 533),
-                new MenuItem("Sleeping Crash".ToUpper(), "loadbig", "", true, intValue: 536),
-                new MenuItem("Oxide 2".ToUpper(), "loadbig", "", true, intValue: 539),
-                new MenuItem("Oxide 3".ToUpper(), "loadbig", "", true, intValue: 542),
-                new MenuItem("Oxide 4".ToUpper(), "loadbig", "", true, intValue: 544),
+                new IntMenuItem(513) { Text = "Intro Box (ND)", Name = Cutscenes.IntroBox.ToString() },
+                new IntMenuItem(515) { Text = "Race Today", Name = Cutscenes.RaceToday.ToString() },
+                new IntMenuItem(518) { Text = "Canyon/Coco", Name = Cutscenes.CanyonCoco.ToString() },
+                new IntMenuItem(521) { Text = "Pass/Tiny", Name = Cutscenes.PassTiny.ToString() },
+                new IntMenuItem(524) { Text = "Temple/Polar", Name = Cutscenes.TemplePolar.ToString() },
+                new IntMenuItem(527) { Text = "Skyway/Dingodile", Name = Cutscenes.SkywayDingodile.ToString() },
+                new IntMenuItem(530) { Text = "Sewer/Cortex", Name = Cutscenes.SewerCortex.ToString() },
+                new IntMenuItem(533) { Text = "Oxide 1", Name = Cutscenes.Oxide1.ToString() },
+                new IntMenuItem(536) { Text = "Sleeping Crash", Name = Cutscenes.SleepingCrash.ToString() },
+                new IntMenuItem(539) { Text = "Oxide 2", Name = Cutscenes.Oxide2.ToString() },
+                new IntMenuItem(542) { Text = "Oxide 3", Name = Cutscenes.Oxide3.ToString() },
+                new IntMenuItem(544) { Text = "Oxide 4", Name = Cutscenes.Oxide4.ToString() },
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
-            });
+            }); ;
 
             menus.Add("bonus_levels", new List<MenuItem>
             {

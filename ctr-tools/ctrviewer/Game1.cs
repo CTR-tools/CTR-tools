@@ -181,7 +181,7 @@ namespace ctrviewer
 
         public void UpdateAntiAlias()
         {
-            graphics.PreferMultiSampling = !graphics.PreferMultiSampling;
+            graphics.PreferMultiSampling = eng.Settings.AntiAlias;
             graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
 
             if (eng.screenBuffer != null)
@@ -346,6 +346,13 @@ namespace ctrviewer
             menu.Find("filter").Click += ToggleFiltering;
 
             foreach (var level in Enum.GetNames(typeof(Level)))
+            {
+                MenuItem item = menu.Find(level.ToString());
+                if (item != null)
+                    item.Click += LoadLevelAsync;
+            }
+
+            foreach (var level in Enum.GetNames(typeof(Cutscenes)))
             {
                 MenuItem item = menu.Find(level.ToString());
                 if (item != null)
@@ -1013,18 +1020,12 @@ namespace ctrviewer
                                 switch (menu.SelectedItem.Param)
                                 {
                                     case "lod": eng.Settings.UseLowLod ^= true; break;
-                                    case "antialias": eng.Settings.AntiAlias ^= true; break;
                                     case "console": eng.Settings.ShowConsole ^= true; break;
                                     case "campos": eng.Settings.ShowCamPos ^= true; break;
-                                    case "visbox": eng.Settings.VisData ^= true; break;
-                                    case "visboxleaf": eng.Settings.VisDataLeaves ^= true; break;
-                                    case "filter": eng.Settings.EnableFiltering ^= true; break;
                                     case "genmips": eng.Settings.GenerateMips ^= true; break;
                                     case "window": eng.Settings.Windowed ^= true; break;
                                     case "stereo": eng.Settings.StereoPair ^= true; break;
-                                    case "vsync": eng.Settings.VerticalSync ^= true; break;
                                     case "kart": eng.Settings.KartMode ^= true; break;
-                                    case "psxres": eng.Settings.InternalPSXResolution ^= true; break;
                                     default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
                                 }
                                 break;
