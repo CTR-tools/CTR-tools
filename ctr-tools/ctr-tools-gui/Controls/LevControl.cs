@@ -438,6 +438,9 @@ namespace CTRTools.Controls
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if (scn == null)
+                return;
+
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
             Graphics g = Graphics.FromImage(pictureBox1.Image);

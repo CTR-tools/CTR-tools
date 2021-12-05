@@ -30,9 +30,12 @@ namespace CTRTools.Controls
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BigFileControl));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.fileTree = new System.Windows.Forms.TreeView();
+            this.bigIcons = new System.Windows.Forms.ImageList(this.components);
             this.fileInfo = new System.Windows.Forms.TextBox();
             this.actionLoadBig = new System.Windows.Forms.Button();
             this.actionExportAll = new System.Windows.Forms.Button();
@@ -85,12 +88,30 @@ namespace CTRTools.Controls
             // 
             this.fileTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fileTree.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.fileTree.HideSelection = false;
+            this.fileTree.ImageIndex = 0;
+            this.fileTree.ImageList = this.bigIcons;
             this.fileTree.Location = new System.Drawing.Point(0, 0);
             this.fileTree.Name = "fileTree";
+            this.fileTree.SelectedImageIndex = 0;
             this.fileTree.Size = new System.Drawing.Size(258, 419);
             this.fileTree.TabIndex = 5;
             this.fileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             this.fileTree.MouseClick += new System.Windows.Forms.MouseEventHandler(this.fileTree_MouseClick);
+            // 
+            // bigIcons
+            // 
+            this.bigIcons.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("bigIcons.ImageStream")));
+            this.bigIcons.TransparentColor = System.Drawing.Color.Transparent;
+            this.bigIcons.Images.SetKeyName(0, "folder.png");
+            this.bigIcons.Images.SetKeyName(1, "lev.png");
+            this.bigIcons.Images.SetKeyName(2, "vrm.png");
+            this.bigIcons.Images.SetKeyName(3, "ctr.png");
+            this.bigIcons.Images.SetKeyName(4, "bin.png");
+            this.bigIcons.Images.SetKeyName(5, "str.png");
+            this.bigIcons.Images.SetKeyName(6, "mpk.png");
+            this.bigIcons.Images.SetKeyName(7, "ptr.png");
+            this.bigIcons.Images.SetKeyName(8, "lng.png");
             // 
             // fileInfo
             // 
@@ -194,5 +215,6 @@ namespace CTRTools.Controls
         private System.ComponentModel.BackgroundWorker bigLoader;
         private Button expandAll;
         private Label bigVersion;
+        private ImageList bigIcons;
     }
 }

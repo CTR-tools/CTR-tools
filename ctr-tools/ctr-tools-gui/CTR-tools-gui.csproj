@@ -211,6 +211,15 @@
     <None Include="readme.md" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icons\folder.png" />
+    <Content Include="icons\lng.png" />
+    <Content Include="icons\mpk.png" />
+    <Content Include="icons\ptr.png" />
+    <Content Include="icons\vrm.png" />
+    <Content Include="icons\bin.png" />
+    <Content Include="icons\ctr.png" />
+    <Content Include="icons\lev.png" />
+    <Content Include="icons\str.png" />
     <Content Include="mapping.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

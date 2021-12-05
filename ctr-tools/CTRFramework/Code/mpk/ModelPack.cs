@@ -3,6 +3,7 @@ using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -113,6 +114,23 @@ namespace CTRFramework
                 model.Export(modelsPath, tim);
                 model.Save(modelsPath);
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"Models: {Models.Count}");
+
+            foreach(var model in Models)
+                sb.AppendLine($"- {model.Name}");
+
+            sb.AppendLine($"Textures: {iconPack.Icons.Count}");
+
+            foreach (var icon in iconPack.Icons.Values)
+                sb.AppendLine($"- {icon.Name}");
+
+            return sb.ToString();
         }
     }
 }

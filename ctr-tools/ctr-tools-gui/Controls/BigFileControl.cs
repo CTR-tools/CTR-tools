@@ -40,6 +40,7 @@ namespace CTRTools.Controls
                 return;
             }
 
+            expandAll.Text = "Expand";
             bigLoader.RunWorkerAsync(path);
         }
 
@@ -65,6 +66,20 @@ namespace CTRTools.Controls
 
                 TreeNode final = new TreeNode(s[s.Length - 1]);
                 final.Tag = Reader.FileCursor;
+                
+                switch (Path.GetExtension(s[s.Length - 1]))
+                {
+                    case ".lev": final.ImageIndex = final.SelectedImageIndex = 1; break;
+                    case ".vrm":
+                    case ".tim": final.ImageIndex = final.SelectedImageIndex = 2; break;
+                    case ".ctr": final.ImageIndex = final.SelectedImageIndex = 3; break;
+                    case ".bin": final.ImageIndex = final.SelectedImageIndex = 4; break;
+                    case ".str": final.ImageIndex = final.SelectedImageIndex = 5; break;
+                    case ".mpk": final.ImageIndex = final.SelectedImageIndex = 6; break;
+                    case ".ptr": final.ImageIndex = final.SelectedImageIndex = 7; break;
+                    case ".lng": final.ImageIndex = final.SelectedImageIndex = 8; break;
+                    default: final.ImageIndex = 0; break;
+                }
 
                 curnode.Nodes.Add(final);
             }
@@ -123,7 +138,10 @@ namespace CTRTools.Controls
         private void actionLoadBig_Click(object sender, EventArgs e)
         {
             if (ofd.ShowDialog() == DialogResult.OK)
+            {
                 LoadBigFull(ofd.FileName);
+                expandAll.Text = "Expand";
+            }
         }
 
         private void BigFileControl_DragDrop(object sender, DragEventArgs e)
@@ -193,6 +211,11 @@ namespace CTRTools.Controls
                             var tim = en.ParseAs<Tim>();
                             fileInfo.Text = tim.ToString();
                             break;
+
+                        case ".mpk":
+                            var mpk = en.ParseAs<ModelPack>();
+                            fileInfo.Text = mpk.ToString();
+                            break;
                     }
                 }
             }
@@ -214,6 +237,7 @@ namespace CTRTools.Controls
 
         private void expandAll_Click(object sender, EventArgs e)
         {
+            fileTree.BeginUpdate();
             if (expandAll.Text == "Expand")
             {
                 fileTree.ExpandAll();
@@ -222,8 +246,11 @@ namespace CTRTools.Controls
             else
             {
                 fileTree.CollapseAll();
+                if (fileTree.Nodes.Count > 0)
+                    fileTree.Nodes[0].Expand();
                 expandAll.Text = "Expand";
             }
+            fileTree.EndUpdate();
         }
 
         private void fileTree_MouseClick(object sender, MouseEventArgs e)
