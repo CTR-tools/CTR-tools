@@ -388,6 +388,7 @@ namespace ctrviewer
         public async void LoadLevelAsync(object sender, EventArgs args)
         {
             IsLoading = true;
+            ControlsEnabled = false;
 
             Task loadlevel = new Task(() =>
             {
@@ -403,6 +404,7 @@ namespace ctrviewer
             await loadlevel;
 
             IsLoading = false;
+            ControlsEnabled = true;
         }
 
         public void SetLodAndReload(object sender, EventArgs args)
@@ -913,6 +915,9 @@ namespace ctrviewer
 
             newms = Mouse.GetState();
             newgs = GamePad.GetState(activeGamePad);
+
+            if (!ControlsEnabled)
+                return;
 
             if (IsActive)
             {
