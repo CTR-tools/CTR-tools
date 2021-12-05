@@ -285,12 +285,12 @@
 247=packs\japfont.vrm
 248=packs\japfont.mpk
 
-249=overlays\234_04.dll
-250=overlays\235_05.dll
-251=overlays\236_06.dll
-252=overlays\237_07.dll
-253=overlays\238_08.dll
-254=overlays\239_09.dll
+249=overlays\234_04.bin
+250=overlays\235_05.bin
+251=overlays\236_06.bin
+252=overlays\237_07.bin
+253=overlays\238_08.bin
+254=overlays\239_09.bin
 
 255=lang\ja.lng
 256=lang\en.lng

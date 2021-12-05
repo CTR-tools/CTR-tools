@@ -72,7 +72,7 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CTRFramework\CTRFramework.csproj">
+    <ProjectReference Include="..\..\CTRFramework\CTRFramework.csproj">
       <Project>{0326f8b5-f788-4529-9f87-c725a5d13bc0}</Project>
       <Name>CTRFramework</Name>
     </ProjectReference>

@@ -33,23 +33,23 @@ namespace CTRFramework.Big
         /// <summary>
         /// Reads BigFile and returns the object.
         /// </summary>
-        /// <param name="fn">Filename.</param>
+        /// <param name="filename">Filename.</param>
         /// <returns></returns>
-        public static BigFile FromFile(string fn)
+        public static BigFile FromFile(string filename)
         {
-            return new BigFile(fn);
+            return new BigFile(filename);
         }
 
         /// <summary>
         /// Reads BigFile depending on the given file type.
         /// </summary>
-        /// <param name="fn">Filename.</param>
-        private BigFile(string fn)
+        /// <param name="filename">Filename.</param>
+        private BigFile(string filename)
         {
-            switch (Path.GetExtension(fn).ToLower())
+            switch (Path.GetExtension(filename).ToLower())
             {
-                case ".big": LoadFromBig(fn); break;
-                case ".txt": LoadFromTxt(fn); break;
+                case ".big": LoadFromBig(filename); break;
+                case ".txt": LoadFromTxt(filename); break;
 
                 default: throw new Exception("Unsupported file.");
             }
@@ -62,16 +62,14 @@ namespace CTRFramework.Big
         private void LoadFromBig(string filename)
         {
             if (!File.Exists(filename))
-                throw new Exception($"File doesn't exist: {filename}");
+                throw new FileNotFoundException($"File doesn't exist: {filename}");
 
             Helpers.Panic(this, PanicType.Info, $"Loading BIG from: {filename}");
 
-            using (BigFileReader b = BigFileReader.FromFile(filename))
+            using (var reader = BigFileReader.FromFile(filename))
             {
-                while (b.NextFile())
-                {
-                    Entries.Add(b.ReadEntry());
-                }
+                while (reader.NextFile())
+                    Entries.Add(reader.ReadEntry());
             }
 
             Helpers.Panic(this, PanicType.Info, "BIG loaded.");
@@ -141,28 +139,28 @@ namespace CTRFramework.Big
                 bw.Write((int)0);
                 bw.Write(Entries.Count);
 
-                bw.Jump(3 * 2048);
+                bw.Jump(3 * Meta.SectorSize);
 
-                foreach (BigEntry c in Entries)
+                foreach (var entry in Entries)
                 {
                     Console.Write(".");
 
                     int pos = (int)bw.BaseStream.Position;
-                    c.Offset = pos / Meta.SectorSize;
+                    entry.Offset = pos / Meta.SectorSize;
 
-                    bw.Write(c.Data);
+                    bw.Write(entry.Data);
 
-                    bw.Jump(pos + c.SizePadded);
+                    bw.Jump(pos + entry.SizePadded);
                 }
 
                 Console.WriteLine();
 
                 bw.Jump(8);
 
-                foreach (BigEntry c in Entries)
+                foreach (var entry in Entries)
                 {
-                    bw.Write(c.Offset);
-                    bw.Write(c.Size);
+                    bw.Write(entry.Offset);
+                    bw.Write(entry.Size);
                 }
 
                 Helpers.Panic(this, PanicType.Info, "Dumping to disk...");

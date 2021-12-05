@@ -510,8 +510,8 @@ namespace CTRFramework
                         for (int i = 0; i < 4; i++)
                         {
                             //sb.AppendLine(MidQuads[i].ToObj(ref a));
-                            
-                            
+
+
                             List<Vertex> list = GetVertexListq(v, i);
 
                             List<Vertex> subdiv = Helpers.Subdivide(list);
@@ -567,7 +567,7 @@ namespace CTRFramework
                                 Helpers.Panic(this, PanicType.Error, $"something's wrong with quadblock {id} at {BaseAddress.ToString("X8")}, happens in secret2_4p and temple2_4p");
                             }
 
-                            
+
                         }
 
                         break;

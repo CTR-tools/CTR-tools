@@ -25,7 +25,8 @@ namespace ctrviewer.Engine.Gui
         public bool Value
         {
             get { return _value; }
-            set {
+            set
+            {
                 _value = value;
             }
         }

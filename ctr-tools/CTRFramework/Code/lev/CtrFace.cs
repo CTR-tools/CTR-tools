@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CTRFramework.Vram;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 using System.Numerics;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -40,7 +35,7 @@ namespace CTRFramework
             sb.Append($"usemtl {(Texture.lod2 == null ? "default" : Texture.lod2.Tag)}");
 
             sb.AppendLine($"f {num + 1} {num + 2} {num + 3}");
-            
+
             if (FaceMode == FaceMode.Normal)
                 sb.AppendLine($"f {num + 3} {num + 2} {num + 4}");
 

@@ -4,9 +4,9 @@ using CTRFramework.Shared;
 using CTRFramework.Sound;
 using CTRFramework.Vram;
 using ctrviewer.Engine;
+using ctrviewer.Engine.Gui;
 using ctrviewer.Engine.Render;
 using ctrviewer.Engine.Testing;
-using ctrviewer.Engine.Gui;
 using ctrviewer.Loaders;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using System.Threading;
 
 namespace ctrviewer
 {
@@ -449,7 +448,7 @@ namespace ctrviewer
 
         public void ToggleSkybox(object sender, EventArgs args)
         {
-           eng.Settings.ShowSky = (sender as BoolMenuItem).Value;
+            eng.Settings.ShowSky = (sender as BoolMenuItem).Value;
         }
 
         public void ToggleWater(object sender, EventArgs args)
@@ -758,18 +757,18 @@ namespace ctrviewer
                 foreach (var pa in s.header.startGrid)
                     eng.paths.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
 
-                    for (int i = 0; i < 8; i++)
-                        if (s.header.startGrid[i].Position != System.Numerics.Vector3.Zero)
-                            eng.instanced.Add(new InstancedModel(
-                               ((CharIndex)i).ToString().ToLower(),
-                               DataConverter.ToVector3(s.header.startGrid[i].Position),
-                               new Vector3(
-                                    s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
-                                    s.header.startGrid[i].Rotation.X * (float)Math.PI * 2,
-                                    s.header.startGrid[i].Rotation.Z * (float)Math.PI * 2),
-                               new Vector3(1f)
-                                )
-                                );
+                for (int i = 0; i < 8; i++)
+                    if (s.header.startGrid[i].Position != System.Numerics.Vector3.Zero)
+                        eng.instanced.Add(new InstancedModel(
+                           ((CharIndex)i).ToString().ToLower(),
+                           DataConverter.ToVector3(s.header.startGrid[i].Position),
+                           new Vector3(
+                                s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
+                                s.header.startGrid[i].Rotation.X * (float)Math.PI * 2,
+                                s.header.startGrid[i].Rotation.Z * (float)Math.PI * 2),
+                           new Vector3(1f)
+                            )
+                            );
 
                 foreach (var ph in s.pickups)
                 {

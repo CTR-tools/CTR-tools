@@ -222,7 +222,7 @@ namespace ctrviewer.Engine.Gui
             });
 
             menus.Add("adventure", new List<MenuItem>
-            { 
+            {
                 new MenuItem("All at once".ToUpper(), "loadbigadv", "", true, intValue: -1),
                 new IntMenuItem(-1) { Text = "All Hubs At Once", Name = "allhubs" },
                 new IntMenuItem(200) { Text = "Gem Valley", Name = "gemvalley" },
@@ -349,11 +349,11 @@ namespace ctrviewer.Engine.Gui
 
             foreach (MenuItem m in items)
             {
-                string s = (m.sType == SwitchType.Range ? String.Format(m.Text, ((QuadFlags)(1 << Game1.currentflag)).ToString(), m.rangeval) : m.ToString()) ; //m.Title.ToUpper(), 
+                string s = (m.sType == SwitchType.Range ? String.Format(m.Text, ((QuadFlags)(1 << Game1.currentflag)).ToString(), m.rangeval) : m.ToString()); //m.Title.ToUpper(), 
 
                 Vector2 backloc = loc - new Vector2(maxwidth / 2 * scale, 0);
 
-                g.Draw(background, new Rectangle((int)backloc.X, (int)backloc.Y - 2, (int)(maxwidth * scale), (int)(40 * scale)), 
+                g.Draw(background, new Rectangle((int)backloc.X, (int)backloc.Y - 2, (int)(maxwidth * scale), (int)(40 * scale)),
                     i == Selection ? new Color(128, 0, 0, 128) : new Color(0, 0, 0, 128));
 
                 g.DrawString(fnt, s, loc + shadow_offset - new Vector2(m.Width / 2 * scale, 0), Color.Black,

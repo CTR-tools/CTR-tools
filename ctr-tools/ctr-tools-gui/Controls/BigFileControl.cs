@@ -1,6 +1,7 @@
 ﻿using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Lang;
+using CTRFramework.Shared;
 using CTRFramework.Vram;
 using System;
 using System.ComponentModel;
@@ -66,7 +67,7 @@ namespace CTRTools.Controls
 
                 TreeNode final = new TreeNode(s[s.Length - 1]);
                 final.Tag = Reader.FileCursor;
-                
+
                 switch (Path.GetExtension(s[s.Length - 1]))
                 {
                     case ".lev": final.ImageIndex = final.SelectedImageIndex = 1; break;
@@ -253,8 +254,13 @@ namespace CTRTools.Controls
             fileTree.EndUpdate();
         }
 
-        private void fileTree_MouseClick(object sender, MouseEventArgs e)
+        private void fileTree_DoubleClick(object sender, EventArgs e)
         {
+            _reader.FileCursor = (int)(sender as TreeView).SelectedNode.Tag;
+            sfd.FileName = Path.GetFileName(_reader.GetFilename());
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+                Helpers.WriteToFile(sfd.FileName, _reader.ReadEntry().Data);
         }
     }
 }

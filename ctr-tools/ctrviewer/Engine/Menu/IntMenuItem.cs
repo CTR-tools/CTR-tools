@@ -1,7 +1,5 @@
-﻿using System;
-
-namespace ctrviewer.Engine.Gui
-{ 
+﻿namespace ctrviewer.Engine.Gui
+{
     public class IntMenuItem : MenuItem
     {
         private int _value = 0;

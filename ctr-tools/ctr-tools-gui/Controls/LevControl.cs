@@ -8,7 +8,6 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 using System.Windows.Forms;
-using System.Linq;
 
 namespace CTRTools.Controls
 {

@@ -109,7 +109,7 @@ namespace CTRFramework
                 visdata = mesh.VisData;
 
                 //foreach (var quad in quads)
-                    //quad.GenerateCtrQuads(verts);
+                //quad.GenerateCtrQuads(verts);
             }
 
             restartPts = new PtrWrap<Pose>(header.ptrRestartPts).GetList(br, header.numRestartPts);
@@ -152,7 +152,7 @@ namespace CTRFramework
                         quads[i].visDataFlags = node.flag;
 
                     //if (node.flag.HasFlag(VisDataFlags.Unk4))
-                     //   throw new Exception("gotcha!");
+                    //   throw new Exception("gotcha!");
                 }
             }
 

@@ -122,7 +122,7 @@ namespace CTRFramework
 
             sb.AppendLine($"Models: {Models.Count}");
 
-            foreach(var model in Models)
+            foreach (var model in Models)
                 sb.AppendLine($"- {model.Name}");
 
             sb.AppendLine($"Textures: {iconPack.Icons.Count}");

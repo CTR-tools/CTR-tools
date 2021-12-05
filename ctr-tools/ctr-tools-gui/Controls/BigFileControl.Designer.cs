@@ -44,6 +44,7 @@ namespace CTRTools.Controls
             this.bigLoader = new System.ComponentModel.BackgroundWorker();
             this.expandAll = new System.Windows.Forms.Button();
             this.bigVersion = new System.Windows.Forms.Label();
+            this.sfd = new System.Windows.Forms.SaveFileDialog();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -97,7 +98,7 @@ namespace CTRTools.Controls
             this.fileTree.Size = new System.Drawing.Size(258, 419);
             this.fileTree.TabIndex = 5;
             this.fileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            this.fileTree.MouseClick += new System.Windows.Forms.MouseEventHandler(this.fileTree_MouseClick);
+            this.fileTree.DoubleClick += new System.EventHandler(this.fileTree_DoubleClick);
             // 
             // bigIcons
             // 
@@ -143,13 +144,17 @@ namespace CTRTools.Controls
             this.actionExportAll.Name = "actionExportAll";
             this.actionExportAll.Size = new System.Drawing.Size(96, 24);
             this.actionExportAll.TabIndex = 8;
-            this.actionExportAll.Text = "Export";
+            this.actionExportAll.Text = "Extract";
             this.actionExportAll.UseVisualStyleBackColor = true;
             this.actionExportAll.Click += new System.EventHandler(this.actionExportAll_Click);
             // 
             // ofd
             // 
             this.ofd.Filter = "Crash Team Racing BIG file (*.big)|*.big";
+            // 
+            // fbd
+            // 
+            this.fbd.Description = "Select path to extract:";
             // 
             // bigLoader
             // 
@@ -216,5 +221,6 @@ namespace CTRTools.Controls
         private Button expandAll;
         private Label bigVersion;
         private ImageList bigIcons;
+        private SaveFileDialog sfd;
     }
 }
