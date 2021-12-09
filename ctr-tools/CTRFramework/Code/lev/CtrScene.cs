@@ -30,6 +30,8 @@ namespace CTRFramework
         public TrialData trial;
         public IconPack iconpack;
 
+        public List<WaterAnim> waterAnim = new List<WaterAnim>();
+
         public List<Pose> restartPts = new List<Pose>();
 
         public CtrVrm vram;
@@ -221,6 +223,14 @@ namespace CTRFramework
                 Helpers.Panic(this, PanicType.Info, va.ToString());
             }
 
+            br.Jump(header.ptrWater);
+
+            for (int i = 0; i < header.numWater; i++)
+            {
+                waterAnim.Add(WaterAnim.FromReader(br));
+            }
+
+
 
             if (sceneDebug)
                 SceneTests();
@@ -236,65 +246,23 @@ namespace CTRFramework
 
             StringBuilder sb = new StringBuilder();
 
-            int countadd = 0;
-            int countmid = 0;
+            List<uint> ptrs = new List<uint>();
 
-            int waterleaf = 0;
-            int waterbranch = 0;
-
-            foreach (var node in visdata)
+            
+            foreach (var w in waterAnim)
             {
-                if (!node.IsLeaf && node.flag != 0) waterbranch++;
+                ptrs.Add(w.ptrWaterAnim.Address.ToUInt32());
             }
 
-            Console.WriteLine($"waterleaf={waterleaf} waterbranch={waterbranch}");
-            Console.ReadKey();
+            ptrs.Sort();
 
-
-            foreach (QuadBlock qb in quads)
+            foreach (var x in ptrs)
             {
-                if (qb.ptrTexMid[0] == PsxPtr.Zero)
-                    countmid++;
-
-                if (qb.ptrAddVis != PsxPtr.Zero)
-                    countadd++;
-
-                sb.AppendLine(
-                    $"ptr3 data: {qb.mosaicPtr4.GetDifference(qb.mosaicPtr3)} " +
-                    $"ptr2 data: {qb.mosaicPtr3.GetDifference(qb.mosaicPtr1)} " +
-                    $"ptr1 data: {qb.mosaicPtr1.GetDifference(qb.mosaicPtr2)}");
-
-                /*
-                sb.AppendLine(
-                    $"{qb.id.ToString("X4")}\t" +
-                    $"{(qb.mosaicPtr1.ToUInt32() & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr1)})\t" +
-                    $"{(qb.mosaicPtr2.ToUInt32() & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr2)})\t" +
-                    $"{(qb.mosaicPtr3.ToUInt32() & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr3)})\t" +
-                    $"{(qb.mosaicPtr4.ToUInt32() & 0xFFFFFFFC).ToString("X8")} ({Helpers.TestPointer(qb.mosaicPtr4)})"
-                    );
-                */
-
-                /*
-                int pos = (int)br.BaseStream.Position;
-
-                br.Jump(qb.mosaicPtr4);
-
-                uint ptr4val = br.ReadUInt32();
-
-                sb.AppendLine("ptr4val: " + ptr4val.ToString("X8"));
-                
-
-                br.Jump(pos);
-                */
+                Console.WriteLine(x.ToString("X8"));
             }
 
-            Helpers.WriteToFile(".\\mosaic_test.txt", sb.ToString());
+            //Console.ReadKey();
 
-            foreach (var quad in quads)
-            {
-                //quad.ColTest(verts);
-                //Console.ReadKey();
-            }
         }
 
         /// <summary>

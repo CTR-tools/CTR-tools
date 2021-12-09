@@ -515,14 +515,8 @@ types:
         repeat-expr: 9
       - id: quad_flags
         type: u2
-      - id: draw_order_low
-        type: u1
-      - id: f1
-        type: u1
-      - id: f2
-        type: u1
-      - id: f3
-        type: u1
+      - id: face_data
+        type: u4
       - id: draw_order_high
         size: 4
       - id: ptr_texture_mid
@@ -772,6 +766,10 @@ types:
         type: u4
       - id: ptr_anim
         type: u4
+    instances:
+      waterdata:
+        pos: ptr_anim
+        size: 0x38
 
   build_info:
     doc: |

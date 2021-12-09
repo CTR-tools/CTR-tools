@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.29102.190
+VisualStudioVersion = 16.0.31911.196
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lng2txt", "cmd_tools\lng2txt\lng2txt.csproj", "{244D645A-172A-4CB5-9E64-9C4BA68EF08C}"
 	ProjectSection(ProjectDependencies) = postProject
