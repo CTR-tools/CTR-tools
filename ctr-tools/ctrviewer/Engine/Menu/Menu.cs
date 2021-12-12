@@ -91,22 +91,24 @@ namespace ctrviewer.Engine.Gui
 
         public void LoadMenuItems()
         {
+            var settings = EngineSettings.Instance;
+
             #region menuitems
             menus.Add("level", new List<MenuItem>()
             {
-                new BoolMenuItem(EngineSettings.Instance.DrawWireframe) { Text = "Wireframe", Name = "wire" },
-                new BoolMenuItem(EngineSettings.Instance.UseTextureReplacements) { Text = "Texture Replacements", Name = "newtex" },
-                new BoolMenuItem(EngineSettings.Instance.VertexLighting) { Text = "Vertex Lighting", Name = "vcolor" },
-                new BoolMenuItem(EngineSettings.Instance.BackFaceCulling) { Text = "Backface Culling", Name = "nocull" },
-                new BoolMenuItem(EngineSettings.Instance.ShowSky) { Text = "Sky Box", Name = "skybox"},
-                new BoolMenuItem(EngineSettings.Instance.ShowWater) { Text = "Water", Name = "water"},
-                new BoolMenuItem(EngineSettings.Instance.ShowInvisible) { Text = "Invisible Meshes", Name = "invis"},
+                new BoolMenuItem() { Text = "Wireframe", Name = "wire", Value = settings.DrawWireframe },
+                new BoolMenuItem() { Text = "Texture Replacements", Name = "newtex", Value = settings.UseTextureReplacements },
+                new BoolMenuItem() { Text = "Vertex Lighting", Name = "vcolor", Value = settings.VertexLighting },
+                new BoolMenuItem() { Text = "Backface Culling", Name = "nocull", Value = settings.BackFaceCulling },
+                new BoolMenuItem() { Text = "Sky Box", Name = "skybox", Value = settings.ShowSky },
+                new BoolMenuItem() { Text = "Water", Name = "water", Value = settings.ShowWater },
+                new BoolMenuItem() { Text = "Invisible Meshes", Name = "invis", Value = settings.ShowInvisible },
 
-                new BoolMenuItem(EngineSettings.Instance.VisData) { Text = "Visibility Tree", Name = "visbox"},
-                new BoolMenuItem(EngineSettings.Instance.VisDataLeaves) { Text = "Render BSP Branches", Name = "visboxleaf"},
+                new BoolMenuItem() { Text = "Visibility Tree", Name = "visbox", Value = settings.VisData },
+                new BoolMenuItem() { Text = "Render BSP Branches", Name = "visboxleaf", Value = settings.VisDataLeaves },
 
-                new BoolMenuItem(EngineSettings.Instance.ShowModels) { Text = "Game Objects", Name = "inst"},
-                new BoolMenuItem(EngineSettings.Instance.ShowBotPaths) { Text = "Bot Paths", Name = "paths"},
+                new BoolMenuItem() { Text = "Game Objects", Name = "inst", Value = settings.ShowModels },
+                new BoolMenuItem() { Text = "Bot Paths", Name = "paths", Value = settings.ShowBotPaths },
                 new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true),
                 new MenuItem("<< quadflag: {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15),
                 new MenuItem("back".ToUpper(), "link", "main", true)
@@ -114,11 +116,11 @@ namespace ctrviewer.Engine.Gui
 
             menus.Add("video", new List<MenuItem>()
             {
-                new BoolMenuItem(EngineSettings.Instance.Windowed) { Text = "Windowed", Name = "window"},
-                new BoolMenuItem(EngineSettings.Instance.VerticalSync) { Text = "vsync/fps lock", Name = "vsync"},
-                new BoolMenuItem(EngineSettings.Instance.AntiAlias) { Text = "Antialias", Name = "antialias"},
-                new BoolMenuItem(EngineSettings.Instance.EnableFiltering) { Text = "Filtering", Name = "filter"},
-                new BoolMenuItem(EngineSettings.Instance.InternalPSXResolution) { Text = "Internal PSX Reolution", Name = "intpsx"},
+                new BoolMenuItem() { Text = "Windowed", Name = "window", Value = settings.Windowed },
+                new BoolMenuItem() { Text = "vsync/fps lock", Name = "vsync", Value = settings.VerticalSync },
+                new BoolMenuItem() { Text = "Antialias", Name = "antialias", Value = settings.AntiAlias },
+                new BoolMenuItem() { Text = "Filtering", Name = "filter", Value = settings.EnableFiltering },
+                new BoolMenuItem() { Text = "Internal PSX Resolution", Name = "intpsx", Value = settings.InternalPSXResolution },
                 new MenuItem("toggle stereoscopic 3D mode".ToUpper(), "toggle", "stereo", true),
                 new MenuItem("toggle mipmap generation on load".ToUpper(), "toggle", "genmips", true),
                 new MenuItem("show camera position".ToUpper(), "toggle", "campos", true),
@@ -211,13 +213,13 @@ namespace ctrviewer.Engine.Gui
 
             menus.Add("battle_arenas", new List<MenuItem>
             {
-                new IntMenuItem((int)Level.battle1 * 8) { Text = "Nitro Court", Name = Level.battle1.ToString() },
-                new IntMenuItem((int)Level.battle2 * 8) { Text = "Rampage Ruins", Name = Level.battle2.ToString() },
-                new IntMenuItem((int)Level.battle3 * 8) { Text = "Parking Lot", Name = Level.battle3.ToString() },
-                new IntMenuItem((int)Level.battle4 * 8) { Text = "Skull Rock", Name = Level.battle4.ToString() },
-                new IntMenuItem((int)Level.battle5 * 8) { Text = "North Bowl", Name = Level.battle5.ToString() },
-                new IntMenuItem((int)Level.battle6 * 8) { Text = "Rocky Road", Name = Level.battle6.ToString() },
-                new IntMenuItem((int)Level.battle7 * 8) { Text = "Lab Basement", Name = Level.battle7.ToString() },
+                new IntMenuItem((int)Level.NitroCourt * 8) { Text = "Nitro Court", Name = Level.NitroCourt.ToString() },
+                new IntMenuItem((int)Level.RampageRuins * 8) { Text = "Rampage Ruins", Name = Level.RampageRuins.ToString() },
+                new IntMenuItem((int)Level.ParkingLot * 8) { Text = "Parking Lot", Name = Level.ParkingLot.ToString() },
+                new IntMenuItem((int)Level.SkullRock * 8) { Text = "Skull Rock", Name = Level.SkullRock.ToString() },
+                new IntMenuItem((int)Level.NorthBowl * 8) { Text = "North Bowl", Name = Level.NorthBowl.ToString() },
+                new IntMenuItem((int)Level.RockyRoad * 8) { Text = "Rocky Road", Name = Level.RockyRoad.ToString() },
+                new IntMenuItem((int)Level.LabBasement * 8) { Text = "Lab Basement", Name = Level.LabBasement.ToString() },
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
@@ -281,7 +283,7 @@ namespace ctrviewer.Engine.Gui
             //ContentVault.Sounds["menu_up"].Play(0.15f, 0, 0);
         }
 
-        public void Update(GamePadState oldstate, GamePadState newstate)
+        public void Update(GamePadState oldstate, GamePadState newstate, MouseState mouse)
         {
             if (!Visible)
                 return;

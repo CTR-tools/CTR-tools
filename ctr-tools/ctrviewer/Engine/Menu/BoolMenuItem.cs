@@ -7,31 +7,15 @@ namespace ctrviewer.Engine.Gui
         OnOff,
         YesNo,
         EnabledDisabled,
-        Number,
+        Numeric,
         TrueFalse
     }
 
     public class BoolMenuItem : MenuItem
     {
-        public override void OnClicked(object sender, EventArgs args = null)
-        {
-            Value ^= true;
-            CalcWidth();
-            base.OnClicked(args);
-        }
-
-        private bool _value = false;
-
-        public bool Value
-        {
-            get { return _value; }
-            set
-            {
-                _value = value;
-            }
-        }
-
         public BoolType DisplayType = BoolType.OnOff;
+
+        public bool Value { get; set; } = false;
 
         private string BoolDisplayValue()
         {
@@ -41,14 +25,16 @@ namespace ctrviewer.Engine.Gui
                 case BoolType.TrueFalse: return Value ? "True" : "False";
                 case BoolType.EnabledDisabled: return Value ? "Enabled" : "Disabled";
                 case BoolType.YesNo: return Value ? "Yes" : "No";
-                case BoolType.Number: return Value ? "1" : "0";
-                default: throw new NotImplementedException("BoolMenuItem: Unimplemented DisplayType.");
+                case BoolType.Numeric: return Value ? "1" : "0";
+                default: throw new NotImplementedException("BoolMenuItem: Unimplemented BoolType.");
             }
         }
 
-        public BoolMenuItem(bool InitValue)
+        public override void OnClick(object sender, EventArgs args = null)
         {
-            _value = InitValue;
+            Value ^= true;
+            CalcWidth();
+            base.OnClick(args);
         }
 
         public override string ToString()

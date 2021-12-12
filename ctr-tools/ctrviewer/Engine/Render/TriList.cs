@@ -170,6 +170,9 @@ namespace ctrviewer.Engine.Render
                 return;
             }
 
+            if (!textureEnabled)
+                effect.DiffuseColor /= 2;
+
             graphics.GraphicsDevice.BlendState = blendState;
             if (type == TriListType.Water)
                 graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend;
@@ -256,6 +259,9 @@ namespace ctrviewer.Engine.Render
                     );
                 }
             }
+
+            if (!textureEnabled)
+                effect.DiffuseColor *= 2;
 
             Samplers.SetToDevice(graphics, EngineRasterizer.Default);
         }

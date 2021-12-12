@@ -153,7 +153,7 @@
             this.discordLogo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.discordLogo.Image = global::CTRTools.Properties.Resources.icon_discord;
             this.discordLogo.InitialImage = null;
-            this.discordLogo.Location = new System.Drawing.Point(319, 233);
+            this.discordLogo.Location = new System.Drawing.Point(315, 233);
             this.discordLogo.Name = "discordLogo";
             this.discordLogo.Size = new System.Drawing.Size(64, 64);
             this.discordLogo.TabIndex = 5;
@@ -166,7 +166,7 @@
             this.githubLogo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.githubLogo.ErrorImage = null;
             this.githubLogo.Image = global::CTRTools.Properties.Resources.icon_github;
-            this.githubLogo.Location = new System.Drawing.Point(240, 233);
+            this.githubLogo.Location = new System.Drawing.Point(236, 233);
             this.githubLogo.Name = "githubLogo";
             this.githubLogo.Size = new System.Drawing.Size(64, 64);
             this.githubLogo.TabIndex = 4;

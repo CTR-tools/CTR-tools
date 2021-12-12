@@ -233,7 +233,7 @@ namespace CTRFramework
                 }
 
                 br.Jump(ptr);
-                tex[cntr] = new CtrTex(br, ptr);
+                tex[cntr] = new CtrTex(br, ptr, visDataFlags);
 
                 cntr++;
             }

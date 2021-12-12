@@ -107,6 +107,9 @@ namespace ctrviewer
         public Viewport vpTop;
         public Viewport vpBottom;
 
+        /// <summary>
+        /// Creates viewport objects. Full is for full screen, rest is for half screen split vertically or horizontally.
+        /// </summary>
         public void UpdateSplitscreenViewports()
         {
             GameConsole.Write("UpdateSplitscreenViewports()");
@@ -147,29 +150,36 @@ namespace ctrviewer
             vpBottom.Y = graphics.PreferredBackBufferHeight / 2;
         }
 
+        /// <summary>
+        /// Updates effect values based on settings.
+        /// </summary>
         public void UpdateEffects()
         {
-            effect = new BasicEffect(graphics.GraphicsDevice);
+            if (effect == null)
+                effect = new BasicEffect(graphics.GraphicsDevice);
+
             effect.VertexColorEnabled = eng.Settings.VertexLighting;
             effect.TextureEnabled = true;
             effect.DiffuseColor = eng.Settings.VertexLighting ? TimeOfDay : new Vector3(1f);
-
-            alphaTestEffect = new AlphaTestEffect(GraphicsDevice);
-            alphaTestEffect.AlphaFunction = CompareFunction.Greater;
-            alphaTestEffect.ReferenceAlpha = 0;
-            alphaTestEffect.VertexColorEnabled = eng.Settings.VertexLighting;
-            alphaTestEffect.DiffuseColor = effect.DiffuseColor;
-
-
             effect.FogEnabled = true;
             effect.FogColor = DataConverter.ToVector3(eng.BackgroundColor);
             effect.FogStart = eng.Cameras[CameraType.DefaultCamera].FarClip / 4 * 3;
             effect.FogEnd = eng.Cameras[CameraType.DefaultCamera].FarClip;
 
-            instanceEffect = new BasicEffect(graphics.GraphicsDevice);
+            if (alphaTestEffect == null)
+                alphaTestEffect = new AlphaTestEffect(GraphicsDevice);
+
+            alphaTestEffect.AlphaFunction = CompareFunction.Greater;
+            alphaTestEffect.ReferenceAlpha = 0;
+            alphaTestEffect.VertexColorEnabled = eng.Settings.VertexLighting;
+            alphaTestEffect.DiffuseColor = effect.DiffuseColor;
+
+            if (instanceEffect == null)
+                instanceEffect = new BasicEffect(graphics.GraphicsDevice);
+
             instanceEffect.VertexColorEnabled = true;
             instanceEffect.TextureEnabled = false;
-            instanceEffect.DiffuseColor = eng.Settings.VertexLighting ? TimeOfDay * 0.5f : new Vector3(1f);
+            instanceEffect.DiffuseColor = effect.DiffuseColor;
         }
 
         public void UpdateVSync()
@@ -235,6 +245,9 @@ namespace ctrviewer
                 SetInternalResolution();
         }
 
+        /// <summary>
+        /// Monogame: default initialize method
+        /// </summary>
         protected override void Initialize()
         {
             GameConsole.Write($"ctrviewer - {version}");
@@ -266,7 +279,7 @@ namespace ctrviewer
 
             UpdateEffects();
 
-            for (PlayerIndex i = PlayerIndex.One; i <= PlayerIndex.Four; i++)
+            for (var i = PlayerIndex.One; i <= PlayerIndex.Four; i++)
             {
                 if (GamePad.GetState(i).IsConnected)
                 {
@@ -288,6 +301,9 @@ namespace ctrviewer
 
         Texture2D tint;
 
+        /// <summary>
+        /// Monogame: default content loading method
+        /// </summary>
         protected override void LoadContent()
         {
             GameConsole.Write("LoadContent()");
@@ -317,9 +333,11 @@ namespace ctrviewer
 
             LoadCones();
 
-            LoadScenes(null);
+            LoadScenesFromFolder();
             LoadLevel();
         }
+
+        #region menustuff
 
         public void InitMenu()
         {
@@ -477,6 +495,11 @@ namespace ctrviewer
             eng.Settings.ShowBotPaths = (sender as BoolMenuItem).Value;
         }
 
+        #endregion
+
+        /// <summary>
+        /// Loads various colored "cones".
+        /// </summary>
         public void LoadCones()
         {
             AddCone("greencone", Color.Green);
@@ -490,12 +513,17 @@ namespace ctrviewer
             AddCone("browncone", Color.Brown);
         }
 
-        //convert this abomination to a model import
+        /// <summary>
+        /// Creates "cone" used for botpaths.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="c"></param>
         public void AddCone(string name, Color c)
         {
             TriList modl = new TriList();
             modl.textureEnabled = false;
 
+            //convert this abomination to a model import
             List<VertexPositionColorTexture> vptc = new List<VertexPositionColorTexture>();
 
             Color c1 = Color.Lerp(Color.LightGray, c, 0.5f);
@@ -529,6 +557,9 @@ namespace ctrviewer
 
         bool IsLoading = false;
 
+        /// <summary>
+        /// Loads all necessary textures and processes as required (generates mips, loads replacements, etc)
+        /// </summary>
         private void LoadTextures()
         {
             GameConsole.Write("LoadTextures()");
@@ -561,7 +592,7 @@ namespace ctrviewer
 
                 foreach (var t in s.ctrvram.textures)
                 {
-                    loadingStatus = $"scene textures: {i}/{x}";
+                    loadingStatus = $"generate mips: {i}/{x}";
 
                     bool alpha = false;
 
@@ -586,6 +617,9 @@ namespace ctrviewer
             ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas ? "logo_xmas" : "logo"));
         }
 
+        /// <summary>
+        /// Loads all models from menu_models.lev
+        /// </summary>
         private void TestLoadKart()
         {
             CtrScene cc = new CtrScene();
@@ -605,6 +639,9 @@ namespace ctrviewer
                 ContentVault.AddModel(model.Name, DataConverter.ToTriList(model, 0.1f));
         }
 
+        /// <summary>
+        /// Loads all .ctr models found in relative modelpath.
+        /// </summary>
         public void TestLoadExtrenalModels()
         {
             string mdlpath = Path.Combine(Meta.BasePath, Meta.ModelsPath);
@@ -627,32 +664,29 @@ namespace ctrviewer
             }
         }
 
-
-        private void LoadScenes(string[] filelist)
+        /// <summary>
+        /// Loads all .lev files from levels folder.
+        /// </summary>
+        private void LoadScenesFromFolder()
         {
-            if (filelist == null)
-                filelist = new string[] { };
+            if (!Directory.Exists("levels"))
+                return;
 
-            Scenes.Clear();
-
-            if (filelist.Length == 0)
-            {
-                if (Directory.Exists("levels"))
-                    filelist = Directory.GetFiles("levels", "*.lev");
-            }
+            string[] filelist = Directory.GetFiles("levels", "*.lev");
 
             if (filelist.Length == 0)
             {
-                GameConsole.Write("no files");
+                GameConsole.Write("no levs to load in levels folder.");
                 return;
             }
 
             foreach (var filename in filelist)
-            {
                 Scenes.Add(CtrScene.FromFile(filename, false));
-            }
         }
 
+        /// <summary>
+        /// Converts scene array to monogame engine data.
+        /// </summary>
         private void LoadLevel()
         {
             GameConsole.Write("LoadLevel()");
@@ -824,6 +858,9 @@ namespace ctrviewer
             RenderEnabled = true;
         }
 
+        /// <summary>
+        /// Colors for different visibility WireBox levels
+        /// </summary>
         private readonly Color[] colorLevelsOfBsp =
         {
             new Color(1.0f,1.0f,1.0f,1.0f),
@@ -841,6 +878,12 @@ namespace ctrviewer
             new Color(0.0f,0.0f,0.0f,1.0f)
         };
 
+        /// <summary>
+        /// Converts visibilty data to a list of wireboxes.
+        /// </summary>
+        /// <param name="visDat"></param>
+        /// <param name="scene"></param>
+        /// <param name="level"></param>
         private void BspPopulate(VisData visDat, CtrScene scene, int level)
         {
             List<VisData> childVisData = scene.GetVisDataChildren(visDat); // if node has children get those children
@@ -868,6 +911,126 @@ namespace ctrviewer
             }
         }
 
+        /// <summary>
+        /// Looks up for bigfile.big in various locations including: settings path, root path, all system disks roots.
+        /// If found, initializes BigFileReader. 
+        /// </summary>
+        /// <returns>Boolean lookup result.</returns>
+        private bool FindBigFile()
+        {
+            bool result = false;
+
+            if (big == null)
+            {
+                if (File.Exists(eng.Settings.BigFileLocation))
+                {
+                    result = true;
+                }
+                else if (File.Exists("bigfile.big"))
+                {
+                    eng.Settings.BigFileLocation = "bigfile.big";
+                    result = true;
+                }
+                else //scan drives
+                {
+                    var drv = DriveInfo.GetDrives();
+
+                    GameConsole.Write($"drives: {drv.Length}");
+
+                    result = false;
+
+                    foreach (DriveInfo dInfo in drv)
+                    {
+                        GameConsole.Write(dInfo.Name);
+                        string path = Path.Combine(dInfo.Name, "bigfile.big");
+                        if (File.Exists(path))
+                        {
+                            eng.Settings.BigFileLocation = path;
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (result == true && big == null)
+                big = BigFileReader.FromFile(eng.Settings.BigFileLocation);
+
+            GameConsole.Write(result ? $"Bigfile location: {eng.Settings.BigFileLocation}" : "Bigfile not found.");
+
+            return result;
+        }
+
+        /// <summary>
+        /// Changes LoD settings and reloads the selected level.
+        /// </summary>
+        /// <param name="ltype"></param>
+        private void SetLodAndReload(LevelType ltype = LevelType.Lod1P)
+        {
+            levelType = ltype;
+
+            if (loadedLevel != -1)
+                LoadLevelsFromBig(loadedLevel);
+        }
+
+        int loadedLevel = -1;
+        string loadingStatus = "done";
+
+        /// <summary>
+        /// Loads scenes from BIG file by file ID. Make sure you're passing correct file indices.
+        /// </summary>
+        /// <param name="absId">Array of absolute file indices.</param>
+        private void LoadLevelsFromBig(params int[] absId)
+        {
+            loadedLevel = absId.Length > 1 ? -1 : absId[0];
+
+            if (loadedLevel > 200)
+                loadedLevel = -1;
+
+            //test whether big file is ready
+            if (big == null && !FindBigFile())
+            {
+                GameConsole.Write("Missing BIGFILE!");
+                return;
+            }
+
+            List<CtrScene> scenes = new List<CtrScene>();
+
+            for (int i = 0; i < absId.Length; i++)
+            {
+                //if it's a level, consider level type to load (1p, 2p, 4p, tt)
+                if (absId[i] < 200)
+                    absId[i] += (int)levelType * 2;
+
+                big.FileCursor = absId[i];
+
+                if (Path.GetExtension(big.GetFilename()) != ".vrm")
+                    return;
+
+                CtrVrm vrm = big.ReadEntry().ParseAs<CtrVrm>();
+
+                big.NextFile();
+
+                if (Path.GetExtension(big.GetFilename()) != ".lev")
+                    return;
+
+                CtrScene scene = big.ReadEntry().ParseAs<CtrScene>();
+                scene.SetVram(vrm);
+
+                scenes.Add(scene);
+
+                loadingStatus = $"scenes: {i}/{absId.Length}";
+            }
+
+            Scenes = scenes;
+
+            LoadLevel();
+            ResetCamera();
+        }
+
+        /// <summary>
+        /// Resets cameras to the default P1 scene position. Uses 1st loaded scene.
+        /// </summary>
         public void ResetCamera()
         {
             if (Scenes.Count > 0)
@@ -886,12 +1049,6 @@ namespace ctrviewer
             }
         }
 
-        protected override void UnloadContent()
-        {
-            eng.Dispose();
-            ContentVault.Clear();
-        }
-
         public bool updatemouse = false;
         public static bool RenderEnabled = true;
         public static bool ControlsEnabled = true;
@@ -905,16 +1062,14 @@ namespace ctrviewer
         MouseState oldms = new MouseState();
         MouseState newms = new MouseState();
 
-
+        /// <summary>
+        /// Monogame: default update method
+        /// </summary>
         protected override void Update(GameTime gameTime)
         {
             Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
 
             KeyboardHandler.Update();
-
-            //if (loading == null)
-            //    LoadGame();
-
 
             oldgs = newgs;
             oldms = newms;
@@ -990,7 +1145,7 @@ namespace ctrviewer
 
                 if (menu.Visible)
                 {
-                    menu.Update(oldgs, newgs);
+                    menu.Update(oldgs, newgs, newms);
 
                     //currentflag = menu.items.Find(x => x.Title == "current flag: {0}").rangeval;
 
@@ -1170,28 +1325,21 @@ namespace ctrviewer
             eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true, newms, oldms);
         }
 
+        /// <summary>
+        /// Draws everything level related using the provided camera.
+        /// </summary>
+        /// <param name="cam">FirstPersonCamera instance.</param>
         private void DrawLevel(FirstPersonCamera cam = null)
         {
             if (!RenderEnabled) return;
 
+            //if we got no camera passed, fall back to default
             if (cam == null)
                 cam = eng.Cameras[CameraType.DefaultCamera];
 
-            //if we have a sky and sky is enabled
+            //if sky exists and enabled
             if (eng.sky != null && eng.Settings.ShowSky)
-            {
-                effect.View = eng.Cameras[CameraType.SkyCamera].ViewMatrix;
-                effect.Projection = eng.Cameras[CameraType.SkyCamera].ProjectionMatrix;
-
-                effect.DiffuseColor /= 2;
-                eng.sky.DrawSky(graphics, effect, null);
-                effect.DiffuseColor *= 2;
-
-                alphaTestEffect.DiffuseColor = effect.DiffuseColor;
-
-                //clear z buffer
-                GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
-            }
+                eng.sky.DrawSky(graphics, eng.Cameras[CameraType.SkyCamera], effect, null);
 
             effect.View = cam.ViewMatrix;
             effect.Projection = cam.ProjectionMatrix;
@@ -1203,27 +1351,25 @@ namespace ctrviewer
             foreach (var v in eng.external)
                 v.Draw(graphics, instanceEffect, null, cam);
 
-
-            if (eng.Settings.ShowModels || eng.Settings.ShowBotPaths)
+            //maybe render game models
+            if (eng.Settings.ShowModels)
             {
-                if (eng.Settings.ShowModels)
-                {
-                    //render all instanced models
-                    foreach (var v in eng.instanced)
-                        v.Draw(graphics, instanceEffect, null, cam);
+                //render all instanced models
+                foreach (var v in eng.instanced)
+                    v.Draw(graphics, instanceEffect, null, cam);
 
-                    //render karts
-                    //if (KartMode)
-                    foreach (Kart k in karts)
-                        k.Draw(graphics, instanceEffect, null, cam);
-                }
+                //render karts
+                //if (KartMode)
+                foreach (Kart k in karts)
+                    k.Draw(graphics, instanceEffect, null, cam);
+            }
 
-                if (eng.Settings.ShowBotPaths)
-                {
-                    //render bot paths
-                    foreach (var v in eng.paths)
-                        v.Draw(graphics, instanceEffect, null, cam);
-                }
+            //maybe render bot paths
+            if (eng.Settings.ShowBotPaths)
+            {
+                //render bot paths
+                foreach (var v in eng.paths)
+                    v.Draw(graphics, instanceEffect, null, cam);
             }
 
             //Samplers.SetToDevice(graphics, EngineRasterizer.Default);
@@ -1232,7 +1378,7 @@ namespace ctrviewer
             foreach (MGLevel qb in (eng.Settings.UseLowLod ? eng.MeshMed : eng.MeshHigh))
                 qb.Draw(graphics, effect, alphaTestEffect);
 
-
+            //maybe render visdata wireboxes
             if (eng.Settings.VisData)
             {
                 //texture enabled makes visdata invisible
@@ -1248,113 +1394,6 @@ namespace ctrviewer
             }
         }
 
-        private bool FindBigFile()
-        {
-            bool result = false;
-
-            if (big == null)
-            {
-                if (File.Exists(eng.Settings.BigFileLocation))
-                {
-                    result = true;
-                }
-                else if (File.Exists("bigfile.big"))
-                {
-                    eng.Settings.BigFileLocation = "bigfile.big";
-                    result = true;
-                }
-                else //scan drives
-                {
-                    var drv = DriveInfo.GetDrives();
-
-                    GameConsole.Write($"drives: {drv.Length}");
-
-                    result = false;
-
-                    foreach (DriveInfo dInfo in drv)
-                    {
-                        GameConsole.Write(dInfo.Name);
-                        string path = Path.Combine(dInfo.Name, "bigfile.big");
-                        if (File.Exists(path))
-                        {
-                            eng.Settings.BigFileLocation = path;
-                            result = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (result == true && big == null)
-                big = BigFileReader.FromFile(eng.Settings.BigFileLocation);
-
-            GameConsole.Write(result ? $"Bigfile location: {eng.Settings.BigFileLocation}" : "Bigfile not found.");
-
-            return result;
-        }
-
-        private void SetLodAndReload(LevelType ltype = LevelType.Lod1P)
-        {
-            levelType = ltype;
-
-            if (loadedLevel != -1)
-                LoadLevelsFromBig(loadedLevel);
-        }
-
-        int loadedLevel = -1;
-        string loadingStatus = "done";
-
-        /// <summary>
-        /// Loads scenes from BIG file.
-        /// </summary>
-        /// <param name="absId">Array of absolute file indices.</param>
-        private void LoadLevelsFromBig(params int[] absId)
-        {
-            loadedLevel = absId.Length > 1 ? -1 : absId[0];
-
-            if (loadedLevel > 200)
-                loadedLevel = -1;
-
-            //test whether big file is ready
-            if (big == null && !FindBigFile())
-            {
-                GameConsole.Write("Missing BIGFILE!");
-                return;
-            }
-
-            List<CtrScene> scenes = new List<CtrScene>();
-
-            for (int i = 0; i < absId.Length; i++)
-            {
-                //if it's a level, consider level type to load (1p, 2p, 4p, tt)
-                if (absId[i] < 200)
-                    absId[i] += (int)levelType * 2;
-
-                big.FileCursor = absId[i];
-
-                if (Path.GetExtension(big.GetFilename()) != ".vrm")
-                    return;
-
-                CtrVrm vrm = big.ReadEntry().ParseAs<CtrVrm>();
-
-                big.NextFile();
-
-                if (Path.GetExtension(big.GetFilename()) != ".lev")
-                    return;
-
-                CtrScene scene = big.ReadEntry().ParseAs<CtrScene>();
-                scene.SetVram(vrm);
-
-                scenes.Add(scene);
-
-                loadingStatus = $"scenes: {i}/{absId.Length}";
-            }
-
-            Scenes = scenes;
-
-            LoadLevel();
-            ResetCamera();
-        }
 
         public static Color CtrMainFontColor = Color.Yellow;
 
@@ -1368,10 +1407,15 @@ namespace ctrviewer
         };
         */
 
+        /// <summary>
+        /// Monogame: default draw method
+        /// </summary>
+        /// <param name="gameTime"></param>
         protected override void Draw(GameTime gameTime)
         {
             IsDrawing = true;
 
+            //if we're loading, only draw the loading info.
             if (IsLoading)
             {
                 spriteBatch.Begin();
@@ -1390,11 +1434,14 @@ namespace ctrviewer
                 return;
             }
 
+            //maybe we should switch to screen buffer
             if (EngineSettings.Instance.InternalPSXResolution)
                 GraphicsDevice.SetRenderTarget(eng.screenBuffer);
 
+            //clear the backgound
             GraphicsDevice.Clear(eng.BackgroundColor);
 
+            //if we're using stereoscopic effect, draw level twice for left and right viewport
             if (eng.Settings.StereoPair)
             {
                 graphics.GraphicsDevice.Viewport = vpLeft;
@@ -1413,6 +1460,7 @@ namespace ctrviewer
                 DrawLevel();
             }
 
+            //if we're using internal resolution, draw rendertarget to screenbuffer, applying 16bits postfx
             if (EngineSettings.Instance.InternalPSXResolution)
             {
                 GraphicsDevice.SetRenderTarget(null);
@@ -1422,10 +1470,16 @@ namespace ctrviewer
                 spriteBatch.End();
             }
 
+            //level done.
+
+            //start drawing menu stuff
+
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp);
 
+            //draw menu (visibility check is inside this method)
             menu.Draw(GraphicsDevice, spriteBatch, font, tint);
 
+            //print instructions if nothing is loaded yet
             if (Scenes.Count == 0 && !IsLoading)
                 spriteBatch.DrawString(font,
                     "Crash Team Racing level viewer\r\n\r\n" +
@@ -1444,10 +1498,11 @@ namespace ctrviewer
 
             //spriteBatch.DrawString(font, $"{newms.ToString()}", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString($"{newms.ToString()}").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
 
-
+            //print fov value, if it's changing
             if (KeyboardHandler.IsAnyDown(Keys.OemMinus, Keys.OemPlus))
                 spriteBatch.DrawString(font, String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##"))).X - 20, 20), CtrMainFontColor);
 
+            //print speed scale, if it's changing
             if (GamePad.GetState(0).Triggers.Left > 0 || GamePad.GetState(0).Triggers.Right > 0)
                 spriteBatch.DrawString(
                     font,
@@ -1455,6 +1510,7 @@ namespace ctrviewer
                     new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString($"Speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}").X - 20, 20),
                     CtrMainFontColor);
 
+            //print camera position, if enabled
             if (eng.Settings.ShowCamPos)
                 spriteBatch.DrawString(font, $"({eng.Cameras[CameraType.DefaultCamera].Position.X.ToString("0.00")}, {eng.Cameras[CameraType.DefaultCamera].Position.Y.ToString("0.00")}, {eng.Cameras[CameraType.DefaultCamera].Position.Z.ToString("0.00")})", new Vector2(20, 20), CtrMainFontColor,
                     0,
@@ -1463,7 +1519,7 @@ namespace ctrviewer
                     SpriteEffects.None,
                     0.5f);
 
-
+            //print kart mode info, if it's enabled
             if (eng.Settings.KartMode)
                 if (karts.Count > 0)
                     spriteBatch.DrawString(font, $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {karts[0].Speed}", new Vector2(20, 20), CtrMainFontColor,
@@ -1473,17 +1529,28 @@ namespace ctrviewer
                     SpriteEffects.None,
                     0.5f);
 
+            //draw console, if enabled
             if (eng.Settings.ShowConsole)
                 GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);
 
-            newmenu.Draw(gameTime, spriteBatch);
+            if (gameTime.IsRunningSlowly)
+                spriteBatch.DrawString(font, $"IsRunningSlowly", new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, 20), CtrMainFontColor,
+                0,
+                Vector2.Zero,
+                graphics.GraphicsDevice.Viewport.Height / 1080f,
+                SpriteEffects.None,
+                0.5f);
+
+            //newmenu.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
+
+            //menu stuff done.
 
             //reset depth state to default cause spritebatch uses none
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            // base.Draw(gameTime);
+            base.Draw(gameTime);
 
             IsDrawing = false;
         }
@@ -1530,17 +1597,31 @@ namespace ctrviewer
             );
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            Scenes.Clear();
-            eng.Dispose();
-            ContentVault.Clear();
-        }
-
         protected override void OnExiting(Object sender, EventArgs args)
         {
+            //make sure settings are saved before we exit
             EngineSettings.Save();
             base.OnExiting(sender, args);
+        }
+
+        /// <summary>
+        /// Monogame: default unloading method
+        /// </summary>
+        protected override void UnloadContent()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>
+        /// Cleanup loaded stuff.
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected override void Dispose(bool disposing)
+        {
+            eng.Dispose();
+            ContentVault.Clear();
+            Content.Unload();
+            Scenes.Clear();
         }
     }
 }

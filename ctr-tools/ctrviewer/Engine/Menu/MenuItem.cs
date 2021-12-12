@@ -4,9 +4,6 @@ namespace ctrviewer.Engine.Gui
 {
     public class MenuItem
     {
-        public event EventHandler Click;
-        public virtual void OnClicked(object sender, EventArgs args = null) => Click?.Invoke(this, args);
-
         public string Name;
         public string Text;
         public string Action;
@@ -18,6 +15,12 @@ namespace ctrviewer.Engine.Gui
 
         public int rangeval;
         public int rangemax;
+
+        #region click event
+        public event EventHandler Click;
+        public virtual void OnClick(object sender, EventArgs args = null) => Click?.Invoke(this, args);
+        public void DoClick() { OnClick(this); }
+        #endregion
 
         public MenuItem()
         {
@@ -43,11 +46,6 @@ namespace ctrviewer.Engine.Gui
         public override string ToString()
         {
             return Text.ToUpper();
-        }
-
-        public void DoClick()
-        {
-            OnClicked(this);
         }
     }
 }

@@ -132,11 +132,17 @@ namespace ctrviewer.Engine.Render
                     ql.Value.Draw(graphics, effect, alpha);
         }
 
-        public void DrawSky(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
+        public void DrawSky(GraphicsDeviceManager graphics, FirstPersonCamera camera, BasicEffect effect, AlphaTestEffect alpha)
         {
+            effect.Projection = camera.ProjectionMatrix;
+            effect.View = camera.ViewMatrix;
+
             foreach (var ql in Trilists)
                 if (ql.Value.type == TriListType.Basic)
                     ql.Value.Draw(graphics, effect, alpha);
+
+            //clear z buffer to make sure skybox is behind everything
+            graphics.GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
         }
 
         public void Seal()

@@ -14,21 +14,23 @@ namespace CTRFramework
         public TextureLayout lod1 = new TextureLayout();
         public TextureLayout lod2 = new TextureLayout();
 
-        public TextureLayout[] hi = new TextureLayout[16];
+        //public TextureLayout[] hi = new TextureLayout[16];
+        public List<TextureLayout> hi = new List<TextureLayout>();
+
         public List<TextureLayout> animframes = new List<TextureLayout>(); //this actually has several lods too
 
         public uint ptrHi;
         public bool isAnimated = false;
 
 
-        public CtrTex(BinaryReaderEx br, PsxPtr ptr)
+        public CtrTex(BinaryReaderEx br, PsxPtr ptr, VisDataFlags flags)
         {
-            Read(br, ptr);
+            Read(br, ptr, flags);
         }
 
         public Bitmap GetHiBitmap(Tim vram, QuadBlock qb)
         {
-            if (hi[0] == null)
+            if (hi.Count == 0)
                 return null;
 
             int width = 0;
@@ -37,19 +39,10 @@ namespace CTRFramework
             int numhtex = 4;
             int numvtex = 4;
 
-            if (qb.visDataFlags.HasFlag(VisDataFlags.Subdiv4x1))
-            {
-                numhtex = 4;
-                numvtex = 1;
-            }
+            if (qb.visDataFlags.HasFlag(VisDataFlags.Subdiv4x1)) numvtex = 1;
+            if (qb.visDataFlags.HasFlag(VisDataFlags.Subdiv4x2)) numvtex = 2;
 
-            if (qb.visDataFlags.HasFlag(VisDataFlags.Subdiv4x2))
-            {
-                numhtex = 4;
-                numvtex = 2;
-            }
-
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < numvtex * numhtex; i++)
             {
                 if (hi[i] != null)
                 {
@@ -83,7 +76,7 @@ namespace CTRFramework
         }
 
 
-        public void Read(BinaryReaderEx br, PsxPtr ptr)
+        public void Read(BinaryReaderEx br, PsxPtr ptr, VisDataFlags flags)
         {
             int pos = (int)br.Position;
 
@@ -142,8 +135,13 @@ namespace CTRFramework
                     {
                         br.Jump(ptrHi);
 
-                        for (int i = 0; i < 16; i++)
-                            hi[i] = TextureLayout.FromReader(br);
+                        int toread = 16;
+
+                        if (flags.HasFlag(VisDataFlags.Subdiv4x2)) toread = 8;
+                        if (flags.HasFlag(VisDataFlags.Subdiv4x1)) toread = 4;
+
+                        for (int i = 0; i < toread; i++)
+                            hi.Add(TextureLayout.FromReader(br));
                     }
             }
 
