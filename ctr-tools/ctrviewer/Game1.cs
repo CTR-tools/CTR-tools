@@ -563,7 +563,6 @@ namespace ctrviewer
         private void LoadTextures()
         {
             GameConsole.Write("LoadTextures()");
-            loadingStatus = "replacement textures";
 
             Dictionary<string, string> replacements = new Dictionary<string, string>();
 
@@ -590,25 +589,35 @@ namespace ctrviewer
                 int x = s.ctrvram.textures.Count;
                 int i = 0;
 
+                var lowtex = s.GetTexturesList(Detail.Med);
+                var medtex = s.GetTexturesList(Detail.Low);
+
                 foreach (var t in s.ctrvram.textures)
                 {
-                    loadingStatus = $"generate mips: {i}/{x}";
-
-                    bool alpha = false;
-
-                    ContentVault.AddTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
-
-                    if (replacements.ContainsKey(t.Key))
-                        ContentVault.AddReplacementTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, replacements[t.Key], out alpha) : Texture2D.FromFile(GraphicsDevice, replacements[t.Key]));
-
-                    if (alpha)
-                        if (!ContentVault.alphalist.Contains(t.Key))
-                            ContentVault.alphalist.Add(t.Key);
-
-                    i++;
+                    if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key))
+                    {
+                        loadingStatus = $"generate mips: {i}/{x}";
+                        LoadTexture(t, replacements);
+                        i++;
+                    }
                 }
             }
         }
+
+        private void LoadTexture(KeyValuePair<string, System.Drawing.Bitmap> t, Dictionary<string, string> replacements)
+        {
+            bool alpha = false;
+
+            ContentVault.AddTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
+
+            if (replacements.ContainsKey(t.Key))
+                ContentVault.AddReplacementTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, replacements[t.Key], out alpha) : Texture2D.FromFile(GraphicsDevice, replacements[t.Key]));
+
+            if (alpha)
+                if (!ContentVault.alphalist.Contains(t.Key))
+                    ContentVault.alphalist.Add(t.Key);
+        }
+
 
         void LoadGenericTextures()
         {
