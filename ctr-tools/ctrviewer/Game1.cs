@@ -609,9 +609,10 @@ namespace ctrviewer
             bool alpha = false;
 
             ContentVault.AddTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
-
-            if (replacements.ContainsKey(t.Key))
-                ContentVault.AddReplacementTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, replacements[t.Key], out alpha) : Texture2D.FromFile(GraphicsDevice, replacements[t.Key]));
+            
+            if (EngineSettings.Instance.UseTextureReplacements)
+                if (replacements.ContainsKey(t.Key))
+                    ContentVault.AddReplacementTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, replacements[t.Key], out alpha) : Texture2D.FromFile(GraphicsDevice, replacements[t.Key]));
 
             if (alpha)
                 if (!ContentVault.alphalist.Contains(t.Key))
