@@ -1072,6 +1072,10 @@ namespace ctrviewer
             oldgs = newgs;
             newgs = GamePad.GetState(activeGamePad);
 
+            //allow fullscreen toggle before checking for controls
+            if (KeyboardHandler.IsComboPressed(Keys.RightAlt, Keys.Enter))
+                eng.Settings.Windowed ^= true;
+
             if (!ControlsEnabled)
                 return;
 
@@ -1099,6 +1103,16 @@ namespace ctrviewer
                                 eng.Cameras[CameraType.DefaultCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
 
                                 eng.Cameras[CameraType.SkyCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
+
+
+
+                                eng.UpdateStereoCamera(CameraType.RightEyeCamera, eng.Settings.StereoPairSeparation);
+                                eng.Cameras[CameraType.RightEyeCamera].SetRotation(eng.Cameras[CameraType.DefaultCamera].leftRightRot, eng.Cameras[CameraType.DefaultCamera].upDownRot);
+                                eng.Cameras[CameraType.RightEyeCamera].Update(gameTime, updatemouse, true);
+
+                                eng.UpdateStereoCamera(CameraType.LeftEyeCamera, eng.Settings.StereoPairSeparation);
+                                eng.Cameras[CameraType.LeftEyeCamera].SetRotation(eng.Cameras[CameraType.DefaultCamera].leftRightRot, eng.Cameras[CameraType.DefaultCamera].upDownRot);
+                                eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true);
                             }
                     }
 
@@ -1118,11 +1132,6 @@ namespace ctrviewer
 
                     if (newgs.IsButtonDown(Buttons.RightShoulder) && newgs.IsButtonDown(Buttons.LeftShoulder))
                         eng.Settings.StereoPairSeparation = 130;
-                }
-
-                if (KeyboardHandler.IsComboPressed(Keys.RightAlt, Keys.Enter))
-                {
-                    eng.Settings.Windowed ^= true;
                 }
 
                 if (KeyboardHandler.IsPressed(Keys.OemTilde) || (newgs.IsButtonDown(Buttons.Back) && !oldgs.IsButtonDown(Buttons.Back)))
