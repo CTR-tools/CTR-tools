@@ -253,7 +253,7 @@ namespace CTRFramework
         Oxide = 15
     }
 
-    public enum CTREvent
+    public enum CtrThreadID
     {
         None = -1,
 

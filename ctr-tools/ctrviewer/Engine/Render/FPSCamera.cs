@@ -40,7 +40,7 @@ namespace ctrviewer.Engine.Render
             upDownRot = y;
         }
 
-        public void Update(GameTime gameTime, bool usemouse, bool move, MouseState newms, MouseState oldms)
+        public void Update(GameTime gameTime, bool usemouse, bool move)
         {
             base.Update(gameTime);
 
@@ -48,16 +48,10 @@ namespace ctrviewer.Engine.Render
 
             if (usemouse && Game.IsActive)
             {
-                if (oldms != newms)
-                {
-                    float xDifference = (newms.X - oldms.X) / 1000f;
-                    float yDifference = (newms.Y - oldms.Y) / 1000f;
+                leftRightRot -= MouseHandler.DeltaX * mouseScale / 1000f;
+                upDownRot -= MouseHandler.DeltaY * mouseScale / 1000f;
 
-                    leftRightRot -= xDifference * mouseScale;
-                    upDownRot -= yDifference * mouseScale;
-
-                    UpdateViewMatrix();
-                }
+                UpdateViewMatrix();
             }
 
 
@@ -118,8 +112,8 @@ namespace ctrviewer.Engine.Render
                 if (KeyboardHandler.IsDown(Keys.LeftShift) || padState.Buttons.A == ButtonState.Pressed)
                     moveVector *= 2;
 
-                speedScale -= padState.Triggers.Left / 20f;
-                speedScale += padState.Triggers.Right / 20f;
+                speedScale -= padState.Triggers.Left / 20f * amount / 60f;
+                speedScale += padState.Triggers.Right / 20f * amount / 60f;
 
                 if (speedScale < 0.1f)
                     speedScale = 0.1f;
@@ -130,15 +124,20 @@ namespace ctrviewer.Engine.Render
                 moveVector *= speedScale * speedScale;
                 //moveVector *= (1 + padState.Triggers.Right * 3);
 
+                var rotationAmount = rotationSpeed * amount * 20;
 
                 if (KeyboardHandler.IsDown(Keys.Left))
-                    leftRightRot += rotationSpeed * amount * 20;
+                    leftRightRot += rotationAmount;
+
                 if (KeyboardHandler.IsDown(Keys.Right))
-                    leftRightRot -= rotationSpeed * amount * 20;
+                    leftRightRot -= rotationAmount;
+
                 if (KeyboardHandler.IsDown(Keys.Up))
-                    upDownRot += rotationSpeed * amount * 20;
+                    upDownRot += rotationAmount;
+
                 if (KeyboardHandler.IsDown(Keys.Down))
-                    upDownRot -= rotationSpeed * amount * 20;
+                    upDownRot -= rotationAmount;
+
             }
 
             AddToCameraPosition(moveVector * amount);
@@ -150,17 +149,14 @@ namespace ctrviewer.Engine.Render
             AddToCameraPosition(new Vector3(0, 0, 0));
         }
 
-
         private void AddToCameraPosition(Vector3 vectorToAdd)
         {
             Matrix cameraRotation = Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
             Vector3 rotatedVector = Vector3.Transform(vectorToAdd, cameraRotation);
-            Position += translationSpeed * (rotatedVector);
-            Target += translationSpeed * (rotatedVector);
+            Position += translationSpeed * rotatedVector;
+            Target += translationSpeed * rotatedVector;
             UpdateViewMatrix();
         }
-
-
 
         public void UpdateViewMatrix(float x = 0, float y = 0, float z = 0)
         {

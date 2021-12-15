@@ -283,7 +283,7 @@ namespace ctrviewer.Engine.Gui
             //ContentVault.Sounds["menu_up"].Play(0.15f, 0, 0);
         }
 
-        public void Update(GamePadState oldstate, GamePadState newstate, MouseState mouse)
+        public void Update(GamePadState oldstate, GamePadState newstate)
         {
             if (!Visible)
                 return;

@@ -16,7 +16,7 @@ namespace CTRFramework
 
         public string path;
         string name = "defaultname";
-        CTREvent gameEvent = CTREvent.None;
+        CtrThreadID gameEvent = CtrThreadID.None;
         public List<CtrMesh> Entries = new List<CtrMesh>();
 
         #region Component model
@@ -28,7 +28,7 @@ namespace CTRFramework
         }
 
         [Browsable(true), DisplayName("CTR event"), Description(""), Category("CTR Model")]
-        public CTREvent GameEvent
+        public CtrThreadID GameEvent
         {
             get => gameEvent;
             set => gameEvent = value;
@@ -68,7 +68,7 @@ namespace CTRFramework
         {
             name = br.ReadStringFixed(16);
 
-            gameEvent = (CTREvent)br.ReadInt16();
+            gameEvent = (CtrThreadID)br.ReadInt16();
             int numEntries = br.ReadInt16();
             br.Jump(PsxPtr.FromReader(br));
 

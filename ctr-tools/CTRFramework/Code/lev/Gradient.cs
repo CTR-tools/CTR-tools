@@ -40,9 +40,6 @@ namespace CTRFramework.Shared
             ColorTo.Write(bw);
         }
 
-        public override string ToString()
-        {
-            return $"From: {From} To: {To}";
-        }
+        public override string ToString() => $"Gradient: from [{From}], to [{To}]";
     }
 }

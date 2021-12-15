@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace ctrviewer.Engine.Testing
 {
-    public class MouseHandler
+    public class MouseHandlerZZZ
     {
         public MouseState PreviousState;
         public MouseState CurrentState;

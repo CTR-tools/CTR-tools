@@ -1059,9 +1059,6 @@ namespace ctrviewer
         GamePadState oldgs = GamePad.GetState(activeGamePad);
         GamePadState newgs = GamePad.GetState(activeGamePad);
 
-        MouseState oldms = new MouseState();
-        MouseState newms = new MouseState();
-
         /// <summary>
         /// Monogame: default update method
         /// </summary>
@@ -1070,11 +1067,9 @@ namespace ctrviewer
             Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
 
             KeyboardHandler.Update();
+            MouseHandler.Update();
 
             oldgs = newgs;
-            oldms = newms;
-
-            newms = Mouse.GetState();
             newgs = GamePad.GetState(activeGamePad);
 
             if (!ControlsEnabled)
@@ -1085,7 +1080,7 @@ namespace ctrviewer
                 if (KeyboardHandler.IsPressed(Keys.PrintScreen))
                     eng.TakeScreenShot();
 
-                newmenu.Update(gameTime, new Point(newms.X, newms.Y));
+                newmenu.Update(gameTime, MouseHandler.Position);
 
                 if (eng.Settings.KartMode)
                     foreach (var kart in karts)
@@ -1145,7 +1140,7 @@ namespace ctrviewer
 
                 if (menu.Visible)
                 {
-                    menu.Update(oldgs, newgs, newms);
+                    menu.Update(oldgs, newgs);
 
                     //currentflag = menu.items.Find(x => x.Title == "current flag: {0}").rangeval;
 
@@ -1217,8 +1212,8 @@ namespace ctrviewer
 
                     if (eng.Settings.KartMode)
                     {
-                        eng.Cameras[CameraType.DefaultCamera].Update(gameTime, false, false, newms, oldms);
-                        eng.Cameras[CameraType.SkyCamera].Update(gameTime, false, false, newms, oldms);
+                        eng.Cameras[CameraType.DefaultCamera].Update(gameTime, false, false);
+                        eng.Cameras[CameraType.SkyCamera].Update(gameTime, false, false);
                     }
                     else
                     {
@@ -1237,7 +1232,7 @@ namespace ctrviewer
         {
             if (IsActive)
             {
-                if (newms.LeftButton == ButtonState.Pressed)
+                if (MouseHandler.IsLeftButtonPressed)
                 {
                     if (captureMouse)
                     {
@@ -1246,42 +1241,34 @@ namespace ctrviewer
 
                         updatemouse = true;
 
-                        if (newms.X <= 0)
+                        if (MouseHandler.X <= 0)
                         {
-                            Mouse.SetPosition(graphics.PreferredBackBufferWidth - 2, newms.Y);
-                            newms = Mouse.GetState();
-                            oldms = newms;
+                            Mouse.SetPosition(graphics.PreferredBackBufferWidth - 2, MouseHandler.Y);
+                            MouseHandler.Reset();
                         }
-                        else if (newms.X >= graphics.PreferredBackBufferWidth - 1)
+                        else if (MouseHandler.X >= graphics.PreferredBackBufferWidth - 1)
                         {
-                            Mouse.SetPosition(1, newms.Y);
-                            newms = Mouse.GetState();
-                            oldms = newms;
+                            Mouse.SetPosition(1, MouseHandler.Y);
+                            MouseHandler.Reset();
                         }
 
-                        if (newms.Y <= 0)
+                        if (MouseHandler.Y <= 0)
                         {
-                            Mouse.SetPosition(newms.X, graphics.PreferredBackBufferHeight - 2);
-                            newms = Mouse.GetState();
-                            oldms = newms;
+                            Mouse.SetPosition(MouseHandler.X, graphics.PreferredBackBufferHeight - 2);
+                            MouseHandler.Reset();
                         }
-                        else if (newms.Y >= graphics.PreferredBackBufferHeight - 1)
+                        else if (MouseHandler.Y >= graphics.PreferredBackBufferHeight - 1)
                         {
-                            Mouse.SetPosition(newms.X, 1);
-                            newms = Mouse.GetState();
-                            oldms = newms;
+                            Mouse.SetPosition(MouseHandler.X, 1);
+                            MouseHandler.Reset();
                         }
 
 
-                        if (newms.ScrollWheelValue > oldms.ScrollWheelValue)
-                        {
+                        if (MouseHandler.IsScrollingUp)
                             eng.Cameras[CameraType.DefaultCamera].speedScale += 0.1f;
-                        }
-
-                        if (newms.ScrollWheelValue < oldms.ScrollWheelValue)
-                        {
+                        
+                        if (MouseHandler.IsScrollingDown)
                             eng.Cameras[CameraType.DefaultCamera].speedScale -= 0.1f;
-                        }
 
 
                         if (eng.Cameras[CameraType.DefaultCamera].speedScale < 0.1f)
@@ -1292,10 +1279,10 @@ namespace ctrviewer
                     }
                     else
                     {
-                        if (0 <= newms.X &&
-                            newms.X <= graphics.PreferredBackBufferWidth &&
-                            0 <= newms.Y &&
-                            newms.Y <= graphics.PreferredBackBufferHeight)
+                        if (0 <= MouseHandler.X &&
+                            MouseHandler.X <= graphics.PreferredBackBufferWidth &&
+                            0 <= MouseHandler.Y &&
+                            MouseHandler.Y <= graphics.PreferredBackBufferHeight)
                             captureMouse = true;
                         updatemouse = true;
                     }
@@ -1315,14 +1302,14 @@ namespace ctrviewer
             }
 
 
-            eng.Cameras[CameraType.SkyCamera].Update(gameTime, updatemouse, false, newms, oldms);
-            eng.Cameras[CameraType.DefaultCamera].Update(gameTime, updatemouse, true, newms, oldms);
+            eng.Cameras[CameraType.SkyCamera].Update(gameTime, updatemouse, false);
+            eng.Cameras[CameraType.DefaultCamera].Update(gameTime, updatemouse, true);
 
             eng.UpdateStereoCamera(CameraType.RightEyeCamera, eng.Settings.StereoPairSeparation);
-            eng.Cameras[CameraType.RightEyeCamera].Update(gameTime, updatemouse, true, newms, oldms);
+            eng.Cameras[CameraType.RightEyeCamera].Update(gameTime, updatemouse, true);
 
             eng.UpdateStereoCamera(CameraType.LeftEyeCamera, eng.Settings.StereoPairSeparation);
-            eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true, newms, oldms);
+            eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true);
         }
 
         /// <summary>
