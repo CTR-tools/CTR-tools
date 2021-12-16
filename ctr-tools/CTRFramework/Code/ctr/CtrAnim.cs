@@ -5,27 +5,31 @@ using System.Linq;
 
 namespace CTRFramework
 {
-    public class CtrAnim : IReadWrite
+    public class CtrAnim
     {
         public string Name;
-        public short numFrames => (short)frames.Count;
-        public short frameSize;
-        public int ptrUnk;//??
+        public short numFrames => (short)Frames.Count;
+        public short frameSize = 0;
+        public PsxPtr ptrDeltas = PsxPtr.Zero;   //assumed to be the pointer to deltas (check cb2 specs)
         public bool duplicateFrames = false;
 
-        List<byte[]> frames = new List<byte[]>();
+        public bool IsCompressed => ptrDeltas != PsxPtr.Zero;
 
-        public static CtrAnim FromReader(BinaryReaderEx br)
+        public List<CtrFrame> Frames = new List<CtrFrame>();
+
+        public List<uint> deltas = new List<uint>();
+
+        public static CtrAnim FromReader(BinaryReaderEx br, int numVerts)
         {
-            return new CtrAnim(br);
+            return new CtrAnim(br, numVerts);
         }
 
-        public CtrAnim(BinaryReaderEx br)
+        public CtrAnim(BinaryReaderEx br, int numVerts)
         {
-            Read(br);
+            Read(br, numVerts);
         }
 
-        public void Read(BinaryReaderEx br)
+        public void Read(BinaryReaderEx br, int numVerts)
         {
             Name = br.ReadStringFixed(16);
 
@@ -36,11 +40,33 @@ namespace CTRFramework
 
             numFrames &= 0x7fff;
 
+            if (duplicateFrames)
+            {
+                numFrames /= 2;
+                numFrames++;
+            }
+
             frameSize = br.ReadInt16();
-            ptrUnk = br.ReadInt32();
+            ptrDeltas = PsxPtr.FromReader(br);
+
+            Console.WriteLine($"{Name} [{IsCompressed}]: {ptrDeltas}");
+            //Console.ReadKey();
+
+            int ptrFrames = (int)br.BaseStream.Position;
 
             for (int i = 0; i < numFrames; i++)
-                frames.Add(br.ReadBytes(frameSize));
+            {
+                br.Jump(ptrFrames + frameSize * i);
+                Console.WriteLine("frame " + i + " " + br.HexPos());
+                Frames.Add(CtrFrame.FromReader(br, numVerts));
+            }
+
+            if (IsCompressed)
+            {
+                br.Jump(ptrDeltas);
+                for (int i = 0; i < numVerts; i++)
+                    deltas.Add(br.ReadUInt32());
+            }
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable)
@@ -51,10 +77,12 @@ namespace CTRFramework
             bw.Write(Name.ToCharArray().Take(16).ToArray());
             bw.Write(numFrames & (duplicateFrames ? 1 : 0) << 15);
             bw.Write(frameSize);
-            bw.Write(ptrUnk);
+            ptrDeltas.Write(bw);
 
-            foreach (var frames in frames)
-                bw.Write(frames);
+            throw new NotImplementedException("implement ctrframe write");
+
+            //foreach (var frames in Frames)
+            //    bw.Write(frames);
         }
     }
 }

@@ -29,13 +29,13 @@ namespace CTRFramework
         public UIntPtr ptrAnims = UIntPtr.Zero;
         public int unk4 = 0; //?
 
-        public Vector4s posOffset = new Vector4s(0, 0, 0, 0);
+        //public Vector4s posOffset = new Vector4s(0, 0, 0, 0);
 
         public List<Vertex> verts = new List<Vertex>();
         public List<TextureLayout> matIndices = new List<TextureLayout>();
 
         public int cmdNum = 0x40;
-        public int vrenderMode = 0x1C;
+        //public int vrenderMode = 0x1C;
 
         public bool IsAnimated
         {
@@ -67,7 +67,8 @@ namespace CTRFramework
         List<CtrAnim> anims = new List<CtrAnim>();
 
         public List<CtrDraw> drawList = new List<CtrDraw>();
-        public List<Vector3b> vtx = new List<Vector3b>();
+        //public List<Vector3b> vtx = new List<Vector3b>();
+        public CtrFrame frame;
         public List<TextureLayout> tl = new List<TextureLayout>();
         public List<Vector4b> cols = new List<Vector4b>();
 
@@ -240,48 +241,29 @@ namespace CTRFramework
                 for (int i = 0; i < numAnims; i++)
                 {
                     br.Jump(animPtrMap[i]);
-                    anims.Add(CtrAnim.FromReader(br));
+                    anims.Add(CtrAnim.FromReader(br, maxv));
                 }
 
                 //jump to first animation, read header and jump to vertex garbage
                 br.Jump(animPtrMap[0] + 0x18);
             }
 
+            frame = CtrFrame.FromReader(br, maxv);
 
-
-            posOffset = new Vector4s(br);
-
-            Helpers.Panic(this, PanicType.Debug, posOffset.ToString());
-
-            br.Seek(16);
-
-            vrenderMode = br.ReadInt32();
-
-            if (!(new List<int> { 0x1C, 0x22 }).Contains(vrenderMode))
-            {
-                Helpers.Panic(this, PanicType.Assume, $"check vrender {vrenderMode.ToString("X8")}");
-            }
-
-            Console.WriteLine(maxv);
-
-            //read vertices
-            for (int k = 0; k < maxv; k++)
-                vtx.Add(new Vector3b(br));
-
-            foreach (var v in vtx)
+            foreach (var v in frame.Vertices)
                 Helpers.Panic(this, PanicType.Debug, v.ToString(VecFormat.Hex));
 
             List<Vector3s> vfixed = new List<Vector3s>();
 
-            foreach (var v in vtx)
+            foreach (var v in frame.Vertices)
                 vfixed.Add(new Vector3s(v.X, v.Y, v.Z));
 
             foreach (Vector3s v in vfixed)
             {
                 //scale vertices
-                v.X = (short)((((float)(v.X + posOffset.X) / 255.0f) * scale.X));
-                v.Y = (short)(-(((float)(v.Y + posOffset.Z) / 255.0f) * scale.Z));
-                v.Z = (short)((((float)(v.Z + posOffset.Y) / 255.0f) * scale.Y));
+                v.X = (short)((((float)(v.X + frame.posOffset.X) / 255.0f) * scale.X));
+                v.Y = (short)(-(((float)(v.Y + frame.posOffset.Z) / 255.0f) * scale.Z));
+                v.Z = (short)((((float)(v.Z + frame.posOffset.Y) / 255.0f) * scale.Y));
 
                 //flip axis
                 short zz = v.Z;
@@ -577,7 +559,7 @@ namespace CTRFramework
                 dVerts[i] -= bb.minf;
 
             //save converted offset to model
-            mesh.posOffset = new Vector4s(
+            mesh.frame.posOffset = new Vector4s(
                 (short)(bb.minf.X / bb2.maxf.X * 255),
                 (short)(bb.minf.Y / bb2.maxf.Y * 255),
                 (short)(bb.minf.Z / bb2.maxf.Z * 255),
@@ -592,7 +574,7 @@ namespace CTRFramework
 
 
             //compress vertices to byte vector 
-            mesh.vtx.Clear();
+            mesh.frame.Vertices.Clear();
 
             foreach (var v in dVerts)
             {
@@ -602,7 +584,7 @@ namespace CTRFramework
                    (byte)(v.Y / bb2.maxf.Y * 255)
                     );
 
-                mesh.vtx.Add(vv);
+                mesh.frame.Vertices.Add(vv);
             }
 
 
@@ -650,14 +632,14 @@ namespace CTRFramework
                     flags = CtrDrawFlags.d //| CtrDrawFlags.k
                 };
 
-                newlist.Add(mesh.vtx[vfaces[i].X]);
-                newlist.Add(mesh.vtx[vfaces[i].Z]);
-                newlist.Add(mesh.vtx[vfaces[i].Y]);
+                newlist.Add(mesh.frame.Vertices[vfaces[i].X]);
+                newlist.Add(mesh.frame.Vertices[vfaces[i].Z]);
+                newlist.Add(mesh.frame.Vertices[vfaces[i].Y]);
 
                 mesh.drawList.AddRange(cmd);
             }
 
-            mesh.vtx = newlist;
+            mesh.frame.Vertices = newlist;
 
             return mesh;
         }
@@ -766,15 +748,15 @@ namespace CTRFramework
 
                     bw.Jump(ptrVerts + 4);
 
-                    posOffset.Write(bw);
+                    frame.posOffset.Write(bw);
 
                     bw.Seek(16);
 
-                    bw.Write(vrenderMode);
+                    bw.Write(frame.vrenderMode);
 
                     Helpers.Panic(this, PanicType.Debug, Name);
 
-                    foreach (var x in vtx)
+                    foreach (var x in frame.Vertices)
                     {
                         x.Write(bw);
                         Helpers.Panic(this, PanicType.Debug, x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2"));

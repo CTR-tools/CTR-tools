@@ -26,6 +26,7 @@ namespace CTRFramework
             colorIndex = (byte)(input >> 9 & 0x7F);
             texIndex = (byte)(input & 0x1FF);
 
+            //so this apparently fails sometimes, check if should pass big endian or not. or maybe masks are wrong?
             if (input != Value)
                 Helpers.Panic(this, PanicType.Error, $"cmd value pack fails: {input.ToString("X8")} <-!!!-> {Value.ToString("X8")}");
 
