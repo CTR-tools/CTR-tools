@@ -2,31 +2,6 @@
 
 namespace CTRFramework
 {
-    #region panic enums
-
-    [Flags]
-    public enum PanicLevel
-    {
-        Silent = 1 << 0,        //silent level overrides other settings
-        Console = 1 << 1,       //writes message to the console
-        Pause = 1 << 2,         //waits for user input
-        File = 1 << 3,          //writes to file
-        Exception = 1 << 4      //throws an exception
-    }
-
-    [Flags]
-    public enum PanicType
-    {
-        All = -1,           //all messages
-        Error = 1 << 0,     //typically used to denote an event, that halts execution of current function to prevent crashing
-        Warning = 1 << 1,   //used to warn about unexpected code execution, i.e missing enum in switch case
-        Info = 1 << 2,      //general info, messages
-        Debug = 1 << 3,     //debug output
-        Assume = 1 << 4     //format assumptions or sanity checks
-    }
-
-    #endregion
-
     #region howl enums
 
     [Flags]

@@ -6,56 +6,9 @@ using System.Reflection;
 
 namespace CTRFramework.Shared
 {
-    public class Helpers
+    public partial class Helpers
     {
         public static Random Random = new Random();
-
-        public static string logpath = Path.Combine(Meta.BasePath, "ctrframework.log");
-
-        public static PanicLevel panicLevel = PanicLevel.Console; //PanicLevel.File;
-        public static PanicType panicType = PanicType.All ^ PanicType.Debug; //PanicType.All;
-
-        /// <summary>
-        /// Call this if something unexpected happened.
-        /// </summary>
-        /// <param name="sender">the object that wants to panic</param>
-        /// <param name="panicType">type of panic</param>
-        /// <param name="message">the message it wants to send</param>
-        public static void Panic(object sender, PanicType panicType, string message)
-        {
-            Panic(sender.GetType().Name, panicType, message);
-        }
-
-        /// <summary>
-        /// Call this if something unexpected happened.
-        /// </summary>
-        /// <param name="x">summary text</param>
-        /// <param name="message">message text</param>
-        public static void Panic(string sender, PanicType pType, string message)
-        {
-            if (panicLevel.HasFlag(PanicLevel.Silent))
-                return;
-
-            if (pType != PanicType.Info)
-                message = $"{pType}\t{sender}:\t{message}";
-
-            if (panicLevel.HasFlag(PanicLevel.File))
-                File.AppendAllText(logpath, $"{DateTime.Now}\t{message}\r\n");
-
-            if (panicLevel.HasFlag(PanicLevel.Console))
-            {
-                if (panicType.HasFlag(pType))
-                {
-                    Console.WriteLine(message);
-
-                    if (panicLevel.HasFlag(PanicLevel.Pause))
-                        Console.ReadKey();
-                }
-            }
-
-            if (panicLevel.HasFlag(PanicLevel.Exception))
-                throw new Exception(message);
-        }
 
         public static float Normalize(float min, float max, float val)
         {
