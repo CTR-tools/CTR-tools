@@ -7,7 +7,7 @@ namespace CTRFramework
         public CtrDrawFlags flags;
         public byte stackIndex;
         public byte colorIndex;
-        public byte texIndex;
+        public ushort texIndex;
 
         public uint Value =>
             (uint)((byte)flags << 24) |
@@ -24,9 +24,8 @@ namespace CTRFramework
             flags = (CtrDrawFlags)(input >> (8 * 3) & 0xFF);
             stackIndex = (byte)(input >> 16 & 0xFF);
             colorIndex = (byte)(input >> 9 & 0x7F);
-            texIndex = (byte)(input & 0x1FF);
+            texIndex = (ushort)(input & 0x1FF);
 
-            //so this apparently fails sometimes, check if should pass big endian or not. or maybe masks are wrong?
             if (input != Value)
                 Helpers.Panic(this, PanicType.Error, $"cmd value pack fails: {input.ToString("X8")} <-!!!-> {Value.ToString("X8")}");
 
