@@ -1,4 +1,5 @@
 ﻿using CTRFramework;
+using ctrviewer.Engine.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -225,7 +226,6 @@ namespace ctrviewer.Engine.Gui
 
             menus.Add("adventure", new List<MenuItem>
             {
-                new MenuItem("All at once".ToUpper(), "loadbigadv", "", true, intValue: -1),
                 new IntMenuItem(-1) { Text = "All Hubs At Once", Name = "allhubs" },
                 new IntMenuItem(200) { Text = "Gem Valley", Name = "gemvalley" },
                 new IntMenuItem(203) { Text = "N. Sanity Beach", Name = "nsanity" },

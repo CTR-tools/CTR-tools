@@ -3,6 +3,8 @@ using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System;
+using ctrviewer.Engine.Input;
 
 namespace ctrviewer.Engine.Testing
 {
@@ -11,31 +13,88 @@ namespace ctrviewer.Engine.Testing
         public static float MaxAcceleration = 0.01f;
         public static float MaxSpeed = 0.25f;
         public static float MaxTurningStep = 0.025f;
+        public static float MaxDriftingStep = 0.05f;
+        public static float MaxJumpStep = 0.001f;
 
         public static float Friction = 0.001f;
         public static float BrakeFriction = 0.01f;
 
         public static float TargetFps = 60;
 
-        public static float GravityStep = 0.01f;
-        public static float MaxGravity = 1f;
+        public static float GravityStep = 0.01f;//0.01f;
+        public static float MaxGravity = 0.25f;//1f;
     }
 
-    enum Power
+    enum PowerType
     {
         Gravity,
-        EngineForward,
+        Engine,
         EngineBackward,
         Jump,
         SteerLeft,
         SteerRight,
         DriftLeft,
-        DriftRight
+        DriftRight,
+        Terrain,
+        GodZ
+    }
+
+    class Power
+    {
+        public bool Enabled = true;
+        public bool IsInertial = false;
+
+        public Vector3 Direction = Vector3.Zero;
+
+        private float _value = 0;
+        public float Value {
+            get
+            {
+                if (_value > MaxValue)
+                    _value = MaxValue;
+
+                return _value;
+            }
+
+            set
+            {
+                _value = value;
+            }
+        }
+
+        public float MaxValue = 0;
+        public float FadeValue = 0;
+
+        public void Boost(float value)
+        {
+            if (Enabled)
+                Value += value;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if (_value != 0 && IsInertial)
+            {
+                if (_value > 0)
+                {
+                    _value -= FadeValue;
+                    if (_value < 0)
+                        _value = 0;
+                }
+
+                if (_value < 0)
+                {
+                    _value += FadeValue;
+                    if (_value > 0)
+                        _value = 0;
+                }
+            }
+        }
     }
 
     class Kart : InstancedModel
     {
-        Dictionary<Power, Vector3> Powers = new Dictionary<Power, Vector3>();
+        Dictionary<PowerType, Power> Powers = new Dictionary<PowerType, Power>();
 
         Vector3 oldPosition;
 
@@ -45,144 +104,167 @@ namespace ctrviewer.Engine.Testing
 
         public Kart(Vector3 pos, Vector3 rot) : base("crash", pos, rot, Vector3.One)
         {
-            Powers.Add(Power.Gravity, Vector3.Down * KartPhysics.MaxGravity);
-            Powers.Add(Power.EngineBackward, Vector3.Zero);
-            Powers.Add(Power.EngineForward, Vector3.Zero);
-            Powers.Add(Power.SteerLeft, Vector3.Zero);
-            Powers.Add(Power.SteerRight, Vector3.Zero);
-            Powers.Add(Power.DriftLeft, Vector3.Zero);
-            Powers.Add(Power.DriftRight, Vector3.Zero);
-            Powers.Add(Power.Jump, Vector3.Zero);
+            Powers.Add(PowerType.Gravity, new Power() { MaxValue = KartPhysics.MaxGravity, Direction = Vector3.Down });
+            Powers.Add(PowerType.Terrain, new Power() { MaxValue = 99999f, Direction = Vector3.Zero });
+            Powers.Add(PowerType.Engine, new Power() { MaxValue = KartPhysics.MaxSpeed, Direction = Vector3.Forward, IsInertial = true, FadeValue = KartPhysics.Friction });
+            //Powers.Add(PowerType.SteerLeft, new Power() { MaxValue = KartPhysics.MaxTurningStep, Direction = Vector3.Left });
+            //Powers.Add(PowerType.SteerRight, new Power() { MaxValue = KartPhysics.MaxTurningStep, Direction = Vector3.Right });
+            //Powers.Add(PowerType.DriftLeft, new Power() { MaxValue = KartPhysics.MaxDriftingStep, Direction = Vector3.Left });
+            //Powers.Add(PowerType.DriftRight, new Power() { MaxValue = KartPhysics.MaxDriftingStep, Direction = Vector3.Right });
+            //Powers.Add(PowerType.Jump, new Power() { MaxValue = KartPhysics.MaxJumpStep, Direction = Vector3.Up });
+            Powers.Add(PowerType.GodZ, new Power() { MaxValue = 1f, Direction = Vector3.Up });
         }
 
         public float GetDelta(GameTime gameTime, float value)
         {
-            return value * (float)gameTime.ElapsedGameTime.TotalMilliseconds * KartPhysics.TargetFps / 1000;
+            return value * KartPhysics.TargetFps / 1000f * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+        }
+
+        public Vector3 GetResultingPower()
+        {
+            Vector3 result = Vector3.Zero;
+
+            foreach (var power in Powers.Values)
+                if (power.Enabled)
+                    result += power.Direction * power.Value;
+
+            return result;
+        }
+
+        public Vector3 GetResultingDirection()
+        {
+            return Vector3.Normalize(GetResultingPower());
         }
 
         public void Collide(List<CtrScene> scenes)
         {
+            Powers[PowerType.Terrain].Enabled = false;
+
             foreach (var scene in scenes)
                 foreach (var quad in scene.quads)
-                    if (quad.quadFlags.HasFlag(QuadFlags.Ground) || quad.quadFlags.HasFlag(QuadFlags.Wall))
-                        if (
-                            (quad.bbox.numericMin.X <= Position.X) &&
-                            (quad.bbox.numericMin.Y - Gravity * 2 <= Position.Y) &&
-                            (quad.bbox.numericMin.Z <= Position.Z) &&
-                            (quad.bbox.numericMax.X >= Position.X) &&
-                            (quad.bbox.numericMax.Y + 1 + Gravity >= Position.Y) &&
-                            (quad.bbox.numericMax.Z >= Position.Z)
-                            )
+                    if (
+                        (quad.bbox.numericMin.X - 1 <= Position.X) &&
+                        (quad.bbox.numericMin.Y - 1 <= Position.Y) &&
+                        (quad.bbox.numericMin.Z - 1 <= Position.Z) &&
+                        (quad.bbox.numericMax.X + 1 >= Position.X) &&
+                        (quad.bbox.numericMax.Y + 1 >= Position.Y) &&
+                        (quad.bbox.numericMax.Z + 1 >= Position.Z)
+                        )
+                    {
+                        GameConsole.Write($"collide with quad bb: {quad.bbox} at {Position}");
+
+                        bool gotcoll = false;
+
+                        for (int i = 0; i < 4; i++)
                         {
-                            GameConsole.Write($"collide with quad bb: {quad.bbox} at {Position}");
+                            List<Vertex> vertices = quad.GetVertexListq(scene.verts, i);
 
-                            for (int i = 0; i < 4; i++)
-                            {
+                            Vector3 p0 = DataConverter.ToVector3(vertices[0].Position);
+                            Vector3 p1 = DataConverter.ToVector3(vertices[1].Position);
+                            Vector3 p2 = DataConverter.ToVector3(vertices[2].Position);
+                            Vector3 p3 = DataConverter.ToVector3(vertices[3].Position);
 
-                                List<Vertex> vertices = quad.GetVertexListq(scene.verts, i);
+                            Vector3 dir = GetResultingDirection();
 
-                                Vector3 p1 = DataConverter.ToVector3(vertices[0].Position);
-                                Vector3 p2 = DataConverter.ToVector3(vertices[1].Position);
-                                Vector3 p3 = DataConverter.ToVector3(vertices[2].Position);
-                                Vector3 p4 = DataConverter.ToVector3(vertices[3].Position);
+                            Ray oldray = new Ray(Position, dir);
+                            Ray newray = new Ray(Position + GetResultingPower(), dir);
 
-
-
-                                var ab = p1 - p2;
-                                var cb = p3 - p2;
-
-                                ab.Normalize();
-                                cb.Normalize();
-
-                                var normal = Vector3.Cross(ab, cb);
-
-                            }
-
-
-
-                            if (Position.Y <= quad.bbox.numericMax.Y)
-                            {
-                                Position.Y = quad.bbox.numericMax.Y;
-                                Gravity = 0;
-                                return;
-                            }
-
+                            TestCollision(oldray, newray, p0, p2, p1);
+                            TestCollision(oldray, newray, p3, p2, p1);
                         }
+                    }
+        
+        }
+
+
+        public bool TestCollision(Ray oldray, Ray newray, Vector3 p1, Vector3 p2, Vector3 p3)
+        {
+            float oldcoll = Collision.IntersectRayTriangle(oldray, p1, p2, p3);
+            float newcoll = Collision.IntersectRayTriangle(newray, p1, p2, p3);
+
+            Vector3 fn = Vector3.Normalize(Vector3.Cross(p1 - p3, p1 - p2));
+
+            if (
+                (Single.IsNaN(oldcoll) && !Single.IsNaN(newcoll)) ||
+                (!Single.IsNaN(oldcoll) && Single.IsNaN(newcoll)) ||
+                (newcoll > 0 && oldcoll < 0) ||
+                (newcoll < 0 && oldcoll > 0)
+               )
+            {
+                GameConsole.Write("BANG");
+
+                GameConsole.Write($" face normal: {fn} vector up: {Vector3.Up}");
+
+                Powers[PowerType.Terrain].Enabled = false;
+
+                Powers[PowerType.Terrain].Direction = Vector3.Up; //should be face normal here
+                Powers[PowerType.Terrain].Value = GetResultingPower().Length(); //total force
+
+                Powers[PowerType.Terrain].Enabled = true;
+
+                Powers[PowerType.Gravity].Value = 0;
+
+                return true;
+            }
+
+            return false;
         }
 
         public void Update(GameTime gameTime, List<CtrScene> scenes)
         {
             oldPosition = Position;
 
+            foreach (var power in Powers)
+                power.Value.Update(gameTime);
+
+            Powers[PowerType.Gravity].Boost(GetDelta(gameTime, KartPhysics.GravityStep));
+
             GamePadState gs = GamePad.GetState(Game1.activeGamePad);
 
             //turning
 
             if (KeyboardHandler.IsAnyDown(Keys.A, Keys.Left) || gs.DPad.Left == ButtonState.Pressed)
-                Rotation.X += GetDelta(gameTime, KartPhysics.MaxTurningStep * (Speed / KartPhysics.MaxSpeed) * (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? 2 : 1));
+                Rotation.X += GetDelta(gameTime, KartPhysics.MaxTurningStep * (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? 2 : 1));
 
             if (KeyboardHandler.IsAnyDown(Keys.D, Keys.Right) || gs.DPad.Right == ButtonState.Pressed)
-                Rotation.X -= GetDelta(gameTime, KartPhysics.MaxTurningStep * (Speed / KartPhysics.MaxSpeed) * (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? 2 : 1));
+                Rotation.X -= GetDelta(gameTime, KartPhysics.MaxTurningStep * (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? 2 : 1));
 
-            //udate accel value
+            Powers[PowerType.Engine].Direction = Vector3.Transform(Vector3.Backward, Matrix.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z));
 
-            if (gs.IsButtonDown(Buttons.A) || KeyboardHandler.IsAnyDown(Keys.W, Keys.Up) || gs.Buttons.A == ButtonState.Pressed)
+
+            //go forward
+
+            if (KeyboardHandler.IsDown(Keys.W))
             {
-                Accel = KartPhysics.MaxAcceleration;
-            }
-            else
-            {
-                Accel = 0;
+                Powers[PowerType.Engine].Boost(GetDelta(gameTime, KartPhysics.MaxAcceleration));
             }
 
-            //update speed value
-
-            Speed += GetDelta(gameTime, Accel - (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? KartPhysics.BrakeFriction : KartPhysics.Friction));
-
-            if (Speed > KartPhysics.MaxSpeed)
-                Speed = KartPhysics.MaxSpeed;
-
-            if (Speed < 0)
-                Speed = 0;
-
-            //move forward
-
-            Position += Vector3.Transform(Vector3.Backward * GetDelta(gameTime, Speed), Matrix.CreateRotationY(Rotation.X));
-
-
-            //apply gravity
-
-            if (!KeyboardHandler.IsDown(Keys.PageUp) && !KeyboardHandler.IsDown(Keys.PageDown))
-            {
-                Gravity += GetDelta(gameTime, KartPhysics.GravityStep);
-
-                if (Gravity > KartPhysics.MaxGravity)
-                    Gravity = KartPhysics.MaxGravity;
-
-                Position.Y -= GetDelta(gameTime, Gravity);
-
-                Collide(scenes);
-
-                if (Gravity == 0 & KeyboardHandler.IsDown(Keys.Space))
-                {
-                    Gravity = 0;
-                    Position.Y += GetDelta(gameTime, 2f);
-                }
-            }
 
             //move up/down
 
-            if (KeyboardHandler.IsDown(Keys.PageUp) || gs.Buttons.LeftShoulder == ButtonState.Pressed)
+            if (KeyboardHandler.IsDown(Keys.PageUp))
             {
-                Gravity = 0;
-                Position.Y += GetDelta(gameTime, 0.5f);
+                Powers[PowerType.Gravity].Value = 0;
+                Powers[PowerType.Gravity].Enabled = false;
+                Powers[PowerType.GodZ].Value = 0.5f;
+                Powers[PowerType.GodZ].Enabled = true;
+            }
+            else if (KeyboardHandler.IsDown(Keys.PageDown))
+            {
+                Powers[PowerType.Gravity].Value = 0;
+                Powers[PowerType.Gravity].Enabled = false;
+                Powers[PowerType.GodZ].Value = -0.5f;
+                Powers[PowerType.GodZ].Enabled = true;
+            }
+            else
+            {
+                Collide(scenes);
             }
 
-            if (KeyboardHandler.IsDown(Keys.PageDown) || gs.Buttons.RightShoulder == ButtonState.Pressed)
-            {
-                Gravity = 0;
-                Position.Y += GetDelta(gameTime, -0.5f);
-            }
+            Position += GetResultingPower();
+
+            Powers[PowerType.Gravity].Enabled = true;
+            Powers[PowerType.GodZ].Enabled = false;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace CTRFramework.Shared
         Both = 3
     }
 
-    public class PsxPtr : IEquatable<PsxPtr>, IReadWrite
+    public class PsxPtr : IEquatable<object>, IReadWrite
     {
         public static PsxPtr Zero = new PsxPtr(0);
 
@@ -64,12 +64,18 @@ namespace CTRFramework.Shared
             bw.Write((UIntPtr)value, patchTable);
         }
 
-        public bool Equals(PsxPtr other)
+        public override bool Equals(object other)
         {
-            return this.value == other.value;
+            if (!(other is PsxPtr))
+                return false;
+
+            return this.value == (other as PsxPtr).value;
         }
 
-        //meh, implement iequatable they said.
+        public override int GetHashCode()
+        {
+            return (int)value;
+        }
 
         public static bool operator ==(PsxPtr a, PsxPtr b)
         {

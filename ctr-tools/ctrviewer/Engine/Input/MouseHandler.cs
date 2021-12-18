@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace ctrviewer.Engine
+namespace ctrviewer.Engine.Input
 {
     public static class MouseHandler
     {

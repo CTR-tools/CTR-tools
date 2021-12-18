@@ -5,6 +5,7 @@ using CTRFramework.Sound;
 using CTRFramework.Vram;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Gui;
+using ctrviewer.Engine.Input;
 using ctrviewer.Engine.Render;
 using ctrviewer.Engine.Testing;
 using ctrviewer.Loaders;
@@ -1132,10 +1133,10 @@ namespace ctrviewer
 
                 if (eng.Settings.StereoPair)
                 {
-                    if (newgs.IsButtonDown(Buttons.RightShoulder))
+                    if (newgs.IsButtonDown(Buttons.RightShoulder) || KeyboardHandler.IsDown(Keys.OemOpenBrackets))
                         eng.Settings.StereoPairSeparation += 5;
 
-                    if (newgs.IsButtonDown(Buttons.LeftShoulder))
+                    if (newgs.IsButtonDown(Buttons.LeftShoulder) || KeyboardHandler.IsDown(Keys.OemCloseBrackets))
                         eng.Settings.StereoPairSeparation -= 5;
 
                     if (eng.Settings.StereoPairSeparation < 0) eng.Settings.StereoPairSeparation = 0;
