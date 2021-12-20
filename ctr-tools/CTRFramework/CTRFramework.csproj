@@ -86,6 +86,7 @@
     <Compile Include="Code\big\BigEntry.cs" />
     <Compile Include="Code\big\BigFileReader.cs" />
     <Compile Include="Code\ctr\CtrAnim.cs" />
+    <Compile Include="Code\ctr\CtrDelta.cs" />
     <Compile Include="Code\ctr\CtrFrame.cs" />
     <Compile Include="Code\ctr\CtrMesh.cs" />
     <Compile Include="Code\ctr\CtrModel.cs" />

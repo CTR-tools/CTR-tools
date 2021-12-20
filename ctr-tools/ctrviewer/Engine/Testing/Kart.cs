@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using ctrviewer.Engine.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ctrviewer.Engine.Testing
 {
@@ -22,7 +23,7 @@ namespace ctrviewer.Engine.Testing
         public static float TargetFps = 60;
 
         public static float GravityStep = 0.01f;//0.01f;
-        public static float MaxGravity = 0.25f;//1f;
+        public static float MaxGravity = 0.5f;//1f;
     }
 
     enum PowerType
@@ -92,7 +93,7 @@ namespace ctrviewer.Engine.Testing
         }
     }
 
-    class Kart : InstancedModel
+    public class Kart : InstancedModel
     {
         Dictionary<PowerType, Power> Powers = new Dictionary<PowerType, Power>();
 
@@ -142,67 +143,66 @@ namespace ctrviewer.Engine.Testing
 
             foreach (var scene in scenes)
                 foreach (var quad in scene.quads)
-                    if (
-                        (quad.bbox.numericMin.X - 1 <= Position.X) &&
-                        (quad.bbox.numericMin.Y - 1 <= Position.Y) &&
-                        (quad.bbox.numericMin.Z - 1 <= Position.Z) &&
-                        (quad.bbox.numericMax.X + 1 >= Position.X) &&
-                        (quad.bbox.numericMax.Y + 1 >= Position.Y) &&
-                        (quad.bbox.numericMax.Z + 1 >= Position.Z)
-                        )
-                    {
-                        GameConsole.Write($"collide with quad bb: {quad.bbox} at {Position}");
-
-                        bool gotcoll = false;
-
-                        for (int i = 0; i < 4; i++)
+                    if (!quad.visDataFlags.HasFlag(VisDataFlags.Water) && !quad.visDataFlags.HasFlag(VisDataFlags.Hidden))
+                        if (
+                            (quad.bbox.numericMin.X - 1 <= Position.X) &&
+                            (quad.bbox.numericMin.Y - 1 <= Position.Y) &&
+                            (quad.bbox.numericMin.Z - 1 <= Position.Z) &&
+                            (quad.bbox.numericMax.X + 1 >= Position.X) &&
+                            (quad.bbox.numericMax.Y + 1 >= Position.Y) &&
+                            (quad.bbox.numericMax.Z + 1 >= Position.Z)
+                            )
                         {
-                            List<Vertex> vertices = quad.GetVertexListq(scene.verts, i);
+                            GameConsole.Write($"collide with quad bb: {quad.bbox} at {Position}");
 
-                            Vector3 p0 = DataConverter.ToVector3(vertices[0].Position);
-                            Vector3 p1 = DataConverter.ToVector3(vertices[1].Position);
-                            Vector3 p2 = DataConverter.ToVector3(vertices[2].Position);
-                            Vector3 p3 = DataConverter.ToVector3(vertices[3].Position);
+                            for (int i = 0; i < 4; i++)
+                            {
+                                List<Vertex> vertices = quad.GetVertexListq(scene.verts, i);
 
-                            Vector3 dir = GetResultingDirection();
+                                Vector3 p0 = DataConverter.ToVector3(vertices[0].Position);
+                                Vector3 p1 = DataConverter.ToVector3(vertices[1].Position);
+                                Vector3 p2 = DataConverter.ToVector3(vertices[2].Position);
+                                Vector3 p3 = DataConverter.ToVector3(vertices[3].Position);
 
-                            Ray oldray = new Ray(Position, dir);
-                            Ray newray = new Ray(Position + GetResultingPower(), dir);
+                                Vector3 dir = GetResultingDirection();
+                                Ray oldray = new Ray(Position, dir);
+                                Ray newray = new Ray(Position + GetResultingPower(), dir);
 
-                            TestCollision(oldray, newray, p0, p2, p1);
-                            TestCollision(oldray, newray, p3, p2, p1);
+                                if (!TestCollision(oldray, newray, p0, p2, p1))
+                                    TestCollision(oldray, newray, p3, p2, p1);
+                            }
                         }
-                    }
-        
-        }
 
+        }
 
         public bool TestCollision(Ray oldray, Ray newray, Vector3 p1, Vector3 p2, Vector3 p3)
         {
             float oldcoll = Collision.IntersectRayTriangle(oldray, p1, p2, p3);
             float newcoll = Collision.IntersectRayTriangle(newray, p1, p2, p3);
 
+            float dist = Vector3.Distance(oldray.Position, newray.Position);
+
             Vector3 fn = Vector3.Normalize(Vector3.Cross(p1 - p3, p1 - p2));
 
+            if (!Single.IsNaN(oldcoll) && !Single.IsNaN(newcoll))
+                return false;
+
             if (
-                (Single.IsNaN(oldcoll) && !Single.IsNaN(newcoll)) ||
-                (!Single.IsNaN(oldcoll) && Single.IsNaN(newcoll)) ||
-                (newcoll > 0 && oldcoll < 0) ||
-                (newcoll < 0 && oldcoll > 0)
+                (!Single.IsNaN(oldcoll) && Single.IsNaN(newcoll))
+                //(newcoll > 0 && oldcoll < 0) ||
+                //(newcoll < 0 && oldcoll > 0)
                )
             {
                 GameConsole.Write("BANG");
 
                 GameConsole.Write($" face normal: {fn} vector up: {Vector3.Up}");
 
-                Powers[PowerType.Terrain].Enabled = false;
+                Powers[PowerType.Gravity].Value = 0;
 
-                Powers[PowerType.Terrain].Direction = Vector3.Up; //should be face normal here
-                Powers[PowerType.Terrain].Value = GetResultingPower().Length(); //total force
+                Powers[PowerType.Terrain].Direction = Vector3.Up;  //oldray.Direction;
+                Powers[PowerType.Terrain].Value = dist;//- dist + oldcoll;
 
                 Powers[PowerType.Terrain].Enabled = true;
-
-                Powers[PowerType.Gravity].Value = 0;
 
                 return true;
             }

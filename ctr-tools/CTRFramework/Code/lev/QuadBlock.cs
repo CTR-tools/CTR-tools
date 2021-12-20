@@ -251,19 +251,33 @@ namespace CTRFramework
             br.Jump(texpos);
         }
 
-
+        /*
         //magic array of indices, each line contains 2 quads
         int[] inds = new int[]
         {
-            6, 5, 1,
-            6, 7, 5,
-            7, 2, 5,
-            7, 8, 2,
-            3, 7, 6,
-            3, 9, 7,
-            9, 8, 7,
-            9, 4, 8
+            1, 6, 5,
+            5, 6, 7,
+            
+            5, 7, 2,
+            2, 7, 8,
+
+            6, 3, 7,
+            7, 3, 9,
+
+            7, 9, 8,
+            8, 9, 4
+
+            //6, 5, 1,
+            //6, 7, 5,
+            //7, 2, 5,
+            //7, 8, 2,
+            //3, 7, 6,
+            //3, 9, 7,
+            //9, 8, 7,
+            //9, 4, 8
         };
+
+        */
 
         public void ColTest(List<Vertex> vertices)
         {
@@ -309,6 +323,7 @@ namespace CTRFramework
         };
         */
 
+        /*
         public List<Vertex> GetVertexList(CtrScene s)
         {
             List<Vertex> buf = new List<Vertex>();
@@ -328,7 +343,7 @@ namespace CTRFramework
 
             return buf;
         }
-
+        */
 
         //use this later for obj export too
         public List<Vertex> GetVertexListq(List<Vertex> vertexArray, int i)
@@ -514,7 +529,7 @@ namespace CTRFramework
 
                             List<Vertex> list = GetVertexListq(v, i);
 
-                            List<Vertex> subdiv = Helpers.Subdivide(list);
+                            //List<Vertex> subdiv = Helpers.Subdivide(list);
 
                             //this normally shouldn't be null
                             if (list != null)
@@ -522,19 +537,21 @@ namespace CTRFramework
 
                                 foreach (Vertex vt in list)
                                 {
-                                    //sb.AppendLine(vt.ToObj());
-                                    //sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
+                                    sb.AppendLine(vt.ToObj());
+                                    sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
                                 }
 
+                                /*
                                 foreach (var subvert in subdiv)
                                 {
                                     sb.AppendLine(subvert.ToObj());
                                 }
+                                */
 
                                 sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? (tex[i] != null ? tex[i].lod2.Tag : "default") : "default"));
                                 //sb.AppendLine($"\r\nusemtl {midunk.ToString("X2")}");
 
-                                /*
+                                
                                 if (objSaveQuads)
                                 {
                                     sb.Append(OBJ.ASCIIQuad("f", a, b));
@@ -544,23 +561,12 @@ namespace CTRFramework
                                     sb.AppendLine(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
                                     sb.AppendLine(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
                                 }
-                                */
+                                
 
                                 sb.AppendLine();
 
-                                //b += 4;
-                                //a += 4;
-
-                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 1, 6, 5, 0, 0, 0));
-                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 5, 6, 7, 0, 0, 0));
-                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 5, 7, 2, 0, 0, 0));
-                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 2, 7, 8, 0, 0, 0));
-                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 6, 3, 7, 0, 0, 0));
-                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 7, 3, 9, 0, 0, 0));
-                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 7, 9, 8, 0, 0, 0));
-                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 8, 9, 4, 0, 0, 0));
-
-                                a += 9;
+                                b += 4;
+                                a += 4;
                             }
                             else
                             {

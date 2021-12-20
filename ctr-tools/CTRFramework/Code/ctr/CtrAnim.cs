@@ -17,7 +17,7 @@ namespace CTRFramework
 
         public List<CtrFrame> Frames = new List<CtrFrame>();
 
-        public List<uint> deltas = new List<uint>();
+        public List<CtrDelta> deltas = new List<CtrDelta>();
 
         public static CtrAnim FromReader(BinaryReaderEx br, int numVerts)
         {
@@ -50,7 +50,6 @@ namespace CTRFramework
             ptrDeltas = PsxPtr.FromReader(br);
 
             Console.WriteLine($"{Name} [{IsCompressed}]: {ptrDeltas}");
-            //Console.ReadKey();
 
             int ptrFrames = (int)br.BaseStream.Position;
 
@@ -65,7 +64,7 @@ namespace CTRFramework
             {
                 br.Jump(ptrDeltas);
                 for (int i = 0; i < numVerts; i++)
-                    deltas.Add(br.ReadUInt32());
+                    deltas.Add(CtrDelta.FromReader(br));
             }
         }
 
