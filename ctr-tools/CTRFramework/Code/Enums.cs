@@ -104,25 +104,7 @@ namespace CTRFramework
     }
 
 
-    public enum RotateFlipType
-    {
-        None = 0,
-        Rotate90 = 1,
-        Rotate180 = 2,
-        Rotate270 = 3,
-        FlipRotate270 = 4,
-        FlipRotate180 = 5,
-        FlipRotate90 = 6,
-        Flip = 7
-    }
 
-    public enum FaceMode
-    {
-        Normal = 0,
-        SingleUV1 = 1,
-        SingleUV2 = 2,
-        Unknown = 3
-    }
 
     public enum TerrainFlags
     {

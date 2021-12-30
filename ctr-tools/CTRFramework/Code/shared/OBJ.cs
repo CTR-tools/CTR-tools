@@ -10,6 +10,8 @@ namespace CTRFramework
 {
     public class OBJ
     {
+        public static bool SaveQuads = false;
+
         public string ObjectName = "empty";
 
         public List<Vector3f> vertices = new List<Vector3f>();

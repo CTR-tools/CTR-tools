@@ -152,6 +152,9 @@ namespace ctrviewer.Loaders
                                         foreach (var ql in Trilists)
                                             if (ql.Value.type == TriListType.Animated)
                                                 Trilists[texTag].ScrollingEnabled = true;
+
+                                    //foreach (var ql in Trilists)
+                                    //    Trilists[texTag].textureEnabled = false;
                                 }
                             }
                         }

@@ -451,7 +451,7 @@ namespace CTRFramework
             Helpers.CheckFolder(path);
 
             foreach (var tl in GetTexturesList(lod).Values)
-                ctrvram?.GetTexture(tl, path)?.Save(Path.Combine(path, $"{tl.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
+                ctrvram.GetTexture(tl, path)?.Save(Path.Combine(path, $"{tl.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
 
             if (lod == Detail.High)
                 foreach (var quad in quads)
@@ -531,6 +531,14 @@ namespace CTRFramework
             sb.AppendLine($"begin: {header.compilationBegins}");
             sb.AppendLine($"end: {header.compilationEnds}");
             sb.AppendLine($"File was compiled in: {Math.Round((header.compilationEnds - header.compilationBegins).TotalMinutes)} minutes");
+
+            int maxindex = 0;
+
+            foreach (var qb in quads)
+                if (maxindex < qb.trackPos && qb.trackPos != 0xFF)
+                    maxindex = qb.trackPos;
+
+            sb.AppendLine($"restarts: length = {restartPts.Count} maxindex = {maxindex}");
 
             return sb.ToString();
         }

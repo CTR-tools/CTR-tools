@@ -79,7 +79,7 @@ namespace CTRTools.Controls
                     case ".mpk": final.ImageIndex = final.SelectedImageIndex = 6; break;
                     case ".ptr": final.ImageIndex = final.SelectedImageIndex = 7; break;
                     case ".lng": final.ImageIndex = final.SelectedImageIndex = 8; break;
-                    default: final.ImageIndex = 0; break;
+                    default: final.ImageIndex = final.SelectedImageIndex = 0; break;
                 }
 
                 curnode.Nodes.Add(final);

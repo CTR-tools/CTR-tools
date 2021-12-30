@@ -7,17 +7,37 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public struct FaceFlags
+    public enum RotateFlipType
     {
-        public RotateFlipType rotateFlipType;
+        None = 0,
+        Rotate90 = 1,
+        Rotate180 = 2,
+        Rotate270 = 3,
+        FlipRotate270 = 4,
+        FlipRotate180 = 5,
+        FlipRotate90 = 6,
+        Flip = 7
+    }
+
+    public enum FaceMode
+    {
+        Normal = 0,
+        SingleUV1 = 1,
+        SingleUV2 = 2,
+        Unknown = 3
+    }
+
+    public class FaceFlags
+    {
+        public RotateFlipType Rotation = RotateFlipType.None;
         public FaceMode faceMode;
 
-        public byte packedValue => (byte)((int)rotateFlipType | (byte)faceMode << 3);
+        public byte packedValue => (byte)((int)Rotation | (byte)faceMode << 3);
 
         public FaceFlags(byte x)
         {
-            rotateFlipType = (RotateFlipType)(x & 7);
-            faceMode = (FaceMode)(x >> 3 & 3);
+            Rotation = (RotateFlipType)(x & 7);
+            faceMode = (FaceMode)((x >> 3) & 3);
         }
     }
 
@@ -46,6 +66,8 @@ namespace CTRFramework
 
         //9 indices in vertex array, that form 4 quads, see above.
         public short[] ind = new short[9];
+
+        public short[,] ind2 = new short[3, 3];
 
         //0x12
         public QuadFlags quadFlags;
@@ -118,7 +140,7 @@ namespace CTRFramework
                 var quad = new CtrQuad()
                 {
                     FaceMode = faceFlags[i].faceMode,
-                    RotateFlipType = faceFlags[i].rotateFlipType,
+                    RotateFlipType = faceFlags[i].Rotation,
                     DrawingOrder = drawOrderHigh[i],
                     FaceNormal = faceNormal[i],
                     Texture = tex[i],
@@ -141,6 +163,18 @@ namespace CTRFramework
 
             for (int i = 0; i < 9; i++)
                 ind[i] = br.ReadInt16();
+
+            ind2[0, 0] = ind[0];
+            ind2[1, 0] = ind[4];
+            ind2[2, 0] = ind[1];
+
+            ind2[0, 1] = ind[5];
+            ind2[1, 1] = ind[6];
+            ind2[2, 1] = ind[7];
+
+            ind2[0, 2] = ind[2];
+            ind2[1, 2] = ind[8];
+            ind2[2, 2] = ind[3];
 
             quadFlags = (QuadFlags)br.ReadUInt16();
 
@@ -251,34 +285,6 @@ namespace CTRFramework
             br.Jump(texpos);
         }
 
-        /*
-        //magic array of indices, each line contains 2 quads
-        int[] inds = new int[]
-        {
-            1, 6, 5,
-            5, 6, 7,
-            
-            5, 7, 2,
-            2, 7, 8,
-
-            6, 3, 7,
-            7, 3, 9,
-
-            7, 9, 8,
-            8, 9, 4
-
-            //6, 5, 1,
-            //6, 7, 5,
-            //7, 2, 5,
-            //7, 8, 2,
-            //3, 7, 6,
-            //3, 9, 7,
-            //9, 8, 7,
-            //9, 4, 8
-        };
-
-        */
-
         public void ColTest(List<Vertex> vertices)
         {
             /*
@@ -312,40 +318,72 @@ namespace CTRFramework
             new int[] { 6, 7, 8, 3 }
         };
 
-        /*
-        //magic array of indices, each line contains 2 quads
-        int[] inds = new int[]
+        /// <summary>
+        /// Rotates quad UVs 
+        /// </summary>
+        /// <param name="buf"></param>
+        /// <param name="rotations"></param>
+        public void QuadTexRotate(List<Vertex> buf, int rotations = 1)
         {
-            1, 6, 5, 5, 6, 7,
-            5, 7, 2, 2, 7, 8,
-            6, 3, 7, 7, 3, 9,
-            7, 9, 8, 8, 9, 4
-        };
-        */
+            if (buf == null)
+                return;
 
-        /*
-        public List<Vertex> GetVertexList(CtrScene s)
-        {
-            List<Vertex> buf = new List<Vertex>();
-
-            for (int i = inds.Length - 1; i >= 0; i--)
-                buf.Add(s.verts[ind[inds[i] - 1]]);
-
-            for (int i = 0; i < inds.Length / 6; i++)
+            for (int i = 0; i < rotations % 4; i++)
             {
-                buf[i * 6 + 0].uv = new Vector2(0, 1);
-                buf[i * 6 + 1].uv = new Vector2(1, 0);
-                buf[i * 6 + 2].uv = new Vector2(0, 0);
-                buf[i * 6 + 3].uv = new Vector2(0, 1);
-                buf[i * 6 + 4].uv = new Vector2(1, 1);
-                buf[i * 6 + 5].uv = new Vector2(1, 0);
+                SwapUV(buf[0], buf[1]);
+                SwapUV(buf[0], buf[2]);
+                SwapUV(buf[2], buf[3]);
             }
-
-            return buf;
         }
-        */
 
-        //use this later for obj export too
+        /// <summary>
+        /// Rotates single face UVs.
+        /// </summary>
+        /// <param name="buf"></param>
+        /// <param name="rotations"></param>
+        public void QuadTexRotateTri(List<Vertex> buf, int rotations = 1)
+        {
+            if (buf == null)
+                return;
+
+            for (int i = 0; i < rotations % 3; i++)
+            {
+                SwapUV(buf[0], buf[1]);
+                SwapUV(buf[1], buf[2]);
+            }
+        }
+
+        /// <summary>
+        /// Flips quad UVs
+        /// </summary>
+        /// <param name="buf"></param>
+        public void QuadTexFlip(List<Vertex> buf)
+        {
+            if (buf == null)
+                return;
+
+            SwapUV(buf[0], buf[1]);
+            SwapUV(buf[2], buf[3]);
+        }
+
+        /// <summary>
+        /// Swaps UVs of 2 given vertices
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        public void SwapUV(Vertex v1, Vertex v2)
+        {
+            var v = v1.uv;
+            v1.uv = v2.uv;
+            v2.uv = v;
+        }
+
+        /// <summary>
+        /// Returns 4 vertices of a quad. -1 for low, 0 1 2 3 for individual med quads.
+        /// </summary>
+        /// <param name="vertexArray"></param>
+        /// <param name="i"></param>
+        /// <returns></returns>
         public List<Vertex> GetVertexListq(List<Vertex> vertexArray, int i)
         {
             try
@@ -354,107 +392,86 @@ namespace CTRFramework
 
                 if (i == -1)
                 {
-                    int[] arrind = new int[] { 0, 1, 2, 3 };
+                    buf.Add(vertexArray[ind2[0, 0]]);
+                    buf.Add(vertexArray[ind2[2, 0]]);
+                    buf.Add(vertexArray[ind2[0, 2]]);
+                    buf.Add(vertexArray[ind2[2, 2]]);
 
-                    for (int j = 0; j < 4; j++)
-                        buf.Add(vertexArray[ind[arrind[j]]]);
-
-                    for (int j = 0; j < 4; j++)
-                    {
+                    for (int j = 0; j < buf.Count; j++)
                         buf[j].uv = texlow.normuv[j];
-                    }
 
                     if (buf.Count != 4)
                     {
                         Helpers.Panic(this, PanicType.Error, "not a quad! " + buf.Count);
-                        //Console.ReadKey();
                     }
 
                     return buf;
                 }
                 else
                 {
-                    int[] arrind;
-                    int[] uvinds;
-
-                    uvinds = GetUVIndices2(1, 2, 3, 4);
-
-
-                    switch (faceFlags[i].rotateFlipType)
-                    {
-                        case RotateFlipType.None: uvinds = GetUVIndices2(1, 2, 3, 4); break;
-                        case RotateFlipType.Rotate90: uvinds = GetUVIndices2(3, 1, 4, 2); break;
-                        case RotateFlipType.Rotate180: uvinds = GetUVIndices2(4, 3, 2, 1); break;
-                        case RotateFlipType.Rotate270: uvinds = GetUVIndices2(2, 4, 1, 3); break;
-                        case RotateFlipType.Flip: uvinds = GetUVIndices2(2, 1, 4, 3); break;
-                        case RotateFlipType.FlipRotate90: uvinds = GetUVIndices2(4, 2, 3, 1); break;
-                        case RotateFlipType.FlipRotate180: uvinds = GetUVIndices2(3, 4, 1, 2); break;
-                        case RotateFlipType.FlipRotate270: uvinds = GetUVIndices2(1, 3, 2, 4); break;
-                        default: throw new Exception("Impossible rotatefliptype.");
-                    }
-
-
-                    switch (faceFlags[i].faceMode)
-                    {
-                        case FaceMode.SingleUV1:
-                            {
-                                uvinds = new int[] { uvinds[2], uvinds[0], uvinds[3], uvinds[1] };
-                                //uvinds = new int[] { uvinds[0], uvinds[0], uvinds[0], uvinds[0] };
-                                break;
-                            }
-
-                        case FaceMode.SingleUV2:
-                            {
-                                uvinds = new int[] { uvinds[1], uvinds[2], uvinds[3], uvinds[0] };
-                                //uvinds = new int[] { uvinds[0], uvinds[0], uvinds[0], uvinds[0] };
-                                break;
-                            }
-                    }
-
-
-
                     if (i > 4 || i < 0)
                     {
                         Helpers.Panic(this, PanicType.Error, "Can't have more than 4 quads in a quad block.");
                         return null;
                     }
 
-                    arrind = FaceIndices[i];
+                    //get xy based on index as follows, used to shift quad indices
+                    //01
+                    //23
 
-                    for (int j = 0; j < 4; j++)
-                    {
-                        buf.Add(vertexArray[ind[arrind[j]]]);
-                    }
+                    byte x = (byte)i;
+                    byte y = (byte)(i >> 1);
 
-                    /*
-                    for (int j = 0; j < 4; j++)
-                    {
-                        buf[j].color = new Vector4b(
-                            (byte)(255 / 4 * j),
-                            (byte)(255 / 4 * j),
-                            (byte)(255 / 4 * j), 
-                            0);
-                    }
-                    */
+                    x &= 1;
+                    y &= 1;
 
+                    //get vertices
+                    buf.Add(vertexArray[ind2[x + 0, y + 0]].Clone());
+                    buf.Add(vertexArray[ind2[x + 1, y + 0]].Clone());
+                    buf.Add(vertexArray[ind2[x + 0, y + 1]].Clone());
+                    buf.Add(vertexArray[ind2[x + 1, y + 1]].Clone());
 
+                    //assign UVs, move to ctrtex maybe
                     for (int j = 0; j < 4; j++)
                     {
                         if (tex[i] != null)
                         {
                             if (!tex[i].isAnimated)
                             {
-                                buf[j].uv = tex[i].lod2.normuv[uvinds[j] - 1];
+                                buf[j].uv = tex[i].lod2.normuv[j];
                             }
                             else
                             {
-                                buf[j].uv = tex[i].animframes[1].normuv[uvinds[j] - 1];
+                                buf[j].uv = tex[i].animframes[1].normuv[j];
                             }
                         }
                         else
                         {
                             buf[j].uv = new Vector2(0, 0);//new Vector2b((byte)((j & 3) >> 1), (byte)(j & 1));
                         }
+                    }
+
+                   //handle texture rotations
+                    switch (faceFlags[i].Rotation)
+                    {
+                        case RotateFlipType.None: break;
+                        case RotateFlipType.Rotate90: QuadTexRotate(buf, 1); break; //3142
+                        case RotateFlipType.Rotate180: QuadTexRotate(buf, 2); break;
+                        case RotateFlipType.Rotate270: QuadTexRotate(buf, 3); break;
+                        case RotateFlipType.FlipRotate270: QuadTexFlip(buf); QuadTexRotate(buf, 3); break;
+                        case RotateFlipType.FlipRotate180: QuadTexFlip(buf); QuadTexRotate(buf, 2); break;
+                        case RotateFlipType.FlipRotate90: QuadTexFlip(buf); QuadTexRotate(buf, 1); break; //3142
+                        case RotateFlipType.Flip: QuadTexFlip(buf); break;
+                        default: throw new Exception("Impossible QuadRotation.");
+                    }
+                    
+                    //handle degenerated quads
+                    switch (faceFlags[i].faceMode)
+                    {
+                        case FaceMode.Normal: break;
+                        case FaceMode.SingleUV1: QuadTexRotateTri(buf, 2); break;
+                        case FaceMode.SingleUV2: QuadTexRotateTri(buf); break;
+                        case FaceMode.Unknown: Helpers.Panic(this, PanicType.Assume, $"quad {id}: both quad flags set"); break;
                     }
 
                     if (buf.Count != 4)
@@ -466,21 +483,9 @@ namespace CTRFramework
             catch (Exception ex)
             {
                 Helpers.Panic(this, PanicType.Error, "Can't export quad to MG. Give null.\r\n" + this.id.ToString("X8") + " " + this.BaseAddress.ToString("X8") + "\r\n" + ex.Message);
-                //Console.ReadKey();
                 return null;
             }
         }
-
-
-        public int[] GetUVIndices2(int x, int y, int z, int w)
-        {
-            return new int[]
-            {
-                x, y, z, w
-            };
-        }
-
-        bool objSaveQuads = true;
 
         public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b)
         {
@@ -503,9 +508,7 @@ namespace CTRFramework
 
                         sb.AppendLine("\r\nusemtl " + (ptrTexLow != UIntPtr.Zero ? texlow.Tag : "default"));
 
-
-
-                        if (objSaveQuads)
+                        if (OBJ.SaveQuads)
                         {
                             sb.Append(OBJ.ASCIIQuad("f", a, b));
                         }
@@ -524,12 +527,7 @@ namespace CTRFramework
                     {
                         for (int i = 0; i < 4; i++)
                         {
-                            //sb.AppendLine(MidQuads[i].ToObj(ref a));
-
-
                             List<Vertex> list = GetVertexListq(v, i);
-
-                            //List<Vertex> subdiv = Helpers.Subdivide(list);
 
                             //this normally shouldn't be null
                             if (list != null)
@@ -551,17 +549,19 @@ namespace CTRFramework
                                 sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? (tex[i] != null ? tex[i].lod2.Tag : "default") : "default"));
                                 //sb.AppendLine($"\r\nusemtl {midunk.ToString("X2")}");
 
-                                
-                                if (objSaveQuads)
+
+                                if (OBJ.SaveQuads)
                                 {
                                     sb.Append(OBJ.ASCIIQuad("f", a, b));
                                 }
                                 else
                                 {
                                     sb.AppendLine(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
-                                    sb.AppendLine(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
+
+                                    if (faceFlags[i].faceMode == FaceMode.Normal)
+                                        sb.AppendLine(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
                                 }
-                                
+
 
                                 sb.AppendLine();
 
@@ -591,123 +591,6 @@ namespace CTRFramework
                 vertices[index].MorphColor = color;
             }
         }
-
-        /*
-        public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendFormat("g {0}\r\n", (quadFlags.HasFlag(QuadFlags.InvisibleTriggers) ? "invisible" : "visible"));
-            sb.AppendFormat("o piece_{0}\r\n\r\n", id.ToString("X4"));
-
-            int vcnt;
-
-            switch (detail)
-            {
-                case Detail.Low: vcnt = 4; break;
-                case Detail.Med: vcnt = 9; break;
-                default: vcnt = 0; break;
-            }
-
-            for (int i = 0; i < vcnt; i++)
-            {
-                sb.AppendLine(v[ind[i]].ToString());
-            }
-
-            sb.AppendLine();
-
-
-
-
-            //if (!quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
-            {
-
-                switch (detail)
-                {
-                    case Detail.Low:
-                        {
-                            sb.AppendLine(texlow.ToObj());
-
-                            sb.Append(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
-                            sb.Append(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
-
-                            b += 4;
-
-                            break;
-                        }
-
-                    case Detail.Med:
-                        {
-                            for (int i = 0; i < 4; i++)
-                            {
-                                if (tex.Count == 4)
-                                {
-                                    sb.AppendLine(tex[i].lod2.ToObj());
-                                }
-                                else
-                                {
-                                    sb.AppendLine("usemtl default");
-                                }
-
-                                if (quadFlags.HasFlag(QuadFlags.InvisibleTriggers))
-                                    sb.AppendLine("usemtl default");
-
-                                switch (faceFlags[i].rotateFlipType)
-                                {
-                                    case RotateFlipType.None: uvinds = GetUVIndices(1, 2, 3, 4); break;
-                                    case RotateFlipType.Rotate90: uvinds = GetUVIndices(3, 1, 4, 2); break;
-                                    case RotateFlipType.Rotate180: uvinds = GetUVIndices(4, 3, 2, 1); break;
-                                    case RotateFlipType.Rotate270: uvinds = GetUVIndices(2, 4, 1, 3); break;
-                                    case RotateFlipType.Flip: uvinds = GetUVIndices(2, 1, 4, 3); break;
-                                    case RotateFlipType.FlipRotate90: uvinds = GetUVIndices(4, 2, 3, 1); break;
-                                    case RotateFlipType.FlipRotate180: uvinds = GetUVIndices(3, 4, 1, 2); break;
-                                    case RotateFlipType.FlipRotate270: uvinds = GetUVIndices(1, 3, 2, 4); break;
-                                }
-
-                                switch (faceFlags[i].faceMode)
-                                {
-                                    case FaceMode.Normal:
-                                        {
-                                            sb.Append(OBJ.ASCIIFace("f", a, b, inds[i * 6], inds[i * 6 + 1], inds[i * 6 + 2], uvinds[0], uvinds[1], uvinds[2])); // 1 3 2 | 0 2 1
-                                            sb.Append(OBJ.ASCIIFace("f", a, b, inds[i * 6 + 3], inds[i * 6 + 4], inds[i * 6 + 5], uvinds[3], uvinds[4], uvinds[5])); // 2 3 4 | 1 2 3
-                                            break;
-                                        }
-                                    case FaceMode.SingleUV1:
-                                        {
-                                            sb.Append(OBJ.ASCIIFace("f", a, b, inds[i * 6], inds[i * 6 + 1], inds[i * 6 + 2], uvinds[1], uvinds[2], uvinds[0])); // 1 3 2 | 0 2 1
-                                            break;
-                                        }
-
-                                    case FaceMode.SingleUV2:
-                                        {
-                                            sb.Append(OBJ.ASCIIFace("f", a, b, inds[i * 6], inds[i * 6 + 1], inds[i * 6 + 2], uvinds[2], uvinds[0], uvinds[1]));
-                                            break;
-                                        }
-                                    case FaceMode.Unknown:
-                                        {
-                                            //should never happen i guess
-                                            Helpers.Panic(this, "FaceMode: both flags are set!");
-                                            Console.ReadKey();
-                                            break;
-                                        }
-                                }
-
-                                sb.AppendLine();
-
-                                if (tex.Count == 4) b += 4;
-                            }
-
-                            break;
-                        }
-                }
-
-            }
-                
-                a += vcnt;
-            
-            return sb.ToString();
-        }
-        */
 
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)

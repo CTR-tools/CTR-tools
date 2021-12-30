@@ -1382,7 +1382,7 @@ namespace ctrviewer
             //Samplers.SetToDevice(graphics, EngineRasterizer.Default);
 
             //render level mesh depending on lod
-            foreach (MGLevel qb in (eng.Settings.UseLowLod ? eng.MeshMed : eng.MeshHigh))
+            foreach (MGLevel qb in (eng.Settings.UseLowLod ? eng.MeshMed : eng.MeshLow))
                 qb.Draw(graphics, effect, alphaTestEffect);
 
             //maybe render visdata wireboxes

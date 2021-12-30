@@ -14,6 +14,18 @@ namespace CTRFramework
         public Vector4b color_target;
         public Vector2 uv; //not used by CTR, added for convenience
 
+        public Vertex Clone()
+        {
+            return new Vertex()
+            {
+                Position = Position,
+                Color = Color,
+                MorphColor = MorphColor,
+                color_target = color_target,
+                uv = uv
+            };
+        }
+
         public Vertex()
         {
         }
