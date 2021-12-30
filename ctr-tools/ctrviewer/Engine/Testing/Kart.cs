@@ -210,6 +210,9 @@ namespace ctrviewer.Engine.Testing
             return false;
         }
 
+        float limitMax = Int16.MaxValue / 100f;
+        float limitMin = Int16.MinValue / 100f;
+
         public void Update(GameTime gameTime, List<CtrScene> scenes)
         {
             oldPosition = Position;
@@ -265,6 +268,13 @@ namespace ctrviewer.Engine.Testing
 
             Powers[PowerType.Gravity].Enabled = true;
             Powers[PowerType.GodZ].Enabled = false;
+
+            if (Position.X > limitMax) Position.X = limitMin;
+            if (Position.Y > limitMax) Position.Y = limitMin;
+            if (Position.Z > limitMax) Position.Z = limitMin;
+            if (Position.X < limitMin) Position.X = limitMax;
+            if (Position.Y < limitMin) Position.Y = limitMax;
+            if (Position.Z < limitMin) Position.Z = limitMax;
         }
     }
 }
