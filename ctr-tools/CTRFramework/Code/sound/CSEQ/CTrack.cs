@@ -95,7 +95,7 @@ namespace CTRFramework.Sound.CSeq
             }
 
             if (CSEQ.UseSampleVolumeForTracks && !CSEQ.IgnoreVolume)
-                me.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, (byte)(seq.samplesReverb[instrument].Volume * 128)));
+                me.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, (byte)(seq.samplesReverb[instrument].Volume * 127)));
 
             foreach (var c in cseqEventCollection)
             {

@@ -1,3 +1,4 @@
+
 {
 	"midi": {
 		"canyon": {
@@ -17,12 +18,12 @@
 				{ "key": 46, "title": "Open Hi-Hat" },
 				{ "key": 39, "title": "Clap" },
 				{ "key": 47, "title": "Tom 1" },
-				{ "key": 45, "title": "Tom 2"  },
-				{ "key": 43, "title": "Tom 3"  },
-				{ "key": 41, "title": "Tom 4"  },
-				{ "key": 64, "title": "Bonga 1"  },
-				{ "key": 61, "title": "Bonga 2"  },
-				{ "key": 36, "title": "Bonga Bass"  }
+				{ "key": 45, "title": "Tom 2" },
+				{ "key": 43, "title": "Tom 3" },
+				{ "key": 41, "title": "Tom 4" },
+				{ "key": 64, "title": "Bonga 1" },
+				{ "key": 61, "title": "Bonga 2" },
+				{ "key": 36, "title": "Bonga Bass" }
 			]
 		},
 		"mines": {
@@ -432,7 +433,7 @@
 		},
 		"north_bowl": {
 			"long": [
-			    { "midi": 7, "pitch": -12, "title": "Clavi" },
+				{ "midi": 7, "pitch": -12, "title": "Clavi" },
 				{ "midi": 30, "title": "Heavy Guitar" },
 				{ "midi": 33, "pitch": -24, "title": "Bass" }
 			],
@@ -449,7 +450,25 @@
 		},
 		"rocky_road": {
 			"long": [
-			    { "midi": 36, "pitch": -12, "title": "Guitar" },
+				{ "midi": 36, "pitch": -12, "title": "Guitar" },
+				{ "midi": 30, "title": "Heavy Guitar" },
+				{ "midi": 33, "pitch": -24, "title": "Bass" }
+			],
+			"short": [
+				{ "key": 0, "title": "Loop1" },
+				{ "key": 1, "title": "Loop2" },
+				{ "key": 2, "title": "Loop3" },
+				{ "key": 3, "title": "Loop4" },
+				{ "key": 42, "title": "Closed Hi-Hat" },
+				{ "key": 46, "title": "Open Hi-Hat" },
+				{ "key": 35, "title": "Bass Drum" },
+				{ "key": 40, "title": "Electric Snare Drum" },
+				{ "key": 38, "title": "Acoustic SnareDrum" }
+			]
+		},
+		"credits": {
+			"long": [
+				{ "midi": 36, "pitch": -12, "title": "Guitar" },
 				{ "midi": 30, "title": "Heavy Guitar" },
 				{ "midi": 33, "pitch": -24, "title": "Bass" }
 			],
@@ -551,8 +570,8 @@
 				{ "midi": 12, "pitch": 12, "title": "Marimba" },
 				{ "midi": 29, "pitch": -24, "title": "Over Guitar" },
 				{ "midi": 56, "title": "Trumpet" },
-				{ "midi": 118, "pitch": 24, "title": "Drum" },  
-				{ "midi": 32, "pitch": -12, "title": "Acoustic Bass" },  
+				{ "midi": 118, "pitch": 24, "title": "Drum" },
+				{ "midi": 32, "pitch": -12, "title": "Acoustic Bass" },
 				{ "midi": 33, "pitch": -12, "title": "Electric Bass" },
 				{ "midi": 61, "pitch": 12, "title": "Brass" },
 				{ "midi": 61, "title": "Brass" }
@@ -567,6 +586,27 @@
 				{ "key": 51, "title": "Ride Cymbal" },
 				{ "key": 78, "title": "Introstringsample" },
 				{ "key": 35, "title": "DrumLoop" }
+			]
+		},
+		"cutscenes": {
+			"long": [
+				{ "midi": 45, "pitch": 0, "title": "Harp" },
+				{ "midi": 22, "pitch": 0, "title": "Harmonica" },
+				{ "midi": 2, "pitch": 0, "title": "Distorted piano" },
+				{ "midi": 39, "pitch": -24, "title": "Bass rythm" },
+				{ "midi": 122, "pitch": -24, "title": "intro whoosh" },
+				{ "midi": 86, "pitch": -12, "title": "Bass melody" },
+				{ "midi": 34, "pitch": -12, "title": "Electric Bass" },
+				{ "midi": 28, "pitch": 0, "title": "Pluck delay" },
+				{ "midi": 12, "pitch": 0, "title": "Marimba" }
+			],
+			"short": [
+				{ "key": 49, "title": "Crash cymbal" },
+				{ "key": 38, "title": "Snare" },
+				{ "key": 44, "title": "Blunt Hi-Hat" },
+				{ "key": 53, "title": "China" },
+				{ "key": 36, "title": "BassDrum" },
+				{ "key": 54, "title": "Tambourine" }
 			]
 		}
 	}
