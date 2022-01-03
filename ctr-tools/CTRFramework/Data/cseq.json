@@ -597,7 +597,7 @@
 				{ "midi": 122, "pitch": -24, "title": "intro whoosh" },
 				{ "midi": 86, "pitch": -12, "title": "Bass melody" },
 				{ "midi": 34, "pitch": -12, "title": "Electric Bass" },
-				{ "midi": 28, "pitch": 0, "title": "Pluck delay" },
+				{ "midi": 28, "pitch": -12, "title": "Pluck delay" },
 				{ "midi": 12, "pitch": 0, "title": "Marimba" }
 			],
 			"short": [
