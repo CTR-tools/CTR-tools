@@ -14,6 +14,8 @@ namespace CTRTools.Controls
 {
     public partial class CseqControl : UserControl
     {
+        public string samplePath = "";
+
         public CSEQ seq;
 
         //??
@@ -23,7 +25,7 @@ namespace CTRTools.Controls
         public CseqControl()
         {
             InitializeComponent();
-
+            samplePath = Properties.Settings.Default.samplePath;
             LoadMeta();
         }
 
@@ -36,10 +38,10 @@ namespace CTRTools.Controls
             else
             {
                 metaInstList.Items.Clear();
-                comboBox1.Items.Clear();
+                patchBox.Items.Clear();
 
                 metaInstList.Items.AddRange(Meta.GetPatchList().ToArray());
-                comboBox1.Items.AddRange(Meta.GetPatchList().ToArray());
+                patchBox.Items.AddRange(Meta.GetPatchList().ToArray());
             }
 
             Howl.samplenames = Meta.LoadNumberedList("samplenames.txt");
@@ -53,10 +55,10 @@ namespace CTRTools.Controls
 
             string name = Path.GetFileNameWithoutExtension(filename);
 
-            for (int i = 0; i < comboBox1.Items.Count; i++)
+            for (int i = 0; i < patchBox.Items.Count; i++)
             {
-                if (name.Contains(comboBox1.Items[i].ToString()))
-                    comboBox1.SelectedIndex = i;
+                if (name.Contains(patchBox.Items[i].ToString()))
+                    patchBox.SelectedIndex = i;
             }
 
             try
@@ -70,46 +72,42 @@ namespace CTRTools.Controls
             }
         }
 
-        private void FillUI(string fn)
+        private void FillUI(string filename)
         {
+            if (seq == null) return;
+
             instrumentList.Nodes.Clear();
             sequenceBox.Items.Clear();
             trackBox.Items.Clear();
-            textBox2.Text = "";
 
-            loadedfile = Path.GetFileName(fn);
-            this.Text = "CTR CSEQ - " + loadedfile;
+            seqInfoBox.Text = "";
 
-            textBox2.Text = "hi";//seq.header.ToString();
+            loadedfile = Path.GetFileNameWithoutExtension(filename);
+            this.Text = "CTR CSEQ - " + filename;
 
-            int i = 0;
+            seqInfoBox.Text = seq.ToString();
 
-            foreach (Song s in seq.Songs)
-            {
-                sequenceBox.Items.Add("Sequence_" + i.ToString("X2"));
-                i++;
-            }
+            foreach (var song in seq.Songs)
+                sequenceBox.Items.Add(song);//"Sequence_" + i.ToString("X2"));
 
-            TreeNode tn = new TreeNode("SampleDef");
-
-            foreach (var sd in seq.samples)
-            {
-                TreeNode tn1 = new TreeNode(sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""));
-                tn.Nodes.Add(tn1);
-            }
-
-            TreeNode tn2 = new TreeNode("SampleDefReverb");
-
-            foreach (var sd in seq.samplesReverb)
-            {
-                TreeNode tn3 = new TreeNode(sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""));
-                tn2.Nodes.Add(tn3);
-            }
-
-            instrumentList.Nodes.Add(tn2);
-            instrumentList.Nodes.Add(tn);
+            PopulateInstrumentsNode(instrumentList, "Instruments", seq.samplesReverb);
+            PopulateInstrumentsNode(instrumentList, "Percussion", seq.samples);
 
             instrumentList.ExpandAll();
+        }
+
+        private void PopulateInstrumentsNode<T>(TreeView root, string name, List<T> samples) where T : Instrument
+        {
+            TreeNode instruments = new TreeNode(name);
+
+            foreach (var sample in samples)
+            {
+                TreeNode node = new TreeNode(sample.Tag + (Howl.samplenames.ContainsKey(sample.SampleID) ? "_" + Howl.samplenames[sample.SampleID] : ""));
+                node.Tag = sample;
+                instruments.Nodes.Add(node);
+            }
+
+            root.Nodes.Add(instruments);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -120,29 +118,21 @@ namespace CTRTools.Controls
 
         private void sequenceBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (sequenceBox.SelectedItem == null) return;
+
             trackBox.Items.Clear();
 
-            int i = 0;
-
-            Song song = seq.Songs[sequenceBox.SelectedIndex];
-
-            foreach (var track in song.tracks)
-            {
-                trackBox.Items.Add(track.Name);
-                i++;
-            }
+            foreach (var track in ((Song)sequenceBox.SelectedItem).tracks)
+                trackBox.Items.Add(track);
 
             tabControl1.SelectedIndex = 1;
         }
 
         private void trackBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int x = sequenceBox.SelectedIndex;
-            int y = trackBox.SelectedIndex;
+            if (trackBox.SelectedItem == null) return;
 
-            if (x != -1 && y != -1)
-                this.trackInfoBox.Text = seq.Songs[x].tracks[y].ToString();
-
+            trackInfoBox.Text = ((CTrack)trackBox.SelectedItem).ListCommands();
             tabControl1.SelectedIndex = 0;
         }
 
@@ -162,21 +152,19 @@ namespace CTRTools.Controls
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-            if (files.Length > 0)
+            if (files.Length == 0) return;
+
+            switch (Path.GetExtension(files[0]))
             {
-                switch (Path.GetExtension(files[0]))
-                {
-                    case ".cseq": LoadCseq(files[0]); break;
-                    case ".bnk": LoadBank(files[0]); tabControl1.SelectedIndex = 3; break;
-                    default: MessageBox.Show("Unsupported file."); break;
-                }
+                case ".cseq": LoadCseq(files[0]); break;
+                case ".bnk": LoadBank(files[0]); tabControl1.SelectedIndex = 3; break;
+                default: MessageBox.Show("Unsupported file."); break;
             }
         }
 
         private void exportSEQToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (seq != null)
-                seq.Save(Path.Combine(Meta.BasePath, "test.cseq"));
+            seq?.Save(Path.Combine(Meta.BasePath, "test.cseq"));
         }
 
         Bank bnk = new Bank();
@@ -308,7 +296,7 @@ namespace CTRTools.Controls
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CSEQ.PatchName = comboBox1.Items[comboBox1.SelectedIndex].ToString();
+            CSEQ.PatchName = patchBox.Items[patchBox.SelectedIndex].ToString();
         }
 
         private void ignoreOriginalVolumeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -316,38 +304,49 @@ namespace CTRTools.Controls
             CSEQ.IgnoreVolume = ignoreOriginalVolumeToolStripMenuItem.Checked;
         }
 
+        AudioFileReader waveFile;
+        WaveOut waveOut;
+
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            AudioFileReader wave = null;
-            WaveOut outputSound = null;
-            string x = "";
+
+            string filename = "";
 
             if (instrumentList.SelectedNode.Parent != null)
             {
                 if (instrumentList.SelectedNode.Parent.Index == 1)
                 {
-                    var sd = seq.samples[instrumentList.SelectedNode.Index];
+                    var sd = instrumentList.SelectedNode.Tag as Instrument;
                     instrumentInfo.SelectedObject = sd;
-                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : "") + ".wav";
+                    filename = Path.Combine(samplePath, $"{sd.ID}{((Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""))}.wav");
                 }
 
                 if (instrumentList.SelectedNode.Parent.Index == 0)
                 {
                     var sd = seq.samplesReverb[instrumentList.SelectedNode.Index];
                     instrumentInfo.SelectedObject = sd;
-                    x = seq.path + "\\" + seq.name + "\\" + sd.Tag + (Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : "") + ".wav";
+                    filename = Path.Combine(samplePath, $"{sd.ID}{((Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""))}.wav");
                 }
 
 
-                if (File.Exists(x))
+                if (File.Exists(filename))
                 {
                     try
                     {
-                        wave = new NAudio.Wave.AudioFileReader(x);
+                        if (waveOut != null)
+                        {
+                            if (waveOut.PlaybackState == PlaybackState.Playing)
+                                waveOut.Stop();
 
-                        outputSound = new WaveOut();
-                        outputSound.Init(wave);
-                        outputSound.Play();
+                            waveOut.Dispose();
+                        }
+
+                        waveOut = new WaveOut();
+
+                        waveFile = new AudioFileReader(filename);
+
+                        waveOut.Init(waveFile);
+                        waveOut.Play();
                     }
                     catch (Exception ex)
                     {
@@ -493,6 +492,27 @@ namespace CTRTools.Controls
 
             if (sfd.ShowDialog() == DialogResult.OK)
                 seq.Save(sfd.FileName);
+        }
+
+        private void setSamplePathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+            if (seq != null)
+            {
+                fbd.RootFolder = Environment.SpecialFolder.Desktop;
+                fbd.SelectedPath = seq.path;
+            }
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+                samplePath = fbd.SelectedPath;
+
+            Properties.Settings.Default.samplePath = samplePath;
+        }
+
+        private void trackInfoBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -17,13 +17,15 @@ namespace CTRFramework.Sound
         public ushort SampleID { get; set; }
         protected short _always0;
 
-        public short unknownFF80;
-        public byte reverb;
-        public byte reverb2;
+        public short unknownFF80 { get; set; }
+        public byte reverb { get; set; }
+        public byte reverb2 { get; set; }
 
         public MetaInst metaInst { get; set; }
 
-        public string Tag => SampleID.ToString("X4") + "_" + Frequency;
+        public string Tag => $"{ID}_{Frequency}";
+        public string ID => $"{SampleID.ToString("0000")}_{SampleID.ToString("X4")}";
+
         public int Frequency
         {
             get { return (int)Math.Round(_freq / 4096f * 44100f); }

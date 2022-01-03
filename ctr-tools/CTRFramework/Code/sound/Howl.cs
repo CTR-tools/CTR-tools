@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Xml;
+using System.Text;
 
 namespace CTRFramework.Sound
 {
@@ -271,6 +272,17 @@ namespace CTRFramework.Sound
 
         public void ExportCSEQ(string path, BinaryReaderEx br)
         {
+            StringBuilder sb = new StringBuilder();
+
+            int x = 0;
+            foreach (var sample in samplesSfx)
+            {
+                sb.AppendLine($"{x.ToString("0000")}_{x.ToString("X4")}={Howl.GetName(sample.SampleID, samplenames)}");
+                x++;
+            }
+
+            Helpers.WriteToFile(Path.Combine(path, "test.txt"), sb.ToString());
+
             CSEQ.PatchMidi = true;
             CSEQ.IgnoreVolume = true;
 

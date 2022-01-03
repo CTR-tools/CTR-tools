@@ -114,7 +114,7 @@ namespace CTRFramework.Sound.CSeq
                 cseqEvent.Write(bw);
         }
 
-        public override string ToString()
+        public string ListCommands()
         {
             StringBuilder sb = new StringBuilder();
 
@@ -125,5 +125,7 @@ namespace CTRFramework.Sound.CSeq
 
             return sb.ToString();
         }
+
+        public override string ToString() => Name;
     }
 }

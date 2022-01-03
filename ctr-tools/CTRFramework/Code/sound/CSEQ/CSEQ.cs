@@ -51,7 +51,11 @@ namespace CTRFramework.Sound.CSeq
         {
             using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                return FromReader(br);
+                var seq = CSEQ.FromReader(br);
+                seq.path = Path.GetDirectoryName(filename);
+                seq.name = Path.GetFileNameWithoutExtension(filename);
+
+                return seq;
             }
         }
         #endregion
@@ -288,5 +292,7 @@ namespace CTRFramework.Sound.CSeq
         {
             return samplesReverb[ct.instrument].SampleID;
         }
+
+        public override string ToString() => $"Songs: {Songs.Count}";
     }
 }

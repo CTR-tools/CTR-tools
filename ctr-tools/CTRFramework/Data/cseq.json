@@ -604,9 +604,9 @@
 				{ "key": 49, "title": "Crash cymbal" },
 				{ "key": 38, "title": "Snare" },
 				{ "key": 44, "title": "Blunt Hi-Hat" },
-				{ "key": 53, "title": "China" },
+				{ "key": 46, "title": "Open hi-hat" },
 				{ "key": 36, "title": "BassDrum" },
-				{ "key": 54, "title": "Tambourine" }
+				{ "key": 55, "title": "Tambourine" }
 			]
 		}
 	}

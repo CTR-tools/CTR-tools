@@ -6,7 +6,7 @@
     <PublishReadyToRun>true</PublishReadyToRun>
     <TieredCompilation>true</TieredCompilation>
     <PublishSingleFile>true</PublishSingleFile>
-    <UseWindowsForms>False</UseWindowsForms>
+    <UseWindowsForms>True</UseWindowsForms>
     <Platforms>x64;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup>

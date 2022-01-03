@@ -34,6 +34,7 @@ namespace CTRTools.Controls
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportSEQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importMIDIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,13 +53,14 @@ namespace CTRTools.Controls
             this.testJsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alistAlBankSamplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadMIDIMappingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setSamplePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tutorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.patchBox = new System.Windows.Forms.ComboBox();
             this.trackBox = new System.Windows.Forms.ListBox();
             this.sequenceBox = new System.Windows.Forms.ListBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.seqInfoBox = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.trackInfoBox = new System.Windows.Forms.TextBox();
@@ -76,7 +78,6 @@ namespace CTRTools.Controls
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -115,34 +116,41 @@ namespace CTRTools.Controls
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // exportSEQToolStripMenuItem
             // 
             this.exportSEQToolStripMenuItem.Name = "exportSEQToolStripMenuItem";
-            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exportSEQToolStripMenuItem.Text = "Save";
             this.exportSEQToolStripMenuItem.Click += new System.EventHandler(this.exportSEQToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.saveAsToolStripMenuItem.Text = "Save as...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // importMIDIToolStripMenuItem
             // 
             this.importMIDIToolStripMenuItem.Name = "importMIDIToolStripMenuItem";
-            this.importMIDIToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.importMIDIToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.importMIDIToolStripMenuItem.Text = "Import MIDI";
             this.importMIDIToolStripMenuItem.Click += new System.EventHandler(this.importMIDIToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -158,7 +166,8 @@ namespace CTRTools.Controls
             this.defaultSampleRateToolStripMenuItem,
             this.testJsonToolStripMenuItem,
             this.alistAlBankSamplesToolStripMenuItem,
-            this.reloadMIDIMappingsToolStripMenuItem});
+            this.reloadMIDIMappingsToolStripMenuItem,
+            this.setSamplePathToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
@@ -278,6 +287,13 @@ namespace CTRTools.Controls
             this.reloadMIDIMappingsToolStripMenuItem.ToolTipText = "Might be useful if you\'re editing JSON file.";
             this.reloadMIDIMappingsToolStripMenuItem.Click += new System.EventHandler(this.reloadMIDIMappingsToolStripMenuItem_Click);
             // 
+            // setSamplePathToolStripMenuItem
+            // 
+            this.setSamplePathToolStripMenuItem.Name = "setSamplePathToolStripMenuItem";
+            this.setSamplePathToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
+            this.setSamplePathToolStripMenuItem.Text = "Set sample path";
+            this.setSamplePathToolStripMenuItem.Click += new System.EventHandler(this.setSamplePathToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -298,10 +314,10 @@ namespace CTRTools.Controls
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Controls.Add(this.patchBox);
             this.groupBox1.Controls.Add(this.trackBox);
             this.groupBox1.Controls.Add(this.sequenceBox);
-            this.groupBox1.Controls.Add(this.textBox2);
+            this.groupBox1.Controls.Add(this.seqInfoBox);
             this.groupBox1.Location = new System.Drawing.Point(3, 27);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(142, 450);
@@ -309,16 +325,16 @@ namespace CTRTools.Controls
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "SEQ Info";
             // 
-            // comboBox1
+            // patchBox
             // 
-            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(5, 422);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(131, 21);
-            this.comboBox1.TabIndex = 5;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.patchBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.patchBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.patchBox.FormattingEnabled = true;
+            this.patchBox.Location = new System.Drawing.Point(5, 422);
+            this.patchBox.Name = "patchBox";
+            this.patchBox.Size = new System.Drawing.Size(131, 21);
+            this.patchBox.TabIndex = 5;
+            this.patchBox.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // trackBox
             // 
@@ -342,15 +358,15 @@ namespace CTRTools.Controls
             this.sequenceBox.SelectedIndexChanged += new System.EventHandler(this.sequenceBox_SelectedIndexChanged);
             this.sequenceBox.DoubleClick += new System.EventHandler(this.sequenceBox_DoubleClick);
             // 
-            // textBox2
+            // seqInfoBox
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.seqInfoBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(6, 19);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(130, 112);
-            this.textBox2.TabIndex = 0;
+            this.seqInfoBox.Location = new System.Drawing.Point(6, 19);
+            this.seqInfoBox.Multiline = true;
+            this.seqInfoBox.Name = "seqInfoBox";
+            this.seqInfoBox.Size = new System.Drawing.Size(130, 112);
+            this.seqInfoBox.TabIndex = 0;
             // 
             // tabControl1
             // 
@@ -389,6 +405,7 @@ namespace CTRTools.Controls
             this.trackInfoBox.Size = new System.Drawing.Size(472, 418);
             this.trackInfoBox.TabIndex = 5;
             this.trackInfoBox.Text = "  ";
+            this.trackInfoBox.TextChanged += new System.EventHandler(this.trackInfoBox_TextChanged);
             // 
             // tabPage2
             // 
@@ -531,13 +548,6 @@ namespace CTRTools.Controls
             // 
             this.sfd.Filter = "MIDI File (*.mid)|*.mid";
             // 
-            // saveAsToolStripMenuItem
-            // 
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.saveAsToolStripMenuItem.Text = "Save as...";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
-            // 
             // CseqControl
             // 
             this.AllowDrop = true;
@@ -573,7 +583,7 @@ namespace CTRTools.Controls
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem openToolStripMenuItem;
         private GroupBox groupBox1;
-        private TextBox textBox2;
+        private TextBox seqInfoBox;
         private ToolStripMenuItem exitToolStripMenuItem;
         private ListBox trackBox;
         private ListBox sequenceBox;
@@ -596,7 +606,7 @@ namespace CTRTools.Controls
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem testJsonToolStripMenuItem;
         private ToolStripMenuItem exportSamplesToolStripMenuItem;
-        private ComboBox comboBox1;
+        private ComboBox patchBox;
         private ToolStripMenuItem ignoreOriginalVolumeToolStripMenuItem;
         private PropertyGrid instrumentInfo;
         private TreeView instrumentList;
@@ -616,6 +626,7 @@ namespace CTRTools.Controls
         private SaveFileDialog sfd;
         private ToolStripMenuItem importMIDIToolStripMenuItem;
         private ToolStripMenuItem saveAsToolStripMenuItem;
+        private ToolStripMenuItem setSamplePathToolStripMenuItem;
     }
 }
 

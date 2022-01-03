@@ -85,5 +85,10 @@ namespace CTRTools
         {
             Process.Start("https://discord.gg/56xm9Aj");
         }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.Save();
+        }
     }
 }
