@@ -191,16 +191,33 @@
     </entry>
   </filenums>
 
-  <howl>
-    <entry>
-      <region>NTSC-U</region>
-      <name>NTSC-U release</name>
-      <banks>banknames.txt</banks>
-      <samples>samplenames.txt</samples>
-      <sequences>HOWL</sequences>
-      <md5>269df8e697e879cb2254ff091f7aefc7</md5>
-    </entry>
-    
-  </howl>
+    <howl>
+        <entry>
+            <region>NTSC-U</region>
+            <name>NTSC-U release</name>
+            <banks>banknames.txt</banks>
+            <samples>samplenames.txt</samples>
+            <sequences>HOWL</sequences>
+            <md5>269df8e697e879cb2254ff091f7aefc7</md5>
+        </entry>
+	  
+	    <entry>
+		    <region>PAL</region>
+		    <name>PAL release</name>
+		    <banks>banknames.txt</banks>
+		    <samples>samplenames_pal.txt</samples>
+		    <sequences>HOWL</sequences>
+		    <md5>3d5e358c2750f0b318a9f23676d15782</md5>
+	    </entry>
+
+        <entry>
+            <region>NTSC-J</region>
+            <name>NTSC-J release</name>
+            <banks>banknames.txt</banks>
+            <samples>samplenames_jap.txt</samples>
+            <sequences>HOWL_JAP</sequences>
+            <md5>aeab71ba44ab09c2da4d45dc5467d719</md5>
+        </entry>
+    </howl>
 
 </data>

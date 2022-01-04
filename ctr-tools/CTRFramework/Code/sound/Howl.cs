@@ -251,6 +251,14 @@ namespace CTRFramework.Sound
             }
 
             Console.Write(ToString());
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var bank in Banks)
+                foreach (var sample in bank.samples.Values)
+                    sb.AppendLine($"{sample.ID},{sample.Hash.ToString("X8")}");
+            
+            Helpers.WriteToFile(Path.Combine(Meta.BasePath, "test.txt"), sb.ToString());
         }
 
         public void ExportCSEQ(string path)
@@ -337,7 +345,11 @@ namespace CTRFramework.Sound
                 Helpers.WriteToFile(fn, data);
 
                 CSEQ seq = CSEQ.FromFile(fn);
-                seq.name = seqnames[j];
+                seq.name = $"sequence_{j.ToString("0000")}";
+
+                if (seqnames.ContainsKey(j))
+                    seq.name = seqnames[j];
+
                 CSEQ.PatchName = seq.name;
                 seq.LoadMetaInstruments(seq.name);
                 seq.Songs[0].ExportMIDI(Path.ChangeExtension(fn, ".mid"), seq);

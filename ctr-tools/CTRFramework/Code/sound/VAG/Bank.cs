@@ -2,14 +2,48 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Force.Crc32;
+using System;
 
 namespace CTRFramework.Sound
 {
+    public class Sample
+    {
+        private const uint nullhash = 0xFFFFFFFF;
+
+        public int ID;
+
+        private byte[] _data;
+
+        public byte[] Data {
+            get { return _data;  }
+            set
+            {
+                _data = value;
+                _hash = nullhash;
+            }
+        }
+
+        private uint _hash = nullhash;
+
+        public uint Hash {
+            get
+            {
+                if (_hash != nullhash)
+                    return _hash;
+
+                _hash = BitConverter.ToUInt32(Crc32Algorithm.Create().ComputeHash(Data), 0);
+
+                return _hash;
+            }
+        }
+    }
+
     public class Bank
     {
         public static Dictionary<int, string> banknames = new Dictionary<int, string>();
 
-        public Dictionary<int, byte[]> samples = new Dictionary<int, byte[]>();
+        public Dictionary<int, Sample> samples = new Dictionary<int, Sample>();
 
         public static void ReadNames()
         {
@@ -70,7 +104,7 @@ namespace CTRFramework.Sound
 
                 if (!samples.ContainsKey(info[i]))
                 {
-                    samples.Add(info[i], br.ReadBytes(sample_end - sample_start));
+                    samples.Add(info[i], new Sample() { ID = info[i], Data = br.ReadBytes(sample_end - sample_start) });
                 }
                 else
                 {
@@ -89,14 +123,13 @@ namespace CTRFramework.Sound
             bw.Jump((int)((bw.BaseStream.Position + 2047) >> 11 << 11));
 
             foreach (var sample in samples)
-                bw.Write(sample.Value);
+                bw.Write(sample.Value.Data);
         }
 
         public bool Contains(int key)
         {
             return samples.ContainsKey(key);
         }
-
 
         public void Export(int id, int freq, string path, string path2 = null, string name = null)
         {
@@ -128,14 +161,14 @@ namespace CTRFramework.Sound
 
                 //Console.WriteLine(vagname);
 
-                using (var br = new BinaryReaderEx(new MemoryStream(samples[id])))
+                using (var br = new BinaryReaderEx(new MemoryStream(samples[id].Data)))
                 {
                     VagSample vag = new VagSample();
                     if (freq != -1)
                         vag.sampleFreq = freq;
                     if (Howl.samplenames.ContainsKey(id))
                         vag.SampleName = Howl.samplenames[id];
-                    vag.ReadFrames(br, samples[id].Length);
+                    vag.ReadFrames(br, samples[id].Data.Length);
 
                     vag.Save(vagname);
                     vag.ExportWav(vagname.Replace("vag", "wav")); //lmao
