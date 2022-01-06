@@ -200,14 +200,23 @@
             <sequences>HOWL</sequences>
             <md5>269df8e697e879cb2254ff091f7aefc7</md5>
         </entry>
+
+		<entry>
+			<region>NTSC-U</region>
+			<name>NTSC-U Demo</name>
+			<banks>banknames.txt</banks>
+			<samples>samplenames_usademo.txt</samples>
+			<sequences>HOWL_NTSCDEMO</sequences>
+			<md5>702ac23e8ab5940f32cfc5ab1e8fc913</md5>
+		</entry>
 	  
 	    <entry>
-		    <region>PAL</region>
-		    <name>PAL release</name>
-		    <banks>banknames.txt</banks>
-		    <samples>samplenames_pal.txt</samples>
-		    <sequences>HOWL</sequences>
-		    <md5>3d5e358c2750f0b318a9f23676d15782</md5>
+            <region>PAL</region>
+            <name>PAL release</name>
+            <banks>banknames.txt</banks>
+            <samples>samplenames_pal.txt</samples>
+            <sequences>HOWL</sequences>
+            <md5>3d5e358c2750f0b318a9f23676d15782</md5>
 	    </entry>
 
         <entry>

@@ -233,7 +233,7 @@ namespace CTRFramework.Sound
             foreach (var ptr in ptrBanks)
             {
                 br.Jump(ptr);
-                Banks.Add(new Bank(br));
+                Banks.Add(Bank.FromReader(br));
             }
 
             foreach (var ptr in ptrSeqs)
@@ -243,12 +243,7 @@ namespace CTRFramework.Sound
             }
 
             for (int i = 0; i < Songs.Count; i++)
-            {
-                if (seqnames.ContainsKey(i))
-                    Songs[i].name = seqnames[i];
-                else
-                    Songs[i].name = i.ToString("00");
-            }
+                Songs[i].name = seqnames.ContainsKey(i) ? seqnames[i] : i.ToString("00");
 
             Console.Write(ToString());
 

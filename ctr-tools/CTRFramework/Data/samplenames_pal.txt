@@ -265,7 +265,6 @@
 265=kart_pen_hit
 266=kart_fake_hit
 267=kart_oxide_hit
-268=podium_cortex_laugh
 
 268=podium_cortex_laugh
 269=podium_cortex_laugh2 #check, it was in the other place

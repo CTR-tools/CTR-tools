@@ -356,7 +356,7 @@
 				{ "key": 51, "title": "Ride Cymbal 1" }
 			]
 		},
-		"nitro": {
+		"nitro_court": {
 			"long": [
 				{ "midi": 61, "pitch": -12, "title": "Brass" },
 				{ "midi": 30, "title": "Heavy Guitar" },

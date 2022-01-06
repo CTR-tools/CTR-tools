@@ -1,18 +1,20 @@
 ﻿using CTRFramework.Shared;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 namespace CTRFramework.Sound
 {
-    public class VagSample
+    public class VagSample : IReadWrite
     {
         public static int DefaultSampleRate = 11025;
 
         private string magic = "VAGp";
         private int version = 3;
         private int reserved = 0;
-        public int dataSize => Frames.Count * 16;
-        public int sampleFreq = 11025;
+        public int dataSize => numFrames * 16;
+        public int numFrames => Frames.Count;
+        public int sampleFreq = DefaultSampleRate;
         private int unk1 = 0;
         private int unk2 = 0;
         private int unk3 = 0;
@@ -43,7 +45,7 @@ namespace CTRFramework.Sound
         {
             using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                return VagSample.FromReader(br);
+                return FromReader(br);
             }
         }
 
@@ -102,7 +104,7 @@ namespace CTRFramework.Sound
         /// Writes VAG data to stream using binary writer.
         /// </summary>
         /// <param name="bw">BinaryWriterEx object.</param>
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             //make sure magic string and version are correct
             magic = "VAGp";
@@ -151,7 +153,7 @@ namespace CTRFramework.Sound
                 double s_1 = 0.0;
                 double s_2 = 0.0;
 
-                foreach (VagFrame frame in Frames)
+                foreach (var frame in Frames)
                     wav.Write(frame.GetRawData(ref s_1, ref s_2));
 
                 int streamSize = (int)wav.BaseStream.Position;

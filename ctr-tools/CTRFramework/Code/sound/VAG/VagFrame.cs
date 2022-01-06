@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CTRFramework.Sound
 {
-    public class VagFrame
+    public class VagFrame : IReadWrite
     {
         public byte predict_nr;
         public byte shift_factor;
@@ -98,7 +98,7 @@ namespace CTRFramework.Sound
         /// Writes VAG frame data to stream using binary writer.
         /// </summary>
         /// <param name="bw">Binary writer object.</param>
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             if (data.Length != 14)
                 throw new Exception("Wrong VAG frame data length.");

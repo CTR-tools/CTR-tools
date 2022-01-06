@@ -88,9 +88,9 @@ namespace bash_dat
             {
                 Dictionary<int, string> filelist = Meta.LoadNumberedList("bash_filelist.txt");
 
-                using (var hdr = new BinaryReaderEx(File.Open(filename, FileMode.Open)))
+                using (var hdr = new BinaryReaderEx(File.OpenRead(filename)))
                 {
-                    using (var dat = new BinaryReaderEx(File.Open(datapath, FileMode.Open)))
+                    using (var dat = new BinaryReaderEx(File.OpenRead(datapath)))
                     {
                         string magic = hdr.ReadStringFixed(8);
 
