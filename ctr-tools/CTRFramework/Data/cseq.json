@@ -65,11 +65,11 @@
 		},
 		"cove": {
 			"long": [
-				{ "midi": 87, "pitch": 12, "title": "Lead & Bass" },
+				{ "midi": 87, "title": "Lead & Bass" },
 				{ "midi": 62, "pitch": -12, "title": "Synth Brass" },
 				{ "midi": 83, "title": "Lead 4" },
-				{ "midi": 114, "pitch": 12, "title": "Steel Drums" },
-				{ "midi": 34, "title": "Electric Bass" },
+				{ "midi": 114, "title": "Steel Drums" },
+				{ "midi": 34, "pitch": -12, "title": "Electric Bass" },
 				{ "midi": 11, "title": "Vibraphone" }
 			],
 			"short": [
