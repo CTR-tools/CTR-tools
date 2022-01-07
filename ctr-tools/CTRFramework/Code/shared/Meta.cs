@@ -12,7 +12,7 @@ namespace CTRFramework.Shared
         public static int SectorSize = 0x800;
 
         #region Paths/filenames
-        public static string BasePath = System.AppDomain.CurrentDomain.BaseDirectory;
+        public static string BasePath = AppDomain.CurrentDomain.BaseDirectory;
         public static string UserPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CTRViewer");
         public static string SettingsFile = Path.Combine(UserPath, "settings.xml");
         public static string JsonPath = "versions.json";
@@ -125,18 +125,36 @@ namespace CTRFramework.Shared
             return names;
         }
 
-        public static string GetVersion()
+        public static Dictionary<string, string> LoadTagList(string resource)
         {
-            return "CTRFramework " + resources.Version + " (" + resources.BuildDate.Split(',')[0] + ")";
+            string[] lines = Helpers.GetLinesFromResource(resource);
+
+            Dictionary<string, string> names = new Dictionary<string, string>();
+
+            foreach (string l in lines)
+            {
+                string line = l.Split('#')[0];
+
+                if (line.Trim() != "")
+                {
+                    string[] bb = line.Trim().Replace(" ", "").Split('=');
+
+                    if (names.ContainsKey(bb[0]))
+                    {
+                        Helpers.Panic("Meta", PanicType.Error, $"duplicate entry {bb[0]}");
+                        continue;
+                    }
+
+                    names.Add(bb[0].Trim(), bb[1].Trim());
+                }
+            }
+
+            return names;
         }
 
-        public static string GetSignature()
-        {
-            return resources.signature;
-        }
+        public static string GetVersion() => $"CTRFramework {resources.Version} ({resources.BuildDate.Split(',')[0]})";
 
-
-
+        public static string GetSignature() => resources.signature;
 
 
         //public static JArray levels;

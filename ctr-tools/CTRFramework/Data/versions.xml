@@ -50,11 +50,11 @@
 	
 	
     <entry>
-      <format>big</format>
-      <region>NTSC</region>
-      <name>Release</name>
-      <list>big_usa_release.txt</list>
-      <md5>c43eba5a20f0b4fc69a00c8d61a8ec10</md5>
+        <format>big</format>
+        <region>NTSC</region>
+        <name>Release</name>
+        <list>big_usa_release.txt</list>
+        <md5>c43eba5a20f0b4fc69a00c8d61a8ec10</md5>
     </entry>
 	
 	
@@ -213,7 +213,7 @@
 	    <entry>
             <region>PAL</region>
             <name>PAL release</name>
-            <banks>banknames.txt</banks>
+            <banks>banknames_pal.txt</banks>
             <samples>samplenames_pal.txt</samples>
             <sequences>HOWL</sequences>
             <md5>3d5e358c2750f0b318a9f23676d15782</md5>
@@ -222,7 +222,7 @@
         <entry>
             <region>NTSC-J</region>
             <name>NTSC-J release</name>
-            <banks>banknames.txt</banks>
+            <banks>banknames_jap.txt</banks>
             <samples>samplenames_jap.txt</samples>
             <sequences>HOWL_JAP</sequences>
             <md5>aeab71ba44ab09c2da4d45dc5467d719</md5>

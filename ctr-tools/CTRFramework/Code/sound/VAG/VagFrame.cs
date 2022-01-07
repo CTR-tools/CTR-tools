@@ -12,6 +12,22 @@ namespace CTRFramework.Sound
 
         public byte[] data;
 
+        public bool IsEmpty
+        {
+            get
+            {
+                if (predict_nr != 0) return false;
+                if (shift_factor != 0) return false;
+                if (flags != 0) return false;
+
+                foreach (byte b in data)
+                    if (b > 0)
+                        return false;
+
+                return true;
+            }
+        }
+
         public VagFrame()
         {
         }

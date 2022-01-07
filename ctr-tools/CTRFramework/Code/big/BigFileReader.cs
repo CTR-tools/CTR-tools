@@ -120,7 +120,7 @@ namespace CTRFramework.Big
         /// <summary>
         /// Reads file entry.
         /// </summary>
-        /// <returns>File data as array of byte.</returns>
+        /// <returns>BigEntry instance.</returns>
         public BigEntry ReadEntry()
         {
             if (FileCursor == -1)
@@ -139,13 +139,13 @@ namespace CTRFramework.Big
 
             Jump(_ptr);
 
-            BigEntry entry = new BigEntry();
-            entry.Index = FileCursor;
-            entry.Name = GetFilename();
-            entry.Offset = _ptr;
-            entry.Data = ReadBytes(_size);
-
-            return entry;
+            return new BigEntry()
+            {
+                Index = FileCursor,
+                Name = GetFilename(),
+                Offset = _ptr,
+                Data = ReadBytes(_size)
+            };
         }
 
         /// <summary>

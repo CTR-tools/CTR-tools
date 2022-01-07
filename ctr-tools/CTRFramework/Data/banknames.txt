@@ -68,3 +68,4 @@
 67=race_tropy
 68=race_penta
 69=race_fake
+70=race_oxide

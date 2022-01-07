@@ -41,6 +41,8 @@ namespace CTRFramework.Sound
 
     public class Bank
     {
+        public static Dictionary<string, string> hashnames = new Dictionary<string, string>();
+
         public static Dictionary<int, string> banknames = new Dictionary<int, string>();
 
         public Dictionary<int, Sample> samples = new Dictionary<int, Sample>();
@@ -48,6 +50,7 @@ namespace CTRFramework.Sound
         public static void ReadNames()
         {
             banknames = Meta.LoadNumberedList("banknames.txt");
+            hashnames = Meta.LoadTagList("samplehashes.txt");
         }
 
         public Bank()
@@ -85,6 +88,11 @@ namespace CTRFramework.Sound
 
 
             byte[] buf;
+
+            buf = br.ReadBytes(16);
+
+            if (!frameIsEmpty(buf))
+                Helpers.Panic(this, PanicType.Assume, "Expected this to be a null frame.");
 
             for (int i = 0; i < sampCnt; i++)
             {
@@ -133,8 +141,8 @@ namespace CTRFramework.Sound
 
         public void Export(int id, int freq, string path, string path2 = null, string name = null)
         {
-            string pathSfxVag = Path.Combine(path, "wav");
-            string pathSfxWav = Path.Combine(path, "vag");
+            string pathSfxVag = Path.Combine(path, "vag");
+            string pathSfxWav = Path.Combine(path, "wav");
 
             Helpers.CheckFolder(pathSfxVag);
             Helpers.CheckFolder(pathSfxWav);
@@ -145,8 +153,7 @@ namespace CTRFramework.Sound
                 Directory.CreateDirectory(vagpath);
 
                 //string vagname = vagpath + "\\" +  (name == null ?  (Howl.sampledict.ContainsKey(id) ? Howl.sampledict[id] : "sample_" + id.ToString("0000")) : name) + ".vag";
-                string vagname = Path.Combine(vagpath, $"{Howl.GetName(id, Howl.samplenames)}.vag");
-
+                string vagname = id.ToString("0000"); // Howl.GetName(id, Howl.samplenames);
 
                 /*
                 if (name != null)
@@ -164,14 +171,24 @@ namespace CTRFramework.Sound
                 using (var br = new BinaryReaderEx(new MemoryStream(samples[id].Data)))
                 {
                     VagSample vag = new VagSample();
+
                     if (freq != -1)
                         vag.sampleFreq = freq;
+
                     if (Howl.samplenames.ContainsKey(id))
                         vag.SampleName = Howl.samplenames[id];
+
                     vag.ReadFrames(br, samples[id].Data.Length);
 
-                    vag.Save(vagname);
-                    vag.ExportWav(vagname.Replace("vag", "wav")); //lmao
+                    string hash = samples[id].Hash.ToString("X8").ToUpper();
+
+                    vagname = $"{id.ToString("0000")}_{samples[id].Hash.ToString("X8")}";
+
+                    if (Bank.hashnames.ContainsKey(hash))
+                        vagname += $"_{Bank.hashnames[hash]}";
+
+                    vag.Save(Path.Combine(pathSfxVag, $"{vagname}.vag"));
+                    vag.ExportWav(Path.Combine(pathSfxWav, $"{vagname}.wav")); //lmao
                 }
             }
         }

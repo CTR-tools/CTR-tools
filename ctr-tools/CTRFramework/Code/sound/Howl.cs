@@ -46,10 +46,7 @@ namespace CTRFramework.Sound
             return result;
         }
 
-        List<ushort> unk = new List<ushort>();
-
-
-
+        List<ushort> unk = new List<ushort>(); //this is speculated to be related to some vab offsets
         List<int> ptrBanks = new List<int>();
         List<int> ptrSeqs = new List<int>();
 
@@ -88,11 +85,12 @@ namespace CTRFramework.Sound
             var hash = MD5.Create().ComputeHash(br.BaseStream);
             string md5 = BitConverter.ToString(hash).Replace("-", "");
 
+
             br.Jump(0);
 
             foreach (XmlElement el in doc.SelectNodes("/data/howl/entry"))
             {
-                if (md5.ToLower() == el["md5"].InnerText.ToLower())
+                if (md5.ToLower() == el["md5"].InnerText.ToLower() )
                 {
                     Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.");
                     banknames = Meta.LoadNumberedList(el["banks"].InnerText);
@@ -222,7 +220,6 @@ namespace CTRFramework.Sound
             samplesSfx = InstanceList<InstrumentShort>.FromReader(br, (uint)br.Position, numSfx);
             samplesEngineSfx = InstanceList<InstrumentShort>.FromReader(br, (uint)br.Position, numEngineSfx);
 
-
             for (int i = 0; i < numBanks; i++)
                 ptrBanks.Add(br.ReadUInt16() * Meta.SectorSize);
 
@@ -245,8 +242,9 @@ namespace CTRFramework.Sound
             for (int i = 0; i < Songs.Count; i++)
                 Songs[i].name = seqnames.ContainsKey(i) ? seqnames[i] : i.ToString("00");
 
-            Console.Write(ToString());
+            Console.WriteLine(ToString());
 
+            /*
             StringBuilder sb = new StringBuilder();
 
             foreach (var bank in Banks)
@@ -254,6 +252,7 @@ namespace CTRFramework.Sound
                     sb.AppendLine($"{sample.ID},{sample.Hash.ToString("X8")}");
             
             Helpers.WriteToFile(Path.Combine(Meta.BasePath, "test.txt"), sb.ToString());
+            */
         }
 
         public void ExportCSEQ(string path)
@@ -263,13 +262,21 @@ namespace CTRFramework.Sound
             CSEQ.PatchMidi = true;
             CSEQ.IgnoreVolume = true;
 
+            string pathSeq = Path.Combine(path, "songs");
+            Helpers.CheckFolder(pathSeq);
+
             foreach (var song in Songs)
             {
                 CSEQ.PatchName = song.name;
                 song.LoadMetaInstruments(song.name);
 
-                song.Save(Path.Combine(path, $"{song.name}.cseq"));
-                song.Songs[0].ExportMIDI(Path.Combine(path, $"{song.name}.mid"), song);
+                song.Save(Path.Combine(pathSeq, $"{song.name}.cseq"));
+                int i = 0;
+                foreach (var s in song.Songs)
+                {
+                    s.ExportMIDI(Path.Combine(pathSeq, $"{song.name}_{i}.mid"), song);
+                    i++;
+                }
             }
         }
 
@@ -292,7 +299,9 @@ namespace CTRFramework.Sound
             string pathBank = Path.Combine(path, "banks");
             Helpers.CheckFolder(pathBank);
 
-            for (int i = 0; i < ptrBanks.Count - 1; i++)
+            Banks.Clear();
+
+            for (int i = 0; i < ptrBanks.Count; i++)
             {
                 br.Jump(ptrBanks[i]);
 
@@ -301,7 +310,13 @@ namespace CTRFramework.Sound
 
                 fn = Path.Combine(pathBank, fn);
 
-                Helpers.WriteToFile(fn, br.ReadBytes(ptrBanks[i + 1] - ptrBanks[i]));
+                Banks.Add(Bank.FromReader(br));
+
+                int pos = (int)br.Position;
+
+                br.Jump(ptrBanks[i]);
+
+                Helpers.WriteToFile(fn, br.ReadBytes(pos - ptrBanks[i]));
             }
 
             Console.WriteLine("---");
@@ -347,7 +362,12 @@ namespace CTRFramework.Sound
 
                 CSEQ.PatchName = seq.name;
                 seq.LoadMetaInstruments(seq.name);
-                seq.Songs[0].ExportMIDI(Path.ChangeExtension(fn, ".mid"), seq);
+                int i = 0;
+                foreach (var s in seq.Songs)
+                {
+                    s.ExportMIDI(Path.Combine(pathSeq, $"{seq.name}_{i}.mid"), seq);
+                    i++;
+                }
 
                 j++;
             }
