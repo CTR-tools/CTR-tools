@@ -86,6 +86,11 @@ namespace CTRFramework.Sound
         {
             for (int i = 0; i < dataSize / 16; i++)
                 Frames.Add(VagFrame.FromReader(br));
+
+            if (!Frames[Frames.Count-1].IsEmpty)
+            {
+                Frames.Add(new VagFrame());
+            }
         }
 
         /// <summary>

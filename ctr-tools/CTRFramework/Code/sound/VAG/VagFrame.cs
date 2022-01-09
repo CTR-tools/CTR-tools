@@ -6,11 +6,11 @@ namespace CTRFramework.Sound
 {
     public class VagFrame : IReadWrite
     {
-        public byte predict_nr;
-        public byte shift_factor;
-        public byte flags;
+        public byte predict_nr = 0;
+        public byte shift_factor = 0;
+        public byte flags = 0;
 
-        public byte[] data;
+        public byte[] data = new byte[14];
 
         public bool IsEmpty
         {

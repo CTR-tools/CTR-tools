@@ -184,6 +184,7 @@ namespace CTRFramework.Sound
         public void Read(BinaryReaderEx br)
         {
             KnownFileCheck(br);
+            Bank.ReadNames();
 
             char[] magic = br.ReadChars(4);
 
@@ -244,7 +245,7 @@ namespace CTRFramework.Sound
 
             Console.WriteLine(ToString());
 
-            /*
+            
             StringBuilder sb = new StringBuilder();
 
             foreach (var bank in Banks)
@@ -252,7 +253,7 @@ namespace CTRFramework.Sound
                     sb.AppendLine($"{sample.ID},{sample.Hash.ToString("X8")}");
             
             Helpers.WriteToFile(Path.Combine(Meta.BasePath, "test.txt"), sb.ToString());
-            */
+            
         }
 
         public void ExportCSEQ(string path)
@@ -310,13 +311,16 @@ namespace CTRFramework.Sound
 
                 fn = Path.Combine(pathBank, fn);
 
-                Banks.Add(Bank.FromReader(br));
+                Bank.FromReader(br);
 
                 int pos = (int)br.Position;
+                if (i < ptrBanks.Count - 1)
+                    pos = ptrBanks[i + 1];
 
                 br.Jump(ptrBanks[i]);
-
                 Helpers.WriteToFile(fn, br.ReadBytes(pos - ptrBanks[i]));
+
+                Banks.Add(Bank.FromFile(fn));
             }
 
             Console.WriteLine("---");

@@ -142,16 +142,11 @@ namespace CTRFramework.Sound
         public void Export(int id, int freq, string path, string path2 = null, string name = null)
         {
             string pathSfxVag = Path.Combine(path, "vag");
-            string pathSfxWav = Path.Combine(path, "wav");
 
             Helpers.CheckFolder(pathSfxVag);
-            Helpers.CheckFolder(pathSfxWav);
 
             if (Contains(id))
             {
-                string vagpath = Path.Combine(path, (path2 == null ? "vag" : path2));
-                Directory.CreateDirectory(vagpath);
-
                 //string vagname = vagpath + "\\" +  (name == null ?  (Howl.sampledict.ContainsKey(id) ? Howl.sampledict[id] : "sample_" + id.ToString("0000")) : name) + ".vag";
                 string vagname = id.ToString("0000"); // Howl.GetName(id, Howl.samplenames);
 
@@ -188,7 +183,7 @@ namespace CTRFramework.Sound
                         vagname += $"_{Bank.hashnames[hash]}";
 
                     vag.Save(Path.Combine(pathSfxVag, $"{vagname}.vag"));
-                    vag.ExportWav(Path.Combine(pathSfxWav, $"{vagname}.wav")); //lmao
+                    vag.ExportWav(Path.Combine(path, $"{vagname}.wav"));
                 }
             }
         }
