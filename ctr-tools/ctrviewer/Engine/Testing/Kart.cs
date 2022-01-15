@@ -189,8 +189,8 @@ namespace ctrviewer.Engine.Testing
 
             if (
                 (!Single.IsNaN(oldcoll) && Single.IsNaN(newcoll))
-                //(newcoll > 0 && oldcoll < 0) ||
-                //(newcoll < 0 && oldcoll > 0)
+               //(newcoll > 0 && oldcoll < 0) ||
+               //(newcoll < 0 && oldcoll > 0)
                )
             {
                 GameConsole.Write("BANG");
@@ -232,12 +232,14 @@ namespace ctrviewer.Engine.Testing
             if (KeyboardHandler.IsAnyDown(Keys.D, Keys.Right) || gs.DPad.Right == ButtonState.Pressed)
                 Rotation.X -= GetDelta(gameTime, KartPhysics.MaxTurningStep * (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? 2 : 1));
 
+            Rotation.X -= GetDelta(gameTime, KartPhysics.MaxTurningStep * gs.ThumbSticks.Left.X);
+
             Powers[PowerType.Engine].Direction = Vector3.Transform(Vector3.Backward, Matrix.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z));
 
 
             //go forward
 
-            if (KeyboardHandler.IsDown(Keys.W))
+            if (KeyboardHandler.IsDown(Keys.W) || gs.Buttons.A == ButtonState.Pressed)
             {
                 Powers[PowerType.Engine].Boost(GetDelta(gameTime, KartPhysics.MaxAcceleration));
             }
@@ -245,14 +247,14 @@ namespace ctrviewer.Engine.Testing
 
             //move up/down
 
-            if (KeyboardHandler.IsDown(Keys.PageUp))
+            if (KeyboardHandler.IsDown(Keys.PageUp) || gs.DPad.Up == ButtonState.Pressed)
             {
                 Powers[PowerType.Gravity].Value = 0;
                 Powers[PowerType.Gravity].Enabled = false;
                 Powers[PowerType.GodZ].Value = 0.5f;
                 Powers[PowerType.GodZ].Enabled = true;
             }
-            else if (KeyboardHandler.IsDown(Keys.PageDown))
+            else if (KeyboardHandler.IsDown(Keys.PageDown) || gs.DPad.Down == ButtonState.Pressed)
             {
                 Powers[PowerType.Gravity].Value = 0;
                 Powers[PowerType.Gravity].Enabled = false;

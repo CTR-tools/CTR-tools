@@ -1252,6 +1252,9 @@ namespace ctrviewer
         {
             if (IsActive)
             {
+                eng.Cameras[CameraType.DefaultCamera].speedScale -= 0.1f * GamePad.GetState(activeGamePad).Triggers.Left;
+                eng.Cameras[CameraType.DefaultCamera].speedScale += 0.1f * GamePad.GetState(activeGamePad).Triggers.Right;
+
                 if (MouseHandler.IsLeftButtonPressed)
                 {
                     if (captureMouse)
@@ -1289,13 +1292,6 @@ namespace ctrviewer
                         
                         if (MouseHandler.IsScrollingDown)
                             eng.Cameras[CameraType.DefaultCamera].speedScale -= 0.1f;
-
-
-                        if (eng.Cameras[CameraType.DefaultCamera].speedScale < 0.1f)
-                            eng.Cameras[CameraType.DefaultCamera].speedScale = 0.1f;
-
-                        if (eng.Cameras[CameraType.DefaultCamera].speedScale > 5)
-                            eng.Cameras[CameraType.DefaultCamera].speedScale = 5;
                     }
                     else
                     {
@@ -1321,6 +1317,11 @@ namespace ctrviewer
                 captureMouse = false;
             }
 
+            if (eng.Cameras[CameraType.DefaultCamera].speedScale < 0.1f)
+                eng.Cameras[CameraType.DefaultCamera].speedScale = 0.1f;
+
+            if (eng.Cameras[CameraType.DefaultCamera].speedScale > 5)
+                eng.Cameras[CameraType.DefaultCamera].speedScale = 5;
 
             eng.Cameras[CameraType.SkyCamera].Update(gameTime, updatemouse, false);
             eng.Cameras[CameraType.DefaultCamera].Update(gameTime, updatemouse, true);
