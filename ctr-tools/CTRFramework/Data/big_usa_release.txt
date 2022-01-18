@@ -390,16 +390,16 @@
 322=models\racers\med\fake.ctr
 323=models\racers\med\oxide.ctr
 
-# ========324 = MORE MODEL PACKS SECTION===============
+# ========324 = MODEL PACKS FOR 2P MODE===============
 
-324=packs\1P_gem_cups\324.mpk
-325=packs\1P_gem_cups\325.mpk
-326=packs\1P_gem_cups\326.mpk
-327=packs\1P_gem_cups\327.mpk
-328=packs\1P_gem_cups\328.mpk
-329=packs\1P_gem_cups\329.mpk
-330=packs\1P_gem_cups\330.mpk
-331=packs\1P_gem_cups\331_bosses.mpk
+324=packs\2P\bots1.mpk	# coco, ngin, polar, tiny
+325=packs\2P\bots2.mpk	# coco, crash, dingo, polar
+326=packs\2P\bots3.mpk	# cortex, crash, polar, tiny
+327=packs\2P\bots4.mpk	# crash, ngin, polar, pura
+328=packs\2P\bots5.mpk	# coco, cortex, dingo, tiny
+329=packs\2P\bots6.mpk	# coco, dingo, ngin, pura
+330=packs\2P\bots7.mpk	# cortex, ngin, pura, tiny
+331=packs\gem_bosses.mpk	#roo, papu, pin, joe
 
 # ==========332 = CHARS LOW SECTION===============
 
@@ -420,24 +420,24 @@
 346=models\racers\low\fake.ctr
 347=models\racers\low\oxide.ctr
 
-# ==========348 = EVEN MORE MODEL PACKS SECTION===============
+# ==========348 = MODEL PACKS FOR 4P MODE===============
 
-348=packs\unknown_long\crash.mpk
-349=packs\unknown_long\cortex.mpk
-350=packs\unknown_long\tiny.mpk
-351=packs\unknown_long\coco.mpk
-352=packs\unknown_long\ngin.mpk
-353=packs\unknown_long\dingo.mpk
-354=packs\unknown_long\polar.mpk
-355=packs\unknown_long\pura.mpk
-356=packs\unknown_long\pinstripe.mpk
-357=packs\unknown_long\papu.mpk
-358=packs\unknown_long\roo.mpk
-359=packs\unknown_long\joe.mpk
-360=packs\unknown_long\ntropy.mpk
-361=packs\unknown_long\pen.mpk
-362=packs\unknown_long\fake.mpk
-363=packs\unknown_long\oxide.mpk
+348=packs\4P\crash.mpk
+349=packs\4P\cortex.mpk
+350=packs\4P\tiny.mpk
+351=packs\4P\coco.mpk
+352=packs\4P\ngin.mpk
+353=packs\4P\dingo.mpk
+354=packs\4P\polar.mpk
+355=packs\4P\pura.mpk
+356=packs\4P\pinstripe.mpk
+357=packs\4P\papu.mpk
+358=packs\4P\roo.mpk
+359=packs\4P\joe.mpk
+360=packs\4P\ntropy.mpk
+361=packs\4P\pen.mpk
+362=packs\4P\fake.mpk
+363=packs\4P\oxide.mpk
 
 # ==========364 = BOSS CUTSCENES/PODIUM VRAM=============
 

@@ -42,6 +42,12 @@ namespace CTRFramework.Vram
 
         public static CtrVrm FromFile(string filename)
         {
+            if (!File.Exists(filename))
+            {
+                Helpers.Panic("CtrVram", PanicType.Warning, "Missing VRAM file, return empty.");
+                return new CtrVrm();
+            }
+
             using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 return FromReader(br);
