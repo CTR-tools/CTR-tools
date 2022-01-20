@@ -18,6 +18,15 @@ namespace CTRFramework.Sound.CSeq
 
         public static int ActiveInstrument = 0;
         public static string PatchName = "";
+
+        public static byte[] hubTracksMask = new byte[]
+        {
+            0x1F, 0x17, 0x08, 0x1F, 
+            0x10, 0x1F, 0x01, 0x08,
+            0x01, 0x10, 0x01, 0x1F, 
+            0x04, 0x04, 0x02, 0x1F, 
+            0x10, 0x08, 0x10, 0x02
+        };
     }
 
     public partial class CSEQ : IReadWrite
@@ -33,6 +42,7 @@ namespace CTRFramework.Sound.CSeq
         public Bank Bank = new Bank();
 
         #region [Constructors, factories]
+       
         public CSEQ()
         {
         }
@@ -51,7 +61,7 @@ namespace CTRFramework.Sound.CSeq
         {
             using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                var seq = CSEQ.FromReader(br);
+                var seq = FromReader(br);
                 seq.path = Path.GetDirectoryName(filename);
                 seq.name = Path.GetFileNameWithoutExtension(filename);
 

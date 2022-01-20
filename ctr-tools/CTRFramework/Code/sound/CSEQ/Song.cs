@@ -60,8 +60,21 @@ namespace CTRFramework.Sound.CSeq
             return true;
         }
 
-        public void ExportMIDI(string fn, CSEQ seq)
+        public void ExportMIDI(string fn, CSEQ seq, bool hubFilter = false, int hubIndex = 0)
         {
+            if (CSEQ.PatchName == "adv_gem_valley" && !hubFilter)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    ExportMIDI($"{fn}_hub_{i.ToString("00")}.mid", seq, true, i);
+
+                    Console.WriteLine($"hub_{i}");
+                    Console.ReadKey();
+                }
+
+                return;
+            }
+
             string cr = Path.GetFileNameWithoutExtension(fn) + "\r\n\r\n" + Properties.Resources.midi_copyright;
 
             MidiEventCollection mc = new MidiEventCollection(1, TPQN);
@@ -78,7 +91,8 @@ namespace CTRFramework.Sound.CSeq
 
             for (int i = 0; i < tracks.Count; i++)
             {
-                mc.AddTrack(tracks[i].ToMidiEventList(MPQN, tracks[i].isDrumTrack ? 10 : availablechannel, seq));
+                if (!hubFilter || ((CSEQ.hubTracksMask[i] & (1 << hubIndex)) > 0))
+                    mc.AddTrack(tracks[i].ToMidiEventList(MPQN, tracks[i].isDrumTrack ? 10 : availablechannel, seq));
 
                 if (!tracks[i].isDrumTrack)
                 {
