@@ -125,7 +125,7 @@ namespace CTRFramework.Big
         /// Saves BigFile to a given location.
         /// </summary>
         /// <param name="filename">Filename.</param>
-        public void Save(string filename = "bigfile.big")
+        public void Save(string filename = Meta.BigFileName)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();

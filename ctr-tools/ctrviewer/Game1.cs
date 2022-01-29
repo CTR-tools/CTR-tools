@@ -335,7 +335,11 @@ namespace ctrviewer
             LoadCones();
 
             LoadScenesFromFolder();
-            LoadLevel();
+
+            if (Scenes.Count > 0)
+            {
+                LoadAllScenes();
+            }
         }
 
         #region menustuff
@@ -552,7 +556,10 @@ namespace ctrviewer
 
             modl.Seal();
 
-            ContentVault.Models.Add(name, modl);
+            TriListCollection coll = new TriListCollection();
+            coll.Entries.Add(modl);
+
+            ContentVault.Models.Add(name, coll);
         }
 
 
@@ -592,10 +599,11 @@ namespace ctrviewer
 
                 var lowtex = s.GetTexturesList(Detail.Med);
                 var medtex = s.GetTexturesList(Detail.Low);
+                var mdltex = s.GetTexturesList(Detail.Models);
 
                 foreach (var t in s.ctrvram.textures)
                 {
-                    if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key))
+                  //  if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key) || mdltex.ContainsKey(t.Key))
                     {
                         loadingStatus = $"generate mips: {i}/{x}";
                         LoadTexture(t, replacements);
@@ -605,13 +613,14 @@ namespace ctrviewer
             }
         }
 
-        private void LoadTexture(KeyValuePair<string, System.Drawing.Bitmap> t, Dictionary<string, string> replacements)
+
+        private void LoadTexture(KeyValuePair<string, System.Drawing.Bitmap> t, Dictionary<string, string> replacements = null)
         {
             bool alpha = false;
 
             ContentVault.AddTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
             
-            if (EngineSettings.Instance.UseTextureReplacements)
+            if (EngineSettings.Instance.UseTextureReplacements && replacements != null)
                 if (replacements.ContainsKey(t.Key))
                     ContentVault.AddReplacementTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, replacements[t.Key], out alpha) : Texture2D.FromFile(GraphicsDevice, replacements[t.Key]));
 
@@ -628,26 +637,31 @@ namespace ctrviewer
             ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas ? "logo_xmas" : "logo"));
         }
 
+        private CtrScene LoadSceneFromBig(int index)
+        {
+            CtrVrm mvram = big.ReadEntry(index).ParseAs<CtrVrm>();
+            CtrScene cc = big.ReadEntry(index+1).ParseAs<CtrScene>();
+            cc.SetVram(mvram);
+
+            return cc;
+        }
+
         /// <summary>
         /// Loads all models from menu_models.lev
         /// </summary>
-        private void TestLoadKart()
+        private void LoadMenuModelsScene()
         {
-            CtrScene cc = new CtrScene();
+            if (big == null) return;
 
-            if (big != null)
-            {
-                big.FileCursor = 216; //menu_models.lev
-                cc = big.ReadEntry().ParseAs<CtrScene>();
-            }
-            else
-            {
-                if (File.Exists("menu_models.lev"))
-                    cc = CtrScene.FromFile("menu_models.lev");
-            }
+            Scenes.Add(LoadSceneFromBig(215));
 
+            /*
             foreach (var model in cc.Models)
-                ContentVault.AddModel(model.Name, DataConverter.ToTriList(model, 0.1f));
+                ContentVault.AddModel(model.Name, DataConverter.ToTriListCollection(model, 0.1f));
+            
+            foreach (var t in cc.ctrvram.textures)
+                LoadTexture(t, null);
+            */
         }
 
         /// <summary>
@@ -669,7 +683,7 @@ namespace ctrviewer
 
                 if (!ContentVault.Models.ContainsKey(c.Name))
                 {
-                    ContentVault.Models.Add(c.Name, DataConverter.ToTriList(c));
+                    ContentVault.Models.Add(c.Name, DataConverter.ToTriListCollection(c));
                     eng.external.Add(new InstancedModel(c.Name, Vector3.Zero, Vector3.Zero, new Vector3(0.1f)));
                 }
             }
@@ -698,7 +712,7 @@ namespace ctrviewer
         /// <summary>
         /// Converts scene array to monogame engine data.
         /// </summary>
-        private void LoadLevel()
+        private void LoadAllScenes()
         {
             GameConsole.Write("LoadLevel()");
 
@@ -715,22 +729,8 @@ namespace ctrviewer
             //making sure we have default stuff loaded. maybe should just allocate statically?
             LoadCones();
             LoadGenericTextures();
-
-            TestLoadKart();
+            LoadMenuModelsScene();
             TestLoadExtrenalModels();
-
-            if (Scenes.Count > 0 && karts.Count == 0)
-            {
-                karts.Add(new Kart(
-                    DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position),
-                    new Vector3(-(float)Math.PI / 2f, 0, 0)));
-            }
-
-            if (karts.Count > 0)
-            {
-                karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
-                karts[0].ModelName = eng.Settings.PlayerModel;
-            }
 
             /*
             //loads custom models using assimp
@@ -802,7 +802,21 @@ namespace ctrviewer
 
             foreach (var scene in Scenes)
                 foreach (var model in scene.Models)
-                    ContentVault.AddModel(model.Name, DataConverter.ToTriList(model));
+                    ContentVault.AddModel(model.Name, DataConverter.ToTriListCollection(model));
+
+
+            if (Scenes.Count > 0 && karts.Count == 0)
+            {
+                karts.Add(new Kart(
+                    DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position),
+                    new Vector3(-(float)Math.PI / 2f, 0, 0)));
+            }
+
+            if (karts.Count > 0)
+            {
+                karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
+                karts[0].ModelName = eng.Settings.PlayerModel;
+            }
 
             foreach (var s in Scenes)
             {
@@ -818,7 +832,7 @@ namespace ctrviewer
                                 s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
                                 s.header.startGrid[i].Rotation.X * (float)Math.PI * 2,
                                 s.header.startGrid[i].Rotation.Z * (float)Math.PI * 2),
-                           new Vector3(1f)
+                           new Vector3(0.1f)
                             )
                             );
 
@@ -937,23 +951,20 @@ namespace ctrviewer
                 {
                     result = true;
                 }
-                else if (File.Exists("bigfile.big"))
+                else if (File.Exists(Meta.BigFileName))
                 {
-                    eng.Settings.BigFileLocation = "bigfile.big";
+                    eng.Settings.BigFileLocation = Meta.BigFileName;
                     result = true;
                 }
                 else //scan drives
                 {
                     var drv = DriveInfo.GetDrives();
 
-                    GameConsole.Write($"drives: {drv.Length}");
-
                     result = false;
 
                     foreach (DriveInfo dInfo in drv)
                     {
-                        GameConsole.Write(dInfo.Name);
-                        string path = Path.Combine(dInfo.Name, "bigfile.big");
+                        string path = Path.Combine(dInfo.Name, Meta.BigFileName);
                         if (File.Exists(path))
                         {
                             eng.Settings.BigFileLocation = path;
@@ -963,6 +974,9 @@ namespace ctrviewer
                     }
                 }
             }
+
+            if (!File.Exists(eng.Settings.BigFileLocation))
+                return false;
 
             if (result == true && big == null)
                 big = BigFileReader.FromFile(eng.Settings.BigFileLocation);
@@ -1035,7 +1049,7 @@ namespace ctrviewer
 
             Scenes = scenes;
 
-            LoadLevel();
+            LoadAllScenes();
             ResetCamera();
         }
 

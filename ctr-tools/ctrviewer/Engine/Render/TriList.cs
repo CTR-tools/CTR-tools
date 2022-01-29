@@ -24,7 +24,7 @@ namespace ctrviewer.Engine.Render
         public List<Color> beginColor = new List<Color>();
         public List<Color> endColor = new List<Color>();
         public Dictionary<int, List<Color>> animatedColors = new Dictionary<int, List<Color>>();
-        public bool vColAnimEnabled = true;
+        public bool vColAnimEnabled = false;
         public bool textureEnabled = true;
         public bool ScrollingEnabled = false;
         public bool CullingEnabled = true;
@@ -77,6 +77,7 @@ namespace ctrviewer.Engine.Render
             indices = GenerateIndices().ToArray();
             verts_sealed = verts.ToArray();
             Sealed = true;
+            texture = ContentVault.GetTexture(textureName, false);
             /*
             for (int i = 0; i < numVerts; i++)
             {

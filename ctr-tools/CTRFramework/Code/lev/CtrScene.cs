@@ -413,7 +413,7 @@ namespace CTRFramework
         {
             if (ctrvram != null)
             {
-                foreach (TextureLayout tl in GetTexturesList().Values)
+                foreach (var tl in GetTexturesList().Values)
                     ctrvram.GetTexture(tl);
             }
         }
@@ -551,9 +551,10 @@ namespace CTRFramework
             {
                 foreach (var model in Models)
                     foreach (var entry in model.Entries)
-                        foreach (TextureLayout tl in entry.tl)
-                            if (!tex.ContainsKey(tl.Tag))
-                                tex.Add(tl.Tag, tl);
+                        foreach (var tl in entry.matIndices)
+                            if (tl != null)
+                                if (!tex.ContainsKey(tl.Tag))
+                                    tex.Add(tl.Tag, tl);
 
                 if (iconpack != null)
                     foreach (var i in iconpack.Icons.Values)

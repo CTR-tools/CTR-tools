@@ -102,8 +102,7 @@ namespace ctrviewer.Engine.Testing
         public float Speed = 0;
         public float Accel = 0;
         public float Gravity = 0;
-
-        public Kart(Vector3 pos, Vector3 rot) : base("crash", pos, rot, Vector3.One)
+        public Kart(Vector3 pos, Vector3 rot) : base("crash", pos, rot, Vector3.One * 0.1f)
         {
             Powers.Add(PowerType.Gravity, new Power() { MaxValue = KartPhysics.MaxGravity, Direction = Vector3.Down });
             Powers.Add(PowerType.Terrain, new Power() { MaxValue = 99999f, Direction = Vector3.Zero });

@@ -46,23 +46,43 @@ namespace ctrviewer.Engine
             return mono_v;
         }
 
-        public static TriList ToTriList(CtrModel model, float scale = 1f)
+
+        public static TriListCollection ToTriListCollection(CtrModel model, float scale = 1f)
         {
             GameConsole.Write(model.Name);
 
-            List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
+            TriListCollection coll = new TriListCollection();
 
-            foreach (var x in model.Entries[0].verts)
-                li.Add(DataConverter.ToVptc(x, x.uv, 0.01f * scale));
+            Dictionary<string, TriList> kek = new Dictionary<string, TriList>();
 
-            TriList t = new TriList();
-            t.textureEnabled = false;
-            t.textureName = "test";
-            t.ScrollingEnabled = false;
-            t.PushTri(li);
-            t.Seal();
+            for (int i = 0; i < model.Entries[0].verts.Count / 3; i++)
+            {
+                string texture = model.Entries[0].matIndices[i] == null ? "test" : model.Entries[0].matIndices[i].Tag;
 
-            return t;
+                if (!kek.ContainsKey(texture))
+                    kek.Add(texture, new TriList());
+
+                List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
+
+                for (int j = i * 3; j < i * 3 + 3; j++)
+                {
+                    Vertex x = model.Entries[0].verts[j];
+                    li.Add(DataConverter.ToVptc(x, x.uv, 0.01f * scale));
+                }
+
+                TriList t = kek[texture];
+                t.textureName = texture;
+                t.textureEnabled = t.textureName == "test" ? false : true; 
+                t.ScrollingEnabled = false;
+                t.PushTri(li);
+            }
+
+            foreach (var list in kek.Values)
+                list.Seal();
+
+            coll.Entries.AddRange(kek.Values);
+
+            return coll;
         }
     }
 }

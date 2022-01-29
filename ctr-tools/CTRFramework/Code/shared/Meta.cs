@@ -15,13 +15,14 @@ namespace CTRFramework.Shared
         public static string BasePath = AppDomain.CurrentDomain.BaseDirectory;
         public static string UserPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CTRViewer");
         public static string SettingsFile = Path.Combine(UserPath, "settings.xml");
-        public static string JsonPath = "versions.json";
-        public static string XmlPath = "versions.xml";
-        public static string HowlPath = "howlnames.txt";
-        public static string CseqPath = "cseq.json";
-        public static string SmplPath = "samplenames.txt";
-        public static string BankPath = "banknames.txt";
-        public static string ModelsPath = "models";
+        public const string JsonPath = "versions.json";
+        public const string XmlPath = "versions.xml";
+        public const string HowlPath = "howlnames.txt";
+        public const string CseqPath = "cseq.json";
+        public const string SmplPath = "samplenames.txt";
+        public const string BankPath = "banknames.txt";
+        public const string ModelsPath = "models";
+        public const string BigFileName = "bigfile.big";
         #endregion
 
         static JObject json;

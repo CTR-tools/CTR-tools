@@ -118,6 +118,17 @@ namespace CTRFramework.Big
         }
 
         /// <summary>
+        /// Wrapped index jump.
+        /// </summary>
+        /// <param name="index">File index.</param>
+        /// <returns>BigEntry instance.</returns>
+        public BigEntry ReadEntry(int index)
+        {
+            FileCursor = index;
+            return ReadEntry();
+        }
+
+        /// <summary>
         /// Reads file entry.
         /// </summary>
         /// <returns>BigEntry instance.</returns>

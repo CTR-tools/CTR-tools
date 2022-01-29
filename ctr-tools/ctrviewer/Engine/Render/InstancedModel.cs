@@ -10,8 +10,13 @@ namespace ctrviewer.Engine.Render
         public Vector3 Position = Vector3.Zero;
         public Vector3 Rotation = Vector3.Zero;
         public Vector3 Scale = Vector3.One;
-        public string ModelName;
-        private TriList model;
+        private string _modelName;
+        public string ModelName
+        {
+            get { return _modelName; }
+            set { _modelName = value; model = ContentVault.GetModel(_modelName.ToLower()); }
+        }
+        private TriListCollection model;
 
         private bool ShouldRotate = false;
 
@@ -27,8 +32,6 @@ namespace ctrviewer.Engine.Render
             Rotation = rot;
             ModelName = name;
             Scale = scale;
-
-            model = ContentVault.GetModel(ModelName);
 
             if (rotated.Contains(ModelName))
                 ShouldRotate = true;
@@ -47,7 +50,10 @@ namespace ctrviewer.Engine.Render
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha, FirstPersonCamera camera)
         {
             if (model == null)
+            {
+                GameConsole.Write($"missing model {ModelName}");
                 return;
+            }
 
             effect.World = Matrix.CreateScale(Scale) * Matrix.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z) * Matrix.CreateTranslation(Position);
             effect.View = camera.ViewMatrix;
