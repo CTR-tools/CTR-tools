@@ -320,7 +320,7 @@ types:
         type: color
       - id: grad_color
         type: color
-      - id: color4
+      - id: color4 # probably not
         type: u4
       - id: skip2_unkptr_related_to_vcol_anim
         type: u4
@@ -328,13 +328,20 @@ types:
         type: u4
       - id: ptr_vcanim
         type: u4
-      - id: skip2_3
-        size: 10
-        
+      - id: num_stars
+        type: u2
+      - id: unk_stars_bool
+        type: u2
+      - id: unk_stars_flags
+        type: u2
+      - id: stars_depth # or some OT order
+        type: u2
+      - id: unk_after_stars
+        type: u2
       - id: water_level
         type: u2
       - id: ptr_ai_nav
-        type: u4 
+        type: u4
 
       - id: skip_null
         type: u4

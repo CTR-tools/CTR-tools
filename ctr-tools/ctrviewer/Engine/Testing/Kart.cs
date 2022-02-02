@@ -120,23 +120,23 @@ namespace ctrviewer.Engine.Testing
             return value * KartPhysics.TargetFps / 1000f * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
         }
 
-        public Vector3 GetResultingPower()
+        public Vector3 GetResultingPower(GameTime gameTime)
         {
             Vector3 result = Vector3.Zero;
 
             foreach (var power in Powers.Values)
                 if (power.Enabled)
-                    result += power.Direction * power.Value;
+                    result += power.Direction * GetDelta(gameTime, power.Value);
 
             return result;
         }
 
-        public Vector3 GetResultingDirection()
+        public Vector3 GetResultingDirection(GameTime gameTime)
         {
-            return Vector3.Normalize(GetResultingPower());
+            return Vector3.Normalize(GetResultingPower(gameTime));
         }
 
-        public void Collide(List<CtrScene> scenes)
+        public void Collide(List<CtrScene> scenes, GameTime gameTime)
         {
             Powers[PowerType.Terrain].Enabled = false;
 
@@ -163,9 +163,9 @@ namespace ctrviewer.Engine.Testing
                                 Vector3 p2 = DataConverter.ToVector3(vertices[2].Position);
                                 Vector3 p3 = DataConverter.ToVector3(vertices[3].Position);
 
-                                Vector3 dir = GetResultingDirection();
+                                Vector3 dir = GetResultingDirection(gameTime);
                                 Ray oldray = new Ray(Position, dir);
-                                Ray newray = new Ray(Position + GetResultingPower(), dir);
+                                Ray newray = new Ray(Position + GetResultingPower(gameTime), dir);
 
                                 if (!TestCollision(oldray, newray, p0, p2, p1))
                                     TestCollision(oldray, newray, p3, p2, p1);
@@ -250,22 +250,22 @@ namespace ctrviewer.Engine.Testing
             {
                 Powers[PowerType.Gravity].Value = 0;
                 Powers[PowerType.Gravity].Enabled = false;
-                Powers[PowerType.GodZ].Value = 0.5f;
+                Powers[PowerType.GodZ].Value = GetDelta(gameTime, 0.5f);
                 Powers[PowerType.GodZ].Enabled = true;
             }
             else if (KeyboardHandler.IsDown(Keys.PageDown) || gs.DPad.Down == ButtonState.Pressed)
             {
                 Powers[PowerType.Gravity].Value = 0;
                 Powers[PowerType.Gravity].Enabled = false;
-                Powers[PowerType.GodZ].Value = -0.5f;
+                Powers[PowerType.GodZ].Value = GetDelta(gameTime, -0.5f);
                 Powers[PowerType.GodZ].Enabled = true;
             }
             else
             {
-                Collide(scenes);
+                Collide(scenes, gameTime);
             }
 
-            Position += GetResultingPower();
+            Position += GetResultingPower(gameTime);
 
             Powers[PowerType.Gravity].Enabled = true;
             Powers[PowerType.GodZ].Enabled = false;
