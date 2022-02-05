@@ -1,6 +1,8 @@
 ﻿using CTRFramework.Shared;
 using System.Collections.Generic;
 using System.Text;
+using System;
+using System.IO;
 
 namespace CTRFramework
 {
@@ -11,7 +13,6 @@ namespace CTRFramework
 
         public TrialData()
         {
-
         }
 
         public TrialData(BinaryReaderEx br)
@@ -26,25 +27,20 @@ namespace CTRFramework
             for (int i = 0; i < cnt; i++)
                 ptrs.Add(br.ReadUInt32());
 
-            br.Seek(6);
-
             if (cnt >= 4)
             {
-                br.Jump(ptrs[3]);
+                var tropy = Instance<TrialGhost>.FromReader(br, ptrs[4]);
+                Console.WriteLine(tropy.ToString());
+                tropy.Save(Path.Combine(Meta.BasePath, "tropy.gst"));
+                tropy.ToObj(Path.Combine(Meta.BasePath, "tropy.obj"));
+            }
 
-                br.Seek(1);
-
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < 291; i++)
-                {
-                    Vertex v = new Vertex();
-                    v.Position = br.ReadVector3s(1 / 100f);
-
-                    sb.AppendFormat($"v {v.Position.X} {v.Position.Y} {v.Position.Z}\r\n");
-                }
-
-                //Helpers.WriteToFile(".\\test.obj", sb.ToString());
+            if (cnt >= 5)
+            {
+                var oxide = Instance<TrialGhost>.FromReader(br, ptrs[5]);
+                Console.WriteLine(oxide.ToString());
+                oxide.Save(Path.Combine(Meta.BasePath, "oxide.gst"));
+                oxide.ToObj(Path.Combine(Meta.BasePath, "oxide.obj"));
             }
         }
     }

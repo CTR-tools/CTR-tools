@@ -40,7 +40,7 @@ namespace CTRFramework
         public PsxPtr ptrLowTexArray;   //0xD4 - assumed to be a pointer to low textures array, there is no number of entries though
 
         public Vector4b backColor;      //0xD8 - base background color, used to clear the screen
-        public uint bgMode;             //0xDC - this actually toggles some render stuff, bit0 - gradient sky, bit1 - ???, bit2 - toggles between water and animated vertices?
+        public uint someRenderFlags;    //0xDC - this actually toggles some render stuff, bit0 - gradient sky, bit1 - ???, bit2 - toggles between water and animated vertices?
 
         public PsxPtr ptrBuildStart;    //0xE0 - pointer to string, date, assumed visdata compilation start
         public PsxPtr ptrBuildEnd;      //0xE4 - pointer to string, date, assumed visdata compilation end
@@ -76,7 +76,13 @@ namespace CTRFramework
         public uint numVcolAnim;        //0x174 - number of animated vertices data
         public PsxPtr ptrVcolAnim;      //0x178 - pointer to animated vertices data
 
-        byte[] skip23;                  //0x17C - 12 bytes
+        public ushort numStars;         //0x17C - amount of stars to generate
+        public ushort unkStarsBool;     //0x17E - some stars related bool
+        public ushort unkStarsFlags;    //0x180 - some stars flags
+        public ushort starsDepth;       //0x182 - defines OT position to draw for correct depth
+
+        public ushort unkAfterStars;    //0x184 - ever not null?
+        public ushort waterLevel;       //0x186 - defines split height for reflections
 
         public PsxPtr ptrAiNav;         //0x188 - pointer to bot path data
 
@@ -138,7 +144,7 @@ namespace CTRFramework
             ptrLowTexArray = PsxPtr.FromReader(br);
             backColor = new Vector4b(br);
 
-            bgMode = br.ReadUInt32();
+            someRenderFlags = br.ReadUInt32();
             ptrBuildStart = PsxPtr.FromReader(br);
             ptrBuildEnd = PsxPtr.FromReader(br);
             ptrBuildType = PsxPtr.FromReader(br);
@@ -160,7 +166,7 @@ namespace CTRFramework
             numRestartPts = br.ReadUInt32();
             ptrRestartPts = PsxPtr.FromReader(br);
 
-            skip2 = br.ReadBytes(16);
+            skip2 = br.ReadBytes(4*4);
 
             bgColorTop = new Vector4b(br);
             bgColorBottom = new Vector4b(br);
@@ -171,11 +177,18 @@ namespace CTRFramework
             numVcolAnim = br.ReadUInt32();
             ptrVcolAnim = PsxPtr.FromReader(br);
 
-            skip23 = br.ReadBytes(12);
+            numStars = br.ReadUInt16();
+            unkStarsBool = br.ReadUInt16();
+            unkStarsFlags = br.ReadUInt16();
+            starsDepth = br.ReadUInt16();
+
+            unkAfterStars = br.ReadUInt16();
+            waterLevel = br.ReadUInt16();
 
             ptrAiNav = PsxPtr.FromReader(br);
 
             skip3 = br.ReadBytes(0x24);
+
 
             long dataEnd = br.Position;
 
@@ -248,7 +261,7 @@ namespace CTRFramework
             bw.Write(unkPtr5);
             ptrLowTexArray.Write(bw, patchTable);
             backColor.Write(bw);
-            bw.Write(bgMode);
+            bw.Write(someRenderFlags);
 
             ptrBuildStart.Write(bw, patchTable);
             ptrBuildEnd.Write(bw, patchTable);
@@ -281,8 +294,13 @@ namespace CTRFramework
             bw.Write(numVcolAnim);
             ptrVcolAnim.Write(bw, patchTable);
 
-            bw.Write(skip23);
+            bw.Write(numStars);
+            bw.Write(unkStarsBool);
+            bw.Write(unkStarsFlags);
+            bw.Write(starsDepth);
 
+            bw.Write(unkAfterStars);
+            bw.Write(waterLevel);
 
             ptrAiNav.Write(bw, patchTable);
 

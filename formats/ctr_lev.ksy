@@ -277,7 +277,7 @@ types:
       - id: back_color
         type: color 
 
-      - id: bg_mode
+      - id: some_render_flags
         type: u4
 
       - id: build

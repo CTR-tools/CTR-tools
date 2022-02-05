@@ -525,7 +525,7 @@ namespace CTRFramework
                 sb.AppendLine($"{kvp.Key.ToString("X2")}: {kvp.Value}");
             }
 
-            sb.AppendLine($"bgmode: {header.bgMode}");
+            sb.AppendLine($"bgmode: {header.someRenderFlags}");
             sb.AppendLine($"color4: {header.color4.ToString("X8")}");
 
             sb.AppendLine($"begin: {header.compilationBegins}");
