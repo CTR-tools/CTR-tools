@@ -116,7 +116,7 @@ namespace CTRFramework.Sound.CSeq
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                Helpers.Panic(this, PanicType.Error, ex.Message);
             }
         }
 

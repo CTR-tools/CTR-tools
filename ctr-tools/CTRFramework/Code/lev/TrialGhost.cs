@@ -104,7 +104,6 @@ namespace CTRFramework
                             z = br.ReadInt16Big() / 100f * 8;
                             br.Seek(4);
                             sb.AppendFormat($"v {x} {y} {z}\r\n");
-                            Console.WriteLine(x + " " + y + " " + z);
                             break;
                         case 0x81: br.Seek(2); break;
                         case 0x82: br.Seek(5);  break;

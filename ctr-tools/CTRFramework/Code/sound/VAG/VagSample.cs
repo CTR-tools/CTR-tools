@@ -20,6 +20,18 @@ namespace CTRFramework.Sound
         private int unk3 = 0;
         public string SampleName = "default_name";
 
+        public bool isLooped
+        {
+            get
+            {
+                foreach (var frame in Frames)
+                    if (frame.flags == 3 || frame.flags == 2 || frame.flags == 6)
+                        return true;
+
+                return false;
+            }
+        }
+
         public List<VagFrame> Frames = new List<VagFrame>();
 
         public VagSample()
@@ -86,11 +98,6 @@ namespace CTRFramework.Sound
         {
             for (int i = 0; i < dataSize / 16; i++)
                 Frames.Add(VagFrame.FromReader(br));
-
-            if (!Frames[Frames.Count-1].IsEmpty)
-            {
-                Frames.Add(new VagFrame());
-            }
         }
 
         /// <summary>

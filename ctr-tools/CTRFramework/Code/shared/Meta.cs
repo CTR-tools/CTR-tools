@@ -174,7 +174,7 @@ namespace CTRFramework.Shared
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                Helpers.Panic("Meta", PanicType.Error, "Failed to load meta instruments.");
                 return false;
             }
         }
@@ -208,6 +208,7 @@ namespace CTRFramework.Shared
             }
             catch
             {
+                Helpers.Panic("Meta", PanicType.Error, $"Failed to load meta instrument: {track} {inst} {x}");
             }
 
             return new MetaInst();

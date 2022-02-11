@@ -39,7 +39,7 @@ namespace CTRFramework.Sound
         }
     }
 
-    public class Bank
+    public class Bank : IReadWrite
     {
         public static Dictionary<string, string> hashnames = new Dictionary<string, string>();
 
@@ -47,12 +47,15 @@ namespace CTRFramework.Sound
 
         public Dictionary<int, Sample> samples = new Dictionary<int, Sample>();
 
+        public bool Contains(int key) => samples.ContainsKey(key);
+
         public static void ReadNames()
         {
             banknames = Meta.LoadNumberedList("banknames.txt");
             hashnames = Meta.LoadTagList("samplehashes.txt");
         }
 
+        #region [Constructors, factories]
         public Bank()
         {
         }
@@ -66,7 +69,7 @@ namespace CTRFramework.Sound
         {
             using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                return Bank.FromReader(br);
+                return FromReader(br);
             }
         }
 
@@ -74,14 +77,56 @@ namespace CTRFramework.Sound
         {
             return new Bank(br);
         }
+        #endregion
 
         public void Read(BinaryReaderEx br)
         {
             int bankoffset = (int)br.Position;
+
             int sampCnt = br.ReadInt16();
             short[] info = br.ReadArrayInt16(sampCnt);
 
-            br.Jump(bankoffset + 0x800);
+            int sam_start = bankoffset + 0x800;
+
+            int flag = 0;
+
+            int loops = 0;
+
+            int frames = 0;
+
+            br.Jump(sam_start);
+
+            do
+            {
+                br.Seek(1);
+                flag = br.ReadByte();
+                br.Seek(14);
+
+                frames++;
+
+                if (flag == 7 || flag == 3)
+                {
+                    br.Jump(sam_start);
+
+                    var sample = new Sample()
+                    {
+                        Data = br.ReadBytes(frames * 16),
+                        ID = info[loops]
+                    };
+
+                    samples.Add(sample.ID, sample);
+
+                    sam_start = (int)br.Position;
+
+                    frames = 0;
+
+                    loops++;
+                }
+            }
+            while (loops < sampCnt);
+            
+
+            return;
 
             int sample_start = 0;
             int sample_end = 0;
@@ -121,7 +166,7 @@ namespace CTRFramework.Sound
             }
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write((short)samples.Keys.Count);
 
@@ -134,11 +179,6 @@ namespace CTRFramework.Sound
                 bw.Write(sample.Value.Data);
         }
 
-        public bool Contains(int key)
-        {
-            return samples.ContainsKey(key);
-        }
-
         public void Export(int id, int freq, string path, string path2 = null, string name = null)
         {
             string pathSfxVag = Path.Combine(path, "vag");
@@ -147,21 +187,7 @@ namespace CTRFramework.Sound
 
             if (Contains(id))
             {
-                //string vagname = vagpath + "\\" +  (name == null ?  (Howl.sampledict.ContainsKey(id) ? Howl.sampledict[id] : "sample_" + id.ToString("0000")) : name) + ".vag";
                 string vagname = id.ToString("0000"); // Howl.GetName(id, Howl.samplenames);
-
-                /*
-                if (name != null)
-                {
-                    vagname += (name != null ? name : "sample") + (Howl.samplenames.ContainsKey(id) ? "_" + Howl.samplenames[id] : "") + ".vag";
-                }
-                else
-                {
-                    vagname += "sample_" + id.ToString("0000") + ".vag";
-                }
-                */
-
-                //Console.WriteLine(vagname);
 
                 using (var br = new BinaryReaderEx(new MemoryStream(samples[id].Data)))
                 {

@@ -95,6 +95,7 @@
     <Compile Include="Code\lang\CharSwap.cs" />
     <Compile Include="Code\lev\CtrFace.cs" />
     <Compile Include="Code\lev\CtrTex.cs" />
+    <Compile Include="Code\lev\TrialGhost.cs" />
     <Compile Include="Code\lev\nav\Nav.cs" />
     <Compile Include="Code\lev\nav\BotPath.cs" />
     <Compile Include="Code\lev\TrialData.cs" />
@@ -231,6 +232,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\banknames_pal.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\samplehashes - Copy.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
