@@ -69,7 +69,7 @@ namespace CTRFramework.Sound.CSeq
                     ExportMIDI($"{fn}_hub_{i.ToString("00")}.mid", seq, true, i);
 
                     Console.WriteLine($"hub_{i}");
-                    Console.ReadKey();
+                    //Console.ReadKey();
                 }
 
                 return;
