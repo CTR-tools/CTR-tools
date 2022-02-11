@@ -61,7 +61,7 @@ namespace CTRFramework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 03.01.2022 17:24:27,42 
+        ///   Looks up a localized string similar to 11.02.2022 16:43:48,82 
         ///.
         /// </summary>
         public static string BuildDate {
