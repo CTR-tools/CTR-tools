@@ -199,22 +199,17 @@ namespace ctrviewer
                 eng.screenBuffer.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
         }
 
+        Vector3 todNight = new Vector3(0.25f, 0.35f, 0.85f) * 2;
+        Vector3 todEvening = new Vector3(0.85f, 0.7f, 0.35f) * 2;
+        Vector3 todDay = new Vector3(1) * 2;
+
         public void SetTimeOfDay(PreferredTimeOfDay tod)
         {
             switch (tod)
             {
-                case PreferredTimeOfDay.Night:
-                    TimeOfDay = new Vector3(0.5f, 0.7f, 1.7f);
-                    break;
-
-                case PreferredTimeOfDay.Evening:
-                    TimeOfDay = new Vector3(1.7f, 1.4f, 0.7f);
-                    break;
-
-                case PreferredTimeOfDay.Day:
-                default:
-                    TimeOfDay = new Vector3(2f);
-                    break;
+                case PreferredTimeOfDay.Night: TimeOfDay = todNight; break;
+                case PreferredTimeOfDay.Evening: TimeOfDay = todEvening; break;
+                case PreferredTimeOfDay.Day: default: TimeOfDay = todDay; break;
             }
 
             UpdateEffects();
@@ -603,7 +598,7 @@ namespace ctrviewer
 
                 foreach (var t in s.ctrvram.textures)
                 {
-                  //  if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key) || mdltex.ContainsKey(t.Key))
+                    if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key) || mdltex.ContainsKey(t.Key))
                     {
                         loadingStatus = $"generate mips: {i}/{x}";
                         LoadTexture(t, replacements);
@@ -820,9 +815,7 @@ namespace ctrviewer
 
             foreach (var s in Scenes)
             {
-                foreach (var pa in s.header.startGrid)
-                    eng.paths.Add(new InstancedModel("purplecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
-
+                //put grid line char models
                 for (int i = 0; i < 8; i++)
                     if (s.header.startGrid[i].Position != System.Numerics.Vector3.Zero)
                         eng.instanced.Add(new InstancedModel(
@@ -836,6 +829,7 @@ namespace ctrviewer
                             )
                             );
 
+                //put all instanced models
                 foreach (var ph in s.pickups)
                 {
                     eng.instanced.Add(new InstancedModel(
@@ -850,9 +844,11 @@ namespace ctrviewer
                         ));
                 }
 
+                //put all restart points
                 foreach (var n in s.restartPts)
                     eng.paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Position), Vector3.Zero, new Vector3(0.03f)));
 
+                //put all botpaths
                 if (s.nav.paths.Count == 3)
                 {
                     foreach (NavFrame n in s.nav.paths[0].Frames)
@@ -1027,22 +1023,7 @@ namespace ctrviewer
                 if (absId[i] < 200)
                     absId[i] += (int)levelType * 2;
 
-                big.FileCursor = absId[i];
-
-                if (Path.GetExtension(big.GetFilename()) != ".vrm")
-                    return;
-
-                CtrVrm vrm = big.ReadEntry().ParseAs<CtrVrm>();
-
-                big.NextFile();
-
-                if (Path.GetExtension(big.GetFilename()) != ".lev")
-                    return;
-
-                CtrScene scene = big.ReadEntry().ParseAs<CtrScene>();
-                scene.SetVram(vrm);
-
-                scenes.Add(scene);
+                scenes.Add(LoadSceneFromBig(absId[i]));
 
                 loadingStatus = $"scenes: {i}/{absId.Length}";
             }
