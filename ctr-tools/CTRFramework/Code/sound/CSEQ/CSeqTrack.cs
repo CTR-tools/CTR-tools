@@ -3,10 +3,11 @@ using NAudio.Midi;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System;
 
-namespace CTRFramework.Sound.CSeq
+namespace CTRFramework.Sound
 {
-    public class CTrack
+    public class CSeqTrack : IReadWrite
     {
         public string Name => $"Track_{Index.ToString("00")}{(isDrumTrack ? "_drums" : "")}";
 
@@ -16,20 +17,20 @@ namespace CTRFramework.Sound.CSeq
         public int instrument = 0;
         public bool isDrumTrack = false;
 
-        public List<Command> cseqEventCollection = new List<Command>();
+        public List<CseqEvent> cseqEventCollection = new List<CseqEvent>();
 
-        public CTrack()
+        public CSeqTrack()
         {
         }
 
-        public CTrack(BinaryReaderEx br)
+        public CSeqTrack(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public static CTrack FromReader(BinaryReaderEx br)
+        public static CSeqTrack FromReader(BinaryReaderEx br)
         {
-            return new CTrack(br);
+            return new CSeqTrack(br);
         }
 
         public void Import(string filename)
@@ -55,14 +56,14 @@ namespace CTRFramework.Sound.CSeq
 
             do
             {
-                Command cmd = Command.FromReader(br);
+                CseqEvent cmd = CseqEvent.FromReader(br);
 
-                if (cmd.cseqEvent == CSEQEvent.ChangePatch)
+                if (cmd.eventType == CseqEventType.ChangePatch)
                     instrument = cmd.pitch;
 
                 cseqEventCollection.Add(cmd);
 
-                if (cmd.cseqEvent == CSEQEvent.EndTrack)
+                if (cmd.eventType == CseqEventType.EndTrack)
                     break;
 
             }
@@ -74,10 +75,10 @@ namespace CTRFramework.Sound.CSeq
             cseqEventCollection.Clear();
 
             foreach (var evt in events)
-                cseqEventCollection.Add(Command.FromMidiEvent(evt));
+                cseqEventCollection.Add(CseqEvent.FromMidiEvent(evt));
         }
 
-        public List<MidiEvent> ToMidiEventList(int MPQN, int channel, CSEQ seq)
+        public List<MidiEvent> ToMidiEventList(int MPQN, int channel, Cseq seq)
         {
             List<MidiEvent> me = new List<MidiEvent>();
             //MidiEvent x;
@@ -91,10 +92,10 @@ namespace CTRFramework.Sound.CSeq
             {
                 me.Add(new ControlChangeEvent(absTime, channel, MidiController.BankSelect, 120));
                 me.Add(new ControlChangeEvent(absTime, channel, MidiController.BankSelect, 0));
-                me.Add(new PatchChangeEvent(absTime, channel, Meta.GetBankIndex(CSEQ.PatchName)));
+                me.Add(new PatchChangeEvent(absTime, channel, Meta.GetBankIndex(Cseq.PatchName)));
             }
 
-            if (CSEQ.UseSampleVolumeForTracks && !CSEQ.IgnoreVolume)
+            if (Cseq.UseSampleVolumeForTracks && !Cseq.IgnoreVolume)
                 me.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, (byte)(seq.samplesReverb[instrument].Volume * 127)));
 
             foreach (var c in cseqEventCollection)
@@ -106,7 +107,7 @@ namespace CTRFramework.Sound.CSeq
             return me;
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write((short)(isDrumTrack ? 1 : 0));
 
@@ -120,7 +121,7 @@ namespace CTRFramework.Sound.CSeq
 
             //sb.Append(address + "\r\n");
 
-            foreach (Command c in cseqEventCollection)
+            foreach (CseqEvent c in cseqEventCollection)
                 sb.Append(c.ToString());
 
             return sb.ToString();

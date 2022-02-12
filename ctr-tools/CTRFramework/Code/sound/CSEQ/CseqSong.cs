@@ -4,32 +4,32 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace CTRFramework.Sound.CSeq
+namespace CTRFramework.Sound
 {
-    public class Song
+    public class CseqSong : IReadWrite
     {
         public int BPM;
         public int TPQN;
         public int MPQN => (int)(60000000.0f / (float)BPM);
 
-        public List<CTrack> tracks = new List<CTrack>();
+        public List<CSeqTrack> Tracks = new List<CSeqTrack>();
 
-        public Song()
+        public CseqSong()
         {
         }
 
-        public Song(BinaryReaderEx br)
+        public CseqSong(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public static Song FromReader(BinaryReaderEx br)
+        public static CseqSong FromReader(BinaryReaderEx br)
         {
-            return new Song(br);
+            return new CseqSong(br);
         }
 
         //reads CSEQ from given binaryreader
-        public bool Read(BinaryReaderEx br)
+        public void Read(BinaryReaderEx br)
         {
             int trackNum = br.ReadByte();
             BPM = br.ReadInt16();
@@ -52,17 +52,15 @@ namespace CTRFramework.Sound.CSeq
                 br.Jump(trackData + seqOffsets[i]);
 
                 //add track to the list
-                tracks.Add(CTrack.FromReader(br));
+                Tracks.Add(CSeqTrack.FromReader(br));
 
-                tracks[i].Index = i;
+                Tracks[i].Index = i;
             }
-
-            return true;
         }
 
-        public void ExportMIDI(string fn, CSEQ seq, bool hubFilter = false, int hubIndex = 0)
+        public void ExportMIDI(string fn, Cseq seq, bool hubFilter = false, int hubIndex = 0)
         {
-            if (CSEQ.PatchName == "adv_gem_valley" && !hubFilter)
+            if (Cseq.PatchName == "adv_gem_valley" && !hubFilter)
             {
                 for (int i = 0; i < 5; i++)
                 {
@@ -89,12 +87,12 @@ namespace CTRFramework.Sound.CSeq
 
             int availablechannel = 1;
 
-            for (int i = 0; i < tracks.Count; i++)
+            for (int i = 0; i < Tracks.Count; i++)
             {
-                if (!hubFilter || ((CSEQ.hubTracksMask[i] & (1 << hubIndex)) > 0))
-                    mc.AddTrack(tracks[i].ToMidiEventList(MPQN, tracks[i].isDrumTrack ? 10 : availablechannel, seq));
+                if (!hubFilter || ((Cseq.hubTracksMask[i] & (1 << hubIndex)) > 0))
+                    mc.AddTrack(Tracks[i].ToMidiEventList(MPQN, Tracks[i].isDrumTrack ? 10 : availablechannel, seq));
 
-                if (!tracks[i].isDrumTrack)
+                if (!Tracks[i].isDrumTrack)
                 {
                     availablechannel++;
 
@@ -121,29 +119,29 @@ namespace CTRFramework.Sound.CSeq
         }
 
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             //sanity check
-            if (tracks.Count > Byte.MaxValue)
+            if (Tracks.Count > Byte.MaxValue)
                 throw new IndexOutOfRangeException("Too many tracks, max 255.");
 
             long songStart = bw.BaseStream.Position;
 
-            bw.Write((byte)tracks.Count);
+            bw.Write((byte)Tracks.Count);
             bw.Write((short)BPM);
             bw.Write((short)TPQN);
 
             long offsetsarraypos = bw.BaseStream.Position;
 
-            bw.Seek(tracks.Count * 2);
+            bw.Seek(Tracks.Count * 2);
 
-            if (tracks.Count % 2 == 0)
+            if (Tracks.Count % 2 == 0)
                 bw.Write((short)0);
 
             List<long> offsets = new List<long>();
             long ptrTracks = bw.BaseStream.Position;
 
-            foreach (var track in tracks)
+            foreach (var track in Tracks)
             {
                 offsets.Add(bw.BaseStream.Position - ptrTracks);
                 track.Write(bw);

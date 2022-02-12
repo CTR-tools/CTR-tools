@@ -1,6 +1,6 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Sound;
-using CTRFramework.Sound.CSeq;
+using CTRFramework.Sound;
 using NAudio.Midi;
 using NAudio.Wave;
 using System;
@@ -16,7 +16,7 @@ namespace CTRTools.Controls
     {
         public string samplePath = "";
 
-        public CSEQ seq;
+        public Cseq seq;
 
         //??
         string loadedfile = "";
@@ -63,7 +63,7 @@ namespace CTRTools.Controls
 
             try
             {
-                seq = CSEQ.FromFile(filename);
+                seq = Cseq.FromFile(filename);
                 FillUI(filename);
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace CTRTools.Controls
 
             trackBox.Items.Clear();
 
-            foreach (var track in ((Song)sequenceBox.SelectedItem).tracks)
+            foreach (var track in ((CseqSong)sequenceBox.SelectedItem).Tracks)
                 trackBox.Items.Add(track);
 
             tabControl1.SelectedIndex = 1;
@@ -132,7 +132,7 @@ namespace CTRTools.Controls
         {
             if (trackBox.SelectedItem == null) return;
 
-            trackInfoBox.Text = ((CTrack)trackBox.SelectedItem).ListCommands();
+            trackInfoBox.Text = ((CSeqTrack)trackBox.SelectedItem).ListCommands();
             tabControl1.SelectedIndex = 0;
         }
 
@@ -254,7 +254,7 @@ namespace CTRTools.Controls
 
                 foreach (string s in files)
                 {
-                    CSEQ c = CSEQ.FromFile(s);
+                    Cseq c = Cseq.FromFile(s);
 
                     foreach (var sd in c.samples)
                         if (!x.Contains(sd.Tag))
@@ -286,7 +286,7 @@ namespace CTRTools.Controls
 
         private void patchMIDIInstrumentsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CSEQ.PatchMidi = patchMIDIInstrumentsToolStripMenuItem.Checked;
+            Cseq.PatchMidi = patchMIDIInstrumentsToolStripMenuItem.Checked;
         }
 
         private void exportSamplesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -296,12 +296,12 @@ namespace CTRTools.Controls
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CSEQ.PatchName = patchBox.Items[patchBox.SelectedIndex].ToString();
+            Cseq.PatchName = patchBox.Items[patchBox.SelectedIndex].ToString();
         }
 
         private void ignoreOriginalVolumeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CSEQ.IgnoreVolume = ignoreOriginalVolumeToolStripMenuItem.Checked;
+            Cseq.IgnoreVolume = ignoreOriginalVolumeToolStripMenuItem.Checked;
         }
 
         AudioFileReader waveFile;
@@ -373,7 +373,7 @@ namespace CTRTools.Controls
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    seq.Songs[x].tracks[y].Import(ofd.FileName);
+                    seq.Songs[x].Tracks[y].Import(ofd.FileName);
                 }
             }
 
@@ -382,7 +382,7 @@ namespace CTRTools.Controls
 
         private void copyInstrumentVolumeToTracksToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CSEQ.UseSampleVolumeForTracks = copyInstrumentVolumeToTracksToolStripMenuItem.Checked;
+            Cseq.UseSampleVolumeForTracks = copyInstrumentVolumeToTracksToolStripMenuItem.Checked;
         }
 
         private void alistAlBankSamplesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -447,7 +447,7 @@ namespace CTRTools.Controls
         private void importMIDIToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (seq == null)
-                seq = new CSEQ();
+                seq = new Cseq();
 
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "MIDI File (*.mid)|*.mid";
@@ -456,21 +456,21 @@ namespace CTRTools.Controls
             {
                 MidiFile midi = new MidiFile(ofd.FileName);
 
-                Song newMidi = new Song();
+                CseqSong newMidi = new CseqSong();
 
                 for (int i = 0; i < midi.Tracks; i++)
                 {
-                    CTrack track = new CTrack();
+                    CSeqTrack track = new CSeqTrack();
                     track.Index = i;
                     //track.name = $"track_{i.ToString("00")}";
                     track.FromMidiEventList(midi.Events.GetTrackEvents(i).ToList());
-                    newMidi.tracks.Add(track);
+                    newMidi.Tracks.Add(track);
                 }
 
-                foreach (var x in newMidi.tracks)
+                foreach (var x in newMidi.Tracks)
                 {
-                    Command c = new Command();
-                    c.cseqEvent = CSEQEvent.ChangePatch;
+                    var c = new CseqEvent();
+                    c.eventType = CseqEventType.ChangePatch;
                     c.pitch = (byte)x.Index;
                     c.wait = 0;
                     x.cseqEventCollection.Insert(0, c);

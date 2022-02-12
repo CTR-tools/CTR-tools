@@ -174,7 +174,7 @@ namespace CTRFramework.Shared
             }
             catch (Exception ex)
             {
-                Helpers.Panic("Meta", PanicType.Error, "Failed to load meta instruments.");
+                Helpers.Panic("Meta", PanicType.Error, $"Failed to load meta instruments: {ex.Message}");
                 return false;
             }
         }

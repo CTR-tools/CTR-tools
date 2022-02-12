@@ -142,9 +142,9 @@
     <Compile Include="Code\shared\Vectors\Vector4b.cs" />
     <Compile Include="Code\shared\Vectors\Vector4s.cs" />
     <Compile Include="Code\sound\CSEQ\CSEQ.cs" />
-    <Compile Include="Code\sound\CSEQ\Command.cs" />
-    <Compile Include="Code\sound\CSEQ\CTrack.cs" />
-    <Compile Include="Code\sound\CSEQ\Song.cs" />
+    <Compile Include="Code\sound\CSEQ\CseqEvent.cs" />
+    <Compile Include="Code\sound\CSEQ\CSeqTrack.cs" />
+    <Compile Include="Code\sound\CSEQ\CseqSong.cs" />
     <Compile Include="Code\sound\Howl.cs" />
     <Compile Include="Code\sound\VAG\VagFrame.cs" />
     <Compile Include="Code\sound\VAG\VagSample.cs" />

@@ -3,9 +3,9 @@ using NAudio.Midi;
 using System;
 using System.Collections.Generic;
 
-namespace CTRFramework.Sound.CSeq
+namespace CTRFramework.Sound
 {
-    public enum CSEQEvent
+    public enum CseqEventType
     {
         Terminator = 0,
         NoteOff = 0x01,
@@ -22,78 +22,76 @@ namespace CTRFramework.Sound.CSeq
     }
 
 
-    public class Command
+    public class CseqEvent : IRead
     {
-        public CSEQEvent cseqEvent = CSEQEvent.Error;
+        public CseqEventType eventType = CseqEventType.Error;
         public byte pitch = 0;
         public byte velocity = 0;
         public int wait = 0;
 
         public int absoluteTime = 0;
 
-        public Command()
+        public CseqEvent()
         {
-
         }
 
-        public Command(BinaryReaderEx br)
+        public CseqEvent(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public static Command FromReader(BinaryReaderEx br)
+        public static CseqEvent FromReader(BinaryReaderEx br)
         {
-            return new Command(br);
+            return new CseqEvent(br);
         }
-
 
         public void Read(BinaryReaderEx br)
         {
             wait = br.ReadTimeDelta();
-            cseqEvent = (CSEQEvent)br.ReadByte();
+            eventType = (CseqEventType)br.ReadByte();
 
-            switch (cseqEvent)
+            switch (eventType)
             {
-                case CSEQEvent.Unknown4:
-                case CSEQEvent.Unknown8:
+                case CseqEventType.Unknown4:
+                case CseqEventType.Unknown8:
                     {
                         pitch = br.ReadByte();
-                        Helpers.Panic(this, PanicType.Assume, $"{cseqEvent} found at {br.HexPos()}");
+                        Helpers.Panic(this, PanicType.Assume, $"{eventType} found at {br.HexPos()}");
                         break;
                     }
 
-                case CSEQEvent.EndTrack2:
-                case CSEQEvent.ChangePatch:
-                case CSEQEvent.BendAssume:
-                case CSEQEvent.VelAssume:
-                case CSEQEvent.PanAssume:
-                case CSEQEvent.NoteOff:
+                case CseqEventType.EndTrack2:
+                case CseqEventType.ChangePatch:
+                case CseqEventType.BendAssume:
+                case CseqEventType.VelAssume:
+                case CseqEventType.PanAssume:
+                case CseqEventType.NoteOff:
                     {
                         pitch = br.ReadByte();
                         break;
                     }
-                case CSEQEvent.NoteOn:
+                case CseqEventType.NoteOn:
                     {
                         pitch = br.ReadByte();
                         velocity = br.ReadByte();
                         break;
                     }
-                case CSEQEvent.EndTrack:
-                case CSEQEvent.Terminator:
+                case CseqEventType.EndTrack:
+                case CseqEventType.Terminator:
                     {
                         break;
                     }
 
                 default:
                     {
-                        cseqEvent = CSEQEvent.Error;
-                        Helpers.Panic(this, PanicType.Warning, $"{cseqEvent} not recognized at  {br.HexPos()}");
+                        eventType = CseqEventType.Error;
+                        Helpers.Panic(this, PanicType.Warning, $"{eventType} not recognized at  {br.HexPos()}");
                         break;
                     }
             }
         }
 
-        public List<MidiEvent> ToMidiEvent(int absTime, int channel, CSEQ seq, CTrack ct)
+        public List<MidiEvent> ToMidiEvent(int absTime, int channel, Cseq seq, CSeqTrack ct)
         {
             List<MidiEvent> events = new List<MidiEvent>();
             //TrackPatch tp = new TrackPatch();
@@ -103,32 +101,32 @@ namespace CTRFramework.Sound.CSeq
             //we can't go beyond 16 with midi
             channel = (channel <= 16) ? channel : 16;
 
-            if (CSEQ.IgnoreVolume)
+            if (Cseq.IgnoreVolume)
                 velocity = 127;
 
             var p = pitch;
 
-            if (CSEQ.PatchMidi)
+            if (Cseq.PatchMidi)
             {
                 if (ct.isDrumTrack)
                 {
-                    if (cseqEvent == CSEQEvent.NoteOn || cseqEvent == CSEQEvent.NoteOff)
+                    if (eventType == CseqEventType.NoteOn || eventType == CseqEventType.NoteOff)
                     {
                         p = (byte)seq.samples[pitch].metaInst.Key;
                     }
                 }
                 else
                 {
-                    if (cseqEvent == CSEQEvent.ChangePatch)
+                    if (eventType == CseqEventType.ChangePatch)
                     {
-                        CSEQ.ActiveInstrument = pitch;
+                        Cseq.ActiveInstrument = pitch;
                         p = (byte)seq.samplesReverb[pitch].metaInst.Midi;
                     }
-                    else if (cseqEvent == CSEQEvent.NoteOn || cseqEvent == CSEQEvent.NoteOff)
+                    else if (eventType == CseqEventType.NoteOn || eventType == CseqEventType.NoteOff)
                     {
                         try
                         {
-                            p += (byte)seq.samplesReverb[CSEQ.ActiveInstrument].metaInst.Pitch;
+                            p += (byte)seq.samplesReverb[Cseq.ActiveInstrument].metaInst.Pitch;
                         }
                         catch //(Exception ex)
                         {
@@ -138,37 +136,37 @@ namespace CTRFramework.Sound.CSeq
                 }
             }
 
-            switch (cseqEvent)
+            switch (eventType)
             {
-                case CSEQEvent.NoteOn: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOn, p, velocity)); break;
-                case CSEQEvent.NoteOff: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOff, p, velocity)); break;
+                case CseqEventType.NoteOn: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOn, p, velocity)); break;
+                case CseqEventType.NoteOff: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOff, p, velocity)); break;
 
-                case CSEQEvent.ChangePatch:
+                case CseqEventType.ChangePatch:
                     // events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, seq.longSamples[pitch].velocity / 2));
                     events.Add(new PatchChangeEvent(absTime, channel, p));
                     break;
 
-                case CSEQEvent.BendAssume: events.Add(new PitchWheelChangeEvent(absTime, channel, p * 64)); break;
-                case CSEQEvent.PanAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.Pan, p / 2)); break;
-                case CSEQEvent.VelAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, p / 2)); break; //not really used
+                case CseqEventType.BendAssume: events.Add(new PitchWheelChangeEvent(absTime, channel, p * 64)); break;
+                case CseqEventType.PanAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.Pan, p / 2)); break;
+                case CseqEventType.VelAssume: events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, p / 2)); break; //not really used
 
                 //case CSEQEvent.EndTrack2:
-                case CSEQEvent.EndTrack: events.Add(new MetaEvent(MetaEventType.EndTrack, 0, absTime)); break;
+                case CseqEventType.EndTrack: events.Add(new MetaEvent(MetaEventType.EndTrack, 0, absTime)); break;
             }
 
             return events;
         }
 
-        public static Command FromMidiEvent(MidiEvent midi)
+        public static CseqEvent FromMidiEvent(MidiEvent midi)
         {
-            Command cmd = new Command();
+            CseqEvent cmd = new CseqEvent();
             cmd.absoluteTime = (int)midi.AbsoluteTime;
 
             switch (midi.CommandCode)
             {
                 case MidiCommandCode.NoteOn:
                     {
-                        cmd.cseqEvent = CSEQEvent.NoteOn;
+                        cmd.eventType = CseqEventType.NoteOn;
 
                         var x = (NoteEvent)midi;
 
@@ -192,7 +190,7 @@ namespace CTRFramework.Sound.CSeq
                     }
                 case MidiCommandCode.NoteOff:
                     {
-                        cmd.cseqEvent = CSEQEvent.NoteOff;
+                        cmd.eventType = CseqEventType.NoteOff;
 
                         var x = (NoteEvent)midi;
 
@@ -224,37 +222,37 @@ namespace CTRFramework.Sound.CSeq
 
         public override string ToString()
         {
-            return String.Format("{0}t - {1}[p:{2}, v:{3}]\r\n", wait, cseqEvent.ToString(), pitch, velocity);
+            return String.Format("{0}t - {1}[p:{2}, v:{3}]\r\n", wait, eventType.ToString(), pitch, velocity);
         }
 
         public void Write(BinaryWriterEx bw)
         {
             bw.WriteTimeDelta((uint)wait);
-            bw.Write((byte)cseqEvent);
+            bw.Write((byte)eventType);
 
-            switch (cseqEvent)
+            switch (eventType)
             {
-                case CSEQEvent.Unknown4:
-                case CSEQEvent.Unknown8:
-                case CSEQEvent.EndTrack2:
-                case CSEQEvent.ChangePatch:
-                case CSEQEvent.BendAssume:
-                case CSEQEvent.VelAssume:
-                case CSEQEvent.PanAssume:
-                case CSEQEvent.NoteOff:
+                case CseqEventType.Unknown4:
+                case CseqEventType.Unknown8:
+                case CseqEventType.EndTrack2:
+                case CseqEventType.ChangePatch:
+                case CseqEventType.BendAssume:
+                case CseqEventType.VelAssume:
+                case CseqEventType.PanAssume:
+                case CseqEventType.NoteOff:
                     {
                         bw.Write((byte)pitch);
                         break;
                     }
 
-                case CSEQEvent.NoteOn:
+                case CseqEventType.NoteOn:
                     {
                         bw.Write((byte)pitch);
                         bw.Write((byte)velocity);
                         break;
                     }
 
-                case CSEQEvent.EndTrack:
+                case CseqEventType.EndTrack:
                     {
                         break;
                     }

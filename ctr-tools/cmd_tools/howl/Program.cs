@@ -1,6 +1,6 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Sound;
-using CTRFramework.Sound.CSeq;
+using CTRFramework.Sound;
 using System;
 using System.IO;
 
@@ -65,7 +65,7 @@ namespace howl
                     break;
 
                 case ".cseq":
-                    CSEQ seq = CSEQ.FromFile(filename);
+                    Cseq seq = Cseq.FromFile(filename);
                     seq.Songs[0].ExportMIDI(Path.ChangeExtension(filename, ".mid"), seq);
                     break;
 

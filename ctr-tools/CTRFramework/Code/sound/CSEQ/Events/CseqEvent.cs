@@ -1,6 +1,6 @@
 ﻿using CTRFramework.Shared;
 
-namespace CTRFramework.Sound.CSeq
+namespace CTRFramework.Sound
 {
     public class CseqRootEvent
     {
@@ -39,7 +39,7 @@ namespace CTRFramework.Sound.CSeq
         }
         public void Write(BinaryWriterEx br)
         {
-            br.Write((byte)CSEQEvent.NoteOff);
+            br.Write((byte)CseqEventType.NoteOff);
             br.Write(NoteNumber);
         }
 

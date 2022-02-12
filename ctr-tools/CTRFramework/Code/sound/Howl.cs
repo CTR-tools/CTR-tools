@@ -1,5 +1,5 @@
 ﻿using CTRFramework.Shared;
-using CTRFramework.Sound.CSeq;
+using CTRFramework.Sound;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,7 +34,7 @@ namespace CTRFramework.Sound
         List<InstrumentShort> samplesEngineSfx = new List<InstrumentShort>();
 
         public List<Bank> Banks = new List<Bank>();
-        public List<CSEQ> Songs = new List<CSEQ>();
+        public List<Cseq> Songs = new List<Cseq>();
 
         public static string GetName(int x, Dictionary<int, string> dict)
         {
@@ -237,7 +237,7 @@ namespace CTRFramework.Sound
             foreach (var ptr in ptrSeqs)
             {
                 br.Jump(ptr);
-                Songs.Add(CSEQ.FromReader(br));
+                Songs.Add(Cseq.FromReader(br));
             }
 
             for (int i = 0; i < Songs.Count; i++)
@@ -260,15 +260,15 @@ namespace CTRFramework.Sound
         {
             Helpers.CheckFolder(path);
 
-            CSEQ.PatchMidi = true;
-            CSEQ.IgnoreVolume = true;
+            Cseq.PatchMidi = true;
+            Cseq.IgnoreVolume = true;
 
             string pathSeq = Path.Combine(path, "songs");
             Helpers.CheckFolder(pathSeq);
 
             foreach (var song in Songs)
             {
-                CSEQ.PatchName = song.name;
+                Cseq.PatchName = song.name;
                 song.LoadMetaInstruments(song.name);
 
                 song.Save(Path.Combine(pathSeq, $"{song.name}.cseq"));
@@ -294,8 +294,8 @@ namespace CTRFramework.Sound
 
             Helpers.WriteToFile(Path.Combine(path, "test.txt"), sb.ToString());
 
-            CSEQ.PatchMidi = true;
-            CSEQ.IgnoreVolume = true;
+            Cseq.PatchMidi = true;
+            Cseq.IgnoreVolume = true;
 
             string pathBank = Path.Combine(path, "banks");
             Helpers.CheckFolder(pathBank);
@@ -358,13 +358,13 @@ namespace CTRFramework.Sound
                 byte[] data = br.ReadBytes(size);
                 Helpers.WriteToFile(fn, data);
 
-                CSEQ seq = CSEQ.FromFile(fn);
+                Cseq seq = Cseq.FromFile(fn);
                 seq.name = $"sequence_{j.ToString("0000")}";
 
                 if (seqnames.ContainsKey(j))
                     seq.name = seqnames[j];
 
-                CSEQ.PatchName = seq.name;
+                Cseq.PatchName = seq.name;
                 seq.LoadMetaInstruments(seq.name);
                 int i = 0;
                 foreach (var s in seq.Songs)

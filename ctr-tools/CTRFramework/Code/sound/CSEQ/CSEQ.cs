@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace CTRFramework.Sound.CSeq
+namespace CTRFramework.Sound
 {
     /// <summary>
     /// Global CSEQ settings.
     /// </summary>
-    public partial class CSEQ
+    public partial class Cseq
     {
         public static bool USdemo = false;
         public static bool PatchMidi = false;
@@ -29,7 +29,7 @@ namespace CTRFramework.Sound.CSeq
         };
     }
 
-    public partial class CSEQ : IReadWrite
+    public partial class Cseq : IReadWrite
     {
         public string path;
         public string name;
@@ -37,27 +37,27 @@ namespace CTRFramework.Sound.CSeq
         public List<InstrumentShort> samples = new List<InstrumentShort>();
         public List<Instrument> samplesReverb = new List<Instrument>();
 
-        public List<Song> Songs = new List<Song>();
+        public List<CseqSong> Songs = new List<CseqSong>();
 
         public Bank Bank = new Bank();
 
         #region [Constructors, factories]
        
-        public CSEQ()
+        public Cseq()
         {
         }
 
-        public CSEQ(BinaryReaderEx br)
+        public Cseq(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public static CSEQ FromReader(BinaryReaderEx br)
+        public static Cseq FromReader(BinaryReaderEx br)
         {
-            return new CSEQ(br);
+            return new Cseq(br);
         }
 
-        public static CSEQ FromFile(string filename)
+        public static Cseq FromFile(string filename)
         {
             using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
@@ -103,7 +103,7 @@ namespace CTRFramework.Sound.CSeq
             for (int i = 0; i < seqCnt; i++)
             {
                 br.Jump(seqStart + seqPtrs[i]);
-                Songs.Add(Song.FromReader(br));
+                Songs.Add(CseqSong.FromReader(br));
             }
 
             int cseqEnd = (int)br.Position;
@@ -298,7 +298,7 @@ namespace CTRFramework.Sound.CSeq
             return VagSample.DefaultSampleRate;
         }
 
-        public int GetLongSampleIDByTrack(CTrack ct)
+        public int GetLongSampleIDByTrack(CSeqTrack ct)
         {
             return samplesReverb[ct.instrument].SampleID;
         }
