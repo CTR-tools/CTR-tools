@@ -1,6 +1,5 @@
-﻿using System;
+﻿using CTRFramework.Shared;
 using System.Collections.Generic;
-using CTRFramework.Shared;
 
 namespace CTRFramework
 {

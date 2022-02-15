@@ -72,7 +72,7 @@ namespace ctrviewer.Engine
 
                 TriList t = kek[texture];
                 t.textureName = texture;
-                t.textureEnabled = t.textureName == "test" ? false : true; 
+                t.textureEnabled = t.textureName == "test" ? false : true;
                 t.ScrollingEnabled = false;
                 t.PushTri(li);
             }

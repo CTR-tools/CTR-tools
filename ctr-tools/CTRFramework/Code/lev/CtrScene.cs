@@ -248,7 +248,7 @@ namespace CTRFramework
 
             List<uint> ptrs = new List<uint>();
 
-            
+
             foreach (var w in waterAnim)
             {
                 ptrs.Add(w.ptrWaterAnim.Address.ToUInt32());

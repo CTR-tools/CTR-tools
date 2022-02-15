@@ -1,8 +1,10 @@
 ﻿using CTRFramework.Shared;
+using System;
+using System.Collections.Generic;
 
 namespace CTRFramework.Sound
 {
-    public class XaInfoEntry : IRead
+    public class XaInfoEntry : IReadWrite
     {
         public byte Index;
         public byte FileIndex;
@@ -39,7 +41,7 @@ namespace CTRFramework.Sound
         /// Writes XaInfoEntry data to stream using binary writer.
         /// </summary>
         /// <param name="bw">BinaryWriterEx object.</param>
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write(Index);
             bw.Write(FileIndex);

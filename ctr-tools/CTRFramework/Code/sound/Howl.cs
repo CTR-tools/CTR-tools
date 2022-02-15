@@ -1,11 +1,10 @@
 ﻿using CTRFramework.Shared;
-using CTRFramework.Sound;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
-using System.Xml;
 using System.Text;
+using System.Xml;
 
 namespace CTRFramework.Sound
 {
@@ -46,7 +45,7 @@ namespace CTRFramework.Sound
             return result;
         }
 
-        List<ushort> unk = new List<ushort>(); //this is speculated to be related to some vab offsets
+        List<ushort> spuIndex = new List<ushort>(); //this is speculated to be related to some vab offsets
         List<int> ptrBanks = new List<int>();
         List<int> ptrSeqs = new List<int>();
 
@@ -90,7 +89,7 @@ namespace CTRFramework.Sound
 
             foreach (XmlElement el in doc.SelectNodes("/data/howl/entry"))
             {
-                if (md5.ToLower() == el["md5"].InnerText.ToLower() )
+                if (md5.ToLower() == el["md5"].InnerText.ToLower())
                 {
                     Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.");
                     banknames = Meta.LoadNumberedList(el["banks"].InnerText);
@@ -128,16 +127,16 @@ namespace CTRFramework.Sound
             bw.Write((int)version);
             bw.Seek(8);
 
-            bw.Write(unk.Count);
+            bw.Write(spuIndex.Count);
             bw.Write(samplesSfx.Count);
             bw.Write(samplesEngineSfx.Count);
 
             bw.Write(Banks.Count);
             bw.Write(Songs.Count);
 
-            bw.Write(unk.Count * 4 + (samplesSfx.Count + samplesEngineSfx.Count) * 8 + (Banks.Count + Songs.Count) * 2); //sampleDataSize
+            bw.Write(spuIndex.Count * 4 + (samplesSfx.Count + samplesEngineSfx.Count) * 8 + (Banks.Count + Songs.Count) * 2); //sampleDataSize
 
-            foreach (var value in unk)
+            foreach (var value in spuIndex)
             {
                 bw.Write((short)0);
                 bw.Write(value);
@@ -215,7 +214,7 @@ namespace CTRFramework.Sound
                 if (br.ReadUInt16() != 0)
                     Helpers.Panic(this, PanicType.Assume, "upper word is not 0.");
 
-                unk.Add(br.ReadUInt16());
+                spuIndex.Add(br.ReadUInt16());
             }
 
             samplesSfx = InstanceList<InstrumentShort>.FromReader(br, (uint)br.Position, numSfx);
@@ -245,15 +244,14 @@ namespace CTRFramework.Sound
 
             Console.WriteLine(ToString());
 
-            
+
             StringBuilder sb = new StringBuilder();
 
             foreach (var bank in Banks)
                 foreach (var sample in bank.samples.Values)
                     sb.AppendLine($"{sample.ID},{sample.Hash.ToString("X8")}");
-            
+
             Helpers.WriteToFile(Path.Combine(Meta.BasePath, "test.txt"), sb.ToString());
-            
         }
 
         public void ExportCSEQ(string path)
@@ -286,6 +284,7 @@ namespace CTRFramework.Sound
             StringBuilder sb = new StringBuilder();
 
             int x = 0;
+
             foreach (var sample in samplesSfx)
             {
                 sb.AppendLine($"{x.ToString("0000")}_{x.ToString("X4")}={Howl.GetName(sample.SampleID, samplenames)}");
@@ -412,7 +411,7 @@ namespace CTRFramework.Sound
 
         public override string ToString()
         {
-            return $"Version: {version.ToString()}\r\nSamples: {samplesSfx.Count}\r\nBanks: {Banks.Count}\r\nSequences: {Songs.Count}";
+            return $"Version: {version}\r\nspuIndices: {spuIndex.Count}\r\nSamples: {samplesSfx.Count}\r\nBanks: {Banks.Count}\r\nSequences: {Songs.Count}";
         }
     }
 }

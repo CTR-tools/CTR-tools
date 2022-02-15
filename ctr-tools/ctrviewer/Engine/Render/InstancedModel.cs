@@ -11,6 +11,7 @@ namespace ctrviewer.Engine.Render
         public Vector3 Rotation = Vector3.Zero;
         public Vector3 Scale = Vector3.One;
         private string _modelName;
+
         public string ModelName
         {
             get { return _modelName; }

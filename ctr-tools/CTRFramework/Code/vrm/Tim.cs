@@ -87,7 +87,7 @@ namespace CTRFramework.Vram
         public void Read(BinaryReaderEx br)
         {
             if (br.ReadUInt32() != magic)
-                Console.WriteLine("Houston! magic mismatch");
+                Helpers.Panic(this, PanicType.Warning, "Houston! magic mismatch");
 
             uint flags = br.ReadUInt32();
 
@@ -102,7 +102,7 @@ namespace CTRFramework.Vram
             Helpers.Panic(this, PanicType.Info, bpp + " " + hasClut);
 
             if ((((flags >> 3) & 1) == 1) != hasClut)
-                Console.WriteLine("Houston! bpp and clut mismatch.");
+                Helpers.Panic(this, PanicType.Warning, "Houston! bpp and clut mismatch.");
 
             if (hasClut)
             {
@@ -245,7 +245,7 @@ namespace CTRFramework.Vram
 
         public byte[] SaveBMPToStream(byte[] pal)
         {
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 using (var bw = new BinaryWriterEx(ms))
                 {

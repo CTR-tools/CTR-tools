@@ -129,7 +129,7 @@ namespace CTRFramework.Shared
         {
             return GetTextFromResource(resource).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
         }
-        
+
         public static List<Vertex> Subdivide(List<Vertex> vertices)
         {
             if (vertices.Count != 4)

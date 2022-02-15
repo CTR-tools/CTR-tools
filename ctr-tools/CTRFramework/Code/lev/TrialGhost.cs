@@ -1,11 +1,9 @@
-﻿using System;
+﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CTRFramework.Shared;
 using System.IO;
 using System.Numerics;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -106,10 +104,11 @@ namespace CTRFramework
                             sb.AppendFormat($"v {x} {y} {z}\r\n");
                             break;
                         case 0x81: br.Seek(2); break;
-                        case 0x82: br.Seek(5);  break;
+                        case 0x82: br.Seek(5); break;
                         case 0x83: br.Seek(1); break;
                         case 0x84: break;
-                        default: br.Seek(-1);
+                        default:
+                            br.Seek(-1);
                             x += br.ReadSByte() / 100f * 8;
                             y += br.ReadSByte() / 100f * 8;
                             z += br.ReadSByte() / 100f * 8;
@@ -120,7 +119,7 @@ namespace CTRFramework
                 }
             }
 
-            Helpers.WriteToFile(filename, sb.ToString());       
+            Helpers.WriteToFile(filename, sb.ToString());
         }
 
         public override string ToString()

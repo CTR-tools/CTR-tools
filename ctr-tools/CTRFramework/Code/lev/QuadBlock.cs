@@ -451,7 +451,7 @@ namespace CTRFramework
                         }
                     }
 
-                   //handle texture rotations
+                    //handle texture rotations
                     switch (faceFlags[i].Rotation)
                     {
                         case RotateFlipType.None: break;
@@ -464,7 +464,7 @@ namespace CTRFramework
                         case RotateFlipType.Flip: QuadTexFlip(buf); break;
                         default: throw new Exception("Impossible QuadRotation.");
                     }
-                    
+
                     //handle degenerated quads
                     switch (faceFlags[i].faceMode)
                     {

@@ -1,11 +1,10 @@
 ﻿using CTRFramework;
+using ctrviewer.Engine.Input;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 using System;
-using ctrviewer.Engine.Input;
-using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Testing
 {
@@ -48,7 +47,8 @@ namespace ctrviewer.Engine.Testing
         public Vector3 Direction = Vector3.Zero;
 
         private float _value = 0;
-        public float Value {
+        public float Value
+        {
             get
             {
                 if (_value > MaxValue)

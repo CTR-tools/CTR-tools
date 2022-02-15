@@ -16,10 +16,7 @@ namespace CTRFramework.Sound
         protected ushort _freq;
         public ushort SampleID { get; set; }
         protected short _always0;
-
-        public short unknownFF80 { get; set; }
-        public byte reverb { get; set; }
-        public byte reverb2 { get; set; }
+        public uint ADSR { get; set; }  // assumes to be raw psx adsr value passed directly to psyq
 
         public MetaInst metaInst { get; set; }
 
@@ -37,13 +34,19 @@ namespace CTRFramework.Sound
             get { return _volume / 255f; }
             set
             {
-                if (_volume < 0)
+                if (value < 0)
+                {
                     _volume = 0;
+                    return;
+                }
 
-                if (_volume > 1)
-                    _volume = 1;
+                if (value > 1)
+                {
+                    _volume = 255;
+                    return;
+                }
 
-                _volume = (byte)(value * 255f);
+                _volume = (byte)Math.Round(value * 255f);
             }
         }
 
@@ -74,9 +77,7 @@ namespace CTRFramework.Sound
             _always0 = br.ReadInt16();
             _freq = br.ReadUInt16();
             SampleID = br.ReadUInt16();
-            unknownFF80 = br.ReadInt16();
-            reverb = br.ReadByte();
-            reverb2 = br.ReadByte();
+            ADSR = br.ReadUInt32();
         }
 
         public virtual void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
@@ -86,9 +87,7 @@ namespace CTRFramework.Sound
             bw.Write((short)0);
             bw.Write((short)_freq);
             bw.Write((short)SampleID);
-            bw.Write((short)unknownFF80);
-            bw.Write((byte)reverb);
-            bw.Write((byte)reverb2);
+            bw.Write(ADSR);
         }
     }
 

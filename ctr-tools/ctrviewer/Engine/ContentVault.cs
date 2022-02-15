@@ -1,5 +1,4 @@
-﻿using CTRFramework;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -43,26 +42,33 @@ namespace ctrviewer.Engine
 
         public static bool AddTexture(string name, Texture2D texture)
         {
-            if (Textures.ContainsKey(name))
+            lock (Textures)
             {
-                //Textures[name] = texture;
-                Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate texture: '{name}'.");
-                return false;
-            }
+                if (Textures.ContainsKey(name))
+                {
+                    Textures[name] = texture;
+                    Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate texture: '{name}'.");
+                    return true;
+                }
 
-            Textures.Add(name, texture);
-            return true;
+                Textures.Add(name, texture);
+                return true;
+            }
         }
         public static bool AddReplacementTexture(string name, Texture2D texture)
         {
-            if (ReplacementTextures.ContainsKey(name))
+            lock (ReplacementTextures)
             {
-                Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate replacement texture: '{name}'.");
-                return false;
-            }
+                if (ReplacementTextures.ContainsKey(name))
+                {
+                    ReplacementTextures[name] = texture;
+                    Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate replacement texture: '{name}'.");
+                    return false;
+                }
 
-            ReplacementTextures.Add(name, texture);
-            return true;
+                ReplacementTextures.Add(name, texture);
+                return true;
+            }
         }
 
         public static bool AddModel(string name, TriListCollection model)
@@ -109,10 +115,12 @@ namespace ctrviewer.Engine
 
         public static void Clear()
         {
-            alphalist.Clear();
             Textures.Clear();
-
+            ReplacementTextures.Clear();
+            alphalist.Clear();
             Models.Clear();
+            Shaders.Clear();
+            Sounds.Clear();
         }
     }
 }

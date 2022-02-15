@@ -1,8 +1,6 @@
 ﻿using CTRFramework.Shared;
-using System.Collections.Generic;
-using System.Text;
 using System;
-using System.IO;
+using System.Collections.Generic;
 
 namespace CTRFramework
 {
@@ -31,7 +29,7 @@ namespace CTRFramework
             br.Seek(6);
 
             long pos = br.Position;
-            
+
             if (cnt > 4)
             {
                 var tropy = Instance<TrialGhost>.FromReader(br, ptrs[4]);
@@ -47,7 +45,7 @@ namespace CTRFramework
                 //oxide.Save(Path.Combine(Meta.BasePath, "oxide.gst"));
                 //oxide.ToObj(Path.Combine(Meta.BasePath, "oxide.obj"));
             }
-            
+
             br.Jump(pos);
         }
     }

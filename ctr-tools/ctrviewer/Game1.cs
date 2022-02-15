@@ -187,6 +187,8 @@ namespace ctrviewer
         {
             graphics.SynchronizeWithVerticalRetrace = eng.Settings.VerticalSync;
             IsFixedTimeStep = eng.Settings.VerticalSync;
+            // graphics.SynchronizeWithVerticalRetrace = false;
+
             graphics.ApplyChanges();
         }
 
@@ -248,9 +250,12 @@ namespace ctrviewer
         {
             GameConsole.Write($"ctrviewer - {version}");
 
+            double temp = (1000d / (double)60) * 10000d;
+            TargetElapsedTime = new TimeSpan((long)temp);
+
             Content.RootDirectory = "Content";
 
-            graphics.HardwareModeSwitch = false;
+            graphics.HardwareModeSwitch = true;
 
             eng = new MainEngine(this);
 
@@ -264,10 +269,9 @@ namespace ctrviewer
             graphics.GraphicsProfile = GraphicsProfile.HiDef;
             UpdateAntiAlias();
             UpdateVSync();
-            graphics.ApplyChanges();
+            //graphics.ApplyChanges();
 
             Window.AllowUserResizing = true;
-
 
             IsMouseVisible = false;
 
@@ -562,14 +566,17 @@ namespace ctrviewer
 
         /// <summary>
         /// Loads all necessary textures and processes as required (generates mips, loads replacements, etc)
+        /// Should be called after all scenes are already loaded to Scenes array.
         /// </summary>
         private void LoadTextures()
         {
+
             GameConsole.Write("LoadTextures()");
 
             Dictionary<string, string> replacements = new Dictionary<string, string>();
 
-            if (Directory.Exists("newtex"))
+            //try to load all png replacement textures, if newtex folder exists
+            if (Directory.Exists("newtex") && EngineSettings.Instance.UseTextureReplacements)
             {
                 string[] files = Directory.GetFiles("newtex", "*.png", SearchOption.AllDirectories);
 
@@ -587,13 +594,18 @@ namespace ctrviewer
                 }
             }
 
+            List<Task> tasks = new List<Task>();
+
+            int i = 0;
+            int x = 0;
+
+            foreach (var s in Scenes)
+                x += s.ctrvram.textures.Count;
+
             foreach (var s in Scenes)
             {
-                int x = s.ctrvram.textures.Count;
-                int i = 0;
-
-                var lowtex = s.GetTexturesList(Detail.Med);
-                var medtex = s.GetTexturesList(Detail.Low);
+                var lowtex = s.GetTexturesList(Detail.Low);
+                var medtex = s.GetTexturesList(Detail.Med);
                 var mdltex = s.GetTexturesList(Detail.Models);
 
                 foreach (var t in s.ctrvram.textures)
@@ -601,11 +613,28 @@ namespace ctrviewer
                     if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key) || mdltex.ContainsKey(t.Key))
                     {
                         loadingStatus = $"generate mips: {i}/{x}";
-                        LoadTexture(t, replacements);
+
+                        Task task = new Task(() =>
+                        {
+                            //GameConsole.Write($"{t.Key} in {System.Threading.Thread.CurrentThread.ManagedThreadId}");
+                            LoadTexture(t, replacements);
+                        });
+                        tasks.Add(task);
                         i++;
                     }
                 }
             }
+
+            loadingStatus = "now waiting for tasks to finish";
+
+            foreach (var task in tasks)
+                task.Start();
+
+            Task.WaitAll(tasks.ToArray());
+
+            tasks.Clear();
+
+            loadingStatus = "tasks done";
         }
 
 
@@ -613,8 +642,13 @@ namespace ctrviewer
         {
             bool alpha = false;
 
-            ContentVault.AddTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) : MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false));
-            
+            ContentVault.AddTexture(t.Key,
+                eng.Settings.GenerateMips ?
+                MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) :
+               MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false)
+                );
+
+            /*
             if (EngineSettings.Instance.UseTextureReplacements && replacements != null)
                 if (replacements.ContainsKey(t.Key))
                     ContentVault.AddReplacementTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, replacements[t.Key], out alpha) : Texture2D.FromFile(GraphicsDevice, replacements[t.Key]));
@@ -622,6 +656,7 @@ namespace ctrviewer
             if (alpha)
                 if (!ContentVault.alphalist.Contains(t.Key))
                     ContentVault.alphalist.Add(t.Key);
+            */
         }
 
 
@@ -635,7 +670,7 @@ namespace ctrviewer
         private CtrScene LoadSceneFromBig(int index)
         {
             CtrVrm mvram = big.ReadEntry(index).ParseAs<CtrVrm>();
-            CtrScene cc = big.ReadEntry(index+1).ParseAs<CtrScene>();
+            CtrScene cc = big.ReadEntry(index + 1).ParseAs<CtrScene>();
             cc.SetVram(mvram);
 
             return cc;
@@ -1284,7 +1319,7 @@ namespace ctrviewer
 
                         if (MouseHandler.IsScrollingUp)
                             eng.Cameras[CameraType.DefaultCamera].speedScale += 0.1f;
-                        
+
                         if (MouseHandler.IsScrollingDown)
                             eng.Cameras[CameraType.DefaultCamera].speedScale -= 0.1f;
                     }

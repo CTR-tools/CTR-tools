@@ -29,11 +29,10 @@ namespace CTRTools.Controls
         public BigFileControl()
         {
             InitializeComponent();
-            this.DoubleBuffered = true;
             onReaderUpdated += LoadFromReader;
         }
 
-        private async void LoadBigFull(string path)
+        private void LoadBigFull(string path)
         {
             if (!File.Exists(path))
             {

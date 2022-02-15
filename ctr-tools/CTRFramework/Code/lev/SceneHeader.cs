@@ -166,7 +166,7 @@ namespace CTRFramework
             numRestartPts = br.ReadUInt32();
             ptrRestartPts = PsxPtr.FromReader(br);
 
-            skip2 = br.ReadBytes(4*4);
+            skip2 = br.ReadBytes(4 * 4);
 
             bgColorTop = new Vector4b(br);
             bgColorBottom = new Vector4b(br);

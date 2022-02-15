@@ -1,7 +1,6 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Numerics;
 
 namespace CTRFramework
@@ -33,8 +32,9 @@ namespace CTRFramework
             set => pose = value;
         }
 
-        public CtrThreadID ThreadID { 
-            get => threadID; 
+        public CtrThreadID ThreadID
+        {
+            get => threadID;
             set => threadID = value;
         }
         #endregion

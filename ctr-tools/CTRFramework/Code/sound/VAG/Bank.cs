@@ -1,9 +1,9 @@
 ﻿using CTRFramework.Shared;
+using Force.Crc32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Force.Crc32;
-using System;
 
 namespace CTRFramework.Sound
 {
@@ -15,8 +15,9 @@ namespace CTRFramework.Sound
 
         private byte[] _data;
 
-        public byte[] Data {
-            get { return _data;  }
+        public byte[] Data
+        {
+            get { return _data; }
             set
             {
                 _data = value;
@@ -26,7 +27,8 @@ namespace CTRFramework.Sound
 
         private uint _hash = nullhash;
 
-        public uint Hash {
+        public uint Hash
+        {
             get
             {
                 if (_hash != nullhash)
@@ -124,7 +126,7 @@ namespace CTRFramework.Sound
                 }
             }
             while (loops < sampCnt);
-            
+
 
             return;
 
