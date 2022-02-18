@@ -4,9 +4,9 @@ It is recommended to use either NTSC-U or NTSC-J versions. PAL will work too, bu
 Demos are not supported.
 
 ## How to use
-- put bigfile.big in root folder *or* put lev/vrm files in "levels" folder
+- put bigfile.big in root folder *or* put individual lev/vrm files in "levels" folder
 - launch viewer
-- in case of levels folder, it should laod right away
+- in case of levels folder, it should load right away
 - in case of bigfile, press esc -> load level -> select cup -> select level to load
 - check level options and video options menus for various settings
 

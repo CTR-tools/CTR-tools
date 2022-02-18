@@ -445,6 +445,7 @@ namespace ctrviewer
             eng.Settings.VisData = (sender as BoolMenuItem).Value;
             (menu.Find("visboxleaf") as BoolMenuItem).Enabled = eng.Settings.VisData;
         }
+
         public void ToggleVisDataLeaves(object sender, EventArgs args)
         {
             eng.Settings.VisDataLeaves = (sender as BoolMenuItem).Value;
@@ -489,6 +490,7 @@ namespace ctrviewer
         {
             eng.Settings.ShowInvisible = (sender as BoolMenuItem).Value;
         }
+
         public void ToggleGameObjects(object sender, EventArgs args)
         {
             eng.Settings.ShowModels = (sender as BoolMenuItem).Value;
@@ -564,21 +566,22 @@ namespace ctrviewer
 
         bool IsLoading = false;
 
+        string newtexPath = Path.Combine(Meta.BasePath, "newtex");
+
         /// <summary>
         /// Loads all necessary textures and processes as required (generates mips, loads replacements, etc)
         /// Should be called after all scenes are already loaded to Scenes array.
         /// </summary>
         private void LoadTextures()
         {
-
             GameConsole.Write("LoadTextures()");
 
             Dictionary<string, string> replacements = new Dictionary<string, string>();
 
             //try to load all png replacement textures, if newtex folder exists
-            if (Directory.Exists("newtex") && EngineSettings.Instance.UseTextureReplacements)
+            if (Directory.Exists(newtexPath) && EngineSettings.Instance.UseTextureReplacements)
             {
-                string[] files = Directory.GetFiles("newtex", "*.png", SearchOption.AllDirectories);
+                string[] files = Directory.GetFiles(newtexPath, "*.png", SearchOption.AllDirectories);
 
                 foreach (var file in files)
                 {
@@ -625,7 +628,7 @@ namespace ctrviewer
                 }
             }
 
-            loadingStatus = "now waiting for tasks to finish";
+            loadingStatus = "converting textures...";
 
             foreach (var task in tasks)
                 task.Start();
@@ -648,7 +651,7 @@ namespace ctrviewer
                MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false)
                 );
 
-            /*
+            
             if (EngineSettings.Instance.UseTextureReplacements && replacements != null)
                 if (replacements.ContainsKey(t.Key))
                     ContentVault.AddReplacementTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, replacements[t.Key], out alpha) : Texture2D.FromFile(GraphicsDevice, replacements[t.Key]));
@@ -656,7 +659,7 @@ namespace ctrviewer
             if (alpha)
                 if (!ContentVault.alphalist.Contains(t.Key))
                     ContentVault.alphalist.Add(t.Key);
-            */
+            
         }
 
 
