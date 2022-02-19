@@ -255,7 +255,8 @@ namespace ctrviewer
 
             Content.RootDirectory = "Content";
 
-            graphics.HardwareModeSwitch = true;
+            //hardware switch is disabled due to wrong resolution + crash after AA change
+            graphics.HardwareModeSwitch = false;
 
             eng = new MainEngine(this);
 
@@ -572,10 +573,12 @@ namespace ctrviewer
         /// Loads all necessary textures and processes as required (generates mips, loads replacements, etc)
         /// Should be called after all scenes are already loaded to Scenes array.
         /// </summary>
-        private void LoadTextures()
+        private Task LoadTextures()
         {
             GameConsole.Write("LoadTextures()");
+            loadingStatus = "converting textures...";
 
+            List<Task> tasks = new List<Task>();
             Dictionary<string, string> replacements = new Dictionary<string, string>();
 
             //try to load all png replacement textures, if newtex folder exists
@@ -597,14 +600,6 @@ namespace ctrviewer
                 }
             }
 
-            List<Task> tasks = new List<Task>();
-
-            int i = 0;
-            int x = 0;
-
-            foreach (var s in Scenes)
-                x += s.ctrvram.textures.Count;
-
             foreach (var s in Scenes)
             {
                 var lowtex = s.GetTexturesList(Detail.Low);
@@ -612,56 +607,45 @@ namespace ctrviewer
                 var mdltex = s.GetTexturesList(Detail.Models);
 
                 foreach (var t in s.ctrvram.textures)
-                {
                     if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key) || mdltex.ContainsKey(t.Key))
-                    {
-                        loadingStatus = $"generate mips: {i}/{x}";
-
-                        Task task = new Task(() =>
-                        {
-                            //GameConsole.Write($"{t.Key} in {System.Threading.Thread.CurrentThread.ManagedThreadId}");
-                            LoadTexture(t, replacements);
-                        });
-                        tasks.Add(task);
-                        i++;
-                    }
-                }
+                        tasks.Add(LoadTextureAsync(t, replacements));
             }
 
-            loadingStatus = "converting textures...";
-
-            foreach (var task in tasks)
-                task.Start();
-
-            Task.WaitAll(tasks.ToArray());
-
-            tasks.Clear();
-
-            loadingStatus = "tasks done";
+            return Task.WhenAll(tasks);
         }
 
+        private Task LoadTextureAsync(KeyValuePair<string, System.Drawing.Bitmap> t, Dictionary<string, string> replacements = null)
+        {
+            Task task = new Task(() => LoadTexture(t, replacements) );
+            task.Start();
+
+            return task;
+        }
 
         private void LoadTexture(KeyValuePair<string, System.Drawing.Bitmap> t, Dictionary<string, string> replacements = null)
         {
             bool alpha = false;
 
-            ContentVault.AddTexture(t.Key,
-                eng.Settings.GenerateMips ?
+            var texture = eng.Settings.GenerateMips ?
                 MipHelper.LoadTextureFromBitmap(GraphicsDevice, t.Value, out alpha) :
-               MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false)
-                );
+                MipHelper.GetTexture2DFromBitmap(GraphicsDevice, t.Value, out alpha, mipmaps: false);
 
-            
+            ContentVault.AddTexture(t.Key, texture);
+
             if (EngineSettings.Instance.UseTextureReplacements && replacements != null)
                 if (replacements.ContainsKey(t.Key))
-                    ContentVault.AddReplacementTexture(t.Key, eng.Settings.GenerateMips ? MipHelper.LoadTextureFromFile(GraphicsDevice, replacements[t.Key], out alpha) : Texture2D.FromFile(GraphicsDevice, replacements[t.Key]));
+                {
+                    var replacement = eng.Settings.GenerateMips ?
+                        MipHelper.LoadTextureFromFile(GraphicsDevice, replacements[t.Key], out alpha) :
+                        Texture2D.FromFile(GraphicsDevice, replacements[t.Key]);
+
+                    ContentVault.AddReplacementTexture(t.Key, replacement);
+                }
 
             if (alpha)
                 if (!ContentVault.alphalist.Contains(t.Key))
                     ContentVault.alphalist.Add(t.Key);
-            
         }
-
 
         void LoadGenericTextures()
         {
@@ -792,7 +776,7 @@ namespace ctrviewer
             GameConsole.Write("scenes parsed at: " + sw.Elapsed.TotalSeconds);
 
             //loading textures between scenes and conversion to monogame for alpha textures info
-            LoadTextures();
+            LoadTextures().Wait();
 
             GameConsole.Write("textures extracted at: " + sw.Elapsed.TotalSeconds);
 

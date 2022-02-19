@@ -58,11 +58,6 @@ namespace ctrviewer.Engine.Render
             verts.AddRange(v);
             textureEnabled = te;
             textureName = name;
-
-            texture = ContentVault.GetTexture(textureName, false);
-            replacement = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
-            if (replacement == null)
-                replacement = texture;
         }
 
         public TriList(TriList t)
@@ -79,7 +74,12 @@ namespace ctrviewer.Engine.Render
             indices = GenerateIndices().ToArray();
             verts_sealed = verts.ToArray();
             Sealed = true;
-            texture = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
+
+            texture = ContentVault.GetTexture(textureName, false);
+            replacement = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
+            if (replacement == null)
+                replacement = texture;
+
             /*
             for (int i = 0; i < numVerts; i++)
             {
