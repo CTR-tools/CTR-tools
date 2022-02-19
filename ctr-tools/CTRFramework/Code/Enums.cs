@@ -205,7 +205,7 @@ namespace CTRFramework
         Roo = 10,
         Joe = 11,
         Ntropy = 12,
-        Penta = 13,
+        Pen = 13,
         Fake = 14,
         Oxide = 15
     }

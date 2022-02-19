@@ -1087,12 +1087,15 @@ namespace ctrviewer
         GamePadState oldgs = GamePad.GetState(activeGamePad);
         GamePadState newgs = GamePad.GetState(activeGamePad);
 
+        int selectedChar = 0;
+
         /// <summary>
         /// Monogame: default update method
         /// </summary>
         protected override void Update(GameTime gameTime)
         {
-            Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
+            if (!graphics.IsFullScreen) 
+                Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
 
             KeyboardHandler.Update();
             MouseHandler.Update();
@@ -1165,6 +1168,26 @@ namespace ctrviewer
                 if (KeyboardHandler.IsPressed(Keys.OemTilde) || (newgs.IsButtonDown(Buttons.Back) && !oldgs.IsButtonDown(Buttons.Back)))
                 {
                     eng.Settings.ShowConsole = !eng.Settings.ShowConsole;
+                }
+
+                if (KeyboardHandler.IsPressed(Keys.O))
+                {
+                    selectedChar--;
+
+                    if (selectedChar < 0)
+                        selectedChar = 14;
+
+                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
+                }
+
+                if (KeyboardHandler.IsPressed(Keys.P))
+                {
+                    selectedChar++;
+
+                    if (selectedChar > 14)
+                        selectedChar = 0;
+
+                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
                 }
 
                 if (KeyboardHandler.IsDown(Keys.OemMinus)) eng.Settings.FieldOfView--;
@@ -1374,19 +1397,19 @@ namespace ctrviewer
 
             //render ctr models from external folder
             foreach (var v in eng.external)
-                v.Draw(graphics, instanceEffect, null, cam);
+                v.Draw(graphics, instanceEffect, alphaTestEffect, cam);
 
             //maybe render game models
             if (eng.Settings.ShowModels)
             {
                 //render all instanced models
                 foreach (var v in eng.instanced)
-                    v.Draw(graphics, instanceEffect, null, cam);
+                    v.Draw(graphics, instanceEffect, alphaTestEffect, cam);
 
                 //render karts
                 //if (KartMode)
                 foreach (Kart k in karts)
-                    k.Draw(graphics, instanceEffect, null, cam);
+                    k.Draw(graphics, instanceEffect, alphaTestEffect, cam);
             }
 
             //maybe render bot paths
@@ -1396,8 +1419,6 @@ namespace ctrviewer
                 foreach (var v in eng.paths)
                     v.Draw(graphics, instanceEffect, null, cam);
             }
-
-            //Samplers.SetToDevice(graphics, EngineRasterizer.Default);
 
             //render level mesh depending on lod
             foreach (MGLevel qb in (eng.Settings.UseLowLod ? eng.MeshMed : eng.MeshLow))
@@ -1458,6 +1479,9 @@ namespace ctrviewer
 
                 return;
             }
+
+            //reset samples to default
+            Samplers.SetToDevice(graphics, EngineSampler.Default);
 
             //maybe we should switch to screen buffer
             if (EngineSettings.Instance.InternalPSXResolution)

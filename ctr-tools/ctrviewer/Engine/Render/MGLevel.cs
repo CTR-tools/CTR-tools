@@ -85,8 +85,6 @@ namespace ctrviewer.Engine.Render
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
-            Samplers.SetToDevice(graphics, EngineSampler.Default);
-
             //foreach (var ql in normalq)
             foreach (var ql in Trilists)
                 if (ql.Value.type == TriListType.Basic)
