@@ -10,13 +10,14 @@ namespace ctrviewer.Engine.Render
         public Vector3 Position = Vector3.Zero;
         public Vector3 Rotation = Vector3.Zero;
         public Vector3 Scale = Vector3.One;
-        private string _modelName;
 
+        private string _modelName;
         public string ModelName
         {
             get { return _modelName; }
             set { _modelName = value; model = ContentVault.GetModel(_modelName.ToLower()); }
         }
+
         private TriListCollection model;
 
         private bool ShouldRotate = false;
@@ -64,7 +65,7 @@ namespace ctrviewer.Engine.Render
             //alpha.View = effect.View;
             //alpha.Projection = effect.Projection;
 
-            model.Draw(graphics, effect, alpha);
+            model.Draw(graphics, effect, null);
         }
     }
 }

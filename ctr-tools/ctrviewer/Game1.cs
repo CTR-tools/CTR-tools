@@ -367,6 +367,10 @@ namespace ctrviewer
             menu.Find("vsync").Click += ToggleVsync;
             menu.Find("antialias").Click += ToggleAntialias;
             menu.Find("filter").Click += ToggleFiltering;
+            menu.Find("stereo").Click += ToggleStereoscopic;
+            menu.Find("campos").Click += ToggleCamPos;
+            menu.Find("genmips").Click += ToggleMips;
+            menu.Find("console").Click += ToggleConsole;
 
             foreach (var level in Enum.GetNames(typeof(Level)))
             {
@@ -397,14 +401,36 @@ namespace ctrviewer
                 menu.Find(lod.ToString()).Click += SetLodAndReload;
         }
 
+
+        public void ToggleCamPos(object sender, EventArgs args)
+        {
+            eng.Settings.ShowCamPos = (sender as BoolMenuItem).Value;
+        }
+
+        public void ToggleMips(object sender, EventArgs args)
+        {
+            eng.Settings.GenerateMips = (sender as BoolMenuItem).Value;
+        }
+
+        public void ToggleConsole(object sender, EventArgs args)
+        {
+            eng.Settings.ShowConsole = (sender as BoolMenuItem).Value;
+        }
+
         public void ToggleWindowed(object sender, EventArgs args)
         {
             eng.Settings.Windowed = (sender as BoolMenuItem).Value;
+        }
+
+        public void ToggleStereoscopic(object sender, EventArgs args)
+        {
+            eng.Settings.StereoPair = (sender as BoolMenuItem).Value;
         }
         public void ToggleVsync(object sender, EventArgs args)
         {
             eng.Settings.VerticalSync = (sender as BoolMenuItem).Value;
         }
+
         public void ToggleAntialias(object sender, EventArgs args)
         {
             eng.Settings.AntiAlias = (sender as BoolMenuItem).Value;
@@ -1230,11 +1256,6 @@ namespace ctrviewer
                                 switch (menu.SelectedItem.Param)
                                 {
                                     case "lod": eng.Settings.UseLowLod ^= true; break;
-                                    case "console": eng.Settings.ShowConsole ^= true; break;
-                                    case "campos": eng.Settings.ShowCamPos ^= true; break;
-                                    case "genmips": eng.Settings.GenerateMips ^= true; break;
-                                    case "window": eng.Settings.Windowed ^= true; break;
-                                    case "stereo": eng.Settings.StereoPair ^= true; break;
                                     case "kart": eng.Settings.KartMode ^= true; break;
                                     default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
                                 }

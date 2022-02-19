@@ -104,10 +104,8 @@ namespace ctrviewer.Engine.Gui
                 new BoolMenuItem() { Text = "Sky Box", Name = "skybox", Value = settings.ShowSky },
                 new BoolMenuItem() { Text = "Water", Name = "water", Value = settings.ShowWater },
                 new BoolMenuItem() { Text = "Invisible Meshes", Name = "invis", Value = settings.ShowInvisible },
-
                 new BoolMenuItem() { Text = "Visibility Tree", Name = "visbox", Value = settings.VisData },
                 new BoolMenuItem() { Text = "Render BSP Branches", Name = "visboxleaf", Value = settings.VisDataLeaves },
-
                 new BoolMenuItem() { Text = "Game Objects", Name = "inst", Value = settings.ShowModels },
                 new BoolMenuItem() { Text = "Bot Paths", Name = "paths", Value = settings.ShowBotPaths },
                 new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true),
@@ -120,12 +118,12 @@ namespace ctrviewer.Engine.Gui
                 new BoolMenuItem() { Text = "Windowed", Name = "window", Value = settings.Windowed },
                 new BoolMenuItem() { Text = "vsync/fps lock", Name = "vsync", Value = settings.VerticalSync },
                 new BoolMenuItem() { Text = "Antialias", Name = "antialias", Value = settings.AntiAlias },
-                new BoolMenuItem() { Text = "Filtering", Name = "filter", Value = settings.EnableFiltering },
+                new BoolMenuItem() { Text = "Texture filtering", Name = "filter", Value = settings.EnableFiltering },
                 new BoolMenuItem() { Text = "Internal PSX Resolution", Name = "intpsx", Value = settings.InternalPSXResolution },
-                new MenuItem("toggle stereoscopic 3D mode".ToUpper(), "toggle", "stereo", true),
-                new MenuItem("toggle mipmap generation on load".ToUpper(), "toggle", "genmips", true),
-                new MenuItem("show camera position".ToUpper(), "toggle", "campos", true),
-                new MenuItem("show console".ToUpper(), "toggle", "console", true),
+                new BoolMenuItem() { Text = "Stereoscopic mode", Name = "stereo", Value = settings.StereoPair },
+                new BoolMenuItem() { Text = "Generate mip maps", Name = "genmips", Value = settings.GenerateMips },
+                new BoolMenuItem() { Text = "Show camera position", Name = "campos", Value = settings.ShowCamPos },
+                new BoolMenuItem() { Text = "Show console", Name = "console", Value = settings.ShowConsole },
                 new MenuItem("back".ToUpper(), "link", "main", true)
             });
 
@@ -235,15 +233,19 @@ namespace ctrviewer.Engine.Gui
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
-            List<MenuItem> main = new List<MenuItem>();
-            main.Add(new MenuItem("resume".ToUpper(), "close", "", true));
-            //main.Add(new MenuItem("reload level".ToUpper(), "load", "", true));
-            main.Add(new MenuItem("load level".ToUpper(), "link", "cupmenu", Game1.BigFileExists)); // File.Exists("bigfile.big")));
-            main.Add(new MenuItem("level options".ToUpper(), "link", "level", true));
-            main.Add(new MenuItem("video options".ToUpper(), "link", "video", true));
-            main.Add(new MenuItem("time of day".ToUpper(), "link", "tod", true));
-            main.Add(new MenuItem("kart mode".ToUpper(), "toggle", "kart", true));
-            main.Add(new MenuItem("quit".ToUpper(), "exit", "", true));
+            var main = new List<MenuItem>
+            {
+                new MenuItem("resume".ToUpper(), "close", "", true),
+                //new MenuItem("reload level".ToUpper(), "load", "", true),
+                new MenuItem("load level".ToUpper(), "link", "cupmenu", Game1.BigFileExists),
+                new MenuItem("level options".ToUpper(), "link", "level", true),
+                new MenuItem("video options".ToUpper(), "link", "video", true),
+                new MenuItem("time of day".ToUpper(), "link", "tod", true),
+                new MenuItem("kart mode".ToUpper(), "toggle", "kart", true),
+                new MenuItem("quit".ToUpper(), "exit", "", true),
+            };
+
+            menus.Add("main", main);
 
             menus.Add("tod", new List<MenuItem>() {
                 new MenuItem("day".ToUpper(), "tod_day", "", true),
@@ -253,8 +255,6 @@ namespace ctrviewer.Engine.Gui
             });
 
             #endregion
-
-            menus.Add("main", main);
 
             items = main;
 
