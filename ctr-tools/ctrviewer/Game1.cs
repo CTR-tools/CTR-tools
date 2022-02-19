@@ -1151,10 +1151,10 @@ namespace ctrviewer
                 if (eng.Settings.StereoPair)
                 {
                     if (newgs.IsButtonDown(Buttons.RightShoulder) || KeyboardHandler.IsDown(Keys.OemOpenBrackets))
-                        eng.Settings.StereoPairSeparation += 5;
+                        eng.Settings.StereoPairSeparation += (float)(300 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
 
                     if (newgs.IsButtonDown(Buttons.LeftShoulder) || KeyboardHandler.IsDown(Keys.OemCloseBrackets))
-                        eng.Settings.StereoPairSeparation -= 5;
+                        eng.Settings.StereoPairSeparation -= (float)(300 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
 
                     if (eng.Settings.StereoPairSeparation < 0) eng.Settings.StereoPairSeparation = 0;
 
