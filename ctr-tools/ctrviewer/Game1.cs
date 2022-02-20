@@ -243,6 +243,11 @@ namespace ctrviewer
                 SetInternalResolution();
         }
 
+        public void Window_ClientSizeChanged(object sender, EventArgs e)
+        {
+            UpdateSplitscreenViewports();
+        }
+
         /// <summary>
         /// Monogame: default initialize method
         /// </summary>
@@ -273,6 +278,7 @@ namespace ctrviewer
             //graphics.ApplyChanges();
 
             Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += Window_ClientSizeChanged;
 
             IsMouseVisible = false;
 
