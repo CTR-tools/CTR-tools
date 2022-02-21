@@ -10,6 +10,8 @@ Demos are not supported.
 - in case of bigfile, press esc -> load level -> select cup -> select level to load
 - check level options and video options menus for various settings
 
+*You can speed up loading times by disabling mip map generation at the cost of texture flickering in the distance.*
+
 ## Controls
 Notice: XInput gamepad is strongly recommended, but mouse+keyboards is supported too.
 You can also use x360ce for DirectInput devices.

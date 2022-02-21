@@ -608,7 +608,6 @@ namespace ctrviewer
         private Task LoadTextures()
         {
             GameConsole.Write("LoadTextures()");
-            loadingStatus = "converting textures...";
 
             List<Task> tasks = new List<Task>();
             Dictionary<string, string> replacements = new Dictionary<string, string>();
@@ -695,6 +694,8 @@ namespace ctrviewer
             return cc;
         }
 
+        CtrScene menu_models;
+
         /// <summary>
         /// Loads all models from menu_models.lev
         /// </summary>
@@ -702,7 +703,7 @@ namespace ctrviewer
         {
             if (big == null) return;
 
-            Scenes.Add(LoadSceneFromBig(215));
+            Scenes.Add(menu_models == null ? LoadSceneFromBig(215) : menu_models);
 
             /*
             foreach (var model in cc.Models)
@@ -765,15 +766,13 @@ namespace ctrviewer
         {
             GameConsole.Write("LoadLevel()");
 
-            loadingStatus = "begin";
-
             RenderEnabled = false;
 
-            //wait for the end of frame, in case we are still rendering.
-            while (IsDrawing) { };
+            loadingStatus = "disposing...";
 
-            //Dispose();
             eng.Clear();
+
+            loadingStatus = "loading necessary data...";
 
             //making sure we have default stuff loaded. maybe should just allocate statically?
             LoadCones();
@@ -801,18 +800,12 @@ namespace ctrviewer
             }
             */
 
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-
-            GameConsole.Write("scenes parsed at: " + sw.Elapsed.TotalSeconds);
+            loadingStatus = "loading textures...";
 
             //loading textures between scenes and conversion to monogame for alpha textures info
             LoadTextures().Wait();
 
-            GameConsole.Write("textures extracted at: " + sw.Elapsed.TotalSeconds);
-
-            loadingStatus = "converting scenes";
+            loadingStatus = "converting scenes...";
 
             foreach (var s in Scenes)
             {
@@ -820,8 +813,6 @@ namespace ctrviewer
                 eng.MeshMed.Add(CrashTeamRacingLoader.FromScene(s, Detail.Med));
                 eng.MeshLow.Add(CrashTeamRacingLoader.FromScene(s, Detail.Low));
             }
-
-            GameConsole.Write("converted scenes to monogame render at: " + sw.Elapsed.TotalSeconds);
 
             //force 1st scene sky and back color
             if (Scenes.Count > 0)
@@ -848,6 +839,7 @@ namespace ctrviewer
                 }
             }
 
+            loadingStatus = "convering models";
 
             foreach (var scene in Scenes)
                 foreach (var model in scene.Models)
@@ -898,6 +890,8 @@ namespace ctrviewer
                         ));
                 }
 
+                loadingStatus = "put paths...";
+
                 //put all restart points
                 foreach (var n in s.restartPts)
                     eng.paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Position), Vector3.Zero, new Vector3(0.03f)));
@@ -905,16 +899,16 @@ namespace ctrviewer
                 //put all botpaths
                 if (s.nav.paths.Count == 3)
                 {
-                    foreach (NavFrame n in s.nav.paths[0].Frames)
+                    foreach (var n in s.nav.paths[0].Frames)
                         eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
-                    foreach (NavFrame n in s.nav.paths[1].Frames)
+                    foreach (var n in s.nav.paths[1].Frames)
                         eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
-                    foreach (NavFrame n in s.nav.paths[2].Frames)
+                    foreach (var n in s.nav.paths[2].Frames)
                         eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
                 }
             }
 
-            GameConsole.Write("extracted dynamics an bsp at: " + sw.Elapsed.TotalSeconds);
+            loadingStatus = "populate bsp...";
 
             foreach (var s in Scenes)
             {
@@ -924,9 +918,7 @@ namespace ctrviewer
                 GameConsole.Write(s.Info());
             }
 
-            sw.Stop();
-
-            GameConsole.Write("level done: " + sw.Elapsed.TotalSeconds);
+            loadingStatus = "done.";
 
             UpdateEffects();
 
@@ -1071,21 +1063,29 @@ namespace ctrviewer
 
             List<CtrScene> scenes = new List<CtrScene>();
 
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             for (int i = 0; i < absId.Length; i++)
             {
+                loadingStatus = $"loading scene: {i + 1}/{absId.Length}";
+
                 //if it's a level, consider level type to load (1p, 2p, 4p, tt)
                 if (absId[i] < 200)
                     absId[i] += (int)levelType * 2;
 
                 scenes.Add(LoadSceneFromBig(absId[i]));
-
-                loadingStatus = $"scenes: {i}/{absId.Length}";
             }
 
             Scenes = scenes;
 
             LoadAllScenes();
             ResetCamera();
+
+            sw.Stop();
+
+            GameConsole.Write($"loading done in {sw.Elapsed.TotalSeconds} seconds");
         }
 
         /// <summary>
