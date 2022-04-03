@@ -5,8 +5,8 @@
 
 Various tools to operate Crash Team Racing (PS1) game files.
 
-Download latest release here: https://github.com/DCxDemo/CTR-tools/releases/latest \
-Tools description: https://github.com/DCxDemo/CTR-tools/wiki/Tools-description
+Download latest release here: https://github.com/CTR-tools/CTR-tools/releases/latest \
+Tools description: https://github.com/CTR-tools/CTR-tools/wiki/Tools-description
 
 Join the CTR-tools Discord server: https://discord.gg/WHkuh2n
 
@@ -24,7 +24,7 @@ Join the CTR-tools Discord server: https://discord.gg/WHkuh2n
 
 ## Building
 CTR-tools is being developed in Visual Studio Community 2019.\
-Target platform is .NET Framework 4.6 (ctrviewer is targeting .NET Core 3.1).\
+Target platform is .NET Framework 4.6.2 (ctrviewer is targeting .NET Core 3.1).\
 It should be enough to install VS and add dependencies via NuGet.
 
 Project dependencies:
@@ -34,7 +34,7 @@ Project dependencies:
 
 ## Contribution
 Game research is welcome, for starters please check:
-* CTR-tools wiki: https://github.com/DCxDemo/CTR-tools/wiki
-* Open issues: https://github.com/DCxDemo/CTR-tools/issues
+* CTR-tools wiki: https://github.com/CTR-tools/CTR-tools/wiki
+* Open issues: https://github.com/CTR-tools/CTR-tools/issues
 
-2016-2021, DCxDemo*.
+2016-2022, DCxDemo*.
