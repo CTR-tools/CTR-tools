@@ -918,7 +918,7 @@ namespace ctrviewer
                 GameConsole.Write(s.Info());
             }
 
-            loadingStatus = "done.";
+            loadingStatus = "updating effects...";
 
             UpdateEffects();
 
@@ -1041,7 +1041,7 @@ namespace ctrviewer
         }
 
         int loadedLevel = -1;
-        string loadingStatus = "done";
+        string loadingStatus = "...";
 
         /// <summary>
         /// Loads scenes from BIG file by file ID. Make sure you're passing correct file indices.
@@ -1084,6 +1084,8 @@ namespace ctrviewer
             ResetCamera();
 
             sw.Stop();
+
+            loadingStatus = "finished.";
 
             GameConsole.Write($"loading done in {sw.Elapsed.TotalSeconds} seconds");
         }
@@ -1209,7 +1211,8 @@ namespace ctrviewer
                     if (selectedChar < 0)
                         selectedChar = 14;
 
-                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
+                    if (karts.Count > 0)
+                        karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
                 }
 
                 if (KeyboardHandler.IsPressed(Keys.P))
@@ -1219,7 +1222,8 @@ namespace ctrviewer
                     if (selectedChar > 14)
                         selectedChar = 0;
 
-                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
+                    if (karts.Count > 0)
+                        karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
                 }
 
                 if (KeyboardHandler.IsDown(Keys.OemMinus)) eng.Settings.FieldOfView--;
@@ -1244,7 +1248,7 @@ namespace ctrviewer
                                 menu.Visible = false;
                                 break;
                             case "loadbig":
-                                LoadLevelsFromBig(menu.SelectedItem.Value);//, 0, 2); 
+                                LoadLevelsFromBig(menu.SelectedItem.Value);
                                 break;
                             case "tod_day":
                                 SetTimeOfDay(PreferredTimeOfDay.Day);
