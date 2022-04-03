@@ -647,7 +647,7 @@ namespace ctrviewer
 
         private Task LoadTextureAsync(KeyValuePair<string, System.Drawing.Bitmap> t, Dictionary<string, string> replacements = null)
         {
-            Task task = new Task(() => LoadTexture(t, replacements) );
+            Task task = new Task(() => LoadTexture(t, replacements));
             task.Start();
 
             return task;
@@ -1128,7 +1128,7 @@ namespace ctrviewer
         /// </summary>
         protected override void Update(GameTime gameTime)
         {
-            if (!graphics.IsFullScreen) 
+            if (!graphics.IsFullScreen)
                 Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
 
             KeyboardHandler.Update();

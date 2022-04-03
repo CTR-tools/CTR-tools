@@ -34,7 +34,7 @@ namespace CTRFramework
         public void Read(BinaryReaderEx br)
         {
             ptrVertex = br.ReadUInt32();
-            Position = br.ReadVector3s(1/100f);
+            Position = br.ReadVector3s(1 / 100f);
             color = new Vector4b(br);
         }
 

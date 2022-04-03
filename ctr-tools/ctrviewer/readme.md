@@ -29,8 +29,12 @@ You can also use x360ce for DirectInput devices.
 
 ## Kart mode
 A simplistic kart mode is added for fun. Do not expect too much, it isn't intended to be a playable game or anything.
-WASD controls kart, PageUp/PageDown - moves kart up down ignoring collisions
-Can't go backwards, can clip through walls
+
+* move kart: WASD or A - accel, left stick - steer
+* raise up/down, ignoring collisions: PageUp/PageDown or dpad up/down 
+* change kart - O/P keys
+
+*Can't go backwards, can clip through walls*
 
 ## Stereoscopic 3D mode
 You can enable side-by-side steropair mode in video settings.
@@ -54,4 +58,4 @@ If replacement texture is found, it will be used instead the original. It also s
 No limitations apply to this process, but if you want to make it look more like in-game, keep the same size (usually 64x64) as well as convert it to 4bit format (16 colors).
 
 
-2016-2021, DCxDemo*.
+2016-2022, DCxDemo*.
