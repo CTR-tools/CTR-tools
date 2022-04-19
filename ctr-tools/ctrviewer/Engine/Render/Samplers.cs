@@ -43,7 +43,8 @@ namespace ctrviewer.Engine.Render
             DefaultSampler = new SamplerState()
             {
                 Filter = EngineSettings.Instance.EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear,
-                MipMapLevelOfDetailBias = -10,
+                MaxAnisotropy = 16,
+                MipMapLevelOfDetailBias = 0,
                 AddressU = TextureAddressMode.Clamp,
                 AddressV = TextureAddressMode.Clamp
             };
@@ -51,6 +52,8 @@ namespace ctrviewer.Engine.Render
             AnimatedSampler = new SamplerState()
             {
                 Filter = EngineSettings.Instance.EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear,
+                MaxAnisotropy = 16,
+                MipMapLevelOfDetailBias = 0,
                 AddressU = TextureAddressMode.Clamp,
                 AddressV = TextureAddressMode.Wrap,
             };
