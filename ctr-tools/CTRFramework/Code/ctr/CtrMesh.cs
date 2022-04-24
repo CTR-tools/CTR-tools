@@ -433,7 +433,7 @@ namespace CTRFramework
         }
 
         /// <summary>
-        /// Creates meaterial file for OBJ.
+        /// Creates material file for OBJ.
         /// </summary>
         /// <returns>MTL file contents.</returns>
         public string ToMtl()
@@ -470,6 +470,7 @@ namespace CTRFramework
             CtrMesh mesh = new CtrMesh();
             mesh.Name = name + "_hi";
             mesh.lodDistance = -1;
+            mesh.frame = new CtrFrame();
 
             //mesh.tl.Add(new TextureLayout());
 
@@ -748,22 +749,9 @@ namespace CTRFramework
 
                     bw.Jump(ptrVerts + 4);
 
-                    frame.posOffset.Write(bw);
-
-                    bw.Seek(16);
-
-                    bw.Write(frame.vrenderMode);
-
-                    Helpers.Panic(this, PanicType.Debug, Name);
-
-                    foreach (var x in frame.Vertices)
-                    {
-                        x.Write(bw);
-                        Helpers.Panic(this, PanicType.Debug, x.X.ToString("X2") + x.Y.ToString("X2") + x.Z.ToString("X2"));
-                    }
+                    frame.Write(bw, patchTable);
 
                     Helpers.Panic(this, PanicType.Debug, "---");
-
 
                     //write clut
 

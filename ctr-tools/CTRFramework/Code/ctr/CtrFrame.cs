@@ -1,4 +1,5 @@
-﻿using CTRFramework.Shared;
+﻿using System;
+using CTRFramework.Shared;
 using System.Collections.Generic;
 
 namespace CTRFramework
@@ -6,8 +7,12 @@ namespace CTRFramework
     public class CtrFrame
     {
         public Vector4s posOffset = new Vector4s(0, 0, 0, 0);
-        public int vrenderMode = 0;
+        public int vrenderMode = 0x1C; //explain
         public List<Vector3b> Vertices = new List<Vector3b>();
+
+        public CtrFrame()
+        {
+        }
 
         public CtrFrame(BinaryReaderEx br, int numVerts)
         {
@@ -42,6 +47,16 @@ namespace CTRFramework
 
             for (int i = 0; i < numVerts; i++)
                 Vertices.Add(new Vector3b(br));
+        }
+
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        {
+            posOffset.Write(bw);
+            bw.Write(new byte[16]);
+            bw.Write(vrenderMode);
+
+            foreach (var vertex in Vertices)
+                vertex.Write(bw);
         }
     }
 }

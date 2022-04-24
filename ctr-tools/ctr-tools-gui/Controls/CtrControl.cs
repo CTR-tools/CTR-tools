@@ -151,15 +151,6 @@ namespace CTRTools.Controls
             }
         }
 
-        private void actionExportPly_Click(object sender, EventArgs e)
-        {
-            if (ctr != null)
-            {
-                if (fbd.ShowDialog() == DialogResult.OK)
-                    ctr.ExportPly(fbd.SelectedPath);
-            }
-        }
-
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex != -1)
