@@ -9,63 +9,54 @@ namespace CTRFramework
 {
     public class ModelPack : IRead
     {
-        string path;
-
-        IconPack iconPack;
+        public IconPack iconPack;
         public List<CtrModel> Models = new List<CtrModel>();
-        public List<UIntPtr> PatchTable = new List<UIntPtr>();
 
         public ModelPack()
         {
         }
 
-        public ModelPack(string s)
+        public ModelPack(BinaryReaderEx br)
         {
-            path = s;
-
-            byte[] data = File.ReadAllBytes(s);
-
-            using (var br = new BinaryReaderEx(new MemoryStream(data)))
-            {
-                int size = br.ReadInt32();
-                br.Jump(size + 4);
-                int size2 = br.ReadInt32();
-
-                //if size mismatch, assume it's demo
-                if (4 + size + 4 + size2 != br.BaseStream.Length)
-                {
-                    Console.WriteLine("demo!");
-                    br.Jump(0);
-                    Read(br);
-                }
-                else
-                {
-                    using (MemoryStream ms = new MemoryStream(data, 4, size))
-                    {
-                        using (var br2 = new BinaryReaderEx(ms))
-                        {
-                            Read(br2);
-                        }
-                    }
-
-                    PatchTable.Clear();
-
-                    br.Jump(size + 4);
-
-                    int ptrMapSize = br.ReadInt32();
-
-                    for (int i = 0; i < ptrMapSize / 4; i++)
-                        PatchTable.Add(br.ReadUIntPtr());
-                }
-            }
+            Read(br);
         }
 
         public static ModelPack FromFile(string filename)
         {
-            return new ModelPack(filename);
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
+            {
+                return FromReader(br);
+            }
+        }
+
+        public static ModelPack FromReader(BinaryReaderEx br)
+        {
+            return new ModelPack(br);
         }
 
         public void Read(BinaryReaderEx br)
+        {
+            int pos = (int)br.Position;
+
+            int size = br.ReadInt32();
+            br.Jump(size + 4);
+            int size2 = br.ReadInt32();
+
+            br.Jump(pos);
+
+            //if size mismatch, assume it's demo
+            if (4 + size + 4 + size2 != br.BaseStream.Length)
+            {
+                Helpers.Panic("ModelPack", PanicType.Assume, "Assumed Demo MPK!");
+                ReadPack(br);
+            }
+            else
+            {
+                ReadPack(PatchedContainer.FromReader(br).GetReader());
+            }
+        }
+
+        public void ReadPack(BinaryReaderEx br)
         {
             int texOff = br.ReadInt32();
 
