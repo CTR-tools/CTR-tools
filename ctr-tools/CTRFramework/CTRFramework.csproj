@@ -216,15 +216,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\samplenames_pal.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\samplenames_jap.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\samplenames_usademo.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Data\samplehashes.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -232,9 +223,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\banknames_pal.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\samplehashes - Copy.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
