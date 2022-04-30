@@ -1,57 +1,69 @@
 @echo off
 
-rem - CTR-tools ISO-rebuild
-
 rem - _BUILD.BAT: Crash Team Racing ISO rebuild batch file
 rem - --- use Notepad++ for nice syntax highlighting ---
 
+echo CTR-tools ISO-rebuild script by dcxdemo
+
+
 rem - !!! variables !!! change, if needed !!!
 
-	rem - Your emulator location here
-	set epsxe_path="D:\Games\Emu\epsxe 2.0.5\epsxe.exe"
+	rem - Your emulator location here, put full path to your emu here
+	set epsxe_path="epsxe.exe"
+	set duck_path="duckstation.exe"
 
-	set ctr_iso=ctr_rebuild
-	set src_path=ctr_source
+	set rebuild=ctr_rebuild
 	set big_name=bigfile
 
-
-rem - licensing region /us, /eu or /jp
-
-	set region=/us
+	set makeiso=%~dp0\tools\mkpsxiso\mkpsxiso.exe
+	set bigtool=%~dp0\tools\ctrtools\bigtool.exe
 
 
-rem - sets current dir
+echo current directory: %~dp0
 
-	cd /d "%~dp0"
-
-
-rem - assembling bigtool.big
-
-	tools\ctrtools\bigtool %big_name%.txt
+	cd /d "%~dp0\%rebuild%\"
 
 
-rem - move data file to source folder
+echo checking tools...
 
-	move /y %big_name%.big %src_path%
-
-
-rem - building XML tree of source directory only if xml is not present!
-	if not exist %src_path%.xml ( 
-		tools\mkpsxiso\mkisoxml %src_path% -o %src_path%.xml
+	if not exist %makeiso% (
+		echo Error! No mkpsxiso found.
+		goto :end
 	)
 
+	if not exist %bigtool% (
+		echo Error! No bigtool found.
+		goto :end
+	)
 
-rem - building ISO
-
-	tools\mkpsxiso\mkpsxiso %src_path%.xml -y -q -o %ctr_iso%.bin
-
-
-rem - licensing ISO
-
-	tools\psxlicense\psxlicense %region% /i %ctr_iso%.bin
+echo OK!
 
 
-rem - done, launch epsxe
+echo rebuilding bigfile
+
+	%bigtool% "%big_name%.txt"
+
+
+echo rebuilding ISO
+
+	%makeiso% "%~dp0\%rebuild%.xml" -y -q -o "%~dp0\%rebuild%.bin"
+
+
+rem - maybe we've got an emulator?
+
+	if exist %duck_path% (
+		echo launching Duckstation
+		start "duckstation" %duck_path% "%~dp0\%rebuild%.bin"
+		goto :end
+	)
+
 	if exist %epsxe_path% (
-		start "epsxe" %epsxe_path% -nogui -loadbin %ctr_iso%.bin
+		echo launching ePSXe
+		start "epsxe" %epsxe_path% -nogui -loadbin "%~dp0\%rebuild%.bin"
+		goto :end
 	)
+
+
+echo Work complete!
+
+:end

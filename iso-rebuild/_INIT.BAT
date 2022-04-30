@@ -1,34 +1,62 @@
 @echo off
 
-rem - CTR-tools ISO-rebuild
-
 rem - _INIT.BAT: Crash Team Racing ISO rebuild batch file
 rem - --- use Notepad++ for nice syntax highlighting ---
 
+echo CTR-tools ISO-rebuild script by dcxdemo
+
+
 rem - !!! variables !!! change, if needed !!!
 
-	set ctr_iso=ctr_rebuild
-	set src_path=ctr_source
+	set rebuild=ctr_rebuild
 	set big_name=bigfile
 
+	set dumpiso=%~dp0\tools\mkpsxiso\dumpsxiso.exe
+	set bigtool=%~dp0\tools\ctrtools\bigtool.exe
 
-rem - sets current dir
+echo current directory: %~dp0
 
 	cd /d "%~dp0"
 
 
-rem - moving data file to root folder
+echo checking tools...
 
-	copy %src_path%\%big_name%.big %big_name%.big /y
-
-
-rem - extracting bigfile big
-
-	tools\ctrtools\bigtool %big_name%.big
-
-
-rem - deleting unknown md5 file
-	if exist unknown_md5.txt (
-		del unknown_md5.txt
+	if not exist %dumpiso% (
+		echo Error! No mkpsxiso found.
+		goto :end
 	)
 
+	if not exist %bigtool% (
+		echo Error! No bigtool found.
+		goto :end
+	)
+
+echo OK!
+
+
+rem - checking param
+
+	if "%~1"=="" (
+		echo Pass BIN/ISO image as a parameter for this script.
+		goto :end
+	)
+
+	if not exist %1 (
+		echo File doesn't exist.
+		goto :end
+	)
+
+
+echo dumping iso files
+
+	%dumpiso% %1 -x "%~dp0\%rebuild%" -s "%~dp0\%rebuild%.xml"
+
+
+echo dumping bigfile contents
+
+	%bigtool% "%~dp0\%rebuild%\%big_name%.big"
+
+
+echo Work complete!
+
+:end
