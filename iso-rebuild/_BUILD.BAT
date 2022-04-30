@@ -44,6 +44,11 @@ echo rebuilding bigfile
 	%bigtool% "%big_name%.txt"
 
 
+rem - get back to root
+
+	cd /d "%~dp0"
+
+
 echo rebuilding ISO
 
 	%makeiso% "%~dp0\%rebuild%.xml" -y -q -o "%~dp0\%rebuild%.bin"
