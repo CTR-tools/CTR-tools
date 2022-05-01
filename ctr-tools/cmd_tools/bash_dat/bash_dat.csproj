@@ -71,8 +71,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BashMesh.cs" />
-    <Compile Include="Tex.cs" />
-    <Compile Include="TexPak.cs" />
+    <Compile Include="BashSfx.cs" />
+    <Compile Include="BashTex.cs" />
+    <Compile Include="BashTexPak.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -85,9 +86,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="readme.txt">
+    <None Include="readme.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

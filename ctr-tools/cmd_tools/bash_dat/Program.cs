@@ -13,7 +13,8 @@ namespace bash_dat
             Console.WriteLine(
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 $"CTR-tools: bash_dat - {Meta.GetSignature()}",
-                "Extracts binary files from Crash Bash CRASHBSH.DAT file and converts TEX to BMP.",
+                "Extracts binary files from Crash Bash CRASHBSH.DAT file.",
+                "Supports: TEX to BMP, SFX to VH/VB/SEQ, model to OBJ.",
                 Meta.GetVersion());
 
             if (args.Length == 0)
@@ -28,19 +29,27 @@ namespace bash_dat
                 return;
             }
 
-            string ext = Path.GetExtension(args[0]).ToLower();
-
-            switch (ext)
+            foreach (var arg in args)
             {
-                case ".tex":
-                    LoadTextureFile(args[0]);
-                    break;
-                case ".mdl":
-                    LoadModelFile(args[0]);
-                    break;
-                default:
-                    LoadDataFile(args[0]);
-                    break;
+                Helpers.Panic("Bash", PanicType.Info, $"Converting: {arg}");
+
+                string ext = Path.GetExtension(arg).ToLower();
+
+                switch (ext)
+                {
+                    case ".tex":
+                        LoadTextureFile(arg);
+                        break;
+                    case ".mdl":
+                        LoadModelFile(arg);
+                        break;
+                    case ".sfx":
+                        LoadSfxFile(arg);
+                        break;
+                    default:
+                        LoadDataFile(arg);
+                        break;
+                }
             }
         }
 
@@ -57,7 +66,7 @@ namespace bash_dat
             }
 
             string exe_md5 = Helpers.CalculateMD5(filename);
-            string bsh_md5 = Helpers.CalculateMD5(datapath);
+            //string bsh_md5 = Helpers.CalculateMD5(datapath);
 
             //File.WriteAllText("md5.txt", exe_md5 + "\r\n" + bsh_md5);
 
@@ -174,55 +183,47 @@ namespace bash_dat
             }
         }
 
-        static void LoadTextureFile(string filename)
+        static void LoadTextureFile(string path)
         {
-            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
+            var x = BashTexPak.FromFile(path);
+
+            Console.WriteLine(x.numPals + " " + x.numTex);
+
+            string extpath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path));
+
+            Helpers.CheckFolder(extpath);
+
+            int num = 0;
+
+            foreach (BashTex t in x.tex)
             {
-                TexPak x = new TexPak(br);
+                BMPHeader b = new BMPHeader();
+                b.Update(t.width * 4, t.height, 16, 4);
 
-                Console.WriteLine(x.numPals + " " + x.numTex);
+                byte[] pal = new byte[16 * 4];
 
-                string path = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename));
+                bool bad = false;
 
-                Helpers.CheckFolder(path);
+                int palindex = t.unk2 / 2;
 
-                int num = 0;
-
-                foreach (Tex t in x.tex)
+                if (palindex < 0 || palindex > x.pals.Count)
                 {
-                    BMPHeader b = new BMPHeader();
-                    b.Update(t.width * 4, t.height, 16, 4);
-
-                    byte[] pal = new byte[16 * 4];
-
-                    bool bad = false;
-
-                    int palindex = t.unk2 / 2;
-
-                    if (palindex < 0 || palindex > x.pals.Count)
-                    {
-                        palindex = 0;
-                        bad = true;
-                    }
-
-                    for (int i = 0; i < 16; i++)
-                    {
-                        pal[i * 4 + 0] = x.pals[palindex][i].B;
-                        pal[i * 4 + 1] = x.pals[palindex][i].G;
-                        pal[i * 4 + 2] = x.pals[palindex][i].R;
-                        pal[i * 4 + 3] = x.pals[palindex][i].A;
-                    }
-
-
-                    b.UpdateData(pal, Tim.FixPixelOrder(t.data));
-
-                    using (var bw = new BinaryWriterEx(File.OpenWrite($"{path}\\tex_" + num + (bad ? "_badpal" : "") + ".bmp")))
-                    {
-                        b.Write(bw);
-                    }
-
-                    num++;
+                    palindex = 0;
+                    bad = true;
                 }
+
+                for (int i = 0; i < 16; i++)
+                {
+                    pal[i * 4 + 0] = x.pals[palindex][i].B;
+                    pal[i * 4 + 1] = x.pals[palindex][i].G;
+                    pal[i * 4 + 2] = x.pals[palindex][i].R;
+                    pal[i * 4 + 3] = x.pals[palindex][i].A;
+                }
+
+                b.UpdateData(pal, Tim.FixPixelOrder(t.data));
+                b.Save($"{extpath}\\tex_" + num + (bad ? "_badpal" : "") + ".bmp");
+
+                num++;
             }
         }
 
@@ -245,6 +246,15 @@ namespace bash_dat
                 for (int i = 0; i < numModels; i++)
                     Helpers.WriteToFile(Path.Combine(Path.GetDirectoryName(filename), $"model_{i.ToString("00")}.obj"), models[i].ToObj());
             }
+        }
+
+        static void LoadSfxFile(string filename)
+        {
+            Helpers.Panic("Bash", PanicType.Info, "Loading sfx...");
+
+            var sfx = BashSfx.FromFile(filename);
+            string path = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename));
+            sfx.Export(path);
         }
     }
 }

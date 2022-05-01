@@ -1,9 +1,10 @@
-﻿using CTRFramework.Shared;
+﻿using CTRFramework;
+using CTRFramework.Shared;
 using System;
 
 namespace bash_dat
 {
-    public class Tex
+    public class BashTex : IRead
     {
         public int width;
         public int height;
@@ -13,9 +14,14 @@ namespace bash_dat
         public int unk3; //possible vals = 1, 2, 8, 16
         public byte[] data;
 
-        public Tex(BinaryReaderEx br)
+        public BashTex(BinaryReaderEx br)
         {
             Read(br);
+        }
+
+        public static BashTex FromReader(BinaryReaderEx br)
+        {
+            return new BashTex(br);
         }
 
         public void Read(BinaryReaderEx br)

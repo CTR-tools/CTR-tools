@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace CTRFramework.Vram
 {
@@ -122,7 +123,13 @@ namespace CTRFramework.Vram
             bw.Write(data);
         }
 
-
+        public void Save(string path)
+        {
+            using (var bw = new BinaryWriterEx(File.OpenWrite(path)))
+            {
+                Write(bw);
+            }
+        }
     }
 
     public class FastBitmap

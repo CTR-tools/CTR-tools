@@ -41,7 +41,7 @@ namespace model_reader
 
             if ((File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
             {
-                foreach (string s in Directory.GetFiles(filename, "*.*"))
+                foreach (string s in Directory.GetFiles(filename, "*.*", SearchOption.AllDirectories))
                 {
                     Console.WriteLine(s + " " + Path.IsPathRooted(s));
                     ConvertFile(Path.IsPathRooted(s) ? s : ".\\" + s);
@@ -93,22 +93,22 @@ namespace model_reader
                     }
                 case ".obj":
                     {
-                        OBJ obj = OBJ.FromFile(filename);
-                        CtrModel ctr = CtrModel.FromObj(obj);
+                        var obj = OBJ.FromFile(filename);
+                        var ctr = CtrModel.FromObj(obj);
                         ctr.Save(basepath);
 
                         break;
                     }
                 case ".ply":
                     {
-                        CtrModel ctr = CtrModel.FromPly(filename);
+                        var ctr = CtrModel.FromPly(filename);
                         ctr.Save(basepath);
 
                         break;
                     }
                 case ".mpk":
                     {
-                        ModelPack mpk = ModelPack.FromFile(filename);
+                        var mpk = ModelPack.FromFile(filename);
                         mpk.Extract(Path.Combine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
 
                         break;

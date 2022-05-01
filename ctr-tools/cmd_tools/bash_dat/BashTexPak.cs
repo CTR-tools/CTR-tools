@@ -3,10 +3,11 @@ using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 
 namespace bash_dat
 {
-    public class TexPak
+    public class BashTexPak
     {
         public uint magic;
         public uint size;
@@ -19,11 +20,24 @@ namespace bash_dat
         public uint zero;
 
         public List<List<Color>> pals = new List<List<Color>>();
-        public List<Tex> tex = new List<Tex>();
+        public List<BashTex> tex = new List<BashTex>();
 
-        public TexPak(BinaryReaderEx br)
+        public BashTexPak(BinaryReaderEx br)
         {
             Read(br);
+        }
+
+        public static BashTexPak FromReader(BinaryReaderEx br)
+        {
+            return new BashTexPak(br);
+        }
+
+        public static BashTexPak FromFile(string path)
+        {
+            using (var br = new BinaryReaderEx(File.OpenRead(path)))
+            {
+                return FromReader(br);
+            }
         }
 
         public void Read(BinaryReaderEx br)
@@ -55,7 +69,7 @@ namespace bash_dat
             for (int i = 0; i < numTex; i++)
             {
                 Console.WriteLine(br.HexPos());
-                tex.Add(new Tex(br));
+                tex.Add(BashTex.FromReader(br));
             }
         }
     }

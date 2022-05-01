@@ -173,6 +173,16 @@ namespace CTRFramework.Shared
             return x;
         }
 
+        public int[] ReadArrayInt32(int num)
+        {
+            int[] x = new int[num];
+
+            for (int i = 0; i < num; i++)
+                x[i] = ReadInt32();
+
+            return x;
+        }
+
         public uint[] ReadArrayUInt32(int num)
         {
             uint[] x = new uint[num];
@@ -190,6 +200,11 @@ namespace CTRFramework.Shared
         public List<short> ReadListInt16(int num)
         {
             return ReadArrayInt16(num).ToList();
+        }
+
+        public List<int> ReadListInt32(int num)
+        {
+            return ReadArrayInt32(num).ToList();
         }
 
         public List<uint> ReadListUInt32(int num)
