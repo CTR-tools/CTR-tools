@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace CTRFramework.Vram
 {
@@ -624,6 +625,15 @@ namespace CTRFramework.Vram
             return pal;
         }
 
+        // conversion formulas used in Duckstation. Maps perfectly the rounded floats.
+        // https://stackoverflow.com/questions/2442576/how-does-one-convert-16-bit-rgb565-to-24-bit-rgb888
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint VRAMConvert5To8(uint color) => ((color * 527u) + 23u) >> 6;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint VRAMConvert8To5(uint color) => ((color * 249u) + 1014u) >> 11;
+
         /// <summary>
         /// Converts 5-5-5-1 16 bit color to 8-8-8-8 32 bit color.
         /// </summary>
@@ -632,9 +642,11 @@ namespace CTRFramework.Vram
         /// <returns></returns>
         public static Color Convert16(ushort col, BlendingMode blend = BlendingMode.Standard)
         {
-            byte r = (byte)(((col >> 0) & 0x1F) << 3);
-            byte g = (byte)(((col >> 5) & 0x1F) << 3);
-            byte b = (byte)(((col >> 10) & 0x1F) << 3);
+            uint color = (uint)col;
+
+            byte r = (byte)(VRAMConvert5To8(color >> 0 & 0x1F));
+            byte g = (byte)(VRAMConvert5To8(color >> 5 & 0x1F));
+            byte b = (byte)(VRAMConvert5To8(color >> 10 & 0x1F));
             byte a = 255;
 
             byte stp = (byte)((col >> 15));
@@ -710,7 +722,7 @@ namespace CTRFramework.Vram
 
         public static ushort ConvertTo16(byte r, byte g, byte b)
         {
-            return (ushort)((r >> 3 << 10) | (g >> 3 << 5) | (b >> 3 << 0));
+            return (ushort)((VRAMConvert8To5(r) << 10) | (VRAMConvert8To5(g) << 5) | (VRAMConvert8To5(b) << 0));
         }
 
         public static Color Convert16(byte[] b, BlendingMode blend = BlendingMode.Standard)
