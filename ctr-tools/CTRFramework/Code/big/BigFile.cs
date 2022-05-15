@@ -81,12 +81,13 @@ namespace CTRFramework.Big
         /// <param name="filename">Text file path.</param>
         private void LoadFromTxt(string filename)
         {
-            string path = Path.GetFileNameWithoutExtension(filename);
+            string path = Path.GetDirectoryName(filename);
+            string bigname = Path.GetFileNameWithoutExtension(filename);
             string[] files = File.ReadAllLines(filename);
 
             for (int i = 0; i < files.Length; i++)
             {
-                files[i] = Path.Combine(".\\", path, files[i]);
+                files[i] = Path.Combine(path, bigname, files[i]);
                 Entries.Add(new BigEntry(files[i]));
             }
         }
