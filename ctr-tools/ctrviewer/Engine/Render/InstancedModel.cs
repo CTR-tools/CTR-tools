@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
 {
@@ -10,6 +8,8 @@ namespace ctrviewer.Engine.Render
         public Vector3 Position = Vector3.Zero;
         public Vector3 Rotation = Vector3.Zero;
         public Vector3 Scale = Vector3.One;
+
+        public SimpleAnimation anim = new SimpleAnimation();
 
         private string _modelName;
         public string ModelName
@@ -22,7 +22,7 @@ namespace ctrviewer.Engine.Render
 
         private bool ShouldRotate = false;
 
-        private static List<string> rotated = new List<string>() { "c", "t", "r", "fruit", "crystal" };
+        private static string[] rotated = new string[] { "c", "t", "r", "fruit", "crystal" };
 
         public InstancedModel()
         {
@@ -35,17 +35,20 @@ namespace ctrviewer.Engine.Render
             ModelName = name;
             Scale = scale;
 
-            if (rotated.Contains(ModelName))
-                ShouldRotate = true;
+            foreach (var entry in rotated)
+                if (entry == ModelName)
+                    ShouldRotate = true;
         }
 
         public void Update(GameTime gameTime)
         {
+            anim.Update(gameTime);
+
             if (ShouldRotate)
             {
-                Rotation += new Vector3(2f * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000f, 0, 0);
-                if (Rotation.X >= Math.PI * 2)
-                    Rotation -= new Vector3((float)(Math.PI * 2), 0, 0);
+                // Rotation += new Vector3(2f * (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000f, 0, 0);
+                //  if (Rotation.X >= Math.PI * 2)
+                //      Rotation -= new Vector3((float)(Math.PI * 2), 0, 0);
             }
         }
 
@@ -57,7 +60,11 @@ namespace ctrviewer.Engine.Render
                 return;
             }
 
-            effect.World = Matrix.CreateScale(Scale) * Matrix.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z) * Matrix.CreateTranslation(Position);
+            effect.World = Matrix.CreateScale(Scale * anim.State.Scale) * Matrix.CreateFromYawPitchRoll(
+                Rotation.X + anim.State.Rotation.X,
+                Rotation.Y + anim.State.Rotation.Y,
+                Rotation.Z + anim.State.Rotation.Z
+                ) * Matrix.CreateTranslation(Position + anim.State.Position);
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ProjectionMatrix;
 

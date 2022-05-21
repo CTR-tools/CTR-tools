@@ -84,5 +84,99 @@ namespace ctrviewer.Engine
 
             return coll;
         }
+
+        public static SimpleAnimation ToSimpleAnimation(BotPath path)
+        {
+            var anim = new SimpleAnimation();
+            anim.Keys.Clear();
+
+            int time = 0;
+
+            foreach(var point in path.Frames)
+            {
+                anim.Keys.Add(new AnimationKey() { Position = ToVector3(point.position), Rotation = new Vector3(0), Scale = new Vector3(1), TimeValue = time });
+                time += 200;
+            }
+
+            anim.State = anim.Keys[0];
+
+            return anim;
+        }
+
+        public static SimpleAnimation ToSimpleAnimation(List<Pose> poses)
+        {
+            var anim = new SimpleAnimation();
+            anim.Keys.Clear();
+
+            int time = 0;
+
+            foreach (var point in poses)
+            {
+                anim.Keys.Add(new AnimationKey() {
+                    Position = ToVector3(point.Position),
+                    Rotation = new Vector3(ToVector3(point.Rotation).X, ToVector3(point.Rotation).Y, ToVector3(point.Rotation).Z),
+                    Scale = new Vector3(1),
+                    TimeValue = time });
+
+                time += 200;
+            }
+
+            anim.Keys.Add(anim.Keys[0]);
+
+            anim.State = anim.Keys[0];
+
+            return anim;
+        }
+
+        public static RespawnPoint GetByIndex(List<RespawnPoint> respawns, int index)
+        {
+            foreach (var resp in respawns)
+                if (resp.index == index)
+                    return resp;
+
+            return null;
+        }
+
+        public static SimpleAnimation ToSimpleAnimation(List<RespawnPoint> respawns)
+        {
+            if (respawns.Count == 0)
+            {
+                GameConsole.Write("go fuck yourself");
+                return null;
+            }
+
+            var anim = new SimpleAnimation();
+            anim.Keys.Clear();
+
+            int time = 0;
+
+
+            var zerospawn = GetByIndex(respawns, 0); 
+            var spawn = zerospawn;
+
+            do
+            {
+                var rot = ToVector3(spawn.Pose.Rotation);
+
+                anim.Keys.Add(new AnimationKey()
+                {
+                    Position = ToVector3(spawn.Pose.Position),
+                    Rotation = new Vector3(0), //rot.X, rot.Y, rot.Z),
+                    Scale = new Vector3(1f),
+                    TimeValue = time
+                });
+
+                GameConsole.Write($"added key! {spawn.index} {spawn.prevIndex} {spawn.Pose.Position} {time}");
+
+                time += 250;
+                spawn = spawn.Next;
+            }
+            while (spawn != zerospawn);
+
+            anim.Keys.Add(anim.Keys[0]);
+            anim.State = anim.Keys[0];
+
+            return anim;
+        }
     }
 }

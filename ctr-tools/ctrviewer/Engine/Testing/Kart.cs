@@ -95,6 +95,8 @@ namespace ctrviewer.Engine.Testing
 
     public class Kart : InstancedModel
     {
+        public SimpleAnimation path;
+
         Dictionary<PowerType, Power> Powers = new Dictionary<PowerType, Power>();
 
         Vector3 oldPosition;
@@ -214,6 +216,16 @@ namespace ctrviewer.Engine.Testing
 
         public void Update(GameTime gameTime, List<CtrScene> scenes)
         {
+            if (path != null)
+            {
+                GameConsole.Write(path.Keys[path.frame].TimeValue + " " + path.frame);
+
+                path.Update(gameTime);
+                Position = path.State.Position;
+                Rotation = path.State.Rotation;
+                return;
+            }
+            
             oldPosition = Position;
 
             foreach (var power in Powers)

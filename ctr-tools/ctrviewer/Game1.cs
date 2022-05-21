@@ -839,25 +839,11 @@ namespace ctrviewer
                 }
             }
 
-            loadingStatus = "convering models";
+            loadingStatus = "converting models";
 
             foreach (var scene in Scenes)
                 foreach (var model in scene.Models)
                     ContentVault.AddModel(model.Name, DataConverter.ToTriListCollection(model));
-
-
-            if (Scenes.Count > 0 && karts.Count == 0)
-            {
-                karts.Add(new Kart(
-                    DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position),
-                    new Vector3(-(float)Math.PI / 2f, 0, 0)));
-            }
-
-            if (karts.Count > 0)
-            {
-                karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
-                karts[0].ModelName = eng.Settings.PlayerModel;
-            }
 
             foreach (var s in Scenes)
             {
@@ -892,9 +878,34 @@ namespace ctrviewer
 
                 loadingStatus = "put paths...";
 
+
                 //put all restart points
-                foreach (var n in s.restartPts)
-                    eng.paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Position), Vector3.Zero, new Vector3(0.03f)));
+                foreach (var n in s.respawnPts)
+                {
+                    eng.paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Pose.Position), Vector3.Zero, new Vector3(0.03f)));
+                    GameConsole.Write($"added spawn: {n.Pose.Position}");
+                }
+
+
+
+
+                if (Scenes.Count > 0 && karts.Count == 0)
+                {
+                    karts.Add(new Kart(
+                        DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position),
+                        new Vector3(-(float)Math.PI / 2f, 0, 0)));
+                }
+
+                if (karts.Count > 0)
+                {
+                    karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
+                    karts[0].ModelName = eng.Settings.PlayerModel;
+                    karts[0].path = DataConverter.ToSimpleAnimation(Scenes[0].respawnPts);
+                }
+
+
+
+
 
                 //put all botpaths
                 if (s.nav.paths.Count == 3)
@@ -915,7 +926,7 @@ namespace ctrviewer
                 if (s.visdata.Count > 0)
                     BspPopulate(s.visdata[0], s, 0);
 
-                GameConsole.Write(s.Info());
+                //GameConsole.Write(s.Info());
             }
 
             loadingStatus = "updating effects...";
@@ -1300,6 +1311,9 @@ namespace ctrviewer
                 else
                 {
                     eng.Update(gameTime);
+
+                    if (karts.Count > 0)
+                        karts[0].Update(gameTime);
 
                     if (eng.Settings.KartMode)
                     {
