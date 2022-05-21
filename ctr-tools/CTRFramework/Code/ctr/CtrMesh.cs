@@ -129,10 +129,13 @@ namespace CTRFramework
 
             int returnto = (int)br.Position;
 
-            br.Jump(ptrAnims);
+            if (IsAnimated)
+            {
+                br.Jump(ptrAnims);
 
-            for (int i = 0; i < numAnims; i++)
-                animPtrMap.Add(br.ReadInt32());
+                for (int i = 0; i < numAnims; i++)
+                    animPtrMap.Add(br.ReadInt32());
+            }
 
             if (unk3 != 0)
                 Helpers.Panic(this, PanicType.Assume, $"check unusual unk3 value = {unk3}");
@@ -426,7 +429,7 @@ namespace CTRFramework
                     // sb.AppendLine($"vt 1 0");
                 }
 
-                sb.AppendLine($"f {i * 3 + 3}/{i * 3 + 3} {i * 3 + 2}/{i * 3 + 2} {i * 3 + 1}/{i * 3 + 1}");
+                sb.AppendLine($"f {i * 3 + 1}/{i * 3 + 1} {i * 3 + 3}/{i * 3 + 3} {i * 3 + 2}/{i * 3 + 2}");
             }
 
             return sb.ToString();
@@ -801,7 +804,7 @@ namespace CTRFramework
 
             sb.AppendLine($"\tMesh: {Name}");
 
-            /*
+
             sb.AppendLine($"unk0: {unk0}");
             sb.AppendLine($"lodDistance: {lodDistance}");
             sb.AppendLine($"billboard: {billboard}");
@@ -815,10 +818,16 @@ namespace CTRFramework
             sb.AppendLine($"numAnims: {numAnims}");
             sb.AppendLine($"ptrAnims: {ptrAnims.ToUInt32().ToString("X8")}");
             sb.AppendLine($"unk4: {unk4.ToString("X8")}");
-            */
+
+            sb.AppendLine($"numVerts: {verts.Count}");
 
             foreach (var entry in anims)
+            {
                 sb.AppendLine($"\t\t{entry.Name} ({entry.numFrames} frames)");
+                sb.AppendLine($"\t\t\tcompressed? {entry.IsCompressed}");
+                sb.AppendLine($"\t\t\tnumDeltas: {entry.deltas.Count}");
+                sb.AppendLine($"\t\t\tframeSize: {entry.frameSize}");
+            }
 
             return sb.ToString();
         }
