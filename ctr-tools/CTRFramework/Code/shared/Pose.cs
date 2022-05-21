@@ -6,7 +6,7 @@ namespace CTRFramework.Shared
 {
     public class Pose : IReadWrite
     {
-        public static Pose Zero = new Pose(Vector3.Zero, Vector3.Zero);
+        public static Pose Zero => new Pose(Vector3.Zero, Vector3.Zero);
 
         public Vector3 Position { get; set; } = Vector3.Zero;
         public Vector3 Rotation { get; set; } = Vector3.Zero;

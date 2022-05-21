@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace CTRFramework.Shared
 {
+    [Flags]
     public enum HiddenBits
     {
         None = 0,
@@ -13,7 +14,7 @@ namespace CTRFramework.Shared
 
     public class PsxPtr : IEquatable<object>, IReadWrite
     {
-        public static PsxPtr Zero = new PsxPtr(0);
+        public static PsxPtr Zero => new PsxPtr(0);
 
         public UIntPtr Address = UIntPtr.Zero;
         public HiddenBits ExtraBits = HiddenBits.None;
