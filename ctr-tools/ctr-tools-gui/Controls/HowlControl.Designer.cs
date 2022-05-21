@@ -36,6 +36,10 @@ namespace CTRTools.Controls
             this.label2 = new System.Windows.Forms.Label();
             this.fbd = new System.Windows.Forms.FolderBrowserDialog();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.actionSave = new System.Windows.Forms.Button();
+            this.sfd = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // actionLoad
@@ -80,11 +84,50 @@ namespace CTRTools.Controls
             // 
             this.ofd.Filter = "Crash Team Racing HWL file (*.hwl)|*.hwl";
             // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertyGrid1.Location = new System.Drawing.Point(190, 8);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(447, 469);
+            this.propertyGrid1.TabIndex = 4;
+            // 
+            // listBox1
+            // 
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(3, 87);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(181, 381);
+            this.listBox1.TabIndex = 5;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            // 
+            // actionSave
+            // 
+            this.actionSave.Location = new System.Drawing.Point(3, 61);
+            this.actionSave.Name = "actionSave";
+            this.actionSave.Size = new System.Drawing.Size(128, 23);
+            this.actionSave.TabIndex = 6;
+            this.actionSave.Text = "Write to HOWL";
+            this.actionSave.UseVisualStyleBackColor = true;
+            this.actionSave.Click += new System.EventHandler(this.actionSave_Click);
+            // 
+            // sfd
+            // 
+            this.sfd.FileName = "sfd";
+            this.sfd.Filter = "Crash Team Racing HWL file (*.hwl)|*.hwl";
+            // 
             // HowlControl
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.actionSave);
+            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.propertyGrid1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.actionExport);
@@ -106,5 +149,9 @@ namespace CTRTools.Controls
         private Label label2;
         private FolderBrowserDialog fbd;
         private OpenFileDialog ofd;
+        private PropertyGrid propertyGrid1;
+        private ListBox listBox1;
+        private Button actionSave;
+        private SaveFileDialog sfd;
     }
 }

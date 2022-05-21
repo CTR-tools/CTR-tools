@@ -267,9 +267,9 @@ namespace CTRTools.Controls
                 scn.header.Write(bw);
 
 
-                bw.Jump(scn.header.ptrRestartPts.Address + 4);
+                bw.Jump(scn.header.ptrRespawnPts.Address + 4);
 
-                foreach (var pose in scn.restartPts)
+                foreach (var pose in scn.respawnPts)
                     pose.Write(bw);
 
                 bw.Jump(scn.header.ptrInstances.Address + 4);
@@ -317,10 +317,10 @@ namespace CTRTools.Controls
                     pa.Rotate(new Vector3(0.5f, 0, 0));
                 }
 
-                scn.restartPts.Reverse();
+                scn.respawnPts.Reverse();
 
-                foreach (Pose pa in scn.restartPts)
-                    pa.Rotate(new Vector3(0.5f, 0, 0));
+               // foreach (var restart in scn.restartPts)
+               //     pa.Rotate(new Vector3(0.5f, 0, 0));
 
 
                 foreach (QuadBlock qb in scn.quads)
@@ -522,9 +522,9 @@ namespace CTRTools.Controls
                 pos.Position *= scale;
             }
 
-            foreach (var pos in scn.restartPts)
+            foreach (var pos in scn.respawnPts)
             {
-                pos.Position *= scale;
+                pos.Pose.Position *= scale;
             }
 
             foreach (var nav in scn.nav.paths)
@@ -550,10 +550,18 @@ namespace CTRTools.Controls
             if (scn == null)
                 return;
 
-            foreach (var quad in scn.quads)
+            foreach (var pt in scn.respawnPts)
             {
-                if (quad.visDataFlags.HasFlag(VisDataFlags.Subdiv4x2))
-                    quad.SetFaceColor(scn.verts, new Vector4b(255, 0, 0, 0));
+                //pt.AngleY = 0;
+
+                pt.FFunk = 0;
+                pt.FFunk2 = 0;
+            }
+
+                foreach (var quad in scn.quads)
+            {
+                //if (quad.visDataFlags.HasFlag(VisDataFlags.Subdiv4x2))
+                //    quad.SetFaceColor(scn.verts, new Vector4b(255, 0, 0, 0));
             }
         }
     }

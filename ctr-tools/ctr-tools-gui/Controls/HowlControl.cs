@@ -24,6 +24,11 @@ namespace CTRTools.Controls
         {
             howl = Howl.FromFile(filename);
             label1.Text = $"Howl loaded from {filename}.";
+
+            foreach (var entry in Howl.samplesSfx)
+            {
+                listBox1.Items.Add(Howl.GetName(entry.SampleID, Howl.samplenames));
+            }
         }
 
         private void actionExport_Click(object sender, EventArgs e)
@@ -55,6 +60,19 @@ namespace CTRTools.Controls
         private void HowlControl_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            propertyGrid1.SelectedObject = Howl.samplesSfx[listBox1.SelectedIndex];
+        }
+
+        private void actionSave_Click(object sender, EventArgs e)
+        {
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                howl.Save(sfd.FileName);
+            }
         }
     }
 }
