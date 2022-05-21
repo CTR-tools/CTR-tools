@@ -247,9 +247,21 @@ namespace CTRFramework.Sound
 
             StringBuilder sb = new StringBuilder();
 
+            var samples = new Dictionary<int, Sample>();
+
+            int maxid = 0;
+
             foreach (var bank in Banks)
                 foreach (var sample in bank.samples.Values)
-                    sb.AppendLine($"{sample.ID},{sample.Hash.ToString("X8")}");
+                    if (!samples.ContainsKey(sample.ID))
+                    {
+                        samples.Add(sample.ID, sample);
+                        if (maxid < sample.ID)
+                            maxid = sample.ID;
+                    }
+
+            for (int i = 0; i <= maxid; i++)
+                sb.AppendLine($"{i}, {(samples.ContainsKey(i) ? samples[i].Hash.ToString("X8") : "")}");
 
             Helpers.WriteToFile(Path.Combine(Meta.BasePath, "test.txt"), sb.ToString());
         }

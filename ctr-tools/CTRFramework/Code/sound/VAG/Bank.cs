@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CTRFramework.Sound
 {
@@ -34,17 +35,20 @@ namespace CTRFramework.Sound
                 if (_hash != nullhash)
                     return _hash;
 
-                _hash = BitConverter.ToUInt32(Crc32Algorithm.Create().ComputeHash(Data), 0);
-
-                return _hash;
+                return GetHash();
             }
+        }
+
+        public uint GetHash()
+        {
+            _hash = BitConverter.ToUInt32(Crc32Algorithm.Create().ComputeHash(Data), 0);
+            return _hash;
         }
     }
 
     public class Bank : IReadWrite
     {
         public static Dictionary<string, string> hashnames = new Dictionary<string, string>();
-
         public static Dictionary<int, string> banknames = new Dictionary<int, string>();
 
         public Dictionary<int, Sample> samples = new Dictionary<int, Sample>();
@@ -127,6 +131,7 @@ namespace CTRFramework.Sound
             }
             while (loops < sampCnt);
 
+            Parallel.ForEach(samples.Values, new ParallelOptions() { MaxDegreeOfParallelism = 32 }, sample => { sample.GetHash(); });
 
             return;
 

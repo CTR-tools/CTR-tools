@@ -52,6 +52,7 @@ namespace howl
                     }
                     break;
 
+                case ".lcd":
                 case ".bnk":
                     Bank.ReadNames();
                     Bank bnk = Bank.FromFile(filename);

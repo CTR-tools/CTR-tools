@@ -11,7 +11,7 @@ namespace CTRFramework.Sound
     /// </summary>
     public partial class Cseq
     {
-        public static bool USdemo = false;
+        public bool USdemo = false;
         public static bool PatchMidi = false;
         public static bool IgnoreVolume = false;
         public static bool UseSampleVolumeForTracks = true;
