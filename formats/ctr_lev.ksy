@@ -45,9 +45,9 @@ types:
       - id: header
         type: scene_header
     
-      - id: restart_main
-        type: pose
-        if: header.ptr_restart_main != 0
+      - id: reflection_texture
+        type: texture_layout
+        if: header.ptr_reflection_texture != 0
     
       - id: restart_pts
         type: pose
@@ -254,7 +254,7 @@ types:
         type: u4
       - id: ptr_icons_array
         type: u4
-      - id: ptr_restart_main
+      - id: ptr_reflection_texture # probably only if water is present, maybe shared
         type: u4
 
       - id: glow_gradient
