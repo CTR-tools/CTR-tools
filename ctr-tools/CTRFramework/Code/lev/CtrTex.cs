@@ -28,6 +28,9 @@ namespace CTRFramework
             Read(br, ptr, flags);
         }
 
+        int mode = 0;
+
+
         public Bitmap GetHiBitmap(Tim vram, QuadBlock qb)
         {
             if (hi.Count == 0)
@@ -71,10 +74,24 @@ namespace CTRFramework
                 }
             }
 
-            return bmp;
+            gr.CompositingMode = CompositingMode.SourceOver;
 
+            for (int i = 0; i < numvtex * 4; i++)
+            {
+                if (hi[i] != null)
+                {
+                    if (hi[i].uv[0].X == hi[i].min.X && hi[i].uv[0].Y == hi[i].min.Y)
+                        mode = 1;
+
+                    gr.DrawString($"{mode}", font, Brushes.Yellow, (i % 4) * width + 1, (i / 4) * height + 1);
+                    mode = 0;
+                }
+            }
+
+            return bmp;
         }
 
+        Font font = new Font("Courier New", 10);
 
         public void Read(BinaryReaderEx br, PsxPtr ptr, VisDataFlags flags)
         {

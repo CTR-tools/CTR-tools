@@ -47,6 +47,8 @@ namespace CTRFramework.Big
 
         public void Save(string path)
         {
+            Helpers.CheckFolder(path);
+
             if (Data.Length > 0)
                 Helpers.WriteToFile(Path.Combine(path, Name), Data);
         }
