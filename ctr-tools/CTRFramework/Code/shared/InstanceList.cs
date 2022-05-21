@@ -27,7 +27,7 @@ namespace CTRFramework.Shared
 
             int pos = (int)br.Position;
 
-            T t = Instance<T>.FromReader(br, Pointer.ToUInt32());
+            T t = Instance<T>.FromReader(br, Pointer);
             br.Jump(pos);
 
             return t;
@@ -43,7 +43,7 @@ namespace CTRFramework.Shared
 
             int pos = (int)br.Position;
 
-            List<T> t = InstanceList<T>.FromReader(br, Pointer.ToUInt32(), count);
+            List<T> t = InstanceList<T>.FromReader(br, Pointer, count);
 
             br.Jump(pos);
 
@@ -53,7 +53,7 @@ namespace CTRFramework.Shared
 
     public class InstanceList<T> : List<T> where T : IRead, new()
     {
-        public static List<T> FromReader(BinaryReaderEx br, uint pos, uint count)
+        public static List<T> FromReader(BinaryReaderEx br, UIntPtr pos, uint count)
         {
             List<T> list = new List<T>();
 

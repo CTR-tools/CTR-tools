@@ -217,8 +217,8 @@ namespace CTRFramework.Sound
                 spuIndex.Add(br.ReadUInt16());
             }
 
-            samplesSfx = InstanceList<InstrumentShort>.FromReader(br, (uint)br.Position, numSfx);
-            samplesEngineSfx = InstanceList<InstrumentShort>.FromReader(br, (uint)br.Position, numEngineSfx);
+            samplesSfx = InstanceList<InstrumentShort>.FromReader(br, (UIntPtr)br.Position, numSfx);
+            samplesEngineSfx = InstanceList<InstrumentShort>.FromReader(br, (UIntPtr)br.Position, numEngineSfx);
 
             for (int i = 0; i < numBanks; i++)
                 ptrBanks.Add(br.ReadUInt16() * Meta.SectorSize);

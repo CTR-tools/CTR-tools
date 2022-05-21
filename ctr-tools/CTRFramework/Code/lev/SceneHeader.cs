@@ -29,7 +29,7 @@ namespace CTRFramework
         public PsxPtr ptrWater;         //0x38 - pointer to array of water entries
         public PsxPtr ptrIcons;         //0x3C - lead to the icon pack header
         public PsxPtr ptrIconsArray;    //0x40 - leads to the icon pack data
-        public PsxPtr ptrReflectionTexture;   //0x44 - looks like a restart point, but doesn't affect anything? maybe like play area bbox?
+        public PsxPtr ptrEnviroMap;     //0x44 - pointer to environment map, used by water rendering
 
         public Gradient[] glowGradients;    //0x48 - used for additional skybox gradient (like papu's pyramid) (24 bytes = 3 * (2 + 2 + 4))
         public Pose[] startGrid;        //0x6C - array of 8 starting locations (96 bytes = (6 * 2) * 8)
@@ -127,7 +127,7 @@ namespace CTRFramework
             ptrIcons = PsxPtr.FromReader(br);
             ptrIconsArray = PsxPtr.FromReader(br);
 
-            ptrReflectionTexture = PsxPtr.FromReader(br);
+            ptrEnviroMap = PsxPtr.FromReader(br);
 
             glowGradients = new Gradient[3];
 
@@ -249,7 +249,7 @@ namespace CTRFramework
             ptrWater.Write(bw, patchTable);
             ptrIcons.Write(bw, patchTable);
             ptrIconsArray.Write(bw, patchTable);
-            ptrReflectionTexture.Write(bw, patchTable);
+            ptrEnviroMap.Write(bw, patchTable);
 
             for (int i = 0; i < glowGradients.Length; i++)
                 glowGradients[i].Write(bw);

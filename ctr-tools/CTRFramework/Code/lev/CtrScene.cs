@@ -38,7 +38,7 @@ namespace CTRFramework
         public CtrVrm vram;
         public Tim ctrvram;
 
-        public TextureLayout reflectionTexture;
+        public TextureLayout enviroMap;
 
         public CtrScene()
         {
@@ -115,9 +115,11 @@ namespace CTRFramework
             if (header == null)
                 throw new Exception("Scene header is null. Halt parsing.");
 
-            if (header.ptrMeshInfo != PsxPtr.Zero)
+
+            mesh = new PtrWrap<MeshInfo>(header.ptrMeshInfo).Get(br);
+
+            if (mesh != null)
             {
-                mesh = new PtrWrap<MeshInfo>(header.ptrMeshInfo).Get(br);
                 quads = mesh.QuadBlocks;
                 verts = mesh.Vertices;
                 visdata = mesh.VisData;
@@ -143,21 +145,18 @@ namespace CTRFramework
                 prev.Pose.Rotation *= (float)(Math.PI / 180.0f);
             }
 
-            vertanims = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
-            skybox = new PtrWrap<SkyBox>(header.ptrSkybox).Get(br);
-            nav = new PtrWrap<Nav>(header.ptrAiNav).Get(br);
-            iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
-            trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
+            vertanims   = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
+            skybox      = new PtrWrap<SkyBox>(header.ptrSkybox).Get(br);
+            nav         = new PtrWrap<Nav>(header.ptrAiNav).Get(br);
+            iconpack    = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
+            trial       = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
+            enviroMap   = new PtrWrap<TextureLayout>(header.ptrEnviroMap).Get(br);
 
             if (header.numSpawnGroups > 0)
             {
                 br.Jump(header.ptrSpawnGroups);
                 spawnGroups = new SpawnGroup(br, (int)header.numSpawnGroups);
             }
-
-            br.Jump(header.ptrReflectionTexture);
-            reflectionTexture = TextureLayout.FromReader(br);
-
 
             if (header.cntu2 > 0)
             {
@@ -474,10 +473,10 @@ namespace CTRFramework
                 return;
             }
 
-            if (reflectionTexture != null)
+            if (enviroMap != null)
             {
-                string p = Path.Combine(path, "reflection.png");
-                ctrvram.GetTexture(reflectionTexture).Save(p);
+                string p = Path.Combine(path, "enviroMap.png");
+                ctrvram.GetTexture(enviroMap).Save(p);
             }
 
             Helpers.Panic(this, PanicType.Debug, ctrvram.ToString());

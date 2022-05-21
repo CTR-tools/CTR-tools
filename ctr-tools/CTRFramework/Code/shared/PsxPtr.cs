@@ -92,6 +92,7 @@ namespace CTRFramework.Shared
             return $"0x{Address.ToUInt32().ToString("X8")} [{ExtraBits}] <= ({value})";
         }
 
+        //implicit conversion to UIntPtr, only use address
         public static implicit operator UIntPtr(PsxPtr me)
         {
             return me.Address;
