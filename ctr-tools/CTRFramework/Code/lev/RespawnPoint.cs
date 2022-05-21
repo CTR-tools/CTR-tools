@@ -7,11 +7,12 @@ namespace CTRFramework.Shared
     {
         public Pose Pose { get; set; } = Pose.Zero;
         public short DistanceToFinish;
-        public byte index;
+        public byte next;
         public byte FFunk; //usually FF, 
-        public byte prevIndex;
+        public byte prev;
         public byte FFunk2;
 
+        public RespawnPoint Prev;
         public RespawnPoint Next;
 
         public RespawnPoint()
@@ -32,9 +33,9 @@ namespace CTRFramework.Shared
         {
             Pose.Position = br.ReadVector3s(1 / 100f);
             DistanceToFinish = br.ReadInt16();
-            index = br.ReadByte();
+            next = br.ReadByte();
             FFunk = br.ReadByte();
-            prevIndex = br.ReadByte();
+            prev = br.ReadByte();
             FFunk2 = br.ReadByte();
         }
 
@@ -42,12 +43,12 @@ namespace CTRFramework.Shared
         {
             bw.WriteVector3s(Pose.Position, 1 / 100f);
             bw.Write(DistanceToFinish);
-            bw.Write(index);
+            bw.Write(next);
             bw.Write(FFunk);
-            bw.Write(prevIndex);
+            bw.Write(prev);
             bw.Write(FFunk2);
         }
 
-        public override string ToString() => $"{Pose} index: {index} linked: {prevIndex}";
+        public override string ToString() => $"{Pose} index: {prev} linked: {next}";
     }
 }

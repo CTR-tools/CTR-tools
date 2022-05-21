@@ -99,15 +99,6 @@ namespace CTRFramework
             }
         }
 
-        public static RespawnPoint GetByIndex(List<RespawnPoint> respawns, int index)
-        {
-            foreach (var resp in respawns)
-                if (resp.index == index)
-                    return resp;
-
-            return null;
-        }
-
         public void ReadScene(BinaryReaderEx br)
         {
             header = Instance<SceneHeader>.FromReader(br);
@@ -132,17 +123,10 @@ namespace CTRFramework
 
             foreach (var respawn in respawnPts)
             {
-                var prev = GetByIndex(respawnPts, respawn.prevIndex);
-
-                if (prev == null)
-                {
-                    Helpers.Panic(this, PanicType.Error, $"{respawn.prevIndex} not found");
-                    continue;
-                }
-
-                prev.Next = respawn;
-                prev.Pose.Rotation = Vector3.Transform(Vector3.UnitY, Matrix4x4.CreateLookAt(prev.Pose.Position, respawn.Pose.Position, Vector3.UnitY));
-                prev.Pose.Rotation *= (float)(Math.PI / 180.0f);
+                respawn.Prev = respawnPts[respawn.prev];
+                respawn.Next = respawnPts[respawn.next];
+                respawn.Pose.Rotation = Vector3.Transform(Vector3.UnitY, Matrix4x4.CreateLookAt(respawn.Pose.Position, respawn.Next.Pose.Position, Vector3.UnitY));
+                respawn.Pose.Rotation *= (float)(Math.PI / 180.0f);
             }
 
             vertanims   = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);

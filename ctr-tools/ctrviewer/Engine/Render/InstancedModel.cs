@@ -42,7 +42,8 @@ namespace ctrviewer.Engine.Render
 
         public void Update(GameTime gameTime)
         {
-            anim.Update(gameTime);
+            if (anim != null)
+                anim.Update(gameTime);
 
             if (ShouldRotate)
             {

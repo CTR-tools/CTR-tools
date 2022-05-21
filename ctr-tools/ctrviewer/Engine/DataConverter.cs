@@ -130,22 +130,10 @@ namespace ctrviewer.Engine
             return anim;
         }
 
-        public static RespawnPoint GetByIndex(List<RespawnPoint> respawns, int index)
-        {
-            foreach (var resp in respawns)
-                if (resp.index == index)
-                    return resp;
-
-            return null;
-        }
-
         public static SimpleAnimation ToSimpleAnimation(List<RespawnPoint> respawns)
         {
             if (respawns.Count == 0)
-            {
-                GameConsole.Write("go fuck yourself");
                 return null;
-            }
 
             var anim = new SimpleAnimation();
             anim.Keys.Clear();
@@ -153,7 +141,7 @@ namespace ctrviewer.Engine
             int time = 0;
 
 
-            var zerospawn = GetByIndex(respawns, 0);
+            var zerospawn = respawns[0];
             var spawn = zerospawn;
 
             do
@@ -163,20 +151,25 @@ namespace ctrviewer.Engine
                 anim.Keys.Add(new AnimationKey()
                 {
                     Position = ToVector3(spawn.Pose.Position),
-                    Rotation = new Vector3(0), //rot.X, rot.Y, rot.Z),
+                    Rotation = new Vector3(0),//new Vector3(rot.X, -rot.Y, rot.Z),
                     Scale = new Vector3(1f),
                     TimeValue = time
                 });
 
-                GameConsole.Write($"added key! {spawn.index} {spawn.prevIndex} {spawn.Pose.Position} {time}");
-
                 time += 250;
                 spawn = spawn.Next;
             }
-            while (spawn != zerospawn);
+            while (spawn != zerospawn && spawn.Next != null);
 
-            anim.Keys.Add(anim.Keys[0]);
             anim.State = anim.Keys[0];
+
+            anim.Keys.Add(new AnimationKey()
+            {
+                Position = anim.Keys[0].Position,
+                Rotation = new Vector3(0),//anim.Keys[0].Rotation,
+                Scale = new Vector3(1f),
+                TimeValue = time + 200
+            });
 
             return anim;
         }

@@ -43,7 +43,7 @@ namespace ctrviewer.Engine.Render
 
             if (Timer >= Keys[frame].TimeValue)
             {
-                //Timer = 0;
+                Timer = 0;
                 return;
             }
 
@@ -61,8 +61,6 @@ namespace ctrviewer.Engine.Render
                 Rotation = Vector3.Lerp(Keys[frame].Rotation, Keys[frame + 1].Rotation, timeScale),
                 Scale = Vector3.Lerp(Keys[frame].Scale, Keys[frame + 1].Scale, timeScale)
             };
-
-            // GameConsole.Write(timeScale + "\t" + State.Scale);
         }
     }
 }

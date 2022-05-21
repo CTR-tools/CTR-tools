@@ -883,12 +883,11 @@ namespace ctrviewer
                 foreach (var n in s.respawnPts)
                 {
                     eng.paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Pose.Position), Vector3.Zero, new Vector3(0.03f)));
-                    GameConsole.Write($"added spawn: {n.Pose.Position}");
                 }
 
 
 
-
+                //spawn kart if needed
                 if (Scenes.Count > 0 && karts.Count == 0)
                 {
                     karts.Add(new Kart(
@@ -896,16 +895,13 @@ namespace ctrviewer
                         new Vector3(-(float)Math.PI / 2f, 0, 0)));
                 }
 
-                if (karts.Count > 0)
+                //update kart
+                if (Scenes.Count > 0 && karts.Count > 0)
                 {
                     karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
                     karts[0].ModelName = eng.Settings.PlayerModel;
                     karts[0].path = DataConverter.ToSimpleAnimation(Scenes[0].respawnPts);
                 }
-
-
-
-
 
                 //put all botpaths
                 if (s.nav.paths.Count == 3)
