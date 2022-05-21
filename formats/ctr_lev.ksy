@@ -761,7 +761,13 @@ types:
       - id: page_x
         type: b4
       - id: page_y
-        type: b12
+        type: b1
+      - id: blending_mode
+        type: b2
+      - id: bit_depth
+        type: b2
+      - id: rest_bits
+        type: b7
       - id: uv3
         type: vector2b
       - id: uv4
@@ -814,7 +820,7 @@ types:
       - id: num_entries
         type: u4
       - id: ptr_text
-        type: u4      
+        type: u4
         repeat: expr
         repeat-expr: num_entries
       - id: skip
@@ -823,7 +829,7 @@ types:
         type: strz
         encoding: ascii
         repeat: expr
-        repeat-expr: num_entries      
+        repeat-expr: num_entries
 
   spawn_type:
     seq:
@@ -890,7 +896,7 @@ types:
     seq:
       - id: position
         type: vector3s
-      - id: angle
+      - id: rotation
         type: vector3s
 
   bounding_box:
