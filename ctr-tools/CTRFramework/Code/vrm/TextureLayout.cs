@@ -30,8 +30,8 @@ namespace CTRFramework.Vram
         public static readonly int SizeOf = 0x0C;
         public uint offset;
 
-        public List<Vector2> uv = new List<Vector2>() { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
-        public List<Vector2> normuv = new List<Vector2>();
+        public Vector2[] uv = new Vector2[4] { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
+        public Vector2[] normuv = new Vector2[4] { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
 
         public Point Palette;
 
@@ -48,7 +48,7 @@ namespace CTRFramework.Vram
         public BlendingMode blendingMode;
         public BitDepth bpp;
 
-        private ushort packedPageData => (ushort)(PageX & PageY << 4 & (byte)blendingMode << 5 & (byte)bpp << 7);
+        private ushort packedPageData => (ushort)(PageX | PageY << 4 | (byte)blendingMode << 5 | (byte)bpp << 7);
 
         public int stretch
         {
@@ -80,38 +80,38 @@ namespace CTRFramework.Vram
             }
         }
 
-        public Point min
+        public Vector2 min
         {
             get
             {
-                return new Point(
+                return new Vector2(
                     (int)Math.Round(Math.Min(Math.Min(uv[0].X, uv[1].X), Math.Min(uv[2].X, uv[3].X))),
                      (int)Math.Round(Math.Min(Math.Min(uv[0].Y, uv[1].Y), Math.Min(uv[2].Y, uv[3].Y)))
                     );
             }
         }
 
-        public Point max
+        public Vector2 max
         {
             get
             {
-                return new Point(
+                return new Vector2(
                      (int)Math.Round(Math.Max(Math.Max(uv[0].X, uv[1].X), Math.Max(uv[2].X, uv[3].X))),
                      (int)Math.Round(Math.Max(Math.Max(uv[0].Y, uv[1].Y), Math.Max(uv[2].Y, uv[3].Y)))
                     );
             }
         }
 
-        public int Width => (max.X - min.X) / stretch + 1;
+        public int Width => (int)((max.X - min.X) / stretch + 1);
 
-        public int Height => max.Y - min.Y + 1;
+        public int Height => (int)(max.Y - min.Y + 1);
 
         public int Position => RealY * CtrVrm.region.Width + RealX; //PageY * (CtrVrm.region.Height * CtrVrm.region.Width / 2) + min.Y * CtrVrm.region.Width + PageX * 64 + min.X / stretch;
 
         public int PalPosition => PalY * CtrVrm.region.Width + PalX * 16;
 
-        public int RealX => PageX * 64 + min.X / stretch;
-        public int RealY => PageY * 256 + min.Y;
+        public int RealX => (int)(PageX * 64 + min.X / stretch);
+        public int RealY => (int)(PageY * 256 + min.Y);
 
         public Rectangle Frame => new Rectangle(RealX, RealY, Width, Height);
 
@@ -119,7 +119,7 @@ namespace CTRFramework.Vram
 
         //meant to be unique
         public string Tag => _tag == "" ? $"{RealX}_{RealY}_{PalX}_{PalY}_{Width * stretch}_{Height}" : _tag;
-
+        //public string Tag => _tag == "" ? $"{PalX}_{PalY}_{RealX}_{RealY}_{Width * stretch}_{Height}" : _tag;
         #endregion
 
         public TextureLayout()
@@ -147,17 +147,17 @@ namespace CTRFramework.Vram
 
         public void Read(BinaryReaderEx br)
         {
-            uv.Clear();
+            //uv.Clear();
 
             offset = (uint)br.Position;
 
-            uv.Add(br.ReadVector2b());
+            uv[0] = br.ReadVector2b();
 
             ushort buf = br.ReadUInt16();
 
             Palette = new Point(buf & 0x3F, buf >> 6);
 
-            uv.Add(br.ReadVector2b());
+            uv[1] = br.ReadVector2b();
 
             buf = br.ReadUInt16();
 
@@ -171,8 +171,16 @@ namespace CTRFramework.Vram
             if (rest != 0)
                 Helpers.Panic(this, PanicType.Assume, $"rest = {rest}");
 
-            uv.Add(br.ReadVector2b());
-            uv.Add(br.ReadVector2b());
+            if (packedPageData != buf)
+            {
+                Helpers.Panic(this, PanicType.Assume, $"mismatch! {buf} {packedPageData}");
+                //Console.ReadKey();
+            }
+
+            //        private ushort packedPageData => (ushort)(PageX & PageY << 4 & (byte)blendingMode << 5 & (byte)bpp << 7);
+
+            uv[2] = br.ReadVector2b();
+            uv[3] = br.ReadVector2b();
 
             NormalizeUV();
 
@@ -182,15 +190,11 @@ namespace CTRFramework.Vram
 
         public void NormalizeUV()
         {
-            normuv.Clear();
-
-            foreach (var v in uv)
-            {
-                Vector2 n = new Vector2(0, 0);
-                n.X = (byte)(Helpers.Normalize(min.X, max.X, v.X) * 255);
-                n.Y = (byte)(Helpers.Normalize(min.Y, max.Y, v.Y) * 255);
-                normuv.Add(n);
-            }
+            for (int i = 0; i < 4; i++)
+                normuv[i] = new Vector2(
+                    (byte)(Helpers.Normalize(min.X, max.X, uv[i].X) * 255),
+                    (byte)(Helpers.Normalize(min.Y, max.Y, uv[i].Y) * 255)
+               );
         }
 
         public override string ToString()
@@ -241,6 +245,11 @@ namespace CTRFramework.Vram
             sb.AppendFormat("\r\nusemtl {0}\r\n", Tag);
 
             return sb.ToString();
+        }
+
+        public RotateFlipType DetectRotation()
+        {
+            return RotateFlipType.None;
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace CTRFramework.Vram
 {
@@ -683,17 +683,7 @@ namespace CTRFramework.Vram
 
             if (stp == 0)
             {
-                if (r == 0 && g == 0 && b == 0)
-                {
-                    a = 0;
-                    r = 0;
-                    g = 0;
-                    b = 0;
-                }
-                else
-                {
-                    a = 255;
-                }
+                a = (byte)((col == 0) ? 0 : 255);
             }
             else
             {
@@ -703,13 +693,6 @@ namespace CTRFramework.Vram
                     if (blend == BlendingMode.Additive)
                         a = 254; //silly but works. this is to avoid alpha sorting problems. should be properly rewritten via shaders.
                 }
-
-
-                /*
-                r = 0;
-                g = 255;
-                b = 255;
-                */
             }
 
             return Color.FromArgb(a, r, g, b);
