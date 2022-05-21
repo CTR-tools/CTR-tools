@@ -29,7 +29,7 @@ namespace CTRFramework
         public PsxPtr ptrWater;         //0x38 - pointer to array of water entries
         public PsxPtr ptrIcons;         //0x3C - lead to the icon pack header
         public PsxPtr ptrIconsArray;    //0x40 - leads to the icon pack data
-        public PsxPtr ptrRestartMain;   //0x44 - looks like a restart point, but doesn't affect anything? maybe like play area bbox?
+        public PsxPtr ptrReflectionTexture;   //0x44 - looks like a restart point, but doesn't affect anything? maybe like play area bbox?
 
         public Gradient[] glowGradients;    //0x48 - used for additional skybox gradient (like papu's pyramid) (24 bytes = 3 * (2 + 2 + 4))
         public Pose[] startGrid;        //0x6C - array of 8 starting locations (96 bytes = (6 * 2) * 8)
@@ -61,8 +61,8 @@ namespace CTRFramework
         public uint numSpawnGroups;     //0x140 - number of spawn point groups, mainly used in adventure mode, also used for hazard paths
         public PsxPtr ptrSpawnGroups;   //0x144 - pointer to the spawn point groups struct
 
-        public uint numRestartPts;      //0x148 - number of restart points in the level
-        public PsxPtr ptrRestartPts;    //0x14C - pointer to the array of restart points (used for cameras, mask grabs, warp orbs) 
+        public uint numRespawnPts;      //0x148 - number of restart points in the level
+        public PsxPtr ptrRespawnPts;    //0x14C - pointer to the array of restart points (used for cameras, mask grabs, warp orbs) 
 
         byte[] skip2;                   //0x150 - 16 bytes
 
@@ -127,7 +127,7 @@ namespace CTRFramework
             ptrIcons = PsxPtr.FromReader(br);
             ptrIconsArray = PsxPtr.FromReader(br);
 
-            ptrRestartMain = PsxPtr.FromReader(br);
+            ptrReflectionTexture = PsxPtr.FromReader(br);
 
             glowGradients = new Gradient[3];
 
@@ -163,8 +163,8 @@ namespace CTRFramework
             numSpawnGroups = br.ReadUInt32();
             ptrSpawnGroups = PsxPtr.FromReader(br);
 
-            numRestartPts = br.ReadUInt32();
-            ptrRestartPts = PsxPtr.FromReader(br);
+            numRespawnPts = br.ReadUInt32();
+            ptrRespawnPts = PsxPtr.FromReader(br);
 
             skip2 = br.ReadBytes(4 * 4);
 
@@ -249,7 +249,7 @@ namespace CTRFramework
             ptrWater.Write(bw, patchTable);
             ptrIcons.Write(bw, patchTable);
             ptrIconsArray.Write(bw, patchTable);
-            ptrRestartMain.Write(bw, patchTable);
+            ptrReflectionTexture.Write(bw, patchTable);
 
             for (int i = 0; i < glowGradients.Length; i++)
                 glowGradients[i].Write(bw);
@@ -279,8 +279,8 @@ namespace CTRFramework
             ptru2.Write(bw, patchTable);
             bw.Write(numSpawnGroups);
             ptrSpawnGroups.Write(bw, patchTable);
-            bw.Write(numRestartPts);
-            ptrRestartPts.Write(bw, patchTable);
+            bw.Write(numRespawnPts);
+            ptrRespawnPts.Write(bw, patchTable);
 
             bw.Write(skip2);
 

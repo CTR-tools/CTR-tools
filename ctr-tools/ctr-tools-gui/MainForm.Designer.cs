@@ -50,6 +50,8 @@
             this.langControl = new CTRTools.Controls.LangControl();
             this.tabXa = new System.Windows.Forms.TabPage();
             this.xaControl = new CTRTools.Controls.XaControl();
+            this.tabHowl = new System.Windows.Forms.TabPage();
+            this.howlControl1 = new CTRTools.Controls.HowlControl();
             this.tabControl.SuspendLayout();
             this.tabAbout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appLogo)).BeginInit();
@@ -62,6 +64,7 @@
             this.tabCseq.SuspendLayout();
             this.tabLang.SuspendLayout();
             this.tabXa.SuspendLayout();
+            this.tabHowl.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -78,6 +81,7 @@
             this.tabControl.Controls.Add(this.tabCseq);
             this.tabControl.Controls.Add(this.tabLang);
             this.tabControl.Controls.Add(this.tabXa);
+            this.tabControl.Controls.Add(this.tabHowl);
             this.tabControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tabControl.Location = new System.Drawing.Point(7, 7);
             this.tabControl.Name = "tabControl";
@@ -308,6 +312,27 @@
             this.xaControl.Size = new System.Drawing.Size(611, 412);
             this.xaControl.TabIndex = 0;
             // 
+            // tabHowl
+            // 
+            this.tabHowl.Controls.Add(this.howlControl1);
+            this.tabHowl.Location = new System.Drawing.Point(4, 22);
+            this.tabHowl.Name = "tabHowl";
+            this.tabHowl.Size = new System.Drawing.Size(611, 412);
+            this.tabHowl.TabIndex = 14;
+            this.tabHowl.Text = "HOWL";
+            this.tabHowl.UseVisualStyleBackColor = true;
+            // 
+            // howlControl1
+            // 
+            this.howlControl1.AllowDrop = true;
+            this.howlControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.howlControl1.Location = new System.Drawing.Point(3, 3);
+            this.howlControl1.Name = "howlControl1";
+            this.howlControl1.Size = new System.Drawing.Size(605, 406);
+            this.howlControl1.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -333,6 +358,7 @@
             this.tabCseq.ResumeLayout(false);
             this.tabLang.ResumeLayout(false);
             this.tabXa.ResumeLayout(false);
+            this.tabHowl.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -362,5 +388,7 @@
         private Controls.LevControl levControl;
         private Controls.LangControl langControl;
         private Controls.XaControl xaControl;
+        private System.Windows.Forms.TabPage tabHowl;
+        private Controls.HowlControl howlControl1;
     }
 }

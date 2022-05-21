@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Numerics;
+using System.Linq;
 
 namespace CTRFramework
 {
@@ -32,10 +34,12 @@ namespace CTRFramework
 
         public List<WaterAnim> waterAnim = new List<WaterAnim>();
 
-        public List<Pose> restartPts = new List<Pose>();
+        public List<RespawnPoint> respawnPts = new List<RespawnPoint>();
 
         public CtrVrm vram;
         public Tim ctrvram;
+
+        public TextureLayout reflectionTexture;
 
         public CtrScene()
         {
@@ -96,6 +100,15 @@ namespace CTRFramework
             }
         }
 
+        public static RespawnPoint GetByIndex(List<RespawnPoint> respawns, int index)
+        {
+            foreach (var resp in respawns)
+                if (resp.index == index)
+                    return resp;
+
+            return null;
+        }
+
         public void ReadScene(BinaryReaderEx br)
         {
             header = Instance<SceneHeader>.FromReader(br);
@@ -114,7 +127,23 @@ namespace CTRFramework
                 //quad.GenerateCtrQuads(verts);
             }
 
-            restartPts = new PtrWrap<Pose>(header.ptrRestartPts).GetList(br, header.numRestartPts);
+            respawnPts = new PtrWrap<RespawnPoint>(header.ptrRespawnPts).GetList(br, header.numRespawnPts);
+
+            foreach (var respawn in respawnPts)
+            {
+                var prev = GetByIndex(respawnPts, respawn.prevIndex);
+
+                if (prev == null)
+                {
+                    Helpers.Panic(this, PanicType.Error, $"{respawn.prevIndex} not found");
+                        continue;
+                }
+
+                prev.Next = respawn;
+                prev.Pose.Rotation = Vector3.Transform(Vector3.UnitY, Matrix4x4.CreateLookAt(prev.Pose.Position, respawn.Pose.Position, Vector3.UnitY));
+                prev.Pose.Rotation *= (float)(Math.PI / 180.0f);
+            }
+
             vertanims = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
             skybox = new PtrWrap<SkyBox>(header.ptrSkybox).Get(br);
             nav = new PtrWrap<Nav>(header.ptrAiNav).Get(br);
@@ -126,6 +155,9 @@ namespace CTRFramework
                 br.Jump(header.ptrSpawnGroups);
                 spawnGroups = new SpawnGroup(br, (int)header.numSpawnGroups);
             }
+
+            br.Jump(header.ptrReflectionTexture);
+            reflectionTexture = TextureLayout.FromReader(br);
 
 
             if (header.cntu2 > 0)
@@ -443,6 +475,12 @@ namespace CTRFramework
                 return;
             }
 
+            if (reflectionTexture != null)
+            {
+                string p = Path.Combine(path, "reflection.png");
+                ctrvram.GetTexture(reflectionTexture).Save(p);
+            }
+
             Helpers.Panic(this, PanicType.Debug, ctrvram.ToString());
 
             Helpers.Panic(this, PanicType.Info, "Exporting textures...");
@@ -466,9 +504,9 @@ namespace CTRFramework
                         catch
                         {
                             Console.WriteLine("oh no");
+                            //Console.ReadKey();
                         }
                     }
-
 
             Helpers.Panic(this, PanicType.Info, "Textures done.");
         }
@@ -515,6 +553,8 @@ namespace CTRFramework
             sb.AppendFormat("{0}: {1}\r\n", "hi quads", quads.Count * 4);
             sb.AppendFormat("{0}: {1}\r\n", "hi tris", quads.Count * 4 * 2);
             sb.AppendFormat("{0}: {1}\r\n", "skybox verts", (skybox != null ? skybox.Vertices.Count : 0));
+            sb.AppendFormat("{0}: {1}\r\n", "vert anims", vertanims.Count);
+            sb.AppendFormat("{0}: {1}\r\n", "water anims", waterAnim.Count);
             sb.AppendFormat("{0}: {1}\r\n", "visdata total", (visdata != null ? visdata.Count : 0));
             sb.AppendFormat("{0}: {1}\r\n", "visdata leaves", numLeaves);
             sb.AppendLine($"minblocks in leaf: {minQuads}");
@@ -538,7 +578,12 @@ namespace CTRFramework
                 if (maxindex < qb.trackPos && qb.trackPos != 0xFF)
                     maxindex = qb.trackPos;
 
-            sb.AppendLine($"restarts: length = {restartPts.Count} maxindex = {maxindex}");
+            sb.AppendLine($"restarts: length = {respawnPts.Count} maxindex = {maxindex}");
+
+            foreach (var s in respawnPts)
+            {
+               // sb.AppendLine(""+s.Rotation);
+            }
 
             return sb.ToString();
         }
@@ -691,7 +736,7 @@ namespace CTRFramework
             skybox = null;
             nav = null;
             spawnGroups = null;
-            restartPts.Clear();
+            respawnPts.Clear();
             ctrvram = null;
         }
     }
