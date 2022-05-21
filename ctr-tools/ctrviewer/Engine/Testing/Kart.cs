@@ -225,7 +225,7 @@ namespace ctrviewer.Engine.Testing
                 Rotation = path.State.Rotation;
                 return;
             }
-            
+
             oldPosition = Position;
 
             foreach (var power in Powers)

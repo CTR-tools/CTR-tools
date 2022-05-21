@@ -319,8 +319,8 @@ namespace CTRTools.Controls
 
                 scn.respawnPts.Reverse();
 
-               // foreach (var restart in scn.restartPts)
-               //     pa.Rotate(new Vector3(0.5f, 0, 0));
+                // foreach (var restart in scn.restartPts)
+                //     pa.Rotate(new Vector3(0.5f, 0, 0));
 
 
                 foreach (QuadBlock qb in scn.quads)
@@ -558,7 +558,7 @@ namespace CTRTools.Controls
                 pt.FFunk2 = 0;
             }
 
-                foreach (var quad in scn.quads)
+            foreach (var quad in scn.quads)
             {
                 //if (quad.visDataFlags.HasFlag(VisDataFlags.Subdiv4x2))
                 //    quad.SetFaceColor(scn.verts, new Vector4b(255, 0, 0, 0));

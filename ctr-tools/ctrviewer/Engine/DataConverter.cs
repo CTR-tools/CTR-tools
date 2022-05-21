@@ -92,7 +92,7 @@ namespace ctrviewer.Engine
 
             int time = 0;
 
-            foreach(var point in path.Frames)
+            foreach (var point in path.Frames)
             {
                 anim.Keys.Add(new AnimationKey() { Position = ToVector3(point.position), Rotation = new Vector3(0), Scale = new Vector3(1), TimeValue = time });
                 time += 200;
@@ -112,11 +112,13 @@ namespace ctrviewer.Engine
 
             foreach (var point in poses)
             {
-                anim.Keys.Add(new AnimationKey() {
+                anim.Keys.Add(new AnimationKey()
+                {
                     Position = ToVector3(point.Position),
                     Rotation = new Vector3(ToVector3(point.Rotation).X, ToVector3(point.Rotation).Y, ToVector3(point.Rotation).Z),
                     Scale = new Vector3(1),
-                    TimeValue = time });
+                    TimeValue = time
+                });
 
                 time += 200;
             }
@@ -151,7 +153,7 @@ namespace ctrviewer.Engine
             int time = 0;
 
 
-            var zerospawn = GetByIndex(respawns, 0); 
+            var zerospawn = GetByIndex(respawns, 0);
             var spawn = zerospawn;
 
             do

@@ -4,9 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Numerics;
-using System.Linq;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -136,7 +135,7 @@ namespace CTRFramework
                 if (prev == null)
                 {
                     Helpers.Panic(this, PanicType.Error, $"{respawn.prevIndex} not found");
-                        continue;
+                    continue;
                 }
 
                 prev.Next = respawn;
@@ -582,7 +581,7 @@ namespace CTRFramework
 
             foreach (var s in respawnPts)
             {
-               // sb.AppendLine(""+s.Rotation);
+                // sb.AppendLine(""+s.Rotation);
             }
 
             return sb.ToString();

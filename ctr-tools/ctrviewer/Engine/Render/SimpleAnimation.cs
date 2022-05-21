@@ -18,7 +18,7 @@ namespace ctrviewer.Engine.Render
 
         public List<AnimationKey> Keys = new List<AnimationKey>();
         public int TotalKeys => Keys.Count;
-        
+
         public AnimationKey State;
 
         public SimpleAnimation()
@@ -62,7 +62,7 @@ namespace ctrviewer.Engine.Render
                 Scale = Vector3.Lerp(Keys[frame].Scale, Keys[frame + 1].Scale, timeScale)
             };
 
-           // GameConsole.Write(timeScale + "\t" + State.Scale);
+            // GameConsole.Write(timeScale + "\t" + State.Scale);
         }
     }
 }
