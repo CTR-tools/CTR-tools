@@ -1,6 +1,6 @@
 ﻿<data comment="versions.xml is used to identify known CTR files">
 
-  <big comment="file meta data based on MD5 checksum">
+  <big comment="big file meta data based on MD5 checksum">
 
     <entry comment="Empty entry sample">
       <format></format>
@@ -191,7 +191,7 @@
     </entry>
   </filenums>
 
-    <howl>
+    <howl comment="howl file meta data based on MD5 checksum.">
         <entry>
             <region>NTSC-U</region>
             <name>NTSC-U release</name>
@@ -200,17 +200,41 @@
             <sequences>HOWL</sequences>
             <md5>269df8e697e879cb2254ff091f7aefc7</md5>
         </entry>
-
 		<entry>
 			<region>NTSC-U</region>
-			<name>NTSC-U Demo</name>
+			<name>August 14 beta</name>
+			<banks>banknames.txt</banks>
+			<samples>samplenames_usademo.txt</samples>
+			<sequences>HOWL_AUG_BETA</sequences>
+			<md5>9a284df93297c9fa514b5d77819f3d82</md5>
+		</entry>
+		<entry>
+			<region>NTSC-U</region>
+			<name>August beta (earliest known)</name>
+			<banks>banknames.txt</banks>
+			<samples>samplenames_usademo.txt</samples>
+			<sequences>HOWL_AUG_BETA</sequences>
+			<md5>bdbc727b51d3786c203307e2dff6d391</md5>
+		</entry>
+		<entry>
+			<region>NTSC-U</region>
+			<name>September beta (review copy)</name>
+			<banks>banknames.txt</banks>
+			<samples>samplenames_usademo.txt</samples>
+			<sequences>HOWL_PROTO</sequences>
+			<md5>c5de2d39e42267e74aa4d5e7b47165a5</md5>
+		</entry>
+		<entry>
+			<region>NTSC-U</region>
+			<name>NTSC-U Standalone Toys R Us/Pizza Hut Demo</name>
 			<banks>banknames.txt</banks>
 			<samples>samplenames_usademo.txt</samples>
 			<sequences>HOWL_NTSCDEMO</sequences>
 			<md5>702ac23e8ab5940f32cfc5ab1e8fc913</md5>
 		</entry>
-	  
-	    <entry>
+
+		
+		<entry>
             <region>PAL</region>
             <name>PAL release</name>
             <banks>banknames_pal.txt</banks>
@@ -218,8 +242,25 @@
             <sequences>HOWL</sequences>
             <md5>3d5e358c2750f0b318a9f23676d15782</md5>
 	    </entry>
+		<entry>
+			<region>PAL</region>
+			<name>NTSC-U/PAL Spyro 2 demo/NTSC-J dengeki D26 demo</name>
+			<banks>banknames_pal.txt</banks>
+			<samples>samplenames_pal.txt</samples>
+			<sequences>HOWL_PALDEMO</sequences>
+			<md5>cf0595a1f22da724b4a4205c7bb7d5e9</md5>
+		</entry>
+		<entry>
+			<region>PAL</region>
+			<name>PAL PS Magazine demo</name>
+			<banks>banknames_pal.txt</banks>
+			<samples>samplenames_pal.txt</samples>
+			<sequences>HOWL_PALDEMO2</sequences>
+			<md5>41b4524491b6900cc0ef8c889218a78a</md5>
+		</entry>
 
-        <entry>
+
+		<entry>
             <region>NTSC-J</region>
             <name>NTSC-J release</name>
             <banks>banknames_jap.txt</banks>
@@ -227,6 +268,15 @@
             <sequences>HOWL_JAP</sequences>
             <md5>aeab71ba44ab09c2da4d45dc5467d719</md5>
         </entry>
+		<entry>
+			<region>NTSC-J</region>
+			<name>NTSC-J standalone extended demo</name>
+			<banks>banknames_jap.txt</banks>
+			<samples>samplenames_jap.txt</samples>
+			<sequences>HOWL_JAP</sequences>
+			<md5>1d19471aec9bd7e0045c7758a58cdd55</md5>
+		</entry>		
     </howl>
+
 
 </data>
