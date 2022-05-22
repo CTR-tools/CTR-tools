@@ -13,8 +13,22 @@ namespace ctrviewer.Engine
         public static Dictionary<string, SoundEffect> Sounds = new Dictionary<string, SoundEffect>();
         public static Dictionary<string, TriListCollection> Models = new Dictionary<string, TriListCollection>();
         public static Dictionary<string, Effect> Shaders = new Dictionary<string, Effect>();
+        public static Dictionary<string, SimpleAnimation> VectorAnims = new Dictionary<string, SimpleAnimation>();
+
 
         public static List<string> alphalist = new List<string>();
+
+        public static bool AddVectorAnim(string name, SimpleAnimation anim)
+        {
+            if (VectorAnims.ContainsKey(name))
+            {
+                Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate vectoranim: '{name}'.");
+                return false;
+            }
+
+            VectorAnims.Add(name, anim);
+            return true;
+        }
 
         public static bool AddShader(string name, Effect shader)
         {
@@ -81,6 +95,14 @@ namespace ctrviewer.Engine
 
             Models.Add(name, model);
             return true;
+        }
+
+        public static SimpleAnimation GetVectorAnim(string name)
+        {
+            if (!VectorAnims.ContainsKey(name))
+                return null;
+
+            return VectorAnims[name];
         }
 
         public static Effect GetShader(string name)
