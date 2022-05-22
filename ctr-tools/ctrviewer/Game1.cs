@@ -58,8 +58,6 @@ namespace ctrviewer
         BasicEffect instanceEffect;         //used for instanced mesh
         AlphaTestEffect alphaTestEffect;    //used for alpha textures pass
 
-        public static PlayerIndex activeGamePad = PlayerIndex.One;
-
         public static Vector3 TimeOfDay = new Vector3(2f);
         List<Kart> karts = new List<Kart>();
 
@@ -286,14 +284,7 @@ namespace ctrviewer
 
             UpdateEffects();
 
-            for (var i = PlayerIndex.One; i <= PlayerIndex.Four; i++)
-            {
-                if (GamePad.GetState(i).IsConnected)
-                {
-                    activeGamePad = i;
-                    break;
-                }
-            }
+            GamePadHandler.Update();
 
             Samplers.Refresh();
             Samplers.InitRasterizers();
@@ -367,6 +358,7 @@ namespace ctrviewer
             menu.Find("paths").Click += ToggleBotPaths;
             menu.Find("visbox").Click += ToggleVisData;
             menu.Find("visboxleaf").Click += ToggleVisDataLeaves;
+            menu.Find("kart").Click += ToggleKartMode;
 
             menu.Find("window").Click += ToggleWindowed;
             menu.Find("intpsx").Click += ToggleInternalPsxResolution;
@@ -407,16 +399,9 @@ namespace ctrviewer
                 menu.Find(lod.ToString()).Click += SetLodAndReload;
         }
 
-
-        public void ToggleCamPos(object sender, EventArgs args)
-        {
-            eng.Settings.ShowCamPos = (sender as BoolMenuItem).Value;
-        }
-
-        public void ToggleMips(object sender, EventArgs args)
-        {
-            eng.Settings.GenerateMips = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleKartMode(object sender, EventArgs args) => eng.Settings.KartMode = (sender as BoolMenuItem).Value;
+        public void ToggleCamPos(object sender, EventArgs args) => eng.Settings.ShowCamPos = (sender as BoolMenuItem).Value;
+        public void ToggleMips(object sender, EventArgs args) => eng.Settings.GenerateMips = (sender as BoolMenuItem).Value;
 
         public void ToggleConsole(object sender, EventArgs args)
         {
@@ -895,12 +880,14 @@ namespace ctrviewer
                         new Vector3(-(float)Math.PI / 2f, 0, 0)));
                 }
 
+                ContentVault.AddVectorAnim("defaultCameraPath", DataConverter.ToSimpleAnimation(Scenes[0].respawnPts));
+
                 //update kart
                 if (Scenes.Count > 0 && karts.Count > 0)
                 {
                     karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
                     karts[0].ModelName = eng.Settings.PlayerModel;
-                    karts[0].path = DataConverter.ToSimpleAnimation(Scenes[0].respawnPts);
+                    karts[0].path = ContentVault.GetVectorAnim("defaultCameraPath");
                 }
 
                 //put all botpaths
@@ -996,24 +983,23 @@ namespace ctrviewer
 
             if (big == null)
             {
+                //check file in settings, most of the time this will be it
                 if (File.Exists(eng.Settings.BigFileLocation))
                 {
                     result = true;
                 }
+                //maybe it's in root folder?
                 else if (File.Exists(Meta.BigFileName))
                 {
                     eng.Settings.BigFileLocation = Meta.BigFileName;
                     result = true;
                 }
-                else //scan drives
+                else //scan all drives, could be mounted CDROM image, or even physical?
                 {
-                    var drv = DriveInfo.GetDrives();
-
-                    result = false;
-
-                    foreach (DriveInfo dInfo in drv)
+                    foreach (var dInfo in DriveInfo.GetDrives())
                     {
                         string path = Path.Combine(dInfo.Name, Meta.BigFileName);
+
                         if (File.Exists(path))
                         {
                             eng.Settings.BigFileLocation = path;
@@ -1125,9 +1111,6 @@ namespace ctrviewer
 
         bool captureMouse = false;
 
-        GamePadState oldgs = GamePad.GetState(activeGamePad);
-        GamePadState newgs = GamePad.GetState(activeGamePad);
-
         int selectedChar = 0;
 
         /// <summary>
@@ -1138,11 +1121,7 @@ namespace ctrviewer
             if (!graphics.IsFullScreen)
                 Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
 
-            KeyboardHandler.Update();
-            MouseHandler.Update();
-
-            oldgs = newgs;
-            newgs = GamePad.GetState(activeGamePad);
+            InputHandlers.Update();
 
             //allow fullscreen toggle before checking for controls
             if (KeyboardHandler.IsComboPressed(Keys.RightAlt, Keys.Enter))
@@ -1189,27 +1168,25 @@ namespace ctrviewer
                     }
 
 
-                if (newgs.Buttons.Start == ButtonState.Pressed && newgs.Buttons.Back == ButtonState.Pressed)
+                if (InputHandlers.Process(GameAction.ForceQuit))
                     Exit();
 
                 if (eng.Settings.StereoPair)
                 {
-                    if (newgs.IsButtonDown(Buttons.RightShoulder) || KeyboardHandler.IsDown(Keys.OemOpenBrackets))
+                    if (GamePadHandler.IsDown(Buttons.RightShoulder) || KeyboardHandler.IsDown(Keys.OemOpenBrackets))
                         eng.Settings.StereoPairSeparation += (float)(300 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
 
-                    if (newgs.IsButtonDown(Buttons.LeftShoulder) || KeyboardHandler.IsDown(Keys.OemCloseBrackets))
+                    if (GamePadHandler.IsDown(Buttons.LeftShoulder) || KeyboardHandler.IsDown(Keys.OemCloseBrackets))
                         eng.Settings.StereoPairSeparation -= (float)(300 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
 
                     if (eng.Settings.StereoPairSeparation < 0) eng.Settings.StereoPairSeparation = 0;
 
-                    if (newgs.IsButtonDown(Buttons.RightShoulder) && newgs.IsButtonDown(Buttons.LeftShoulder))
+                    if (GamePadHandler.IsDown(Buttons.RightShoulder) && GamePadHandler.IsDown(Buttons.LeftShoulder))
                         eng.Settings.StereoPairSeparation = 130;
                 }
 
-                if (KeyboardHandler.IsPressed(Keys.OemTilde) || (newgs.IsButtonDown(Buttons.Back) && !oldgs.IsButtonDown(Buttons.Back)))
-                {
-                    eng.Settings.ShowConsole = !eng.Settings.ShowConsole;
-                }
+                if (InputHandlers.Process(GameAction.ToggleConsole))
+                    eng.Settings.ShowConsole ^= true;
 
                 if (KeyboardHandler.IsPressed(Keys.O))
                 {
@@ -1236,14 +1213,12 @@ namespace ctrviewer
                 if (KeyboardHandler.IsDown(Keys.OemMinus)) eng.Settings.FieldOfView--;
                 if (KeyboardHandler.IsDown(Keys.OemPlus)) eng.Settings.FieldOfView++;
 
-                if ((newgs.Buttons.Start == ButtonState.Pressed && oldgs.Buttons.Start != newgs.Buttons.Start) || KeyboardHandler.IsPressed(Keys.Escape))
-                {
-                    menu.Visible = !menu.Visible;
-                }
+                if (InputHandlers.Process(GameAction.MenuToggle))
+                    menu.Visible ^= true;
 
                 if (menu.Visible)
                 {
-                    menu.Update(oldgs, newgs);
+                    menu.Update();
 
                     //currentflag = menu.items.Find(x => x.Title == "current flag: {0}").rangeval;
 
@@ -1286,9 +1261,7 @@ namespace ctrviewer
                         menu.Exec = !menu.Exec;
                     }
 
-                    if ((newgs.Buttons.B == ButtonState.Pressed && newgs.Buttons.B != oldgs.Buttons.B) ||
-                        (newgs.Buttons.Y == ButtonState.Pressed && newgs.Buttons.Y != oldgs.Buttons.Y) ||
-                        KeyboardHandler.IsPressed(Keys.Back))
+                    if (InputHandlers.Process(GameAction.MenuBack))
                     {
                         bool togglemenu = true;
 
@@ -1333,8 +1306,8 @@ namespace ctrviewer
         {
             if (IsActive)
             {
-                eng.Cameras[CameraType.DefaultCamera].speedScale -= 0.1f * GamePad.GetState(activeGamePad).Triggers.Left;
-                eng.Cameras[CameraType.DefaultCamera].speedScale += 0.1f * GamePad.GetState(activeGamePad).Triggers.Right;
+                eng.Cameras[CameraType.DefaultCamera].speedScale -= 0.1f * GamePadHandler.State.Triggers.Left;
+                eng.Cameras[CameraType.DefaultCamera].speedScale += 0.1f * GamePadHandler.State.Triggers.Right;
 
                 if (MouseHandler.IsLeftButtonPressed)
                 {

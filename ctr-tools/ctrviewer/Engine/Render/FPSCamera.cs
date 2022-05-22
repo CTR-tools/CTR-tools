@@ -56,24 +56,21 @@ namespace ctrviewer.Engine.Render
             }
 
 
-            leftRightRot -= GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.X * amount * 4 * gamePadScale;
-            upDownRot += GamePad.GetState(Game1.activeGamePad).ThumbSticks.Right.Y * amount * 4 * gamePadScale;
+            leftRightRot -= GamePadHandler.State.ThumbSticks.Right.X * amount * 4 * gamePadScale;
+            upDownRot += GamePadHandler.State.ThumbSticks.Right.Y * amount * 4 * gamePadScale;
 
 
             Vector3 moveVector = new Vector3(0, 0, 0);
 
             if (move && Game.IsActive)
             {
-                GamePadState padState = GamePad.GetState(Game1.activeGamePad);
-
-
-                if (KeyboardHandler.IsDown(Keys.W) || padState.DPad.Up == ButtonState.Pressed)
+                if (KeyboardHandler.IsDown(Keys.W) || GamePadHandler.State.DPad.Up == ButtonState.Pressed)
                     moveVector += Vector3.Forward;
-                if (KeyboardHandler.IsDown(Keys.S) || padState.DPad.Down == ButtonState.Pressed)
+                if (KeyboardHandler.IsDown(Keys.S) || GamePadHandler.State.DPad.Down == ButtonState.Pressed)
                     moveVector += Vector3.Backward;
-                if (KeyboardHandler.IsDown(Keys.D) || padState.DPad.Right == ButtonState.Pressed)
+                if (KeyboardHandler.IsDown(Keys.D) || GamePadHandler.State.DPad.Right == ButtonState.Pressed)
                     moveVector += Vector3.Right;
-                if (KeyboardHandler.IsDown(Keys.A) || padState.DPad.Left == ButtonState.Pressed)
+                if (KeyboardHandler.IsDown(Keys.A) || GamePadHandler.State.DPad.Left == ButtonState.Pressed)
                     moveVector += Vector3.Left;
 
 
@@ -108,13 +105,13 @@ namespace ctrviewer.Engine.Render
                 slowdown *= 0.75f;
 
 
-                moveVector += new Vector3(padState.ThumbSticks.Left.X / 100f, 0, -padState.ThumbSticks.Left.Y / 100f);
+                moveVector += new Vector3(GamePadHandler.State.ThumbSticks.Left.X / 100f, 0, -GamePadHandler.State.ThumbSticks.Left.Y / 100f);
 
-                if (KeyboardHandler.IsDown(Keys.LeftShift) || padState.Buttons.A == ButtonState.Pressed)
+                if (KeyboardHandler.IsDown(Keys.LeftShift) || GamePadHandler.State.Buttons.A == ButtonState.Pressed)
                     moveVector *= 2;
 
-                speedScale -= padState.Triggers.Left / 20f * amount / 60f;
-                speedScale += padState.Triggers.Right / 20f * amount / 60f;
+                speedScale -= GamePadHandler.State.Triggers.Left / 20f * amount / 60f;
+                speedScale += GamePadHandler.State.Triggers.Right / 20f * amount / 60f;
 
                 if (speedScale < 0.1f)
                     speedScale = 0.1f;
@@ -144,7 +141,7 @@ namespace ctrviewer.Engine.Render
             AddToCameraPosition(moveVector * amount);
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
             AddToCameraPosition(new Vector3(0, 0, 0));

@@ -241,7 +241,7 @@ namespace ctrviewer.Engine.Gui
                 new MenuItem("level options".ToUpper(), "link", "level", true),
                 new MenuItem("video options".ToUpper(), "link", "video", true),
                 new MenuItem("time of day".ToUpper(), "link", "tod", true),
-                new MenuItem("kart mode".ToUpper(), "toggle", "kart", true),
+                new BoolMenuItem() { Text = "Kart mode", Name = "kart", Value = settings.KartMode },
                 new MenuItem("quit".ToUpper(), "exit", "", true),
             };
 
@@ -283,15 +283,13 @@ namespace ctrviewer.Engine.Gui
             //ContentVault.Sounds["menu_up"].Play(0.15f, 0, 0);
         }
 
-        public void Update(GamePadState oldstate, GamePadState newstate)
+        public void Update()
         {
-            if (!Visible)
-                return;
+            if (!Visible) return;
 
-            if ((newstate.DPad.Up == ButtonState.Pressed && newstate.DPad.Up != oldstate.DPad.Up) || KeyboardHandler.IsAnyPressed(Keys.W, Keys.Up)) Previous();
-            if ((newstate.DPad.Down == ButtonState.Pressed && newstate.DPad.Down != oldstate.DPad.Down) || KeyboardHandler.IsAnyPressed(Keys.S, Keys.Down)) Next();
-
-            if (newstate.DPad.Left == ButtonState.Pressed && newstate.DPad.Left != oldstate.DPad.Left || KeyboardHandler.IsAnyPressed(Keys.A, Keys.Left))
+            if (InputHandlers.Process(GameAction.MenuUp)) Previous();
+            if (InputHandlers.Process(GameAction.MenuDown)) Next();
+            if (InputHandlers.Process(GameAction.MenuLeft))
             {
                 if (SelectedItem.sType == SwitchType.Range)
                 {
@@ -302,7 +300,7 @@ namespace ctrviewer.Engine.Gui
                     Game1.currentflag = SelectedItem.rangeval;
                 }
             }
-            if ((newstate.DPad.Right == ButtonState.Pressed && newstate.DPad.Right != oldstate.DPad.Right) || KeyboardHandler.IsAnyPressed(Keys.D, Keys.Right))
+            if (InputHandlers.Process(GameAction.MenuRight))
             {
                 if (SelectedItem.sType == SwitchType.Range)
                 {
@@ -314,7 +312,8 @@ namespace ctrviewer.Engine.Gui
                 }
             }
 
-            if ((newstate.Buttons.A == ButtonState.Pressed && newstate.Buttons.A != oldstate.Buttons.A) || KeyboardHandler.IsAnyPressed(Keys.Enter, Keys.Space) && !KeyboardHandler.IsAltPressed)
+            //do not allow to enter menus if alt is pressed cause of fullscreen toggle
+            if (!KeyboardHandler.IsAltPressed && InputHandlers.Process(GameAction.MenuConfirm))
                 if (SelectedItem.Enabled)
                 {
                     SelectedItem.DoClick();
