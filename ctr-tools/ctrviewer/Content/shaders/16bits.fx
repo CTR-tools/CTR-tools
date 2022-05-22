@@ -16,13 +16,15 @@ struct Vertex
     float2 TextureCoordinates : TEXCOORD0;
 };
 
-int NUM_BITS_CHOP = 3;
-
-float4 chopBits(float input)
+float4 color5to8(float input)
 {
-    //get rid of lower bits
-    return (float)(((int)(input * 0xFF)) >> NUM_BITS_CHOP << NUM_BITS_CHOP) / 0xFF;
+    return (float)(((int)(input * 0xFF) * 249 + 1014) >> 11);
 }
+
+//5to8
+//((color * 527u) + 23u) >> 6
+//8to5
+//((color * 249u) + 1014u) >> 11
 
 float4 pixelShader(Vertex input) : COLOR
 {
@@ -31,9 +33,9 @@ float4 pixelShader(Vertex input) : COLOR
     //bw test
     //color.rgb = color.r * 0.2126 + color.g * 0.7152 + color.b * 0.0722;
 
-    color.r = chopBits(color.r);
-    color.g = chopBits(color.g);
-    color.b = chopBits(color.b);
+    color.r = color5to8(color.r);
+    color.g = color5to8(color.g);
+    color.b = color5to8(color.b);
 
     return color;
 }
