@@ -73,6 +73,7 @@ namespace ctrviewer.Engine
         }
 
         public bool StereoPair { get; set; } = false;
+        public bool StereoCrossEyed { get; set; } = true;
         public string PlayerModel { get; set; } = "crash";
         public float StereoPairSeparation { get; set; } = 20;
         public bool ShowCamPos { get; set; } = false;
@@ -196,14 +197,14 @@ namespace ctrviewer.Engine
                 filename = Meta.SettingsFile;
             }
 
-            XmlWriterSettings settings = new XmlWriterSettings() { Indent = true };
+            var settings = new XmlWriterSettings() { Indent = true };
 
-            using (XmlWriter sw = XmlWriter.Create(filename, settings))
+            using (var sw = XmlWriter.Create(filename, settings))
             {
-                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                var ns = new XmlSerializerNamespaces();
                 ns.Add("", "");
 
-                XmlSerializer x = new XmlSerializer(Instance.GetType());
+                var x = new XmlSerializer(Instance.GetType());
                 x.Serialize(sw, Instance, ns);
                 sw.Flush();
                 sw.Close();
@@ -218,16 +219,16 @@ namespace ctrviewer.Engine
                 filename = Meta.SettingsFile;
             }
 
-            EngineSettings settings = new EngineSettings();
+            var settings = new EngineSettings();
 
             if (!File.Exists(filename))
                 return settings;
 
-            using (StreamReader reader = new StreamReader(File.OpenRead(filename)))
+            using (var reader = new StreamReader(File.OpenRead(filename)))
             {
                 try
                 {
-                    XmlSerializer x = new XmlSerializer(settings.GetType());
+                    var x = new XmlSerializer(settings.GetType());
                     settings = (EngineSettings)x.Deserialize(reader);
                     reader.Close();
                 }

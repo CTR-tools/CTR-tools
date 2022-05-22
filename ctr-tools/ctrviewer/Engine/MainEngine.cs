@@ -54,12 +54,24 @@ namespace ctrviewer.Engine
 
         public void TakeScreenShot()
         {
-            Helpers.CheckFolder(Path.Combine(Meta.BasePath, "screenshots"));
-            using (FileStream fs = File.Create($"screenshots\\{screenshotstaken.ToString("0000")}_{DateTime.Now.ToString("ddMMyy_hhmmss")}.png"))
+            if (!Settings.InternalPSXResolution)
+            {
+                GameConsole.Write("Can't take screenshot without native resolution buffer.");
+                return;
+            }
+
+            string screenshotFolder = Path.Combine(Meta.UserPath, "screenshots");
+            string screenshotPath = Path.Combine(screenshotFolder, $"{screenshotstaken.ToString("0000")}_{DateTime.Now.ToString("ddMMyy_hhmmss")}.png");
+            Helpers.CheckFolder(screenshotFolder);
+
+            using (var fs = File.Create(screenshotPath))
             {
                 screenBuffer.SaveAsPng(fs, screenBuffer.Width, screenBuffer.Height);
             }
+
             screenshotstaken++;
+
+            GameConsole.Write($"Screenshot saved: {screenshotPath}");
         }
 
         public void Subscribe()
@@ -86,7 +98,7 @@ namespace ctrviewer.Engine
 
         public void UpdateStereoCamera(CameraType cameraType, float separationValue)
         {
-            Vector3 moveVector = Vector3.Transform((cameraType == CameraType.RightEyeCamera ? Vector3.Left : Vector3.Right) * separationValue / 100f, Cameras[CameraType.DefaultCamera].GetYawPitchRollMatrix());
+            Vector3 moveVector = Vector3.Transform((cameraType == (Settings.StereoCrossEyed ? CameraType.RightEyeCamera : CameraType.LeftEyeCamera) ? Vector3.Left : Vector3.Right) * separationValue / 100f, Cameras[CameraType.DefaultCamera].GetYawPitchRollMatrix());
             Cameras[cameraType].Position = Cameras[CameraType.DefaultCamera].Position + moveVector;
             Cameras[cameraType].rotationSpeed = Cameras[CameraType.DefaultCamera].rotationSpeed;
             Cameras[cameraType].Target = Cameras[CameraType.DefaultCamera].Target;
@@ -100,7 +112,6 @@ namespace ctrviewer.Engine
 
         public void Draw()
         {
-
         }
 
         public void Update(GameTime gameTime)
@@ -121,12 +132,12 @@ namespace ctrviewer.Engine
         public void Clear()
         {
             sky = null;
+            ContentVault.Clear();
             instanced.Clear();
             MeshHigh.Clear();
             MeshMed.Clear();
             MeshLow.Clear();
             paths.Clear();
-            ContentVault.Clear();
             bbox.Clear();
             bbox2.Clear();
         }
@@ -136,7 +147,7 @@ namespace ctrviewer.Engine
             EngineSettings.Save();
             Unsubscribe();
             Cameras.Clear();
-            this.Clear();
+            Clear();
         }
     }
 }

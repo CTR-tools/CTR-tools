@@ -236,7 +236,7 @@ namespace ctrviewer
         public void UpdateInternalResolution()
         {
             if (EngineSettings.Instance.InternalPSXResolution)
-                SetInternalResolution(512, 240);
+                SetInternalResolution(512, 216);
             else
                 SetInternalResolution();
         }
@@ -366,6 +366,7 @@ namespace ctrviewer
             menu.Find("antialias").Click += ToggleAntialias;
             menu.Find("filter").Click += ToggleFiltering;
             menu.Find("stereo").Click += ToggleStereoscopic;
+            menu.Find("crosseyed").Click += ToggleCrosseyed;
             menu.Find("campos").Click += ToggleCamPos;
             menu.Find("genmips").Click += ToggleMips;
             menu.Find("console").Click += ToggleConsole;
@@ -416,7 +417,13 @@ namespace ctrviewer
         public void ToggleStereoscopic(object sender, EventArgs args)
         {
             eng.Settings.StereoPair = (sender as BoolMenuItem).Value;
+            menu.Find("crosseyed").Enabled = eng.Settings.StereoPair;
         }
+        public void ToggleCrosseyed(object sender, EventArgs args)
+        {
+            eng.Settings.StereoCrossEyed = (sender as BoolMenuItem).Value;
+        }
+
         public void ToggleVsync(object sender, EventArgs args)
         {
             eng.Settings.VerticalSync = (sender as BoolMenuItem).Value;
@@ -1156,14 +1163,13 @@ namespace ctrviewer
                                 eng.Cameras[CameraType.SkyCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
 
 
+                                eng.UpdateStereoCamera(CameraType.LeftEyeCamera, eng.Settings.StereoPairSeparation);
+                                eng.Cameras[CameraType.LeftEyeCamera].SetRotation(eng.Cameras[CameraType.DefaultCamera].leftRightRot, eng.Cameras[CameraType.DefaultCamera].upDownRot);
+                                eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true);
 
                                 eng.UpdateStereoCamera(CameraType.RightEyeCamera, eng.Settings.StereoPairSeparation);
                                 eng.Cameras[CameraType.RightEyeCamera].SetRotation(eng.Cameras[CameraType.DefaultCamera].leftRightRot, eng.Cameras[CameraType.DefaultCamera].upDownRot);
                                 eng.Cameras[CameraType.RightEyeCamera].Update(gameTime, updatemouse, true);
-
-                                eng.UpdateStereoCamera(CameraType.LeftEyeCamera, eng.Settings.StereoPairSeparation);
-                                eng.Cameras[CameraType.LeftEyeCamera].SetRotation(eng.Cameras[CameraType.DefaultCamera].leftRightRot, eng.Cameras[CameraType.DefaultCamera].upDownRot);
-                                eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true);
                             }
                     }
 

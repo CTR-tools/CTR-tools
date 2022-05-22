@@ -121,6 +121,7 @@ namespace ctrviewer.Engine.Gui
                 new BoolMenuItem() { Text = "Texture filtering", Name = "filter", Value = settings.EnableFiltering },
                 new BoolMenuItem() { Text = "Internal PSX Resolution", Name = "intpsx", Value = settings.InternalPSXResolution },
                 new BoolMenuItem() { Text = "Stereoscopic mode", Name = "stereo", Value = settings.StereoPair },
+                new BoolMenuItem() { Text = "crosseyed", Name = "crosseyed", Value = settings.StereoCrossEyed },
                 new BoolMenuItem() { Text = "Generate mip maps", Name = "genmips", Value = settings.GenerateMips },
                 new BoolMenuItem() { Text = "Show camera position", Name = "campos", Value = settings.ShowCamPos },
                 new BoolMenuItem() { Text = "Show console", Name = "console", Value = settings.ShowConsole },

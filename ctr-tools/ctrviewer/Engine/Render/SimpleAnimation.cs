@@ -8,10 +8,17 @@ namespace ctrviewer.Engine.Render
         public Vector3 Position;
         public Vector3 Rotation;
         public Vector3 Scale;
-        public float TimeValue;
+
+        public float Time;
+        public float TimeValue => Time / (Parent != null ? Parent.Speed : 1.0f);
+
+        public SimpleAnimation Parent;
     }
+
     public class SimpleAnimation
     {
+        public float Speed = 1.0f;
+
         public bool forcepos = true;
 
         public float Timer = 0;
@@ -23,8 +30,8 @@ namespace ctrviewer.Engine.Render
 
         public SimpleAnimation()
         {
-            Keys.Add(new AnimationKey() { Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1f), TimeValue = 0 });
-            Keys.Add(new AnimationKey() { Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1), TimeValue = 2000 });
+            Keys.Add(new AnimationKey() { Parent = this, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1f), Time = 0 });
+            Keys.Add(new AnimationKey() { Parent = this, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1), Time = 2000 });
             //Keys.Add(new AnimationKey() { Position = new Vector3(0, 0, 0), Rotation = new Vector3(6.28f, 0, 0), Scale = new Vector3(1), TimeValue = 3000 });
             //Keys.Add(new AnimationKey() { Position = new Vector3(0, 0, 0), Rotation = new Vector3(6.28f, 0, 0), Scale = new Vector3(1), TimeValue = 4500 });
 
@@ -44,6 +51,7 @@ namespace ctrviewer.Engine.Render
             if (Timer >= Keys[frame].TimeValue)
             {
                 Timer = 0;
+                State = Keys[0];
                 return;
             }
 

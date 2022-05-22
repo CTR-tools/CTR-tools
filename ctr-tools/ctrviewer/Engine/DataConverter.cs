@@ -94,7 +94,7 @@ namespace ctrviewer.Engine
 
             foreach (var point in path.Frames)
             {
-                anim.Keys.Add(new AnimationKey() { Position = ToVector3(point.position), Rotation = new Vector3(0), Scale = new Vector3(1), TimeValue = time });
+                anim.Keys.Add(new AnimationKey() { Parent = anim, Position = ToVector3(point.position), Rotation = new Vector3(0), Scale = new Vector3(1), Time = time });
                 time += 200;
             }
 
@@ -114,10 +114,11 @@ namespace ctrviewer.Engine
             {
                 anim.Keys.Add(new AnimationKey()
                 {
+                    Parent = anim,
                     Position = ToVector3(point.Position),
                     Rotation = new Vector3(ToVector3(point.Rotation).X, ToVector3(point.Rotation).Y, ToVector3(point.Rotation).Z),
                     Scale = new Vector3(1),
-                    TimeValue = time
+                    Time = time
                 });
 
                 time += 200;
@@ -126,6 +127,7 @@ namespace ctrviewer.Engine
             anim.Keys.Add(anim.Keys[0]);
 
             anim.State = anim.Keys[0];
+            anim.Speed = 0.5f;
 
             return anim;
         }
@@ -150,10 +152,11 @@ namespace ctrviewer.Engine
 
                 anim.Keys.Add(new AnimationKey()
                 {
+                    Parent = anim,
                     Position = ToVector3(spawn.Pose.Position),
-                    Rotation = new Vector3(0),//new Vector3(rot.X, -rot.Y, rot.Z),
+                    Rotation = new Vector3(0),
                     Scale = new Vector3(1f),
-                    TimeValue = time
+                    Time = time
                 });
 
                 time += 250;
@@ -162,13 +165,15 @@ namespace ctrviewer.Engine
             while (spawn != zerospawn && spawn.Next != null);
 
             anim.State = anim.Keys[0];
+            anim.Speed = 0.5f;
 
             anim.Keys.Add(new AnimationKey()
             {
+                Parent = anim,
                 Position = anim.Keys[0].Position,
                 Rotation = new Vector3(0),//anim.Keys[0].Rotation,
                 Scale = new Vector3(1f),
-                TimeValue = time + 200
+                Time = time + 200
             });
 
             return anim;
