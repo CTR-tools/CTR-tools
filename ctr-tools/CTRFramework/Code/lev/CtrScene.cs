@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Text;
+using System.Diagnostics;
 
 namespace CTRFramework
 {
@@ -64,7 +65,7 @@ namespace CTRFramework
 
             if (File.Exists(vrmpath))
             {
-                Console.WriteLine("VRAM found!");
+                Helpers.Panic(this, PanicType.Info, "VRAM found!");
                 //ctrvram = CtrVrm.FromFile(vrmpath);
 
                 SetVram(CtrVrm.FromFile(vrmpath));
@@ -81,6 +82,7 @@ namespace CTRFramework
         public static CtrScene FromFile(string filename, bool readHi = true)
         {
             CtrScene.ReadHiTex = readHi;
+
             return new CtrScene(filename);
         }
 
@@ -88,6 +90,10 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
+            Stopwatch sw = new Stopwatch();
+
+            sw.Start();
+
             try
             {
                 ReadScene(PatchedContainer.FromReader(br).GetReader());
@@ -97,6 +103,10 @@ namespace CTRFramework
                 //try to load scene without patch table
                 ReadScene(br);
             }
+
+            sw.Stop();
+
+            Helpers.Panic(this, PanicType.Measure, $"CtrScene.Read: {sw.ElapsedMilliseconds}");
         }
 
         public void ReadScene(BinaryReaderEx br)
@@ -119,14 +129,16 @@ namespace CTRFramework
                 //quad.GenerateCtrQuads(verts);
             }
 
+            Console.WriteLine((mesh.numVertices * Vertex.SizeOf + mesh.ptrVertices.ToUInt32()).ToString("X8"));
+            Console.ReadKey();
+
             respawnPts = new PtrWrap<RespawnPoint>(header.ptrRespawnPts).GetList(br, header.numRespawnPts);
 
             foreach (var respawn in respawnPts)
             {
                 respawn.Prev = respawnPts[respawn.prev];
                 respawn.Next = respawnPts[respawn.next];
-                respawn.Pose.Rotation = Vector3.Transform(Vector3.UnitY, Matrix4x4.CreateLookAt(respawn.Pose.Position, respawn.Next.Pose.Position, Vector3.UnitY));
-                respawn.Pose.Rotation *= (float)(Math.PI / 180.0f);
+                respawn.Pose.Rotation = Vector3.Transform(-Vector3.UnitZ, Matrix4x4.CreateLookAt(respawn.Pose.Position, respawn.Next.Pose.Position, Vector3.UnitX)) / 180f * (float)Math.PI;
             }
 
             vertanims   = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
@@ -222,7 +234,7 @@ namespace CTRFramework
 
                 try
                 {
-                    CtrModel ctr = CtrModel.FromReader(br);
+                    var ctr = CtrModel.FromReader(br);
                     if (ctr != null)
                         Models.Add(ctr);
                 }
@@ -232,7 +244,7 @@ namespace CTRFramework
                 }
             }
 
-            foreach (VertexAnim va in vertanims)
+            foreach (var va in vertanims)
             {
                 Helpers.Panic(this, PanicType.Info, va.ToString());
             }
@@ -483,9 +495,9 @@ namespace CTRFramework
                             if (!File.Exists(file))
                                 tex.GetHiBitmap(ctrvram, quad)?.Save(file, System.Drawing.Imaging.ImageFormat.Png);
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            Console.WriteLine("oh no");
+                            Helpers.Panic(this, PanicType.Error, $"oh no: {ex.Message}");
                             //Console.ReadKey();
                         }
                     }
@@ -703,6 +715,78 @@ namespace CTRFramework
             }
 
             return leafQuadBlocks;
+        }
+
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable)
+        {
+            bw.Jump(SceneHeader.SizeOf);
+
+            //write enviro map
+            if (enviroMap != null)
+            {
+                header.ptrEnviroMap.Address = (UIntPtr)bw.BaseStream.Position;
+                enviroMap.Write(bw, patchTable);
+            }
+            else
+            {
+                header.ptrEnviroMap.Address = UIntPtr.Zero;
+            }
+
+            foreach (var respawn in respawnPts)
+                respawn.Write(bw, patchTable);
+
+            //write instances
+            header.ptrInstances.Address = (UIntPtr)bw.BaseStream.Position;
+
+            foreach (var pickup in pickups)
+                pickup.Write(bw, patchTable);
+
+            //reserve space for model pointers
+            header.ptrModelsPtr.Address = (UIntPtr)bw.BaseStream.Position;
+
+            foreach (var model in Models)
+                bw.Write(-1);
+
+            header.ptrMeshInfo.Address = (UIntPtr)bw.BaseStream.Position;
+
+            bw.Seek(MeshInfo.SizeOf);
+
+            //write quadblocks
+            mesh.numQuadBlocks = (uint)quads.Count;
+            mesh.ptrQuadBlocks = (UIntPtr)bw.BaseStream.Position;
+
+            foreach (var quad in quads)
+                quad.Write(bw, patchTable);
+
+            //write vertices
+            mesh.numVertices = (uint)vertanims.Count;
+            mesh.ptrVertices = (UIntPtr)bw.BaseStream.Position;
+
+            foreach (var vert in verts)
+                vert.Write(bw, patchTable);
+
+
+            //finally jump back and write header
+
+            bw.Jump(0);
+            header.Write(bw, patchTable);
+
+            //bw.Jump(header.ptrMeshInfo);
+            //mesh.Write(bw, patchTable);
+        }
+
+        public void Save(string filename)
+        {
+            var cont = new PatchedContainer();
+
+            using (var ms = new MemoryStream())
+            using (var bw = new BinaryWriterEx(ms))
+            {
+                Write(bw, cont.PatchTable);
+                cont.Data = ms.ToArray();
+            }
+
+            cont.Save(filename);
         }
 
         public void Dispose()

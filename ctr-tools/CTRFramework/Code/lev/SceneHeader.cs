@@ -201,20 +201,20 @@ namespace CTRFramework
             {
                 br.Jump(ptrBuildStart);
                 compilationBegins = Helpers.ParseDate(br.ReadStringNT());
-                Console.WriteLine(compilationBegins);
+                Helpers.Panic(this, PanicType.Info, compilationBegins.ToString());
             }
 
             if (ptrBuildEnd != PsxPtr.Zero)
             {
                 br.Jump(ptrBuildEnd);
                 compilationEnds = Helpers.ParseDate(br.ReadStringNT());
-                Console.WriteLine(compilationEnds);
+                Helpers.Panic(this, PanicType.Info, compilationBegins.ToString());
             }
 
             if (ptrBuildType != PsxPtr.Zero)
             {
                 br.Jump(ptrBuildType);
-                Console.WriteLine(br.ReadStringNT());
+                Helpers.Panic(this, PanicType.Info, br.ReadStringNT());
             }
 
             br.Jump(dataEnd);

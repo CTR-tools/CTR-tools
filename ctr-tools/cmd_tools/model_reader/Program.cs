@@ -81,6 +81,7 @@ namespace model_reader
                         var scene = CtrScene.FromFile(filename);
                         //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
                         scene.Export(Path.Combine(basepath, name), ExportFlags.All);
+                        //scene.Save(filename + "_test.lev");
                         break;
                     }
                 case ".ctr":

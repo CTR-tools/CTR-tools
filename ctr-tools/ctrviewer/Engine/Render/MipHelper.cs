@@ -1,8 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using Xna = Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ctrviewer.Engine.Render
 {
@@ -18,7 +19,7 @@ namespace ctrviewer.Engine.Render
         /// <returns>Texture2D object.</returns>
         public static Texture2D LoadTextureFromFile(GraphicsDevice device, string path, out bool alpha)
         {
-            using (Bitmap bmp = (Bitmap)Bitmap.FromFile(path))
+            using (var bmp = (Bitmap)Bitmap.FromFile(path))
             {
                 return LoadTextureFromBitmap(device, bmp, out alpha);
             }
@@ -151,6 +152,21 @@ namespace ctrviewer.Engine.Render
 
             return bitmap;
         }
+        /*
+        public static Texture2D Paint(GraphicsDevice graphics, RenderTarget2D rendertarget, SpriteBatch spriteBatch, Texture2D texture)
+        {
+            if (rendertarget == null) return null;
+            if (spriteBatch == null) return null;
+            if (texture == null) return null;
 
+            graphics.SetRenderTarget(rendertarget);
+            spriteBatch.Draw(
+                texture, 
+                new Xna.Rectangle(0, 0, rendertarget.Width, rendertarget.Height),
+                new Xna.Rectangle(0, 0, texture.Width, texture.Height),
+                Xna.Color.White
+                );
+        }
+        */
     }
 }

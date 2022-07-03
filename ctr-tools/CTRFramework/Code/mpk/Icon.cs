@@ -47,7 +47,7 @@ namespace CTRFramework
             Index = br.ReadUInt32();
             tl = TextureLayout.FromReader(br, true);
 
-            Console.WriteLine(Name);
+            Helpers.Panic(this, PanicType.Debug, Name);
         }
 
         public void Save(string path, Tim tim)

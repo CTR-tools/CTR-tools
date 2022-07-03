@@ -80,8 +80,8 @@ namespace CTRFramework.Shared
                 return;
             }
 
-            Write((short)(Math.Round(value.X / scale)));
-            Write((short)(Math.Round(value.Y / scale)));
+            Write((byte)(Math.Round(value.X / scale)));
+            Write((byte)(Math.Round(value.Y / scale)));
         }
 
         public void WriteVector3sPadded(Vector3 value, float scale = 1.0f)

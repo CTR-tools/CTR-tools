@@ -6,6 +6,8 @@ namespace CTRFramework
 {
     public class MeshInfo : IRead
     {
+        public static readonly int SizeOf = 32;
+
         public uint numQuadBlocks;
         public uint numVertices;
         public uint numUnk; //this is probably some third count

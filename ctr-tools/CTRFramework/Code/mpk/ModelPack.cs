@@ -87,10 +87,9 @@ namespace CTRFramework
                 }
                 catch
                 {
-                    Console.WriteLine($"Model failed: {ptr.ToString("X8")}");
+                    Helpers.Panic(this, PanicType.Error, $"Model failed: {ptr.ToString("X8")}");
                 }
             }
-
         }
 
         public void Extract(string path, Tim tim)

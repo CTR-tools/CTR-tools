@@ -38,7 +38,7 @@ namespace CTRFramework.Vram
         public int PalX => Palette.X;
         public int PalY => Palette.Y;
 
-        private ushort packedPalette => (ushort)(Palette.X & Palette.Y << 6);
+        private ushort packedPalette => (ushort)(Palette.X | Palette.Y << 6);
 
         public Point Page;
 

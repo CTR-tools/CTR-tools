@@ -49,14 +49,14 @@ namespace CTRFramework
             frameSize = br.ReadInt16();
             ptrDeltas = PsxPtr.FromReader(br);
 
-            Console.WriteLine($"{Name} [{IsCompressed}]: {ptrDeltas}");
+            Helpers.Panic(this, PanicType.Debug, $"{Name} [{IsCompressed}]: {ptrDeltas}");
 
             int ptrFrames = (int)br.BaseStream.Position;
 
             for (int i = 0; i < numFrames; i++)
             {
                 br.Jump(ptrFrames + frameSize * i);
-                Console.WriteLine("frame " + i + " " + br.HexPos());
+                Helpers.Panic(this, PanicType.Debug, $"frame {i} {br.HexPos()}");
                 Frames.Add(CtrFrame.FromReader(br, numVerts));
             }
 

@@ -49,7 +49,7 @@ namespace ctrviewer.Engine
 
         public static TriListCollection ToTriListCollection(CtrModel model, float scale = 1f)
         {
-            GameConsole.Write(model.Name);
+            //GameConsole.Write(model.Name);
 
             TriListCollection coll = new TriListCollection();
 

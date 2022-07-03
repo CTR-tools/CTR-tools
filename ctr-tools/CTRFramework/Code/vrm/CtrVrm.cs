@@ -48,8 +48,13 @@ namespace CTRFramework.Vram
                 return new CtrVrm();
             }
 
-            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
+
+            byte[] data = File.ReadAllBytes(filename);
+
+            using (var br = new BinaryReaderEx(new MemoryStream(data)))
             {
+            //    using (var br = new BinaryReaderEx(File.OpenRead(filename)))
+            //{
                 return FromReader(br);
             }
         }

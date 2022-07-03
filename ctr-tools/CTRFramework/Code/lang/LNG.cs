@@ -168,7 +168,7 @@ namespace CTRFramework.Lang
 
             foreach (string entry in dEntries)
             {
-                Console.WriteLine(entry);
+                Helpers.Panic(this, PanicType.Debug, entry);
                 list.Add(entry, (int)bw.BaseStream.Position);
                 bw.Write(Encoding.Default.GetBytes(entry.Replace("|", "" + (char)0xD)));
                 bw.Write((byte)0);

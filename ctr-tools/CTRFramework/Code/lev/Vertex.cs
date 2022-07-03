@@ -7,6 +7,8 @@ namespace CTRFramework
 {
     public class Vertex : IReadWrite
     {
+        public static readonly int SizeOf = 16;
+
         public Vector3 Position;
         public Vector4b Color;
         public Vector4b MorphColor;

@@ -58,10 +58,17 @@ namespace CTRFramework.Shared
 
         public void Read(BinaryReaderEx br)
         {
-            X = br.ReadByte();
-            Y = br.ReadByte();
-            Z = br.ReadByte();
-            W = br.ReadByte();
+            uint val = br.ReadUInt32();
+
+            W = (byte)(val >> 24 & 0xFF);
+            Z = (byte)(val >> 16 & 0xFF);
+            Y = (byte)(val >> 8 & 0xFF);
+            X = (byte)(val & 0xFF);
+
+            //X = br.ReadByte();
+            //Y = br.ReadByte();
+            //Z = br.ReadByte();
+            //W = br.ReadByte();
         }
 
         public void Write(BinaryWriterEx bw)

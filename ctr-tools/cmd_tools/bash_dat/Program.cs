@@ -241,7 +241,7 @@ namespace bash_dat
                     models.Add(new BashMesh(br));
 
                 foreach (var m in models)
-                    Console.WriteLine(m.ToString());
+                    Helpers.Panic("LoadModelFile", PanicType.Debug, m.ToString());
 
                 for (int i = 0; i < numModels; i++)
                     Helpers.WriteToFile(Path.Combine(Path.GetDirectoryName(filename), $"model_{i.ToString("00")}.obj"), models[i].ToObj());

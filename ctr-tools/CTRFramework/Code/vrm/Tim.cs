@@ -115,7 +115,7 @@ namespace CTRFramework.Vram
                 clutdata = br.ReadArrayUInt16(clutregion.Width * clutregion.Height);
 
                 if (_clutsize != clutsize)
-                    Console.WriteLine("Houston! clutsize mismatch.");
+                    Helpers.Panic(this, PanicType.Error, "Houston! clutsize mismatch.");
             }
 
             uint _datasize = br.ReadUInt32();
@@ -126,7 +126,7 @@ namespace CTRFramework.Vram
             data = br.ReadArrayUInt16(region.Width * region.Height);
 
             if (_datasize != datasize)
-                Console.WriteLine($"Houston! datasize mismatch. {_datasize} {datasize}");
+                Helpers.Panic(this, PanicType.Error, $"Houston! datasize mismatch. {_datasize} {datasize}");
         }
 
         /// <summary>
