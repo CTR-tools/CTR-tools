@@ -32,6 +32,8 @@ namespace lng2txt
 
             foreach (string filename in args)
             {
+                Console.WriteLine($"Input file: {filename}");
+
                 if (File.Exists(filename))
                 {
                     string ext = Path.GetExtension(filename).ToLower();

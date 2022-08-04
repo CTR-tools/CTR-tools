@@ -28,6 +28,7 @@ namespace bigtool
 
             string filename = Path.GetFullPath(args[0]);
 
+            Console.WriteLine($"Input file: {filename}");
             Console.WriteLine("Current path: " + Environment.CurrentDirectory);
 
             string name = Path.GetFileNameWithoutExtension(filename).ToLower();

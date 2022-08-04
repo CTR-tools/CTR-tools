@@ -23,6 +23,8 @@ namespace howl
 
             string filename = args[0];
 
+            Console.WriteLine($"Input file: {filename}");
+
             if (!File.Exists(filename))
             {
                 Console.WriteLine($"{filename} doesn't exist.");
@@ -55,18 +57,23 @@ namespace howl
                 case ".lcd":
                 case ".bnk":
                     Bank.ReadNames();
-                    Bank bnk = Bank.FromFile(filename);
+                    var bnk = Bank.FromFile(filename);
                     bnk.ExportAll(0, Path.Combine(basepath, name));
                     break;
 
                 case ".xnf":
-                    XaInfo xnf = XaInfo.FromFile(filename);
+                    var xnf = XaInfo.FromFile(filename);
                     Console.WriteLine(xnf.ToString());
                     break;
 
                 case ".cseq":
-                    Cseq seq = Cseq.FromFile(filename);
+                    var seq = Cseq.FromFile(filename);
                     seq.Songs[0].ExportMIDI(Path.ChangeExtension(filename, ".mid"), seq);
+                    break;
+
+                case ".mid":
+                    var midseq = Cseq.FromMidi(filename);
+                    midseq.Save(Path.ChangeExtension(filename, ".cseq"));
                     break;
 
                 default:

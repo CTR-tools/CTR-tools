@@ -33,6 +33,8 @@ namespace model_reader
 
             string filename = args[0];
 
+            Console.WriteLine($"Input file: {filename}");
+
             if (!(File.Exists(filename) || Directory.Exists(filename)))
             {
                 Console.WriteLine("{0} doesn't exist.", filename);
