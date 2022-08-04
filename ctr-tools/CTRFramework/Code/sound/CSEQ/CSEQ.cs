@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using NAudio.Midi;
 
 namespace CTRFramework.Sound
 {
@@ -33,6 +34,9 @@ namespace CTRFramework.Sound
     {
         public string path;
         public string name;
+
+        public short numSamples => (short)samples.Count;
+        public short numSamplesReverb => (short)samplesReverb.Count;
 
         public List<InstrumentShort> samples = new List<InstrumentShort>();
         public List<Instrument> samplesReverb = new List<Instrument>();
@@ -68,6 +72,50 @@ namespace CTRFramework.Sound
                 return seq;
             }
         }
+
+        public static Cseq FromMidi(string filename)
+        {
+            var midi = new MidiFile(filename);
+
+            var seq = new Cseq();
+            var song = new CseqSong();
+
+            song.BPM = 120;
+            song.TPQN = 30;
+
+            for (int i = 0; i < midi.Tracks; i++)
+            {
+                //create a track
+                var track = new CSeqTrack();
+                track.Index = i;
+                //track.name = $"track_{i.ToString("00")}";
+                track.FromMidiEventList((List<MidiEvent>)midi.Events.GetTrackEvents(i));
+
+                song.Tracks.Add(track);
+
+                //create an instrument for the track
+                var inst = new Instrument();
+                inst.Volume = 255;
+                inst.Frequency = 11050;
+                inst.SampleID = (ushort)i;
+
+                seq.samplesReverb.Add(inst);
+            }
+
+            foreach (var x in song.Tracks)
+            {
+                var c = new CseqEvent();
+                c.eventType = CseqEventType.ChangePatch;
+                c.pitch = (byte)x.Index;
+                c.wait = 0;
+                x.cseqEventCollection.Insert(0, c);
+            }
+
+            seq.Songs.Add(song);
+
+            return seq;
+        }
+
         #endregion
 
         public void Read(BinaryReaderEx br)
