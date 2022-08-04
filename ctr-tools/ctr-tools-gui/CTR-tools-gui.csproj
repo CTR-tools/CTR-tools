@@ -71,7 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Char.cs" />
+    <Compile Include="_moveordelete\Char.cs" />
     <Compile Include="Controls\CseqControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -132,10 +132,10 @@
     <Compile Include="Controls\LevControl.Designer.cs">
       <DependentUpon>LevControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CtrGameconfig.cs" />
-    <Compile Include="LevelSlot.cs" />
-    <Compile Include="Mcs.cs" />
-    <Compile Include="Mem.cs" />
+    <Compile Include="_moveordelete\CtrGameconfig.cs" />
+    <Compile Include="_moveordelete\LevelSlot.cs" />
+    <Compile Include="_moveordelete\Mcs.cs" />
+    <Compile Include="_moveordelete\Mem.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
