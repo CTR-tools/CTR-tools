@@ -32,7 +32,7 @@ namespace CTRFramework
             int numGroups = br.ReadInt32();
             int ptrGroups = br.ReadInt32();
 
-            Dictionary<uint, Icon> IconsPtrDict = new Dictionary<uint, Icon>();
+            var IconsPtrDict = new Dictionary<uint, Icon>();
 
             for (int i = 0; i < numTex; i++)
             {
@@ -94,7 +94,7 @@ namespace CTRFramework
             if (!Groups.ContainsKey("largefont"))
                 return null;
 
-            List<Bitmap> glyphs = new List<Bitmap>();
+            var glyphs = new List<Bitmap>();
 
             //populate glyph array
             foreach (var iconname in Groups["largefont"])

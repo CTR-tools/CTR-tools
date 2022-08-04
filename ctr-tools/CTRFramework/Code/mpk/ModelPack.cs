@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class ModelPack : IRead
+    public class ModelPack : IRead, IDisposable
     {
         public IconPack iconPack;
         public List<CtrModel> Models = new List<CtrModel>();
@@ -75,7 +75,8 @@ namespace CTRFramework
             List<uint> modelPtrs = br.ReadListUInt32(numModels);
 
             br.Jump(texOff);
-            iconPack = new IconPack(br);
+
+            iconPack = IconPack.FromReader(br);
 
             foreach (var ptr in modelPtrs)
             {
@@ -87,9 +88,33 @@ namespace CTRFramework
                 }
                 catch
                 {
-                    Helpers.Panic(this, PanicType.Error, $"Model failed: {ptr.ToString("X8")}");
+                    Helpers.Panic(this, PanicType.Error, $"Model loading failed: {ptr.ToString("X8")}");
                 }
             }
+        }
+
+        //returns all texturelayouts found in model pack
+        public Dictionary<string, TextureLayout> GetTexturesList()
+        {
+            var tex = new Dictionary<string, TextureLayout>();
+
+            foreach (var icon in iconPack.Icons.Values)
+            {
+                if (icon.tl == null)
+                {
+                    //hmm
+                    Helpers.Panic(this, PanicType.Error, icon.Name);
+                    continue;
+                }
+
+                if (!tex.ContainsKey(icon.tl.Tag))
+                    tex.Add(icon.tl.Tag, icon.tl);
+            }
+
+            //add model textures here, icons only will work for now
+            //should implement similiar func for model that will loop through every lod here
+
+            return tex;
         }
 
         public void Extract(string path, Tim tim)
@@ -121,6 +146,12 @@ namespace CTRFramework
                 sb.AppendLine($"- {icon.Name}");
 
             return sb.ToString();
+        }
+
+        public void Dispose()
+        {
+            Models.Clear();
+            iconPack = null;
         }
     }
 }
