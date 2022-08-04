@@ -129,8 +129,8 @@ namespace CTRFramework
                 //quad.GenerateCtrQuads(verts);
             }
 
-            Console.WriteLine((mesh.numVertices * Vertex.SizeOf + mesh.ptrVertices.ToUInt32()).ToString("X8"));
-            Console.ReadKey();
+            //Console.WriteLine((mesh.numVertices * Vertex.SizeOf + mesh.ptrVertices.ToUInt32()).ToString("X8"));
+            //Console.ReadKey();
 
             respawnPts = new PtrWrap<RespawnPoint>(header.ptrRespawnPts).GetList(br, header.numRespawnPts);
 

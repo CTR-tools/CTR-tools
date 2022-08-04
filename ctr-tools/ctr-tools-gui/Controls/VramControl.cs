@@ -15,125 +15,163 @@ namespace CTRTools.Controls
         public VramControl()
         {
             InitializeComponent();
-            this.DoubleBuffered = true;
         }
 
-        private string pathFileParent
-        {
-            get
-            {
-                return Path.GetDirectoryName(pathFile.Text);
-            }
-        }
+        private string pathFileParent => Path.GetDirectoryName(pathFile.Text);
 
         private void actionPack_Click(object sender, EventArgs e)
         {
-            if (!File.Exists(pathFile.Text))
+            if (!DataExists()) return;
+
+            var textures = new Dictionary<string, TextureLayout>();
+            var vrm = new Tim();
+
+            switch (Path.GetExtension(pathFile.Text))
             {
-                MessageBox.Show($"File doesn't exist!\r\n{pathFile.Text}");
+                case ".lev":
+                    using (var scene = CtrScene.FromFile(pathFile.Text))
+                    {
+                        textures = scene.GetTexturesList();
+                    }
+                    break;
+                case ".mpk":
+                    using (var mpk = ModelPack.FromFile(pathFile.Text))
+                    {
+                        textures = mpk.GetTexturesList();
+                    }
+                    break;
+            }
+
+            if (textures.Count == 0)
+            { 
+                MessageBox.Show("no textures to replace!");
                 return;
             }
 
-            using (var scene = CtrScene.FromFile(pathFile.Text))
+            vrm = CtrVrm.FromFile(pathVram.Text).GetVram();
+
+            ReplaceTextures(textures, vrm);
+
+            //force collect the garbage
+            GC.Collect();
+
+            MessageBox.Show("Done.");
+        }
+
+        //checks whether all paths provided are ok
+        private bool DataExists()
+        {
+            if (pathFile.Text == "" || !File.Exists(pathFile.Text))
             {
-                var vrm = scene.ctrvram;
-
-                //dumping vram before the change
-                if (optionDebugVram.Checked)
-                    //only dump if file doesn't exist (to compare to earliest version of vram)
-                    if (!File.Exists(Path.Combine(pathFileParent, "test_old.bmp")))
-                        vrm.SaveBMP(Path.Combine(pathFileParent, "test_old.bmp"), BMPHeader.GrayScalePalette(16));
-
-                var list = scene.GetTexturesList();
-
-                foreach (var s in Directory.GetFiles(pathFolder.Text, "*.png"))
-                {
-                    string tag = Path.GetFileNameWithoutExtension(s);
-
-                    Console.Write($"replacing {tag}... ");
-
-                    if (!list.ContainsKey(tag))
-                    {
-                        Helpers.Panic(vrm, PanicType.Warning, "unknown texture entry");
-                        continue;
-                    }
-
-                    Tim newtex = vrm.GetTimTexture(list[tag]);
-                    newtex.LoadDataFromBitmap(s);
-
-                    vrm.DrawTim(newtex);
-
-                    Console.WriteLine("done.");
-                }
-
-                if (optionDebugVram.Checked)
-                    vrm.SaveBMP(Path.Combine(pathFileParent, "test_new.bmp"), BMPHeader.GrayScalePalette(16));
-
-
-                List<Tim> tims = new List<Tim>();
-
-                //throw new Exception("reimplement frames via ctrvram2");
-                tims.Add(vrm.GetTrueColorTexture(new Rectangle(512, 0, 384, 256)));
-                tims.Add(vrm.GetTrueColorTexture(new Rectangle(512, 256, 512, 256)));
-
-                string vramFile = Path.ChangeExtension(pathFile.Text, ".vrm");
-
-                Helpers.BackupFile(vramFile);
-                File.Delete(vramFile);
-
-                using (var bw = new BinaryWriterEx(File.Create(vramFile)))
-                {
-                    bw.Write((int)0x20);
-
-                    foreach (var tim in tims)
-                    {
-                        bw.Write(tim.Filesize);
-                        tim.Write(bw);
-                    }
-
-                    bw.Write((int)0);
-                }
-
-                //ctr.GetTrueColorTexture(512, 0, 384, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x01.tim"));
-                //ctr.GetTrueColorTexture(512, 256, 512, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x02.tim"));
+                MessageBox.Show($"File doesn't exist!\r\n{pathFile.Text}");
+                return false;
             }
 
-            GC.Collect();
-            MessageBox.Show("Done.");
+            if (pathVram.Text == "" || !File.Exists(pathVram.Text))
+            {
+                MessageBox.Show($"Vram file doesn't exist!\r\n{pathVram.Text}");
+                return false;
+            }
+
+            if (pathFolder.Text == "" || !Directory.Exists(pathFolder.Text))
+            {
+                MessageBox.Show($"Folder doesn't exist!\r\n{pathFolder.Text}");
+                return false;
+            }
+
+            return true;
+        }
+
+        //
+        private void ReplaceTextures(Dictionary<string, TextureLayout> textures, Tim vrm)
+        {
+            if (!DataExists()) return;
+
+            //dumping vram before the change
+            if (optionDebugVram.Checked)
+                //only dump if file doesn't exist (to compare to earliest version of vram)
+                if (!File.Exists(Path.Combine(pathFileParent, "test_old.bmp")))
+                    vrm.SaveBMP(Path.Combine(pathFileParent, "test_old.bmp"), BMPHeader.GrayScalePalette(16));
+
+            foreach (var png in Directory.GetFiles(pathFolder.Text, "*.png"))
+            {
+                string tag = Path.GetFileNameWithoutExtension(png);
+
+                Helpers.Panic(vrm, PanicType.Info, $"replacing {tag}... ");
+
+                if (!textures.ContainsKey(tag))
+                {
+                    Helpers.Panic(vrm, PanicType.Warning, "unknown texture entry");
+                    continue;
+                }
+
+                Tim newtex = vrm.GetTimTexture(textures[tag]);
+                newtex.LoadDataFromBitmap(png);
+
+                vrm.DrawTim(newtex);
+            }
+
+
+            if (optionDebugVram.Checked)
+                vrm.SaveBMP(Path.Combine(pathFileParent, "test_new.bmp"), BMPHeader.GrayScalePalette(16));
+
+            //now onto saving vram...
+
+            //backup existing file
+            Helpers.BackupFile(pathVram.Text);
+            File.Delete(pathVram.Text);
+
+            var tims = new List<Tim>() {
+                vrm.GetTrueColorTexture(new Rectangle(512, 0, 384, 256)),
+                vrm.GetTrueColorTexture(new Rectangle(512, 256, 512, 256))
+            };
+
+            //should move this to ctrvram i guess
+            using (var bw = new BinaryWriterEx(File.Create(pathVram.Text)))
+            {
+                bw.Write((int)0x20);
+
+                foreach (var tim in tims)
+                {
+                    bw.Write(tim.Filesize);
+                    tim.Write(bw);
+                }
+
+                bw.Write((int)0);
+            }
+
+            //ctr.GetTrueColorTexture(512, 0, 384, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x01.tim"));
+            //ctr.GetTrueColorTexture(512, 256, 512, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x02.tim"));
         }
 
         private void actionExtract_Click(object sender, EventArgs e)
         {
-            if (!File.Exists(pathFile.Text))
-            {
-                MessageBox.Show($"File doesn't exist!\r\n{pathFile.Text}");
-                return;
-            }
+            if (!DataExists()) return;
 
-            using (var s = CtrScene.FromFile(pathFile.Text))
+            using (var scene = CtrScene.FromFile(pathFile.Text))
             {
-                if (optionTexHigh.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texHigh"), Detail.High);
-                if (optionTexMed.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texMed"), Detail.Med);
-                if (optionTexLow.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texLow"), Detail.Low);
-                if (optionTexModels.Checked) s.ExportTextures(Path.Combine(pathFileParent, "texModels"), Detail.Models);
+                string data = Path.Combine(pathFileParent, "data");
+
+                if (optionTexHigh.Checked) scene.ExportTextures(data, Detail.High);
+                if (optionTexMed.Checked) scene.ExportTextures(data, Detail.Med);
+                if (optionTexLow.Checked) scene.ExportTextures(data, Detail.Low);
+                if (optionTexModels.Checked) scene.ExportTextures(data, Detail.Models);
 
                 //generates colored vram, keep in mind same texture data may use different palettes
-                Bitmap bmp = new Bitmap(2048, 512);
-                Graphics g = Graphics.FromImage(bmp);
+                var bmp = new Bitmap(2048, 512);
+                var g = Graphics.FromImage(bmp);
 
-                foreach (var x in s.GetTexturesList())
+                foreach (var x in scene.GetTexturesList())
                 {
-                    using (Bitmap bb = s.ctrvram.GetTexture(x.Value))
+                    using (var bb = scene.ctrvram.GetTexture(x.Value))
                     {
                         if (bb != null)
-                        {
                             g.DrawImage(bb, x.Value.RealX * 4 - 2048, x.Value.RealY);
-                        }
                     }
                 }
 
                 bmp.Save(Path.Combine(pathFileParent, "test_color.bmp"));
-                s.ctrvram.SaveBMP(Path.Combine(pathFileParent, "test_bw.bmp"), BMPHeader.GrayScalePalette(16));
+                scene.ctrvram.SaveBMP(Path.Combine(pathFileParent, "test_bw.bmp"), BMPHeader.GrayScalePalette(16));
             }
 
             GC.Collect();
@@ -142,8 +180,8 @@ namespace CTRTools.Controls
 
         private void actionBrowseFile_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "CTR scene file (*.lev)|*.lev";
+            //gotta support ctr here as well i suppose
+            ofd.Filter = "CTR file (*.lev, *.mpk)|*.lev;*.mpk|CTR scene file (*.lev)|*.lev|CTR model pack (*.mpk)|*.mpk;";
 
             if (ofd.ShowDialog() == DialogResult.OK)
                 MaybeLoadFile(ofd.FileName);
@@ -151,20 +189,27 @@ namespace CTRTools.Controls
 
         private void MaybeLoadFile(string path)
         {
-            if (Path.GetExtension(path).ToLower() != ".lev")
+            string ext = Path.GetExtension(path).ToLower();
+
+            if (ext != ".lev" && ext != ".mpk")
             {
-                MessageBox.Show("Not a CTR scene file.");
+                MessageBox.Show("Not a supported CTR file.");
                 return;
             }
 
             pathFile.Text = path;
             pathFolder.Text = Path.Combine(Path.GetDirectoryName(path), "newtex");
             Helpers.CheckFolder(pathFolder.Text);
+
+            string vrampath = Path.ChangeExtension(pathFile.Text, ".vrm");
+
+            if (File.Exists(vrampath))
+                pathVram.Text = vrampath;
         }
 
         private void actionBrowseFolder_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            var fbd = new FolderBrowserDialog();
 
             if (pathFolder.Text != "")
             {
@@ -179,15 +224,15 @@ namespace CTRTools.Controls
 
         private void actionOpenFolder_Click(object sender, EventArgs e)
         {
-            if (pathFolder.Text != "")
-                if (Directory.Exists(pathFolder.Text))
-                {
-                    Process.Start(pathFolder.Text);
-                }
-                else
-                {
-                    MessageBox.Show($"Folder doesn't exist!\r\n{pathFolder.Text}");
-                }
+            if (pathFolder.Text == "") return;
+
+            if (!Directory.Exists(pathFolder.Text))
+            {
+                MessageBox.Show($"Folder doesn't exist!\r\n{pathFolder.Text}");
+                return;
+            }
+
+            Process.Start(pathFolder.Text);
         }
 
         private void VramControl_DragDrop(object sender, DragEventArgs e)
@@ -217,7 +262,7 @@ namespace CTRTools.Controls
                 {
                     using (var br = new BinaryReaderEx(new MemoryStream(StringToByteArrayFastest(textBox1.Text))))
                     {
-                        TextureLayout tl = new TextureLayout(br);
+                        var tl = new TextureLayout(br);
                         pictureBox1.Image = ctr.GetTexture(tl);
                     }
                 }
@@ -256,10 +301,7 @@ namespace CTRTools.Controls
             return val - (val < 58 ? 48 : (val < 97 ? 55 : 87));
         }
 
-        private void actionRestore_Click(object sender, EventArgs e)
-        {
-            Helpers.RestoreFile(Path.ChangeExtension(pathFile.Text, ".vrm"));
-        }
+        private void actionRestore_Click(object sender, EventArgs e) => Helpers.RestoreFile(pathVram.Text);
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -294,6 +336,14 @@ namespace CTRTools.Controls
 
                 pictureBox3.Image = dst;
             }
+        }
+
+        private void actionBrowseVram_Click(object sender, EventArgs e)
+        {
+            ofd.Filter = "CTR VRAM file (*.vrm)|*.vrm";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+                pathFolder.Text = ofd.FileName;
         }
     }
 }

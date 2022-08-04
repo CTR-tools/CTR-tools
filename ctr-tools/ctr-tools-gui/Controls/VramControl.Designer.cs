@@ -53,7 +53,11 @@ namespace CTRTools.Controls
             this.actionBrowseFile = new System.Windows.Forms.Button();
             this.actionBrowseFolder = new System.Windows.Forms.Button();
             this.actionOpenFolder = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pathVram = new System.Windows.Forms.TextBox();
+            this.actionBrowseVram = new System.Windows.Forms.Button();
             this.actionRestore = new System.Windows.Forms.Button();
+            this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -161,22 +165,26 @@ namespace CTRTools.Controls
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 67F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label5, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(this.label5, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.pathFile, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.label4, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.pathFolder, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.pathFolder, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.actionBrowseFile, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.actionBrowseFolder, 3, 2);
-            this.tableLayoutPanel1.Controls.Add(this.actionOpenFolder, 4, 2);
+            this.tableLayoutPanel1.Controls.Add(this.actionBrowseFolder, 3, 3);
+            this.tableLayoutPanel1.Controls.Add(this.actionOpenFolder, 4, 3);
+            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.pathVram, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.actionBrowseVram, 3, 2);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 19);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 27F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(621, 183);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
@@ -187,9 +195,9 @@ namespace CTRTools.Controls
             this.panel1.Controls.Add(this.optionTexMed);
             this.panel1.Controls.Add(this.optionTexLow);
             this.panel1.Controls.Add(this.optionDebugVram);
-            this.panel1.Location = new System.Drawing.Point(119, 62);
+            this.panel1.Location = new System.Drawing.Point(124, 90);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(204, 116);
+            this.panel1.Size = new System.Drawing.Size(204, 90);
             this.panel1.TabIndex = 4;
             // 
             // optionTexModels
@@ -254,7 +262,7 @@ namespace CTRTools.Controls
             // 
             this.label5.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(33, 38);
+            this.label5.Location = new System.Drawing.Point(38, 66);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(80, 13);
             this.label5.TabIndex = 4;
@@ -262,9 +270,9 @@ namespace CTRTools.Controls
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(3, 62);
+            this.pictureBox1.Location = new System.Drawing.Point(3, 90);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(110, 91);
+            this.pictureBox1.Size = new System.Drawing.Size(110, 90);
             this.pictureBox1.TabIndex = 4;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Visible = false;
@@ -272,27 +280,27 @@ namespace CTRTools.Controls
             // pathFile
             // 
             this.pathFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.pathFile.Location = new System.Drawing.Point(119, 5);
+            this.pathFile.Location = new System.Drawing.Point(124, 5);
             this.pathFile.Name = "pathFile";
-            this.pathFile.Size = new System.Drawing.Size(357, 20);
+            this.pathFile.Size = new System.Drawing.Size(352, 20);
             this.pathFile.TabIndex = 1;
             // 
             // label4
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 8);
+            this.label4.Location = new System.Drawing.Point(7, 8);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(110, 13);
+            this.label4.Size = new System.Drawing.Size(111, 13);
             this.label4.TabIndex = 2;
-            this.label4.Text = "CTR scene file (*.lev):";
+            this.label4.Text = "CTR file (*.lev, *.mpk):";
             // 
             // pathFolder
             // 
             this.pathFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.pathFolder.Location = new System.Drawing.Point(119, 34);
+            this.pathFolder.Location = new System.Drawing.Point(124, 62);
             this.pathFolder.Name = "pathFolder";
-            this.pathFolder.Size = new System.Drawing.Size(357, 20);
+            this.pathFolder.Size = new System.Drawing.Size(352, 20);
             this.pathFolder.TabIndex = 3;
             // 
             // actionBrowseFile
@@ -309,7 +317,7 @@ namespace CTRTools.Controls
             // actionBrowseFolder
             // 
             this.actionBrowseFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.actionBrowseFolder.Location = new System.Drawing.Point(482, 33);
+            this.actionBrowseFolder.Location = new System.Drawing.Point(482, 61);
             this.actionBrowseFolder.Name = "actionBrowseFolder";
             this.actionBrowseFolder.Size = new System.Drawing.Size(61, 23);
             this.actionBrowseFolder.TabIndex = 1;
@@ -319,13 +327,42 @@ namespace CTRTools.Controls
             // 
             // actionOpenFolder
             // 
-            this.actionOpenFolder.Location = new System.Drawing.Point(549, 33);
+            this.actionOpenFolder.Location = new System.Drawing.Point(549, 61);
             this.actionOpenFolder.Name = "actionOpenFolder";
             this.actionOpenFolder.Size = new System.Drawing.Size(69, 23);
             this.actionOpenFolder.TabIndex = 6;
             this.actionOpenFolder.Text = "Open folder";
             this.actionOpenFolder.UseVisualStyleBackColor = true;
             this.actionOpenFolder.Click += new System.EventHandler(this.actionOpenFolder_Click);
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 37);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(115, 13);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "CTR VRAM file (*.vrm):";
+            // 
+            // pathVram
+            // 
+            this.pathVram.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.pathVram.Location = new System.Drawing.Point(124, 34);
+            this.pathVram.Name = "pathVram";
+            this.pathVram.Size = new System.Drawing.Size(352, 20);
+            this.pathVram.TabIndex = 8;
+            // 
+            // actionBrowseVram
+            // 
+            this.actionBrowseVram.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.actionBrowseVram.Location = new System.Drawing.Point(482, 33);
+            this.actionBrowseVram.Name = "actionBrowseVram";
+            this.actionBrowseVram.Size = new System.Drawing.Size(61, 22);
+            this.actionBrowseVram.TabIndex = 9;
+            this.actionBrowseVram.Text = "Browse...";
+            this.actionBrowseVram.UseVisualStyleBackColor = true;
+            this.actionBrowseVram.Click += new System.EventHandler(this.actionBrowseVram_Click);
             // 
             // actionRestore
             // 
@@ -391,5 +428,9 @@ namespace CTRTools.Controls
         private PictureBox pictureBox3;
         private PictureBox pictureBox2;
         private Button button2;
+        private Button actionBrowseVram;
+        private Label label1;
+        private TextBox pathVram;
+        private OpenFileDialog ofd;
     }
 }

@@ -47,15 +47,18 @@ namespace CTRTools
                         if (tabControl.SelectedTab != tabVram)
                             tabControl.SelectedTab = tabLev;
                         break;
+                    case ".mpk":
+                        tabControl.SelectedTab = tabVram;
+                        break;
                     case ".big":
                         tabControl.SelectedTab = tabBig;
                         break;
                     case ".xnf":
                         tabControl.SelectedTab = tabXa;
                         break;
-                    //case ".hwl":
-                    //   tabControl1.SelectedTab = tabHowl;
-                    //   break;
+                    case ".hwl":
+                        tabControl.SelectedTab = tabHowl;
+                        break;
                     case ".cseq":
                         tabControl.SelectedTab = tabCseq;
                         break;
@@ -66,29 +69,12 @@ namespace CTRTools
             }
         }
 
-        /// <summary>
-        /// Link to CTR-tools Github repository.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void githubBox_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://github.com/CTR-tools/CTR-tools");
-        }
+        // Link to CTR-tools Github repository.
+        private void githubBox_Click(object sender, EventArgs e) => Process.Start(Meta.LinkGithub);
+        
+        // Link to CTR-tools Discord.
+        private void discordBox_Click(object sender, EventArgs e) => Process.Start(Meta.LinkDiscord);
 
-        /// <summary>
-        /// Link to CTR-tools Discord.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void discordBox_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://discord.gg/56xm9Aj");
-        }
-
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Properties.Settings.Default.Save();
-        }
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e) => Properties.Settings.Default.Save();
     }
 }
