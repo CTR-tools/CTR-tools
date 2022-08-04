@@ -23,6 +23,9 @@ namespace CTRFramework.Shared
         public const string BankPath = "banknames.txt";
         public const string ModelsPath = "models";
         public const string BigFileName = "bigfile.big";
+
+        public const string LinkDiscord = "https://discord.gg/56xm9Aj";
+        public const string LinkGithub = "https://github.com/CTR-tools/CTR-tools";
         #endregion
 
         static JObject json;
