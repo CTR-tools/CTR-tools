@@ -76,7 +76,9 @@ namespace ctrviewer
             graphics = new GraphicsDeviceManager(this);
         }
 
-        public void SwitchDisplayMode()
+        public void SwitchDisplayMode() => SwitchDisplayMode(graphics);
+
+        public void SwitchDisplayMode(GraphicsDeviceManager graphics)
         {
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -87,7 +89,7 @@ namespace ctrviewer
                 graphics.PreferredBackBufferHeight = graphics.PreferredBackBufferHeight * eng.Settings.WindowScale / 100;
             }
 
-            UpdateSplitscreenViewports();
+            UpdateSplitscreenViewports(graphics);
 
             UpdateInternalResolution();
 
@@ -109,44 +111,50 @@ namespace ctrviewer
         /// <summary>
         /// Creates viewport objects. Full is for full screen, rest is for half screen split vertically or horizontally.
         /// </summary>
-        public void UpdateSplitscreenViewports()
+        public void UpdateSplitscreenViewports(GraphicsDeviceManager graphics)
         {
             GameConsole.Write("UpdateSplitscreenViewports()");
 
-            vpFull.MaxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
-            vpFull.MinDepth = graphics.GraphicsDevice.Viewport.MinDepth;
-            vpFull.Width = graphics.PreferredBackBufferWidth;
-            vpFull.Height = graphics.PreferredBackBufferHeight;
-            vpFull.X = 0;
-            vpFull.Y = 0;
+            int width = graphics.PreferredBackBufferWidth;
+            int height = graphics.PreferredBackBufferHeight;
 
-            vpLeft.MaxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
-            vpLeft.MinDepth = graphics.GraphicsDevice.Viewport.MinDepth;
-            vpLeft.Width = graphics.PreferredBackBufferWidth / 2;
-            vpLeft.Height = graphics.PreferredBackBufferHeight;
-            vpLeft.X = 0;
-            vpLeft.Y = 0;
+            float minDepth = graphics.GraphicsDevice.Viewport.MinDepth;
+            float maxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
 
-            vpRight.MaxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
-            vpRight.MinDepth = graphics.GraphicsDevice.Viewport.MinDepth;
-            vpRight.Width = graphics.PreferredBackBufferWidth / 2;
-            vpRight.Height = graphics.PreferredBackBufferHeight;
-            vpRight.X = graphics.PreferredBackBufferWidth / 2;
-            vpRight.Y = 0;
+            vpFull = new Viewport()
+            {
+                Bounds = new Rectangle(0, 0, width, height),
+                MaxDepth = maxDepth,
+                MinDepth = minDepth
+            };
 
-            vpTop.MaxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
-            vpTop.MinDepth = graphics.GraphicsDevice.Viewport.MinDepth;
-            vpTop.Width = graphics.PreferredBackBufferWidth;
-            vpTop.Height = graphics.PreferredBackBufferHeight / 2;
-            vpTop.X = 0;
-            vpTop.Y = 0;
+            vpLeft = new Viewport()
+            {
+                Bounds = new Rectangle(0, 0, width / 2, height),
+                MaxDepth = maxDepth,
+                MinDepth = minDepth
+            };
 
-            vpBottom.MaxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
-            vpBottom.MinDepth = graphics.GraphicsDevice.Viewport.MinDepth;
-            vpBottom.Width = graphics.PreferredBackBufferWidth;
-            vpBottom.Height = graphics.PreferredBackBufferHeight / 2;
-            vpBottom.X = 0;
-            vpBottom.Y = graphics.PreferredBackBufferHeight / 2;
+            vpRight = new Viewport()
+            {
+                Bounds = new Rectangle(width / 2, 0, width / 2, height),
+                MaxDepth = maxDepth,
+                MinDepth = minDepth
+            };
+
+            vpTop = new Viewport()
+            {
+                Bounds = new Rectangle(0, 0, width, height / 2),
+                MaxDepth = maxDepth,
+                MinDepth = minDepth
+            };
+
+            vpBottom = new Viewport()
+            {
+                Bounds = new Rectangle(0, height / 2, width, height / 2),
+                MaxDepth = maxDepth,
+                MinDepth = minDepth
+            };
         }
 
         /// <summary>
@@ -243,7 +251,7 @@ namespace ctrviewer
 
         public void Window_ClientSizeChanged(object sender, EventArgs e)
         {
-            UpdateSplitscreenViewports();
+            UpdateSplitscreenViewports(graphics);
         }
 
         /// <summary>
@@ -289,7 +297,7 @@ namespace ctrviewer
             Samplers.Refresh();
             Samplers.InitRasterizers();
 
-            SwitchDisplayMode();
+            SwitchDisplayMode(graphics);
 
             base.Initialize();
         }
@@ -325,7 +333,7 @@ namespace ctrviewer
 
             BigFileExists = FindBigFile();
 
-            UpdateSplitscreenViewports();
+            UpdateSplitscreenViewports(graphics);
 
             InitMenu();
 
@@ -721,12 +729,12 @@ namespace ctrviewer
 
             foreach (var s in models)
             {
-                CtrModel c = CtrModel.FromFile(s);
+                var model = CtrModel.FromFile(s);
 
-                if (!ContentVault.Models.ContainsKey(c.Name))
+                if (!ContentVault.Models.ContainsKey(model.Name))
                 {
-                    ContentVault.Models.Add(c.Name, DataConverter.ToTriListCollection(c));
-                    eng.external.Add(new InstancedModel(c.Name, Vector3.Zero, Vector3.Zero, new Vector3(0.1f)));
+                    ContentVault.Models.Add(model.Name, DataConverter.ToTriListCollection(model));
+                    eng.external.Add(new InstancedModel(model.Name, Vector3.Zero, Vector3.Zero, new Vector3(0.1f)));
                 }
             }
         }
@@ -954,28 +962,37 @@ namespace ctrviewer
         /// <param name="level"></param>
         private void BspPopulate(VisData visDat, CtrScene scene, int level)
         {
-            List<VisData> childVisData = scene.GetVisDataChildren(visDat); // if node has children get those children
-            if (childVisData.Count > 0)  // has any children?
+            var childVisData = scene.GetVisDataChildren(visDat); // if node has children get those children
+
+            // has any children?
+            //if (childVisData.Count == 0) return;
+
+            foreach (var node in childVisData)
             {
-                foreach (var b in childVisData)
+                if (node == null) continue;
+
+                if (node.IsLeaf) // leaves don't have children
                 {
-                    if (b == null)
-                        continue;
+                    eng.bbox.Add(
+                        new WireBox(
+                            DataConverter.ToVector3(node.bbox.Min), 
+                            DataConverter.ToVector3(node.bbox.Max), 
+                            Color.Magenta, 1 / 100f));
 
-                    if (b.IsLeaf) // leaves don't have children
-                    {
-                        eng.bbox.Add(new WireBox(DataConverter.ToVector3(b.bbox.Min), DataConverter.ToVector3(b.bbox.Max), Color.Magenta, 1 / 100f));
-                    }
-                    else
-                    {
-                        // show those children in different color than the parent
-                        if (!eng.bbox2.ContainsKey(level))
-                            eng.bbox2.Add(level, new List<WireBox>());
-
-                        eng.bbox2[level].Add(new WireBox(DataConverter.ToVector3(b.bbox.Min), DataConverter.ToVector3(b.bbox.Max), colorLevelsOfBsp[level % colorLevelsOfBsp.Length], 1 / 100f));
-                        BspPopulate(b, scene, level + 1);
-                    }
+                    continue;
                 }
+
+                // show those children in different color than the parent
+                if (!eng.bbox2.ContainsKey(level))
+                    eng.bbox2.Add(level, new List<WireBox>());
+
+                eng.bbox2[level].Add(
+                    new WireBox(
+                        DataConverter.ToVector3(node.bbox.Min), 
+                        DataConverter.ToVector3(node.bbox.Max), 
+                        colorLevelsOfBsp[level % colorLevelsOfBsp.Length], 1 / 100f));
+
+                BspPopulate(node, scene, level + 1);
             }
         }
 
