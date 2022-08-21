@@ -975,8 +975,8 @@ namespace ctrviewer
                 {
                     eng.bbox.Add(
                         new WireBox(
-                            DataConverter.ToVector3(node.bbox.Min), 
-                            DataConverter.ToVector3(node.bbox.Max), 
+                            DataConverter.ToVector3(node.bbox.Min),
+                            DataConverter.ToVector3(node.bbox.Max),
                             Color.Magenta, 1 / 100f));
 
                     continue;
@@ -988,8 +988,8 @@ namespace ctrviewer
 
                 eng.bbox2[level].Add(
                     new WireBox(
-                        DataConverter.ToVector3(node.bbox.Min), 
-                        DataConverter.ToVector3(node.bbox.Max), 
+                        DataConverter.ToVector3(node.bbox.Min),
+                        DataConverter.ToVector3(node.bbox.Max),
                         colorLevelsOfBsp[level % colorLevelsOfBsp.Length], 1 / 100f));
 
                 BspPopulate(node, scene, level + 1);

@@ -71,7 +71,7 @@ namespace CTRTools
 
         // Link to CTR-tools Github repository.
         private void githubBox_Click(object sender, EventArgs e) => Process.Start(Meta.LinkGithub);
-        
+
         // Link to CTR-tools Discord.
         private void discordBox_Click(object sender, EventArgs e) => Process.Start(Meta.LinkDiscord);
 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31911.196
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lng2txt", "cmd_tools\lng2txt\lng2txt.csproj", "{244D645A-172A-4CB5-9E64-9C4BA68EF08C}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -35,16 +35,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bash_dat", "cmd_tools\bash_
 		{0326F8B5-F788-4529-9F87-C725A5D13BC0} = {0326F8B5-F788-4529-9F87-C725A5D13BC0}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ctrviewer", "ctrviewer\ctrviewer.csproj", "{8D2ED85F-1A29-402B-A2B1-DA038F719CF1}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0326F8B5-F788-4529-9F87-C725A5D13BC0} = {0326F8B5-F788-4529-9F87-C725A5D13BC0}
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cmd_tools", "cmd_tools", "{1ABEE12F-A18C-4F32-A69C-E5EC20467116}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTRFramework_Tests", "CTRFramework_Tests\CTRFramework_Tests.csproj", "{2F78E6DD-9F0D-48DE-9B6A-115F59FBB5CE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vram_map", "cmd_tools\vram_map\vram_map.csproj", "{2DEAF563-A41D-4034-B738-51855FBD47AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "merge4bits", "cmd_tools\merge4bits\merge4bits.csproj", "{3DD79DFD-0F39-428C-84B3-3551937FE1F2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ctrviewer", "ctrviewer\ctrviewer.csproj", "{4977E0CC-1608-417F-9CF3-68470A51C528}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -110,14 +109,6 @@ Global
 		{712E662C-419B-42F9-A5A3-0027D91FE88E}.Release|x64.Build.0 = Release|x64
 		{712E662C-419B-42F9-A5A3-0027D91FE88E}.Release|x86.ActiveCfg = Release|x86
 		{712E662C-419B-42F9-A5A3-0027D91FE88E}.Release|x86.Build.0 = Release|x86
-		{8D2ED85F-1A29-402B-A2B1-DA038F719CF1}.Debug|x64.ActiveCfg = Debug|x64
-		{8D2ED85F-1A29-402B-A2B1-DA038F719CF1}.Debug|x64.Build.0 = Debug|x64
-		{8D2ED85F-1A29-402B-A2B1-DA038F719CF1}.Debug|x86.ActiveCfg = Debug|x86
-		{8D2ED85F-1A29-402B-A2B1-DA038F719CF1}.Debug|x86.Build.0 = Debug|x86
-		{8D2ED85F-1A29-402B-A2B1-DA038F719CF1}.Release|x64.ActiveCfg = Release|x64
-		{8D2ED85F-1A29-402B-A2B1-DA038F719CF1}.Release|x64.Build.0 = Release|x64
-		{8D2ED85F-1A29-402B-A2B1-DA038F719CF1}.Release|x86.ActiveCfg = Release|x86
-		{8D2ED85F-1A29-402B-A2B1-DA038F719CF1}.Release|x86.Build.0 = Release|x86
 		{2F78E6DD-9F0D-48DE-9B6A-115F59FBB5CE}.Debug|x64.ActiveCfg = Debug|x64
 		{2F78E6DD-9F0D-48DE-9B6A-115F59FBB5CE}.Debug|x64.Build.0 = Debug|x64
 		{2F78E6DD-9F0D-48DE-9B6A-115F59FBB5CE}.Debug|x86.ActiveCfg = Debug|x86
@@ -134,6 +125,22 @@ Global
 		{2DEAF563-A41D-4034-B738-51855FBD47AE}.Release|x64.Build.0 = Release|x64
 		{2DEAF563-A41D-4034-B738-51855FBD47AE}.Release|x86.ActiveCfg = Release|x86
 		{2DEAF563-A41D-4034-B738-51855FBD47AE}.Release|x86.Build.0 = Release|x86
+		{3DD79DFD-0F39-428C-84B3-3551937FE1F2}.Debug|x64.ActiveCfg = Debug|x64
+		{3DD79DFD-0F39-428C-84B3-3551937FE1F2}.Debug|x64.Build.0 = Debug|x64
+		{3DD79DFD-0F39-428C-84B3-3551937FE1F2}.Debug|x86.ActiveCfg = Debug|x86
+		{3DD79DFD-0F39-428C-84B3-3551937FE1F2}.Debug|x86.Build.0 = Debug|x86
+		{3DD79DFD-0F39-428C-84B3-3551937FE1F2}.Release|x64.ActiveCfg = Release|x64
+		{3DD79DFD-0F39-428C-84B3-3551937FE1F2}.Release|x64.Build.0 = Release|x64
+		{3DD79DFD-0F39-428C-84B3-3551937FE1F2}.Release|x86.ActiveCfg = Release|x86
+		{3DD79DFD-0F39-428C-84B3-3551937FE1F2}.Release|x86.Build.0 = Release|x86
+		{4977E0CC-1608-417F-9CF3-68470A51C528}.Debug|x64.ActiveCfg = Debug|x64
+		{4977E0CC-1608-417F-9CF3-68470A51C528}.Debug|x64.Build.0 = Debug|x64
+		{4977E0CC-1608-417F-9CF3-68470A51C528}.Debug|x86.ActiveCfg = Debug|x86
+		{4977E0CC-1608-417F-9CF3-68470A51C528}.Debug|x86.Build.0 = Debug|x86
+		{4977E0CC-1608-417F-9CF3-68470A51C528}.Release|x64.ActiveCfg = Release|x64
+		{4977E0CC-1608-417F-9CF3-68470A51C528}.Release|x64.Build.0 = Release|x64
+		{4977E0CC-1608-417F-9CF3-68470A51C528}.Release|x86.ActiveCfg = Release|x86
+		{4977E0CC-1608-417F-9CF3-68470A51C528}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +152,7 @@ Global
 		{43F67739-B59B-49CF-A22A-F487AB1157E4} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
 		{712E662C-419B-42F9-A5A3-0027D91FE88E} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
 		{2DEAF563-A41D-4034-B738-51855FBD47AE} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
+		{3DD79DFD-0F39-428C-84B3-3551937FE1F2} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E9B47DD5-5D7F-44E8-8DDD-E8D9058D81D2}

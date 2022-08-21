@@ -43,7 +43,7 @@ namespace CTRFramework
                 (flags.HasFlag(CtrDrawFlags.n) ? "n" : "_") +
                 (flags.HasFlag(CtrDrawFlags.l) ? "l" : "_") +
                 (flags.HasFlag(CtrDrawFlags.s) ? "s" : "_") +
-                $" f: { ((byte)flags).ToString("X2")} s: {stackIndex} t: {texIndex} c: {colorIndex}";
+                $" f: {((byte)flags).ToString("X2")} s: {stackIndex} t: {texIndex} c: {colorIndex}";
         }
     }
 }

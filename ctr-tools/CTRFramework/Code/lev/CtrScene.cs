@@ -2,11 +2,11 @@
 using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Text;
-using System.Diagnostics;
 
 namespace CTRFramework
 {
@@ -141,12 +141,12 @@ namespace CTRFramework
                 respawn.Pose.Rotation = Vector3.Transform(-Vector3.UnitZ, Matrix4x4.CreateLookAt(respawn.Pose.Position, respawn.Next.Pose.Position, Vector3.UnitX)) / 180f * (float)Math.PI;
             }
 
-            vertanims   = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
-            skybox      = new PtrWrap<SkyBox>(header.ptrSkybox).Get(br);
-            nav         = new PtrWrap<Nav>(header.ptrAiNav).Get(br);
-            iconpack    = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
-            trial       = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
-            enviroMap   = new PtrWrap<TextureLayout>(header.ptrEnviroMap).Get(br);
+            vertanims = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
+            skybox = new PtrWrap<SkyBox>(header.ptrSkybox).Get(br);
+            nav = new PtrWrap<Nav>(header.ptrAiNav).Get(br);
+            iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
+            trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
+            enviroMap = new PtrWrap<TextureLayout>(header.ptrEnviroMap).Get(br);
 
             if (header.numSpawnGroups > 0)
             {

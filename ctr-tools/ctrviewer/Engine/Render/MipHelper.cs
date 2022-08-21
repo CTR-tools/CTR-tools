@@ -1,9 +1,8 @@
-﻿using System.Drawing;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using Xna = Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace ctrviewer.Engine.Render
 {

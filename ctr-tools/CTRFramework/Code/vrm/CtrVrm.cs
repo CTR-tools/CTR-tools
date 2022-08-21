@@ -53,8 +53,8 @@ namespace CTRFramework.Vram
 
             using (var br = new BinaryReaderEx(new MemoryStream(data)))
             {
-            //    using (var br = new BinaryReaderEx(File.OpenRead(filename)))
-            //{
+                //    using (var br = new BinaryReaderEx(File.OpenRead(filename)))
+                //{
                 return FromReader(br);
             }
         }

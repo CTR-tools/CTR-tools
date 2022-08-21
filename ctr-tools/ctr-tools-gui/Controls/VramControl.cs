@@ -43,7 +43,7 @@ namespace CTRTools.Controls
             }
 
             if (textures.Count == 0)
-            { 
+            {
                 MessageBox.Show("no textures to replace!");
                 return;
             }

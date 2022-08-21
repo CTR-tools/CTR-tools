@@ -37,7 +37,7 @@ namespace CTRFramework.Sound
 
         public static string GetName(int x, Dictionary<int, string> dict)
         {
-            string result = $"{x.ToString("0000")}_{ x.ToString("X4")}";
+            string result = $"{x.ToString("0000")}_{x.ToString("X4")}";
 
             if (dict.ContainsKey(x))
                 result += "_" + dict[x];

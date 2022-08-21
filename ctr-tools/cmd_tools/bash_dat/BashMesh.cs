@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
@@ -9,8 +10,7 @@ namespace bash_dat
     {
         public short u11;
         public short u12;
-        public short u21;
-        public short u22;
+        public int uzero;
 
         public int ptrVerts;
         public int ptrModel;
@@ -26,14 +26,18 @@ namespace bash_dat
             Read(br);
         }
 
+        public static BashMesh FromReader(BinaryReaderEx br) => new BashMesh(br);
+
         public void Read(BinaryReaderEx br)
         {
             br.ReadBytes(8);
 
             u11 = br.ReadInt16();
             u12 = br.ReadInt16();
-            u21 = br.ReadInt16();
-            u22 = br.ReadInt16();
+            uzero = br.ReadInt32();
+
+            if (uzero != 0)
+                Console.WriteLine("uzero not null");
 
             ptrVerts = (int)(br.Position + br.ReadInt32());
             ptrModel = (int)(br.Position + br.ReadInt32());

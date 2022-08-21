@@ -1,9 +1,9 @@
 ﻿using CTRFramework.Shared;
+using NAudio.Midi;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using NAudio.Midi;
 
 namespace CTRFramework.Sound
 {
