@@ -18,10 +18,7 @@ namespace CTRFramework
             Read(br);
         }
 
-        public static SkyBox FromReader(BinaryReaderEx br)
-        {
-            return new SkyBox(br);
-        }
+        public static SkyBox FromReader(BinaryReaderEx br) => new SkyBox(br);
 
         public void Read(BinaryReaderEx br)
         {
@@ -48,7 +45,7 @@ namespace CTRFramework
 
         public string ToObj()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (var vertex in Vertices)
                 sb.AppendLine(vertex.ToObj());

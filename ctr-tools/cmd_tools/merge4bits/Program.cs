@@ -94,20 +94,19 @@ namespace merge4bits
 
             var newdata = new byte[src1.Width * src1.Height];
 
-            for (int i = 0; i < src1.Height; i++)
-                for (int j = 0; j < src1.Width; j++)
+            for (int j = 0; j < src1.Height; j++)
+                for (int i = 0; i < src1.Width; i++)
                     //naive getpixel approach, can speedup by using bitmapdata here
-                    newdata[j * src1.Height + i] = (byte)(pal1.IndexOf(src1.GetPixel(i, j)) + pal2.IndexOf(src2.GetPixel(i, j)) * 4);
-
+                    newdata[i + j * src1.Width] = (byte)(pal1.IndexOf(src1.GetPixel(i, j)) * 4 + pal2.IndexOf(src2.GetPixel(i, j)));
 
             //copy new index data to bitmap
-
+            
             var result = new Bitmap(src1.Width, src1.Height, PixelFormat.Format8bppIndexed);
             var rect = new Rectangle(0, 0, src1.Width, src1.Height);
             var bmpdata = result.LockBits(rect, ImageLockMode.ReadWrite, result.PixelFormat);
             Marshal.Copy(newdata, 0, bmpdata.Scan0, newdata.Length);
             result.UnlockBits(bmpdata);
-
+            
 
             //bake src1 new palette
 
