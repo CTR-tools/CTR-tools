@@ -24,7 +24,8 @@ $RECYCLE.BIN/
 [Oo]bj
 [Bb]in
 [Dd]ebug
-[Bb]uild/
+[Bb]uild
+[Pp]ublish
 .vs
 *.user
 *.suo
