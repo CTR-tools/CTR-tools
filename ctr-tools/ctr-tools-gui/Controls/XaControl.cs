@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Sound;
+using CTRFramework.Shared;
 using NAudio.Wave;
 using System;
 using System.IO;
@@ -103,7 +104,7 @@ namespace CTRTools.Controls
             {
                 if (listBox1.SelectedIndex >= 0)
                 {
-                    string name = Path.Combine(xnf.RootPath, xnf.folders[comboBox1.SelectedIndex], xnf.Entries[xnf.entryStartIndex[comboBox1.SelectedIndex] + listBox1.SelectedIndex].GetName());
+                    string name = Helpers.PathCombine(xnf.RootPath, xnf.folders[comboBox1.SelectedIndex], xnf.Entries[xnf.entryStartIndex[comboBox1.SelectedIndex] + listBox1.SelectedIndex].GetName());
 
                     if (File.Exists(name))
                     {

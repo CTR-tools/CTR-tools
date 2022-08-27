@@ -119,8 +119,8 @@ namespace CTRFramework
 
         public void Extract(string path, Tim tim)
         {
-            string modelsPath = Path.Combine(path, "models");
-            string texturesPath = Path.Combine(path, "textures");
+            string modelsPath = Helpers.PathCombine(path, "models");
+            string texturesPath = Helpers.PathCombine(path, "textures");
 
             iconPack.Extract(texturesPath, tim);
 

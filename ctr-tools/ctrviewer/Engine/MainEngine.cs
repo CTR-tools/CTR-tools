@@ -60,8 +60,8 @@ namespace ctrviewer.Engine
                 return;
             }
 
-            string screenshotFolder = Path.Combine(Meta.UserPath, "screenshots");
-            string screenshotPath = Path.Combine(screenshotFolder, $"{screenshotstaken.ToString("0000")}_{DateTime.Now.ToString("ddMMyy_hhmmss")}.png");
+            string screenshotFolder = Helpers.PathCombine(Meta.UserPath, "screenshots");
+            string screenshotPath = Helpers.PathCombine(screenshotFolder, $"{screenshotstaken.ToString("0000")}_{DateTime.Now.ToString("ddMMyy_hhmmss")}.png");
             Helpers.CheckFolder(screenshotFolder);
 
             using (var fs = File.Create(screenshotPath))

@@ -32,7 +32,7 @@ namespace CTRFramework.Shared
     /// </summary>
     public partial class Helpers
     {
-        public static string logpath = Path.Combine(Meta.BasePath, "ctrframework.log");
+        public static string logpath = Helpers.PathCombine(Meta.BasePath, "ctrframework.log");
 
         /// <summary>
         /// Defines the way all messages are handled. Can combine flags.

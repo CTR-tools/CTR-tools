@@ -35,7 +35,7 @@ namespace howl
             string name = Path.GetFileNameWithoutExtension(filename);
             string ext = Path.GetExtension(filename).ToLower();
 
-            string path = Path.Combine(basepath, Path.GetFileNameWithoutExtension(filename));
+            string path = Helpers.PathCombine(basepath, Path.GetFileNameWithoutExtension(filename));
 
             switch (ext)
             {
@@ -58,7 +58,7 @@ namespace howl
                 case ".bnk":
                     Bank.ReadNames();
                     var bnk = Bank.FromFile(filename);
-                    bnk.ExportAll(0, Path.Combine(basepath, name));
+                    bnk.ExportAll(0, Helpers.PathCombine(basepath, name));
                     break;
 
                 case ".xnf":

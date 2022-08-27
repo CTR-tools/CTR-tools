@@ -163,7 +163,7 @@ namespace CTRTools.Controls
 
         private void exportSEQToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            seq?.Save(Path.Combine(Meta.BasePath, "test.cseq"));
+            seq?.Save(Helpers.PathCombine(Meta.BasePath, "test.cseq"));
         }
 
         Bank bnk = new Bank();
@@ -317,14 +317,14 @@ namespace CTRTools.Controls
                 {
                     var sd = instrumentList.SelectedNode.Tag as Instrument;
                     instrumentInfo.SelectedObject = sd;
-                    filename = Path.Combine(samplePath, $"{sd.ID}{((Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""))}.wav");
+                    filename = Helpers.PathCombine(samplePath, $"{sd.ID}{((Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""))}.wav");
                 }
 
                 if (instrumentList.SelectedNode.Parent.Index == 0)
                 {
                     var sd = seq.samplesReverb[instrumentList.SelectedNode.Index];
                     instrumentInfo.SelectedObject = sd;
-                    filename = Path.Combine(samplePath, $"{sd.ID}{((Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""))}.wav");
+                    filename = Helpers.PathCombine(samplePath, $"{sd.ID}{((Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""))}.wav");
                 }
 
 

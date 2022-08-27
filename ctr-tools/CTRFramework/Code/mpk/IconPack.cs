@@ -86,7 +86,7 @@ namespace CTRFramework
             foreach (var icon in Icons.Values)
                 icon.Save(path, tim);
 
-            //GetFonts(tim).Save(Path.Combine(path, "largefont.png"), System.Drawing.Imaging.ImageFormat.Png);
+            //GetFonts(tim).Save(Helpers.PathCombine(path, "largefont.png"), System.Drawing.Imaging.ImageFormat.Png);
         }
 
         public Bitmap GetFonts(Tim tim)

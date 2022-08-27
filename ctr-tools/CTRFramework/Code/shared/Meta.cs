@@ -13,8 +13,8 @@ namespace CTRFramework.Shared
 
         #region Paths/filenames
         public static string BasePath = AppDomain.CurrentDomain.BaseDirectory;
-        public static string UserPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CTRViewer");
-        public static string SettingsFile = Path.Combine(UserPath, "settings.xml");
+        public static string UserPath = Helpers.PathCombine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CTRViewer");
+        public static string SettingsFile = Helpers.PathCombine(UserPath, "settings.xml");
         public const string JsonPath = "versions.json";
         public const string XmlPath = "versions.xml";
         public const string HowlPath = "howlnames.txt";
@@ -90,7 +90,7 @@ namespace CTRFramework.Shared
 
         public static Dictionary<int, string> GetBigList(string resource)
         {
-            return Meta.LoadNumberedList(resource); //Path.Combine(Meta.DataPath, fn));
+            return Meta.LoadNumberedList(resource); //Helpers.PathCombine(Meta.DataPath, fn));
         }
 
         public static Dictionary<int, string> LoadNumberedList(string resource)

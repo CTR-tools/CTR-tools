@@ -13,8 +13,8 @@ namespace CTRFramework_Tests
         List<string> testlist = new List<string>();
         int numStrings = 0;
         Random random = new Random();
-        string filenameLng = Path.Combine(Meta.BasePath, "test.lng");
-        string filenameText = Path.Combine(Meta.BasePath, "test.txt");
+        string filenameLng = Helpers.PathCombine(Meta.BasePath, "test.lng");
+        string filenameText = Helpers.PathCombine(Meta.BasePath, "test.txt");
 
         private void GenerateTestData()
         {

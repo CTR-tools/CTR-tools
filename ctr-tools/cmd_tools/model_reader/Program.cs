@@ -67,7 +67,7 @@ namespace model_reader
 
             if (!File.Exists(vrampath))
             {
-                vrampath = Path.Combine(Path.GetDirectoryName(filename), "shared.vrm");
+                vrampath = Helpers.PathCombine(Path.GetDirectoryName(filename), "shared.vrm");
 
                 if (!File.Exists(vrampath))
                 {
@@ -82,7 +82,7 @@ namespace model_reader
                     {
                         var scene = CtrScene.FromFile(filename);
                         //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
-                        scene.Export(Path.Combine(basepath, name), ExportFlags.All);
+                        scene.Export(Helpers.PathCombine(basepath, name), ExportFlags.All);
                         //scene.Save(filename + "_test.lev");
                         break;
                     }
@@ -112,7 +112,7 @@ namespace model_reader
                 case ".mpk":
                     {
                         var mpk = ModelPack.FromFile(filename);
-                        mpk.Extract(Path.Combine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
+                        mpk.Extract(Helpers.PathCombine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
 
                         break;
                     }

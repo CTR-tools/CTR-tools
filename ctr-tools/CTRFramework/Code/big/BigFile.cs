@@ -87,7 +87,7 @@ namespace CTRFramework.Big
 
             for (int i = 0; i < files.Length; i++)
             {
-                files[i] = Path.Combine(path, bigname, files[i]);
+                files[i] = Helpers.PathCombine(path, bigname, files[i]);
                 Entries.Add(new BigEntry(files[i]));
             }
         }
@@ -105,7 +105,7 @@ namespace CTRFramework.Big
 
             foreach (var entry in Entries)
             {
-                string filename = Path.Combine(path, entry.Name);
+                string filename = Helpers.PathCombine(path, entry.Name);
                 //Helpers.CheckFolder(Path.GetDirectoryName(filename));
 
                 biglist.AppendLine(entry.Name);

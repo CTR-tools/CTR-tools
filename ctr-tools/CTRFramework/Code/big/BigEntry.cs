@@ -50,7 +50,7 @@ namespace CTRFramework.Big
             Helpers.CheckFolder(path);
 
             if (Data.Length > 0)
-                Helpers.WriteToFile(Path.Combine(path, Name), Data);
+                Helpers.WriteToFile(Helpers.PathCombine(path, Name), Data);
         }
 
         public T ParseAs<T>() where T : IRead, new()

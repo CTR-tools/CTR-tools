@@ -12,7 +12,7 @@ namespace CTRFramework_Tests
         Random random = new Random();
         List<PsxPtr> initial = new List<PsxPtr>();
         List<PsxPtr> verify = new List<PsxPtr>();
-        string filenameTest = Path.Combine(Meta.BasePath, "psxptrtest.bin");
+        string filenameTest = Helpers.PathCombine(Meta.BasePath, "psxptrtest.bin");
 
         private void GenerateTestData()
         {

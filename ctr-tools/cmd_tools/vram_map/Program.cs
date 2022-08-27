@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Vram;
+using CTRFramework.Shared;
 using System;
 using System.Drawing;
 using System.IO;
@@ -41,7 +42,7 @@ namespace vram_map
 
                 string[] values = line.Split(',');
 
-                string path = Path.Combine(Path.GetDirectoryName(args[0]), values[(int)TimData.Name]);
+                string path = Helpers.PathCombine(Path.GetDirectoryName(args[0]), values[(int)TimData.Name]);
 
                 Bitmap bmp = (Bitmap)Bitmap.FromFile(path);
 

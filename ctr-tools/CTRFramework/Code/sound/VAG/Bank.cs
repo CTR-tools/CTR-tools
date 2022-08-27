@@ -188,7 +188,7 @@ namespace CTRFramework.Sound
 
         public void Export(int id, int freq, string path, string path2 = null, string name = null)
         {
-            string pathSfxVag = Path.Combine(path, "vag");
+            string pathSfxVag = Helpers.PathCombine(path, "vag");
 
             Helpers.CheckFolder(pathSfxVag);
 
@@ -215,8 +215,8 @@ namespace CTRFramework.Sound
                     if (Bank.hashnames.ContainsKey(hash))
                         vagname += $"_{Bank.hashnames[hash]}";
 
-                    vag.Save(Path.Combine(pathSfxVag, $"{vagname}.vag"));
-                    vag.ExportWav(Path.Combine(path, $"{vagname}.wav"));
+                    vag.Save(Helpers.PathCombine(pathSfxVag, $"{vagname}.vag"));
+                    vag.ExportWav(Helpers.PathCombine(path, $"{vagname}.wav"));
                 }
             }
         }

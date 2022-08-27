@@ -90,8 +90,8 @@ namespace CTRTools.Controls
             //dumping vram before the change
             if (optionDebugVram.Checked)
                 //only dump if file doesn't exist (to compare to earliest version of vram)
-                if (!File.Exists(Path.Combine(pathFileParent, "test_old.bmp")))
-                    vrm.SaveBMP(Path.Combine(pathFileParent, "test_old.bmp"), BMPHeader.GrayScalePalette(16));
+                if (!File.Exists(Helpers.PathCombine(pathFileParent, "test_old.bmp")))
+                    vrm.SaveBMP(Helpers.PathCombine(pathFileParent, "test_old.bmp"), BMPHeader.GrayScalePalette(16));
 
             foreach (var png in Directory.GetFiles(pathFolder.Text, "*.png"))
             {
@@ -113,7 +113,7 @@ namespace CTRTools.Controls
 
 
             if (optionDebugVram.Checked)
-                vrm.SaveBMP(Path.Combine(pathFileParent, "test_new.bmp"), BMPHeader.GrayScalePalette(16));
+                vrm.SaveBMP(Helpers.PathCombine(pathFileParent, "test_new.bmp"), BMPHeader.GrayScalePalette(16));
 
             //now onto saving vram...
 
@@ -140,8 +140,8 @@ namespace CTRTools.Controls
                 bw.Write((int)0);
             }
 
-            //ctr.GetTrueColorTexture(512, 0, 384, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x01.tim"));
-            //ctr.GetTrueColorTexture(512, 256, 512, 256).Write(Path.Combine(Path.GetDirectoryName(pathFolder.Text), "x02.tim"));
+            //ctr.GetTrueColorTexture(512, 0, 384, 256).Write(Helpers.PathCombine(Path.GetDirectoryName(pathFolder.Text), "x01.tim"));
+            //ctr.GetTrueColorTexture(512, 256, 512, 256).Write(Helpers.PathCombine(Path.GetDirectoryName(pathFolder.Text), "x02.tim"));
         }
 
         private void actionExtract_Click(object sender, EventArgs e)
@@ -150,7 +150,7 @@ namespace CTRTools.Controls
 
             using (var scene = CtrScene.FromFile(pathFile.Text))
             {
-                string data = Path.Combine(pathFileParent, "data");
+                string data = Helpers.PathCombine(pathFileParent, "data");
 
                 if (optionTexHigh.Checked) scene.ExportTextures(data, Detail.High);
                 if (optionTexMed.Checked) scene.ExportTextures(data, Detail.Med);
@@ -170,8 +170,8 @@ namespace CTRTools.Controls
                     }
                 }
 
-                bmp.Save(Path.Combine(pathFileParent, "test_color.bmp"));
-                scene.ctrvram.SaveBMP(Path.Combine(pathFileParent, "test_bw.bmp"), BMPHeader.GrayScalePalette(16));
+                bmp.Save(Helpers.PathCombine(pathFileParent, "test_color.bmp"));
+                scene.ctrvram.SaveBMP(Helpers.PathCombine(pathFileParent, "test_bw.bmp"), BMPHeader.GrayScalePalette(16));
             }
 
             GC.Collect();
@@ -198,7 +198,7 @@ namespace CTRTools.Controls
             }
 
             pathFile.Text = path;
-            pathFolder.Text = Path.Combine(Path.GetDirectoryName(path), "newtex");
+            pathFolder.Text = Helpers.PathCombine(Path.GetDirectoryName(path), "newtex");
             Helpers.CheckFolder(pathFolder.Text);
 
             string vrampath = Path.ChangeExtension(pathFile.Text, ".vrm");

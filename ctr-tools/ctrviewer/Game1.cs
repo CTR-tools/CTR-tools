@@ -599,7 +599,7 @@ namespace ctrviewer
 
         bool IsLoading = false;
 
-        string newtexPath = Path.Combine(Meta.BasePath, "newtex");
+        string newtexPath = Helpers.PathCombine(Meta.BasePath, "newtex");
 
         /// <summary>
         /// Loads all necessary textures and processes as required (generates mips, loads replacements, etc)
@@ -719,7 +719,7 @@ namespace ctrviewer
         /// </summary>
         public void TestLoadExtrenalModels()
         {
-            string mdlpath = Path.Combine(Meta.BasePath, Meta.ModelsPath);
+            string mdlpath = Helpers.PathCombine(Meta.BasePath, Meta.ModelsPath);
 
             if (!Directory.Exists(mdlpath)) return;
 
@@ -1022,7 +1022,7 @@ namespace ctrviewer
                 {
                     foreach (var dInfo in DriveInfo.GetDrives())
                     {
-                        string path = Path.Combine(dInfo.Name, Meta.BigFileName);
+                        string path = Helpers.PathCombine(dInfo.Name, Meta.BigFileName);
 
                         if (File.Exists(path))
                         {

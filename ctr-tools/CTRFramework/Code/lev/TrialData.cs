@@ -33,16 +33,16 @@ namespace CTRFramework
             {
                 var tropy = Instance<TrialGhost>.FromReader(br, ptrs[4]);
                 Helpers.Panic(this, PanicType.Debug, tropy.ToString());
-                //tropy.Save(Path.Combine(Meta.BasePath, "tropy.gst"));
-                //tropy.ToObj(Path.Combine(Meta.BasePath, "tropy.obj"));
+                //tropy.Save(Helpers.PathCombine(Meta.BasePath, "tropy.gst"));
+                //tropy.ToObj(Helpers.PathCombine(Meta.BasePath, "tropy.obj"));
             }
 
             if (cnt > 5)
             {
                 var oxide = Instance<TrialGhost>.FromReader(br, ptrs[5]);
                 Helpers.Panic(this, PanicType.Debug, oxide.ToString());
-                //oxide.Save(Path.Combine(Meta.BasePath, "oxide.gst"));
-                //oxide.ToObj(Path.Combine(Meta.BasePath, "oxide.obj"));
+                //oxide.Save(Helpers.PathCombine(Meta.BasePath, "oxide.gst"));
+                //oxide.ToObj(Helpers.PathCombine(Meta.BasePath, "oxide.obj"));
             }
 
             br.Jump(pos);

@@ -321,14 +321,14 @@ namespace CTRFramework
             if (header.ptrAiNav != PsxPtr.Zero)
                 sb.AppendLine(nav.ToObj(ref a));
 
-            Helpers.WriteToFile(Path.Combine(path, $"{fname}.obj"), sb.ToString());
+            Helpers.WriteToFile(Helpers.PathCombine(path, $"{fname}.obj"), sb.ToString());
 
             sb.Clear();
 
 
             Dictionary<string, TextureLayout> tex = GetTexturesList(lod);
 
-            string lodpath = Path.Combine(path, "tex" + lod.ToString());
+            string lodpath = Helpers.PathCombine(path, "tex" + lod.ToString());
             Helpers.CheckFolder(lodpath);
 
             foreach (var tl in tex.Values)
@@ -340,12 +340,12 @@ namespace CTRFramework
                     sb.AppendLine($"newmtl {tl.Tag}");
                     sb.AppendLine($"map_Kd {texname}\r\n");
 
-                    if (!File.Exists(Path.Combine(path, texname)))
+                    if (!File.Exists(Helpers.PathCombine(path, texname)))
                     {
                         Helpers.Panic(this, PanicType.Warning, "missing bitmap");
 
                         Bitmap bmp = new Bitmap(1, 1);
-                        bmp.Save(Path.Combine(path, texname));
+                        bmp.Save(Helpers.PathCombine(path, texname));
                     }
                 }
                 else
@@ -356,7 +356,7 @@ namespace CTRFramework
 
             /*
              //generates bunch of labeled textures for each byte value
-            Helpers.CheckFolder(Path.Combine(path, "midunk"));
+            Helpers.CheckFolder(Helpers.PathCombine(path, "midunk"));
 
             for (int i = 0; i < 256; i++)
             {
@@ -367,7 +367,7 @@ namespace CTRFramework
                 Graphics graphics = Graphics.FromImage(bmp);
                 graphics.FillRectangle(Brushes.White, new Rectangle(0, 0, 64, 64));
                 graphics.DrawString(i.ToString("X2"), new Font("Consolas", 24, FontStyle.Bold), Brushes.Black, new Point(0, 0));
-                bmp.Save(Path.Combine(path, $"midunk\\{i.ToString("X2")}.png"));
+                bmp.Save(Helpers.PathCombine(path, $"midunk\\{i.ToString("X2")}.png"));
             }
             */
 
@@ -380,14 +380,14 @@ namespace CTRFramework
             sb.Append("newmtl default\r\n");
             sb.Append("Map_Kd default.png\r\n");
 
-            Helpers.WriteToFile(Path.Combine(path, $"{fname}.mtl"), sb.ToString());
+            Helpers.WriteToFile(Helpers.PathCombine(path, $"{fname}.mtl"), sb.ToString());
 
             sb.Clear();
         }
 
         private void ExportModels(string dir)
         {
-            dir = Path.Combine(dir, Meta.ModelsPath);
+            dir = Helpers.PathCombine(dir, Meta.ModelsPath);
 
             Helpers.CheckFolder(dir);
 
@@ -401,7 +401,7 @@ namespace CTRFramework
         private void ExportSkyBox(string path)
         {
             if (skybox != null)
-                Helpers.WriteToFile(Path.Combine(path, $"{name}_sky.obj"), skybox.ToObj());
+                Helpers.WriteToFile(Helpers.PathCombine(path, $"{name}_sky.obj"), skybox.ToObj());
         }
 
         public void Export(string path, ExportFlags flags)
@@ -450,10 +450,10 @@ namespace CTRFramework
         /// <param name="path"></param>
         public void ExportTextures(string path)
         {
-            ExportTextures(Path.Combine(path, "texMed"), Detail.Med);
-            ExportTextures(Path.Combine(path, "texLow"), Detail.Low);
-            ExportTextures(Path.Combine(path, "texHigh"), Detail.High);
-            ExportTextures(Path.Combine(path, "texModels"), Detail.Models);
+            ExportTextures(Helpers.PathCombine(path, "texMed"), Detail.Med);
+            ExportTextures(Helpers.PathCombine(path, "texLow"), Detail.Low);
+            ExportTextures(Helpers.PathCombine(path, "texHigh"), Detail.High);
+            ExportTextures(Helpers.PathCombine(path, "texModels"), Detail.Models);
         }
 
         /// <summary>
@@ -471,7 +471,7 @@ namespace CTRFramework
 
             if (enviroMap != null)
             {
-                string p = Path.Combine(path, "enviroMap.png");
+                string p = Helpers.PathCombine(path, "enviroMap.png");
                 ctrvram.GetTexture(enviroMap).Save(p);
             }
 
@@ -479,11 +479,11 @@ namespace CTRFramework
 
             Helpers.Panic(this, PanicType.Info, "Exporting textures...");
 
-            path = Path.Combine(path, $"tex{lod}");
+            path = Helpers.PathCombine(path, $"tex{lod}");
             Helpers.CheckFolder(path);
 
             foreach (var tl in GetTexturesList(lod).Values)
-                ctrvram.GetTexture(tl, path)?.Save(Path.Combine(path, $"{tl.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
+                ctrvram.GetTexture(tl, path)?.Save(Helpers.PathCombine(path, $"{tl.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
 
             if (lod == Detail.High)
                 foreach (var quad in quads)
@@ -491,7 +491,7 @@ namespace CTRFramework
                     {
                         try
                         {
-                            string file = Path.Combine(path, $"{tex.lod2.Tag}.png");
+                            string file = Helpers.PathCombine(path, $"{tex.lod2.Tag}.png");
                             if (!File.Exists(file))
                                 tex.GetHiBitmap(ctrvram, quad)?.Save(file, System.Drawing.Imaging.ImageFormat.Png);
                         }

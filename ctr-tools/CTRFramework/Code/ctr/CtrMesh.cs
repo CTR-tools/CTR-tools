@@ -789,12 +789,12 @@ namespace CTRFramework
 
             if (tl.Count > 0)
             {
-                string texturepath = Path.Combine(path, Name);
+                string texturepath = Helpers.PathCombine(path, Name);
 
                 Helpers.CheckFolder(texturepath);
 
                 foreach (var tex in tl)
-                    vram.GetTexture(tex).Save(Path.Combine(texturepath, $"{tex.Tag}.png"));
+                    vram.GetTexture(tex).Save(Helpers.PathCombine(texturepath, $"{tex.Tag}.png"));
             }
         }
 

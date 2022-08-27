@@ -84,13 +84,13 @@ namespace CTRFramework
         {
             int i = 0;
 
-            path = Path.Combine(path, Name);
+            path = Helpers.PathCombine(path, Name);
             Helpers.CheckFolder(path);
 
             foreach (var entry in Entries)
             {
                 string name = $"{Name}.{entry.Name}.{i.ToString("00")}{(entry.IsAnimated ? ".Animated" : "")}";
-                string fn = Path.Combine(path, $"{name}.obj");
+                string fn = Helpers.PathCombine(path, $"{name}.obj");
 
                 Helpers.WriteToFile(fn, entry.ToObj(name));
                 if (entry.tl.Count > 0)
@@ -118,7 +118,7 @@ namespace CTRFramework
         /// <param name="filename">Target file name.</param>
         public void Save(string path, string filename)
         {
-            using (var bw = new BinaryWriterEx(File.Create(Path.Combine(path, filename))))
+            using (var bw = new BinaryWriterEx(File.Create(Helpers.PathCombine(path, filename))))
             {
                 Write(bw);
             }
@@ -274,7 +274,7 @@ namespace CTRFramework
         public void ExportPly(string path)
         {
             foreach (var entry in Entries)
-                entry.ExportPly(Path.Combine(path, $"{Name}.ply"));
+                entry.ExportPly(Helpers.PathCombine(path, $"{Name}.ply"));
         }
 
         public override string ToString()

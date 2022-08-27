@@ -178,7 +178,7 @@ namespace CTRFramework.Big
             Reset();
 
             while (NextFile())
-                ReadEntry().Save(Path.Combine(path));
+                ReadEntry().Save(Helpers.PathCombine(path));
         }
 
         /// <summary>

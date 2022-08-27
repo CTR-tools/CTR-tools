@@ -83,7 +83,7 @@ namespace CTRFramework.Lang
 
             if (trySwap)
             {
-                string swapfile = Path.Combine(Meta.BasePath, "charswap.txt");
+                string swapfile = Helpers.PathCombine(Meta.BasePath, "charswap.txt");
 
                 if (File.Exists(swapfile))
                 {
@@ -105,7 +105,7 @@ namespace CTRFramework.Lang
         {
             if (trySwap)
             {
-                string swapfile = Path.Combine(Meta.BasePath, "charswap.txt");
+                string swapfile = Helpers.PathCombine(Meta.BasePath, "charswap.txt");
 
                 if (File.Exists(swapfile))
                 {

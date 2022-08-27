@@ -263,7 +263,7 @@ namespace CTRFramework.Sound
             for (int i = 0; i <= maxid; i++)
                 sb.AppendLine($"{i}, {(samples.ContainsKey(i) ? samples[i].Hash.ToString("X8") : "")}");
 
-            Helpers.WriteToFile(Path.Combine(Meta.BasePath, "test.txt"), sb.ToString());
+            Helpers.WriteToFile(Helpers.PathCombine(Meta.BasePath, "test.txt"), sb.ToString());
         }
 
         public void ExportCSEQ(string path)
@@ -273,7 +273,7 @@ namespace CTRFramework.Sound
             Cseq.PatchMidi = true;
             Cseq.IgnoreVolume = true;
 
-            string pathSeq = Path.Combine(path, "songs");
+            string pathSeq = Helpers.PathCombine(path, "songs");
             Helpers.CheckFolder(pathSeq);
 
             foreach (var song in Songs)
@@ -281,11 +281,11 @@ namespace CTRFramework.Sound
                 Cseq.PatchName = song.name;
                 song.LoadMetaInstruments(song.name);
 
-                song.Save(Path.Combine(pathSeq, $"{song.name}.cseq"));
+                song.Save(Helpers.PathCombine(pathSeq, $"{song.name}.cseq"));
                 int i = 0;
                 foreach (var s in song.Songs)
                 {
-                    s.ExportMIDI(Path.Combine(pathSeq, $"{song.name}_{i}.mid"), song);
+                    s.ExportMIDI(Helpers.PathCombine(pathSeq, $"{song.name}_{i}.mid"), song);
                     i++;
                 }
             }
@@ -303,12 +303,12 @@ namespace CTRFramework.Sound
                 x++;
             }
 
-            Helpers.WriteToFile(Path.Combine(path, "test.txt"), sb.ToString());
+            Helpers.WriteToFile(Helpers.PathCombine(path, "test.txt"), sb.ToString());
 
             Cseq.PatchMidi = true;
             Cseq.IgnoreVolume = true;
 
-            string pathBank = Path.Combine(path, "banks");
+            string pathBank = Helpers.PathCombine(path, "banks");
             Helpers.CheckFolder(pathBank);
 
             Banks.Clear();
@@ -320,7 +320,7 @@ namespace CTRFramework.Sound
                 string fn = String.Format($"{i.ToString("00")}_{(banknames.ContainsKey(i) ? banknames[i] : "bank")}.bnk");
                 Console.WriteLine("Extracting " + fn);
 
-                fn = Path.Combine(pathBank, fn);
+                fn = Helpers.PathCombine(pathBank, fn);
 
                 Bank.FromReader(br);
 
@@ -336,7 +336,7 @@ namespace CTRFramework.Sound
 
             Console.WriteLine("---");
 
-            string pathSeq = Path.Combine(path, "songs");
+            string pathSeq = Helpers.PathCombine(path, "songs");
             Helpers.CheckFolder(pathSeq);
 
             int j = 0;
@@ -360,7 +360,7 @@ namespace CTRFramework.Sound
 
                 Console.WriteLine("Extracting " + fn);
 
-                fn = Path.Combine(pathSeq, fn);
+                fn = Helpers.PathCombine(pathSeq, fn);
 
                 br.Jump(ptrSeq);
                 int size = br.ReadInt32();
@@ -380,7 +380,7 @@ namespace CTRFramework.Sound
                 int i = 0;
                 foreach (var s in seq.Songs)
                 {
-                    s.ExportMIDI(Path.Combine(pathSeq, $"{seq.name}_{i}.mid"), seq);
+                    s.ExportMIDI(Helpers.PathCombine(pathSeq, $"{seq.name}_{i}.mid"), seq);
                     i++;
                 }
 
@@ -390,7 +390,7 @@ namespace CTRFramework.Sound
 
         public void ExportAllSamples(string path)
         {
-            string output = Path.Combine(path, "samples");
+            string output = Helpers.PathCombine(path, "samples");
             Helpers.CheckFolder(output);
 
             int i = 0;
