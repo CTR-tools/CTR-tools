@@ -66,11 +66,11 @@ namespace bash_dat
         {
             Helpers.CheckFolder(path);
 
-            Helpers.WriteToFile(Path.Combine(path, "data.vb"), VB);
-            Helpers.WriteToFile(Path.Combine(path, "data.vh"), VH);
+            Helpers.WriteToFile(Helpers.PathCombine(path, "data.vb"), VB);
+            Helpers.WriteToFile(Helpers.PathCombine(path, "data.vh"), VH);
 
             for (int i = 0; i < SEQ.Count; i++)
-                Helpers.WriteToFile(Path.Combine(path, $"data_{i}.seq"), SEQ[i]);
+                Helpers.WriteToFile(Helpers.PathCombine(path, $"data_{i}.seq"), SEQ[i]);
         }
     }
 }

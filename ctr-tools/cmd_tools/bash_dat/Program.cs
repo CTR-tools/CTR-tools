@@ -53,19 +53,26 @@ namespace bash_dat
             }
         }
 
-        static void LoadDataFile(string filename)
+        static void LoadDataFile(string exename)
         {
-            string dir = Path.GetDirectoryName(filename);
-            string datapath = Path.Combine(dir, "CRASHBSH.DAT");
+            string dir = Path.GetDirectoryName(exename);
+            string datname = Helpers.FindFirstFile(dir, "crashbsh.dat");
 
-            if (!File.Exists(filename) || !File.Exists(datapath))
+            if (datname == String.Empty)
+            {
+                Console.WriteLine("No CRASHBSH.DAT found in this folder!");
+                Console.ReadKey();
+                return;
+            }
+
+            if (!File.Exists(exename) || !File.Exists(datname))
             {
                 Console.WriteLine("Required files not found. Please put exe and data file in the same folder.");
                 Console.ReadKey();
                 return;
             }
 
-            string exe_md5 = Helpers.CalculateMD5(filename);
+            string exe_md5 = Helpers.CalculateMD5(exename);
             //string bsh_md5 = Helpers.CalculateMD5(datapath);
 
             //File.WriteAllText("md5.txt", exe_md5 + "\r\n" + bsh_md5);
@@ -95,11 +102,11 @@ namespace bash_dat
 
             try
             {
-                Dictionary<int, string> filelist = Meta.LoadNumberedList("bash_filelist.txt");
+                var filelist = Meta.LoadNumberedList("bash_filelist.txt");
 
-                using (var hdr = new BinaryReaderEx(File.OpenRead(filename)))
+                using (var hdr = new BinaryReaderEx(File.OpenRead(exename)))
                 {
-                    using (var dat = new BinaryReaderEx(File.OpenRead(datapath)))
+                    using (var dat = new BinaryReaderEx(File.OpenRead(datname)))
                     {
                         string magic = hdr.ReadStringFixed(8);
 
@@ -113,7 +120,7 @@ namespace bash_dat
 
                         for (int i = 0; i < num; i++)
                         {
-                            int offset = hdr.ReadInt32() * 0x800;
+                            int offset = hdr.ReadInt32() * Meta.SectorSize;
                             int size = hdr.ReadInt32();
 
                             dat.Jump(offset);
@@ -165,7 +172,8 @@ namespace bash_dat
 
                             dat.Jump(offset);
 
-                            string final_path = Path.Combine(dir, "data", (filelist.ContainsKey(i) && num == 0x3E0) ? filelist[i] : $"{i.ToString("00000")}{ext}");
+                            //need full path here for path separator fixup
+                            string final_path = Helpers.PathCombine(dir, "data", (filelist.ContainsKey(i) && num == 0x3E0) ? filelist[i] : $"{i.ToString("00000")}{ext}");
 
                             Helpers.WriteToFile(final_path, dat.ReadBytes(size));
 
@@ -175,7 +183,7 @@ namespace bash_dat
                 }
 
                 Console.WriteLine($"\r\nDone! Extracted {num} files.");
-                Console.ReadKey();
+                //Console.ReadKey();
             }
             catch (Exception ex)
             {
@@ -189,22 +197,22 @@ namespace bash_dat
 
             Console.WriteLine(x.numPals + " " + x.numTex);
 
-            string extpath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path));
+            string extpath = Helpers.PathCombine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path));
 
             Helpers.CheckFolder(extpath);
 
             int num = 0;
 
-            foreach (BashTex t in x.tex)
+            foreach (var tex in x.tex)
             {
-                BMPHeader b = new BMPHeader();
-                b.Update(t.width * 4, t.height, 16, 4);
+                var bmp = new BMPHeader();
+                bmp.Update(tex.width * 4, tex.height, 16, 4);
 
                 byte[] pal = new byte[16 * 4];
 
                 bool bad = false;
 
-                int palindex = t.unk2 / 2;
+                int palindex = tex.unk2 / 2;
 
                 if (palindex < 0 || palindex > x.pals.Count)
                 {
@@ -220,8 +228,8 @@ namespace bash_dat
                     pal[i * 4 + 3] = x.pals[palindex][i].A;
                 }
 
-                b.UpdateData(pal, Tim.FixPixelOrder(t.data));
-                b.Save($"{extpath}\\tex_" + num + (bad ? "_badpal" : "") + ".bmp");
+                bmp.UpdateData(pal, Tim.FixPixelOrder(tex.data));
+                bmp.Save($"{extpath}\\tex_{num}{(bad ? "_badpal" : "")}.bmp");
 
                 num++;
             }
@@ -229,7 +237,7 @@ namespace bash_dat
 
         static void LoadModelFile(string filename)
         {
-            List<BashMesh> models = new List<BashMesh>();
+            var models = new List<BashMesh>();
 
             using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
@@ -244,7 +252,10 @@ namespace bash_dat
                     Helpers.Panic("LoadModelFile", PanicType.Debug, m.ToString());
 
                 for (int i = 0; i < numModels; i++)
-                    Helpers.WriteToFile(Path.Combine(Path.GetDirectoryName(filename), $"model_{i.ToString("00")}.obj"), models[i].ToObj());
+                {
+                    var path = Helpers.PathCombine(Path.GetDirectoryName(filename), $"model_{i.ToString("00")}.obj");
+                    Helpers.WriteToFile(path, models[i].ToObj());
+                }
             }
         }
 
@@ -253,7 +264,7 @@ namespace bash_dat
             Helpers.Panic("Bash", PanicType.Info, "Loading sfx...");
 
             var sfx = BashSfx.FromFile(filename);
-            string path = Path.Combine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename));
+            string path = Helpers.PathCombine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename));
             sfx.Export(path);
         }
     }
