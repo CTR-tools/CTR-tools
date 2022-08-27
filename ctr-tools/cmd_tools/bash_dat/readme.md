@@ -12,16 +12,16 @@ This tool is able to:
 
 ## supported versions:
 
-OPSM 38 Demo
-Spyro Split / Winter Jampack 2000 / demo disc 1.3
-Spyro 3 NTSC Demo
-Euro Demo xx? (gotta compare rest of euro demos if they differ)
-Sep 14, preview prototype
-NTSC Release
-Oct 9 PAL prototype
-PAL Release
-JAP Trial
-JAP Release
+- OPSM 38 Demo
+- Spyro Split / Winter Jampack 2000 / demo disc 1.3
+- Spyro 3 NTSC Demo
+- Euro Demo xx? (gotta compare rest of euro demos if they differ)
+- Sep 14, preview prototype
+- NTSC Release
+- Oct 9 PAL prototype
+- PAL Release
+- JAP Trial
+- JAP Release
 
 *Important! File names are partially available only for NTSC-U release.*
 
