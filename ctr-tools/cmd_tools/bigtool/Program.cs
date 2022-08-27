@@ -31,19 +31,25 @@ namespace bigtool
             Console.WriteLine($"Input file: {filename}");
             Console.WriteLine("Current path: " + Environment.CurrentDirectory);
 
-            string name = Path.GetFileNameWithoutExtension(filename).ToLower();
-            string ext = Path.GetExtension(filename).ToLower();
-            string bigpath = Path.GetDirectoryName(filename);
+            string bigName = Path.GetFileNameWithoutExtension(filename);
+            string ext = Path.GetExtension(filename);
+            string bigPath = Path.GetDirectoryName(filename);
 
+            //gotta revisit this stuff
+            //it tries to be smart for the end user when we just call it as "bigtool bigfile.big"
+
+            //if no root provided (as i get it, it happens when there is no .\ or disk C:\, right?)
             if (!Path.IsPathRooted(filename))
             {
-                bigpath = Environment.CurrentDirectory;
+                //maybe bigfile is in current terminal directory?
+                bigPath = Environment.CurrentDirectory;
 
-                if (!File.Exists(Path.Combine(bigpath, filename)))
+                if (!File.Exists(Helpers.PathCombine(bigPath, filename)))
                 {
-                    bigpath = Meta.BasePath;
+                    //maybe bigfile in tool's root?
+                    bigPath = Meta.BasePath;
 
-                    if (!File.Exists(Path.Combine(bigpath, filename)))
+                    if (!File.Exists(Helpers.PathCombine(bigPath, filename)))
                     {
                         Console.WriteLine("Check filename.");
                         return;
@@ -51,22 +57,22 @@ namespace bigtool
                 }
             }
 
-            string path = Path.Combine(bigpath, name);
+            string exportPath = Helpers.PathCombine(bigPath, bigName);
 
             try
             {
-                BigFile big = BigFile.FromFile(Path.Combine(bigpath, $"{name}{ext}"));
+                var bigfile = BigFile.FromFile(Helpers.PathCombine(bigPath, $"{bigName}{ext}"));
 
-                if (big.Entries.Count == 0)
+                if (bigfile.Entries.Count == 0)
                 {
                     Console.WriteLine("No files to process.");
                     return;
                 }
 
-                switch (ext)
+                switch (ext.ToLower())
                 {
-                    case ".big": big.Extract(path); break;
-                    case ".txt": big.Save(Path.Combine(bigpath, $"{name}.big")); break;
+                    case ".big": bigfile.Extract(exportPath); break;
+                    case ".txt": bigfile.Save(Helpers.PathCombine(bigPath, $"{bigName}.big")); break;
                     default: Console.WriteLine($"Unsupported file type: {ext}"); break;
                 }
             }
