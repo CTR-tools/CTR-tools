@@ -81,6 +81,28 @@ namespace CTRFramework.Shared
                 Directory.CreateDirectory(path);
         }
 
+
+        //might move to helpers
+        //scans folder for given filename, matches in uppercase, returns first file found or nothing
+        //i can hardly imagine someone keeping multiple dat files with different casing on linux, but it's linux
+        public static string FindFirstFile(string directory, string filename, string filter = "*")
+        {
+            filename = filename.ToUpper();
+
+            //btw how filter works then on linux, lol
+            foreach (var file in Directory.GetFiles(directory, filter))
+                if (Path.GetFileName(file).ToUpper() == filename)
+                    return file;
+
+            return String.Empty;
+        }
+
+        //replaces back and forward slashes with system specific path separator
+        public static string FixPathSeparator(string directory) => directory.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
+
+        //wrapper for path combine that also fixes path separator
+        public static string PathCombine(params string[] path) => FixPathSeparator(Path.Combine(path));
+
         public static void BackupFile(string fileName)
         {
             string backupName = $"{fileName}.bkp";
