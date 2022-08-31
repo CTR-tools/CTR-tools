@@ -54,31 +54,23 @@ namespace CTRFramework.Vram
         {
         }
 
-        public static Tim FromFile(string fn)
+        public Tim(BinaryReaderEx br) => Read(br);
+
+        public static Tim FromFile(string filename)
         {
-            using (var br = new BinaryReaderEx(File.OpenRead(fn)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 return FromReader(br);
             }
         }
 
-        public static Tim FromReader(BinaryReaderEx br)
-        {
-            return new Tim(br);
-        }
-
-        public Tim(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public static Tim FromReader(BinaryReaderEx br) => new Tim(br);
 
         public Tim(Rectangle rect, BitDepth bitDepth)
         {
             region = rect;
             bpp = bitDepth;
             data = new ushort[rect.Width * rect.Height];
-
-            Helpers.Panic(this, PanicType.Debug, "lemao what? " + rect.Width * rect.Height + " " + data.Length);
         }
 
         /// <summary>
@@ -447,7 +439,7 @@ namespace CTRFramework.Vram
 
                 x.ConvertTo16Bit();
 
-                Bitmap bmp = new Bitmap(x.region.Width, x.region.Height);
+                var bmp = new Bitmap(x.region.Width, x.region.Height);
 
                 for (int i = 0; i < bmp.Width; i++)
                     for (int j = 0; j < bmp.Height; j++)
@@ -487,7 +479,7 @@ namespace CTRFramework.Vram
         /// <param name="filename"></param>
         public void LoadDataFromBitmap(string filename)
         {
-            Bitmap bitmap = (Bitmap)Bitmap.FromFile(filename);
+            var bitmap = (Bitmap)Bitmap.FromFile(filename);
 
             if (bitmap.Width / 4 != region.Width || bitmap.Height != region.Height)
             {
@@ -517,7 +509,7 @@ namespace CTRFramework.Vram
                 byte B = bytes[i * 4 + 2];
                 byte A = bytes[i * 4 + 3];
 
-                ushort col = ConvertTo16(R, G, B);
+                ushort col = ConvertTo16(R, G, B, A);
 
                 if (!palette.Contains(col))
                 {
@@ -700,12 +692,24 @@ namespace CTRFramework.Vram
 
         public static ushort ConvertTo16(Color c)
         {
-            return ConvertTo16(c.R, c.G, c.B);
+            return ConvertTo16(c.R, c.G, c.B, c.A);
         }
 
-        public static ushort ConvertTo16(byte r, byte g, byte b)
+        public static ushort ConvertTo16(byte r, byte g, byte b, byte a = 255)
         {
-            return (ushort)((VRAMConvert8To5(r) << 10) | (VRAMConvert8To5(g) << 5) | (VRAMConvert8To5(b) << 0));
+            var cr = (ushort)VRAMConvert8To5(r);
+            var cg = (ushort)VRAMConvert8To5(g);
+            var cb = (ushort)VRAMConvert8To5(b);
+
+            //transparent = full 0
+            if (a == 0)
+                return 0;
+
+            //black = 0,0,1
+            if (cr == 0 & cg == 0 & cb == 0 && a == 255)
+                return 1;
+
+            return (ushort)(cr << 10 | cg << 5 | cb << 0 | (ushort)(a < 255 ? 0x8000 : 0));
         }
 
         public static Color Convert16(byte[] b, BlendingMode blend = BlendingMode.Standard)
