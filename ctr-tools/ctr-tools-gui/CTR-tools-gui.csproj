@@ -220,9 +220,6 @@
     <Content Include="icons\ctr.png" />
     <Content Include="icons\lev.png" />
     <Content Include="icons\str.png" />
-    <Content Include="mapping.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Properties\ctr-tools-logo.png" />
     <Content Include="Properties\icon_discord.png" />
     <Content Include="Properties\icon_github.png" />

@@ -43,10 +43,10 @@ namespace model_reader
 
             if ((File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
             {
-                foreach (string s in Directory.GetFiles(filename, "*.*", SearchOption.AllDirectories))
+                foreach (var file in Directory.GetFiles(filename, "*.*", SearchOption.AllDirectories))
                 {
-                    Console.WriteLine(s + " " + Path.IsPathRooted(s));
-                    ConvertFile(Path.IsPathRooted(s) ? s : ".\\" + s);
+                    Console.WriteLine(file + " " + Path.IsPathRooted(file));
+                    ConvertFile(Path.IsPathRooted(file) ? file : ".\\" + file);
                 }
             }
             else
@@ -67,7 +67,7 @@ namespace model_reader
 
             if (!File.Exists(vrampath))
             {
-                vrampath = Helpers.PathCombine(Path.GetDirectoryName(filename), "shared.vrm");
+                vrampath = Helpers.FindFirstFile(Path.GetDirectoryName(filename), "shared.vrm");
 
                 if (!File.Exists(vrampath))
                 {

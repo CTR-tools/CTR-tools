@@ -10,8 +10,15 @@ using System.Windows.Forms;
 
 namespace CTRTools.Controls
 {
+    public enum FileSourceMode
+    {
+        Lev, Mpk
+    }
+
     public partial class VramControl : UserControl
     {
+        private FileSourceMode mode = FileSourceMode.Lev;
+
         public VramControl()
         {
             InitializeComponent();
@@ -126,6 +133,16 @@ namespace CTRTools.Controls
                 vrm.GetTrueColorTexture(new Rectangle(512, 256, 512, 256))
             };
 
+            //special case for shared.vrm
+            if (Path.GetFileName(pathVram.Text) == "shared.vrm")
+            {
+                tims = new List<Tim>() {
+                    vrm.GetTrueColorTexture(new Rectangle(896, 0, 128, 256)),
+                    vrm.GetTrueColorTexture(new Rectangle(0, 216, 512, 48)),
+                    //hardcoded ntsc-u regions, pal has different layout, so should rewrite ctrvram to store frames and reuse them
+                };
+            }
+
             //should move this to ctrvram i guess
             using (var bw = new BinaryWriterEx(File.Create(pathVram.Text)))
             {
@@ -148,6 +165,16 @@ namespace CTRTools.Controls
         {
             if (!DataExists()) return;
 
+            switch (mode)
+            {
+                case FileSourceMode.Lev: ExtractTexturesLev(); break;
+                case FileSourceMode.Mpk: ExtractTexturesMpk(); break;
+                default: throw new Exception("wat");
+            }
+        }
+
+        private void ExtractTexturesLev()
+        {
             using (var scene = CtrScene.FromFile(pathFile.Text))
             {
                 string data = Helpers.PathCombine(pathFileParent, "data");
@@ -178,6 +205,38 @@ namespace CTRTools.Controls
             MessageBox.Show("Done!");
         }
 
+        private void ExtractTexturesMpk()
+        {
+            using (var pack = ModelPack.FromFile(pathFile.Text))
+            {
+                string data = Helpers.PathCombine(pathFileParent, "data");
+
+                //since mpk doesnt have built in vram check, need to read that first
+                Tim tim = CtrVrm.FromFile(pathVram.Text).GetVram();
+
+                pack.Extract(data, tim);
+
+                //generates colored vram, keep in mind same texture data may use different palettes
+                var bmp = new Bitmap(2048, 512);
+                var g = Graphics.FromImage(bmp);
+
+                foreach (var x in pack.GetTexturesList())
+                {
+                    using (var bb = tim.GetTexture(x.Value))
+                    {
+                        if (bb != null)
+                            g.DrawImage(bb, x.Value.RealX * 4 - 2048, x.Value.RealY);
+                    }
+                }
+
+                bmp.Save(Helpers.PathCombine(pathFileParent, "test_color.bmp"));
+                tim.SaveBMP(Helpers.PathCombine(pathFileParent, "test_bw.bmp"), BMPHeader.GrayScalePalette(16));
+            }
+
+            GC.Collect();
+            MessageBox.Show("Done!");
+        }
+
         private void actionBrowseFile_Click(object sender, EventArgs e)
         {
             //gotta support ctr here as well i suppose
@@ -191,10 +250,11 @@ namespace CTRTools.Controls
         {
             string ext = Path.GetExtension(path).ToLower();
 
-            if (ext != ".lev" && ext != ".mpk")
+            switch (ext)
             {
-                MessageBox.Show("Not a supported CTR file.");
-                return;
+                case ".lev": mode = FileSourceMode.Lev; break;
+                case ".mpk": mode = FileSourceMode.Mpk; break;
+                default: MessageBox.Show("Not a supported CTR file."); return;
             }
 
             pathFile.Text = path;

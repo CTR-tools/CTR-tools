@@ -46,7 +46,7 @@ namespace lng2txt
                                 lng = LNG.FromFile(filename);
                                 lng.Export(Path.ChangeExtension(filename, "txt"), true);
 
-                                if (Path.GetFileNameWithoutExtension(filename) == "ja")
+                                if (Path.GetFileNameWithoutExtension(filename).ToLower() == "ja")
                                 {
                                     lng = LNG.FromFile(filename, true);
                                     lng.Export(Path.ChangeExtension(filename, "katakana.txt"), true);
