@@ -62,7 +62,7 @@ namespace CTRFramework
 
         public string ToObj(float scale = 1.0f)
         {
-            return $"v {Position.X * scale} {Position.Y * scale} {Position.Z * scale} {(Color.X / 255f).ToString("0.###")} {(Color.Y / 255f).ToString("0.###")} {(Color.Z / 255f).ToString("0.###")}";
+            return $"v\t{Position.X * scale} {Position.Y * scale} {Position.Z * scale}\t{(Color.X / 255f).ToString("0.###")} {(Color.Y / 255f).ToString("0.###")} {(Color.Z / 255f).ToString("0.###")}";
         }
     }
 

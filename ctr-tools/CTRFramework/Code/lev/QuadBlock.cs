@@ -491,8 +491,8 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"g {(visDataFlags.HasFlag(VisDataFlags.Hidden) ? "invisible" : "visible")}");
-            sb.AppendLine($"o piece_{id.ToString("X4")}\r\n");
+            sb.AppendLine($"g\t{(visDataFlags.HasFlag(VisDataFlags.Hidden) ? "invisible" : "visible")}");
+            sb.AppendLine($"o\tpiece_{id.ToString("X4")}\r\n");
 
             switch (detail)
             {
@@ -500,10 +500,10 @@ namespace CTRFramework
                     {
                         List<Vertex> list = GetVertexListq(v, -1);
 
-                        foreach (Vertex vt in list)
+                        foreach (var vt in list)
                         {
                             sb.AppendLine(vt.ToObj());
-                            sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
+                            sb.AppendLine("vt\t" + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
                         }
 
                         sb.AppendLine("\r\nusemtl " + (ptrTexLow != UIntPtr.Zero ? texlow.Tag : "default"));
@@ -536,7 +536,7 @@ namespace CTRFramework
                                 foreach (Vertex vt in list)
                                 {
                                     sb.AppendLine(vt.ToObj());
-                                    sb.AppendLine("vt " + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
+                                    sb.AppendLine("vt\t" + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
                                 }
 
                                 /*

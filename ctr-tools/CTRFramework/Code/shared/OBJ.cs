@@ -5,13 +5,24 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using ThreeDeeBear.Models.Ply;
+using System.Numerics;
+using System.Windows.Forms;
+using System.Net.Mail;
 
 namespace CTRFramework
 {
-    public class OBJ
+    //options
+    public partial class OBJ
     {
         public static bool SaveQuads = false;
+        public static bool SaveNegativeIndices = false;
+        public bool HasCoords = true;
+        public bool HasColors = true;
+        public bool HasNormals = true;
+    }
 
+    public partial class OBJ
+    {
         public string ObjectName = "empty";
 
         public List<Vector3f> vertices = new List<Vector3f>();
@@ -24,25 +35,17 @@ namespace CTRFramework
         {
         }
 
-        public OBJ(string filename)
-        {
-            Read(filename);
-        }
+        public OBJ(string filename) => Read(filename);
 
-        public static OBJ FromFile(string filename)
-        {
-            return new OBJ(filename);
-        }
+        public static OBJ FromFile(string filename) => new OBJ(filename);
 
         public void Read(string filename)
         {
             vertices.Clear();
-            faces.Clear();
             colors.Clear();
+            faces.Clear();
 
-            string[] lines = File.ReadAllLines(filename);
-
-            foreach (var line in lines)
+            foreach (var line in File.ReadLines(filename))
                 ParseLine(line);
 
             Result = new PlyResult(vertices, faces, colors);
@@ -54,9 +57,9 @@ namespace CTRFramework
         /// <param name="line">OBJ line.</param>
         private void ParseLine(string line)
         {
-            line = line.Split('#')[0];
+            line = line.Split('#')[0].Replace('\t', ' ').Trim();
 
-            if (line.Trim() == "")
+            if (line == "")
             {
                 Console.WriteLine("empty line");
                 return;
@@ -178,7 +181,7 @@ namespace CTRFramework
         {
             return
                 String.Format(
-                    "{0} {1} {2} {3}\r\n",
+                    "{0}\t{1} {2} {3}\r\n",
                     label,
                     totalv + x, totalv + y, totalv + z
                     );
@@ -186,22 +189,20 @@ namespace CTRFramework
 
         public static string ASCIIQuad(string label, int totalv, int totalvt)
         {
-            return $"{label} {totalv + 2}/{totalvt + 2} {totalv + 1}/{totalvt + 1} {totalv + 3}/{totalvt + 3} {totalv + 4}/{totalvt + 4}";
+            return $"{label}\t{totalv + 2}/{totalvt + 2} {totalv + 1}/{totalvt + 1} {totalv + 3}/{totalvt + 3} {totalv + 4}/{totalvt + 4}";
         }
-
-        static bool useNegativeIndexing = false;
 
         public static string ASCIIFace(string label, int totalv, int totalvt, int x, int y, int z, float xuv, float yuv, float zuv)
         {
             //OBJ format supports negative indexing to avoid large index values
             //meshlab imports wrong UVs, blender works fine
-            if (useNegativeIndexing)
+            if (SaveNegativeIndices)
             {
-                return $"{label} {-x}/{-xuv} {-y}/{-yuv} {-z}/{-zuv}";
+                return $"{label}\t{-x}/{-xuv} {-y}/{-yuv} {-z}/{-zuv}";
             }
             else
             {
-                return $"{label} {totalv + x}/{totalvt + xuv} {totalv + y}/{totalvt + yuv} {totalv + z}/{totalvt + zuv}";
+                return $"{label}\t{totalv + x}/{totalvt + xuv} {totalv + y}/{totalvt + yuv} {totalv + z}/{totalvt + zuv}";
             }
         }
     }
