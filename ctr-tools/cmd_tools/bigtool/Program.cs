@@ -57,8 +57,6 @@ namespace bigtool
                 }
             }
 
-            string exportPath = Helpers.PathCombine(bigPath, bigName);
-
             try
             {
                 var bigfile = BigFile.FromFile(Helpers.PathCombine(bigPath, $"{bigName}{ext}"));
@@ -71,7 +69,7 @@ namespace bigtool
 
                 switch (ext.ToLower())
                 {
-                    case ".big": bigfile.Extract(exportPath); break;
+                    case ".big": bigfile.Extract(Helpers.PathCombine(bigPath, bigName)); break;
                     case ".txt": bigfile.Save(Helpers.PathCombine(bigPath, $"{bigName}.big")); break;
                     default: Console.WriteLine($"Unsupported file type: {ext}"); break;
                 }

@@ -17,12 +17,12 @@ namespace CTRFramework.Big
             {
                 //let's hardcode it as you can't add files anyway.
                 //ideally you should calculate the amount of sectors used for size/offset array
-                int to_alloc = Meta.SectorSize * 3;
+                int size = Meta.SectorSize * 3;
 
-                foreach (BigEntry c in Entries)
-                    to_alloc += c.SizePadded;
+                foreach (var entry in Entries)
+                    size += entry.SizePadded;
 
-                return to_alloc;
+                return size;
             }
         }
 
@@ -35,10 +35,7 @@ namespace CTRFramework.Big
         /// </summary>
         /// <param name="filename">Filename.</param>
         /// <returns></returns>
-        public static BigFile FromFile(string filename)
-        {
-            return new BigFile(filename);
-        }
+        public static BigFile FromFile(string filename) => new BigFile(filename);
 
         /// <summary>
         /// Reads BigFile depending on the given file type.

@@ -69,6 +69,7 @@ namespace ctrviewer.Engine
                 return true;
             }
         }
+
         public static bool AddReplacementTexture(string name, Texture2D texture)
         {
             lock (ReplacementTextures)
@@ -85,17 +86,7 @@ namespace ctrviewer.Engine
             }
         }
 
-        public static bool AddModel(string name, TriListCollection model)
-        {
-            if (Models.ContainsKey(name))
-            {
-                Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate model: '{name}'.");
-                return false;
-            }
-
-            Models.Add(name, model);
-            return true;
-        }
+        public static void AddModel(string name, TriListCollection model) => Models[name] = model;
 
         public static SimpleAnimation GetVectorAnim(string name)
         {

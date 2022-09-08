@@ -11,11 +11,11 @@ namespace CTRFramework.Sound
     {
         public static readonly int SizeOf = 0x0C;
 
-        protected byte _magic1;
-        protected byte _volume;
-        protected ushort _freq;
+        public byte _magic1;
+        public byte _volume;
+        public ushort _freq;
         public ushort SampleID { get; set; }
-        protected short _always0;
+        public short _always0;
         public uint ADSR { get; set; }  // assumes to be raw psx adsr value passed directly to psyq
 
         public MetaInst metaInst { get; set; }
@@ -128,5 +128,7 @@ namespace CTRFramework.Sound
             bw.Write((ushort)SampleID);
             bw.Write((short)_always0);
         }
+
+        public override string ToString() => $"magic:{_magic1}\tvol:{_volume}\tfreq:{_freq}\tid:{SampleID}\tzero:{_always0}";
     }
 }

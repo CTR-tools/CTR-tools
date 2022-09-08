@@ -269,11 +269,9 @@ namespace CTRFramework
         /// </summary>
         private void SceneTests()
         {
+            var sb = new StringBuilder();
 
-            StringBuilder sb = new StringBuilder();
-
-            List<uint> ptrs = new List<uint>();
-
+            var ptrs = new List<uint>();
 
             foreach (var w in waterAnim)
             {
@@ -288,7 +286,6 @@ namespace CTRFramework
             }
 
             //Console.ReadKey();
-
         }
 
         /// <summary>
@@ -489,6 +486,12 @@ namespace CTRFramework
                 foreach (var quad in quads)
                     foreach (var tex in quad.tex)
                     {
+                        if (tex == null)
+                        {
+                            Helpers.Panic(this, PanicType.Error, $"tex is null for whatever reason... {quad.id}");
+                            continue;
+                        }
+
                         try
                         {
                             string file = Helpers.PathCombine(path, $"{tex.lod2.Tag}.png");
@@ -584,7 +587,7 @@ namespace CTRFramework
 
         public Dictionary<string, TextureLayout> GetTexturesList(Detail lod)
         {
-            Dictionary<string, TextureLayout> tex = new Dictionary<string, TextureLayout>();
+            var result = new Dictionary<string, TextureLayout>();
 
             if (lod == Detail.Models)
             {
@@ -592,15 +595,13 @@ namespace CTRFramework
                     foreach (var entry in model.Entries)
                         foreach (var tl in entry.matIndices)
                             if (tl != null)
-                                if (!tex.ContainsKey(tl.Tag))
-                                    tex.Add(tl.Tag, tl);
+                                result[tl.Tag] = tl;
 
                 if (iconpack != null)
                     foreach (var i in iconpack.Icons.Values)
                         if (i.tl != null)
                         {
-                            if (!tex.ContainsKey(i.tl.Tag))
-                                tex.Add(i.tl.Tag, i.tl);
+                            result[i.tl.Tag] = i.tl;
                         }
                         else
                         {
@@ -610,81 +611,80 @@ namespace CTRFramework
             }
             else
             {
-                foreach (QuadBlock qb in quads)
+                foreach (var qb in quads)
                 {
                     switch (lod)
                     {
                         case Detail.Low:
                             if (qb.ptrTexLow != UIntPtr.Zero)
-                                if (!tex.ContainsKey(qb.texlow.Tag))
-                                    tex.Add(qb.texlow.Tag, qb.texlow);
+                                result[qb.texlow.Tag] = qb.texlow;
                             break;
 
                         case Detail.Med:
-                            foreach (CtrTex t in qb.tex)
-                                if (t != null)
-                                    if (t.lod2.Position != 0)
-                                        if (!tex.ContainsKey(t.lod2.Tag))
-                                            tex.Add(t.lod2.Tag, t.lod2);
+                            foreach (var tex in qb.tex)
+                            {
+                                if (tex == null) continue;
+
+                                if (tex.lod2.Position != 0)
+                                    result[tex.lod2.Tag] = tex.lod2;
+                            }
                             break;
 
                         case Detail.High:
-                            foreach (CtrTex t in qb.tex)
-                                if (t != null)
-                                    foreach (var x in t.hi)
-                                        if (x != null)
-                                            if (!tex.ContainsKey(x.Tag))
-                                                tex.Add(x.Tag, x);
+                            foreach (var tex in qb.tex)
+                            {
+                                if (tex == null) continue;
+
+                                foreach (var x in tex.hi)
+                                    if (x != null)
+                                        result[x.Tag] = x;
+                            }
                             break;
                     }
                 }
             }
 
-            return tex;
+            return result;
         }
 
 
         public Dictionary<string, TextureLayout> GetTexturesList()
         {
-            Dictionary<string, TextureLayout> tex = new Dictionary<string, TextureLayout>();
+            var result = new Dictionary<string, TextureLayout>();
 
             foreach (var t in GetTexturesList(Detail.Low))
-                if (!tex.ContainsKey(t.Key))
-                    tex.Add(t.Key, t.Value);
+                result[t.Key] = t.Value;
 
             foreach (var t in GetTexturesList(Detail.Med))
-                if (!tex.ContainsKey(t.Key))
-                    tex.Add(t.Key, t.Value);
+                result[t.Key] = t.Value;
 
             foreach (var t in GetTexturesList(Detail.High))
-                if (!tex.ContainsKey(t.Key))
-                    tex.Add(t.Key, t.Value);
+                result[t.Key] = t.Value;
 
             foreach (var t in GetTexturesList(Detail.Models))
-                if (!tex.ContainsKey(t.Key))
-                    tex.Add(t.Key, t.Value);
+                result[t.Key] = t.Value;
 
-            return tex;
+            return result;
         }
 
         /// <summary>
         /// Returns VisData children
         /// </summary>
-        /// <param name="visData"></param>
-        public List<VisData> GetVisDataChildren(VisData visData)
+        /// <param name="node"></param>
+        public List<VisData> GetVisDataChildren(VisData node)
         {
-            List<VisData> childVisData = new List<VisData>();
+            var childVisData = new List<VisData>();
 
-            if (visData.leftChild != 0 && !visData.IsLeaf) // in the future: handle leaves different. Draw them?
+            if (node.leftChild != 0 && !node.IsLeaf) // in the future: handle leaves different. Draw them?
             {
-                ushort uLeftChild = (ushort)(visData.leftChild & 0x3fff);
+                ushort uLeftChild = (ushort)(node.leftChild & 0x3fff);
                 VisData leftChild = visdata.Find(cc => cc.id == uLeftChild);
                 childVisData.Add(leftChild);
             }
 
-            if (visData.rightChild != 0 && !visData.IsLeaf) // in the future: handle leaves different. Draw them?
+            if (node.rightChild != 0 && !node.IsLeaf) // in the future: handle leaves different. Draw them?
             {
-                ushort uRightChild = (ushort)(visData.rightChild & 0x3fff);
+                ushort uRightChild = (ushort)(node.rightChild & 0x3fff);
                 VisData rightChild = visdata.Find(cc => cc.id == uRightChild);
                 childVisData.Add(rightChild);
             }
@@ -700,7 +700,7 @@ namespace CTRFramework
         /// <param name="leaf"></param>
         public List<QuadBlock> GetListOfLeafQuadBlocks(VisData leaf)
         {
-            List<QuadBlock> leafQuadBlocks = new List<QuadBlock>();
+            var leafQuadBlocks = new List<QuadBlock>();
 
             if (!leaf.IsLeaf)
                 return leafQuadBlocks;
@@ -732,6 +732,7 @@ namespace CTRFramework
                 header.ptrEnviroMap.Address = UIntPtr.Zero;
             }
 
+            //write respawn table
             foreach (var respawn in respawnPts)
                 respawn.Write(bw, patchTable);
 

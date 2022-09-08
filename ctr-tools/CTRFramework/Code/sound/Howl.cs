@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Xml;
 
 namespace CTRFramework.Sound
@@ -30,7 +31,7 @@ namespace CTRFramework.Sound
         public HowlVersion version;     //freezes the game if changed, game code tests against fixed number for some reason. maybe like version.
 
         public static List<InstrumentShort> samplesSfx = new List<InstrumentShort>();
-        List<InstrumentShort> samplesEngineSfx = new List<InstrumentShort>();
+        public static List<InstrumentShort> samplesEngineSfx = new List<InstrumentShort>();
 
         public List<Bank> Banks = new List<Bank>();
         public List<Cseq> Songs = new List<Cseq>();
@@ -219,6 +220,18 @@ namespace CTRFramework.Sound
 
             samplesSfx = InstanceList<InstrumentShort>.FromReader(br, (UIntPtr)br.Position, numSfx);
             samplesEngineSfx = InstanceList<InstrumentShort>.FromReader(br, (UIntPtr)br.Position, numEngineSfx);
+
+            /*
+            foreach (var instrument in samplesSfx)
+                Helpers.Panic(this, PanicType.Info, instrument.ToString());
+
+            Console.WriteLine("=======================");
+
+            foreach (var instrument in samplesEngineSfx)
+                Helpers.Panic(this, PanicType.Info, instrument.ToString());
+
+            Console.ReadKey();
+            */
 
             for (int i = 0; i < numBanks; i++)
                 ptrBanks.Add(br.ReadUInt16() * Meta.SectorSize);

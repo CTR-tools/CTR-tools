@@ -71,11 +71,6 @@ namespace ctrviewer
 
         public LevelType levelType = LevelType.Lod1P;
 
-        public Game1()
-        {
-            graphics = new GraphicsDeviceManager(this);
-        }
-
         public void SwitchDisplayMode() => SwitchDisplayMode(graphics);
 
         public void SwitchDisplayMode(GraphicsDeviceManager graphics)
@@ -254,6 +249,11 @@ namespace ctrviewer
             UpdateSplitscreenViewports(graphics);
         }
 
+        public Game1()
+        {
+            graphics = new GraphicsDeviceManager(this);
+        }
+
         /// <summary>
         /// Monogame: default initialize method
         /// </summary>
@@ -265,6 +265,7 @@ namespace ctrviewer
             TargetElapsedTime = new TimeSpan((long)temp);
 
             Content.RootDirectory = "Content";
+
 
             //hardware switch is disabled due to wrong resolution + crash after AA change
             graphics.HardwareModeSwitch = false;
@@ -610,7 +611,7 @@ namespace ctrviewer
             GameConsole.Write("LoadTextures()");
 
             List<Task> tasks = new List<Task>();
-            Dictionary<string, string> replacements = new Dictionary<string, string>();
+            var replacements = new Dictionary<string, string>();
 
             //try to load all png replacement textures, if newtex folder exists
             if (Directory.Exists(newtexPath) && EngineSettings.Instance.UseTextureReplacements)
@@ -687,8 +688,8 @@ namespace ctrviewer
 
         private CtrScene LoadSceneFromBig(int index)
         {
-            CtrVrm mvram = big.ReadEntry(index).ParseAs<CtrVrm>();
-            CtrScene cc = big.ReadEntry(index + 1).ParseAs<CtrScene>();
+            var mvram = big.ReadEntry(index).ParseAs<CtrVrm>();
+            var cc = big.ReadEntry(index + 1).ParseAs<CtrScene>();
             cc.SetVram(mvram);
 
             return cc;
@@ -809,7 +810,7 @@ namespace ctrviewer
 
             foreach (var s in Scenes)
             {
-                eng.MeshHigh.Add(CrashTeamRacingLoader.FromScene(s, Detail.High));
+                //eng.MeshHigh.Add(CrashTeamRacingLoader.FromScene(s, Detail.High));
                 eng.MeshMed.Add(CrashTeamRacingLoader.FromScene(s, Detail.Med));
                 eng.MeshLow.Add(CrashTeamRacingLoader.FromScene(s, Detail.Low));
             }
