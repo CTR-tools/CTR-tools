@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -258,7 +259,7 @@ namespace CTRFramework.Sound
             Console.WriteLine(ToString());
 
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             var samples = new Dictionary<int, Sample>();
 
@@ -273,8 +274,32 @@ namespace CTRFramework.Sound
                             maxid = sample.ID;
                     }
 
+            for (int i = 0; i < maxid; i++)
+                if (!samples.ContainsKey(i))
+                    samples.Add(i, new Sample() { ID = -1, Data = new byte[] { } });
+
+
+            foreach (var sample in samples)
+            {
+                sb.AppendLine($"{sample.Key},{sample.Value.Hash.ToString("X8")}");
+            }
+
+            /*
+            int maxid = 0;
+
+            foreach (var bank in Banks)
+                foreach (var sample in bank.samples.Values)
+                    if (!samples.ContainsKey(sample.ID))
+                    {
+                        samples.Add(sample.ID, sample);
+                        if (maxid < sample.ID)
+                            maxid = sample.ID;
+                    }
+
             for (int i = 0; i <= maxid; i++)
                 sb.AppendLine($"{i}, {(samples.ContainsKey(i) ? samples[i].Hash.ToString("X8") : "")}");
+
+            */
 
             Helpers.WriteToFile(Helpers.PathCombine(Meta.BasePath, "test.txt"), sb.ToString());
         }

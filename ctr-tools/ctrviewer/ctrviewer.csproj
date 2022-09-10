@@ -6,7 +6,7 @@
     <PublishReadyToRun>true</PublishReadyToRun>
     <TieredCompilation>true</TieredCompilation>
     <UseWindowsForms>false</UseWindowsForms>
-    <Platforms>AnyCPU;x64;x86</Platforms>
+    <Platforms>x64;x86</Platforms>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>

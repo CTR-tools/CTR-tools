@@ -3,6 +3,7 @@ using Force.Crc32;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,9 +40,13 @@ namespace CTRFramework.Sound
             }
         }
 
+        private Crc32Algorithm algo = new Crc32Algorithm();
+
         public uint GetHash()
         {
-            _hash = BitConverter.ToUInt32(Crc32Algorithm.Create().ComputeHash(Data), 0);
+            byte[] hashdata = algo.ComputeHash(Data);
+            Array.Reverse(hashdata, 0, 4);
+            _hash = BitConverter.ToUInt32(hashdata, 0);
             return _hash;
         }
     }
@@ -130,6 +135,9 @@ namespace CTRFramework.Sound
                 }
             }
             while (loops < sampCnt);
+
+            //foreach (var sample in samples.Values)
+            //    sample.GetHash();
 
             Parallel.ForEach(samples.Values, new ParallelOptions() { MaxDegreeOfParallelism = 32 }, sample => { sample.GetHash(); });
 

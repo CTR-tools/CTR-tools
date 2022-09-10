@@ -27,11 +27,11 @@ namespace howl
 
             if (!File.Exists(filename))
             {
-                Console.WriteLine($"{filename} doesn't exist.");
+                Console.WriteLine($"File not found: {filename}.");
                 return;
             }
 
-            string basepath = Path.GetDirectoryName(filename);
+            string? basepath = Path.GetDirectoryName(filename);
             string name = Path.GetFileNameWithoutExtension(filename);
             string ext = Path.GetExtension(filename).ToLower();
 
@@ -42,7 +42,7 @@ namespace howl
                 case ".hwl":
                     using (var br = new BinaryReaderEx(File.OpenRead(filename)))
                     {
-                        Howl hwl = Howl.FromReader(br);
+                        var hwl = Howl.FromReader(br);
 
                         hwl.ExportCSEQ(path, br);
                         hwl.ExportAllSamples(path);
@@ -54,6 +54,8 @@ namespace howl
                     }
                     break;
 
+                //the lcd extension comes from doom/final doom
+                //it is speculated, that the bank format comes from libWESS (Williams Entertainment Sound System) 
                 case ".lcd":
                 case ".bnk":
                     Bank.ReadNames();
