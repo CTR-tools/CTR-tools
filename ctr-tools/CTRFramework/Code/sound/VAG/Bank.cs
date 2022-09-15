@@ -11,6 +11,8 @@ namespace CTRFramework.Sound
 {
     public class Sample
     {
+        public string Name = "default_name";
+
         private const uint nullhash = 0xFFFFFFFF;
 
         public int ID;
@@ -40,6 +42,8 @@ namespace CTRFramework.Sound
             }
         }
 
+        public string HashString => Hash.ToString("X8").ToUpper();
+
         private Crc32Algorithm algo = new Crc32Algorithm();
 
         public uint GetHash()
@@ -53,10 +57,15 @@ namespace CTRFramework.Sound
 
     public class Bank : IReadWrite
     {
+        public string Name = "default_name";
+        public int Index = -1;
+
         public static Dictionary<string, string> hashnames = new Dictionary<string, string>();
         public static Dictionary<int, string> banknames = new Dictionary<int, string>();
 
         public Dictionary<int, Sample> samples = new Dictionary<int, Sample>();
+
+        public Dictionary<int, Sample> Entries = new Dictionary<int, Sample>();
 
         public bool Contains(int key) => samples.ContainsKey(key);
 
@@ -71,10 +80,7 @@ namespace CTRFramework.Sound
         {
         }
 
-        public Bank(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public Bank(BinaryReaderEx br) => Read(br);
 
         public static Bank FromFile(string filename)
         {
@@ -84,10 +90,7 @@ namespace CTRFramework.Sound
             }
         }
 
-        public static Bank FromReader(BinaryReaderEx br)
-        {
-            return new Bank(br);
-        }
+        public static Bank FromReader(BinaryReaderEx br) => new Bank(br);
         #endregion
 
         public void Read(BinaryReaderEx br)
@@ -95,6 +98,10 @@ namespace CTRFramework.Sound
             int bankoffset = (int)br.Position;
 
             int sampCnt = br.ReadInt16();
+
+            if (sampCnt > 1023)
+                throw new Exception("Unlikely a bank.");
+
             short[] info = br.ReadArrayInt16(sampCnt);
 
             int sam_start = bankoffset + 0x800;
@@ -136,49 +143,12 @@ namespace CTRFramework.Sound
             }
             while (loops < sampCnt);
 
-            //foreach (var sample in samples.Values)
-            //    sample.GetHash();
-
-            Parallel.ForEach(samples.Values, new ParallelOptions() { MaxDegreeOfParallelism = 32 }, sample => { sample.GetHash(); });
-
-            return;
-
-            int sample_start = 0;
-            int sample_end = 0;
-
-
-            byte[] buf;
-
-            buf = br.ReadBytes(16);
-
-            if (!frameIsEmpty(buf))
-                Helpers.Panic(this, PanicType.Assume, "Expected this to be a null frame.");
-
-            for (int i = 0; i < sampCnt; i++)
-            {
-                sample_start = (int)br.Position;
-
-                br.Seek(16);
-
-                do
-                {
-                    buf = br.ReadBytes(16);
-                }
-                while (!frameIsEmpty(buf));
-
-                sample_end = (int)br.Position;
-
-                br.Jump(sample_start);
-
-                if (!samples.ContainsKey(info[i]))
-                {
-                    samples.Add(info[i], new Sample() { ID = info[i], Data = br.ReadBytes(sample_end - sample_start) });
-                }
-                else
-                {
-                    Helpers.Panic(this, PanicType.Warning, $"dupe key: {info[i]}");
-                }
-            }
+            Parallel.ForEach(samples.Values, new ParallelOptions() {
+                MaxDegreeOfParallelism = 32 }, 
+                sample => {
+                    sample.GetHash();
+                    sample.Name = hashnames.ContainsKey(sample.HashString) ? hashnames[sample.HashString] : "default_name";
+                });
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
@@ -194,19 +164,25 @@ namespace CTRFramework.Sound
                 bw.Write(sample.Value.Data);
         }
 
-        public void Export(int id, int freq, string path, string path2 = null, string name = null)
+        public void Export(int id, int freq, string path, string pathSfxVag = null, string path2 = null, string name = null)
         {
-            string pathSfxVag = Helpers.PathCombine(path, "vag");
+            //string pathSfxVag = Helpers.PathCombine(path, "vag");
 
-            Helpers.CheckFolder(pathSfxVag);
+            //Helpers.CheckFolder(pathSfxVag);
 
             if (Contains(id))
             {
                 string vagname = id.ToString("0000"); // Howl.GetName(id, Howl.samplenames);
 
+                if (File.Exists(Helpers.PathCombine(pathSfxVag, $"{vagname}.vag")))
+                    return;
+
+                if (File.Exists(Helpers.PathCombine(path, $"{vagname}.wav")))
+                    return;
+
                 using (var br = new BinaryReaderEx(new MemoryStream(samples[id].Data)))
                 {
-                    VagSample vag = new VagSample();
+                    var vag = new VagSample();
 
                     if (freq != -1)
                         vag.sampleFreq = freq;
@@ -216,9 +192,9 @@ namespace CTRFramework.Sound
 
                     vag.ReadFrames(br, samples[id].Data.Length);
 
-                    string hash = samples[id].Hash.ToString("X8").ToUpper();
+                    string hash = samples[id].HashString;
 
-                    vagname = $"{id.ToString("0000")}_{samples[id].Hash.ToString("X8")}";
+                    vagname = $"{id.ToString("0000")}_{hash}";
 
                     if (Bank.hashnames.ContainsKey(hash))
                         vagname += $"_{Bank.hashnames[hash]}";
@@ -231,34 +207,32 @@ namespace CTRFramework.Sound
 
         public void ExportAll(int bnum, string path, string path2 = null)
         {
-            int i = 0;
+            string pathSfxVag = Helpers.PathCombine(path, "vag");
+            Helpers.CheckFolder(pathSfxVag);
 
-            foreach (var s in samples)
-            {
-                Export(s.Key, Howl.GetFreq(s.Key), path, path2, s.Key.ToString("0000") + "_" + s.Key.ToString("X4"));
-                i++;
-            }
+            Parallel.ForEach(samples, new ParallelOptions() { MaxDegreeOfParallelism = 32 }, sample => {
+                Export(sample.Key, Howl.GetFreq(sample.Key), path, pathSfxVag, path2, $"{sample.Key.ToString("0000")}_{sample.Key.ToString("X4")}");
+            });
+
+            Console.Write(".");
         }
-
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.Append(samples.Count + " samples total\r\n");
 
             int cnt = 0;
 
-            foreach (var s in samples)
+            foreach (var sample in samples)
             {
-                sb.Append(s.ToString() + "\r\n");
+                sb.AppendLine(sample.ToString());
                 cnt++;
             }
 
             return sb.ToString();
         }
-
-
 
         #region [Private functions]
 

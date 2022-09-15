@@ -9,7 +9,6 @@ namespace CTRFramework.Sound
     {
         public static int DefaultSampleRate = 11025;
 
-        private string magic = "VAGp";
         private int version = 3;
         private int reserved = 0;
         public int dataSize => numFrames * 16;
@@ -34,19 +33,14 @@ namespace CTRFramework.Sound
 
         public List<VagFrame> Frames = new List<VagFrame>();
 
+        #region [Constructors, factories]
         public VagSample()
         {
         }
 
-        public VagSample(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public VagSample(BinaryReaderEx br) => Read(br);
 
-        public static VagSample FromReader(BinaryReaderEx br)
-        {
-            return new VagSample(br);
-        }
+        public static VagSample FromReader(BinaryReaderEx br) => new VagSample(br);
 
         /// <summary>
         /// Creates VagSample instance from file.
@@ -60,6 +54,7 @@ namespace CTRFramework.Sound
                 return FromReader(br);
             }
         }
+        #endregion
 
         /// <summary>
         /// Read VAG data from stream using binary reader.
@@ -67,7 +62,7 @@ namespace CTRFramework.Sound
         /// <param name="br">BinaryReaderEx instance.</param>
         public void Read(BinaryReaderEx br)
         {
-            magic = new string(br.ReadChars(4));
+            var magic = new string(br.ReadChars(4));
 
             //vagedit exports vags without magic string for some reason, so only warn
             if (magic != "VAGp")
@@ -119,10 +114,9 @@ namespace CTRFramework.Sound
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             //make sure magic string and version are correct
-            magic = "VAGp";
             version = 3;
 
-            bw.Write(magic.ToCharArray());
+            bw.Write("VAGp".ToCharArray());
             bw.WriteBig(version);
             bw.WriteBig(reserved);
             bw.WriteBig(dataSize);

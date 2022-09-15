@@ -1,8 +1,11 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿//using Newtonsoft.Json;
+//using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
+using System.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using resources = CTRFramework.Properties.Resources;
 
 namespace CTRFramework.Shared
@@ -19,6 +22,7 @@ namespace CTRFramework.Shared
         public const string XmlPath = "versions.xml";
         public const string HowlPath = "howlnames.txt";
         public const string CseqPath = "cseq.json";
+        public const string CseqXmlPath = "cseq.xml";
         public const string SmplPath = "samplenames.txt";
         public const string BankPath = "banknames.txt";
         public const string ModelsPath = "models";
@@ -28,18 +32,15 @@ namespace CTRFramework.Shared
         public const string LinkGithub = "https://github.com/CTR-tools/CTR-tools";
         #endregion
 
-        static JObject json;
+        //static JObject json;
 
         public static void Load()
         {
-            json = JObject.Parse(Helpers.GetTextFromResource(JsonPath));
+            //json = JObject.Parse(Helpers.GetTextFromResource(JsonPath));
         }
 
-        public List<string> LoadList(string fn)
-        {
-            string[] s = File.ReadAllLines(fn);
-            return new List<string>(s);
-        }
+        /*
+        public List<string> LoadList(string filename) => new List<string>(File.ReadAllLines(filename));
 
         public static string Detect(string file, string list, int fc)
         {
@@ -87,11 +88,9 @@ namespace CTRFramework.Shared
             Console.WriteLine("list tag = {0}", res);
             return res;
         }
+        */
 
-        public static Dictionary<int, string> GetBigList(string resource)
-        {
-            return Meta.LoadNumberedList(resource); //Helpers.PathCombine(Meta.DataPath, fn));
-        }
+        public static Dictionary<int, string> GetBigList(string resource) => Meta.LoadNumberedList(resource);
 
         public static Dictionary<int, string> LoadNumberedList(string resource)
         {
@@ -161,17 +160,23 @@ namespace CTRFramework.Shared
         public static string GetSignature() => resources.signature;
 
 
+
+        static XmlDocument midixml;
+
         //public static JArray levels;
-        public static JObject midi;
+        //public static JObject midi;
 
         public static bool LoadMidiJson()
         {
             try
             {
-                JObject json = JObject.Parse(Helpers.GetTextFromResource(Meta.CseqPath));
+                //JObject json = JObject.Parse(Helpers.GetTextFromResource(Meta.CseqPath));
 
                 //levels = (JArray)json["levels"];
-                midi = (JObject)json["midi"];
+                //midi = (JObject)json["midi"];
+
+                midixml = new XmlDocument();
+                midixml.LoadXml(Helpers.GetTextFromResource(CseqXmlPath));
 
                 return true;
             }
@@ -191,13 +196,44 @@ namespace CTRFramework.Shared
             return "!" + lev + "!";
         }
         */
-        public static MetaInst GetMetaInst(string track, string inst, int x)
+
+        public static MetaInst GetMetaInst(string song, string inst, int index)
         {
-            if (midi == null)
+            if (midixml == null)
                 Meta.LoadMidiJson();
 
             try
             {
+                var node = midixml.SelectNodes($"/midi/song[@title='{song}']");
+
+                if (node == null)
+                {
+                    Helpers.Panic("Meta", PanicType.Warning, $"Missing song in cseq.xml: {song}");
+                    return new MetaInst();
+                }
+
+                var insts = midixml.SelectNodes($"/midi/song[@title='{song}']/{inst}[{index+1}]");
+
+                if (insts.Count == 1)
+                {
+                    var zzz = new MetaInst();
+
+                    if (insts[0].Attributes["title"] != null)
+                        zzz.Title = insts[0].Attributes["title"].Value;
+
+                    if (insts[0].Attributes["pitch"] != null)
+                        zzz.Pitch = Int32.Parse(insts[0].Attributes["pitch"].Value);
+
+                    if (insts[0].Attributes["key"] != null)
+                        zzz.Key = Int32.Parse(insts[0].Attributes["key"].Value);
+
+                    if (insts[0].Attributes["midi"] != null)
+                        zzz.Midi = Int32.Parse(insts[0].Attributes["midi"].Value);
+
+                    return zzz;
+                }
+
+                /*
                 //really?
                 if (midi != null)
                 {
@@ -208,12 +244,13 @@ namespace CTRFramework.Shared
                                 return JsonConvert.DeserializeObject<MetaInst>(midi[track][inst][x].ToString());
                             }
                 }
+                */
             }
-            catch
+            catch (Exception ex)
             {
-                Helpers.Panic("Meta", PanicType.Error, $"Failed to load meta instrument: {track} {inst} {x}");
+                Helpers.Panic("Meta", PanicType.Error, $"Failed to load meta instrument: {song} {inst} {index}\r\n{ex.Message}");
             }
-
+                
             return new MetaInst();
         }
 
@@ -221,19 +258,24 @@ namespace CTRFramework.Shared
         {
             var list = new List<string>();
 
-            foreach (KeyValuePair<string, JToken> j in midi)
-                list.Add(j.Key);
+            foreach (XmlElement el in midixml.SelectNodes($"/midi/song"))
+                list.Add(el.Attributes["title"].Value);
 
             return list;
         }
 
         public static string GetMetaInstText(string name)
         {
-            return midi[name].ToString();
+            return "implement me!"; //midi[name].ToString();
         }
 
         public static int GetBankIndex(string track)
         {
+            //did we mean to support custom midi drum banks here???
+
+            return 0;
+
+            /*
             try
             {
                 //really?
@@ -253,6 +295,7 @@ namespace CTRFramework.Shared
             }
 
             return 0;
+            */
         }
     }
     public struct MetaInst

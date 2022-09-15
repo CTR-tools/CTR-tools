@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Xml;
+using System.Threading.Tasks;
 
 namespace CTRFramework.Sound
 {
@@ -80,7 +81,7 @@ namespace CTRFramework.Sound
         {
             br.Jump(0);
 
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.LoadXml(Helpers.GetTextFromResource(Meta.XmlPath));
 
             var hash = MD5.Create().ComputeHash(br.BaseStream);
@@ -91,31 +92,32 @@ namespace CTRFramework.Sound
 
             foreach (XmlElement el in doc.SelectNodes("/data/howl/entry"))
             {
-                if (md5.ToLower() == el["md5"].InnerText.ToLower())
+                if (md5.ToLower() != el["md5"].InnerText.ToLower()) continue;
+
+
+                Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.");
+
+                banknames = Meta.LoadNumberedList(el["banks"].InnerText);
+                samplenames = Meta.LoadNumberedList(el["samples"].InnerText);
+
+                string[] lines = Helpers.GetLinesFromResource("howlnames.txt");
+
+                foreach (var line in lines)
                 {
-                    Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.");
-                    banknames = Meta.LoadNumberedList(el["banks"].InnerText);
-                    samplenames = Meta.LoadNumberedList(el["samples"].InnerText);
-
-                    string[] lines = Helpers.GetLinesFromResource("howlnames.txt");
-
-                    foreach (var line in lines)
+                    if (line.Split(':')[0].Trim() == el["sequences"].InnerText)
                     {
-                        if (line.Split(':')[0].Trim() == el["sequences"].InnerText)
+                        string[] songs = line.Split(':')[1].Trim().Split(';');
+
+                        for (int i = 0; i < songs.Length; i++)
                         {
-                            string[] songs = line.Split(':')[1].Split(';');
-
-                            for (int i = 0; i < songs.Length; i++)
-                            {
-                                seqnames.Add(i, songs[i].Trim());
-                            }
-
-                            break;
+                            seqnames.Add(i, songs[i].Trim());
                         }
-                    }
 
-                    return;
+                        break;
+                    }
                 }
+
+                return;
             }
 
             Console.WriteLine("Unknown HOWL file.");
@@ -241,10 +243,13 @@ namespace CTRFramework.Sound
                 ptrSeqs.Add(br.ReadUInt16() * Meta.SectorSize);
 
 
-            foreach (var ptr in ptrBanks)
+            for (int i = 0; i < numBanks; i++)
             {
-                br.Jump(ptr);
-                Banks.Add(Bank.FromReader(br));
+                br.Jump(ptrBanks[i]);
+                var bank = Bank.FromReader(br);
+                bank.Name = banknames[i];
+                bank.Index = i;
+                Banks.Add(bank);
             }
 
             foreach (var ptr in ptrSeqs)
@@ -254,7 +259,12 @@ namespace CTRFramework.Sound
             }
 
             for (int i = 0; i < Songs.Count; i++)
+            {
                 Songs[i].name = seqnames.ContainsKey(i) ? seqnames[i] : i.ToString("00");
+                Songs[i].PatchName = Songs[i].name;
+
+                Songs[i].LoadMetaInstruments();
+            }
 
             Console.WriteLine(ToString());
 
@@ -316,8 +326,8 @@ namespace CTRFramework.Sound
 
             foreach (var song in Songs)
             {
-                Cseq.PatchName = song.name;
-                song.LoadMetaInstruments(song.name);
+                song.PatchName = song.name;
+                song.LoadMetaInstruments();
 
                 song.Save(Helpers.PathCombine(pathSeq, $"{song.name}.cseq"));
                 int i = 0;
@@ -356,8 +366,6 @@ namespace CTRFramework.Sound
                 br.Jump(ptrBanks[i]);
 
                 string fn = String.Format($"{i.ToString("00")}_{(banknames.ContainsKey(i) ? banknames[i] : "bank")}.bnk");
-                Console.WriteLine("Extracting " + fn);
-
                 fn = Helpers.PathCombine(pathBank, fn);
 
                 Bank.FromReader(br);
@@ -413,8 +421,8 @@ namespace CTRFramework.Sound
                 if (seqnames.ContainsKey(j))
                     seq.name = seqnames[j];
 
-                Cseq.PatchName = seq.name;
-                seq.LoadMetaInstruments(seq.name);
+                seq.PatchName = seq.name;
+                seq.LoadMetaInstruments();
                 int i = 0;
                 foreach (var s in seq.Songs)
                 {

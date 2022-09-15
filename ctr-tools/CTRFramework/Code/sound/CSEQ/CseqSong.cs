@@ -60,7 +60,7 @@ namespace CTRFramework.Sound
 
         public void ExportMIDI(string fn, Cseq seq, bool hubFilter = false, int hubIndex = 0)
         {
-            if (Cseq.PatchName == "adv_gem_valley" && !hubFilter)
+            if (seq.PatchName == "adv_gem_valley" && !hubFilter)
             {
                 for (int i = 0; i < 5; i++)
                 {

@@ -18,7 +18,7 @@ namespace CTRFramework.Sound
         public static bool UseSampleVolumeForTracks = true;
 
         public static int ActiveInstrument = 0;
-        public static string PatchName = "";
+        public string PatchName = "";
 
         public static byte[] hubTracksMask = new byte[]
         {
@@ -56,10 +56,7 @@ namespace CTRFramework.Sound
             Read(br);
         }
 
-        public static Cseq FromReader(BinaryReaderEx br)
-        {
-            return new Cseq(br);
-        }
+        public static Cseq FromReader(BinaryReaderEx br) => new Cseq(br);
 
         public static Cseq FromFile(string filename)
         {
@@ -158,17 +155,15 @@ namespace CTRFramework.Sound
 
             if (cseqEnd - cseqStart != size)
                 Helpers.Panic(this, PanicType.Warning, $"CSEQ size mismatch! {size} vs {cseqEnd - cseqStart}");
-
-            LoadMetaInstruments(PatchName);
         }
 
-        public void LoadMetaInstruments(string song)
+        public void LoadMetaInstruments()
         {
             for (int i = 0; i < samplesReverb.Count; i++)
-                samplesReverb[i].metaInst = Meta.GetMetaInst(song, "long", i);
+                samplesReverb[i].metaInst = Meta.GetMetaInst(PatchName, "long", i);
 
             for (int i = 0; i < samples.Count; i++)
-                samples[i].metaInst = Meta.GetMetaInst(song, "short", i);
+                samples[i].metaInst = Meta.GetMetaInst(PatchName, "short", i);
         }
 
         public void LoadBank(string filename)

@@ -92,7 +92,7 @@ namespace CTRFramework.Sound
             {
                 me.Add(new ControlChangeEvent(absTime, channel, MidiController.BankSelect, 120));
                 me.Add(new ControlChangeEvent(absTime, channel, MidiController.BankSelect, 0));
-                me.Add(new PatchChangeEvent(absTime, channel, Meta.GetBankIndex(Cseq.PatchName)));
+                me.Add(new PatchChangeEvent(absTime, channel, Meta.GetBankIndex(seq.PatchName)));
             }
 
             if (Cseq.UseSampleVolumeForTracks && !Cseq.IgnoreVolume)
