@@ -14,15 +14,9 @@ namespace CTRFramework
         {
         }
 
-        public PatchedContainer(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public PatchedContainer(BinaryReaderEx br) => Read(br);
 
-        public BinaryReaderEx GetReader()
-        {
-            return new BinaryReaderEx(new MemoryStream(Data));
-        }
+        public BinaryReaderEx GetReader() => new BinaryReaderEx(new MemoryStream(Data));
 
         public void Read(BinaryReaderEx br)
         {
@@ -44,6 +38,7 @@ namespace CTRFramework
             bw.Write(Data.Length);
             bw.Write(Data);
             bw.Write(PatchTable.Count * 4);
+
             foreach (var ptr in PatchTable)
                 bw.Write(ptr.ToUInt32());
         }
@@ -64,9 +59,6 @@ namespace CTRFramework
             }
         }
 
-        public static PatchedContainer FromReader(BinaryReaderEx br)
-        {
-            return new PatchedContainer(br);
-        }
+        public static PatchedContainer FromReader(BinaryReaderEx br) => new PatchedContainer(br);
     }
 }
