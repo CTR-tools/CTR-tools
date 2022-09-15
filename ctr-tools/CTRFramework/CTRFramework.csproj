@@ -181,7 +181,6 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\cseq.json" />
     <None Include="app.config" />
     <None Include="Data\readme.md" />
     <None Include="packages.config" />
