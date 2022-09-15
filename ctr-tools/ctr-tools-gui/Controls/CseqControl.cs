@@ -295,7 +295,8 @@ namespace CTRTools.Controls
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Cseq.PatchName = patchBox.Items[patchBox.SelectedIndex].ToString();
+            if (seq != null)
+                seq.PatchName = patchBox.Items[patchBox.SelectedIndex].ToString();
         }
 
         private void ignoreOriginalVolumeToolStripMenuItem_Click(object sender, EventArgs e)

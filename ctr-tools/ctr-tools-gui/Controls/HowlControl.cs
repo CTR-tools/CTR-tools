@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Sound;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -25,10 +26,42 @@ namespace CTRTools.Controls
             howl = Howl.FromFile(filename);
             label1.Text = $"Howl loaded from {filename}.";
 
+
+            listBox1.BeginUpdate();
+
+            listBox1.Items.Clear();
+
             foreach (var entry in Howl.samplesSfx)
-            {
                 listBox1.Items.Add(Howl.GetName(entry.SampleID, Howl.samplenames));
+
+            listBox1.EndUpdate();
+
+
+            treeBanks.BeginUpdate();
+
+            treeBanks.Nodes.Clear();
+
+            foreach (var bank in howl.Banks)
+            {
+                var bankNode = new TreeNode() {
+                    Text = bank.Name + $" [{bank.samples.Count}]",
+                    Tag = bank
+                };
+
+                foreach (var sample in bank.samples.Values)
+                {
+                    var sampleNode = new TreeNode() {
+                        Text = $"{sample.Name} ({sample.ID}) [{sample.HashString}]",
+                        Tag = sample
+                    };
+
+                    bankNode.Nodes.Add(sampleNode);
+                }
+
+                treeBanks.Nodes.Add(bankNode);
             }
+
+            treeBanks.EndUpdate();
         }
 
         private void actionExport_Click(object sender, EventArgs e)
@@ -64,6 +97,8 @@ namespace CTRTools.Controls
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (listBox1.SelectedIndex < 0) return;
+            
             propertyGrid1.SelectedObject = Howl.samplesSfx[listBox1.SelectedIndex];
         }
 
@@ -73,6 +108,10 @@ namespace CTRTools.Controls
             {
                 howl.Save(sfd.FileName);
             }
+        }
+
+        private void treeBanks_AfterSelect(object sender, TreeViewEventArgs e)
+        {
         }
     }
 }
