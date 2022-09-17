@@ -29,7 +29,7 @@ It should be enough to install VS and add dependencies via NuGet.
 
 Project dependencies:
 * NAudio - https://github.com/naudio/NAudio (used to export MIDI files)
-* Crc2.NET - https://github.com/force-net/Crc32.NET (for CRC32 sample hashes)
+* Crc32.NET - https://github.com/force-net/Crc32.NET (for CRC32 sample hashes)
 * MonoGame - https://github.com/MonoGame/MonoGame (used for viewer)
 
 ## Contribution
