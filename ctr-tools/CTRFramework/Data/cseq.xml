@@ -485,4 +485,29 @@
 		<short key="36" title="BassDrum"/>
 		<short key="55" title="Tambourine"/>
 	</song>
+	<song title="jap_main_menu">
+		<long channel="1" midi="33" pitch="-12" title="Electric Bass"/>
+		<long channel="1" midi="33" pitch="-12" title="Lead 8"/>
+		<long channel="1" midi="33" pitch="-12" title="Jazz Guitar"/>
+		<long channel="2" midi="18" pitch="12" title="Rock Organ"/>
+		<long channel="2" midi="18" title="Guitar"/>
+		<long channel="2" midi="18" title="Vibraphone"/>
+		<long channel="3" midi="0" title="Lead 4"/>
+		<long channel="3" midi="0" title="Lead 4"/>
+		<long channel="3" midi="0" title="Lead 4"/>
+		<long channel="4" midi="0" title="Lead 4"/>
+		<long channel="4" midi="0" title="Lead 4"/>
+		<long channel="4" midi="0" title="Lead 4"/>
+		<long channel="5" midi="7" title="Lead 4"/>
+		<long channel="5" midi="7" title="Lead 4"/>
+		<long channel="5" midi="7" title="Lead 4"/>
+		<long channel="6" midi="52" title="Lead 4"/>
+		<long channel="6" midi="52" title="Lead 4"/>
+		<long channel="7" midi="0" title="Lead 4"/>
+		<long channel="7" midi="0" title="Lead 4"/>
+		<long channel="8" midi="0" title="Lead 4"/>
+		<long channel="8" midi="0" title="Lead 4"/>
+		<long channel="9" midi="0" title="Lead 4"/>
+		<long channel="9" midi="0" title="Lead 4"/>
+	</song>
 </midi>

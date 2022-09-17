@@ -20,7 +20,7 @@ namespace CTRFramework.Sound
         Ntsc = 0x80
     }
 
-    public class Howl
+    public class Howl : IReadWrite
     {
         public static Dictionary<int, string> seqnames = new Dictionary<int, string>();
         public static Dictionary<int, string> banknames = new Dictionary<int, string>();
@@ -32,8 +32,10 @@ namespace CTRFramework.Sound
 
         public HowlVersion version;     //freezes the game if changed, game code tests against fixed number for some reason. maybe like version.
 
-        public static List<InstrumentShort> samplesSfx = new List<InstrumentShort>();
-        public static List<InstrumentShort> samplesEngineSfx = new List<InstrumentShort>();
+        List<ushort> SpuPtrTable = new List<ushort>(); //this is speculated to be related to some vab offsets
+
+        public static List<InstrumentShort> SampleTable = new List<InstrumentShort>();
+        public static List<InstrumentShort> EngineTable = new List<InstrumentShort>();
 
         public List<Bank> Banks = new List<Bank>();
         public List<Cseq> Songs = new List<Cseq>();
@@ -48,7 +50,6 @@ namespace CTRFramework.Sound
             return result;
         }
 
-        List<ushort> spuIndex = new List<ushort>(); //this is speculated to be related to some vab offsets
         List<int> ptrBanks = new List<int>();
         List<int> ptrSeqs = new List<int>();
 
@@ -78,9 +79,7 @@ namespace CTRFramework.Sound
             var doc = new XmlDocument();
             doc.LoadXml(Helpers.GetTextFromResource(Meta.XmlPath));
 
-            var hash = MD5.Create().ComputeHash(br.BaseStream);
-            string md5 = BitConverter.ToString(hash).Replace("-", "");
-
+            string md5 = Helpers.CalculateMD5(br.BaseStream);
 
             br.Jump(0);
 
@@ -117,7 +116,7 @@ namespace CTRFramework.Sound
             Console.WriteLine("Unknown HOWL file.");
         }
 
-        public void Write(BinaryWriterEx bw)
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             Console.WriteLine("Writing HOWL...");
 
@@ -125,25 +124,25 @@ namespace CTRFramework.Sound
             bw.Write((int)version);
             bw.Seek(8);
 
-            bw.Write(spuIndex.Count);
-            bw.Write(samplesSfx.Count);
-            bw.Write(samplesEngineSfx.Count);
+            bw.Write(SpuPtrTable.Count);
+            bw.Write(SampleTable.Count);
+            bw.Write(EngineTable.Count);
 
             bw.Write(Banks.Count);
             bw.Write(Songs.Count);
 
-            bw.Write(spuIndex.Count * 4 + (samplesSfx.Count + samplesEngineSfx.Count) * 8 + (Banks.Count + Songs.Count) * 2); //sampleDataSize
+            bw.Write(SpuPtrTable.Count * 4 + (SampleTable.Count + EngineTable.Count) * 8 + (Banks.Count + Songs.Count) * 2); //sampleDataSize
 
-            foreach (var value in spuIndex)
+            foreach (var value in SpuPtrTable)
             {
                 bw.Write((short)0);
                 bw.Write(value);
             }
 
-            foreach (var instrument in samplesSfx)
+            foreach (var instrument in SampleTable)
                 instrument.Write(bw);
 
-            foreach (var instrument in samplesEngineSfx)
+            foreach (var instrument in EngineTable)
                 instrument.Write(bw);
 
 
@@ -198,25 +197,25 @@ namespace CTRFramework.Sound
             if (reserved2 != 0)
                 Helpers.Panic(this, PanicType.Assume, "reserved2 is not null. Possible error.");
 
-            uint numUnkTable = br.ReadUInt32();     //number of entries in an unknown array, messes up all samples if anything is modified
-            uint numSfx = br.ReadUInt32();          //number of sample declarations, contains all sfx entries (not instruments)
-            uint numEngineSfx = br.ReadUInt32();    //number of engine sound array entries
+            uint numSpuPtrTable = br.ReadUInt32();  //number of entries in an unknown array, messes up all samples if anything is modified
+            uint numSampleTable = br.ReadUInt32();  //number of sample declarations, contains all sfx entries (not instruments)
+            uint numEngineTable = br.ReadUInt32();  //number of engine sound array entries
 
             uint numBanks = br.ReadUInt32();        //number of banks
             uint numSequences = br.ReadUInt32();    //number of sequences
 
             int sampleDataSize = br.ReadInt32();    //whole sample data size to the last seq pointer
 
-            for (int i = 0; i < numUnkTable; i++)
+            for (int i = 0; i < numSpuPtrTable; i++)
             {
                 if (br.ReadUInt16() != 0)
                     Helpers.Panic(this, PanicType.Assume, "upper word is not 0.");
 
-                spuIndex.Add(br.ReadUInt16());
+                SpuPtrTable.Add(br.ReadUInt16());
             }
 
-            samplesSfx = InstanceList<InstrumentShort>.FromReader(br, (UIntPtr)br.Position, numSfx);
-            samplesEngineSfx = InstanceList<InstrumentShort>.FromReader(br, (UIntPtr)br.Position, numEngineSfx);
+            SampleTable = InstanceList<InstrumentShort>.FromReader(br, (UIntPtr)br.Position, numSampleTable);
+            EngineTable = InstanceList<InstrumentShort>.FromReader(br, (UIntPtr)br.Position, numEngineTable);
 
             /*
             foreach (var instrument in samplesSfx)
@@ -262,7 +261,7 @@ namespace CTRFramework.Sound
 
             Console.WriteLine(ToString());
 
-
+            /*
             var sb = new StringBuilder();
 
             var samples = new Dictionary<int, Sample>();
@@ -287,6 +286,7 @@ namespace CTRFramework.Sound
             {
                 sb.AppendLine($"{sample.Key},{sample.Value.Hash.ToString("X8")}");
             }
+            */
 
             /*
             int maxid = 0;
@@ -302,10 +302,9 @@ namespace CTRFramework.Sound
 
             for (int i = 0; i <= maxid; i++)
                 sb.AppendLine($"{i}, {(samples.ContainsKey(i) ? samples[i].Hash.ToString("X8") : "")}");
-
-            */
-
+s
             Helpers.WriteToFile(Helpers.PathCombine(Meta.BasePath, "test.txt"), sb.ToString());
+            */
         }
 
         public void ExportCSEQ(string path)
@@ -335,17 +334,20 @@ namespace CTRFramework.Sound
 
         public void ExportCSEQ(string path, BinaryReaderEx br)
         {
-            StringBuilder sb = new StringBuilder();
+            //sample table
+
+            var sb = new StringBuilder();
 
             int x = 0;
 
-            foreach (var sample in samplesSfx)
+            foreach (var sample in SampleTable)
             {
-                sb.AppendLine($"{x.ToString("0000")}_{x.ToString("X4")}={Howl.GetName(sample.SampleID, samplenames)}");
+                sb.AppendLine($"{x.ToString("0000")},\t{x.ToString("X4")},\t{sample.ID},\t{sample._always0},\t{sample.flags},\t{Howl.GetName(sample.SampleID, samplenames)}");
                 x++;
             }
 
             Helpers.WriteToFile(Helpers.PathCombine(path, "test.txt"), sb.ToString());
+
 
             Cseq.PatchMidi = true;
             Cseq.IgnoreVolume = true;
@@ -444,7 +446,7 @@ namespace CTRFramework.Sound
 
         public static int GetFreq(int sampleId)
         {
-            foreach (var sd in samplesSfx)
+            foreach (var sd in SampleTable)
                 if (sd.SampleID == sampleId)
                     return sd.Frequency;
 
@@ -463,7 +465,7 @@ namespace CTRFramework.Sound
 
         public override string ToString()
         {
-            return $"Version: {version}\r\nspuIndices: {spuIndex.Count}\r\nSamples: {samplesSfx.Count}\r\nBanks: {Banks.Count}\r\nSequences: {Songs.Count}";
+            return $"Version: {version}\r\nspuIndices: {SpuPtrTable.Count}\r\nSamples: {SampleTable.Count}\r\nBanks: {Banks.Count}\r\nSequences: {Songs.Count}";
         }
     }
 }

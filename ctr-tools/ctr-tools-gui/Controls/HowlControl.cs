@@ -31,7 +31,7 @@ namespace CTRTools.Controls
 
             listBox1.Items.Clear();
 
-            foreach (var entry in Howl.samplesSfx)
+            foreach (var entry in Howl.SampleTable)
                 listBox1.Items.Add(Howl.GetName(entry.SampleID, Howl.samplenames));
 
             listBox1.EndUpdate();
@@ -99,7 +99,7 @@ namespace CTRTools.Controls
         {
             if (listBox1.SelectedIndex < 0) return;
             
-            propertyGrid1.SelectedObject = Howl.samplesSfx[listBox1.SelectedIndex];
+            propertyGrid1.SelectedObject = Howl.SampleTable[listBox1.SelectedIndex];
         }
 
         private void actionSave_Click(object sender, EventArgs e)

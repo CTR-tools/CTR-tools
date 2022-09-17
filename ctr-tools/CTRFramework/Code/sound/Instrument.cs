@@ -11,11 +11,11 @@ namespace CTRFramework.Sound
     {
         public static readonly int SizeOf = 0x0C;
 
-        public byte _magic1;
+        public byte flags;  //0 - regular, 1 - music sample, 2 - looped sample? but insts can be looped as well, 3 - ?, 4 - taunt?, others?
         public byte _volume;
         public ushort _freq;
         public ushort SampleID { get; set; }
-        public short _always0;
+        public short _always0; //not 0 in main sample table, probably length, size or duration
         public uint ADSR { get; set; }  // assumes to be raw psx adsr value passed directly to psyq
 
         public MetaInst metaInst { get; set; }
@@ -58,8 +58,8 @@ namespace CTRFramework.Sound
         {
             Read(br);
 
-            if (_magic1 != 1)
-                Helpers.Panic(this, PanicType.Assume, $"magic1 != 1: {_magic1}");
+            if (flags != 1)
+                Helpers.Panic(this, PanicType.Assume, $"magic1 != 1: {flags}");
 
             if (_always0 != 0)
                 Helpers.Panic(this, PanicType.Assume, $"always0 != 0: {_always0}");
@@ -72,7 +72,7 @@ namespace CTRFramework.Sound
 
         public virtual void Read(BinaryReaderEx br)
         {
-            _magic1 = br.ReadByte();
+            flags = br.ReadByte();
             _volume = br.ReadByte();
             _always0 = br.ReadInt16();
             _freq = br.ReadUInt16();
@@ -113,22 +113,28 @@ namespace CTRFramework.Sound
 
         public override void Read(BinaryReaderEx br)
         {
-            _magic1 = br.ReadByte();
+            flags = br.ReadByte();
             _volume = br.ReadByte();
             _freq = br.ReadUInt16();
             SampleID = br.ReadUInt16();
             _always0 = br.ReadInt16();
+
+            if (flags != 0 && flags != 1 && flags != 2 && flags != 4)
+            {
+                Helpers.Panic(this, PanicType.Info, $"instrument flag: {flags}");
+                Console.ReadKey();
+            }
         }
 
         public override void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.Write((byte)_magic1);
+            bw.Write((byte)flags);
             bw.Write((byte)_volume);
             bw.Write((short)_freq);
             bw.Write((ushort)SampleID);
             bw.Write((short)_always0);
         }
 
-        public override string ToString() => $"magic:{_magic1}\tvol:{_volume}\tfreq:{_freq}\tid:{SampleID}\tzero:{_always0}";
+        public override string ToString() => $"magic:{flags}\tvol:{_volume}\tfreq:{_freq}\tid:{SampleID}\tzero:{_always0}";
     }
 }
