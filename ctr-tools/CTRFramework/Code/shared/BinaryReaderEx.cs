@@ -217,7 +217,7 @@ namespace CTRFramework.Shared
         #region String helpers
 
         /// <summary>
-        /// Reads fixed sized array of char and converts to a string.
+        /// Reads fixed sized array of char and converts to a string
         /// </summary>
         /// <param name="num">Number of chars to read.</param>
         /// <returns></returns>
@@ -235,10 +235,8 @@ namespace CTRFramework.Shared
         /// <returns></returns>
         public string ReadStringNT(bool forceKatakana = false)
         {
-            List<char> chars = new List<char>();
-
+            var chars = new List<char>();
             int limit = 1024;
-
             char accent = '\0';
 
             do
@@ -308,7 +306,7 @@ namespace CTRFramework.Shared
         {
             int x = (int)BaseStream.Position;
             Jump(ptr);
-            string value = ReadStringFixed(16);
+            string value = ReadStringFixed(length);
             Jump(x);
 
             return value;
