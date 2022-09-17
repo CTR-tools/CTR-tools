@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ctrviewer", "ctrviewer\ctrv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bigtool", "cmd_tools\bigtool\bigtool.csproj", "{38C9A5A1-FC5A-4070-9F15-6F6340555B2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "howl", "cmd_tools\howl\howl.csproj", "{2AE0ECC5-4F60-4A9F-BAF2-C2B59B21E063}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "howl", "cmd_tools\howl\howl.csproj", "{2AE0ECC5-4F60-4A9F-BAF2-C2B59B21E063}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
