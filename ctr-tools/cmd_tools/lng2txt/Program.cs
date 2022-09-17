@@ -1,7 +1,5 @@
 ﻿using CTRFramework.Lang;
 using CTRFramework.Shared;
-using System;
-using System.IO;
 
 namespace lng2txt
 {
@@ -9,8 +7,6 @@ namespace lng2txt
     {
         static void Main(string[] args)
         {
-            LNG lng;
-
             Console.WriteLine(
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 $"CTR-Tools: lng2txt - {Meta.GetSignature()}",
@@ -32,47 +28,56 @@ namespace lng2txt
 
             foreach (string filename in args)
             {
-                Console.WriteLine($"Input file: {filename}");
-
-                if (File.Exists(filename))
+                if (!File.Exists(filename))
                 {
-                    string ext = Path.GetExtension(filename).ToLower();
+                    Console.WriteLine($"Missing file: {filename}");
+                    continue;
+                }
 
-                    try
-                    {
-                        switch (ext)
-                        {
-                            case ".lng":
-                                lng = LNG.FromFile(filename);
-                                lng.Export(Path.ChangeExtension(filename, "txt"), true);
-
-                                if (Path.GetFileNameWithoutExtension(filename).ToLower() == "ja")
-                                {
-                                    lng = LNG.FromFile(filename, true);
-                                    lng.Export(Path.ChangeExtension(filename, "katakana.txt"), true);
-                                }
-
-                                continue;
-
-                            case ".txt":
-                                lng = LNG.FromText(File.ReadAllLines(filename, System.Text.Encoding.Default), true);
-                                lng.Save(Path.ChangeExtension(filename, "lng"));
-                                continue;
-
-                            default:
-                                Console.WriteLine("Unsupported file.");
-                                continue;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error: {ex.Message}");
-                        continue;
-                    }
+                try
+                {
+                    ProcessFile(filename);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
+                    continue;
                 }
             }
 
             Console.WriteLine("Done.");
+        }
+
+        static void ProcessFile(string filename)
+        {
+            Console.WriteLine($"Input file: {filename}");
+
+            string fn = Path.GetFileName(filename);
+            string ext = Path.GetExtension(filename);
+
+            switch (ext.ToLower())
+            {
+                case ".lng":
+                    var lng = LNG.FromFile(filename);
+                    lng.Export(Path.ChangeExtension(filename, "txt"), true);
+
+                    if (fn.ToLower() == "ja.lng")
+                    {
+                        lng = LNG.FromFile(filename, true);
+                        lng.Export(Path.ChangeExtension(filename, "katakana.txt"));
+                    }
+
+                    break;
+
+                case ".txt":
+                    lng = LNG.FromText(File.ReadAllLines(filename), true);
+                    lng.Save(Path.ChangeExtension(filename, "lng"));
+                    break;
+
+                default:
+                    Console.WriteLine($"Unsupported file.");
+                    break;
+            }
         }
     }
 }
