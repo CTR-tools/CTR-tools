@@ -74,7 +74,6 @@
 1CCD3C44=en_kart_coco_hit
 1CECFDAD=de_kart_papu_hit
 1D2F1018=jap_dist_guitar_chord02
-1D2F1018=jap_dist_guitar_chord02
 1D75BB1E=temple_steelpan_hi
 1D7BB6C0=podium_ngin_steam
 1D8D1786=mines_harmonica_tune01
@@ -143,7 +142,6 @@
 35BD3022=intro_xylo
 3663EBE8=chara_pura_birds1
 366B5D78=jap_dist_guitar_chord01
-366B5D78=jap_dist_guitar_chord01
 36B4072A=podium_joe_sad
 36C75AB1=caves_pluck
 37844EBA=menu_confirm
@@ -205,7 +203,6 @@
 4D40F69E=pew_zap01
 4DBE8DF8=jingle_bells
 4E1E20A4=squash_out
-4E1E20A4=squash_out
 4E39EBBE=it_kart_crash_hit
 4EA0C361=chara_coco_buttons1
 4EDCCFB7=ne_kart_pinstripe_hit
@@ -260,7 +257,6 @@
 63360E77=kart_enginejet
 63D8A124=menu_intro_ctr
 63F0B2BF=jap_bass_guitar02
-63F0B2BF=jap_bass_guitar02
 64477D23=boss_door
 64B72659=oxide_door
 64B7D152=es_kart_tiny_hit
@@ -291,7 +287,6 @@
 70678E6A=it_kart_ntropy_hit
 70E47F9A=jap_vocoder_lead_high
 7157C387=podium_joe_woosh02
-7157C387=podium_joe_woosh02
 7195403B=minecart_roll
 72966130=en_kart_tiny_hit
 72B36899=podium_tiny_roar2
@@ -302,7 +297,6 @@
 744C50D5=jap_dist_guitar_chord03
 7489FA30=boulder_roll
 749899DB=mask_gone
-74A098CE=jap_bass_guitar03
 74A098CE=jap_bass_guitar03
 74AFAB4C=oxide_bass_drum
 7587BBF8=weapon_orb_loop
@@ -335,7 +329,6 @@
 853D3FF8=ne_kart_pinstripe_yes
 86BD4632=cortex_brass
 8769EF5F=seagull
-87FD6EDB=podium_joe_woosh01
 87FD6EDB=podium_joe_woosh01
 881BBE04=cutscenes_cocotyping2
 8866E1DF=podium_roo_step
@@ -413,7 +406,6 @@ A98B0738=es_kart_papu_hit
 A98FF4C3=canyon_tom04
 A9C8768D=skyway_some_perc02____
 AAB70375=pickup_wumpa_crate
-AB2EE288=en_kart_pura_yes
 AB2EE288=en_kart_pura_yes
 AB60D1A9=roo_bass_drum_reverb
 ABB6DCF7=letter_pickup
@@ -549,7 +541,6 @@ DE3F134D=en_kart_pura_hit
 DE50689B=intro_harp
 DE59C6FC=tambourine_
 DED4C993=es_kart_dingo_hit
-DEE11C50=podium_crash_step
 DEE11C50=podium_crash_step
 DF4A4E5B=ne_kart_cortex_hit
 DF576C00=box_intro_aku
