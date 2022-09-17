@@ -21,7 +21,7 @@
 12=jingle06
 
 # =========== EXTRA section ==============
-# names in this section are based XA leftover found in game data
+# names in this section are based on XA leftovers found in game data
 
 # Aku Aku hints
 

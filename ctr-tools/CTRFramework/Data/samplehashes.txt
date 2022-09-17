@@ -98,7 +98,7 @@
 24FB7565=xylo_high_distorted
 2569CD8C=coco_bass_drum
 256FC806=ja_kart_pinstripe_hit
-26617998=___
+26617998=chara_tiny_weights03_unused_
 26885512=string_ensemble
 26C1D264=mines_harmonica_tune02
 2723ACF1=ja_kart_coco_hit
@@ -254,7 +254,7 @@
 5FEF0879=intro_slide
 61AE2915=xylo_high
 62899BFB=kart_land
-63360E77=kart_enginejet
+63360E77=kart_turbo_full
 63D8A124=menu_intro_ctr
 63F0B2BF=jap_bass_guitar02
 64477D23=boss_door
@@ -458,7 +458,7 @@ B9CEB5DF=ja_kart_polar_hit
 B9D9615A=cutscenes_racing
 BA32D175=de_kart_oxide_yes
 BAA8ED91=ne_kart_crash_hit
-BB1FADB8=kart_turbo_success
+BB1FADB8=kart_turbo_mini
 BB3FD278=de_kart_cortex_hit
 BBC41935=en_kart_pen_hit
 BC9013EB=cortex_flute
