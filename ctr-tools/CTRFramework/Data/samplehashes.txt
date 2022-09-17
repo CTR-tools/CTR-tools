@@ -234,7 +234,7 @@
 5A7C9E09=cutscene_ship_terminal2
 5A80CF98=jap_guitar_slide_up
 5A9168BD=ja_kart_papu_yes
-5AB062AD=kart_turbo_fail
+5AB062AD=weapon_bomb_hit
 5ACBF021=podium_crash_sleep01
 5B0A0FE7=oxide_bass_muted01
 5BF655D0=fr_kart_coco_hit
@@ -275,7 +275,7 @@
 69F9E334=aku_xylo_low
 6A0DEB0C=chara_tiny_grunt1
 6A865C00=podium_papu_step
-6AECF0FA=fx_slider
+6AECF0FA=weapon_bomb_loop
 6B08E0CD=pipe_hiss
 6BDB77AE=weapon_rocket_hit
 6C24E59E=fr_kart_fake_hit
