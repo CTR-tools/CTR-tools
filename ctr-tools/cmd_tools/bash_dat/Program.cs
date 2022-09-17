@@ -102,7 +102,7 @@ namespace bash_dat
 
             try
             {
-                var filelist = Meta.LoadNumberedList("bash_filelist.txt");
+                var filelist = Helpers.LoadNumberedList(Meta.BashPath);
 
                 using (var hdr = new BinaryReaderEx(File.OpenRead(exename)))
                 {

@@ -43,7 +43,7 @@ namespace CTRTools.Controls
                 patchBox.Items.AddRange(Meta.GetPatchList().ToArray());
             }
 
-            Howl.samplenames = Meta.LoadNumberedList("samplenames.txt");
+            Howl.samplenames = Helpers.LoadNumberedList("samplenames.txt");
         }
 
         private void LoadCseq(string filename)

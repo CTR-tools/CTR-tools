@@ -10,11 +10,17 @@ namespace CTRFramework.Shared
     {
         public static Random Random = new Random();
 
-        public static float Normalize(float min, float max, float val)
+        public static float Normalize(float min, float max, float val) => (val - min) / (max - min);
+
+        //parses datetime format found in ctr lev files
+        public static DateTime ParseDate(string input)
         {
-            return (val - min) / (max - min);
+            DateTime result = DateTime.ParseExact(input.Replace("  ", " "), "ddd MMM d HH:mm:ss yyyy", CultureInfo.InvariantCulture);
+            Helpers.Panic("Helpers.ParseDate", PanicType.Debug, result.ToString());
+            return result;
         }
 
+        #region [MD5 helpers]
         public static string CalculateMD5(string filename)
         {
             using (var stream = File.OpenRead(filename))
@@ -31,7 +37,9 @@ namespace CTRFramework.Shared
                 return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
             }
         }
+        #endregion
 
+        #region [Filesystem helpers]
         //avoids excessive fragmentation
         public static void WriteToFile(string fileName, string content, System.Text.Encoding encoding = null)
         {
@@ -40,12 +48,12 @@ namespace CTRFramework.Shared
 
             CheckFolder(fileName);
 
-            using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
+            using (var stream = new FileStream(fileName, FileMode.OpenOrCreate))
             {
-                using (StreamWriter sw = new StreamWriter(fs, encoding))
+                using (var writer = new StreamWriter(stream, encoding))
                 {
-                    fs.SetLength(content.Length);
-                    sw.Write(content);
+                    stream.SetLength(content.Length);
+                    writer.Write(content);
                 }
             }
         }
@@ -54,18 +62,11 @@ namespace CTRFramework.Shared
         {
             CheckFolder(fileName);
 
-            using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
+            using (var stream = new FileStream(fileName, FileMode.OpenOrCreate))
             {
-                fs.SetLength(data.Length);
-                fs.Write(data, 0, data.Length);
+                stream.SetLength(data.Length);
+                stream.Write(data, 0, data.Length);
             }
-        }
-
-        public static DateTime ParseDate(string input)
-        {
-            DateTime result = DateTime.ParseExact(input.Replace("  ", " "), "ddd MMM d HH:mm:ss yyyy", CultureInfo.InvariantCulture);
-            Helpers.Panic("Helpers.ParseDate", PanicType.Debug, result.ToString());
-            return result;
         }
 
         /// <summary>
@@ -103,6 +104,9 @@ namespace CTRFramework.Shared
         //wrapper for path combine that also fixes path separator
         public static string PathCombine(params string[] path) => FixPathSeparator(Path.Combine(path));
 
+        #endregion
+
+        #region [Backup helpers]
         public static void BackupFile(string fileName)
         {
             string backupName = $"{fileName}.bkp";
@@ -120,6 +124,18 @@ namespace CTRFramework.Shared
                 File.Delete(fileName);
                 File.Move(backupName, fileName);
             }
+        }
+        #endregion
+
+        #region [Resource helpers]
+        /// <summary>
+        /// Retrieves array of lines from embedded resource.
+        /// </summary>
+        /// <param name="resource">Filename, typically from Meta helper class.</param>
+        /// <returns></returns>
+        public static string[] GetLinesFromResource(string resource)
+        {
+            return GetTextFromResource(resource).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
         }
 
         /// <summary>
@@ -142,16 +158,73 @@ namespace CTRFramework.Shared
             }
         }
 
-        /// <summary>
-        /// Retrieves array of lines from embedded resource.
-        /// </summary>
-        /// <param name="resource">Filename, typically from Meta helper class.</param>
-        /// <returns></returns>
-        public static string[] GetLinesFromResource(string resource)
+        //This is used for filenames mostly, loads list of "123=filename" as dictionary
+        public static Dictionary<int, string> LoadNumberedList(string resource)
         {
-            return GetTextFromResource(resource).Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            string[] lines = Helpers.GetLinesFromResource(resource);
+
+            var names = new Dictionary<int, string>();
+
+            foreach (string l in lines)
+            {
+                string line = l.Split('#')[0];
+
+                if (line.Trim() != "")
+                {
+                    string[] bb = line.Trim().Replace(" ", "").Split('=');
+
+                    int x = -1;
+                    Int32.TryParse(bb[0], out x);
+
+                    if (x == -1)
+                    {
+                        Console.WriteLine("List parsing error at: {0}", line);
+                        continue;
+                    }
+
+                    if (names.ContainsKey(x))
+                    {
+                        Helpers.Panic("Meta", PanicType.Error, $"duplicate entry {x}");
+                        continue;
+                    }
+
+                    names.Add(x, bb[1]);
+                }
+            }
+
+            return names;
         }
 
+        //This is used for samples, loads list of "XXXXXXXX=sample_name" as dictionary
+        public static Dictionary<string, string> LoadTagList(string resource)
+        {
+            string[] lines = Helpers.GetLinesFromResource(resource);
+
+            var names = new Dictionary<string, string>();
+
+            foreach (string l in lines)
+            {
+                string line = l.Split('#')[0];
+
+                if (line.Trim() != "")
+                {
+                    string[] bb = line.Trim().Replace(" ", "").Split('=');
+
+                    if (names.ContainsKey(bb[0]))
+                    {
+                        Helpers.Panic("Meta", PanicType.Error, $"duplicate entry {bb[0]}");
+                        continue;
+                    }
+
+                    names.Add(bb[0].Trim(), bb[1].Trim());
+                }
+            }
+
+            return names;
+        }
+        #endregion
+
+        #region [Subdivision helpers]
         public static List<Vertex> Subdivide(List<Vertex> vertices)
         {
             if (vertices.Count != 4)
@@ -207,5 +280,6 @@ namespace CTRFramework.Shared
                     ),
             };
         }
+        #endregion
     }
 }

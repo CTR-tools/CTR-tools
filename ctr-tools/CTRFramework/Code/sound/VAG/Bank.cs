@@ -71,8 +71,8 @@ namespace CTRFramework.Sound
 
         public static void ReadNames()
         {
-            banknames = Meta.LoadNumberedList("banknames.txt");
-            hashnames = Meta.LoadTagList("samplehashes.txt");
+            banknames = Helpers.LoadNumberedList("banknames.txt");
+            hashnames = Helpers.LoadTagList("samplehashes.txt");
         }
 
         #region [Constructors, factories]

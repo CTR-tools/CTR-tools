@@ -1,11 +1,6 @@
-﻿//using Newtonsoft.Json;
-//using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
 using System.Xml;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 using resources = CTRFramework.Properties.Resources;
 
 namespace CTRFramework.Shared
@@ -14,11 +9,10 @@ namespace CTRFramework.Shared
     {
         public static int SectorSize = 0x800;
 
-        #region Paths/filenames
+        #region [Paths/filenames]
         public static string BasePath = AppDomain.CurrentDomain.BaseDirectory;
         public static string UserPath = Helpers.PathCombine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CTRViewer");
         public static string SettingsFile = Helpers.PathCombine(UserPath, "settings.xml");
-        public const string JsonPath = "versions.json";
         public const string XmlPath = "versions.xml";
         public const string HowlPath = "howlnames.txt";
         public const string CseqPath = "cseq.json";
@@ -27,154 +21,23 @@ namespace CTRFramework.Shared
         public const string BankPath = "banknames.txt";
         public const string ModelsPath = "models";
         public const string BigFileName = "bigfile.big";
+        public const string BashPath = "bash_filelist.txt";
 
         public const string LinkDiscord = "https://discord.gg/56xm9Aj";
         public const string LinkGithub = "https://github.com/CTR-tools/CTR-tools";
         #endregion
-
-        //static JObject json;
-
-        public static void Load()
-        {
-            //json = JObject.Parse(Helpers.GetTextFromResource(JsonPath));
-        }
-
-        /*
-        public List<string> LoadList(string filename) => new List<string>(File.ReadAllLines(filename));
-
-        public static string Detect(string file, string list, int fc)
-        {
-            if (json == null) Load();
-
-            Console.Write("Calculating MD5... ");
-
-            string md5 = Helpers.CalculateMD5(file);
-            string res = "";
-
-            Console.WriteLine(md5);
-
-            JToken j = json[list][md5];
-            // string tag = "ntsc";
-
-            if (j != null)
-            {
-                res = j.Value<string>("list");
-
-                Console.WriteLine(
-                    String.Format("Detected file from {0}",
-                    j.Value<string>("comment")
-                    ));
-            }
-            else
-            {
-                Console.WriteLine("Unknown file.");
-
-                j = json["big_nums"][fc.ToString()];
-
-                if (j != null)
-                {
-                    res = j.ToString();
-
-                    Console.WriteLine(
-                        String.Format("{0} files in BIG. Assume: {1}",
-                        fc, res
-                        ));
-                }
-            }
-
-            if (res == "")
-                File.WriteAllText("unknown_md5.txt", md5);
-
-            Console.WriteLine("list tag = {0}", res);
-            return res;
-        }
-        */
-
-        public static Dictionary<int, string> GetBigList(string resource) => Meta.LoadNumberedList(resource);
-
-        public static Dictionary<int, string> LoadNumberedList(string resource)
-        {
-            string[] lines = Helpers.GetLinesFromResource(resource);
-
-            Dictionary<int, string> names = new Dictionary<int, string>();
-
-            foreach (string l in lines)
-            {
-                string line = l.Split('#')[0];
-
-                if (line.Trim() != "")
-                {
-                    string[] bb = line.Trim().Replace(" ", "").Split('=');
-
-                    int x = -1;
-                    Int32.TryParse(bb[0], out x);
-
-                    if (x == -1)
-                    {
-                        Console.WriteLine("List parsing error at: {0}", line);
-                        continue;
-                    }
-
-                    if (names.ContainsKey(x))
-                    {
-                        Helpers.Panic("Meta", PanicType.Error, $"duplicate entry {x}");
-                        continue;
-                    }
-
-                    names.Add(x, bb[1]);
-                }
-            }
-
-            return names;
-        }
-
-        public static Dictionary<string, string> LoadTagList(string resource)
-        {
-            string[] lines = Helpers.GetLinesFromResource(resource);
-
-            Dictionary<string, string> names = new Dictionary<string, string>();
-
-            foreach (string l in lines)
-            {
-                string line = l.Split('#')[0];
-
-                if (line.Trim() != "")
-                {
-                    string[] bb = line.Trim().Replace(" ", "").Split('=');
-
-                    if (names.ContainsKey(bb[0]))
-                    {
-                        Helpers.Panic("Meta", PanicType.Error, $"duplicate entry {bb[0]}");
-                        continue;
-                    }
-
-                    names.Add(bb[0].Trim(), bb[1].Trim());
-                }
-            }
-
-            return names;
-        }
 
         public static string GetVersion() => $"CTRFramework {resources.Version} ({resources.BuildDate.Split(',')[0]})";
 
         public static string GetSignature() => resources.signature;
 
 
-
         static XmlDocument midixml;
-
-        //public static JArray levels;
-        //public static JObject midi;
 
         public static bool LoadMidiJson()
         {
             try
             {
-                //JObject json = JObject.Parse(Helpers.GetTextFromResource(Meta.CseqPath));
-
-                //levels = (JArray)json["levels"];
-                //midi = (JObject)json["midi"];
-
                 midixml = new XmlDocument();
                 midixml.LoadXml(Helpers.GetTextFromResource(CseqXmlPath));
 
@@ -200,7 +63,8 @@ namespace CTRFramework.Shared
         public static MetaInst GetMetaInst(string song, string inst, int index)
         {
             if (midixml == null)
-                Meta.LoadMidiJson();
+                if (!Meta.LoadMidiJson())
+                    return new MetaInst();
 
             try
             {
@@ -212,10 +76,11 @@ namespace CTRFramework.Shared
                     return new MetaInst();
                 }
 
-                var insts = midixml.SelectNodes($"/midi/song[@title='{song}']/{inst}[{index+1}]");
+                var insts = midixml.SelectNodes($"/midi/song[@title='{song}']/{inst}[{index+1}]"); //looks like xpath numbering starts from 1?
 
                 if (insts.Count == 1)
                 {
+                    //this is better to implement via xml serialization later
                     var zzz = new MetaInst();
 
                     if (insts[0].Attributes["title"] != null)
@@ -232,19 +97,6 @@ namespace CTRFramework.Shared
 
                     return zzz;
                 }
-
-                /*
-                //really?
-                if (midi != null)
-                {
-                    if (midi[track] != null)
-                        if (midi[track][inst] != null)
-                            if (midi[track][inst][x] != null)
-                            {
-                                return JsonConvert.DeserializeObject<MetaInst>(midi[track][inst][x].ToString());
-                            }
-                }
-                */
             }
             catch (Exception ex)
             {
@@ -254,6 +106,7 @@ namespace CTRFramework.Shared
             return new MetaInst();
         }
 
+        //returns list of available songs in cseq.xml
         public static List<string> GetPatchList()
         {
             var list = new List<string>();

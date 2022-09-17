@@ -58,15 +58,9 @@ namespace CTRFramework.Sound
         {
         }
 
-        public Howl(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public Howl(BinaryReaderEx br) => Read(br);
 
-        public static Howl FromReader(BinaryReaderEx br)
-        {
-            return new Howl(br);
-        }
+        public static Howl FromReader(BinaryReaderEx br) => new Howl(br);
 
         public static Howl FromFile(string filename)
         {
@@ -97,8 +91,8 @@ namespace CTRFramework.Sound
 
                 Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.");
 
-                banknames = Meta.LoadNumberedList(el["banks"].InnerText);
-                samplenames = Meta.LoadNumberedList(el["samples"].InnerText);
+                banknames = Helpers.LoadNumberedList(el["banks"].InnerText);
+                samplenames = Helpers.LoadNumberedList(el["samples"].InnerText);
 
                 string[] lines = Helpers.GetLinesFromResource("howlnames.txt");
 

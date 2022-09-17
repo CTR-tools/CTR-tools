@@ -99,7 +99,7 @@ namespace CTRFramework.Big
                 {
                     Version = $"{el["name"].InnerText} [{el["region"].InnerText}]";
                     Helpers.Panic(this, PanicType.Info, $"{md5}\r\n{Version} detected.\r\nUsing {el["list"].InnerText}");
-                    names = Meta.GetBigList(el["list"].InnerText);
+                    names = Helpers.LoadNumberedList(el["list"].InnerText);
                     return;
                 }
             }
@@ -109,7 +109,7 @@ namespace CTRFramework.Big
                 if (TotalFiles == Int32.Parse(el["num"].InnerText))
                 {
                     Helpers.Panic(this, PanicType.Info, $"Using {el["list"].InnerText}");
-                    names = Meta.GetBigList(el["list"].InnerText);
+                    names = Helpers.LoadNumberedList(el["list"].InnerText);
                     return;
                 }
             }

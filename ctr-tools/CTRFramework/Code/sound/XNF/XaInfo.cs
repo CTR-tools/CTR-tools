@@ -102,23 +102,19 @@ namespace CTRFramework.Sound
 
             string list = "";
 
+            //move to versions xml
             if (Entries.Count == 427) list = "xa_usa_beta_sep.txt";
             if (Entries.Count == 414) list = "xa_usa_release.txt";
             if (Entries.Count == 358) list = "xa_pal_release.txt";
             if (Entries.Count == 364) list = "xa_jap_release.txt";
 
-            if (list != "")
-            {
-                Dictionary<int, string> xanames = Meta.LoadNumberedList(list);
+            if (list == "") return;
+            
+            var xanames = Helpers.LoadNumberedList(list);
 
-                for (int i = 0; i < Entries.Count; i++)
-                {
-                    if (xanames.ContainsKey(i))
-                    {
-                        Entries[i].Name = xanames[i];
-                    }
-                }
-            }
+            for (int i = 0; i < Entries.Count; i++)
+                if (xanames.ContainsKey(i))
+                    Entries[i].Name = xanames[i];
         }
 
         /// <summary>

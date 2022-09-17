@@ -75,10 +75,10 @@ namespace CTRFramework.Sound
 
             string cr = Path.GetFileNameWithoutExtension(fn) + "\r\n\r\n" + Properties.Resources.midi_copyright;
 
-            MidiEventCollection mc = new MidiEventCollection(1, TPQN);
+            var mc = new MidiEventCollection(1, TPQN);
 
             //this is a lazy fix for guitarpro5 bug, 1st track does not import there
-            List<MidiEvent> dummy = new List<MidiEvent>();
+            var dummy = new List<MidiEvent>();
             dummy.Add(new TextEvent(Path.GetFileNameWithoutExtension(fn), MetaEventType.SequenceTrackName, 0));
             dummy.Add(new TextEvent(cr, MetaEventType.Copyright, 0));
             dummy.Add(new TempoEvent(MPQN, 0));
@@ -101,7 +101,6 @@ namespace CTRFramework.Sound
 
                     //limit channel if overflow
                     if (availablechannel > 16) availablechannel = 16;
-
                 }
             }
 
