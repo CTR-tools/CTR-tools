@@ -35,7 +35,7 @@ namespace CTRFramework.Lang
 
             br.Jump(offset);
 
-            List<uint> offsets = br.ReadListUInt32(numStrings);
+            var offsets = br.ReadListUInt32(numStrings);
 
             foreach (uint u in offsets)
             {

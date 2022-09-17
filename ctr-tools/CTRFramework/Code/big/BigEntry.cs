@@ -32,16 +32,15 @@ namespace CTRFramework.Big
             Name = name != null ? name : path;
             Data = new byte[0];
 
-            if (File.Exists(path))
+            if (!File.Exists(path)) return;
+
+            try
             {
-                try
-                {
-                    Data = File.ReadAllBytes(path);
-                }
-                catch
-                {
-                    Helpers.Panic(this, PanicType.Info, $"Unable to access the file: {path}");
-                }
+                Data = File.ReadAllBytes(path);
+            }
+            catch
+            {
+                Helpers.Panic(this, PanicType.Info, $"Unable to access the file: {path}");
             }
         }
 
@@ -61,9 +60,6 @@ namespace CTRFramework.Big
             }
         }
 
-        public override string ToString()
-        {
-            return $"{Name} [{(Size / 1024) + 1} kb]";
-        }
+        public override string ToString() => $"{Name} [{(Size / 1024) + 1} kb]";
     }
 }

@@ -125,7 +125,7 @@ namespace CTRFramework.Big
         /// <param name="filename">Filename.</param>
         public void Save(string filename = Meta.BigFileName)
         {
-            Stopwatch sw = new Stopwatch();
+            var sw = new Stopwatch();
             sw.Start();
 
             Helpers.Panic(this, PanicType.Info, $"we'll need {TotalSize / 1024.0f / 1024.0f}MB for {Entries.Count} files:");

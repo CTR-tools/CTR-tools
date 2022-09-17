@@ -14,10 +14,7 @@ namespace CTRFramework.Big
         public int FileCursor = -1;
 
         private int totalFiles = 0;
-        public int TotalFiles
-        {
-            get => totalFiles;
-        }
+        public int TotalFiles => totalFiles;
 
         public int FileSize
         {
@@ -32,7 +29,7 @@ namespace CTRFramework.Big
 
         public string GetFilename()
         {
-            if (FileCursor != -1)
+            if (FileCursor > -1)
                 if (names.ContainsKey(FileCursor))
                     return names[FileCursor];
 
@@ -47,10 +44,7 @@ namespace CTRFramework.Big
             KnownFileCheck();
         }
 
-        public static BigFileReader FromFile(string filename)
-        {
-            return new BigFileReader(File.OpenRead(filename));
-        }
+        public static BigFileReader FromFile(string filename) => new BigFileReader(File.OpenRead(filename));
 
         /// <summary>
         /// Sanity check for CTR BIG format.
@@ -84,37 +78,39 @@ namespace CTRFramework.Big
         {
             Jump(0);
 
-            //Console.WriteLine(Meta.GetTextFromResource(Meta.XmlPath));
-            //Console.ReadKey();
-
-            XmlDocument doc = new XmlDocument();
+            var doc = new XmlDocument();
             doc.LoadXml(Helpers.GetTextFromResource(Meta.XmlPath));
 
-            var hash = MD5.Create().ComputeHash(BaseStream);
-            string md5 = BitConverter.ToString(hash).Replace("-", "");
+            //calc hash and look for matching entry
 
-            foreach (XmlElement el in doc.SelectNodes("/data/big/entry"))
+            var md5 = Helpers.CalculateMD5(BaseStream);
+            string xpath = $"/data/big/entry[@md5='{md5}']";
+            var node = doc.SelectSingleNode(xpath);
+
+            if (node != null)
             {
-                if (md5.ToLower() == el["md5"].InnerText.ToLower())
-                {
-                    Version = $"{el["name"].InnerText} [{el["region"].InnerText}]";
-                    Helpers.Panic(this, PanicType.Info, $"{md5}\r\n{Version} detected.\r\nUsing {el["list"].InnerText}");
-                    names = Helpers.LoadNumberedList(el["list"].InnerText);
-                    return;
-                }
+                string name = doc.SelectSingleNode($"{xpath}/name").InnerText;
+                string region = doc.SelectSingleNode($"{xpath}/region").InnerText;
+                string list = doc.SelectSingleNode($"{xpath}/list").InnerText;
+
+                Version = $"{name} [{region}]";
+                Helpers.Panic(this, PanicType.Info, $"{md5}\r\n{Version} detected.\r\nUsing {list}");
+                names = Helpers.LoadNumberedList(list);
+                return;
             }
 
-            foreach (XmlElement el in doc.SelectNodes("/data/filenums/entry"))
+            //no matches by hash, let's try number of files
+            xpath = $"/data/filenums/entry[@files='{TotalFiles}']";
+            node = doc.SelectSingleNode(xpath);
+
+            if (node != null)
             {
-                if (TotalFiles == Int32.Parse(el["num"].InnerText))
-                {
-                    Helpers.Panic(this, PanicType.Info, $"Using {el["list"].InnerText}");
-                    names = Helpers.LoadNumberedList(el["list"].InnerText);
-                    return;
-                }
+                Helpers.Panic(this, PanicType.Info, $"Unknown BIG file. {TotalFiles} files, using {node.Attributes["list"].Value}");
+                names = Helpers.LoadNumberedList(node.Attributes["list"].Value);
+                return;
             }
 
-            Helpers.Panic(this, PanicType.Info, "Unknown BIG file.");
+            Helpers.Panic(this, PanicType.Info, "Unknown BIG file. No matches found.");
         }
 
         /// <summary>

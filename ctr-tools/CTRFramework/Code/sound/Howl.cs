@@ -2,12 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
 using System.Xml;
-using System.Threading.Tasks;
 
 namespace CTRFramework.Sound
 {
@@ -114,67 +110,6 @@ namespace CTRFramework.Sound
             }
 
             Console.WriteLine("Unknown HOWL file.");
-        }
-
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
-        {
-            Console.WriteLine("Writing HOWL...");
-
-            bw.Write("HOWL".ToCharArray());
-            bw.Write((int)version);
-            bw.Seek(8);
-
-            bw.Write(SpuPtrTable.Count);
-            bw.Write(SampleTable.Count);
-            bw.Write(EngineTable.Count);
-
-            bw.Write(Banks.Count);
-            bw.Write(Songs.Count);
-
-            bw.Write(SpuPtrTable.Count * 4 + (SampleTable.Count + EngineTable.Count) * 8 + (Banks.Count + Songs.Count) * 2); //sampleDataSize
-
-            foreach (var value in SpuPtrTable)
-            {
-                bw.Write((short)0);
-                bw.Write(value);
-            }
-
-            foreach (var instrument in SampleTable)
-                instrument.Write(bw);
-
-            foreach (var instrument in EngineTable)
-                instrument.Write(bw);
-
-
-
-            int ptrs = (int)bw.BaseStream.Position;
-
-            bw.Seek(2 * (Banks.Count + Songs.Count));
-
-            bw.JumpNextSector();
-
-            List<uint> offsets = new List<uint>();
-
-            foreach (var bank in Banks)
-            {
-                offsets.Add((uint)bw.BaseStream.Position);
-                bank.Write(bw);
-                bw.JumpNextSector();
-            }
-
-            foreach (var song in Songs)
-            {
-                offsets.Add((uint)bw.BaseStream.Position);
-                song.Write(bw);
-                bw.JumpNextSector();
-            }
-
-            bw.Jump(ptrs);
-
-            foreach (var ptr in offsets)
-                bw.Write((short)(ptr / Meta.SectorSize));
-
-            Console.WriteLine("HOWL saved.");
         }
 
         public void Read(BinaryReaderEx br)
@@ -305,6 +240,77 @@ namespace CTRFramework.Sound
 s
             Helpers.WriteToFile(Helpers.PathCombine(Meta.BasePath, "test.txt"), sb.ToString());
             */
+        }
+
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        {
+            Console.WriteLine("Writing HOWL...");
+
+            bw.Write("HOWL".ToCharArray());
+            bw.Write((int)version);
+            bw.Seek(8);
+
+            bw.Write(SpuPtrTable.Count);
+            bw.Write(SampleTable.Count);
+            bw.Write(EngineTable.Count);
+
+            bw.Write(Banks.Count);
+            bw.Write(Songs.Count);
+
+            bw.Write(SpuPtrTable.Count * 4 + (SampleTable.Count + EngineTable.Count) * 8 + (Banks.Count + Songs.Count) * 2); //sampleDataSize
+
+            foreach (var value in SpuPtrTable)
+            {
+                bw.Write((short)0);
+                bw.Write(value);
+            }
+
+            foreach (var instrument in SampleTable)
+                instrument.Write(bw);
+
+            foreach (var instrument in EngineTable)
+                instrument.Write(bw);
+
+
+
+            int ptrs = (int)bw.BaseStream.Position;
+
+            bw.Seek(2 * (Banks.Count + Songs.Count));
+
+            bw.JumpNextSector();
+
+            List<uint> offsets = new List<uint>();
+
+            foreach (var bank in Banks)
+            {
+                offsets.Add((uint)bw.BaseStream.Position);
+                bank.Write(bw);
+                bw.JumpNextSector();
+            }
+
+            foreach (var song in Songs)
+            {
+                offsets.Add((uint)bw.BaseStream.Position);
+                song.Write(bw);
+                bw.JumpNextSector();
+            }
+
+            bw.Jump(ptrs);
+
+            foreach (var ptr in offsets)
+                bw.Write((short)(ptr / Meta.SectorSize));
+
+            Console.WriteLine("HOWL saved.");
+        }
+
+        public void Save(string filename)
+        {
+            Helpers.CheckFolder(Path.GetDirectoryName(filename));
+
+            using (var bw = new BinaryWriterEx(File.OpenWrite(filename)))
+            {
+                Write(bw);
+            }
         }
 
         public void ExportCSEQ(string path)
@@ -451,16 +457,6 @@ s
                     return sd.Frequency;
 
             return -1;
-        }
-
-        public void Save(string filename)
-        {
-            Helpers.CheckFolder(Path.GetDirectoryName(filename));
-
-            using (var bw = new BinaryWriterEx(File.OpenWrite(filename)))
-            {
-                Write(bw);
-            }
         }
 
         public override string ToString()
