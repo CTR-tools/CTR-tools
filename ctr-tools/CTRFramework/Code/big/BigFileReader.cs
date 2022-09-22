@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
 using System.Xml;
 
 namespace CTRFramework.Big
@@ -89,9 +88,9 @@ namespace CTRFramework.Big
 
             if (node != null)
             {
-                string name = doc.SelectSingleNode($"{xpath}/name").InnerText;
-                string region = doc.SelectSingleNode($"{xpath}/region").InnerText;
-                string list = doc.SelectSingleNode($"{xpath}/list").InnerText;
+                string name = node["name"]?.InnerText;
+                string region = node["region"]?.InnerText;
+                string list = node["list"]?.InnerText;
 
                 Version = $"{name} [{region}]";
                 Helpers.Panic(this, PanicType.Info, $"{md5}\r\n{Version} detected.\r\nUsing {list}");

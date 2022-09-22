@@ -154,7 +154,7 @@ namespace CTRFramework.Lang
         /// <param name="filename">BinaryWriterEx object.</param>
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            List<string> dEntries = new List<string>();
+            var dEntries = new List<string>();
 
             foreach (var entry in Entries)
                 if (entry != null)
@@ -170,7 +170,7 @@ namespace CTRFramework.Lang
             {
                 Helpers.Panic(this, PanicType.Debug, entry);
                 list.Add(entry, (int)bw.BaseStream.Position);
-                bw.Write(Encoding.Default.GetBytes(entry.Replace("|", "" + (char)0xD)));
+                bw.Write(Encoding.Default.GetBytes(entry.Replace('|', (char)0xD)));
                 bw.Write((byte)0);
             }
 

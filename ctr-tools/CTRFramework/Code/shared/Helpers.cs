@@ -1,7 +1,9 @@
-﻿using System;
+﻿using CTRFramework.Properties;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Reflection;
 
 namespace CTRFramework.Shared
@@ -127,6 +129,22 @@ namespace CTRFramework.Shared
         }
         #endregion
 
+
+        public static Stream GetStreamFromZip(string resource)
+        {
+            var thisAssembly = Assembly.GetExecutingAssembly();
+            var stream = thisAssembly.GetManifestResourceStream($"CTRFramework.Data.Data.zip");
+
+            var zip = new ZipArchive(stream, ZipArchiveMode.Read);
+
+            foreach (var entry in zip.Entries)
+                if (entry.Name == resource)
+                    return entry.Open();
+
+            return null;
+        }
+
+
         #region [Resource helpers]
         /// <summary>
         /// Retrieves array of lines from embedded resource.
@@ -145,13 +163,13 @@ namespace CTRFramework.Shared
         /// <returns></returns>
         public static string GetTextFromResource(string resource)
         {
-            var thisAssembly = Assembly.GetExecutingAssembly();
-            using (var stream = thisAssembly.GetManifestResourceStream($"CTRFramework.Data.{resource}"))
+            //var thisAssembly = Assembly.GetExecutingAssembly();
+            //using (var stream = thisAssembly.GetManifestResourceStream($"CTRFramework.Data.{resource}"))
             {
-                if (stream == null)
-                    return "";
+                //if (stream == null)
+                //     return "";
 
-                using (var reader = new StreamReader(stream))
+                using (var reader = new StreamReader(GetStreamFromZip(resource)))
                 {
                     return reader.ReadToEnd();
                 }

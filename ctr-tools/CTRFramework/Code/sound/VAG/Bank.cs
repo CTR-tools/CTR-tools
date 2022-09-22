@@ -64,7 +64,6 @@ namespace CTRFramework.Sound
         public static Dictionary<int, string> banknames = new Dictionary<int, string>();
 
         public Dictionary<int, Sample> samples = new Dictionary<int, Sample>();
-
         public Dictionary<int, Sample> Entries = new Dictionary<int, Sample>();
 
         public bool Contains(int key) => samples.ContainsKey(key);
@@ -158,7 +157,7 @@ namespace CTRFramework.Sound
             foreach (var sample in samples)
                 bw.Write((short)sample.Key);
 
-            bw.Jump((int)((bw.BaseStream.Position + 2047) >> 11 << 11));
+            bw.Jump((int)((bw.BaseStream.Position + Meta.SectorSize - 1) >> 11 << 11));
 
             foreach (var sample in samples)
                 bw.Write(sample.Value.Data);

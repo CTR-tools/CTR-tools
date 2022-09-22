@@ -173,6 +173,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
@@ -182,30 +184,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <EmbeddedResource Include="Data\Data.zip" />
     <None Include="Data\readme.md" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Data\versions.json" />
+    <None Include="Data\versions.json" />
     <None Include="ThirdParty\Kaitai\README.md" />
     <None Include="ThirdParty\PlyImporter\LICENSE" />
     <None Include="ThirdParty\PlyImporter\README.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ThirdParty\Kaitai\LICENSE" />
-    <EmbeddedResource Include="Data\big_usa_beta_aug.txt" />
-    <EmbeddedResource Include="Data\big_usa_demo.txt" />
-    <EmbeddedResource Include="Data\big_pal_release.txt" />
-    <EmbeddedResource Include="Data\big_usa_beta_sep.txt" />
-    <EmbeddedResource Include="Data\big_usa_release.txt" />
-    <EmbeddedResource Include="Data\howlnames.txt" />
-    <EmbeddedResource Include="Data\samplenames.txt" />
-    <EmbeddedResource Include="Data\versions.xml" />
-    <EmbeddedResource Include="Data\banknames.txt" />
-    <EmbeddedResource Include="Data\big_usa_beta_14th.txt" />
-    <EmbeddedResource Include="Data\xa_usa_release.txt" />
-    <EmbeddedResource Include="Data\xa_usa_beta_sep.txt" />
-    <EmbeddedResource Include="Data\xa_jap_release.txt" />
-    <EmbeddedResource Include="Data\xa_pal_release.txt" />
-    <EmbeddedResource Include="Data\bash_filelist.txt" />
+    <None Include="Data\big_usa_beta_aug.txt" />
+    <None Include="Data\big_usa_demo.txt" />
+    <None Include="Data\big_pal_release.txt" />
+    <None Include="Data\big_usa_beta_sep.txt" />
+    <None Include="Data\big_usa_release.txt" />
+    <None Include="Data\howlnames.txt" />
+    <None Include="Data\samplenames.txt" />
+    <None Include="Data\versions.xml" />
+    <None Include="Data\banknames.txt" />
+    <None Include="Data\big_usa_beta_14th.txt" />
+    <None Include="Data\xa_usa_release.txt" />
+    <None Include="Data\xa_usa_beta_sep.txt" />
+    <None Include="Data\xa_jap_release.txt" />
+    <None Include="Data\xa_pal_release.txt" />
+    <None Include="Data\bash_filelist.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -214,20 +217,21 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\samplehashes.txt" />
+    <None Include="Data\samplehashes.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\banknames_jap.txt" />
+    <None Include="Data\banknames_jap.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\banknames_pal.txt" />
+    <None Include="Data\banknames_pal.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\cseq.xml" />
+    <None Include="Data\cseq.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>echo %25date%25 %25time%25 &gt; "$(ProjectDir)\Properties\BuildDate.txt"</PreBuildEvent>
+    <PreBuildEvent>$(ProjectDir)\Data\zip_data.bat
+echo %25date%25 %25time%25 &gt; "$(ProjectDir)\Properties\BuildDate.txt"</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>
