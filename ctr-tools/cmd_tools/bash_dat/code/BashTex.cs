@@ -1,6 +1,5 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
-using System;
 
 namespace bash_dat
 {

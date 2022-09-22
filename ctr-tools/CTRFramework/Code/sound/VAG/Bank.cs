@@ -3,7 +3,6 @@ using Force.Crc32;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -142,9 +141,12 @@ namespace CTRFramework.Sound
             }
             while (loops < sampCnt);
 
-            Parallel.ForEach(samples.Values, new ParallelOptions() {
-                MaxDegreeOfParallelism = 32 }, 
-                sample => {
+            Parallel.ForEach(samples.Values, new ParallelOptions()
+            {
+                MaxDegreeOfParallelism = 32
+            },
+                sample =>
+                {
                     sample.GetHash();
                     sample.Name = hashnames.ContainsKey(sample.HashString) ? hashnames[sample.HashString] : "default_name";
                 });
@@ -209,7 +211,8 @@ namespace CTRFramework.Sound
             string pathSfxVag = Helpers.PathCombine(path, "vag");
             Helpers.CheckFolder(pathSfxVag);
 
-            Parallel.ForEach(samples, new ParallelOptions() { MaxDegreeOfParallelism = 32 }, sample => {
+            Parallel.ForEach(samples, new ParallelOptions() { MaxDegreeOfParallelism = 32 }, sample =>
+            {
                 Export(sample.Key, Howl.GetFreq(sample.Key), path, pathSfxVag, path2, $"{sample.Key.ToString("0000")}_{sample.Key.ToString("X4")}");
             });
 

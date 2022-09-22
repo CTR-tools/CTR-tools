@@ -1,6 +1,5 @@
 ﻿using CTRFramework.Sound;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 
@@ -43,14 +42,16 @@ namespace CTRTools.Controls
 
             foreach (var bank in howl.Banks)
             {
-                var bankNode = new TreeNode() {
+                var bankNode = new TreeNode()
+                {
                     Text = bank.Name + $" [{bank.samples.Count}]",
                     Tag = bank
                 };
 
                 foreach (var sample in bank.samples.Values)
                 {
-                    var sampleNode = new TreeNode() {
+                    var sampleNode = new TreeNode()
+                    {
                         Text = $"{sample.Name} ({sample.ID}) [{sample.HashString}]",
                         Tag = sample
                     };
@@ -98,7 +99,7 @@ namespace CTRTools.Controls
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex < 0) return;
-            
+
             propertyGrid1.SelectedObject = Howl.SampleTable[listBox1.SelectedIndex];
         }
 

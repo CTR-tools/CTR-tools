@@ -76,7 +76,7 @@ namespace CTRFramework.Shared
                     return new MetaInst();
                 }
 
-                var insts = midixml.SelectNodes($"/midi/song[@title='{song}']/{inst}[{index+1}]"); //looks like xpath numbering starts from 1?
+                var insts = midixml.SelectNodes($"/midi/song[@title='{song}']/{inst}[{index + 1}]"); //looks like xpath numbering starts from 1?
 
                 if (insts.Count == 1)
                 {
@@ -102,7 +102,7 @@ namespace CTRFramework.Shared
             {
                 Helpers.Panic("Meta", PanicType.Error, $"Failed to load meta instrument: {song} {inst} {index}\r\n{ex.Message}");
             }
-                
+
             return new MetaInst();
         }
 

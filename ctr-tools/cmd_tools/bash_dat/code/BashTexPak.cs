@@ -1,9 +1,6 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 
 namespace bash_dat
 {

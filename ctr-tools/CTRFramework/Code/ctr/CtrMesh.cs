@@ -3,7 +3,6 @@ using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;

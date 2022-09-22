@@ -1,5 +1,5 @@
-﻿using CTRFramework.Vram;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
+using CTRFramework.Vram;
 using System;
 using System.Drawing;
 using System.IO;

@@ -5,9 +5,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using ThreeDeeBear.Models.Ply;
-using System.Numerics;
-using System.Windows.Forms;
-using System.Net.Mail;
 
 namespace CTRFramework
 {

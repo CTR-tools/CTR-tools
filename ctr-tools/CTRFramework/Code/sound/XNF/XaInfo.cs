@@ -109,7 +109,7 @@ namespace CTRFramework.Sound
             if (Entries.Count == 364) list = "xa_jap_release.txt";
 
             if (list == "") return;
-            
+
             var xanames = Helpers.LoadNumberedList(list);
 
             for (int i = 0; i < Entries.Count; i++)

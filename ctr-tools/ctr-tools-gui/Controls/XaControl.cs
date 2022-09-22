@@ -1,5 +1,5 @@
-﻿using CTRFramework.Sound;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
+using CTRFramework.Sound;
 using NAudio.Wave;
 using System;
 using System.IO;

@@ -1,7 +1,5 @@
 ﻿using CTRFramework.Big;
 using CTRFramework.Shared;
-using System;
-using System.IO;
 
 namespace bigtool
 {
