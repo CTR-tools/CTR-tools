@@ -128,7 +128,7 @@ namespace CTRFramework.Shared
         }
         #endregion
 
-
+        #region [Resource helpers]
         public static Stream GetStreamFromZip(string resource)
         {
             var thisAssembly = Assembly.GetExecutingAssembly();
@@ -143,8 +143,6 @@ namespace CTRFramework.Shared
             return null;
         }
 
-
-        #region [Resource helpers]
         /// <summary>
         /// Retrieves array of lines from embedded resource.
         /// </summary>

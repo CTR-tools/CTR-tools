@@ -2,6 +2,7 @@
 using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text;
 
@@ -16,10 +17,7 @@ namespace CTRFramework
         {
         }
 
-        public ModelPack(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public ModelPack(BinaryReaderEx br) => Read(br);
 
         public static ModelPack FromFile(string filename)
         {
@@ -29,10 +27,7 @@ namespace CTRFramework
             }
         }
 
-        public static ModelPack FromReader(BinaryReaderEx br)
-        {
-            return new ModelPack(br);
-        }
+        public static ModelPack FromReader(BinaryReaderEx br) => new ModelPack(br);
 
         public void Read(BinaryReaderEx br)
         {
@@ -98,6 +93,8 @@ namespace CTRFramework
         {
             var tex = new Dictionary<string, TextureLayout>();
 
+            //loop through all icons
+
             foreach (var icon in iconPack.Icons.Values)
             {
                 if (icon.tl == null)
@@ -107,12 +104,20 @@ namespace CTRFramework
                     continue;
                 }
 
-                if (!tex.ContainsKey(icon.tl.Tag))
-                    tex.Add(icon.tl.Tag, icon.tl);
+                tex[icon.tl.Tag] = icon.tl;
             }
 
-            //add model textures here, icons only will work for now
-            //should implement similiar func for model that will loop through every lod here
+            //loop through all models
+
+            foreach (var model in Models)
+                foreach (var mesh in model.Entries)
+                    foreach (var tl in mesh.tl)
+                    {
+                        if (tl == null)
+                            continue;
+
+                        tex[tl.Tag] = tl;
+                    }
 
             return tex;
         }
@@ -133,7 +138,7 @@ namespace CTRFramework
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.AppendLine($"Models: {Models.Count}");
 
