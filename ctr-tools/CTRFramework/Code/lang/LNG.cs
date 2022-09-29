@@ -40,8 +40,21 @@ namespace CTRFramework.Lang
             foreach (uint u in offsets)
             {
                 br.Jump(u);
-                Entries.Add(br.ReadStringNT(ForceKatakana).Replace((char)0x0D, '|'));
-                // | is considered new line in the entry. used for long strings.
+
+                string entry = br.ReadStringNT(ForceKatakana);
+                entry = entry.Replace((char)0x0D, '|');
+                //you probably can use it with other chars as well?
+                //probably better use U+0303, but it's only Ñ in PAL
+                entry = entry.Replace((char)0x03 + "n", "ñ");
+                entry = entry.Replace((char)0x03 + "N", "Ñ");
+                entry = entry.Replace('#', '¡');
+                entry = entry.Replace('$', '¿');
+
+                Entries.Add(entry);
+
+                // PAL: # is ¡
+                // PAL: $ is ¿
+                // ctr-tools: | is considered new line in the entry. used for long strings.
             }
 
             for (int i = 0; i < Entries.Count; i++)
@@ -76,6 +89,7 @@ namespace CTRFramework.Lang
             //trim every string to avoid extra spaces.
             for (int i = 0; i < lng.Entries.Count; i++)
             {
+                // use ; for comments, if needed
                 lng.Entries[i] = lng.Entries[i].Split(';')[0].Trim();
                 if (lng.Entries[i] == "null")
                     lng.Entries[i] = null;
@@ -170,7 +184,15 @@ namespace CTRFramework.Lang
             {
                 Helpers.Panic(this, PanicType.Debug, entry);
                 list.Add(entry, (int)bw.BaseStream.Position);
-                bw.Write(Encoding.Default.GetBytes(entry.Replace('|', (char)0xD)));
+
+                string result = entry;
+                result = result.Replace('|', (char)0xD);
+                result = result.Replace('¡', '#');
+                result = result.Replace('¿', '$');
+                result = result.Replace("ñ", (char)0x03 + "n");
+                result = result.Replace("Ñ", (char)0x03 + "N");
+
+                bw.Write(Encoding.Default.GetBytes(result));
                 bw.Write((byte)0);
             }
 

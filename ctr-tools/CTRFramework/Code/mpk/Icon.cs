@@ -15,15 +15,9 @@ namespace CTRFramework
         {
         }
 
-        public Icon(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public Icon(BinaryReaderEx br) => Read(br);
 
-        public static Icon FromReader(BinaryReaderEx br)
-        {
-            return new Icon(br);
-        }
+        public static Icon FromReader(BinaryReaderEx br) => new Icon(br);
 
         public bool Equals(Icon other)
         {
@@ -51,14 +45,13 @@ namespace CTRFramework
 
         public void Save(string path, Tim tim)
         {
-            Helpers.CheckFolder(path);
-
             if (tim == null)
             {
                 Helpers.Panic(this, PanicType.Error, "Passed null vram.");
                 return;
             }
 
+            Helpers.CheckFolder(path);
             tim.GetTexture(tl).Save(Helpers.PathCombine(path, $"{Name}_{tl.Tag}.png"), ImageFormat.Png);
         }
     }
