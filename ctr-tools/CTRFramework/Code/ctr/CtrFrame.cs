@@ -14,15 +14,9 @@ namespace CTRFramework
         {
         }
 
-        public CtrFrame(BinaryReaderEx br, int numVerts)
-        {
-            Read(br, numVerts);
-        }
+        public CtrFrame(BinaryReaderEx br, int numVerts) => Read(br, numVerts);
 
-        public static CtrFrame FromReader(BinaryReaderEx br, int numVerts)
-        {
-            return new CtrFrame(br, numVerts);
-        }
+        public static CtrFrame FromReader(BinaryReaderEx br, int numVerts) => new CtrFrame(br, numVerts);
 
         public void Read(BinaryReaderEx br, int numVerts)
         {

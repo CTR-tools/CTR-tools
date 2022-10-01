@@ -46,6 +46,13 @@ namespace CTRFramework
             PatchTable = cnt.PatchTable;
         }
 
+        /// <summary>
+        /// Reads CtrModel object using binary reader.
+        /// </summary>
+        /// <param name="br">BinaryReaderEx object.</param>
+        /// <returns>CtrModel object.</returns>
+        public static CtrModel FromReader(BinaryReaderEx br, bool usePatchCon = false) => new CtrModel(br, usePatchCon);
+
         public CtrModel(BinaryReaderEx br, bool usePatchCon)
         {
             if (usePatchCon)
@@ -106,10 +113,7 @@ namespace CTRFramework
         /// Saves CTR model to file using internal model name.
         /// </summary>
         /// <param name="path">Path to save.</param>
-        public void Save(string path)
-        {
-            Save(path, $"{name}.ctr");
-        }
+        public void Save(string path) => Save(path, $"{name}.ctr");
 
         /// <summary>
         /// Saves CTR model to specific file.
@@ -216,18 +220,6 @@ namespace CTRFramework
             }
         }
 
-
-        /// <summary>
-        /// Reads CtrModel object using binary reader.
-        /// </summary>
-        /// <param name="br">BinaryReaderEx object.</param>
-        /// <returns>CtrModel object.</returns>
-        public static CtrModel FromReader(BinaryReaderEx br, bool usePatchCon = false)
-        {
-            return new CtrModel(br, usePatchCon);
-        }
-
-
         /// <summary>
         /// Creates CtrModel object using list of OBJ files.
         /// </summary>
@@ -250,10 +242,7 @@ namespace CTRFramework
         /// </summary>
         /// <param name="obj">OBJ object.</param>
         /// <returns></returns>
-        public static CtrModel FromObj(OBJ obj)
-        {
-            return FromObj(new List<OBJ> { obj });
-        }
+        public static CtrModel FromObj(OBJ obj) => FromObj(new List<OBJ> { obj });
 
         /// <summary>
         /// Creates CtrModel object from PLY model.
@@ -262,9 +251,8 @@ namespace CTRFramework
         /// <returns>CtrModel object.</returns>
         public static CtrModel FromPly(string filename)
         {
-            PlyResult ply = PlyHandler.FromFile(filename);
-
-            CtrModel ctr = new CtrModel();
+            var ply = PlyHandler.FromFile(filename);
+            var ctr = new CtrModel();
             ctr.name = Path.GetFileNameWithoutExtension(filename);
             ctr.Entries.Add(CtrMesh.FromPly(ctr.Name, ply));
 

@@ -132,7 +132,7 @@ namespace CTRFramework.Big
 
             byte[] final_big = new byte[TotalSize];
 
-            using (var bw = new BinaryWriterEx(new MemoryStream(final_big)))
+            using (var bw = new BinaryWriterEx(new MemoryStream(final_big, 0, TotalSize)))
             {
                 bw.Write((int)0);
                 bw.Write(Entries.Count);

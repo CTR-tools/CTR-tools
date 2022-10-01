@@ -83,8 +83,6 @@ namespace CTRFramework.Shared
                 Directory.CreateDirectory(path);
         }
 
-
-        //might move to helpers
         //scans folder for given filename, matches in uppercase, returns first file found or nothing
         //i can hardly imagine someone keeping multiple dat files with different casing on linux, but it's linux
         public static string FindFirstFile(string directory, string filename, string filter = "*")

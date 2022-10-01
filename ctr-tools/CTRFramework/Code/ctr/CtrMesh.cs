@@ -36,13 +36,7 @@ namespace CTRFramework
         public int cmdNum = 0x40;
         //public int vrenderMode = 0x1C;
 
-        public bool IsAnimated
-        {
-            get
-            {
-                return numAnims > 0;
-            }
-        }
+        public bool IsAnimated => numAnims > 0;
 
         #region [Component model]
         [Browsable(true), DisplayName("LOD distance"), Description(""), Category("CTR Mesh")]
@@ -63,7 +57,7 @@ namespace CTRFramework
         //private int maxTex = 0;
         //private int maxClut = 0;
 
-        List<CtrAnim> anims = new List<CtrAnim>();
+        public List<CtrAnim> anims = new List<CtrAnim>();
 
         public List<CtrDraw> drawList = new List<CtrDraw>();
         //public List<Vector3b> vtx = new List<Vector3b>();
@@ -75,25 +69,18 @@ namespace CTRFramework
 
         public byte[] trtire16 = new byte[] { 0x00, 0xD8, 0x00, 0x3F, 0x1F, 0xD8, 0x05, 0x00, 0x00, 0xF7, 0x1F, 0xF7 };
 
+        public bool isTextured => ptrTex == ptrClut;
 
-        public bool isTextured
-        {
-            get => ptrTex == ptrClut;
-        }
-
+        #region [Constuctors, factories]
         public CtrMesh()
         {
         }
 
-        public CtrMesh(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public CtrMesh(BinaryReaderEx br) => Read(br);
 
-        public static CtrMesh FromReader(BinaryReaderEx br)
-        {
-            return new CtrMesh(br);
-        }
+        public static CtrMesh FromReader(BinaryReaderEx br) => new CtrMesh(br);
+
+        #endregion
 
         /// <summary>
         /// Reads CTR model using BinaryReaderEx.
@@ -164,11 +151,10 @@ namespace CTRFramework
             TextureLayout curtl;
 
             //define temporary arrays
-            Vector4b[] clr = new Vector4b[4];       //color buffer
-            Vector3s[] crd = new Vector3s[4];       //face buffer
-            TextureLayout[] tlb = new TextureLayout[4];       //face buffer
-
-            Vector3s[] stack = new Vector3s[256];   //vertex buffer
+            var tempColor = new Vector4b[4];    //color buffer
+            var tempCoords = new Vector3s[4];   //face buffer
+            var tempTex = new TextureLayout[4]; //face buffer
+            var stack = new Vector3s[256];      //vertex buffer
 
             int maxv = 0;
             int maxc = 0;
@@ -255,7 +241,7 @@ namespace CTRFramework
             foreach (var v in frame.Vertices)
                 Helpers.Panic(this, PanicType.Debug, v.ToString(VecFormat.Hex));
 
-            List<Vector3s> vfixed = new List<Vector3s>();
+            var vfixed = new List<Vector3s>();
 
             foreach (var v in frame.Vertices)
                 vfixed.Add(new Vector3s(v.X, v.Y, v.Z));
@@ -298,28 +284,28 @@ namespace CTRFramework
                 }
 
                 //push new vertex from stack
-                crd[0] = crd[1];
-                crd[1] = crd[2];
-                crd[2] = crd[3];
-                crd[3] = stack[d.stackIndex];
+                tempCoords[0] = tempCoords[1];
+                tempCoords[1] = tempCoords[2];
+                tempCoords[2] = tempCoords[3];
+                tempCoords[3] = stack[d.stackIndex];
 
                 //push new color
-                clr[0] = clr[1];
-                clr[1] = clr[2];
-                clr[2] = clr[3];
-                clr[3] = cols[d.colorIndex];
+                tempColor[0] = tempColor[1];
+                tempColor[1] = tempColor[2];
+                tempColor[2] = tempColor[3];
+                tempColor[3] = cols[d.colorIndex];
 
 
-                tlb[0] = tlb[1];
-                tlb[1] = tlb[2];
-                tlb[2] = tlb[3];
-                tlb[3] = (d.texIndex == 0 ? null : tl[d.texIndex - 1]);
+                tempTex[0] = tempTex[1];
+                tempTex[1] = tempTex[2];
+                tempTex[2] = tempTex[3];
+                tempTex[3] = (d.texIndex == 0 ? null : tl[d.texIndex - 1]);
 
 
                 if (d.flags.HasFlag(CtrDrawFlags.l))
                 {
-                    crd[1] = crd[0];
-                    clr[1] = clr[0];
+                    tempCoords[1] = tempCoords[0];
+                    tempColor[1] = tempColor[0];
                 }
 
 
@@ -336,8 +322,8 @@ namespace CTRFramework
                     for (int z = 3 - 1; z >= 0; z--)
                     {
                         Vertex v = new Vertex();
-                        v.Position = new Vector3(crd[1 + z].X, crd[z + 1].Y, crd[z + 1].Z);
-                        v.Color = clr[1 + z];
+                        v.Position = new Vector3(tempCoords[1 + z].X, tempCoords[z + 1].Y, tempCoords[z + 1].Z);
+                        v.Color = tempColor[1 + z];
                         v.MorphColor = v.Color;
 
                         if (d.texIndex != 0)
@@ -368,7 +354,7 @@ namespace CTRFramework
 
         public List<string> GetDistinctTags()
         {
-            List<string> dist = new List<string>();
+            var dist = new List<string>();
 
             foreach (var t in tl)
             {
@@ -476,7 +462,7 @@ namespace CTRFramework
 
             //mesh.tl.Add(new TextureLayout());
 
-            List<Vector4b> cc = new List<Vector4b>();
+            var cc = new List<Vector4b>();
 
             foreach (var c in colors)
             {
@@ -491,8 +477,8 @@ namespace CTRFramework
             colors = cc;
 
             //get distinct values from input lists
-            List<Vector3f> dVerts = new List<Vector3f>();
-            List<Vector4b> dColors = new List<Vector4b>();
+            var dVerts = new List<Vector3f>();
+            var dColors = new List<Vector4b>();
 
             foreach (var v in vertices)
             {
@@ -508,8 +494,8 @@ namespace CTRFramework
 
 
             //recalculate indices for distinct arrays
-            List<Vector3i> vfaces = new List<Vector3i>();
-            List<Vector3i> cfaces = new List<Vector3i>();
+            var vfaces = new List<Vector3i>();
+            var cfaces = new List<Vector3i>();
 
             if (dVerts.Count != vertices.Count)
             {
@@ -581,7 +567,7 @@ namespace CTRFramework
 
             foreach (var v in dVerts)
             {
-                Vector3b vv = new Vector3b(
+                var vv = new Vector3b(
                    (byte)(v.X / bb2.maxf.X * 255),
                    (byte)(v.Z / bb2.maxf.Z * 255),
                    (byte)(v.Y / bb2.maxf.Y * 255)
@@ -605,7 +591,7 @@ namespace CTRFramework
 
 
             //create new vertex array and loop through all faces
-            List<Vector3b> newlist = new List<Vector3b>();
+            var newlist = new List<Vector3b>();
 
             for (int i = 0; i < faces.Count; i++)
             {
@@ -669,10 +655,7 @@ namespace CTRFramework
         /// <param name="name">Model name.</param>
         /// <param name="obj">OBJ object.</param>
         /// <returns>CtrHeader object.</returns>
-        public static CtrMesh FromObj(string name, OBJ obj)
-        {
-            return FromPly(name, obj.Result);
-        }
+        public static CtrMesh FromObj(string name, OBJ obj) => FromPly(name, obj.Result);
 
         public void ExportPly(string filename)
         {
@@ -799,7 +782,7 @@ namespace CTRFramework
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.AppendLine($"\tMesh: {Name}");
 
