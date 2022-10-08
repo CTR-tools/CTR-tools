@@ -32,6 +32,7 @@ namespace CTRFramework.Big
             Name = name != null ? name : path;
             Data = new byte[0];
 
+            //the logic is that if file doesnt exist, it still creates a valid dummy entry for bigfile.
             if (!File.Exists(path)) return;
 
             try
@@ -44,14 +45,21 @@ namespace CTRFramework.Big
             }
         }
 
+        /// <summary>
+        /// Saves entry data as a separate file. Does not create empty files.
+        /// </summary>
+        /// <param name="path"></param>
         public void Save(string path)
         {
-            Helpers.CheckFolder(path);
-
             if (Data.Length > 0)
                 Helpers.WriteToFile(Helpers.PathCombine(path, Name), Data);
         }
 
+        /// <summary>
+        /// Generic method to parse entry data as a CTR specific class. 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T ParseAs<T>() where T : IRead, new()
         {
             using (var br = new BinaryReaderEx(new MemoryStream(Data)))
