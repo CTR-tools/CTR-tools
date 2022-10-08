@@ -4,6 +4,21 @@ using System.Collections.Generic;
 
 namespace CTRFramework
 {
+    [Flags]
+    public enum VisDataFlags
+    {
+        None = 0,
+        Leaf = 1 << 0,      // defines if entry is leaf or branch, other bits assumed to only be used 1 at a time (? check)
+        Water = 1 << 1,     // renders quads node as water
+        Unk2 = 1 << 2,      // ?? caps on cove bridge
+        Subdiv4x1 = 1 << 3, // reduces 4x4 subdivision to 4x1
+        Subdiv4x2 = 1 << 4, // reduces 4x4 subdivision to 4x2
+        Unk5 = 1 << 5,      // additive blended?
+        Hidden = 1 << 6,    // doesn't render child quads
+        Unk7 = 1 << 7,      // ??
+        All = -1
+    }
+
     public class VisData : IReadWrite
     {
         public static readonly int SizeOf = 0x20;
@@ -24,8 +39,8 @@ namespace CTRFramework
         public uint unk1;           //assumed to be 0
 
         //if leaf
-        public uint reserved;       //assumed to be 0
-        public uint ptrUnkData;     //data goes right after visdata, relatively low amounts (20-30) or 0 links, seems to control trigger scripts somehow, can't shatter crates if 0
+        public uint reserved;           //assumed to be 0
+        public uint ptrInstanceNodes;   //pointer to the array of nodes with a zero byte terminator
         public uint numQuadBlock;
         public uint ptrQuadBlock;
 
@@ -35,15 +50,9 @@ namespace CTRFramework
         {
         }
 
-        public VisData(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public VisData(BinaryReaderEx br) => Read(br);
 
-        public static VisData FromReader(BinaryReaderEx br)
-        {
-            return new VisData(br);
-        }
+        public static VisData FromReader(BinaryReaderEx br) => new VisData(br);
 
         public static int[] counter = new int[8];
 
@@ -60,6 +69,9 @@ namespace CTRFramework
 
             if (!IsLeaf && flag != VisDataFlags.None)
                 Helpers.Panic(this, PanicType.Assume, $"branches assumed to have no flags, yet: {((int)flag).ToString("X8")}");
+
+            if (flag.HasFlag(VisDataFlags.Subdiv4x1) && flag.HasFlag(VisDataFlags.Subdiv4x2))
+                Helpers.Panic(this, PanicType.Assume, $"nodes not supposed to use both subdiv flags at the same time???");
 
             if (flag.HasFlag(VisDataFlags.Leaf)) counter[0]++;
             if (flag.HasFlag(VisDataFlags.Water)) counter[1]++;
@@ -103,7 +115,7 @@ namespace CTRFramework
             else
             {
                 reserved = br.ReadUInt32();
-                ptrUnkData = br.ReadUInt32();
+                ptrInstanceNodes = br.ReadUInt32();
                 numQuadBlock = br.ReadUInt32();
                 ptrQuadBlock = br.ReadUInt32();
 
@@ -137,7 +149,7 @@ namespace CTRFramework
             else
             {
                 bw.Write(reserved);
-                bw.Write(ptrUnkData);
+                bw.Write(ptrInstanceNodes);
                 bw.Write(numQuadBlock);
                 bw.Write(ptrQuadBlock);
             }

@@ -61,6 +61,8 @@ namespace ctrviewer
         public static Vector3 TimeOfDay = new Vector3(2f);
         List<Kart> karts = new List<Kart>();
 
+
+
         //meh
         public static int currentflag = 1;
 
@@ -300,8 +302,11 @@ namespace ctrviewer
 
             SwitchDisplayMode(graphics);
 
+
+
             base.Initialize();
         }
+
 
 
         public bool IsChristmas => (DateTime.Now.Month == 12 && DateTime.Now.Day >= 20) || (DateTime.Now.Month == 1 && DateTime.Now.Day <= 7);
@@ -863,7 +868,7 @@ namespace ctrviewer
                             );
 
                 //put all instanced models
-                foreach (var ph in s.pickups)
+                foreach (var ph in s.Instances)
                 {
                     eng.instanced.Add(new InstancedModel(
                         (ph.ModelName == "warppad" ? "beam" : ph.ModelName),
@@ -925,7 +930,15 @@ namespace ctrviewer
                 if (s.visdata.Count > 0)
                     BspPopulate(s.visdata[0], s, 0);
 
-                //GameConsole.Write(s.Info());
+                //add instance boxes
+                foreach (var node in s.instvisdata)
+                {
+                    eng.bbox.Add(
+                        new WireBox(
+                            DataConverter.ToVector3(node.bbox.Min),
+                            DataConverter.ToVector3(node.bbox.Max),
+                            Color.Green, 1 / 100f));
+                }
             }
 
             loadingStatus = "updating effects...";

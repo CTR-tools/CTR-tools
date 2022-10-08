@@ -1,6 +1,7 @@
 # CTRFramework data
 This folder contains various data, used by the code. It is stored in XML or numbered list custom format (kind of like INI).
-These files are added as embedded resources to CTRFramework.dll. Refer to Helpers and Meta classes (GetTextFromResource, GetTextFromResource, LoadNumberedList, etc.)
+These files are compressed to zip archive, then the archive is added as an embedded resource to CTRFramework.dll.
+Refer to Helpers class resource helpers region - GetStreamFromZip, GetLinesFromResource, GetTextFromResource, LoadNumberedList, LoadTagList, etc.
 
 # Numbered list format
 Every entry in this such should be defined as [decimal number]=[string without spaces] (i.e 249=levels\canyon\level.dat)

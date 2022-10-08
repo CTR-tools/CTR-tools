@@ -1,12 +1,15 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace CTRFramework
 {
-    public class PickupHeader : IReadWrite
+    public class CtrInstance : IReadWrite
     {
+        //instance should hold a pointer to model class, they're separate now
+
         #region Component model
         public string Name
         {
@@ -49,15 +52,9 @@ namespace CTRFramework
 
         public string ModelName;
 
-        public PickupHeader(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public CtrInstance(BinaryReaderEx br) => Read(br);
 
-        public static PickupHeader FromReader(BinaryReaderEx br)
-        {
-            return new PickupHeader(br);
-        }
+        public static CtrInstance FromReader(BinaryReaderEx br) => new CtrInstance(br);
 
         public void Read(BinaryReaderEx br)
         {
@@ -85,9 +82,9 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.Write(System.Text.Encoding.ASCII.GetBytes(name));
-            for (int i = 0; i < 16 - name.Length; i++) bw.Write((byte)0);
-
+            int pos = (int)bw.BaseStream.Position;
+            bw.Write(name.ToCharArray().Take(16).ToArray());
+            bw.Jump(pos + 16);
             bw.Write(ptrModel, patchTable);
 
             bw.WriteVector3sPadded(scale, 1 / 4096f / 16f);

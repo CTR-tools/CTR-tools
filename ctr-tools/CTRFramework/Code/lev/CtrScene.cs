@@ -23,9 +23,10 @@ namespace CTRFramework
         public List<Vertex> verts = new List<Vertex>();
         public List<VertexAnim> vertanims = new List<VertexAnim>();
         public List<QuadBlock> quads = new List<QuadBlock>();
-        public List<PickupHeader> pickups = new List<PickupHeader>();
-        public List<VisData> visdata = new List<VisData>();
         public List<CtrModel> Models = new List<CtrModel>();
+        public List<CtrInstance> Instances = new List<CtrInstance>();
+        public List<VisData> visdata = new List<VisData>();
+        public List<VisData> instvisdata = new List<VisData>();
         public SkyBox skybox;
         public Nav nav;
         public SpawnGroup spawnGroups;
@@ -184,6 +185,35 @@ namespace CTRFramework
                 }
             }
 
+            //read all instance boxes
+            foreach (var node in visdata)
+            {
+                if (!node.IsLeaf) continue;
+
+                if (node.ptrInstanceNodes == 0) continue;
+
+                Helpers.Panic(this, PanicType.Info, $"hello: {node.ptrInstanceNodes.ToString("X8")}");
+
+                br.Jump(node.ptrInstanceNodes);
+
+                instvisdata.Add(VisData.FromReader(br));
+
+                int terminator = -1;
+
+                do
+                {
+                    terminator = br.ReadInt32();
+
+                    if (terminator != 0)
+                    {
+                        br.Seek(-4);
+                        instvisdata.Add(VisData.FromReader(br));
+                    }
+                }
+                while (terminator != 0);
+            }
+
+
             //assign anim color target to vertex
             foreach (var va in vertanims)
             {
@@ -220,7 +250,7 @@ namespace CTRFramework
                 br.Jump(header.ptrInstancesPtr.Address + 4 * i);
                 br.Jump(br.ReadUInt32());
 
-                pickups.Add(PickupHeader.FromReader(br));
+                Instances.Add(CtrInstance.FromReader(br));
             }
 
 
@@ -739,7 +769,7 @@ namespace CTRFramework
             //write instances
             header.ptrInstances.Address = (UIntPtr)bw.BaseStream.Position;
 
-            foreach (var pickup in pickups)
+            foreach (var pickup in Instances)
                 pickup.Write(bw, patchTable);
 
             //reserve space for model pointers
@@ -797,7 +827,7 @@ namespace CTRFramework
             verts.Clear();
             vertanims.Clear();
             quads.Clear();
-            pickups.Clear();
+            Instances.Clear();
             visdata.Clear();
             Models.Clear();
             skybox = null;

@@ -37,8 +37,8 @@ namespace CTRTools.Controls
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             if (scn != null)
-                if (scn.pickups.Count > 0)
-                    propertyGrid1.SelectedObject = scn.pickups[trackBar1.Value];
+                if (scn.Instances.Count > 0)
+                    propertyGrid1.SelectedObject = scn.Instances[trackBar1.Value];
         }
 
         string path = "";
@@ -53,10 +53,10 @@ namespace CTRTools.Controls
 
                 propertyGrid1.SelectedObject = null;
 
-                if (scn.pickups.Count > 0)
+                if (scn.Instances.Count > 0)
                 {
-                    propertyGrid1.SelectedObject = scn.pickups[0];
-                    trackBar1.Maximum = scn.pickups.Count - 1;
+                    propertyGrid1.SelectedObject = scn.Instances[0];
+                    trackBar1.Maximum = scn.Instances.Count - 1;
                 }
 
                 vertexArrayControl1.VertexArray = scn.verts;
@@ -71,7 +71,7 @@ namespace CTRTools.Controls
         {
             if (scn != null)
             {
-                foreach (PickupHeader ph in scn.pickups)
+                foreach (CtrInstance ph in scn.Instances)
                 {
                     ph.Pose.Move(new Vector3(0, (float)numericUpDown1.Value / 100f, 0));
                 }
@@ -274,7 +274,7 @@ namespace CTRTools.Controls
 
                 bw.Jump(scn.header.ptrInstances.Address + 4);
 
-                foreach (PickupHeader ph in scn.pickups)
+                foreach (CtrInstance ph in scn.Instances)
                     ph.Write(bw);
 
                 bw.Jump(scn.mesh.ptrVertices + 4);
@@ -491,7 +491,7 @@ namespace CTRTools.Controls
                 vertex.Position *= scale;
             }
 
-            foreach (var pickup in scn.pickups)
+            foreach (var pickup in scn.Instances)
             {
                 pickup.Pose.Position *= scale;
                 pickup.Scale *= scale;

@@ -86,6 +86,15 @@ namespace CTRFramework.Lang
             LNG lng = new LNG();
             lng.Entries = lines.ToList();
 
+            foreach (var str in lng.Entries.ToList())
+            {
+                if (str.Contains('{') || str.Contains('}'))
+                    lng.Entries.Remove(str);
+
+                if (str.Trim() == ";") 
+                    lng.Entries.Remove(str);
+            }
+
             //trim every string to avoid extra spaces.
             for (int i = 0; i < lng.Entries.Count; i++)
             {
@@ -140,7 +149,7 @@ namespace CTRFramework.Lang
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             for (int i = 0; i < Entries.Count - 1; i++)
                 sb.AppendLine(Entries[i] == null ? "null" : Entries[i]);
