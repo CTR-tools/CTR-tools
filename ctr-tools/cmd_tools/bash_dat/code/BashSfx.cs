@@ -5,19 +5,13 @@ namespace bash_dat
 {
     public class BashSfx : IRead
     {
-        public byte[] VB;
-        public byte[] VH;
+        public byte[] VB = new byte[0];
+        public byte[] VH = new byte[0];
         public List<byte[]> SEQ = new List<byte[]>();
 
-        public BashSfx(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public BashSfx(BinaryReaderEx br) => Read(br);
 
-        public static BashSfx FromReader(BinaryReaderEx br)
-        {
-            return new BashSfx(br);
-        }
+        public static BashSfx FromReader(BinaryReaderEx br) => new BashSfx(br);
 
         public static BashSfx FromFile(string path)
         {
@@ -38,7 +32,7 @@ namespace bash_dat
 
             int ptrVB = br.ReadInt32();
             int ptrVH = br.ReadInt32();
-            List<int> ptrSEQ = br.ReadListInt32(numSeq);
+            var ptrSEQ = br.ReadListInt32(numSeq);
             ptrSEQ.Add((int)br.BaseStream.Length);
 
             br.Jump(ptrVB);

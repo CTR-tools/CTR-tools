@@ -57,7 +57,7 @@ namespace CTRTools.Controls
                 if (Reader.FileSize == 0)
                     continue;
 
-                string[] s = Reader.GetFilename().Split('\\');
+                string[] s = Reader.Filename.Split('\\');
 
                 TreeNode curnode = tn;
 
@@ -259,7 +259,7 @@ namespace CTRTools.Controls
                 return;
 
             _reader.FileCursor = (int)(sender as TreeView).SelectedNode.Tag;
-            sfd.FileName = Path.GetFileName(_reader.GetFilename());
+            sfd.FileName = Path.GetFileName(_reader.Filename);
 
             if (sfd.ShowDialog() == DialogResult.OK)
                 Helpers.WriteToFile(sfd.FileName, _reader.ReadEntry().Data);

@@ -91,7 +91,7 @@ namespace CTRFramework.Lang
                 if (str.Contains('{') || str.Contains('}'))
                     lng.Entries.Remove(str);
 
-                if (str.Trim() == ";") 
+                if (str.Trim() == ";")
                     lng.Entries.Remove(str);
             }
 
@@ -110,7 +110,7 @@ namespace CTRFramework.Lang
 
                 if (File.Exists(swapfile))
                 {
-                    CharSwap swap = new CharSwap(swapfile);
+                    var swap = new CharSwap(swapfile);
 
                     for (int i = 0; i < lng.Entries.Count; i++)
                         lng.Entries[i] = swap.Parse(lng.Entries[i], SwapMode.ToEnglish);

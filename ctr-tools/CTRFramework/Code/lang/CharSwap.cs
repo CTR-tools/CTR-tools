@@ -31,7 +31,7 @@ namespace CTRFramework.Lang
 
         public string Parse(string text, SwapMode swapmode)
         {
-            char[] target = text.ToArray();
+            char[] target = text.ToUpper().ToArray();
 
             for (int i = 0; i < target.Length; i++)
             {

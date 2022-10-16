@@ -69,6 +69,13 @@ namespace CTRFramework.Shared
 
         #endregion
 
+        public void Pad(uint pad = 4)
+        {
+            if (BaseStream.Position % pad != 0)
+            {
+                BaseStream.Position += pad - (BaseStream.Position % pad);
+            }
+        }
 
         public int FromTimeDelta(byte[] value)
         {

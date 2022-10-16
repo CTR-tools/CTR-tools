@@ -19,15 +19,9 @@ namespace CTRFramework.Shared
         {
         }
 
-        public static RespawnPoint FromReader(BinaryReaderEx br)
-        {
-            return new RespawnPoint(br);
-        }
+        public static RespawnPoint FromReader(BinaryReaderEx br) => new RespawnPoint(br);
 
-        public RespawnPoint(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public RespawnPoint(BinaryReaderEx br) => Read(br);
 
         public void Read(BinaryReaderEx br)
         {

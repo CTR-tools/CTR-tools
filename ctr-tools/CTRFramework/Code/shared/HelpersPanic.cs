@@ -22,7 +22,7 @@ namespace CTRFramework.Shared
         Warning = 1 << 1,   //used to warn about unexpected code execution, i.e missing enum in switch case
         Info = 1 << 2,      //general info, messages
         Debug = 1 << 3,     //debug output
-        Assume = 1 << 4,     //used for format assumptions or sanity checks
+        Assume = 1 << 4,    //used for format assumptions or sanity checks
         Measure = 1 << 5    //used for time measurements, so you can only leave this on and check the results
     }
 

@@ -26,13 +26,16 @@ namespace CTRFramework.Big
 
         Dictionary<int, string> names = new Dictionary<int, string>();
 
-        public string GetFilename()
+        public string Filename
         {
-            if (FileCursor > -1)
-                if (names.ContainsKey(FileCursor))
-                    return names[FileCursor];
+            get
+            {
+                if (FileCursor > -1)
+                    if (names.ContainsKey(FileCursor))
+                        return names[FileCursor];
 
-            return $"file_{FileCursor.ToString("0000")}.bin";
+                return $"file_{FileCursor.ToString("0000")}.bin";
+            }
         }
 
         private int fileDefPtr => 8 + FileCursor * 8;
@@ -148,7 +151,7 @@ namespace CTRFramework.Big
             return new BigEntry()
             {
                 Index = FileCursor,
-                Name = GetFilename(),
+                Name = Filename,
                 Offset = _ptr,
                 Data = ReadBytes(_size)
             };

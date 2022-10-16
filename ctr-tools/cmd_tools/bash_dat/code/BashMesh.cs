@@ -19,10 +19,7 @@ namespace bash_dat
 
         public List<Vector3> Vertices = new List<Vector3>();
 
-        public BashMesh(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public BashMesh(BinaryReaderEx br) => Read(br);
 
         public static BashMesh FromReader(BinaryReaderEx br) => new BashMesh(br);
 
@@ -61,7 +58,7 @@ namespace bash_dat
 
         public string ToObj()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (var v in Vertices)
                 sb.AppendLine($"v {v.X} {-v.Y} {-v.Z}");

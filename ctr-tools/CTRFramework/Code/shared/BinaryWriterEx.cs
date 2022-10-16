@@ -17,6 +17,14 @@ namespace CTRFramework.Shared
         {
         }
 
+        public void Pad(uint pad = 4)
+        {
+            if (BaseStream.Position % pad != 0)
+            {
+                BaseStream.Position += pad - (BaseStream.Position % pad);
+            }
+        }
+
         public void Jump(UIntPtr x)
         {
             Jump(x.ToUInt32());

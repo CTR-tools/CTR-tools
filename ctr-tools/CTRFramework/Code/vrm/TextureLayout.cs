@@ -126,10 +126,7 @@ namespace CTRFramework.Vram
         {
         }
 
-        public TextureLayout(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public TextureLayout(BinaryReaderEx br) => Read(br);
 
         public static TextureLayout FromReader(BinaryReaderEx br, bool skipcheck = false)
         {
@@ -172,10 +169,7 @@ namespace CTRFramework.Vram
                 Helpers.Panic(this, PanicType.Assume, $"rest = {rest}");
 
             if (packedPageData != buf)
-            {
                 Helpers.Panic(this, PanicType.Assume, $"mismatch! {buf} {packedPageData}");
-                //Console.ReadKey();
-            }
 
             //        private ushort packedPageData => (ushort)(PageX & PageY << 4 & (byte)blendingMode << 5 & (byte)bpp << 7);
 
@@ -216,7 +210,7 @@ namespace CTRFramework.Vram
         //this aint actually ever used for obj export...
         public string ToObj(int numVerts = 4)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             //this is to avoid negative UV and make it clamp friendly
             int[] inds = new int[4] { 0, 1, 2, 3 };
