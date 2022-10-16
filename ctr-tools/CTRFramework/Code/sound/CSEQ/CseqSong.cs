@@ -8,29 +8,61 @@ namespace CTRFramework.Sound
 {
     public class CseqSong : IReadWrite
     {
-        public int BPM;
-        public int TPQN;
+        public string Name = "Song";
+
+        public override string ToString() => Name;
+
+        public byte unk0 = 0; //is it part of this struct?
+
+        private int BPM = 0;
+        private int TPQN = 0;
+
+        public int BeatsPerMinute
+        {
+            get
+            {
+                return BPM;
+            }
+            set
+            {
+                BPM = value;
+            }
+        }
+
+        public int TicksPerQuarterNote
+        {
+            get
+            {
+                return TPQN;
+            }
+            set
+            {
+                TPQN = value;
+            }
+        }
+
         public int MPQN => (int)(60000000.0f / (float)BPM);
 
         public List<CSeqTrack> Tracks = new List<CSeqTrack>();
+
+        public byte NumTracks => (byte)Tracks.Count;
+
+        #region [Constructors, factories]
 
         public CseqSong()
         {
         }
 
-        public CseqSong(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public CseqSong(BinaryReaderEx br) => Read(br);
 
-        public static CseqSong FromReader(BinaryReaderEx br)
-        {
-            return new CseqSong(br);
-        }
+        public static CseqSong FromReader(BinaryReaderEx br) => new CseqSong(br);
+
+        #endregion
 
         //reads CSEQ from given binaryreader
         public void Read(BinaryReaderEx br)
         {
+            unk0 = br.ReadByte();
             int trackNum = br.ReadByte();
             BPM = br.ReadInt16();
             TPQN = br.ReadInt16();
@@ -39,8 +71,10 @@ namespace CTRFramework.Sound
             short[] seqOffsets = br.ReadArrayInt16(trackNum);
 
             //padding i guess?
-            if (trackNum % 2 == 0)
-                br.ReadInt16();
+            //if (trackNum % 2 == 0)
+            //    br.ReadInt16();
+
+            br.Pad();
 
             //save current position to read tracks
             int trackData = (int)br.Position;
@@ -56,6 +90,9 @@ namespace CTRFramework.Sound
 
                 Tracks[i].Index = i;
             }
+
+            if (NumTracks != trackNum)
+                Helpers.Panic(this, PanicType.Warning, "NumTracks != trackNum, this is weird");
         }
 
         public void ExportMIDI(string fn, Cseq seq, bool hubFilter = false, int hubIndex = 0)
@@ -126,6 +163,7 @@ namespace CTRFramework.Sound
 
             long songStart = bw.BaseStream.Position;
 
+            bw.Write((byte)0); //some counter, but always 0?
             bw.Write((byte)Tracks.Count);
             bw.Write((short)BPM);
             bw.Write((short)TPQN);
@@ -133,11 +171,12 @@ namespace CTRFramework.Sound
             long offsetsarraypos = bw.BaseStream.Position;
 
             bw.Seek(Tracks.Count * 2);
+            bw.Pad();
 
-            if (Tracks.Count % 2 == 0)
-                bw.Write((short)0);
+            //if (Tracks.Count % 2 == 0)
+            //    bw.Write((short)0);
 
-            List<long> offsets = new List<long>();
+            var offsets = new List<long>();
             long ptrTracks = bw.BaseStream.Position;
 
             foreach (var track in Tracks)
@@ -145,6 +184,8 @@ namespace CTRFramework.Sound
                 offsets.Add(bw.BaseStream.Position - ptrTracks);
                 track.Write(bw);
             }
+
+            bw.Pad();
 
             long songEnd = bw.BaseStream.Position;
 

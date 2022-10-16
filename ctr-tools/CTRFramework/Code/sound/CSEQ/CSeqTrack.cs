@@ -19,24 +19,20 @@ namespace CTRFramework.Sound
 
         public List<CseqEvent> cseqEventCollection = new List<CseqEvent>();
 
+        #region [Constructors, factories]
         public CSeqTrack()
         {
         }
 
-        public CSeqTrack(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public CSeqTrack(BinaryReaderEx br) => Read(br);
 
-        public static CSeqTrack FromReader(BinaryReaderEx br)
-        {
-            return new CSeqTrack(br);
-        }
+        public static CSeqTrack FromReader(BinaryReaderEx br) => new CSeqTrack(br);
+        #endregion
 
-        public void Import(string filename)
+        public void Import(string filename, int trackNum = 1)
         {
-            MidiFile midi = new MidiFile(filename);
-            FromMidiEventList(midi.Events.GetTrackEvents(1).ToList());
+            var midi = new MidiFile(filename);
+            FromMidiEventList(midi.Events.GetTrackEvents(trackNum).ToList());
         }
 
         public void Read(BinaryReaderEx br)
@@ -46,9 +42,9 @@ namespace CTRFramework.Sound
             //trackNum = num;
             //address = br.HexPos();
 
-            int trackType = br.ReadInt16();
+            ushort trackType = br.ReadUInt16();
 
-            if (trackType != 0 && trackType != 1)
+            if (trackType > 0)
                 Helpers.Panic(this, PanicType.Warning, "track type value not boolean at " + br.HexPos());
 
             if (trackType == 1)
@@ -56,7 +52,7 @@ namespace CTRFramework.Sound
 
             do
             {
-                CseqEvent cmd = CseqEvent.FromReader(br);
+                var cmd = CseqEvent.FromReader(br);
 
                 if (cmd.eventType == CseqEventType.ChangePatch)
                     instrument = cmd.pitch;
@@ -75,13 +71,31 @@ namespace CTRFramework.Sound
             cseqEventCollection.Clear();
 
             foreach (var evt in events)
-                cseqEventCollection.Add(CseqEvent.FromMidiEvent(evt));
+            {
+                var newevent = CseqEvent.FromMidiEvent(evt);
+
+                if (newevent != null)
+                    cseqEventCollection.Add(newevent);
+            }
+
+            for (int i = 1; i < cseqEventCollection.Count; i++)
+            {
+                cseqEventCollection[i].wait = cseqEventCollection[i].absoluteTime - cseqEventCollection[i - 1].absoluteTime;
+            }
+
+            foreach (var evt in events)
+            {
+                if (evt.Channel == 10)
+                {
+                    isDrumTrack = true;
+                    break;
+                }
+            }
         }
 
         public List<MidiEvent> ToMidiEventList(int MPQN, int channel, Cseq seq)
         {
-            List<MidiEvent> me = new List<MidiEvent>();
-            //MidiEvent x;
+            var me = new List<MidiEvent>();
 
             int absTime = 0;
 
@@ -113,16 +127,18 @@ namespace CTRFramework.Sound
 
             foreach (var cseqEvent in cseqEventCollection)
                 cseqEvent.Write(bw);
+
+            bw.Pad();
         }
 
         public string ListCommands()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             //sb.Append(address + "\r\n");
 
-            foreach (CseqEvent c in cseqEventCollection)
-                sb.Append(c.ToString());
+            foreach (var c in cseqEventCollection)
+                sb.AppendLine(c.ToString());
 
             return sb.ToString();
         }

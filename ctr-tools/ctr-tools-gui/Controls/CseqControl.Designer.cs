@@ -57,6 +57,7 @@ namespace CTRTools.Controls
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tutorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button5 = new System.Windows.Forms.Button();
             this.patchBox = new System.Windows.Forms.ComboBox();
             this.trackBox = new System.Windows.Forms.ListBox();
             this.sequenceBox = new System.Windows.Forms.ListBox();
@@ -306,7 +307,7 @@ namespace CTRTools.Controls
             // tutorialToolStripMenuItem
             // 
             this.tutorialToolStripMenuItem.Name = "tutorialToolStripMenuItem";
-            this.tutorialToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.tutorialToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.tutorialToolStripMenuItem.Text = "Tutorial";
             this.tutorialToolStripMenuItem.Click += new System.EventHandler(this.tutorialToolStripMenuItem_Click);
             // 
@@ -314,6 +315,7 @@ namespace CTRTools.Controls
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.button5);
             this.groupBox1.Controls.Add(this.patchBox);
             this.groupBox1.Controls.Add(this.trackBox);
             this.groupBox1.Controls.Add(this.sequenceBox);
@@ -324,6 +326,16 @@ namespace CTRTools.Controls
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "SEQ Info";
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(71, 170);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 6;
+            this.button5.Text = "Remove all";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // patchBox
             // 
@@ -627,6 +639,7 @@ namespace CTRTools.Controls
         private ToolStripMenuItem importMIDIToolStripMenuItem;
         private ToolStripMenuItem saveAsToolStripMenuItem;
         private ToolStripMenuItem setSamplePathToolStripMenuItem;
+        private Button button5;
     }
 }
 

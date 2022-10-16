@@ -2,6 +2,7 @@
 using NAudio.Midi;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace CTRFramework.Sound
 {
@@ -93,7 +94,7 @@ namespace CTRFramework.Sound
 
         public List<MidiEvent> ToMidiEvent(int absTime, int channel, Cseq seq, CSeqTrack ct)
         {
-            List<MidiEvent> events = new List<MidiEvent>();
+            var events = new List<MidiEvent>();
             //TrackPatch tp = new TrackPatch();
 
             absTime += wait;
@@ -128,8 +129,9 @@ namespace CTRFramework.Sound
                         {
                             p += (byte)seq.samplesReverb[Cseq.ActiveInstrument].metaInst.Pitch;
                         }
-                        catch //(Exception ex)
+                        catch (Exception ex)
                         {
+                            Helpers.Panic(this, PanicType.Error, ex.Message);
                             //System.Windows.Forms.MessageBox.Show("" + seq.samplesReverb.Count + " " + p);
                         }
                     }
@@ -159,7 +161,7 @@ namespace CTRFramework.Sound
 
         public static CseqEvent FromMidiEvent(MidiEvent midi)
         {
-            CseqEvent cmd = new CseqEvent();
+            var cmd = new CseqEvent();
             cmd.absoluteTime = (int)midi.AbsoluteTime;
 
             switch (midi.CommandCode)
@@ -174,16 +176,7 @@ namespace CTRFramework.Sound
                             throw new Exception("note too large!");
 
                         cmd.pitch = (byte)x.NoteNumber;
-
-                        if (x.Velocity > 127)
-                        {
-                            cmd.velocity = 127;
-                        }
-                        else
-                        {
-                            cmd.velocity = (byte)x.Velocity;
-                        }
-
+                        cmd.velocity = x.Velocity > 127 ? (byte)127 : (byte)x.Velocity;
                         cmd.wait = x.DeltaTime;
 
                         break;
@@ -208,22 +201,19 @@ namespace CTRFramework.Sound
                             cmd.velocity = (byte)(x.Velocity * 2);
                         }
 
-                        cmd.wait = 0;
+                        cmd.wait = x.DeltaTime;
 
                         break;
                     }
                 default:
                     Helpers.Panic("Command", PanicType.Warning, $"Unimplemented MIDI event: {midi.CommandCode}");
-                    break;
+                    return null;
             }
 
             return cmd;
         }
 
-        public override string ToString()
-        {
-            return String.Format("{0}t - {1}[p:{2}, v:{3}]\r\n", wait, eventType.ToString(), pitch, velocity);
-        }
+        public override string ToString() => $"[{absoluteTime}]\t{wait}t - {eventType}[p:{pitch}, v:{velocity}]";
 
         public void Write(BinaryWriterEx bw)
         {

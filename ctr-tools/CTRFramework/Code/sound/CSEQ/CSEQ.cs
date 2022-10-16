@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Shared;
 using NAudio.Midi;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,8 +78,9 @@ namespace CTRFramework.Sound
             var seq = new Cseq();
             var song = new CseqSong();
 
-            song.BPM = 120;
-            song.TPQN = 30;
+            //find a way to read from midi
+            song.BeatsPerMinute = 120;
+            song.TicksPerQuarterNote = midi.DeltaTicksPerQuarterNote;
 
             for (int i = 0; i < midi.Tracks; i++)
             {
@@ -134,12 +136,14 @@ namespace CTRFramework.Sound
             short[] seqPtrs = br.ReadArrayInt16(seqCnt);
 
             //awesome NTSC demo fix
-            int p = (seqCnt == 4) ? 1 : 3;
+            //int p = (seqCnt == 4) ? 1 : 3;
+
+            br.Pad();
 
             //checking whether it's 0 or not
-            for (int i = 0; i < p; i++)
-                if (br.ReadByte() != 0)
-                    Helpers.Panic(this, PanicType.Warning, "unknown 3 bytes block - not null at " + br.HexPos());
+            //for (int i = 0; i < p; i++)
+            //    if (br.ReadByte() != 0)
+            //       Helpers.Panic(this, PanicType.Warning, "unknown 3 bytes block - not null at " + br.HexPos());
 
             //saving sequence data offset
             int seqStart = (int)br.Position;
@@ -149,6 +153,7 @@ namespace CTRFramework.Sound
             {
                 br.Jump(seqStart + seqPtrs[i]);
                 Songs.Add(CseqSong.FromReader(br));
+                Songs[i].Name = $"Song_{i.ToString("00")}";
             }
 
             int cseqEnd = (int)br.Position;
@@ -237,30 +242,38 @@ namespace CTRFramework.Sound
 
             long ptrTracks = bw.BaseStream.Position;
 
+            bw.Seek(Songs.Count * 2);
+            bw.Pad();
+
             //it's meant to be like that
             //foreach (var seq in sequences)
             //    bw.Write((short)0);
-            bw.Seek(Songs.Count * 2 + (USdemo ? 1 : 3));
+            //bw.Seek(Songs.Count * 2 + (USdemo ? 1 : 3));
 
-            List<long> pointers = new List<long>();
-            long offsetstart = bw.BaseStream.Position;
+            var offsets = new List<long>();
+            long ptrSongs = bw.BaseStream.Position;
 
             foreach (var song in Songs)
             {
-                pointers.Add(bw.BaseStream.Position - offsetstart);
+                offsets.Add(bw.BaseStream.Position - ptrSongs);
                 song.Write(bw);
             }
+
+            bw.Pad();
 
             int cseqEnd = (int)bw.BaseStream.Position;
 
             bw.Jump(ptrTracks);
 
-            foreach (var ptr in pointers)
+            foreach (var ptr in offsets)
                 bw.Write((short)ptr);
 
             bw.Jump(cseqStart);
             bw.Write(cseqEnd - cseqStart);
             bw.Jump(cseqEnd);
+
+            if (bw.BaseStream.Length < bw.BaseStream.Position)
+                bw.BaseStream.SetLength(bw.BaseStream.Position);
         }
 
         public void ExportSamples()
