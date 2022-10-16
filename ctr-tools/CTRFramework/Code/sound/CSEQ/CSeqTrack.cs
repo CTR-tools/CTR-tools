@@ -91,6 +91,8 @@ namespace CTRFramework.Sound
                     break;
                 }
             }
+
+            cseqEventCollection.Add(new CseqEvent() { wait = 1, eventType = CseqEventType.EndTrack, });
         }
 
         public List<MidiEvent> ToMidiEventList(int MPQN, int channel, Cseq seq)
