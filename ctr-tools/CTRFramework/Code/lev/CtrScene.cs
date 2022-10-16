@@ -213,6 +213,11 @@ namespace CTRFramework
                 while (terminator != 0);
             }
 
+            foreach (var node in instvisdata)
+            {
+                Helpers.Panic(this, PanicType.Assume, node.ToString());
+            }
+            //Console.ReadKey();
 
             //assign anim color target to vertex
             foreach (var va in vertanims)
@@ -525,8 +530,8 @@ namespace CTRFramework
                         try
                         {
                             string file = Helpers.PathCombine(path, $"{tex.lod2.Tag}.png");
-                            if (!File.Exists(file))
-                                tex.GetHiBitmap(ctrvram, quad)?.Save(file, System.Drawing.Imaging.ImageFormat.Png);
+                            //if (!File.Exists(file))
+                            tex.GetHiBitmap(ctrvram, quad)?.Save(file, System.Drawing.Imaging.ImageFormat.Png);
                         }
                         catch (Exception ex)
                         {

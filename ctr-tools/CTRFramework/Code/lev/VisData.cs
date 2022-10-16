@@ -15,7 +15,7 @@ namespace CTRFramework
         Subdiv4x2 = 1 << 4, // reduces 4x4 subdivision to 4x2
         Unk5 = 1 << 5,      // additive blended?
         Hidden = 1 << 6,    // doesn't render child quads
-        Unk7 = 1 << 7,      // ??
+        Instance = 1 << 7,  // denotes whether the box contains model instance (only used in linked hitbox nodes)
         All = -1
     }
 
@@ -44,6 +44,18 @@ namespace CTRFramework
         public uint numQuadBlock;
         public uint ptrQuadBlock;
 
+        //if hitbox
+        public short boxX;
+        public short boxY;
+        public short boxZ;
+
+        public short unkX;
+        public short unkY;
+        public short unkZ;
+
+        public int ptrInst;
+
+
         public bool IsLeaf => flag.HasFlag(VisDataFlags.Leaf);
 
         public VisData()
@@ -56,9 +68,16 @@ namespace CTRFramework
 
         public static int[] counter = new int[8];
 
+        byte[] rawdata;
+
         public void Read(BinaryReaderEx br)
         {
             BaseAddress = (int)br.Position;
+
+            rawdata = br.ReadBytes(0x20);
+
+            br.Seek(-0x20);
+
 
             flag = (VisDataFlags)br.ReadByte();
             unk0 = br.ReadByte();
@@ -80,12 +99,24 @@ namespace CTRFramework
             if (flag.HasFlag(VisDataFlags.Subdiv4x2)) counter[4]++;
             if (flag.HasFlag(VisDataFlags.Unk5)) counter[5]++;
             if (flag.HasFlag(VisDataFlags.Hidden)) counter[6]++;
-            if (flag.HasFlag(VisDataFlags.Unk7)) counter[7]++;
+            if (flag.HasFlag(VisDataFlags.Instance)) counter[7]++;
 
             id = br.ReadUInt16();
             bbox = BoundingBox.FromReader(br);
 
-            if (!IsLeaf)
+            if (flag.HasFlag(VisDataFlags.Instance))
+            {
+                boxX = br.ReadInt16();
+                boxY = br.ReadInt16();
+                boxZ = br.ReadInt16();
+
+                unkX = br.ReadInt16();
+                unkY = br.ReadInt16();
+                unkZ = br.ReadInt16();
+
+                ptrInst = br.ReadInt32();
+            }
+            else if (!IsLeaf)
             {
                 divX = br.ReadUInt16();
                 divY = br.ReadUInt16();
@@ -136,7 +167,17 @@ namespace CTRFramework
             bw.Write(id);
             bbox.Write(bw);
 
-            if (!IsLeaf)
+            if (flag.HasFlag(VisDataFlags.Instance))
+            {
+                bw.Write(boxX);
+                bw.Write(boxY);
+                bw.Write(boxZ);
+                bw.Write(unkX);
+                bw.Write(unkY);
+                bw.Write(unkZ);
+                bw.Write(ptrInst);
+            }
+            else if (!IsLeaf)
             {
                 bw.Write(divX);
                 bw.Write(divY);
@@ -160,7 +201,14 @@ namespace CTRFramework
 
         public override string ToString()
         {
-            return $"id = {id} | flag = {flag} | ptr = {ptrQuadBlock.ToString("X8")}\r\n\t{bbox.ToString()}\r\n\t";
+            string result = $"id = {id} | flag = {flag} | ptr = {ptrQuadBlock.ToString("X8")}\r\n\t{bbox.ToString()}\r\n\t";
+
+            foreach (byte b in rawdata)
+                result += b.ToString("X2");
+
+            result += "\r\n";
+
+            return result;
         }
     }
 }

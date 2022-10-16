@@ -49,8 +49,8 @@ types:
         type: texture_layout
         if: header.ptr_reflection_texture != 0
     
-      - id: restart_pts
-        type: pose
+      - id: respawn_pts
+        type: restart_point
         repeat: expr
         repeat-expr: header.cnt_restart_pts
     
@@ -893,12 +893,28 @@ types:
         type: s2
 
   pose:
+  
     seq:
       - id: position
         type: vector3s
       - id: rotation
         type: vector3s
 
+  restart_point:
+    seq:
+      - id: position
+        type: vector3s
+      - id: distance
+        type: u2
+      - id: next
+        type: u1
+      - id: unk_ff1
+        type: u1
+      - id: prev
+        type: u1
+      - id: unk_ff2
+        type: u1
+        
   bounding_box:
     seq:
       - id: min

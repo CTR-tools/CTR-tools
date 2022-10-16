@@ -62,7 +62,6 @@ namespace ctrviewer
         List<Kart> karts = new List<Kart>();
 
 
-
         //meh
         public static int currentflag = 1;
 
@@ -302,12 +301,8 @@ namespace ctrviewer
 
             SwitchDisplayMode(graphics);
 
-
-
             base.Initialize();
         }
-
-
 
         public bool IsChristmas => (DateTime.Now.Month == 12 && DateTime.Now.Day >= 20) || (DateTime.Now.Month == 1 && DateTime.Now.Day <= 7);
 
@@ -615,7 +610,7 @@ namespace ctrviewer
         {
             GameConsole.Write("LoadTextures()");
 
-            List<Task> tasks = new List<Task>();
+            var tasks = new List<Task>();
             var replacements = new Dictionary<string, string>();
 
             //try to load all png replacement textures, if newtex folder exists
@@ -669,7 +664,7 @@ namespace ctrviewer
 
             ContentVault.AddTexture(t.Key, texture);
 
-            if (EngineSettings.Instance.UseTextureReplacements && replacements != null)
+            if (eng.Settings.UseTextureReplacements && replacements != null)
                 if (replacements.ContainsKey(t.Key))
                 {
                     var replacement = eng.Settings.GenerateMips ?
@@ -693,11 +688,11 @@ namespace ctrviewer
 
         private CtrScene LoadSceneFromBig(int index)
         {
-            var mvram = big.ReadEntry(index).ParseAs<CtrVrm>();
-            var cc = big.ReadEntry(index + 1).ParseAs<CtrScene>();
-            cc.SetVram(mvram);
+            var vram = big.ReadEntry(index).ParseAs<CtrVrm>();
+            var scene = big.ReadEntry(index + 1).ParseAs<CtrScene>();
+            scene.SetVram(vram);
 
-            return cc;
+            return scene;
         }
 
         CtrScene menu_models;
@@ -937,7 +932,7 @@ namespace ctrviewer
                         new WireBox(
                             DataConverter.ToVector3(node.bbox.Min),
                             DataConverter.ToVector3(node.bbox.Max),
-                            Color.Green, 1 / 100f));
+                            node.flag.HasFlag(VisDataFlags.Instance) ? Color.Green : Color.Red, 1 / 100f));
                 }
             }
 

@@ -54,8 +54,8 @@ namespace CTRFramework
                 }
             }
 
-            Bitmap bmp = new Bitmap(width * numhtex, height * numvtex);
-            Graphics gr = Graphics.FromImage(bmp);
+            var bmp = new Bitmap(width * numhtex, height * numvtex);
+            var gr = Graphics.FromImage(bmp);
 
             gr.SmoothingMode = SmoothingMode.HighQuality;
             gr.InterpolationMode = InterpolationMode.NearestNeighbor;
@@ -69,7 +69,9 @@ namespace CTRFramework
             {
                 if (hi[i] != null)
                 {
-                    Bitmap b = vram.GetTexture(hi[i]);
+                    hi[i].DetectRotation();
+
+                    var b = vram.GetTexture(hi[i]);
                     gr.DrawImage(b, new Rectangle((i % 4) * width, (i / 4) * height, width, height), 0, 0, b.Width, b.Height, GraphicsUnit.Pixel, attributes);
                 }
             }
