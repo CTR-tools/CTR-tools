@@ -84,16 +84,7 @@ namespace CTRFramework.Lang
         public static LNG FromText(string[] lines, bool trySwap = false)
         {
             LNG lng = new LNG();
-            lng.Entries = lines.ToList();
-
-            foreach (var str in lng.Entries.ToList())
-            {
-                if (str.Contains('{') || str.Contains('}'))
-                    lng.Entries.Remove(str);
-
-                if (str.Trim() == ";")
-                    lng.Entries.Remove(str);
-            }
+            lng.Entries.AddRange(lines);
 
             //trim every string to avoid extra spaces.
             for (int i = 0; i < lng.Entries.Count; i++)
