@@ -25,14 +25,12 @@ namespace ctrviewer.Engine
         }
 
         public Point Resolution = Point.Zero;
+        public string BigFileLocation = $".\\{Meta.BigFileName}";
 
         private bool _internalPSXResolution = false;
         public bool InternalPSXResolution
         {
-            get
-            {
-                return _internalPSXResolution;
-            }
+            get => _internalPSXResolution;
             set
             {
                 _internalPSXResolution = value;
@@ -40,10 +38,20 @@ namespace ctrviewer.Engine
             }
         }
 
-        public string BigFileLocation = ".\\bigfile.big";
+        public int _anisotropyLevel = 4;
+        public int AnisotropyLevel
+        {
+            get => _anisotropyLevel;
+            set
+            {
+                UpdateIntValue(ref _anisotropyLevel, value, 0, 4);
+                onAnisotropyChanged?.Invoke();
+            }
+        }
 
-        public byte AntiAliasLevel { get; set; } = 4;
         public bool TextureFiltering { get; set; } = true;
+
+        public int AntiAliasLevel { get; set; } = 4;
 
         public bool UseTextureReplacements { get; set; } = false;
         public bool VisData { get; set; } = false;
@@ -97,10 +105,7 @@ namespace ctrviewer.Engine
         private bool _vertexLighting = true;
         public bool VertexLighting
         {
-            get
-            {
-                return _vertexLighting;
-            }
+            get => _vertexLighting;
             set
             {
                 _vertexLighting = value;
@@ -111,10 +116,7 @@ namespace ctrviewer.Engine
         private bool _antiAlias = true;
         public bool AntiAlias
         {
-            get
-            {
-                return _antiAlias;
-            }
+            get => _antiAlias;
             set
             {
                 _antiAlias = value;
@@ -125,10 +127,7 @@ namespace ctrviewer.Engine
         private bool _verticalSync = true;
         public bool VerticalSync
         {
-            get
-            {
-                return _verticalSync;
-            }
+            get => _verticalSync;
             set
             {
                 _verticalSync = value;
@@ -139,15 +138,10 @@ namespace ctrviewer.Engine
         private int _fieldOfView = 80;
         public int FieldOfView
         {
-            get
-            {
-                if (_fieldOfView < 20) _fieldOfView = 20;
-                if (_fieldOfView > 150) _fieldOfView = 150;
-                return _fieldOfView;
-            }
+            get => _fieldOfView;
             set
             {
-                _fieldOfView = value;
+                UpdateIntValue(ref _fieldOfView, value, 20, 150);
                 onFieldOfViewChanged?.Invoke();
             }
         }
@@ -155,21 +149,18 @@ namespace ctrviewer.Engine
         private int _windowScale = 75;
         public int WindowScale
         {
-            get
-            {
-                if (_windowScale < 10) _windowScale = 10;
-                if (_windowScale > 90) _windowScale = 90;
-                return _windowScale;
-            }
+            get => _windowScale;
             set
             {
-                _windowScale = value;
+                UpdateIntValue(ref _windowScale, value, 10, 90);
                 onWindowedChanged?.Invoke();
             }
         }
 
         public delegate void DelegateNoArgs();
 
+        [XmlIgnore]
+        public DelegateNoArgs onAnisotropyChanged = null;
         [XmlIgnore]
         public DelegateNoArgs onFilteringChanged = null;
         [XmlIgnore]
@@ -187,6 +178,13 @@ namespace ctrviewer.Engine
 
         public EngineSettings()
         {
+        }
+
+        public void UpdateIntValue(ref int value, int newvalue, int min, int max)
+        {
+            value = newvalue;
+            if (newvalue < min) value = min;
+            if (newvalue > max) value = max;
         }
 
         public static void Save(string filename = "")

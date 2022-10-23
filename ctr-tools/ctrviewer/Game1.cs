@@ -270,6 +270,7 @@ namespace ctrviewer
 
             //hardware switch is disabled due to wrong resolution + crash after AA change
             graphics.HardwareModeSwitch = false;
+            graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
             eng = new MainEngine(this);
 
@@ -279,8 +280,9 @@ namespace ctrviewer
             eng.Settings.onVerticalSyncChanged += UpdateVSync;
             eng.Settings.onInternalPsxResolutionChanged += UpdateInternalResolution;
             eng.Settings.onFilteringChanged += Samplers.Refresh;
+            eng.Settings.onAnisotropyChanged += Samplers.Refresh;
 
-            graphics.GraphicsProfile = GraphicsProfile.HiDef;
+
             UpdateAntiAlias();
             UpdateVSync();
             //graphics.ApplyChanges();
@@ -343,13 +345,10 @@ namespace ctrviewer
             LoadScenesFromFolder();
 
             if (Scenes.Count > 0)
-            {
                 LoadAllScenes();
-            }
         }
 
         #region menustuff
-
         public void InitMenu()
         {
             //loadmenu
@@ -380,16 +379,18 @@ namespace ctrviewer
             menu.Find("genmips").Click += ToggleMips;
             menu.Find("console").Click += ToggleConsole;
 
+            menu.Find("aniso").Click += UpdateAniso;
+
             foreach (var level in Enum.GetNames(typeof(Level)))
             {
-                MenuItem item = menu.Find(level.ToString());
+                var item = menu.Find(level.ToString());
                 if (item != null)
                     item.Click += LoadLevelAsync;
             }
 
             foreach (var level in Enum.GetNames(typeof(Cutscenes)))
             {
-                MenuItem item = menu.Find(level.ToString());
+                var item = menu.Find(level.ToString());
                 if (item != null)
                     item.Click += LoadLevelAsync;
             }
@@ -409,43 +410,34 @@ namespace ctrviewer
                 menu.Find(lod.ToString()).Click += SetLodAndReload;
         }
 
+        #region [click events]
         public void ToggleKartMode(object sender, EventArgs args) => eng.Settings.KartMode = (sender as BoolMenuItem).Value;
         public void ToggleCamPos(object sender, EventArgs args) => eng.Settings.ShowCamPos = (sender as BoolMenuItem).Value;
         public void ToggleMips(object sender, EventArgs args) => eng.Settings.GenerateMips = (sender as BoolMenuItem).Value;
 
-        public void ToggleConsole(object sender, EventArgs args)
-        {
-            eng.Settings.ShowConsole = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleConsole(object sender, EventArgs args) => eng.Settings.ShowConsole = (sender as BoolMenuItem).Value;
 
-        public void ToggleWindowed(object sender, EventArgs args)
-        {
-            eng.Settings.Windowed = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleWindowed(object sender, EventArgs args) => eng.Settings.Windowed = (sender as BoolMenuItem).Value;
 
         public void ToggleStereoscopic(object sender, EventArgs args)
         {
             eng.Settings.StereoPair = (sender as BoolMenuItem).Value;
             menu.Find("crosseyed").Enabled = eng.Settings.StereoPair;
         }
-        public void ToggleCrosseyed(object sender, EventArgs args)
-        {
-            eng.Settings.StereoCrossEyed = (sender as BoolMenuItem).Value;
-        }
 
-        public void ToggleVsync(object sender, EventArgs args)
-        {
-            eng.Settings.VerticalSync = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleCrosseyed(object sender, EventArgs args) => eng.Settings.StereoCrossEyed = (sender as BoolMenuItem).Value;
 
-        public void ToggleAntialias(object sender, EventArgs args)
-        {
-            eng.Settings.AntiAlias = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleVsync(object sender, EventArgs args) => eng.Settings.VerticalSync = (sender as BoolMenuItem).Value;
+
+        public void ToggleAntialias(object sender, EventArgs args) => eng.Settings.AntiAlias = (sender as BoolMenuItem).Value;
+
         public void ToggleFiltering(object sender, EventArgs args)
         {
             eng.Settings.EnableFiltering = (sender as BoolMenuItem).Value;
+            menu.Find("aniso").Enabled = eng.Settings.EnableFiltering;
         }
+
+        public void UpdateAniso(object sender, EventArgs args) => eng.Settings.AnisotropyLevel = (sender as IntRangeMenuItem).SelectedValue;
 
         public async void LoadLevelAsync(object sender, EventArgs args)
         {
@@ -480,61 +472,29 @@ namespace ctrviewer
             (menu.Find("visboxleaf") as BoolMenuItem).Enabled = eng.Settings.VisData;
         }
 
-        public void ToggleVisDataLeaves(object sender, EventArgs args)
-        {
-            eng.Settings.VisDataLeaves = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleVisDataLeaves(object sender, EventArgs args) => eng.Settings.VisDataLeaves = (sender as BoolMenuItem).Value;
 
-        public void ToggleInternalPsxResolution(object sender, EventArgs args)
-        {
-            eng.Settings.InternalPSXResolution = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleInternalPsxResolution(object sender, EventArgs args) => eng.Settings.InternalPSXResolution = (sender as BoolMenuItem).Value;
 
-        public void ToggleWireFrame(object sender, EventArgs args)
-        {
-            eng.Settings.DrawWireframe = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleWireFrame(object sender, EventArgs args) => eng.Settings.DrawWireframe = (sender as BoolMenuItem).Value;
 
-        public void ToggleReplacements(object sender, EventArgs args)
-        {
-            eng.Settings.UseTextureReplacements = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleReplacements(object sender, EventArgs args) => eng.Settings.UseTextureReplacements = (sender as BoolMenuItem).Value;
+ 
+        public void ToggleVertexColors(object sender, EventArgs args) => eng.Settings.VertexLighting = (sender as BoolMenuItem).Value;
 
-        public void ToggleVertexColors(object sender, EventArgs args)
-        {
-            eng.Settings.VertexLighting = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleBackfaceCulling(object sender, EventArgs args) => eng.Settings.BackFaceCulling = (sender as BoolMenuItem).Value;
 
-        public void ToggleBackfaceCulling(object sender, EventArgs args)
-        {
-            eng.Settings.BackFaceCulling = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleSkybox(object sender, EventArgs args) => eng.Settings.ShowSky = (sender as BoolMenuItem).Value;
 
-        public void ToggleSkybox(object sender, EventArgs args)
-        {
-            eng.Settings.ShowSky = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleWater(object sender, EventArgs args) => eng.Settings.ShowWater = (sender as BoolMenuItem).Value;
 
-        public void ToggleWater(object sender, EventArgs args)
-        {
-            eng.Settings.ShowWater = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleInvisible(object sender, EventArgs args) => eng.Settings.ShowInvisible = (sender as BoolMenuItem).Value;
 
-        public void ToggleInvisible(object sender, EventArgs args)
-        {
-            eng.Settings.ShowInvisible = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleGameObjects(object sender, EventArgs args) => eng.Settings.ShowModels = (sender as BoolMenuItem).Value;
 
-        public void ToggleGameObjects(object sender, EventArgs args)
-        {
-            eng.Settings.ShowModels = (sender as BoolMenuItem).Value;
-        }
+        public void ToggleBotPaths(object sender, EventArgs args) => eng.Settings.ShowBotPaths = (sender as BoolMenuItem).Value;
 
-        public void ToggleBotPaths(object sender, EventArgs args)
-        {
-            eng.Settings.ShowBotPaths = (sender as BoolMenuItem).Value;
-        }
-
+        #endregion
         #endregion
 
         /// <summary>

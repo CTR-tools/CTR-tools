@@ -28,6 +28,8 @@ namespace ctrviewer.Engine.Gui
 
         public MenuItem SelectedItem => items[_selectedIndex];
 
+        private int _selectedIndex;
+
         public int Selection
         {
             get => _selectedIndex;
@@ -38,8 +40,6 @@ namespace ctrviewer.Engine.Gui
                 if (value < 0) _selectedIndex = items.Count - 1;
             }
         }
-
-        private int _selectedIndex;
 
         public MenuItem Find(string name)
         {
@@ -83,7 +83,7 @@ namespace ctrviewer.Engine.Gui
             CalcWidth();
         }
 
-        public void CalcWidth()
+        private void CalcWidth()
         {
             foreach (var item in items)
                 item.CalcWidth();
@@ -93,7 +93,8 @@ namespace ctrviewer.Engine.Gui
         {
             var settings = EngineSettings.Instance;
 
-            #region menuitems
+            #region [menu items]
+
             menus.Add("level", new List<MenuItem>()
             {
                 new BoolMenuItem() { Text = "Wireframe", Name = "wire", Value = settings.DrawWireframe },
@@ -107,8 +108,8 @@ namespace ctrviewer.Engine.Gui
                 new BoolMenuItem() { Text = "Render BSP Branches", Name = "visboxleaf", Value = settings.VisDataLeaves },
                 new BoolMenuItem() { Text = "Game Objects", Name = "inst", Value = settings.ShowModels },
                 new BoolMenuItem() { Text = "Bot Paths", Name = "paths", Value = settings.ShowBotPaths },
-                new MenuItem("toggle lod".ToUpper(), "toggle", "lod", true),
-                new MenuItem("<< quadflag: {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15),
+                new MenuItem("Toggle lod".ToUpper(), "toggle", "lod", true),
+                new MenuItem("QuadFlag: << {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15),
                 new MenuItem("back".ToUpper(), "link", "main", true)
             });
 
@@ -118,6 +119,7 @@ namespace ctrviewer.Engine.Gui
                 new BoolMenuItem() { Text = "vsync/fps lock", Name = "vsync", Value = settings.VerticalSync },
                 new BoolMenuItem() { Text = "Antialias", Name = "antialias", Value = settings.AntiAlias },
                 new BoolMenuItem() { Text = "Texture filtering", Name = "filter", Value = settings.EnableFiltering },
+                new IntRangeMenuItem() { Text = "Anisotropy", Name = "aniso", SelectedValue = settings.AnisotropyLevel, Values = new List<(int, string)>() { (1, "1x"), (2, "2x"), (4, "4x"), (8, "8x"), (16, "16x") } },
                 new BoolMenuItem() { Text = "Internal PSX Resolution", Name = "intpsx", Value = settings.InternalPSXResolution },
                 new BoolMenuItem() { Text = "Stereoscopic mode", Name = "stereo", Value = settings.StereoPair },
                 new BoolMenuItem() { Text = "crosseyed", Name = "crosseyed", Value = settings.StereoCrossEyed },
@@ -127,18 +129,18 @@ namespace ctrviewer.Engine.Gui
                 new MenuItem("back".ToUpper(), "link", "main", true)
             });
 
-            List<MenuItem> cupmenu = new List<MenuItem>();
-            cupmenu.Add(new MenuItem("level type".ToUpper(), "link", "level_type", true));
-            cupmenu.Add(new MenuItem("wumpa cup".ToUpper(), "link", "cup_wumpa", true));
-            cupmenu.Add(new MenuItem("crystal cup".ToUpper(), "link", "cup_cryst", true));
-            cupmenu.Add(new MenuItem("nitro cup".ToUpper(), "link", "cup_nitro", true));
-            cupmenu.Add(new MenuItem("crash cup".ToUpper(), "link", "cup_crash", true));
-            cupmenu.Add(new MenuItem("bonus tracks".ToUpper(), "link", "bonus_levels", true));
-            cupmenu.Add(new MenuItem("battle arenas".ToUpper(), "link", "battle_arenas", true));
-            cupmenu.Add(new MenuItem("adventure".ToUpper(), "link", "adventure", true));
-            cupmenu.Add(new MenuItem("cutscenes".ToUpper(), "link", "cutscenes", true));
-            cupmenu.Add(new MenuItem("back".ToUpper(), "link", "main", true));
-            menus.Add("cupmenu", cupmenu);
+            menus.Add("cupmenu", new List<MenuItem>() {
+                new MenuItem("level type".ToUpper(), "link", "level_type", true),
+                new MenuItem("wumpa cup".ToUpper(), "link", "cup_wumpa", true),
+                new MenuItem("crystal cup".ToUpper(), "link", "cup_cryst", true),
+                new MenuItem("nitro cup".ToUpper(), "link", "cup_nitro", true),
+                new MenuItem("crash cup".ToUpper(), "link", "cup_crash", true),
+                new MenuItem("bonus tracks".ToUpper(), "link", "bonus_levels", true),
+                new MenuItem("battle arenas".ToUpper(), "link", "battle_arenas", true),
+                new MenuItem("adventure".ToUpper(), "link", "adventure", true),
+                new MenuItem("cutscenes".ToUpper(), "link", "cutscenes", true),
+                new MenuItem("back".ToUpper(), "link", "main", true)
+            });
 
             menus.Add("level_type", new List<MenuItem>()
             {
@@ -233,8 +235,7 @@ namespace ctrviewer.Engine.Gui
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
             });
 
-            var main = new List<MenuItem>
-            {
+            menus.Add("main", new List<MenuItem>() {
                 new MenuItem("resume".ToUpper(), "close", "", true),
                 //new MenuItem("reload level".ToUpper(), "load", "", true),
                 new MenuItem("load level".ToUpper(), "link", "cupmenu", Game1.BigFileExists),
@@ -243,9 +244,7 @@ namespace ctrviewer.Engine.Gui
                 new MenuItem("time of day".ToUpper(), "link", "tod", true),
                 new BoolMenuItem() { Text = "Kart mode", Name = "kart", Value = settings.KartMode },
                 new MenuItem("quit".ToUpper(), "exit", "", true),
-            };
-
-            menus.Add("main", main);
+            });
 
             menus.Add("tod", new List<MenuItem>() {
                 new MenuItem("day".ToUpper(), "tod_day", "", true),
@@ -256,28 +255,22 @@ namespace ctrviewer.Engine.Gui
 
             #endregion
 
-            items = main;
+            items = menus["main"];
 
             //Selection = 0;
         }
 
-        public void Next()
+        private void Next()
         {
-            do
-            {
-                Selection++;
-            }
+            do Selection++;
             while (items[Selection].Action == "" && items[Selection].Enabled);
 
             //ContentVault.Sounds["menu_down"].Play(0.15f, 0, 0);
         }
 
-        public void Previous()
+        private void Previous()
         {
-            do
-            {
-                Selection--;
-            }
+            do Selection--;
             while (items[Selection].Action == "" && items[Selection].Enabled);
 
             //ContentVault.Sounds["menu_up"].Play(0.15f, 0, 0);

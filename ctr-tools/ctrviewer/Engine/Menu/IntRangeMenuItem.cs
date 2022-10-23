@@ -1,31 +1,39 @@
-﻿namespace ctrviewer.Engine.Gui
+﻿using System;
+using System.Collections.Generic;
+
+namespace ctrviewer.Engine.Gui
 {
     public class IntRangeMenuItem : MenuItem
     {
-        public int Value { get; set; } = 0;
+        public List<(int value, string label)> Values = new List<(int value, string label)>();
 
-        public int MinValue = 0;
-        public int MaxValue = 10;
+        public int SelectedValue = 0;
 
-        public IntRangeMenuItem(int InitValue)
+        public new int Value => Values[SelectedValue].value;
+        public string Label => Values[SelectedValue].label;
+
+        public IntRangeMenuItem()
         {
-            Value = InitValue;
         }
 
         public void ChangeValue(int change)
         {
-            Value += change;
+            SelectedValue += change;
 
-            if (Value < MinValue)
-                Value = MaxValue;
+            if (SelectedValue < 0)
+                SelectedValue = Values.Count - 1;
 
-            if (Value > MaxValue)
-                Value = MinValue;
+            if (SelectedValue > Values.Count - 1)
+                SelectedValue = 0;
         }
 
-        public override string ToString()
+        public override void OnClick(object sender, EventArgs args = null)
         {
-            return $"{Text}: << {Value} >>";
+            ChangeValue(1);
+            CalcWidth();
+            base.OnClick(args);
         }
+
+        public override string ToString() => $"{Text}: << {Label} >>".ToUpper();
     }
 }
