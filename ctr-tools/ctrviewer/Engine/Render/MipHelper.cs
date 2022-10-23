@@ -32,7 +32,7 @@ namespace ctrviewer.Engine.Render
         /// <returns>Texture2D object.</returns>
         public static Texture2D LoadTextureFromBitmap(GraphicsDevice device, Bitmap bmp, out bool alpha)
         {
-            Texture2D texture = GetTexture2DFromBitmap(device, bmp, out alpha);
+            var texture = GetTexture2DFromBitmap(device, bmp, out alpha);
 
             byte[] temp = new byte[texture.Width * texture.Height * 4];
             bmp = FixBitmap(bmp, out alpha, out temp, false);
@@ -52,9 +52,9 @@ namespace ctrviewer.Engine.Render
                 width /= 2;
                 height /= 2;
 
-                using (Bitmap mip = new Bitmap(width, height))
+                using (var mip = new Bitmap(width, height))
                 {
-                    Graphics gr = Graphics.FromImage(mip);
+                    var gr = Graphics.FromImage(mip);
                     gr.SmoothingMode = SmoothingMode.AntiAlias;
                     gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     gr.PixelOffsetMode = PixelOffsetMode.HighQuality;

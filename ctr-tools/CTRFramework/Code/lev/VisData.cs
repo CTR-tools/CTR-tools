@@ -58,6 +58,7 @@ namespace CTRFramework
 
         public bool IsLeaf => flag.HasFlag(VisDataFlags.Leaf);
 
+        #region [Constructors, Factories]
         public VisData()
         {
         }
@@ -65,6 +66,8 @@ namespace CTRFramework
         public VisData(BinaryReaderEx br) => Read(br);
 
         public static VisData FromReader(BinaryReaderEx br) => new VisData(br);
+
+        #endregion
 
         public static int[] counter = new int[8];
 

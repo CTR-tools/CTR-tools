@@ -31,7 +31,7 @@ namespace model_reader
                 return;
             }
 
-            string filename = args[0];
+            string filename = Path.GetFullPath(args[0]);
 
             Console.WriteLine($"Input file: {filename}");
 

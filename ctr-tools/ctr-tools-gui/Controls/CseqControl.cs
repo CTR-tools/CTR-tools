@@ -97,11 +97,11 @@ namespace CTRTools.Controls
 
         private void PopulateInstrumentsNode<T>(TreeView root, string name, List<T> samples) where T : Instrument
         {
-            TreeNode instruments = new TreeNode(name);
+            var instruments = new TreeNode(name);
 
             foreach (var sample in samples)
             {
-                TreeNode node = new TreeNode(sample.Tag + (Howl.samplenames.ContainsKey(sample.SampleID) ? "_" + Howl.samplenames[sample.SampleID] : ""));
+                var node = new TreeNode(sample.Tag + (Howl.samplenames.ContainsKey(sample.SampleID) ? "_" + Howl.samplenames[sample.SampleID] : ""));
                 node.Tag = sample;
                 instruments.Nodes.Add(node);
             }

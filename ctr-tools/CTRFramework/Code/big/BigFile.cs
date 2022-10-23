@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text;
 
@@ -43,12 +44,15 @@ namespace CTRFramework.Big
         /// <param name="filename">Filename.</param>
         private BigFile(string filename)
         {
+            if (!File.Exists(filename))
+                throw new FileNotFoundException($"File doesn't exist: {filename}");
+
             switch (Path.GetExtension(filename).ToLower())
             {
                 case ".big": LoadFromBig(filename); break;
                 case ".txt": LoadFromTxt(filename); break;
 
-                default: throw new Exception("Unsupported file.");
+                default: throw new Exception("Unsupported file, try BIG or TXT.");
             }
         }
 
@@ -58,9 +62,6 @@ namespace CTRFramework.Big
         /// <param name="filename">Filename.</param>
         private void LoadFromBig(string filename)
         {
-            if (!File.Exists(filename))
-                throw new FileNotFoundException($"File doesn't exist: {filename}");
-
             Helpers.Panic(this, PanicType.Info, $"Loading BIG from: {filename}");
 
             using (var reader = BigFileReader.FromFile(filename))
@@ -98,7 +99,7 @@ namespace CTRFramework.Big
             Helpers.Panic(this, PanicType.Info, $"Exporting BIG to: {path}");
             Helpers.Panic(this, PanicType.Info, $"{Entries.Count} files:");
 
-            StringBuilder biglist = new StringBuilder();
+            var biglist = new StringBuilder();
 
             foreach (var entry in Entries)
             {

@@ -137,9 +137,9 @@ namespace CTRFramework.Shared
         //It probably was wrong all the time, make sure stuff still works.
         public int ReadInt32Big()
         {
-            byte[] x = BitConverter.GetBytes(ReadInt32());
-            Array.Reverse(x);
-            return BitConverter.ToInt32(x, 0);
+            byte[] data = ReadBytes(4);
+            Array.Reverse(data);
+            return BitConverter.ToInt32(data, 0);
         }
 
         public short ReadInt16Big()

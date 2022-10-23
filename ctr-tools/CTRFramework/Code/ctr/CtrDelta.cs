@@ -25,13 +25,8 @@ namespace CTRFramework
             Position.Z = (byte)((value >> (9 + 8 * 2)) & 0xFF);
         }
 
-        public static CtrDelta FromReader(BinaryReaderEx br)
-        {
-            return new CtrDelta(br);
-        }
-        public override string ToString()
-        {
-            return $"Position: {Position} Bits: {Bits}";
-        }
+        public static CtrDelta FromReader(BinaryReaderEx br) => new CtrDelta(br);
+
+        public override string ToString() => $"Position: {Position} Bits: {Bits}";
     }
 }
