@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
 {
@@ -38,12 +39,14 @@ namespace ctrviewer.Engine.Render
             DoubleSidedRasterizer.CullMode = CullMode.None;
         }
 
+        static byte[] anisoLevels = new byte[] { 1, 2, 4, 8, 16 };
+
         public static void Refresh()
         {
             DefaultSampler = new SamplerState()
             {
                 Filter = EngineSettings.Instance.EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear,
-                MaxAnisotropy = EngineSettings.Instance.AnisotropyLevel,
+                MaxAnisotropy = anisoLevels[EngineSettings.Instance.AnisotropyLevel],
                 MipMapLevelOfDetailBias = 0,
                 AddressU = TextureAddressMode.Clamp,
                 AddressV = TextureAddressMode.Clamp
@@ -52,7 +55,7 @@ namespace ctrviewer.Engine.Render
             AnimatedSampler = new SamplerState()
             {
                 Filter = EngineSettings.Instance.EnableFiltering ? TextureFilter.Anisotropic : TextureFilter.PointMipLinear,
-                MaxAnisotropy = EngineSettings.Instance.AnisotropyLevel,
+                MaxAnisotropy = anisoLevels[EngineSettings.Instance.AnisotropyLevel],
                 MipMapLevelOfDetailBias = 0,
                 AddressU = TextureAddressMode.Clamp,
                 AddressV = TextureAddressMode.Wrap,
