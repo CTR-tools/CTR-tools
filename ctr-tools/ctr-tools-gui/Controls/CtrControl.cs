@@ -121,13 +121,18 @@ namespace CTRTools.Controls
 
         private void actionSaveCtr_Click(object sender, EventArgs e)
         {
+            if (ctr == null) return;
+
+            if (fbd.ShowDialog() != DialogResult.OK) return;
+
             try
             {
-                if (ctr != null)
-                {
-                    if (fbd.ShowDialog() == DialogResult.OK)
-                        ctr.Save(fbd.SelectedPath);
-                }
+                if (optionTwoSided.Checked)
+                    foreach (var mesh in ctr.Entries)
+                        foreach (var cmd in mesh.drawList)
+                            cmd.flags &= ~CtrDrawFlags.d;
+
+                ctr.Save(fbd.SelectedPath);
             }
             catch (Exception ex)
             {

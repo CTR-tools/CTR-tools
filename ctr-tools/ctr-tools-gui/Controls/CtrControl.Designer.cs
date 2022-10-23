@@ -43,6 +43,7 @@ namespace CTRTools.Controls
             this.ofdctr = new System.Windows.Forms.OpenFileDialog();
             this.ofdmdl = new System.Windows.Forms.OpenFileDialog();
             this.fbd = new System.Windows.Forms.FolderBrowserDialog();
+            this.optionTwoSided = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -180,11 +181,23 @@ namespace CTRTools.Controls
             this.ofdmdl.Filter = "All supported models (*.ply, *.obj)|*.ply;*.obj|Wavefront OBJ (*.obj)|*.obj|Stanf" +
     "ord PLY (*.ply)|*.ply";
             // 
+            // optionTwoSided
+            // 
+            this.optionTwoSided.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.optionTwoSided.AutoSize = true;
+            this.optionTwoSided.Location = new System.Drawing.Point(207, 458);
+            this.optionTwoSided.Name = "optionTwoSided";
+            this.optionTwoSided.Size = new System.Drawing.Size(101, 17);
+            this.optionTwoSided.TabIndex = 1;
+            this.optionTwoSided.Text = "Force two sided";
+            this.optionTwoSided.UseVisualStyleBackColor = true;
+            // 
             // CtrControl
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.optionTwoSided);
             this.Controls.Add(this.actionSaveCtr);
             this.Controls.Add(this.actionLoadCtr);
             this.Controls.Add(this.groupBox1);
@@ -201,6 +214,7 @@ namespace CTRTools.Controls
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -219,5 +233,6 @@ namespace CTRTools.Controls
         private FolderBrowserDialog fbd;
         private Button button1;
         private Button button2;
+        private CheckBox optionTwoSided;
     }
 }
