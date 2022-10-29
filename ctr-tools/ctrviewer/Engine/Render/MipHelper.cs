@@ -32,44 +32,39 @@ namespace ctrviewer.Engine.Render
         /// <returns>Texture2D object.</returns>
         public static Texture2D LoadTextureFromBitmap(GraphicsDevice device, Bitmap bmp, out bool alpha)
         {
-            var texture = GetTexture2DFromBitmap(device, bmp, out alpha);
-
-            byte[] temp = new byte[texture.Width * texture.Height * 4];
-            bmp = FixBitmap(bmp, out alpha, out temp, false);
+            var texture = GetTexture2DFromBitmap(device, bmp, out alpha, fix: false);
 
             bool x = alpha;
 
             int level = 1;
 
-            int width = bmp.Width;
-            int height = bmp.Height;
-
-            if (width <= MinMipSize || height <= MinMipSize)
+            if (bmp.Width <= MinMipSize || bmp.Height <= MinMipSize)
                 return texture;
+
+            Bitmap oldmip;
+            Bitmap newmip = bmp;
 
             do
             {
-                width /= 2;
-                height /= 2;
+                oldmip = newmip;
+                newmip = new Bitmap(oldmip.Width >> 1, oldmip.Height >> 1);
 
-                using (var mip = new Bitmap(width, height))
-                {
-                    var gr = Graphics.FromImage(mip);
-                    gr.SmoothingMode = SmoothingMode.AntiAlias;
-                    gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    gr.CompositingMode = CompositingMode.SourceOver;
+                var gr = Graphics.FromImage(newmip);
+                gr.SmoothingMode = SmoothingMode.AntiAlias;
+                gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                gr.CompositingMode = CompositingMode.SourceOver;
 
-                    var attributes = new ImageAttributes();
-                    attributes.SetWrapMode(WrapMode.TileFlipXY);
+                var attributes = new ImageAttributes();
+                attributes.SetWrapMode(WrapMode.TileFlipXY);
 
-                    gr.DrawImage(bmp, new System.Drawing.Rectangle(0, 0, mip.Width, mip.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, attributes);
-                    texture = GetTexture2DFromBitmap(device, mip, out alpha, true, texture, level);
-                }
+                gr.DrawImage(oldmip, new Rectangle(0, 0, newmip.Width, newmip.Height), 0, 0, oldmip.Width, oldmip.Height, GraphicsUnit.Pixel, attributes);
+
+                texture = GetTexture2DFromBitmap(device, newmip, out alpha, true, texture, level, fix: true);
 
                 level++;
             }
-            while (width >= MinMipSize && height >= MinMipSize);
+            while (newmip.Width > MinMipSize && newmip.Height > MinMipSize);
 
             alpha = x;
 
@@ -86,11 +81,11 @@ namespace ctrviewer.Engine.Render
         /// <param name="tex">Optional. Texture to update.</param>
         /// <param name="level">Optional. Mip level to update.</param>
         /// <returns>Texture2D object.</returns>
-        public static Texture2D GetTexture2DFromBitmap(GraphicsDevice device, Bitmap bitmap, out bool alpha, bool mipmaps = true, Texture2D tex = null, int level = -1)
+        public static Texture2D GetTexture2DFromBitmap(GraphicsDevice device, Bitmap bitmap, out bool alpha, bool mipmaps = true, Texture2D tex = null, int level = -1, bool fix = false)
         {
             byte[] bytes = new byte[bitmap.Width * bitmap.Height * 4];
 
-            bitmap = FixBitmap(bitmap, out alpha, out bytes, false);
+            bitmap = FixBitmap(bitmap, out alpha, out bytes, fix);
 
             if (tex == null)
             {

@@ -15,7 +15,7 @@ namespace CTRFramework
         Subdiv4x2 = 1 << 4, // reduces 4x4 subdivision to 4x2
         Unk5 = 1 << 5,      // additive blended?
         Hidden = 1 << 6,    // doesn't render child quads
-        Instance = 1 << 7,  // denotes whether the box contains model instance (only used in linked hitbox nodes)
+        NoCollision = 1 << 7,     // denotes whether the box is solid or you can drive through
         All = -1
     }
 
@@ -102,12 +102,12 @@ namespace CTRFramework
             if (flag.HasFlag(VisDataFlags.Subdiv4x2)) counter[4]++;
             if (flag.HasFlag(VisDataFlags.Unk5)) counter[5]++;
             if (flag.HasFlag(VisDataFlags.Hidden)) counter[6]++;
-            if (flag.HasFlag(VisDataFlags.Instance)) counter[7]++;
+            if (flag.HasFlag(VisDataFlags.NoCollision)) counter[7]++;
 
             id = br.ReadUInt16();
             bbox = BoundingBox.FromReader(br);
 
-            if (flag.HasFlag(VisDataFlags.Instance))
+            if (flag.HasFlag(VisDataFlags.NoCollision))
             {
                 boxX = br.ReadInt16();
                 boxY = br.ReadInt16();
@@ -170,7 +170,7 @@ namespace CTRFramework
             bw.Write(id);
             bbox.Write(bw);
 
-            if (flag.HasFlag(VisDataFlags.Instance))
+            if (flag.HasFlag(VisDataFlags.NoCollision))
             {
                 bw.Write(boxX);
                 bw.Write(boxY);

@@ -63,7 +63,7 @@ namespace ctrviewer
 
 
         //meh
-        public static int currentflag = 1;
+        public static int currentflag = -1;
 
         //get version only once, because we don't want this to be allocated every frame.
         public static string version = Meta.GetVersion();
@@ -382,6 +382,8 @@ namespace ctrviewer
             menu.Find("flag").PressedRight += ChangeFlag;
 
             menu.Find("aniso").Click += UpdateAniso;
+            menu.Find("aniso").PressedLeft += UpdateAniso;
+            menu.Find("aniso").PressedRight += UpdateAniso;
 
             foreach (var level in Enum.GetNames(typeof(Level)))
             {
@@ -900,7 +902,7 @@ namespace ctrviewer
                         new WireBox(
                             DataConverter.ToVector3(node.bbox.Min),
                             DataConverter.ToVector3(node.bbox.Max),
-                            node.flag.HasFlag(VisDataFlags.Instance) ? Color.Green : Color.Red, 1 / 100f));
+                            node.flag.HasFlag(VisDataFlags.NoCollision) ? Color.Green : Color.Red, 1 / 100f));
                 }
             }
 
@@ -954,7 +956,7 @@ namespace ctrviewer
                         new WireBox(
                             DataConverter.ToVector3(node.bbox.Min),
                             DataConverter.ToVector3(node.bbox.Max),
-                            Color.Magenta, 1 / 100f));
+                            node.ptrInstanceNodes != 0 ? Color.Yellow : Color.Magenta, 1 / 100f));
 
                     continue;
                 }

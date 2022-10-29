@@ -289,15 +289,19 @@ namespace ctrviewer.Engine.Gui
 
             if (InputHandlers.Process(GameAction.MenuUp)) Previous();
             if (InputHandlers.Process(GameAction.MenuDown)) Next();
-            if (InputHandlers.Process(GameAction.MenuLeft))
+
+            if (SelectedItem.Enabled)
             {
-                if (SelectedItem is IntRangeMenuItem)
-                    SelectedItem.PressLeft();
-            }
-            if (InputHandlers.Process(GameAction.MenuRight))
-            {
-                if (SelectedItem is IntRangeMenuItem)
-                    SelectedItem.PressRight();
+                if (InputHandlers.Process(GameAction.MenuLeft))
+                {
+                    if (SelectedItem is IntRangeMenuItem)
+                        SelectedItem.PressLeft();
+                }
+                if (InputHandlers.Process(GameAction.MenuRight))
+                {
+                    if (SelectedItem is IntRangeMenuItem)
+                        SelectedItem.PressRight();
+                }
             }
 
             //do not allow to enter menus if alt is pressed cause of fullscreen toggle
