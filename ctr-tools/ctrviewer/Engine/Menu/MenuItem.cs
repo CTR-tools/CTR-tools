@@ -11,37 +11,35 @@ namespace ctrviewer.Engine.Gui
         public int Value;
         public bool Enabled = true;
         public float Width;
-        public SwitchType sType;
 
-        public int rangeval;
-        public int rangemax;
-
-        #region click event
+        #region [events]
         public event EventHandler Click;
         public virtual void OnClick(object sender, EventArgs args = null) => Click?.Invoke(this, args);
         public void DoClick() { OnClick(this); }
+
+        public event EventHandler PressedLeft;
+        public virtual void OnPressedLeft(object sender, EventArgs args = null) => PressedLeft?.Invoke(this, args);
+        public void PressLeft() { OnPressedLeft(this); }
+
+        public event EventHandler PressedRight;
+        public virtual void OnPressedRight(object sender, EventArgs args = null) => PressedRight?.Invoke(this, args);
+        public void PressRight() { OnPressedRight(this); }
         #endregion
 
         public MenuItem()
         {
         }
 
-        public MenuItem(string t, string a, string p, bool e = true, SwitchType st = SwitchType.None, int rmax = 0, int intValue = 0)
+        public MenuItem(string t, string a, string p, bool e = true, int intValue = 0)
         {
             Text = t;
             Action = a;
             Param = p;
             Enabled = e;
-            sType = st;
-            rangeval = 0;
-            rangemax = rmax;
             Value = intValue;
         }
 
-        public void CalcWidth()
-        {
-            Width = Menu.Font.MeasureString(ToString()).X;
-        }
+        public void CalcWidth() => Width = Menu.Font.MeasureString(ToString()).X;
 
         public override string ToString() => Text.ToUpper();
     }

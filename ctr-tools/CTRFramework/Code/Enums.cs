@@ -150,7 +150,8 @@ namespace CTRFramework
         Ground = 1 << 12,       //ground, makes it collidable
         Wall = 1 << 13,         //walls, if it's flat, char will keep bouncing
         NoCollision = 1 << 14,  //visible stuff like water and outside areas
-        InvisibleTriggers = 1 << 15 //invisible stuff like triggers
+        InvisibleTriggers = 1 << 15, //invisible stuff like triggers
+        All = -1
     }
 
 

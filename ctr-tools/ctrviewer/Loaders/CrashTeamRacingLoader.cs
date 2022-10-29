@@ -12,26 +12,20 @@ namespace ctrviewer.Loaders
 {
     public class CrashTeamRacingLoader : MGLevel
     {
-        public CrashTeamRacingLoader(CtrScene s, Detail detail)
-        {
-            LoadCrashTeamRacingScene(s, detail);
-        }
+        public CrashTeamRacingLoader(CtrScene scene, Detail detail) => LoadCrashTeamRacingScene(scene, detail);
 
-        public static MGLevel FromScene(CtrScene s, Detail detail)
-        {
-            return new CrashTeamRacingLoader(s, detail);
-        }
+        public static MGLevel FromScene(CtrScene scene, Detail detail) => new CrashTeamRacingLoader(scene, detail);
 
-        private void LoadCrashTeamRacingScene(CtrScene s, Detail detail)
+        private void LoadCrashTeamRacingScene(CtrScene scene, Detail detail)
         {
-            if (s.visdata.Count > 0)
+            if (scene.visdata.Count > 0)
                 boundingBox = new Microsoft.Xna.Framework.BoundingBox(
-                    DataConverter.ToVector3(s.visdata[0].bbox.numericMin),
-                    DataConverter.ToVector3(s.visdata[0].bbox.numericMax)
+                    DataConverter.ToVector3(scene.visdata[0].bbox.numericMin),
+                    DataConverter.ToVector3(scene.visdata[0].bbox.numericMax)
                     );
 
-            List<VertexPositionColorTexture> monolist = new List<VertexPositionColorTexture>();
-            List<CTRFramework.Vertex> vts = new List<Vertex>();
+            var monolist = new List<VertexPositionColorTexture>();
+            var vts = new List<Vertex>();
 
             switch (detail)
             {
@@ -39,10 +33,10 @@ namespace ctrviewer.Loaders
                     {
                         Helpers.Panic(this, PanicType.Info, "doin low");
 
-                        foreach (QuadBlock qb in s.quads)
+                        foreach (QuadBlock qb in scene.quads)
                         {
                             monolist.Clear();
-                            vts = qb.GetVertexListq(s.verts, -1);
+                            vts = qb.GetVertexListq(scene.verts, -1);
 
                             if (vts != null)
                             {
@@ -89,12 +83,12 @@ namespace ctrviewer.Loaders
                     {
                         Helpers.Panic(this, PanicType.Info, "doin med");
 
-                        foreach (QuadBlock qb in s.quads)
+                        foreach (QuadBlock qb in scene.quads)
                         {
                             for (int j = 0; j < 4; j++)
                             {
                                 monolist.Clear();
-                                vts = qb.GetVertexListq(s.verts, j);
+                                vts = qb.GetVertexListq(scene.verts, j);
 
                                 if (vts != null)
                                 {
@@ -166,12 +160,12 @@ namespace ctrviewer.Loaders
                     {
                         Helpers.Panic(this, PanicType.Info, "doin hi");
 
-                        foreach (QuadBlock qb in s.quads)
+                        foreach (QuadBlock qb in scene.quads)
                         {
                             for (int j = 0; j < 4; j++)
                             {
                                 monolist.Clear();
-                                vts = qb.GetVertexListq(s.verts, j);
+                                vts = qb.GetVertexListq(scene.verts, j);
 
                                 List<Vertex> subdiv = Helpers.Subdivide(vts);
 

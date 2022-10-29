@@ -377,6 +377,9 @@ namespace ctrviewer
             menu.Find("campos").Click += ToggleCamPos;
             menu.Find("genmips").Click += ToggleMips;
             menu.Find("console").Click += ToggleConsole;
+            menu.Find("flag").Click += ChangeFlag;
+            menu.Find("flag").PressedLeft += ChangeFlag;
+            menu.Find("flag").PressedRight += ChangeFlag;
 
             menu.Find("aniso").Click += UpdateAniso;
 
@@ -410,6 +413,12 @@ namespace ctrviewer
         }
 
         #region [click events]
+        public void ChangeFlag(object sender, EventArgs args)
+        {
+            Game1.currentflag = (sender as IntRangeMenuItem).Value;
+            GameConsole.Write($"flag is now: {currentflag.ToString("X4")}");
+        }
+
         public void ToggleKartMode(object sender, EventArgs args) => eng.Settings.KartMode = (sender as BoolMenuItem).Value;
         public void ToggleCamPos(object sender, EventArgs args) => eng.Settings.ShowCamPos = (sender as BoolMenuItem).Value;
         public void ToggleMips(object sender, EventArgs args) => eng.Settings.GenerateMips = (sender as BoolMenuItem).Value;
@@ -497,7 +506,7 @@ namespace ctrviewer
         #endregion
 
         /// <summary>
-        /// Loads various colored "cones".
+        /// Loads various colored "cones" used for point indication (like bot paths).
         /// </summary>
         public void LoadCones()
         {
@@ -559,7 +568,7 @@ namespace ctrviewer
 
         bool IsLoading = false;
 
-        string newtexPath = Helpers.PathCombine(Meta.BasePath, "newtex");
+        string newtexPath = Helpers.PathCombine(Meta.BasePath, Meta.NewtexPath);
 
         /// <summary>
         /// Loads all necessary textures and processes as required (generates mips, loads replacements, etc)
@@ -1210,8 +1219,6 @@ namespace ctrviewer
                 if (menu.Visible)
                 {
                     menu.Update();
-
-                    //currentflag = menu.items.Find(x => x.Title == "current flag: {0}").rangeval;
 
                     if (menu.Exec)
                     {

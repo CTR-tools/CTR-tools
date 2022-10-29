@@ -18,7 +18,7 @@ namespace ctrviewer.Engine.Gui
 
         public static SpriteFont Font = null;
 
-
+        //position in percentage where 0.5 is half the screen
         public Vector2 Position = new Vector2(0.5f, 0.35f);
         public bool Exec = false;
 
@@ -44,11 +44,9 @@ namespace ctrviewer.Engine.Gui
         public MenuItem Find(string name)
         {
             foreach (var items in menus.Values)
-            {
                 foreach (var item in items)
                     if (item.Name == name)
                         return item;
-            }
 
             //not found
             return null;
@@ -95,6 +93,14 @@ namespace ctrviewer.Engine.Gui
 
             #region [menu items]
 
+            var flagtitles = new List<(int, string)>() { (-1, "None")};
+
+            foreach (int i in Enum.GetValues(typeof(QuadFlags)))
+            {
+                if (i == 0 || i == -1) continue;
+                flagtitles.Add((i, ((QuadFlags)i).ToString()));
+            }
+
             menus.Add("level", new List<MenuItem>()
             {
                 new BoolMenuItem() { Text = "Wireframe", Name = "wire", Value = settings.DrawWireframe },
@@ -109,7 +115,8 @@ namespace ctrviewer.Engine.Gui
                 new BoolMenuItem() { Text = "Game Objects", Name = "inst", Value = settings.ShowModels },
                 new BoolMenuItem() { Text = "Bot Paths", Name = "paths", Value = settings.ShowBotPaths },
                 new MenuItem("Toggle lod".ToUpper(), "toggle", "lod", true),
-                new MenuItem("QuadFlag: << {0} >>".ToUpper(), "flag", "scroll", true, SwitchType.Range, 15),
+                new IntRangeMenuItem() { Text = "QuadFlag", Name = "flag", SelectedValue = 0, Values = flagtitles
+                },
                 new MenuItem("back".ToUpper(), "link", "main", true)
             });
 
@@ -284,25 +291,13 @@ namespace ctrviewer.Engine.Gui
             if (InputHandlers.Process(GameAction.MenuDown)) Next();
             if (InputHandlers.Process(GameAction.MenuLeft))
             {
-                if (SelectedItem.sType == SwitchType.Range)
-                {
-                    SelectedItem.rangeval--;
-                    if (SelectedItem.rangeval < 0)
-                        SelectedItem.rangeval = SelectedItem.rangemax;
-
-                    Game1.currentflag = SelectedItem.rangeval;
-                }
+                if (SelectedItem is IntRangeMenuItem)
+                    SelectedItem.PressLeft();
             }
             if (InputHandlers.Process(GameAction.MenuRight))
             {
-                if (SelectedItem.sType == SwitchType.Range)
-                {
-                    SelectedItem.rangeval++;
-                    if (SelectedItem.rangeval > SelectedItem.rangemax)
-                        SelectedItem.rangeval = 0;
-
-                    Game1.currentflag = SelectedItem.rangeval;
-                }
+                if (SelectedItem is IntRangeMenuItem)
+                    SelectedItem.PressRight();
             }
 
             //do not allow to enter menus if alt is pressed cause of fullscreen toggle
@@ -316,19 +311,22 @@ namespace ctrviewer.Engine.Gui
 
         Vector2 shadow_offset = new Vector2(2, 4);
 
-        public void Draw(GraphicsDevice gd, SpriteBatch g, SpriteFont fnt, Texture2D background)
-        {
-            g.GraphicsDevice.BlendState = BlendState.Opaque;
+        Color MenuItemBackColor = new Color(0, 0, 0, 128);
+        Color MenuItemSelectedColor = new Color(128, 0, 0, 128);
 
+        public void Draw(GraphicsDevice graphics, SpriteBatch batch, SpriteFont fnt, Texture2D background)
+        {
             if (!Visible) return;
 
-            float scale = gd.Viewport.Height / 1080f;
+            graphics.BlendState = BlendState.Opaque;
 
-            g.Draw(background, gd.Viewport.Bounds, Color.Black * 0.25f);
+            float scale = graphics.Viewport.Height / 1080f;
+
+            batch.Draw(background, graphics.Viewport.Bounds, Color.Black * 0.25f);
 
             int i = 0;
 
-            Vector2 loc = new Vector2(gd.Viewport.Width, gd.Viewport.Height) * Position;
+            Vector2 loc = new Vector2(graphics.Viewport.Width, graphics.Viewport.Height) * Position;
 
             float maxwidth = 0;
 
@@ -338,52 +336,56 @@ namespace ctrviewer.Engine.Gui
 
             maxwidth *= 1.25f;
 
-            if (maxwidth < gd.Viewport.Width / 3)
-                maxwidth = gd.Viewport.Width / 3;
+            if (maxwidth < graphics.Viewport.Width / 3)
+                maxwidth = graphics.Viewport.Width / 3;
 
             foreach (MenuItem m in items)
             {
-                string s = (m.sType == SwitchType.Range ? String.Format(m.Text, ((QuadFlags)(1 << Game1.currentflag)).ToString(), m.rangeval) : m.ToString()); //m.Title.ToUpper(), 
+                string s = m.ToString();
 
                 Vector2 backloc = loc - new Vector2(maxwidth / 2 * scale, 0);
 
-                g.Draw(background, new Rectangle((int)backloc.X, (int)backloc.Y - 2, (int)(maxwidth * scale), (int)(40 * scale)),
-                    i == Selection ? new Color(128, 0, 0, 128) : new Color(0, 0, 0, 128));
+                //draw menu item background
+                batch.Draw(background, new Rectangle((int)backloc.X, (int)backloc.Y - 2, (int)(maxwidth * scale), (int)(40 * scale)),
+                    i == Selection ? MenuItemSelectedColor : MenuItemBackColor);
 
-                g.DrawString(fnt, s, loc + shadow_offset - new Vector2(m.Width / 2 * scale, 0), Color.Black,
+                //draw menu item text shadow
+                batch.DrawString(fnt, s, loc + shadow_offset - new Vector2(m.Width / 2 * scale, 0), Color.Black,
                    0, new Vector2(0, 0), scale, SpriteEffects.None, 1.0f);
 
-                g.DrawString(fnt, s, loc - new Vector2(m.Width / 2 * scale, 0),
+                //draw menu item text
+                batch.DrawString(fnt, s, loc - new Vector2(m.Width / 2 * scale, 0),
                    m.Enabled ? (m == SelectedItem ? Color.White : Game1.CtrMainFontColor) : Color.DarkGray,// (i == selection ? (m.Enabled ? Color.Red : Color.DarkRed) : (m.Enabled ? Color.White : Color.Gray)),
                    0, new Vector2(0, 0), scale, SpriteEffects.None, 0.5f);
 
-                loc += new Vector2(0, 40 * scale);
+                //next line
+                loc.Y += 40 * scale;
 
                 i++;
             }
 
             //draw logo
-            g.Draw(
+            batch.Draw(
                 ContentVault.Textures["logo"],
-                new Vector2((gd.Viewport.Width / 2), 50 * gd.Viewport.Height / 1080f),
+                new Vector2((graphics.Viewport.Width / 2), 50 * graphics.Viewport.Height / 1080f),
                 new Rectangle(0, 0, ContentVault.Textures["logo"].Width, ContentVault.Textures["logo"].Height),
                 Color.White,
                 0,
                 new Vector2(ContentVault.Textures["logo"].Width / 2, 0),
-                gd.Viewport.Height / 1080f,
+                graphics.Viewport.Height / 1080f,
                 SpriteEffects.None,
                 0.5f
                 );
 
             //draw framework version
-            g.DrawString(
+            batch.DrawString(
                 fnt,
                 Game1.version,
-                new Vector2(((gd.Viewport.Width - fnt.MeasureString(Game1.version).X * gd.Viewport.Height / 1080f) / 2), gd.Viewport.Height - 60 * gd.Viewport.Width / 1080f),
+                new Vector2(((graphics.Viewport.Width - fnt.MeasureString(Game1.version).X * graphics.Viewport.Height / 1080f) / 2), graphics.Viewport.Height - 60 * graphics.Viewport.Width / 1080f),
                 Color.Aquamarine,
                 0,
                 new Vector2(0, 0),
-                gd.Viewport.Height / 1080f,
+                graphics.Viewport.Height / 1080f,
                 SpriteEffects.None,
                  0.5f
                 );

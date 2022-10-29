@@ -19,6 +19,7 @@ namespace CTRFramework.Shared
         public const string CseqXmlPath = "cseq.xml";
         public const string SmplPath = "samplenames.txt";
         public const string BankPath = "banknames.txt";
+        public const string NewtexPath = "newtex";
         public const string ModelsPath = "models";
         public const string BigFileName = "bigfile.big";
         public const string BashPath = "bash_filelist.txt";

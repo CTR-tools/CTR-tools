@@ -29,6 +29,17 @@ namespace ctrviewer.Engine.Gui
 
         public override void OnClick(object sender, EventArgs args = null)
         {
+            OnPressedRight(sender, args);
+        }
+
+        public override void OnPressedLeft(object sender, EventArgs args = null)
+        {
+            ChangeValue(-1);
+            CalcWidth();
+            base.OnClick(args);
+        }
+        public override void OnPressedRight(object sender, EventArgs args = null)
+        {
             ChangeValue(1);
             CalcWidth();
             base.OnClick(args);

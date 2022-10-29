@@ -100,8 +100,8 @@ namespace ctrviewer.Engine.Render
             Samplers.SetToDevice(graphics, EngineSampler.Default);
 
 
-            if (flagq.ContainsKey(((QuadFlags)(1 << Game1.currentflag)).ToString()))
-                flagq[((QuadFlags)(1 << Game1.currentflag)).ToString()].Draw(graphics, effect, alpha);
+            if (flagq.ContainsKey(((QuadFlags)Game1.currentflag).ToString()))
+                flagq[((QuadFlags)Game1.currentflag).ToString()].Draw(graphics, effect, alpha);
 
 
 

@@ -10,15 +10,9 @@ namespace ctrviewer.Loaders
 {
     public class RawLevelLoader : MGLevel
     {
-        public RawLevelLoader(string filename)
-        {
-            Load(filename);
-        }
+        public RawLevelLoader(string filename) => Load(filename);
 
-        public static MGLevel FromFile(string filename)
-        {
-            return new RawLevelLoader(filename);
-        }
+        public static MGLevel FromFile(string filename) => new RawLevelLoader(filename);
 
         private void Load(string filename)
         {
@@ -32,7 +26,7 @@ namespace ctrviewer.Loaders
         {
             Random random = new Random();
 
-            List<VertexPositionColorTexture> monolist = new List<VertexPositionColorTexture>();
+            var monolist = new List<VertexPositionColorTexture>();
 
             //if (!scene.HasMeshes)
             //    return;
