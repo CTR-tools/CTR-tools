@@ -189,7 +189,6 @@ namespace ctrviewer
         {
             graphics.SynchronizeWithVerticalRetrace = eng.Settings.VerticalSync;
             IsFixedTimeStep = eng.Settings.VerticalSync;
-            // graphics.SynchronizeWithVerticalRetrace = false;
 
             graphics.ApplyChanges();
         }

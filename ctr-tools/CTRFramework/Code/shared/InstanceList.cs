@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace CTRFramework.Shared
 {
+    /// <summary>
+    /// PtrWrap class is meant to wrap a C style pointer, read and return data from binaryreader and jump back to the pointer.
+    /// This allows to parse some header sequentially and obtain the data it points to immediately.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class PtrWrap<T> where T : IRead, new()
     {
         public UIntPtr Pointer = UIntPtr.Zero;
@@ -43,7 +48,7 @@ namespace CTRFramework.Shared
 
             int pos = (int)br.Position;
 
-            List<T> t = InstanceList<T>.FromReader(br, Pointer, count);
+            var t = InstanceList<T>.FromReader(br, Pointer, count);
 
             br.Jump(pos);
 
@@ -51,11 +56,15 @@ namespace CTRFramework.Shared
         }
     }
 
-    public class InstanceList<T> : List<T> where T : IRead, new()
+    /// <summary>
+    /// Generic class, returns a list of class instances (IRead) given the address and number of entries.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class InstanceList<T> where T : IRead, new()
     {
         public static List<T> FromReader(BinaryReaderEx br, UIntPtr pos, uint count)
         {
-            List<T> list = new List<T>();
+            var list = new List<T>();
 
             br.Jump(pos);
 
@@ -70,6 +79,10 @@ namespace CTRFramework.Shared
         }
     }
 
+    /// <summary>
+    /// Generic class, returns a class instance (IRead) given the address.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Instance<T> where T : IRead, new()
     {
         public static T FromReader(BinaryReaderEx br, uint pos = 0)
@@ -83,9 +96,6 @@ namespace CTRFramework.Shared
             return t;
         }
 
-        public static T FromReader(BinaryReaderEx br, UIntPtr pos)
-        {
-            return FromReader(br, pos.ToUInt32());
-        }
+        public static T FromReader(BinaryReaderEx br, UIntPtr pos) => FromReader(br, pos.ToUInt32());
     }
 }
