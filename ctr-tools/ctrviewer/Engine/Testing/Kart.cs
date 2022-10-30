@@ -104,7 +104,7 @@ namespace ctrviewer.Engine.Testing
         public float Speed = 0;
         public float Accel = 0;
         public float Gravity = 0;
-        public Kart(Vector3 pos, Vector3 rot) : base("crash", pos, rot, Vector3.One * 0.1f)
+        public Kart(Vector3 pos, Vector3 rot) : base("crash", pos, rot, Vector3.One * 0.06f)
         {
             Powers.Add(PowerType.Gravity, new Power() { MaxValue = KartPhysics.MaxGravity, Direction = Vector3.Down });
             Powers.Add(PowerType.Terrain, new Power() { MaxValue = 99999f, Direction = Vector3.Zero });
@@ -235,10 +235,10 @@ namespace ctrviewer.Engine.Testing
 
             //turning
 
-            if (KeyboardHandler.IsAnyDown(Keys.A, Keys.Left) || GamePadHandler.State.DPad.Left == ButtonState.Pressed)
+            if (KeyboardHandler.IsAnyDown(Keys.A, Keys.Left) || GamePadHandler.IsDown(Buttons.DPadLeft))
                 Rotation.X += GetDelta(gameTime, KartPhysics.MaxTurningStep * (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? 2 : 1));
 
-            if (KeyboardHandler.IsAnyDown(Keys.D, Keys.Right) || GamePadHandler.State.DPad.Right == ButtonState.Pressed)
+            if (KeyboardHandler.IsAnyDown(Keys.D, Keys.Right) || GamePadHandler.IsDown(Buttons.DPadRight))
                 Rotation.X -= GetDelta(gameTime, KartPhysics.MaxTurningStep * (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? 2 : 1));
 
             Rotation.X -= GetDelta(gameTime, KartPhysics.MaxTurningStep * GamePadHandler.State.ThumbSticks.Left.X);
@@ -248,7 +248,7 @@ namespace ctrviewer.Engine.Testing
 
             //go forward
 
-            if (KeyboardHandler.IsDown(Keys.W) || GamePadHandler.IsPressed(Buttons.A))
+            if (KeyboardHandler.IsDown(Keys.W) || GamePadHandler.IsDown(Buttons.A))
             {
                 Powers[PowerType.Engine].Boost(GetDelta(gameTime, KartPhysics.MaxAcceleration));
             }
@@ -256,14 +256,14 @@ namespace ctrviewer.Engine.Testing
 
             //move up/down
 
-            if (KeyboardHandler.IsDown(Keys.PageUp) || GamePadHandler.State.DPad.Up == ButtonState.Pressed)
+            if (KeyboardHandler.IsDown(Keys.PageUp) || GamePadHandler.IsDown(Buttons.DPadUp))
             {
                 Powers[PowerType.Gravity].Value = 0;
                 Powers[PowerType.Gravity].Enabled = false;
                 Powers[PowerType.GodZ].Value = GetDelta(gameTime, 0.5f);
                 Powers[PowerType.GodZ].Enabled = true;
             }
-            else if (KeyboardHandler.IsDown(Keys.PageDown) || GamePadHandler.State.DPad.Down == ButtonState.Pressed)
+            else if (KeyboardHandler.IsDown(Keys.PageDown) || GamePadHandler.IsDown(Buttons.DPadDown))
             {
                 Powers[PowerType.Gravity].Value = 0;
                 Powers[PowerType.Gravity].Enabled = false;

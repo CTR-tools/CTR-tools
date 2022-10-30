@@ -2,17 +2,13 @@
 using ctrviewer.Engine.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Gui
 {
-    public enum SwitchType
-    {
-        None, Toggle, Range, Set
-    }
-
-    class Menu
+    public class Menu
     {
         public static Dictionary<string, List<MenuItem>> menus = new Dictionary<string, List<MenuItem>>();
 

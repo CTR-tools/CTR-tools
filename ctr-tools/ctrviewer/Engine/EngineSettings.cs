@@ -83,7 +83,7 @@ namespace ctrviewer.Engine
         public bool StereoPair { get; set; } = false;
         public bool StereoCrossEyed { get; set; } = true;
         public string PlayerModel { get; set; } = "crash";
-        public float StereoPairSeparation { get; set; } = 20;
+        public float StereoPairSeparation { get; set; } = 10;
         public bool ShowCamPos { get; set; } = false;
         public bool UseLowLod { get; set; } = false;
         public bool ShowConsole { get; set; } = false;

@@ -107,12 +107,12 @@ namespace ctrviewer
         /// <summary>
         /// Creates viewport objects. Full is for full screen, rest is for half screen split vertically or horizontally.
         /// </summary>
-        public void UpdateSplitscreenViewports(GraphicsDeviceManager graphics)
+        public void UpdateSplitscreenViewports(GraphicsDeviceManager graphics, RenderTarget2D renderTarget = null)
         {
             GameConsole.Write("UpdateSplitscreenViewports()");
 
-            int width = graphics.PreferredBackBufferWidth;
-            int height = graphics.PreferredBackBufferHeight;
+            int width = renderTarget != null ? renderTarget.Width : graphics.PreferredBackBufferWidth;
+            int height = renderTarget != null ? renderTarget.Height : graphics.PreferredBackBufferHeight;
 
             float minDepth = graphics.GraphicsDevice.Viewport.MinDepth;
             float maxDepth = graphics.GraphicsDevice.Viewport.MaxDepth;
@@ -230,10 +230,12 @@ namespace ctrviewer
                 GraphicsDevice,
                 width,
                 height,
-                true,
+                false,
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24
                 );
+
+            UpdateSplitscreenViewports(graphics, EngineSettings.Instance.InternalPSXResolution ? eng.screenBuffer : null);
         }
 
         public void UpdateInternalResolution()
@@ -435,7 +437,12 @@ namespace ctrviewer
             menu.Find("crosseyed").Enabled = eng.Settings.StereoPair;
         }
 
-        public void ToggleCrosseyed(object sender, EventArgs args) => eng.Settings.StereoCrossEyed = (sender as BoolMenuItem).Value;
+        public void ToggleCrosseyed(object sender, EventArgs args)
+        {
+            eng.Settings.StereoCrossEyed = (sender as BoolMenuItem).Value;
+            UpdateCameras(new GameTime());
+        }
+    
 
         public void ToggleVsync(object sender, EventArgs args) => eng.Settings.VerticalSync = (sender as BoolMenuItem).Value;
 
@@ -828,7 +835,7 @@ namespace ctrviewer
                                 s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
                                 s.header.startGrid[i].Rotation.X * (float)Math.PI * 2,
                                 s.header.startGrid[i].Rotation.Z * (float)Math.PI * 2),
-                           new Vector3(0.1f)
+                           new Vector3(0.06f)
                             )
                             );
 
@@ -873,7 +880,7 @@ namespace ctrviewer
                 {
                     karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
                     karts[0].ModelName = eng.Settings.PlayerModel;
-                    karts[0].path = ContentVault.GetVectorAnim("defaultCameraPath");
+                    //karts[0].path = ContentVault.GetVectorAnim("defaultCameraPath");
                 }
 
                 //put all botpaths
@@ -1151,8 +1158,8 @@ namespace ctrviewer
 
                                 kart.Update(gameTime, Scenes);
 
-                                eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0, 2f, 0) +
-                                    Vector3.Transform(Vector3.Forward * 4f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -1f));
+                                eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0f, 1.2f, 0) +
+                                    Vector3.Transform(Vector3.Forward * 2f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -4f));
 
                                 eng.Cameras[CameraType.DefaultCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
 
@@ -1176,15 +1183,15 @@ namespace ctrviewer
                 if (eng.Settings.StereoPair)
                 {
                     if (GamePadHandler.IsDown(Buttons.RightShoulder) || KeyboardHandler.IsDown(Keys.OemOpenBrackets))
-                        eng.Settings.StereoPairSeparation += (float)(300 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
+                        eng.Settings.StereoPairSeparation += (float)(100 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
 
                     if (GamePadHandler.IsDown(Buttons.LeftShoulder) || KeyboardHandler.IsDown(Keys.OemCloseBrackets))
-                        eng.Settings.StereoPairSeparation -= (float)(300 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
+                        eng.Settings.StereoPairSeparation -= (float)(100 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
 
                     if (eng.Settings.StereoPairSeparation < 0) eng.Settings.StereoPairSeparation = 0;
 
                     if (GamePadHandler.IsDown(Buttons.RightShoulder) && GamePadHandler.IsDown(Buttons.LeftShoulder))
-                        eng.Settings.StereoPairSeparation = 130;
+                        eng.Settings.StereoPairSeparation = 10;
                 }
 
                 if (InputHandlers.Process(GameAction.ToggleConsole))

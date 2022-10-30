@@ -47,10 +47,7 @@ namespace ctrviewer.Engine.Render
                 var mip = new Bitmap(width, height);
 
                 var gr = Graphics.FromImage(mip);
-                gr.SmoothingMode = SmoothingMode.None;
                 gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                gr.PixelOffsetMode = PixelOffsetMode.None;
-                gr.CompositingMode = CompositingMode.SourceCopy;
 
                 var attributes = new ImageAttributes();
                 attributes.SetWrapMode(WrapMode.TileFlipXY);

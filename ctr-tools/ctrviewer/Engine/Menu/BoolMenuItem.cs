@@ -15,7 +15,7 @@ namespace ctrviewer.Engine.Gui
     {
         public BoolType DisplayType = BoolType.OnOff;
 
-        public bool Value { get; set; } = false;
+        public new bool Value { get; set; } = false;
 
         private string BoolDisplayValue()
         {
@@ -37,9 +37,6 @@ namespace ctrviewer.Engine.Gui
             base.OnClick(args);
         }
 
-        public override string ToString()
-        {
-            return $"{Text}: {BoolDisplayValue()}".ToUpper();
-        }
+        public override string ToString() => $"{Text}: {BoolDisplayValue()}".ToUpper();
     }
 }
