@@ -1190,7 +1190,7 @@ namespace ctrviewer
                 if (InputHandlers.Process(GameAction.ToggleConsole))
                     eng.Settings.ShowConsole ^= true;
 
-                if (KeyboardHandler.IsPressed(Keys.O))
+                if (KeyboardHandler.IsPressed(Keys.O) || GamePadHandler.IsPressed(Buttons.LeftShoulder))
                 {
                     selectedChar--;
 
@@ -1201,7 +1201,7 @@ namespace ctrviewer
                         karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
                 }
 
-                if (KeyboardHandler.IsPressed(Keys.P))
+                if (KeyboardHandler.IsPressed(Keys.P) || GamePadHandler.IsPressed(Buttons.RightShoulder))
                 {
                     selectedChar++;
 

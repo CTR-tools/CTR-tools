@@ -2,6 +2,7 @@
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
+
 using System.Collections.Generic;
 
 namespace ctrviewer.Engine
@@ -22,8 +23,9 @@ namespace ctrviewer.Engine
         {
             if (VectorAnims.ContainsKey(name))
             {
+                VectorAnims[name] = anim;
                 Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate vectoranim: '{name}'.");
-                return false;
+                return true;
             }
 
             VectorAnims.Add(name, anim);

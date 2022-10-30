@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -32,39 +33,42 @@ namespace ctrviewer.Engine.Render
         /// <returns>Texture2D object.</returns>
         public static Texture2D LoadTextureFromBitmap(GraphicsDevice device, Bitmap bmp, out bool alpha)
         {
-            var texture = GetTexture2DFromBitmap(device, bmp, out alpha, fix: false);
+            var mips = new List<Bitmap>();
 
-            bool x = alpha;
+            mips.Add(bmp);
 
-            int level = 1;
+            int width = bmp.Width >> 1;
+            int height = bmp.Height >> 1;
 
-            if (bmp.Width <= MinMipSize || bmp.Height <= MinMipSize)
-                return texture;
+            var old = bmp;
 
-            Bitmap oldmip;
-            Bitmap newmip = bmp;
-
-            do
+            while (width >= MinMipSize && height >= MinMipSize)
             {
-                oldmip = newmip;
-                newmip = new Bitmap(oldmip.Width >> 1, oldmip.Height >> 1);
+                var mip = new Bitmap(width, height);
 
-                var gr = Graphics.FromImage(newmip);
-                gr.SmoothingMode = SmoothingMode.AntiAlias;
+                var gr = Graphics.FromImage(mip);
+                gr.SmoothingMode = SmoothingMode.None;
                 gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                gr.CompositingMode = CompositingMode.SourceOver;
+                gr.PixelOffsetMode = PixelOffsetMode.None;
+                gr.CompositingMode = CompositingMode.SourceCopy;
 
                 var attributes = new ImageAttributes();
                 attributes.SetWrapMode(WrapMode.TileFlipXY);
 
-                gr.DrawImage(oldmip, new Rectangle(0, 0, newmip.Width, newmip.Height), 0, 0, oldmip.Width, oldmip.Height, GraphicsUnit.Pixel, attributes);
+                gr.DrawImage(old, new Rectangle(0, 0, width, height), 0, 0, old.Width, old.Height, GraphicsUnit.Pixel, attributes);
+                mips.Add(mip);
+                old = mip;
 
-                texture = GetTexture2DFromBitmap(device, newmip, out alpha, true, texture, level, fix: true);
-
-                level++;
+                width >>= 1;
+                height >>= 1;
             }
-            while (newmip.Width > MinMipSize && newmip.Height > MinMipSize);
+
+            bool x = false;
+
+            var texture = new Texture2D(device, bmp.Width, bmp.Height, true, SurfaceFormat.Color);
+
+            for (int i = 0; i < mips.Count; i++)
+                texture = GetTexture2DFromBitmap(device, mips[i], out x, true, texture, i, fix: false);
 
             alpha = x;
 
