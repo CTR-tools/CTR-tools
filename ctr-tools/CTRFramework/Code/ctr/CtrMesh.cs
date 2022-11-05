@@ -71,6 +71,83 @@ namespace CTRFramework
 
         public bool isTextured => ptrTex == ptrClut;
 
+        //
+        public List<TextureLayout> GroupByPalette(string path, Tim vram)
+        {
+            Helpers.CheckFolder(path);
+
+            //create separate texture lists, grouped by PalXY
+
+            var dict = new Dictionary<(int, int), List<TextureLayout>>();
+
+            foreach (var ttl in tl)
+            {
+                if (!dict.ContainsKey((ttl.PalX, ttl.PalY)))
+                    dict[(ttl.PalX, ttl.PalY)] = new List<TextureLayout>();
+
+                dict[(ttl.PalX, ttl.PalY)].Add(ttl);
+            }
+
+            Console.WriteLine($"total entries: {dict.Keys.Count}");
+
+            //combine every list to a single texture
+
+            var result = new List<TextureLayout>();
+
+            foreach (var ttl in dict.Values)
+                result.Add(Combine(ttl));
+
+            //save all grouped textures
+
+            foreach (var ttl in result)
+                vram.GetTexture(ttl).Save(Helpers.PathCombine(path, ttl.Tag + ".png"), System.Drawing.Imaging.ImageFormat.Png);
+
+            return result;
+        }
+
+        private TextureLayout Combine(List<TextureLayout> tl)
+        {
+            //corner cases, dont do anything
+
+            if (tl.Count == 0) return null;
+            if (tl.Count == 1) return tl[0];
+
+            var first = tl[0];
+
+            float maxX = 0;
+            float maxY = 0;
+            float minX = 20000;
+            float minY = 20000;
+
+            //find min/max UV
+
+            foreach (var t in tl)
+            {
+                if (t.min.X < minX) minX = t.min.X;
+                if (t.min.Y < minY) minY = t.min.Y;
+                if (t.max.X > maxX) maxX = t.max.X;
+                if (t.max.Y > maxY) maxY = t.max.Y;
+            }
+
+            //return new TL using first entry data and min/max values.
+            //not particularly correct psx TL, but still works for export, as it guesses min/max anyways.
+
+            return new TextureLayout()
+            {
+                Page = first.Page,
+                blendingMode = first.blendingMode,
+                bpp = first.bpp,
+                Palette = first.Palette,
+                uv = new Vector2[]
+                {
+                    new Vector2(minX, minY),
+                    new Vector2(minX, maxY),
+                    new Vector2(maxX, minY),
+                    new Vector2(maxX, maxY)
+                }
+            };
+        }
+
         #region [Constuctors, factories]
         public CtrMesh()
         {
@@ -203,7 +280,7 @@ namespace CTRFramework
                 Helpers.Panic(this, PanicType.Debug, t.ToString("X8"));
 
                 br.Jump(t);
-                TextureLayout tx = TextureLayout.FromReader(br);
+                var tx = TextureLayout.FromReader(br);
                 tl.Add(tx);
 
                 Helpers.Panic(this, PanicType.Debug, tx.ToString());

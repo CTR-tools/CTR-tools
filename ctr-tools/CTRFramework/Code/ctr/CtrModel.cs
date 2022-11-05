@@ -105,6 +105,8 @@ namespace CTRFramework
 
                 entry.ExportTextures(path, vram);
 
+                entry.GroupByPalette(Helpers.PathCombine(path, "grouptest"), vram);
+
                 i++;
             }
         }
@@ -161,9 +163,7 @@ namespace CTRFramework
                 bw.Write(x - 4);
         }
 
-
-
-        public int FixPointers()
+        private int FixPointers()
         {
             int curPtr = 0x18;
             //ptrHeaders = (UIntPtr)curPtr;
@@ -227,9 +227,9 @@ namespace CTRFramework
         /// <returns></returns>
         public static CtrModel FromObj(List<OBJ> objlist)
         {
-            CtrModel ctr = new CtrModel();
+            var ctr = new CtrModel();
 
-            foreach (OBJ obj in objlist)
+            foreach (var obj in objlist)
                 ctr.Entries.Add(CtrMesh.FromObj(obj.ObjectName, obj));
 
             ctr.name = objlist[0].ObjectName;
