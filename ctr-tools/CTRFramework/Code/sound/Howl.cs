@@ -352,7 +352,7 @@ s
                 x++;
             }
 
-            Helpers.WriteToFile(Helpers.PathCombine(path, "test.txt"), sb.ToString());
+            //Helpers.WriteToFile(Helpers.PathCombine(path, "test.txt"), sb.ToString());
 
 
             Cseq.PatchMidi = true;

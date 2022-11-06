@@ -118,7 +118,7 @@ namespace CTRFramework.Vram
         private string _tag = "";
 
         //meant to be unique
-        public string Tag => _tag == "" ? $"{RealX}_{RealY}_{PalX}_{PalY}_{Width * stretch}_{Height}" : _tag;
+        public string Tag => _tag == "" ? $"{RealX}_{RealY}_{PalX}_{PalY}_{Width * stretch}_{Height}_{(byte)blendingMode}" : _tag;
         //public string Tag => _tag == "" ? $"{PalX}_{PalY}_{RealX}_{RealY}_{Width * stretch}_{Height}" : _tag;
         #endregion
 

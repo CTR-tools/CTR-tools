@@ -1474,6 +1474,21 @@ namespace ctrviewer
         };
         */
 
+        private void DrawLoadingScreen(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin();
+            spriteBatch.Draw(tint, new Rectangle(
+                0,
+                graphics.PreferredBackBufferHeight / 2 - 10,
+                graphics.PreferredBackBufferWidth,
+                96
+                ), Color.Black);
+            spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), CtrMainFontColor);
+            spriteBatch.DrawString(font, loadingStatus, new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString(loadingStatus).X / 2), graphics.PreferredBackBufferHeight / 2 + 40), CtrMainFontColor);
+            spriteBatch.End();
+
+        }
+
         /// <summary>
         /// Monogame: default draw method
         /// </summary>
@@ -1485,23 +1500,12 @@ namespace ctrviewer
             //if we're loading, only draw the loading info.
             if (IsLoading)
             {
-                spriteBatch.Begin();
-                spriteBatch.Draw(tint, new Rectangle(
-                    0,
-                    graphics.PreferredBackBufferHeight / 2 - 10,
-                    graphics.PreferredBackBufferWidth,
-                    96
-                    ), Color.Black);
-                spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), CtrMainFontColor);
-                spriteBatch.DrawString(font, loadingStatus, new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString(loadingStatus).X / 2), graphics.PreferredBackBufferHeight / 2 + 40), CtrMainFontColor);
-                spriteBatch.End();
-
+                DrawLoadingScreen(gameTime, spriteBatch);
                 IsDrawing = false;
-
                 return;
             }
 
-            //reset samples to default
+            //reset samplers to default
             Samplers.SetToDevice(graphics, EngineSampler.Default);
 
             //maybe we should switch to screen buffer
