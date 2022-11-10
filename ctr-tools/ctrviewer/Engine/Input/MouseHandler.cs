@@ -19,8 +19,10 @@ namespace ctrviewer.Engine.Input
             oldState = newState;
         }
 
-        public static bool IsLeftButtonPressed => newState.LeftButton == ButtonState.Pressed;
-        public static bool IsRightButtonPressed => newState.RightButton == ButtonState.Pressed;
+        public static bool IsLeftButtonHeld => newState.LeftButton == ButtonState.Pressed;
+        public static bool IsRightButtonHeld => newState.RightButton == ButtonState.Pressed;
+        public static bool IsLeftButtonPressed => newState.LeftButton == ButtonState.Pressed && oldState.LeftButton != ButtonState.Pressed;
+        public static bool IsRightButtonPressed => newState.RightButton == ButtonState.Pressed && oldState.RightButton != ButtonState.Pressed;
         public static bool IsWheelPressed => newState.MiddleButton == ButtonState.Pressed;
         public static int X => newState.X;
         public static int Y => newState.Y;

@@ -15,7 +15,7 @@ namespace ctrviewer.Engine.Gui
         #region [events]
         public event EventHandler Click;
         public virtual void OnClick(object sender, EventArgs args = null) => Click?.Invoke(this, args);
-        public void DoClick() { OnClick(this); }
+        public void DoClick() { if (Enabled) OnClick(this); }
 
         public event EventHandler PressedLeft;
         public virtual void OnPressedLeft(object sender, EventArgs args = null) => PressedLeft?.Invoke(this, args);

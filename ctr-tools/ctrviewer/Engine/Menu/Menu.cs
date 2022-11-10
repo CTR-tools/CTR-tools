@@ -205,7 +205,7 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem(542) { Text = "Oxide 3", Name = Cutscenes.Oxide3.ToString() },
                 new IntMenuItem(544) { Text = "Oxide 4", Name = Cutscenes.Oxide4.ToString() },
                 new MenuItem("back".ToUpper(), "link", "cupmenu", true)
-            }); ;
+            });
 
             menus.Add("bonus_levels", new List<MenuItem>
             {
@@ -246,6 +246,7 @@ namespace ctrviewer.Engine.Gui
                 new MenuItem("video options".ToUpper(), "link", "video", true),
                 new MenuItem("time of day".ToUpper(), "link", "tod", true),
                 new BoolMenuItem() { Text = "Kart mode", Name = "kart", Value = settings.KartMode },
+                new MenuItem("open settings file".ToUpper(), "settings", "", true),
                 new MenuItem("quit".ToUpper(), "exit", "", true),
             });
 
@@ -314,6 +315,8 @@ namespace ctrviewer.Engine.Gui
         Color MenuItemBackColor = new Color(0, 0, 0, 128);
         Color MenuItemSelectedColor = new Color(128, 0, 0, 128);
 
+
+
         public void Draw(GraphicsDevice graphics, SpriteBatch batch, SpriteFont fnt, Texture2D background)
         {
             if (!Visible) return;
@@ -345,9 +348,21 @@ namespace ctrviewer.Engine.Gui
 
                 Vector2 backloc = loc - new Vector2(maxwidth / 2 * scale, 0);
 
+                var rect = new Rectangle((int)backloc.X, (int)backloc.Y - 2, (int)(maxwidth * scale), (int)(40 * scale));
+
+                if (rect.Contains(MouseHandler.X, MouseHandler.Y))
+                {
+                    Selection = i;
+
+                    if (MouseHandler.IsLeftButtonPressed)
+                    {
+                        m.DoClick();
+                    }
+                }
+
                 //draw menu item background
-                batch.Draw(background, new Rectangle((int)backloc.X, (int)backloc.Y - 2, (int)(maxwidth * scale), (int)(40 * scale)),
-                    i == Selection ? MenuItemSelectedColor : MenuItemBackColor);
+                batch.Draw(background, rect,
+                    i == Selection ? MenuItemSelectedColor : MenuItemBackColor); ;
 
                 //draw menu item text shadow
                 batch.DrawString(fnt, s, loc + shadow_offset - new Vector2(m.Width / 2 * scale, 0), Color.Black,
@@ -359,7 +374,7 @@ namespace ctrviewer.Engine.Gui
                    0, new Vector2(0, 0), scale, SpriteEffects.None, 0.5f);
 
                 //next line
-                loc.Y += 40 * scale;
+                loc.Y += (int)(40 * scale);
 
                 i++;
             }

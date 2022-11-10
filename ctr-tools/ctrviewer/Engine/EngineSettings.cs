@@ -38,7 +38,7 @@ namespace ctrviewer.Engine
             }
         }
 
-        public int _anisotropyLevel = 4;
+        private int _anisotropyLevel = 4;
         public int AnisotropyLevel
         {
             get => _anisotropyLevel;

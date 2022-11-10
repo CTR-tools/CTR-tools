@@ -128,19 +128,7 @@ namespace CTRFramework.Vram
 
         public TextureLayout(BinaryReaderEx br) => Read(br);
 
-        public static TextureLayout FromReader(BinaryReaderEx br, bool skipcheck = false)
-        {
-            int test = br.ReadInt32();
-
-            if (test == 0 && !skipcheck)
-            {
-                Helpers.Panic("TextureLayout", PanicType.Assume, "test failed");
-                return null;
-            }
-
-            br.Seek(-4);
-            return new TextureLayout(br);
-        }
+        public static TextureLayout FromReader(BinaryReaderEx br) => new TextureLayout(br);
 
         public void Read(BinaryReaderEx br)
         {

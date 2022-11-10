@@ -38,7 +38,7 @@ namespace CTRFramework
         {
             Name = br.ReadStringFixed(16);
             Index = br.ReadUInt32();
-            tl = TextureLayout.FromReader(br, true);
+            tl = TextureLayout.FromReader(br);
 
             Helpers.Panic(this, PanicType.Debug, Name);
         }

@@ -1233,6 +1233,10 @@ namespace ctrviewer
                     {
                         switch (menu.SelectedItem.Action)
                         {
+                            case "settings":
+                                var info = new ProcessStartInfo() { Arguments = Meta.SettingsFile, FileName = "notepad" };
+                                Process.Start(info);
+                                break;
                             case "close":
                                 menu.Visible = false;
                                 break;
@@ -1429,7 +1433,7 @@ namespace ctrviewer
 
                 //render karts
                 //if (KartMode)
-                foreach (Kart k in karts)
+                foreach (var k in karts)
                     k.Draw(graphics, instanceEffect, alphaTestEffect, cam);
             }
 
@@ -1442,7 +1446,7 @@ namespace ctrviewer
             }
 
             //render level mesh depending on lod
-            foreach (MGLevel qb in (eng.Settings.UseLowLod ? eng.MeshMed : eng.MeshLow))
+            foreach (var qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshMed))
                 qb.Draw(graphics, effect, alphaTestEffect);
 
             //maybe render visdata wireboxes
