@@ -56,7 +56,7 @@ namespace ctrviewer.Engine
         {
             if (!Settings.InternalPSXResolution)
             {
-                GameConsole.Write("Can't take screenshot without native resolution buffer.");
+                GameConsole.Write("Can't take screenshot without native resolution buffer yet.");
                 return;
             }
 

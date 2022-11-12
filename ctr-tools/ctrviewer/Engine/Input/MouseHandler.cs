@@ -13,6 +13,7 @@ namespace ctrviewer.Engine.Input
             oldState = newState;
             newState = Mouse.GetState();
         }
+
         public static void Reset()
         {
             newState = Mouse.GetState();

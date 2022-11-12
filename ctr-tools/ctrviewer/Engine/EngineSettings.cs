@@ -49,6 +49,18 @@ namespace ctrviewer.Engine
             }
         }
 
+
+        private bool _fps30 = false;
+        public bool Fps30
+        {
+            get => _fps30;
+            set
+            {
+                _fps30 = value;
+                onFps30Changed?.Invoke();
+            }
+        }
+
         public bool TextureFiltering { get; set; } = true;
 
         public int AntiAliasLevel { get; set; } = 4;
@@ -159,6 +171,8 @@ namespace ctrviewer.Engine
 
         public delegate void DelegateNoArgs();
 
+        [XmlIgnore]
+        public DelegateNoArgs onFps30Changed = null;
         [XmlIgnore]
         public DelegateNoArgs onAnisotropyChanged = null;
         [XmlIgnore]

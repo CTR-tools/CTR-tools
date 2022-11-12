@@ -73,9 +73,6 @@ namespace ctrviewer.Engine.Input
             return false;
         }
 
-        public static bool IsComboPressed(Buttons held, Buttons pressed)
-        {
-            return IsDown(held) && IsPressed(pressed);
-        }
+        public static bool IsComboPressed(Buttons held, Buttons pressed) => IsDown(held) && IsPressed(pressed);
     }
 }

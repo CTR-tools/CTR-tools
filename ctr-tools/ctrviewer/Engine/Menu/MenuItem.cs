@@ -19,11 +19,11 @@ namespace ctrviewer.Engine.Gui
 
         public event EventHandler PressedLeft;
         public virtual void OnPressedLeft(object sender, EventArgs args = null) => PressedLeft?.Invoke(this, args);
-        public void PressLeft() { OnPressedLeft(this); }
+        public void PressLeft() { if (Enabled) OnPressedLeft(this); }
 
         public event EventHandler PressedRight;
         public virtual void OnPressedRight(object sender, EventArgs args = null) => PressedRight?.Invoke(this, args);
-        public void PressRight() { OnPressedRight(this); }
+        public void PressRight() { if (Enabled) OnPressedRight(this); }
         #endregion
 
         public MenuItem()

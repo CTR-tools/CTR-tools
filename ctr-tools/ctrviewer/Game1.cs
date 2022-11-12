@@ -230,9 +230,9 @@ namespace ctrviewer
                 GraphicsDevice,
                 width,
                 height,
-                false,
+                false, //mipmap
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24
+                DepthFormat.Depth24Stencil8
                 );
 
             UpdateSplitscreenViewports(graphics, EngineSettings.Instance.InternalPSXResolution ? eng.screenBuffer : null);
@@ -256,6 +256,17 @@ namespace ctrviewer
             graphics = new GraphicsDeviceManager(this);
         }
 
+        public void UpdateFps30(object sender, EventArgs args)
+        {
+            EngineSettings.Instance.Fps30 = (sender as BoolMenuItem).Value;
+        }
+
+        public void UpdateTargetFramerate()
+        {
+            double temp = 1000d / (EngineSettings.Instance.Fps30 ? (double)30 : (double)60) * 10000d;
+            TargetElapsedTime = new TimeSpan((long)temp);
+        }
+
         /// <summary>
         /// Monogame: default initialize method
         /// </summary>
@@ -263,8 +274,7 @@ namespace ctrviewer
         {
             GameConsole.Write($"ctrviewer - {version}");
 
-            double temp = (1000d / (double)60) * 10000d;
-            TargetElapsedTime = new TimeSpan((long)temp);
+            UpdateTargetFramerate();
 
             Content.RootDirectory = "Content";
 
@@ -282,7 +292,7 @@ namespace ctrviewer
             eng.Settings.onInternalPsxResolutionChanged += UpdateInternalResolution;
             eng.Settings.onFilteringChanged += Samplers.Refresh;
             eng.Settings.onAnisotropyChanged += Samplers.Refresh;
-
+            eng.Settings.onFps30Changed += UpdateTargetFramerate;
 
             UpdateAntiAlias();
             UpdateVSync();
@@ -291,7 +301,7 @@ namespace ctrviewer
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += Window_ClientSizeChanged;
 
-            IsMouseVisible = false;
+            IsMouseVisible = true;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -379,6 +389,7 @@ namespace ctrviewer
             menu.Find("campos").Click += ToggleCamPos;
             menu.Find("genmips").Click += ToggleMips;
             menu.Find("console").Click += ToggleConsole;
+
             menu.Find("flag").Click += ChangeFlag;
             menu.Find("flag").PressedLeft += ChangeFlag;
             menu.Find("flag").PressedRight += ChangeFlag;
@@ -386,6 +397,8 @@ namespace ctrviewer
             menu.Find("aniso").Click += UpdateAniso;
             menu.Find("aniso").PressedLeft += UpdateAniso;
             menu.Find("aniso").PressedRight += UpdateAniso;
+
+            menu.Find("fps30").Click += UpdateFps30;
 
             foreach (var level in Enum.GetNames(typeof(Level)))
             {
@@ -442,9 +455,13 @@ namespace ctrviewer
             eng.Settings.StereoCrossEyed = (sender as BoolMenuItem).Value;
             UpdateCameras(new GameTime());
         }
-    
 
-        public void ToggleVsync(object sender, EventArgs args) => eng.Settings.VerticalSync = (sender as BoolMenuItem).Value;
+
+        public void ToggleVsync(object sender, EventArgs args)
+        {
+            eng.Settings.VerticalSync = (sender as BoolMenuItem).Value;
+            menu.Find("fps30").Enabled = eng.Settings.VerticalSync;
+        }
 
         public void ToggleAntialias(object sender, EventArgs args) => eng.Settings.AntiAlias = (sender as BoolMenuItem).Value;
 
@@ -842,16 +859,25 @@ namespace ctrviewer
                 //put all instanced models
                 foreach (var ph in s.Instances)
                 {
-                    eng.instanced.Add(new InstancedModel(
-                        (ph.ModelName == "warppad" ? "beam" : ph.ModelName),
-                        DataConverter.ToVector3(ph.Pose.Position),
-                        new Vector3(
-                            (float)(ph.Pose.Rotation.Y * Math.PI * 2f),
-                            (float)(ph.Pose.Rotation.X * Math.PI * 2f),
-                            (float)(ph.Pose.Rotation.Z * Math.PI * 2f)
-                        ),
-                        new Vector3(ph.Scale.Y, ph.Scale.X, ph.Scale.Z) * (ph.ModelName == "warppad" ? 0.33f : 1)
-                        ));
+                    var model = new InstancedModel(
+                            ph.ModelName,
+                            DataConverter.ToVector3(ph.Pose.Position),
+                            new Vector3(
+                                ph.Pose.Rotation.Y,
+                                ph.Pose.Rotation.X,
+                                ph.Pose.Rotation.Z
+                            ) * (float)(Math.PI * 2f),
+                            new Vector3(ph.Scale.Y, ph.Scale.X, ph.Scale.Z)
+                    );
+
+                    //treat special case for hubs
+                    if (ph.ModelName == "warppad")
+                    {
+                        model.ModelName = "beam";
+                        model.Scale *= 0.33f;
+                    }
+
+                    eng.instanced.Add(model);
                 }
 
                 loadingStatus = "put paths...";
@@ -1064,10 +1090,9 @@ namespace ctrviewer
                 return;
             }
 
-            List<CtrScene> scenes = new List<CtrScene>();
+            Scenes.Clear();
 
-
-            Stopwatch sw = new Stopwatch();
+            var sw = new Stopwatch();
             sw.Start();
 
             for (int i = 0; i < absId.Length; i++)
@@ -1078,10 +1103,8 @@ namespace ctrviewer
                 if (absId[i] < 200)
                     absId[i] += (int)levelType * 2;
 
-                scenes.Add(LoadSceneFromBig(absId[i]));
+                Scenes.Add(LoadSceneFromBig(absId[i]));
             }
-
-            Scenes = scenes;
 
             LoadAllScenes();
             ResetCamera();
@@ -1128,187 +1151,189 @@ namespace ctrviewer
         /// </summary>
         protected override void Update(GameTime gameTime)
         {
+            //update input before window active check to avoid random camera jumpscares
+            InputHandlers.Update();
+
+            if (!IsActive) return;
+
             if (!graphics.IsFullScreen)
                 Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
-
-            InputHandlers.Update();
 
             //allow fullscreen toggle before checking for controls
             if (KeyboardHandler.IsComboPressed(Keys.RightAlt, Keys.Enter))
                 eng.Settings.Windowed ^= true;
 
-            if (!ControlsEnabled)
-                return;
+            if (!ControlsEnabled) return;
 
-            if (IsActive)
+
+            if (InputHandlers.Process(GameAction.Screenshot))
+                eng.TakeScreenShot();
+
+            newmenu.Update(gameTime, MouseHandler.Position);
+
+            if (eng.Settings.KartMode)
+                foreach (var kart in karts)
+                {
+                    if (!menu.Visible)
+                        if (Scenes.Count > 0)
+                        {
+                            if (KeyboardHandler.IsPressed(Keys.R))
+                                kart.Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
+
+                            kart.Update(gameTime, Scenes);
+
+                            eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0f, 1.2f, 0) +
+                                Vector3.Transform(Vector3.Forward * 2f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -4f));
+
+                            eng.Cameras[CameraType.DefaultCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
+
+                            eng.Cameras[CameraType.SkyCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
+
+
+                            eng.UpdateStereoCamera(CameraType.LeftEyeCamera, eng.Settings.StereoPairSeparation);
+                            eng.Cameras[CameraType.LeftEyeCamera].SetRotation(eng.Cameras[CameraType.DefaultCamera].leftRightRot, eng.Cameras[CameraType.DefaultCamera].upDownRot);
+                            eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true);
+
+                            eng.UpdateStereoCamera(CameraType.RightEyeCamera, eng.Settings.StereoPairSeparation);
+                            eng.Cameras[CameraType.RightEyeCamera].SetRotation(eng.Cameras[CameraType.DefaultCamera].leftRightRot, eng.Cameras[CameraType.DefaultCamera].upDownRot);
+                            eng.Cameras[CameraType.RightEyeCamera].Update(gameTime, updatemouse, true);
+                        }
+                }
+
+
+            if (InputHandlers.Process(GameAction.ForceQuit))
+                Exit();
+
+            if (eng.Settings.StereoPair)
             {
-                if (KeyboardHandler.IsPressed(Keys.PrintScreen))
-                    eng.TakeScreenShot();
+                if (GamePadHandler.IsDown(Buttons.RightShoulder) || KeyboardHandler.IsDown(Keys.OemOpenBrackets))
+                    eng.Settings.StereoPairSeparation += (float)(100 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
 
-                newmenu.Update(gameTime, MouseHandler.Position);
+                if (GamePadHandler.IsDown(Buttons.LeftShoulder) || KeyboardHandler.IsDown(Keys.OemCloseBrackets))
+                    eng.Settings.StereoPairSeparation -= (float)(100 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
+
+                if (eng.Settings.StereoPairSeparation < 0) eng.Settings.StereoPairSeparation = 0;
+
+                if (GamePadHandler.IsDown(Buttons.RightShoulder) && GamePadHandler.IsDown(Buttons.LeftShoulder))
+                    eng.Settings.StereoPairSeparation = 10;
+            }
+
+            if (InputHandlers.Process(GameAction.ToggleConsole))
+                eng.Settings.ShowConsole ^= true;
+
+            if (KeyboardHandler.IsPressed(Keys.O) || GamePadHandler.IsPressed(Buttons.LeftShoulder))
+            {
+                selectedChar--;
+
+                if (selectedChar < 0)
+                    selectedChar = 14;
+
+                if (karts.Count > 0)
+                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
+            }
+
+            if (KeyboardHandler.IsPressed(Keys.P) || GamePadHandler.IsPressed(Buttons.RightShoulder))
+            {
+                selectedChar++;
+
+                if (selectedChar > 14)
+                    selectedChar = 0;
+
+                if (karts.Count > 0)
+                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
+            }
+
+            if (KeyboardHandler.IsDown(Keys.OemMinus)) eng.Settings.FieldOfView--;
+            if (KeyboardHandler.IsDown(Keys.OemPlus)) eng.Settings.FieldOfView++;
+
+            if (InputHandlers.Process(GameAction.MenuToggle))
+                menu.Visible ^= true;
+
+            if (menu.Visible)
+            {
+                menu.Update();
+
+                if (menu.Exec)
+                {
+                    switch (menu.SelectedItem.Action)
+                    {
+                        case "settings":
+                            var info = new ProcessStartInfo() { Arguments = Meta.SettingsFile, FileName = "notepad" };
+                            Process.Start(info);
+                            break;
+                        case "close":
+                            menu.Visible = false;
+                            break;
+                        case "loadbig":
+                            LoadLevelsFromBig(menu.SelectedItem.Value);
+                            break;
+                        case "tod_day":
+                            SetTimeOfDay(PreferredTimeOfDay.Day);
+                            break;
+                        case "tod_evening":
+                            SetTimeOfDay(PreferredTimeOfDay.Evening);
+                            break;
+                        case "tod_night":
+                            SetTimeOfDay(PreferredTimeOfDay.Night);
+                            break;
+                        case "link":
+                            menu.SetMenu(font, menu.SelectedItem.Param);
+                            break;
+                        case "toggle":
+                            switch (menu.SelectedItem.Param)
+                            {
+                                case "lod": eng.Settings.UseLowLod ^= true; break;
+                                case "kart": eng.Settings.KartMode ^= true; break;
+                                default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
+                            }
+                            break;
+
+                        case "exit":
+                            Exit();
+                            break;
+                    }
+
+                    menu.Exec = !menu.Exec;
+                }
+
+                //handle "go back"
+                if (InputHandlers.Process(GameAction.MenuBack))
+                {
+                    bool togglemenu = true;
+
+                    foreach (var m in menu.items)
+                    {
+                        if (m.Action == "link" && m.Text == "BACK")
+                        {
+                            menu.SetMenu(font, m.Param);
+                            togglemenu = false;
+                        }
+                    }
+
+                    if (togglemenu) menu.Visible = !menu.Visible;
+                }
+            }
+            else
+            {
+                eng.Update(gameTime);
+
+                if (karts.Count > 0)
+                    karts[0].Update(gameTime);
 
                 if (eng.Settings.KartMode)
-                    foreach (var kart in karts)
-                    {
-                        if (!menu.Visible)
-                            if (Scenes.Count > 0)
-                            {
-                                if (KeyboardHandler.IsPressed(Keys.R))
-                                    kart.Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
-
-                                kart.Update(gameTime, Scenes);
-
-                                eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0f, 1.2f, 0) +
-                                    Vector3.Transform(Vector3.Forward * 2f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -4f));
-
-                                eng.Cameras[CameraType.DefaultCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
-
-                                eng.Cameras[CameraType.SkyCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
-
-
-                                eng.UpdateStereoCamera(CameraType.LeftEyeCamera, eng.Settings.StereoPairSeparation);
-                                eng.Cameras[CameraType.LeftEyeCamera].SetRotation(eng.Cameras[CameraType.DefaultCamera].leftRightRot, eng.Cameras[CameraType.DefaultCamera].upDownRot);
-                                eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true);
-
-                                eng.UpdateStereoCamera(CameraType.RightEyeCamera, eng.Settings.StereoPairSeparation);
-                                eng.Cameras[CameraType.RightEyeCamera].SetRotation(eng.Cameras[CameraType.DefaultCamera].leftRightRot, eng.Cameras[CameraType.DefaultCamera].upDownRot);
-                                eng.Cameras[CameraType.RightEyeCamera].Update(gameTime, updatemouse, true);
-                            }
-                    }
-
-
-                if (InputHandlers.Process(GameAction.ForceQuit))
-                    Exit();
-
-                if (eng.Settings.StereoPair)
                 {
-                    if (GamePadHandler.IsDown(Buttons.RightShoulder) || KeyboardHandler.IsDown(Keys.OemOpenBrackets))
-                        eng.Settings.StereoPairSeparation += (float)(100 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
-
-                    if (GamePadHandler.IsDown(Buttons.LeftShoulder) || KeyboardHandler.IsDown(Keys.OemCloseBrackets))
-                        eng.Settings.StereoPairSeparation -= (float)(100 * gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
-
-                    if (eng.Settings.StereoPairSeparation < 0) eng.Settings.StereoPairSeparation = 0;
-
-                    if (GamePadHandler.IsDown(Buttons.RightShoulder) && GamePadHandler.IsDown(Buttons.LeftShoulder))
-                        eng.Settings.StereoPairSeparation = 10;
-                }
-
-                if (InputHandlers.Process(GameAction.ToggleConsole))
-                    eng.Settings.ShowConsole ^= true;
-
-                if (KeyboardHandler.IsPressed(Keys.O) || GamePadHandler.IsPressed(Buttons.LeftShoulder))
-                {
-                    selectedChar--;
-
-                    if (selectedChar < 0)
-                        selectedChar = 14;
-
-                    if (karts.Count > 0)
-                        karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
-                }
-
-                if (KeyboardHandler.IsPressed(Keys.P) || GamePadHandler.IsPressed(Buttons.RightShoulder))
-                {
-                    selectedChar++;
-
-                    if (selectedChar > 14)
-                        selectedChar = 0;
-
-                    if (karts.Count > 0)
-                        karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
-                }
-
-                if (KeyboardHandler.IsDown(Keys.OemMinus)) eng.Settings.FieldOfView--;
-                if (KeyboardHandler.IsDown(Keys.OemPlus)) eng.Settings.FieldOfView++;
-
-                if (InputHandlers.Process(GameAction.MenuToggle))
-                    menu.Visible ^= true;
-
-                if (menu.Visible)
-                {
-                    menu.Update();
-
-                    if (menu.Exec)
-                    {
-                        switch (menu.SelectedItem.Action)
-                        {
-                            case "settings":
-                                var info = new ProcessStartInfo() { Arguments = Meta.SettingsFile, FileName = "notepad" };
-                                Process.Start(info);
-                                break;
-                            case "close":
-                                menu.Visible = false;
-                                break;
-                            case "loadbig":
-                                LoadLevelsFromBig(menu.SelectedItem.Value);
-                                break;
-                            case "tod_day":
-                                SetTimeOfDay(PreferredTimeOfDay.Day);
-                                break;
-                            case "tod_evening":
-                                SetTimeOfDay(PreferredTimeOfDay.Evening);
-                                break;
-                            case "tod_night":
-                                SetTimeOfDay(PreferredTimeOfDay.Night);
-                                break;
-                            case "link":
-                                menu.SetMenu(font);
-                                break;
-                            case "toggle":
-                                switch (menu.SelectedItem.Param)
-                                {
-                                    case "lod": eng.Settings.UseLowLod ^= true; break;
-                                    case "kart": eng.Settings.KartMode ^= true; break;
-                                    default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
-                                }
-                                break;
-
-                            case "exit":
-                                Exit();
-                                break;
-                        }
-
-                        menu.Exec = !menu.Exec;
-                    }
-
-                    if (InputHandlers.Process(GameAction.MenuBack))
-                    {
-                        bool togglemenu = true;
-
-                        foreach (MenuItem m in menu.items)
-                        {
-                            if (m.Action == "link" && m.Text == "BACK")
-                            {
-                                menu.SetMenu(font, m.Param);
-                                togglemenu = false;
-                            }
-                        }
-
-                        if (togglemenu) menu.Visible = !menu.Visible;
-                    }
+                    eng.Cameras[CameraType.DefaultCamera].Update(gameTime, false, false);
+                    eng.Cameras[CameraType.SkyCamera].Update(gameTime, false, false);
                 }
                 else
                 {
-                    eng.Update(gameTime);
-
-                    if (karts.Count > 0)
-                        karts[0].Update(gameTime);
-
-                    if (eng.Settings.KartMode)
+                    if (ControlsEnabled)
                     {
-                        eng.Cameras[CameraType.DefaultCamera].Update(gameTime, false, false);
-                        eng.Cameras[CameraType.SkyCamera].Update(gameTime, false, false);
-                    }
-                    else
-                    {
-                        if (ControlsEnabled)
-                        {
-                            UpdateCameras(gameTime);
-                        }
+                        UpdateCameras(gameTime);
                     }
                 }
             }
+
 
             base.Update(gameTime);
         }
@@ -1320,7 +1345,7 @@ namespace ctrviewer
                 eng.Cameras[CameraType.DefaultCamera].speedScale -= 0.1f * GamePadHandler.State.Triggers.Left;
                 eng.Cameras[CameraType.DefaultCamera].speedScale += 0.1f * GamePadHandler.State.Triggers.Right;
 
-                if (MouseHandler.IsLeftButtonPressed)
+                if (MouseHandler.IsLeftButtonHeld)
                 {
                     if (captureMouse)
                     {
@@ -1543,7 +1568,7 @@ namespace ctrviewer
             {
                 GraphicsDevice.SetRenderTarget(null);
 
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, effect: ContentVault.GetShader("16bits"));
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, effect: ContentVault.GetShader("16bits"));
                 spriteBatch.Draw(eng.screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
                 spriteBatch.End();
             }
@@ -1552,7 +1577,7 @@ namespace ctrviewer
 
             //start drawing menu stuff
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp);
 
             //draw menu (visibility check is inside this method)
             menu.Draw(GraphicsDevice, spriteBatch, font, tint);

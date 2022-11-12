@@ -2,7 +2,6 @@
 using ctrviewer.Engine.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 
@@ -22,7 +21,7 @@ namespace ctrviewer.Engine.Gui
 
         public bool Visible = false;
 
-        public MenuItem SelectedItem => items[_selectedIndex];
+        public MenuItem SelectedItem => (_selectedIndex < items.Count ? items[_selectedIndex] : items[0]);
 
         private int _selectedIndex;
 
@@ -120,6 +119,7 @@ namespace ctrviewer.Engine.Gui
             {
                 new BoolMenuItem() { Text = "Windowed", Name = "window", Value = settings.Windowed },
                 new BoolMenuItem() { Text = "vsync/fps lock", Name = "vsync", Value = settings.VerticalSync },
+                new BoolMenuItem() { Text = "30 FPS", Name = "fps30", Value = settings.Fps30, Enabled = settings.VerticalSync },
                 new BoolMenuItem() { Text = "Antialias", Name = "antialias", Value = settings.AntiAlias },
                 new BoolMenuItem() { Text = "Texture filtering", Name = "filter", Value = settings.EnableFiltering },
                 new IntRangeMenuItem() { Text = "Anisotropy", Name = "aniso", Enabled = settings.EnableFiltering, SelectedValue = settings.AnisotropyLevel, Values = new List<(int, string)>() { (1, "1x"), (2, "2x"), (4, "4x"), (8, "8x"), (16, "16x") } },
@@ -267,7 +267,7 @@ namespace ctrviewer.Engine.Gui
         private void Next()
         {
             do Selection++;
-            while (items[Selection].Action == "" && items[Selection].Enabled);
+            while (!items[Selection].Enabled);
 
             //ContentVault.Sounds["menu_down"].Play(0.15f, 0, 0);
         }
@@ -275,7 +275,7 @@ namespace ctrviewer.Engine.Gui
         private void Previous()
         {
             do Selection--;
-            while (items[Selection].Action == "" && items[Selection].Enabled);
+            while (!items[Selection].Enabled);
 
             //ContentVault.Sounds["menu_up"].Play(0.15f, 0, 0);
         }
@@ -287,33 +287,22 @@ namespace ctrviewer.Engine.Gui
             if (InputHandlers.Process(GameAction.MenuUp)) Previous();
             if (InputHandlers.Process(GameAction.MenuDown)) Next();
 
-            if (SelectedItem.Enabled)
-            {
-                if (InputHandlers.Process(GameAction.MenuLeft))
-                {
-                    if (SelectedItem is IntRangeMenuItem)
-                        SelectedItem.PressLeft();
-                }
-                if (InputHandlers.Process(GameAction.MenuRight))
-                {
-                    if (SelectedItem is IntRangeMenuItem)
-                        SelectedItem.PressRight();
-                }
-            }
+            if (InputHandlers.Process(GameAction.MenuLeft)) SelectedItem.PressLeft();
+            if (InputHandlers.Process(GameAction.MenuRight)) SelectedItem.PressRight();
 
             //do not allow to enter menus if alt is pressed cause of fullscreen toggle
-            if (!KeyboardHandler.IsAltPressed && InputHandlers.Process(GameAction.MenuConfirm))
-                if (SelectedItem.Enabled)
-                {
+            if (!KeyboardHandler.IsAltPressed)
+                if (InputHandlers.Process(GameAction.MenuConfirm))
+                {     
                     SelectedItem.DoClick();
                     Exec = true;
                 }
         }
 
-        Vector2 shadow_offset = new Vector2(2, 4);
+        public static Vector2 shadow_offset = new Vector2(2, 4);
 
-        Color MenuItemBackColor = new Color(0, 0, 0, 128);
-        Color MenuItemSelectedColor = new Color(128, 0, 0, 128);
+        public static Color MenuItemBackColor = new Color(0, 0, 0, 128);
+        public static Color MenuItemSelectedColor = new Color(128, 0, 0, 128);
 
 
 
@@ -357,6 +346,7 @@ namespace ctrviewer.Engine.Gui
                     if (MouseHandler.IsLeftButtonPressed)
                     {
                         m.DoClick();
+                        Exec = true;
                     }
                 }
 
