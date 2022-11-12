@@ -611,7 +611,7 @@ namespace ctrviewer
             //top half
             if (top.A > 0)
             {
-                vptc.Add(new VertexPositionColorTexture(new Vector3(10, 0, -size), top, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), top, new Vector2(0, 0)));
                 vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, -size), top, new Vector2(0, 0)));
                 vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), top, new Vector2(0, 0)));
                 vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), top, new Vector2(0, 0)));
@@ -620,7 +620,7 @@ namespace ctrviewer
 
                 vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), top, new Vector2(0, 0)));
                 vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, size), top, new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(0, 10, 0), top, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), top, new Vector2(0, 0)));
                 vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), top, new Vector2(0, 0)));
                 modl.PushQuad(vptc);
                 vptc.Clear();
@@ -1504,6 +1504,7 @@ namespace ctrviewer
             if (cam == null)
                 cam = eng.Cameras[CameraType.DefaultCamera];
 
+
             if (ContentVault.Models.ContainsKey("backsky"))
             {
                 effect.Projection = eng.Cameras[CameraType.SkyCamera].ProjectionMatrix;
@@ -1514,6 +1515,7 @@ namespace ctrviewer
                 //clear z buffer to make sure skybox is behind everything
                 graphics.GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
             }
+
 
             //if sky exists and enabled
             if (eng.sky != null && eng.Settings.ShowSky)
@@ -1526,6 +1528,7 @@ namespace ctrviewer
 
             alphaTestEffect.View = effect.View;
             alphaTestEffect.Projection = effect.Projection;
+
 
             //render ctr models from external folder
             foreach (var v in eng.external)
