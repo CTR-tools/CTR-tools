@@ -219,18 +219,17 @@ namespace CTRFramework.Shared
             {
                 string line = l.Split('#')[0];
 
-                if (line.Trim() != "")
+                if (line.Trim() == "") continue;
+
+                string[] bb = line.Trim().Replace(" ", "").Split('=');
+
+                if (names.ContainsKey(bb[0]))
                 {
-                    string[] bb = line.Trim().Replace(" ", "").Split('=');
-
-                    if (names.ContainsKey(bb[0]))
-                    {
-                        Helpers.Panic("Meta", PanicType.Error, $"duplicate entry {bb[0]}");
-                        continue;
-                    }
-
-                    names.Add(bb[0].Trim(), bb[1].Trim());
+                    Helpers.Panic("Meta", PanicType.Error, $"duplicate entry {bb[0]}");
+                    continue;
                 }
+
+                names.Add(bb[0].Trim(), bb[1].Trim());
             }
 
             return names;

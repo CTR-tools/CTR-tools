@@ -25,6 +25,8 @@ namespace CTRFramework.Vram
 
     public class TextureLayout : IReadWrite
     {
+        public TextureLayout ParentLayout = null;
+
         #region properties
 
         public static readonly int SizeOf = 0x0C;
@@ -118,7 +120,7 @@ namespace CTRFramework.Vram
         private string _tag = "";
 
         //meant to be unique
-        public string Tag => _tag == "" ? $"{RealX}_{RealY}_{PalX}_{PalY}_{Width * stretch}_{Height}_{(byte)blendingMode}" : _tag;
+        public string Tag => _tag == "" ? $"{RealX}_{RealY}_{PalX}_{PalY}_{Width * stretch}_{Height}{(blendingMode != BlendingMode.Standard ? "_" + (byte)blendingMode : "")}" : _tag;
         //public string Tag => _tag == "" ? $"{PalX}_{PalY}_{RealX}_{RealY}_{Width * stretch}_{Height}" : _tag;
         #endregion
 

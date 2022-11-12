@@ -32,6 +32,7 @@ namespace CTRFramework
 
         public List<Vertex> verts = new List<Vertex>();
         public List<TextureLayout> matIndices = new List<TextureLayout>();
+        public List<TextureLayout> goupedTextures = new List<TextureLayout>();
 
         public int cmdNum = 0x40;
         //public int vrenderMode = 0x1C;
@@ -99,8 +100,10 @@ namespace CTRFramework
 
             //save all grouped textures
 
+            var list = Helpers.LoadTagList("texturenames.txt");
+
             foreach (var ttl in result)
-                vram.GetTexture(ttl).Save(Helpers.PathCombine(path, ttl.Tag + ".png"), System.Drawing.Imaging.ImageFormat.Png);
+                vram.GetTexture(ttl).Save(Helpers.PathCombine(path, (list.ContainsKey(ttl.Tag) ? list[ttl.Tag] : ttl.Tag) + ".png"), System.Drawing.Imaging.ImageFormat.Png);
 
             return result;
         }

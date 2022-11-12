@@ -19,7 +19,7 @@ namespace ctrviewer.Engine.Input
 
         public static bool IsAltComboPressed(Keys key) => IsAltPressed && IsPressed(key);
         public static bool IsShiftComboPressed(Keys key) => IsShiftPressed && IsPressed(key);
-        public static bool IsCOntrolComboPressed(Keys key) => IsControlPressed && IsPressed(key);
+        public static bool IsControlComboPressed(Keys key) => IsControlPressed && IsPressed(key);
 
         public static bool IsComboPressed(Keys helperkey, Keys key) => IsDown(helperkey) && IsPressed(key);
 

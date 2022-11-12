@@ -578,6 +578,14 @@ namespace CTRFramework
 
             StringBuilder sb = new StringBuilder();
 
+            sb.AppendLine($"sceneflags: {header.sceneFlags}");
+            sb.AppendLine($"{header.ptrSkybox}");
+            sb.AppendLine($"{header.backColor}");
+            sb.AppendLine($"{header.bgColorTop}");
+            sb.AppendLine($"{header.bgColorBottom}");
+            sb.AppendLine($"{header.gradColorTop}");
+            sb.AppendLine($"{header.gradColorBottom}");
+
             sb.AppendFormat("{0}: {1}\r\n", "verts", verts.Count);
             sb.AppendFormat("{0}: {1}\r\n", "primitives", quads.Count);
             sb.AppendFormat("{0}: {1}\r\n", "lo quads", quads.Count);
@@ -597,8 +605,8 @@ namespace CTRFramework
                 sb.AppendLine($"{kvp.Key.ToString("X2")}: {kvp.Value}");
             }
 
-            sb.AppendLine($"bgmode: {header.someRenderFlags}");
-            sb.AppendLine($"color4: {header.color4.ToString("X8")}");
+            sb.AppendLine($"bgmode: {header.sceneFlags}");
+            sb.AppendLine($"color4: {header.gradColorBottom}");
 
             sb.AppendLine($"begin: {header.compilationBegins}");
             sb.AppendLine($"end: {header.compilationEnds}");

@@ -4,6 +4,14 @@ using System.Collections.Generic;
 
 namespace CTRFramework
 {
+    [Flags]
+    public enum SceneFlags
+    {
+        GradientSky = 1 << 0,
+        KillPlane = 1 << 1,
+        AnimVerts = 1 << 2
+    }
+
     public class SceneHeader : IReadWrite
     {
         public static readonly int SizeOf = 0x1B0;
@@ -40,7 +48,7 @@ namespace CTRFramework
         public PsxPtr ptrLowTexArray;   //0xD4 - assumed to be a pointer to low textures array, there is no number of entries though
 
         public Vector4b backColor;      //0xD8 - base background color, used to clear the screen
-        public uint someRenderFlags;    //0xDC - this actually toggles some render stuff, bit0 - gradient sky, bit1 - ???, bit2 - toggles between water and animated vertices?
+        public SceneFlags sceneFlags;   //0xDC - this actually toggles some render stuff, bit0 - gradient sky, bit1 - ???, bit2 - toggles between water and animated vertices?
 
         public PsxPtr ptrBuildStart;    //0xE0 - pointer to string, date, assumed visdata compilation start
         public PsxPtr ptrBuildEnd;      //0xE4 - pointer to string, date, assumed visdata compilation end
@@ -66,10 +74,10 @@ namespace CTRFramework
 
         byte[] skip2;                   //0x150 - 16 bytes
 
-        public Vector4b bgColorTop;     //0x160 - top background color
+        public Vector4b bgColorTop;     //0x160 - top background color, last byte - usage bool, if == 0 - dont fill, same for colors below
         public Vector4b bgColorBottom;  //0x164 - bottom background color
-        public Vector4b gradColor;      //0x168 - some color used in sky gradient rendering
-        public uint color4;             //0x16C
+        public Vector4b gradColorTop;   //0x168 - some color used in sky gradient rendering, kinda replaces top color if grad is used
+        public Vector4b gradColorBottom;//0x16C - not sure, but maybe
 
         public uint skip2_unkPtr;       //0x170
 
@@ -141,10 +149,11 @@ namespace CTRFramework
 
             unkPtr4 = br.ReadUInt32();
             unkPtr5 = br.ReadUInt32();
+
             ptrLowTexArray = PsxPtr.FromReader(br);
             backColor = new Vector4b(br);
 
-            someRenderFlags = br.ReadUInt32();
+            sceneFlags = (SceneFlags)br.ReadUInt32();
             ptrBuildStart = PsxPtr.FromReader(br);
             ptrBuildEnd = PsxPtr.FromReader(br);
             ptrBuildType = PsxPtr.FromReader(br);
@@ -170,8 +179,8 @@ namespace CTRFramework
 
             bgColorTop = new Vector4b(br);
             bgColorBottom = new Vector4b(br);
-            gradColor = new Vector4b(br);
-            color4 = br.ReadUInt32();
+            gradColorTop = new Vector4b(br);
+            gradColorBottom = new Vector4b(br);
 
             skip2_unkPtr = br.ReadUInt32();
             numVcolAnim = br.ReadUInt32();
@@ -261,7 +270,7 @@ namespace CTRFramework
             bw.Write(unkPtr5);
             ptrLowTexArray.Write(bw, patchTable);
             backColor.Write(bw);
-            bw.Write(someRenderFlags);
+            bw.Write((uint)sceneFlags);
 
             ptrBuildStart.Write(bw, patchTable);
             ptrBuildEnd.Write(bw, patchTable);
@@ -286,8 +295,8 @@ namespace CTRFramework
 
             bgColorTop.Write(bw);
             bgColorBottom.Write(bw);
-            gradColor.Write(bw);
-            bw.Write(color4);
+            gradColorTop.Write(bw);
+            gradColorBottom.Write(bw);
 
             bw.Write(skip2_unkPtr);
 

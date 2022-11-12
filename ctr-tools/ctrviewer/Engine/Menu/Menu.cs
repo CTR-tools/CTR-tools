@@ -88,7 +88,7 @@ namespace ctrviewer.Engine.Gui
 
             #region [menu items]
 
-            var flagtitles = new List<(int, string)>() { (-1, "None")};
+            var flagtitles = new List<(int, string)>() { (-1, "None") };
 
             foreach (int i in Enum.GetValues(typeof(QuadFlags)))
             {
@@ -293,7 +293,7 @@ namespace ctrviewer.Engine.Gui
             //do not allow to enter menus if alt is pressed cause of fullscreen toggle
             if (!KeyboardHandler.IsAltPressed)
                 if (InputHandlers.Process(GameAction.MenuConfirm))
-                {     
+                {
                     SelectedItem.DoClick();
                     Exec = true;
                 }

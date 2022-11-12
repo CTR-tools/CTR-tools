@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+
 using System.IO;
 using System.Threading.Tasks;
 
@@ -359,6 +360,7 @@ namespace ctrviewer
                 LoadAllScenes();
         }
 
+
         #region menustuff
         public void InitMenu()
         {
@@ -513,7 +515,7 @@ namespace ctrviewer
         public void ToggleWireFrame(object sender, EventArgs args) => eng.Settings.DrawWireframe = (sender as BoolMenuItem).Value;
 
         public void ToggleReplacements(object sender, EventArgs args) => eng.Settings.UseTextureReplacements = (sender as BoolMenuItem).Value;
- 
+
         public void ToggleVertexColors(object sender, EventArgs args) => eng.Settings.VertexLighting = (sender as BoolMenuItem).Value;
 
         public void ToggleBackfaceCulling(object sender, EventArgs args) => eng.Settings.BackFaceCulling = (sender as BoolMenuItem).Value;
@@ -558,7 +560,7 @@ namespace ctrviewer
             modl.textureEnabled = false;
 
             //convert this abomination to a model import
-            List<VertexPositionColorTexture> vptc = new List<VertexPositionColorTexture>();
+            var vptc = new List<VertexPositionColorTexture>();
 
             Color c1 = Color.Lerp(Color.LightGray, c, 0.5f);
             Color c2 = Color.Lerp(Color.Black, c, 0.5f);
@@ -586,6 +588,65 @@ namespace ctrviewer
             modl.Seal();
 
             TriListCollection coll = new TriListCollection();
+            coll.Entries.Add(modl);
+
+            ContentVault.Models.Add(name, coll);
+        }
+
+
+        public void GenerateBasicSky(string name, Color top, Color bottom, int size = 10)
+        {
+            if (top.A == 0 && top.B == 0)
+            {
+                GameConsole.Write("no backcolors to use");
+                return;
+            }
+
+            var modl = new TriList();
+            modl.textureEnabled = false;
+
+            //convert this abomination to a model import
+            var vptc = new List<VertexPositionColorTexture>();
+
+            //top half
+            if (top.A > 0)
+            {
+                vptc.Add(new VertexPositionColorTexture(new Vector3(10, 0, -size), top, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, -size), top, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), top, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), top, new Vector2(0, 0)));
+                modl.PushQuad(vptc);
+                vptc.Clear();
+
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), top, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, size), top, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(0, 10, 0), top, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), top, new Vector2(0, 0)));
+                modl.PushQuad(vptc);
+                vptc.Clear();
+            }
+
+            //bottom half
+            if (bottom.A > 0)
+            {
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), bottom, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(0, -size, 0), bottom, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, -size), bottom, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), bottom, new Vector2(0, 0)));
+                modl.PushQuad(vptc);
+                vptc.Clear();
+
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), bottom, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(0, -size, 0), bottom, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, size), bottom, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), bottom, new Vector2(0, 0)));
+                modl.PushQuad(vptc);
+                vptc.Clear();
+            }
+
+            modl.Seal();
+
+            var coll = new TriListCollection();
             coll.Entries.Add(modl);
 
             ContentVault.Models.Add(name, coll);
@@ -813,6 +874,14 @@ namespace ctrviewer
             if (Scenes.Count > 0)
             {
                 eng.BackgroundColor = DataConverter.ToColor(Scenes[0].header.backColor);
+
+                GenerateBasicSky(
+                    "backsky",
+                    DataConverter.ToColor(Scenes[0].header.bgColorTop),
+                    DataConverter.ToColor(Scenes[0].header.bgColorBottom),
+                    10
+                    );
+
                 if (Scenes[0].skybox != null)
                     eng.sky = new MGLevel(Scenes[0].skybox);
             }
@@ -1435,9 +1504,22 @@ namespace ctrviewer
             if (cam == null)
                 cam = eng.Cameras[CameraType.DefaultCamera];
 
+            if (ContentVault.Models.ContainsKey("backsky"))
+            {
+                effect.Projection = eng.Cameras[CameraType.SkyCamera].ProjectionMatrix;
+                effect.View = eng.Cameras[CameraType.SkyCamera].ViewMatrix;
+
+                ContentVault.Models["backsky"].Draw(graphics, effect, null);
+
+                //clear z buffer to make sure skybox is behind everything
+                graphics.GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
+            }
+
             //if sky exists and enabled
             if (eng.sky != null && eng.Settings.ShowSky)
                 eng.sky.DrawSky(graphics, eng.Cameras[CameraType.SkyCamera], effect, null);
+
+
 
             effect.View = cam.ViewMatrix;
             effect.Projection = cam.ProjectionMatrix;
