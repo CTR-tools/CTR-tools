@@ -203,7 +203,7 @@ namespace ctrviewer
                 eng.screenBuffer.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
         }
 
-        Vector3 todNight = new Vector3(0.25f, 0.35f, 0.85f) * 2;
+        Vector3 todNight = new Vector3(0.1f, 0.3f, 0.5f) * 2;
         Vector3 todEvening = new Vector3(0.85f, 0.7f, 0.35f) * 2;
         Vector3 todDay = new Vector3(1) * 2;
 
@@ -556,7 +556,9 @@ namespace ctrviewer
         /// <param name="c"></param>
         public void AddCone(string name, Color c)
         {
-            TriList modl = new TriList();
+            if (ContentVault.Models.ContainsKey(name)) return;
+
+            var modl = new TriList();
             modl.textureEnabled = false;
 
             //convert this abomination to a model import
@@ -587,7 +589,7 @@ namespace ctrviewer
 
             modl.Seal();
 
-            TriListCollection coll = new TriListCollection();
+            var coll = new TriListCollection();
             coll.Entries.Add(modl);
 
             ContentVault.Models.Add(name, coll);
@@ -734,13 +736,18 @@ namespace ctrviewer
                     ContentVault.alphalist.Add(t.Key);
         }
 
-        void LoadGenericTextures()
+        private void LoadGenericTextures()
         {
             ContentVault.AddTexture("test", Content.Load<Texture2D>("test"));
             ContentVault.AddTexture("flag", Content.Load<Texture2D>("flag"));
             ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas ? "logo_xmas" : "logo"));
         }
 
+        /// <summary>
+        /// Loads scene and vram by index. Please note that vram file comes first, then goes scene file.
+        /// </summary>
+        /// <param name="index">File index in the BIG file.</param>
+        /// <returns>CtrScene instance.</returns>
         private CtrScene LoadSceneFromBig(int index)
         {
             var vram = big.ReadEntry(index).ParseAs<CtrVrm>();
@@ -753,21 +760,17 @@ namespace ctrviewer
         CtrScene menu_models;
 
         /// <summary>
-        /// Loads all models from menu_models.lev
+        /// Tries to load and adds menu_models scene to the list. Fails silently.
         /// </summary>
         private void LoadMenuModelsScene()
         {
             if (big == null) return;
 
-            Scenes.Add(menu_models == null ? LoadSceneFromBig(215) : menu_models);
+            if (menu_models == null)
+                menu_models = LoadSceneFromBig(215);
 
-            /*
-            foreach (var model in cc.Models)
-                ContentVault.AddModel(model.Name, DataConverter.ToTriListCollection(model, 0.1f));
-            
-            foreach (var t in cc.ctrvram.textures)
-                LoadTexture(t, null);
-            */
+            if (menu_models != null)
+                Scenes.Add(menu_models);
         }
 
         /// <summary>

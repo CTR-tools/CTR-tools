@@ -42,7 +42,7 @@ namespace ctrviewer.Engine.Input
                 case GameAction.MenuBack: return KeyboardHandler.IsAnyPressed(Keys.Back) || GamePadHandler.IsPressed((Buttons)SonyButtons.Circle);
                 case GameAction.MenuConfirm: return KeyboardHandler.IsAnyPressed(Keys.Enter) || GamePadHandler.IsPressed((Buttons)SonyButtons.Cross);
 
-                case GameAction.ForceQuit: return KeyboardHandler.IsAltComboPressed(Keys.F4) || GamePadHandler.IsComboPressed(Buttons.Start, Buttons.Back);
+                case GameAction.ForceQuit: return KeyboardHandler.IsAltComboPressed(Keys.F4) || GamePadHandler.AreAllDown(Buttons.Start, Buttons.Back);
                 case GameAction.ToggleConsole: return KeyboardHandler.IsPressed(Keys.OemTilde) || (GamePadHandler.IsPressed(Buttons.Back) & !GamePadHandler.IsDown(Buttons.Start));
 
                 case GameAction.ToggleFullscreen: return KeyboardHandler.IsAltComboPressed(Keys.Enter);
