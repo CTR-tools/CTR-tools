@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.XInput;
 
 namespace ctrviewer.Engine.Input
 {
@@ -34,6 +35,8 @@ namespace ctrviewer.Engine.Input
 
         public static bool IsScrollingUp => newState.ScrollWheelValue > oldState.ScrollWheelValue;
         public static bool IsScrollingDown => newState.ScrollWheelValue < oldState.ScrollWheelValue;
+
+        public static bool Moved => (newState.X != oldState.X) || (newState.Y != oldState.Y);
 
         public static void Print()
         {

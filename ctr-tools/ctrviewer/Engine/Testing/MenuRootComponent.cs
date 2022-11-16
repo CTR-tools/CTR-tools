@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using ctrviewer.Engine.Input;
 
 namespace ctrviewer.Engine.Testing
 {
@@ -84,20 +85,20 @@ namespace ctrviewer.Engine.Testing
         {
         }
 
-        public void Update(GameTime gameTime, Point mousePosition)
+        public void Update(GameTime gameTime)
         {
             if (Enabled)
             {
                 buttonState = xButtonState.Normal;
 
-                if (Intersects(mousePosition))
+                if (Intersects(MouseHandler.Position))
                 {
                     OnClick(this, new EventArgs());
                     buttonState = xButtonState.Hover;
                 }
 
                 foreach (var x in Children)
-                    x.Update(gameTime, mousePosition);
+                    x.Update(gameTime);
             }
         }
 

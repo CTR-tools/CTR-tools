@@ -339,7 +339,7 @@ namespace ctrviewer.Engine.Gui
 
                 var rect = new Rectangle((int)backloc.X, (int)backloc.Y - 2, (int)(maxwidth * scale), (int)(40 * scale));
 
-                if (rect.Contains(MouseHandler.X, MouseHandler.Y))
+                if ((MouseHandler.Moved || MouseHandler.IsLeftButtonPressed) && rect.Contains(MouseHandler.Position))
                 {
                     Selection = i;
 

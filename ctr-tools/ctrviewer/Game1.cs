@@ -1331,7 +1331,7 @@ namespace ctrviewer
             if (InputHandlers.Process(GameAction.Screenshot))
                 eng.TakeScreenShot();
 
-            newmenu.Update(gameTime, MouseHandler.Position);
+            newmenu.Update(gameTime);
 
             if (eng.Settings.KartMode)
                 foreach (var kart in karts)

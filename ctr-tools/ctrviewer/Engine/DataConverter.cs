@@ -11,7 +11,7 @@ namespace ctrviewer.Engine
     {
         public static Vector3 ToVector3(Vector3s vector, float scale = 1.0f) => new Vector3(vector.X * scale, vector.Y * scale, vector.Z * scale);
 
-        public static Vector3 ToVector3(Color color) => new Vector3(color.R / 255f, color.G / 255f, color.B / 255f);
+        //public static Vector3 ToVector3(Color color) => new Vector3(color.R / 255f, color.G / 255f, color.B / 255f);
 
         public static Vector3 ToVector3(System.Numerics.Vector3 vector, float scale = 1.0f) => new Vector3(vector.X, vector.Y, vector.Z) * scale;
 
