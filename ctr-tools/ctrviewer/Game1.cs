@@ -166,7 +166,7 @@ namespace ctrviewer
             effect.TextureEnabled = true;
             effect.DiffuseColor = eng.Settings.VertexLighting ? TimeOfDay : new Vector3(1f);
             effect.FogEnabled = true;
-            effect.FogColor = DataConverter.ToVector3(eng.BackgroundColor);
+            effect.FogColor = eng.BackgroundColor.ToVector3();
             effect.FogStart = eng.Cameras[CameraType.DefaultCamera].FarClip / 4 * 3;
             effect.FogEnd = eng.Cameras[CameraType.DefaultCamera].FarClip;
 
@@ -182,7 +182,7 @@ namespace ctrviewer
                 instanceEffect = new BasicEffect(graphics.GraphicsDevice);
 
             instanceEffect.VertexColorEnabled = true;
-            instanceEffect.TextureEnabled = false;
+            instanceEffect.TextureEnabled = true;
             instanceEffect.DiffuseColor = effect.DiffuseColor;
         }
 
@@ -596,7 +596,7 @@ namespace ctrviewer
         }
 
 
-        public void GenerateBasicSky(string name, Color top, Color bottom, int size = 10)
+        public void GenerateBasicSky(string name, Color top, Color bottom, Gradient[] grad, int size = 10)
         {
             if (top.A == 0 && top.B == 0)
             {
@@ -613,20 +613,109 @@ namespace ctrviewer
             //top half
             if (top.A > 0)
             {
-                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), top, new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, -size), top, new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), top, new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), top, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, -size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
                 modl.PushQuad(vptc);
                 vptc.Clear();
 
-                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), top, new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, size), top, new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), top, new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), top, new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
                 modl.PushQuad(vptc);
                 vptc.Clear();
             }
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To  / 25f, -5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From  / 25f, 5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From  / 25f, -5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To  / 25f, 5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To  / 25f, -5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From  / 25f, 5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From  / 25f, -5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+
 
             //bottom half
             if (bottom.A > 0)
@@ -882,6 +971,7 @@ namespace ctrviewer
                     "backsky",
                     DataConverter.ToColor(Scenes[0].header.bgColorTop),
                     DataConverter.ToColor(Scenes[0].header.bgColorBottom),
+                    Scenes[0].header.glowGradients,
                     10
                     );
 
