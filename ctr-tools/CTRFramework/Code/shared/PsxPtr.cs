@@ -35,15 +35,9 @@ namespace CTRFramework.Shared
         /// Reads the original pointer.
         /// </summary>
         /// <param name="br">BinaryReaderEx instance.</param>
-        public void Read(BinaryReaderEx br)
-        {
-            Convert(br.ReadUInt32());
-        }
+        public void Read(BinaryReaderEx br) => Convert(br.ReadUInt32());
 
-        public static PsxPtr FromReader(BinaryReaderEx br)
-        {
-            return new PsxPtr(br);
-        }
+        public static PsxPtr FromReader(BinaryReaderEx br) => new PsxPtr(br);
 
         /// <summary>
         /// Splits original value in MIPS pointer and extra hidden bits.
@@ -73,15 +67,13 @@ namespace CTRFramework.Shared
             return this.value == (other as PsxPtr).value;
         }
 
-        public override int GetHashCode()
-        {
-            return (int)value;
-        }
+        public override int GetHashCode() => (int)value;
 
         public static bool operator ==(PsxPtr a, PsxPtr b)
         {
             return a.Equals(b);
         }
+
         public static bool operator !=(PsxPtr a, PsxPtr b)
         {
             return !a.Equals(b);

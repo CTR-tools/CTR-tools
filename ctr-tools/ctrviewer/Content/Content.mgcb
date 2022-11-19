@@ -81,6 +81,12 @@
 /processorParam:DebugMode=Auto
 /build:shaders/16bits.fx
 
+#begin shaders/scanlines.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:shaders/scanlines.fx
+
 #begin test.png
 /importer:TextureImporter
 /processor:TextureProcessor

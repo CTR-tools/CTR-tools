@@ -41,6 +41,7 @@ namespace ctrviewer.Engine
             }
 
             Shaders.Add(name, shader);
+
             return true;
         }
 
@@ -101,7 +102,10 @@ namespace ctrviewer.Engine
         public static Effect GetShader(string name)
         {
             if (!Shaders.ContainsKey(name))
+            {
+                GameConsole.Write($"shader: {name} not found");
                 return null;
+            }
 
             return Shaders[name];
         }

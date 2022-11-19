@@ -1,9 +1,12 @@
-﻿using CTRFramework.Shared;
+﻿using CTRFramework.Lang;
+using CTRFramework.Shared;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
+//using System.Drawing;
 using System.IO;
 
 namespace ctrviewer.Engine
@@ -16,8 +19,21 @@ namespace ctrviewer.Engine
         SkyCamera
     }
 
+    public class UserContext
+    {
+        //user display size
+        public Vector2 DisplaySize;
+
+        //selected buffer size
+        public Vector2 BufferSize;
+    }
+
     public partial class MainEngine : IDisposable
     {
+        public UserContext userContext = new UserContext();
+
+        public Game1 game;
+
         public EngineSettings Settings => EngineSettings.Instance;
 
         public RenderTarget2D screenBuffer;
@@ -42,8 +58,10 @@ namespace ctrviewer.Engine
         public MGLevel sky;
         public Color BackgroundColor = Color.DarkBlue;
 
-        public MainEngine(Game game)
+        public MainEngine(Game1 _game)
         {
+            game = _game;
+
             InitializeCameras(game);
             UpdateFOV();
             Subscribe();
@@ -54,9 +72,9 @@ namespace ctrviewer.Engine
 
         public void TakeScreenShot()
         {
-            if (!Settings.InternalPSXResolution)
+            if (screenBuffer is null)
             {
-                GameConsole.Write("Can't take screenshot without native resolution buffer yet.");
+                GameConsole.Write("Screen buffer doesnt exist.");
                 return;
             }
 
@@ -72,6 +90,24 @@ namespace ctrviewer.Engine
             screenshotstaken++;
 
             GameConsole.Write($"Screenshot saved: {screenshotPath}");
+        }
+
+
+        public void CreateScreenBuffer()
+        {
+            if (screenBuffer != null)
+                screenBuffer.Dispose();
+
+            screenBuffer = new RenderTarget2D(
+                game.GraphicsDevice,
+                (int)userContext.BufferSize.X,
+                (int)userContext.BufferSize.Y,
+                false, //mipmap
+                game.GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24Stencil8,
+                Settings.AntiAlias ? Settings.AntiAliasLevel : 0,
+                RenderTargetUsage.PreserveContents
+            );
         }
 
         public void Subscribe()
@@ -104,6 +140,18 @@ namespace ctrviewer.Engine
             Cameras[cameraType].Target = Cameras[CameraType.DefaultCamera].Target;
         }
 
+        public void UpdateAntiAlias()
+        {
+            game.graphics.PreferMultiSampling = Settings.AntiAlias;
+            game.graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = Settings.AntiAliasLevel;
+        }
+
+        public void UpdateAntiAliasAndBuffer()
+        {
+            UpdateAntiAlias();
+            CreateScreenBuffer();
+        }
+               
         public void UpdateFOV()
         {
             foreach (var camera in Cameras.Values)

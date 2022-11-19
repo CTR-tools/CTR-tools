@@ -99,50 +99,50 @@ namespace ctrviewer.Engine.Gui
             menus.Add("level", new List<MenuItem>()
             {
                 new BoolMenuItem() { Text = "Wireframe", Name = "wire", Value = settings.DrawWireframe },
-                new BoolMenuItem() { Text = "Texture Replacements", Name = "newtex", Value = settings.UseTextureReplacements },
-                new BoolMenuItem() { Text = "Vertex Lighting", Name = "vcolor", Value = settings.VertexLighting },
-                new BoolMenuItem() { Text = "Backface Culling", Name = "nocull", Value = settings.BackFaceCulling },
-                new BoolMenuItem() { Text = "Sky Box", Name = "skybox", Value = settings.ShowSky },
+                new BoolMenuItem() { Text = "Texture replacements", Name = "newtex", Value = settings.UseTextureReplacements },
+                new BoolMenuItem() { Text = "Vertex lighting", Name = "vcolor", Value = settings.VertexLighting },
+                new BoolMenuItem() { Text = "Backface culling", Name = "nocull", Value = settings.BackFaceCulling },
+                new BoolMenuItem() { Text = "Skybox", Name = "skybox", Value = settings.ShowSky },
                 new BoolMenuItem() { Text = "Water", Name = "water", Value = settings.ShowWater },
                 new BoolMenuItem() { Text = "Invisible Meshes", Name = "invis", Value = settings.ShowInvisible },
                 new BoolMenuItem() { Text = "Visibility Tree", Name = "visbox", Value = settings.VisData },
                 new BoolMenuItem() { Text = "Render BSP Branches", Name = "visboxleaf", Value = settings.VisDataLeaves, Enabled = settings.VisData },
                 new BoolMenuItem() { Text = "Game Objects", Name = "inst", Value = settings.ShowModels },
                 new BoolMenuItem() { Text = "Bot Paths", Name = "paths", Value = settings.ShowBotPaths },
-                new MenuItem("Toggle lod".ToUpper(), "toggle", "lod", true),
+                new MenuItem("Toggle LoD", "toggle", "lod", true),
                 new IntRangeMenuItem() { Text = "QuadFlag", Name = "flag", SelectedValue = 0, Values = flagtitles
                 },
-                new MenuItem("back".ToUpper(), "link", "main", true)
+                new MenuItem("Back", "link", "main", true)
             });
 
             menus.Add("video", new List<MenuItem>()
             {
                 new BoolMenuItem() { Text = "Windowed", Name = "window", Value = settings.Windowed },
-                new BoolMenuItem() { Text = "vsync/fps lock", Name = "vsync", Value = settings.VerticalSync },
+                new BoolMenuItem() { Text = "VSync/FPS lock", Name = "vsync", Value = settings.VerticalSync },
                 new BoolMenuItem() { Text = "30 FPS", Name = "fps30", Value = settings.Fps30, Enabled = settings.VerticalSync },
                 new BoolMenuItem() { Text = "Antialias", Name = "antialias", Value = settings.AntiAlias },
                 new BoolMenuItem() { Text = "Texture filtering", Name = "filter", Value = settings.EnableFiltering },
                 new IntRangeMenuItem() { Text = "Anisotropy", Name = "aniso", Enabled = settings.EnableFiltering, SelectedValue = settings.AnisotropyLevel, Values = new List<(int, string)>() { (1, "1x"), (2, "2x"), (4, "4x"), (8, "8x"), (16, "16x") } },
                 new BoolMenuItem() { Text = "Internal PSX Resolution", Name = "intpsx", Value = settings.InternalPSXResolution },
                 new BoolMenuItem() { Text = "Stereoscopic mode", Name = "stereo", Value = settings.StereoPair },
-                new BoolMenuItem() { Text = "crosseyed", Name = "crosseyed", Value = settings.StereoCrossEyed, Enabled = settings.StereoPair },
-                new BoolMenuItem() { Text = "Generate mip maps", Name = "genmips", Value = settings.GenerateMips },
+                new BoolMenuItem() { Text = "Crosseyed", Name = "crosseyed", Value = settings.StereoCrossEyed, Enabled = settings.StereoPair },
+                new BoolMenuItem() { Text = "Generate mipmaps", Name = "genmips", Value = settings.GenerateMips },
                 new BoolMenuItem() { Text = "Show camera position", Name = "campos", Value = settings.ShowCamPos },
                 new BoolMenuItem() { Text = "Show console", Name = "console", Value = settings.ShowConsole },
-                new MenuItem("back".ToUpper(), "link", "main", true)
+                new MenuItem("Back", "link", "main", true)
             });
 
             menus.Add("cupmenu", new List<MenuItem>() {
-                new MenuItem("level type".ToUpper(), "link", "level_type", true),
-                new MenuItem("wumpa cup".ToUpper(), "link", "cup_wumpa", true),
-                new MenuItem("crystal cup".ToUpper(), "link", "cup_cryst", true),
-                new MenuItem("nitro cup".ToUpper(), "link", "cup_nitro", true),
-                new MenuItem("crash cup".ToUpper(), "link", "cup_crash", true),
-                new MenuItem("bonus tracks".ToUpper(), "link", "bonus_levels", true),
-                new MenuItem("battle arenas".ToUpper(), "link", "battle_arenas", true),
-                new MenuItem("adventure".ToUpper(), "link", "adventure", true),
-                new MenuItem("cutscenes".ToUpper(), "link", "cutscenes", true),
-                new MenuItem("back".ToUpper(), "link", "main", true)
+                new MenuItem("Level type", "link", "level_type", true),
+                new MenuItem("Wumpa cup", "link", "cup_wumpa", true),
+                new MenuItem("Crystal cup", "link", "cup_cryst", true),
+                new MenuItem("Nitro cup", "link", "cup_nitro", true),
+                new MenuItem("Crash cup", "link", "cup_crash", true),
+                new MenuItem("Bonus tracks", "link", "bonus_levels", true),
+                new MenuItem("Battle arenas", "link", "battle_arenas", true),
+                new MenuItem("Adventure", "link", "adventure", true),
+                new MenuItem("Cutscenes", "link", "cutscenes", true),
+                new MenuItem("Back", "link", "main", true)
             });
 
             menus.Add("level_type", new List<MenuItem>()
@@ -151,7 +151,7 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem((int)LevelType.Lod2P) { Text = "2 player", Name = LevelType.Lod2P.ToString() },
                 new IntMenuItem((int)LevelType.Lod4P) { Text = "4 player", Name = LevelType.Lod4P.ToString() },
                 new IntMenuItem((int)LevelType.LodRelic) { Text = "relic race", Name = LevelType.LodRelic.ToString() },
-                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+                new MenuItem("Back", "link", "cupmenu", true)
             });
 
             menus.Add("cup_wumpa", new List<MenuItem>()
@@ -160,7 +160,7 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem((int)Level.TigerTemple * 8) { Text = "Tiger Temple", Name = Level.TigerTemple.ToString() },
                 new IntMenuItem((int)Level.BlizzardBluff * 8) { Text = "Blizzard Bluff", Name = Level.BlizzardBluff.ToString() },
                 new IntMenuItem((int)Level.CocoPark * 8) { Text = "Coco Park", Name = Level.CocoPark.ToString() },
-                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+                new MenuItem("Back", "link", "cupmenu", true)
             });
 
             menus.Add("cup_cryst", new List<MenuItem>()
@@ -169,7 +169,7 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem((int)Level.DingoCanyon * 8) { Text = "Dingo Canyon", Name = Level.DingoCanyon.ToString()  },
                 new IntMenuItem((int)Level.DragonMines * 8) { Text = "Dragon Mines", Name = Level.DragonMines.ToString() },
                 new IntMenuItem((int)Level.SewerSpeedway * 8) { Text = "Sewer Speedway", Name = Level.SewerSpeedway.ToString() },
-                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+                new MenuItem("Back", "link", "cupmenu", true)
             });
 
             menus.Add("cup_nitro", new List<MenuItem>()
@@ -178,7 +178,7 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem((int)Level.PapuPyramid * 8) { Text = "Papu's Pyramid", Name = Level.PapuPyramid.ToString()  },
                 new IntMenuItem((int)Level.CortexCastle * 8) { Text = "Cortex Castle", Name = Level.CortexCastle.ToString() },
                 new IntMenuItem((int)Level.TinyArena * 8) { Text = "Tiny Arena", Name = Level.TinyArena.ToString() },
-                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+                new MenuItem("Back", "link", "cupmenu", true)
             });
 
             menus.Add("cup_crash", new List<MenuItem>()
@@ -187,7 +187,7 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem((int)Level.NGinLabs * 8) { Text = "N. Gin Labs", Name = Level.NGinLabs.ToString()  },
                 new IntMenuItem((int)Level.HotAirSkyway * 8) { Text = "Hot Air Skyway", Name = Level.HotAirSkyway.ToString() },
                 new IntMenuItem((int)Level.SlideColiseum * 8) { Text = "Slide Coliseum", Name = Level.SlideColiseum.ToString() },
-                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+                new MenuItem("Back", "link", "cupmenu", true)
             });
 
             menus.Add("cutscenes", new List<MenuItem>()
@@ -204,7 +204,7 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem(539) { Text = "Oxide 2", Name = Cutscenes.Oxide2.ToString() },
                 new IntMenuItem(542) { Text = "Oxide 3", Name = Cutscenes.Oxide3.ToString() },
                 new IntMenuItem(544) { Text = "Oxide 4", Name = Cutscenes.Oxide4.ToString() },
-                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+                new MenuItem("Back", "link", "cupmenu", true)
             });
 
             menus.Add("bonus_levels", new List<MenuItem>
@@ -212,7 +212,7 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem((int)Level.OxideStation * 8) { Text = "Oxide Station", Name = Level.OxideStation.ToString() },
                 new IntMenuItem((int)Level.TurboTrack * 8) { Text = "Turbo Track", Name = Level.TurboTrack.ToString()  },
                 new IntMenuItem(217) { Text = "Character Selection", Name = "charselect" },
-                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+                new MenuItem("Back", "link", "cupmenu", true)
              });
 
             menus.Add("battle_arenas", new List<MenuItem>
@@ -224,7 +224,7 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem((int)Level.NorthBowl * 8) { Text = "North Bowl", Name = Level.NorthBowl.ToString() },
                 new IntMenuItem((int)Level.RockyRoad * 8) { Text = "Rocky Road", Name = Level.RockyRoad.ToString() },
                 new IntMenuItem((int)Level.LabBasement * 8) { Text = "Lab Basement", Name = Level.LabBasement.ToString() },
-                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+                new MenuItem("Back", "link", "cupmenu", true)
             });
 
             menus.Add("adventure", new List<MenuItem>
@@ -235,26 +235,26 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem(206) { Text = "Lost Ruins", Name = "lostruins" },
                 new IntMenuItem(209) { Text = "Glacier Park", Name = "glacierpark" },
                 new IntMenuItem(212) { Text = "Citadel City", Name = "citadelcity" },
-                new MenuItem("back".ToUpper(), "link", "cupmenu", true)
+                new MenuItem("Back", "link", "cupmenu", true)
             });
 
             menus.Add("main", new List<MenuItem>() {
-                new MenuItem("resume".ToUpper(), "close", "", true),
-                //new MenuItem("reload level".ToUpper(), "load", "", true),
-                new MenuItem("load level".ToUpper(), "link", "cupmenu", Game1.BigFileExists),
-                new MenuItem("level options".ToUpper(), "link", "level", true),
-                new MenuItem("video options".ToUpper(), "link", "video", true),
-                new MenuItem("time of day".ToUpper(), "link", "tod", true),
+                new MenuItem("Resume", "close", "", true),
+                //new MenuItem("reload level", "load", "", true),
+                new MenuItem("Load level", "link", "cupmenu", Game1.BigFileExists),
+                new MenuItem("Level options", "link", "level", true),
+                new MenuItem("Video options", "link", "video", true),
+                new MenuItem("Time of day", "link", "tod", true),
                 new BoolMenuItem() { Text = "Kart mode", Name = "kart", Value = settings.KartMode },
-                new MenuItem("open settings file".ToUpper(), "settings", "", true),
-                new MenuItem("quit".ToUpper(), "exit", "", true),
+                new MenuItem("Open settings file", "settings", "", true),
+                new MenuItem("Quit", "exit", "", true),
             });
 
             menus.Add("tod", new List<MenuItem>() {
-                new MenuItem("day".ToUpper(), "tod_day", "", true),
-                new MenuItem("evening".ToUpper(), "tod_evening", "", true),
-                new MenuItem("night".ToUpper(), "tod_night", "", true),
-                new MenuItem("back".ToUpper(), "link", "main", true)
+                new MenuItem("Day", "tod_day", "", true),
+                new MenuItem("Evening", "tod_evening", "", true),
+                new MenuItem("Night", "tod_night", "", true),
+                new MenuItem("Back", "link", "main", true)
             });
 
             #endregion
@@ -355,11 +355,11 @@ namespace ctrviewer.Engine.Gui
                     i == Selection ? MenuItemSelectedColor : MenuItemBackColor); ;
 
                 //draw menu item text shadow
-                batch.DrawString(fnt, s, loc + shadow_offset - new Vector2(m.Width / 2 * scale, 0), Color.Black,
+                batch.DrawString(fnt, s, loc + shadow_offset - new Vector2(m.Width / 2 * scale, 5 * scale), Color.Black,
                    0, new Vector2(0, 0), scale, SpriteEffects.None, 1.0f);
 
                 //draw menu item text
-                batch.DrawString(fnt, s, loc - new Vector2(m.Width / 2 * scale, 0),
+                batch.DrawString(fnt, s, loc - new Vector2(m.Width / 2 * scale, 5 * scale),
                    m.Enabled ? (m == SelectedItem ? Color.White : Game1.CtrMainFontColor) : Color.DarkGray,// (i == selection ? (m.Enabled ? Color.Red : Color.DarkRed) : (m.Enabled ? Color.White : Color.Gray)),
                    0, new Vector2(0, 0), scale, SpriteEffects.None, 0.5f);
 

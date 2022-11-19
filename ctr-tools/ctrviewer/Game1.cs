@@ -41,7 +41,7 @@ namespace ctrviewer
     {
         MainEngine eng;
 
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont font;
 
@@ -75,7 +75,7 @@ namespace ctrviewer
 
         public void SwitchDisplayMode() => SwitchDisplayMode(graphics);
 
-        public void SwitchDisplayMode(GraphicsDeviceManager graphics)
+        public void SetResolution(GraphicsDeviceManager graphics)
         {
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -86,9 +86,15 @@ namespace ctrviewer
                 graphics.PreferredBackBufferHeight = graphics.PreferredBackBufferHeight * eng.Settings.WindowScale / 100;
             }
 
-            UpdateSplitscreenViewports(graphics);
+        }
+
+        public void SwitchDisplayMode(GraphicsDeviceManager graphics)
+        {
+            SetResolution(graphics);
 
             UpdateInternalResolution();
+
+            UpdateSplitscreenViewports(graphics);
 
             graphics.IsFullScreen = !eng.Settings.Windowed;
             graphics.ApplyChanges();
@@ -194,14 +200,6 @@ namespace ctrviewer
             graphics.ApplyChanges();
         }
 
-        public void UpdateAntiAlias()
-        {
-            graphics.PreferMultiSampling = eng.Settings.AntiAlias;
-            graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
-
-            if (eng.screenBuffer != null)
-                eng.screenBuffer.GraphicsDevice.PresentationParameters.MultiSampleCount = eng.Settings.AntiAliasLevel;
-        }
 
         Vector3 todNight = new Vector3(0.1f, 0.3f, 0.5f) * 2;
         Vector3 todEvening = new Vector3(0.85f, 0.7f, 0.35f) * 2;
@@ -227,16 +225,10 @@ namespace ctrviewer
                 height = graphics.PreferredBackBufferHeight;
             }
 
-            eng.screenBuffer = new RenderTarget2D(
-                GraphicsDevice,
-                width,
-                height,
-                false, //mipmap
-                GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24Stencil8
-                );
+            eng.userContext.BufferSize = new Vector2(width, height);
+            eng.CreateScreenBuffer();
 
-            UpdateSplitscreenViewports(graphics, EngineSettings.Instance.InternalPSXResolution ? eng.screenBuffer : null);
+            UpdateSplitscreenViewports(graphics, eng.screenBuffer);
         }
 
         public void UpdateInternalResolution()
@@ -250,6 +242,7 @@ namespace ctrviewer
         public void Window_ClientSizeChanged(object sender, EventArgs e)
         {
             UpdateSplitscreenViewports(graphics);
+            SwitchDisplayMode();
         }
 
         public Game1()
@@ -288,14 +281,14 @@ namespace ctrviewer
 
             eng.Settings.onWindowedChanged += SwitchDisplayMode;
             eng.Settings.onVertexLightingChanged += UpdateEffects;
-            eng.Settings.onAntiAliasChanged += UpdateAntiAlias;
+            eng.Settings.onAntiAliasChanged += eng.UpdateAntiAliasAndBuffer;
             eng.Settings.onVerticalSyncChanged += UpdateVSync;
             eng.Settings.onInternalPsxResolutionChanged += UpdateInternalResolution;
             eng.Settings.onFilteringChanged += Samplers.Refresh;
             eng.Settings.onAnisotropyChanged += Samplers.Refresh;
             eng.Settings.onFps30Changed += UpdateTargetFramerate;
 
-            UpdateAntiAlias();
+            eng.UpdateAntiAlias();
             UpdateVSync();
             //graphics.ApplyChanges();
 
@@ -333,7 +326,7 @@ namespace ctrviewer
             ContentVault.AddSound("menu_down", Content.Load<SoundEffect>("sfx\\menu_down"));
 
             ContentVault.AddShader("16bits", Content.Load<Effect>("shaders\\16bits"));
-
+            ContentVault.AddShader("scanlines", Content.Load<Effect>("shaders\\scanlines"));
 
             LoadGenericTextures();
             effect.Texture = ContentVault.Textures["test"];
@@ -347,8 +340,6 @@ namespace ctrviewer
             font = Content.Load<SpriteFont>("File");
 
             BigFileExists = FindBigFile();
-
-            UpdateSplitscreenViewports(graphics);
 
             InitMenu();
 
@@ -601,7 +592,8 @@ namespace ctrviewer
             if (top.A == 0 && top.B == 0)
             {
                 GameConsole.Write("no backcolors to use");
-                return;
+                //dont return, we still want to draw grad
+                //return;
             }
 
             var modl = new TriList();
@@ -746,7 +738,7 @@ namespace ctrviewer
 
         bool IsLoading = false;
 
-        string newtexPath = Helpers.PathCombine(Meta.BasePath, Meta.NewtexPath);
+        string newtexPath = Helpers.PathCombine(Meta.BasePath, Meta.NewtexName);
 
         /// <summary>
         /// Loads all necessary textures and processes as required (generates mips, loads replacements, etc)
@@ -830,6 +822,10 @@ namespace ctrviewer
             ContentVault.AddTexture("test", Content.Load<Texture2D>("test"));
             ContentVault.AddTexture("flag", Content.Load<Texture2D>("flag"));
             ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas ? "logo_xmas" : "logo"));
+
+            //and shader!
+            ContentVault.AddShader("16bits", Content.Load<Effect>("shaders\\16bits"));
+            ContentVault.AddShader("scanlines", Content.Load<Effect>("shaders\\scanlines"));
         }
 
         /// <summary>
@@ -1465,7 +1461,7 @@ namespace ctrviewer
 
                     foreach (var m in menu.items)
                     {
-                        if (m.Action == "link" && m.Text == "BACK")
+                        if (m.Action == "link" && m.Text.ToUpper() == "BACK")
                         {
                             menu.SetMenu(font, m.Param);
                             togglemenu = false;
@@ -1716,8 +1712,8 @@ namespace ctrviewer
             Samplers.SetToDevice(graphics, EngineSampler.Default);
 
             //maybe we should switch to screen buffer
-            if (EngineSettings.Instance.InternalPSXResolution)
-                GraphicsDevice.SetRenderTarget(eng.screenBuffer);
+            //if (EngineSettings.Instance.InternalPSXResolution)
+            GraphicsDevice.SetRenderTarget(eng.screenBuffer);
 
             //clear the backgound
             GraphicsDevice.Clear(eng.BackgroundColor);
@@ -1742,14 +1738,12 @@ namespace ctrviewer
             }
 
             //if we're using internal resolution, draw rendertarget to screenbuffer, applying 16bits postfx
-            if (EngineSettings.Instance.InternalPSXResolution)
-            {
-                GraphicsDevice.SetRenderTarget(null);
 
-                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, effect: ContentVault.GetShader("16bits"));
-                spriteBatch.Draw(eng.screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
-                spriteBatch.End();
-            }
+            GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, effect: eng.Settings.InternalPSXResolution ? ContentVault.GetShader("16bits") : null);
+            spriteBatch.Draw(eng.screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+            spriteBatch.End();
+            
 
             //level done.
 

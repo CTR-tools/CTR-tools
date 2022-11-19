@@ -173,6 +173,8 @@ namespace ctrviewer.Engine.Render
                 return;
             }
 
+            effect.VertexColorEnabled = EngineSettings.Instance.VertexLighting;
+
             if (!textureEnabled)
                 effect.DiffuseColor /= 2;
 

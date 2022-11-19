@@ -41,6 +41,6 @@ namespace ctrviewer.Engine.Gui
 
         public void CalcWidth() => Width = Menu.Font.MeasureString(ToString()).X;
 
-        public override string ToString() => Text.ToUpper();
+        public override string ToString() => Text;
     }
 }

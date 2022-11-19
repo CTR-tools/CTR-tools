@@ -37,6 +37,6 @@ namespace ctrviewer.Engine.Gui
             base.OnClick(args);
         }
 
-        public override string ToString() => $"{Text}: {BoolDisplayValue()}".ToUpper();
+        public override string ToString() => $"{Text}: {BoolDisplayValue()}";
     }
 }

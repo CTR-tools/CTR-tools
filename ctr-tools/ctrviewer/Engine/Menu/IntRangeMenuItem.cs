@@ -45,6 +45,6 @@ namespace ctrviewer.Engine.Gui
             base.OnClick(args);
         }
 
-        public override string ToString() => $"{Text}: << {Label} >>".ToUpper();
+        public override string ToString() => $"{Text}: << {Label} >>";
     }
 }

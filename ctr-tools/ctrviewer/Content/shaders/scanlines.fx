@@ -2,9 +2,13 @@
 #define VS_SHADERMODEL vs_3_0
 #define PS_SHADERMODEL ps_5_0
 
+#define VERTICAL_WIDTH 1080
+#define BRIGHTNESS 0.5
+
+
 Texture2D SpriteTexture;
 
-sampler2D SpriteTextureSampler = sampler_state
+sampler2D tex = sampler_state
 {
     Texture = <SpriteTexture>;
 };
@@ -24,13 +28,12 @@ float chopComponent(float input, int bits)
 
 float4 chopColor(Vertex input) : COLOR
 {
-    float4 color = tex2D(SpriteTextureSampler, input.TextureCoordinates);
+    float2 uv = input.TextureCoordinates;
 
-    color.r = chopComponent(color.r, 5);
-    color.g = chopComponent(color.g, 5);
-    color.b = chopComponent(color.b, 5);
-
-    return color;
+    if ((int)(uv.y * VERTICAL_WIDTH) % 2 > 0)
+        return tex2D(tex, uv);
+    else
+        return tex2D(tex, uv) * BRIGHTNESS;
 }
 
 technique
