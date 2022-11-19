@@ -11,13 +11,13 @@ namespace ctrviewer.Engine
     public class EngineSettings
     {
         private static EngineSettings singleton = null;
-        //        public static EngineSettings Instance => (singleton == null ? Load() : singleton);
+        //        public static EngineSettings Instance => (singleton is null ? Load() : singleton);
 
         public static EngineSettings Instance
         {
             get
             {
-                if (singleton == null)
+                if (singleton is null)
                     singleton = EngineSettings.Load();
 
                 return singleton;

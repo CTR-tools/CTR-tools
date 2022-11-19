@@ -27,7 +27,7 @@ namespace ctrviewer.Engine.Testing
 
         public override void DrawComponent(GameTime gameTime, SpriteBatch sb)
         {
-            if (MenuRootComponent.Font == null)
+            if (MenuRootComponent.Font is null)
             {
                 Console.WriteLine("no font assigned.");
                 return;

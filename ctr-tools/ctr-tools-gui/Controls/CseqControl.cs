@@ -73,7 +73,7 @@ namespace CTRTools.Controls
 
         private void FillUI(string filename)
         {
-            if (seq == null) return;
+            if (seq is null) return;
 
             instrumentList.Nodes.Clear();
             sequenceBox.Items.Clear();
@@ -117,7 +117,7 @@ namespace CTRTools.Controls
 
         private void sequenceBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (sequenceBox.SelectedItem == null) return;
+            if (sequenceBox.SelectedItem is null) return;
 
             trackBox.Items.Clear();
 
@@ -131,7 +131,7 @@ namespace CTRTools.Controls
 
         private void trackBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (trackBox.SelectedItem == null) return;
+            if (trackBox.SelectedItem is null) return;
 
             trackInfoBox.Text = ((CSeqTrack)trackBox.SelectedItem).ListCommands();
             tabControl1.SelectedIndex = 0;
@@ -448,7 +448,7 @@ namespace CTRTools.Controls
 
         private void importMIDIToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (seq == null)
+            if (seq is null)
                 seq = new Cseq();
 
             var ofd = new OpenFileDialog();
@@ -503,7 +503,7 @@ namespace CTRTools.Controls
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (seq == null)
+            if (seq is null)
                 return;
 
             SaveFileDialog sfd = new SaveFileDialog();

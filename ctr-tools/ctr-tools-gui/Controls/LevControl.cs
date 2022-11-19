@@ -85,7 +85,7 @@ namespace CTRTools.Controls
 
         private void button9_Click(object sender, EventArgs e)
         {
-            if (scn == null) return;
+            if (scn is null) return;
 
             foreach (QuadBlock qb in scn.quads)
                 qb.quadFlags = GetFlags(checkedListBox1);
@@ -107,7 +107,7 @@ namespace CTRTools.Controls
 
         private void button10_Click(object sender, EventArgs e)
         {
-            if (scn == null) return;
+            if (scn is null) return;
 
             foreach (QuadBlock qb in scn.quads)
             {
@@ -118,7 +118,7 @@ namespace CTRTools.Controls
 
         private void button11_Click(object sender, EventArgs e)
         {
-            if (scn == null) return;
+            if (scn is null) return;
 
             StringBuilder sb = new StringBuilder();
 
@@ -130,7 +130,7 @@ namespace CTRTools.Controls
 
         private void button12_Click(object sender, EventArgs e)
         {
-            if (scn == null) return;
+            if (scn is null) return;
 
             StringBuilder sb = new StringBuilder();
 
@@ -184,7 +184,7 @@ namespace CTRTools.Controls
 
         private void button13_Click(object sender, EventArgs e)
         {
-            if (scn == null) return;
+            if (scn is null) return;
 
             foreach (QuadBlock qb in scn.quads)
                 qb.terrainFlag = (TerrainFlags)r.Next(20);
@@ -192,7 +192,7 @@ namespace CTRTools.Controls
 
         private void button14_Click(object sender, EventArgs e)
         {
-            if (scn == null) return;
+            if (scn is null) return;
 
             foreach (QuadBlock qb in scn.quads)
                 qb.WeatherIntensity = 255;
@@ -200,7 +200,7 @@ namespace CTRTools.Controls
 
         private void button15_Click(object sender, EventArgs e)
         {
-            if (scn == null) return;
+            if (scn is null) return;
 
             foreach (QuadBlock qb in scn.quads)
                 qb.WeatherIntensity = 0;
@@ -426,7 +426,7 @@ namespace CTRTools.Controls
 
         private void actionExportObj(object sender, EventArgs e)
         {
-            if (scn == null) return;
+            if (scn is null) return;
 
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.SelectedPath = Path.GetDirectoryName(path);
@@ -437,7 +437,7 @@ namespace CTRTools.Controls
 
         private void button4_Click(object sender, EventArgs e)
         {
-            if (scn == null)
+            if (scn is null)
                 return;
 
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
@@ -473,7 +473,7 @@ namespace CTRTools.Controls
 
         private void button18_Click_1(object sender, EventArgs e)
         {
-            if (scn == null)
+            if (scn is null)
                 return;
 
             foreach (VisData v in scn.visdata)
@@ -547,7 +547,7 @@ namespace CTRTools.Controls
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            if (scn == null)
+            if (scn is null)
                 return;
 
             foreach (var pt in scn.respawnPts)

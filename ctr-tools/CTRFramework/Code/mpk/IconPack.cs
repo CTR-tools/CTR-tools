@@ -75,7 +75,7 @@ namespace CTRFramework
 
         public void Extract(string path, Tim tim)
         {
-            if (tim == null)
+            if (tim is null)
             {
                 Helpers.Panic(this, PanicType.Warning, "Passed null vram to IconPack.");
                 return;

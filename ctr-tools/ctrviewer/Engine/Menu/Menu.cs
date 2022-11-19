@@ -244,17 +244,10 @@ namespace ctrviewer.Engine.Gui
                 new MenuItem("Load level", "link", "cupmenu", Game1.BigFileExists),
                 new MenuItem("Level options", "link", "level", true),
                 new MenuItem("Video options", "link", "video", true),
-                new MenuItem("Time of day", "link", "tod", true),
+                new IntRangeMenuItem() { Text = "Time of day", Name = "tod2", SelectedValue = 0, Values = new List<(int, string)>() { (0, "Day"), (1, "Evening"), (2, "Night") } },
                 new BoolMenuItem() { Text = "Kart mode", Name = "kart", Value = settings.KartMode },
-                new MenuItem("Open settings file", "settings", "", true),
+                //new MenuItem("Open settings file", "settings", "", true),
                 new MenuItem("Quit", "exit", "", true),
-            });
-
-            menus.Add("tod", new List<MenuItem>() {
-                new MenuItem("Day", "tod_day", "", true),
-                new MenuItem("Evening", "tod_evening", "", true),
-                new MenuItem("Night", "tod_night", "", true),
-                new MenuItem("Back", "link", "main", true)
             });
 
             #endregion

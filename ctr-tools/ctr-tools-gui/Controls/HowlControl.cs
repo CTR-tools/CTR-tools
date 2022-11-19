@@ -67,7 +67,7 @@ namespace CTRTools.Controls
 
         private void actionExport_Click(object sender, EventArgs e)
         {
-            if (howl == null)
+            if (howl is null)
                 return;
 
             if (fbd.ShowDialog() == DialogResult.OK)

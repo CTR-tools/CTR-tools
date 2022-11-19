@@ -96,7 +96,7 @@ namespace CTRFramework
 
             foreach (var icon in iconPack.Icons.Values)
             {
-                if (icon.tl == null)
+                if (icon.tl is null)
                 {
                     //hmm
                     Helpers.Panic(this, PanicType.Error, icon.Name);
@@ -112,7 +112,7 @@ namespace CTRFramework
                 foreach (var mesh in model.Entries)
                     foreach (var tl in mesh.tl)
                     {
-                        if (tl == null)
+                        if (tl is null)
                             continue;
 
                         tex[tl.Tag] = tl;

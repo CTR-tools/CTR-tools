@@ -43,7 +43,7 @@ namespace ctrviewer.Engine
 
             for (int i = 0; i < model.Entries[0].verts.Count / 3; i++)
             {
-                string texture = model.Entries[0].matIndices[i] == null ? "test" : model.Entries[0].matIndices[i].Tag;
+                string texture = model.Entries[0].matIndices[i] is null ? "test" : model.Entries[0].matIndices[i].Tag;
 
                 if (!kek.ContainsKey(texture))
                     kek.Add(texture, new TriList());

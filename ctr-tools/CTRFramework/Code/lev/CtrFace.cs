@@ -16,7 +16,7 @@ namespace CTRFramework
 
         public string ToObj(ref int num)
         {
-            if (Vertices == null || Vertices.Length <= 4)
+            if (Vertices is null || Vertices.Length <= 4)
             {
                 Helpers.Panic(this, PanicType.Warning, "No vertices in quad.");
                 //return "";
@@ -32,7 +32,7 @@ namespace CTRFramework
                     for (int i = 0; i < numVerts; i++)
                         sb.AppendLine($"vt {Texture.lod2.normuv[i].X} {-Texture.lod2.normuv[i].Y}");
 
-            sb.Append($"usemtl {(Texture.lod2 == null ? "default" : Texture.lod2.Tag)}");
+            sb.Append($"usemtl {(Texture.lod2 is null ? "default" : Texture.lod2.Tag)}");
 
             sb.AppendLine($"f {num + 1} {num + 2} {num + 3}");
 

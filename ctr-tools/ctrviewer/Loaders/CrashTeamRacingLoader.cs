@@ -181,7 +181,7 @@ namespace ctrviewer.Loaders
                                         monolist.Add(DataConverter.ToVptc(x, Vector2.Zero));
 
                                     bool isAnimated = false;
-                                    string texTag = (qb?.tex[j]?.lod2 == null ? "test" : qb.tex[j].lod2.Tag);
+                                    string texTag = (qb?.tex[j]?.lod2 is null ? "test" : qb.tex[j].lod2.Tag);
 
                                     Push(Trilists, texTag, monolist, TriListType.Basic, BlendState.Opaque);
                                 }

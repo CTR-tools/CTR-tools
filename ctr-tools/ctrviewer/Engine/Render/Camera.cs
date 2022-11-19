@@ -1,14 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
+using SharpDX.Mathematics.Interop;
 
 namespace ctrviewer.Engine.Render
 {
     public partial class Camera : GameComponent
     {
-        #region Свойства
-        public Vector3 Target;                 // Координаты цели
-        public Vector3 Position;                // Позиция 
-        public Matrix ViewMatrix { get; protected set; }     // Видовая матрица
-        public Matrix ProjectionMatrix { get; protected set; }  // Матрица проекции
+        public Vector3 Target;
+        public Vector3 Position;
+        public Matrix ViewMatrix { get; protected set; }
+        public Matrix ProjectionMatrix { get; protected set; }
+
         public float AspectRatio
         {
             get
@@ -16,20 +17,15 @@ namespace ctrviewer.Engine.Render
                 return Game.GraphicsDevice.Viewport.AspectRatio;
             }
         }
+
         public float NearClip = 0.1f;
         public float FarClip = 1000.0f;
         public float ViewAngle = 80.0f;
-        #endregion
 
-        #region Раздел инициализации: конструктор, инициализация
-        #region Конструктор
-        public Camera(Game game)
-            : base(game)
+        public Camera(Game game) : base(game)
         {
         }
-        #endregion
 
-        #region Инициализация
         public override void Initialize()
         {
             ViewMatrix = Matrix.Identity;
@@ -37,15 +33,13 @@ namespace ctrviewer.Engine.Render
 
             base.Initialize();
         }
-        #endregion
-        #endregion
 
         public void UpdateProjectionMatrix()
         {
             ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(ViewAngle), AspectRatio, NearClip, FarClip);
+            //ProjectionMatrix = Matrix.CreateOrthographic(720, 480, 0, 1000);
         }
 
-        #region Обновление состояния объекта
         public override void Update(GameTime gameTime)
         {
             ViewMatrix = Matrix.CreateLookAt(Position, Target, Vector3.Up);
@@ -53,8 +47,5 @@ namespace ctrviewer.Engine.Render
 
             base.Update(gameTime);
         }
-
-        #endregion
     }
-
 }

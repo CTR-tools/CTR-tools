@@ -51,7 +51,7 @@ namespace CTRTools
         {
             MemMapEntry entry = Entries.Find(x => x.Name == name);
 
-            if (entry == null)
+            if (entry is null)
                 return;
 
             uint absPtr = (uint)(BasePointer + entry.Offset);

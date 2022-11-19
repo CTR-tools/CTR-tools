@@ -171,13 +171,13 @@ namespace CTRFramework.Vram
         /// <param name="src">Source TIM to draw.</param>
         public void DrawTim(Tim src)
         {
-            if (src == null)
+            if (src is null)
             {
                 Helpers.Panic(this, PanicType.Warning, "Passed TIM is null.");
                 return;
             }
 
-            if (src.data == null)
+            if (src.data is null)
             {
                 Helpers.Panic(this, PanicType.Warning, "Nothing to draw.");
                 return;
@@ -212,7 +212,7 @@ namespace CTRFramework.Vram
 
             if (src.hasClut)
             {
-                if (src.clutdata == null)
+                if (src.clutdata is null)
                 {
                     Helpers.Panic(this, PanicType.Warning, "clutdata is missing");
                     return;

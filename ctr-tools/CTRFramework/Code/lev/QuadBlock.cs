@@ -325,7 +325,7 @@ namespace CTRFramework
         /// <param name="rotations"></param>
         public void QuadTexRotate(List<Vertex> buf, int rotations = 1)
         {
-            if (buf == null)
+            if (buf is null)
                 return;
 
             for (int i = 0; i < rotations % 4; i++)
@@ -343,7 +343,7 @@ namespace CTRFramework
         /// <param name="rotations"></param>
         public void QuadTexRotateTri(List<Vertex> buf, int rotations = 1)
         {
-            if (buf == null)
+            if (buf is null)
                 return;
 
             for (int i = 0; i < rotations % 3; i++)
@@ -359,7 +359,7 @@ namespace CTRFramework
         /// <param name="buf"></param>
         public void QuadTexFlip(List<Vertex> buf)
         {
-            if (buf == null)
+            if (buf is null)
                 return;
 
             SwapUV(buf[0], buf[1]);

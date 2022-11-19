@@ -63,7 +63,7 @@ namespace CTRFramework.Shared
 
         public static MetaInst GetMetaInst(string song, string inst, int index)
         {
-            if (midixml == null)
+            if (midixml is null)
                 if (!Meta.LoadMidiJson())
                     return new MetaInst();
 
@@ -71,7 +71,7 @@ namespace CTRFramework.Shared
             {
                 var node = midixml.SelectNodes($"/midi/song[@title='{song}']");
 
-                if (node == null)
+                if (node is null)
                 {
                     Helpers.Panic("Meta", PanicType.Warning, $"Missing song in cseq.xml: {song}");
                     return new MetaInst();

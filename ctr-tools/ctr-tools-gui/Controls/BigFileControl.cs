@@ -255,7 +255,7 @@ namespace CTRTools.Controls
 
         private void fileTree_DoubleClick(object sender, EventArgs e)
         {
-            if ((sender as TreeView).SelectedNode.Tag == null)
+            if ((sender as TreeView).SelectedNode.Tag is null)
                 return;
 
             _reader.FileCursor = (int)(sender as TreeView).SelectedNode.Tag;

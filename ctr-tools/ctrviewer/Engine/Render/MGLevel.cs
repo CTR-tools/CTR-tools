@@ -59,7 +59,7 @@ namespace ctrviewer.Engine.Render
 
         public void Push(Dictionary<string, TriList> dict, string name, List<VertexPositionColorTexture> monolist, TriListType type = TriListType.Basic, BlendState blendState = null, string custTex = "")
         {
-            if (blendState == null)
+            if (blendState is null)
                 blendState = BlendState.Opaque;
 
             if (!dict.ContainsKey(name))

@@ -55,7 +55,7 @@ namespace ctrviewer.Engine.Render
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha, FirstPersonCamera camera)
         {
-            if (model == null)
+            if (model is null)
             {
                 GameConsole.Write($"missing model {ModelName}");
                 return;

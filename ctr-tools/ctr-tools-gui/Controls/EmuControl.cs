@@ -143,7 +143,7 @@ namespace CTRTools.Controls
 
         private void GetGameConfig(object sender, EventArgs e)
         {
-            if (m == null)
+            if (m is null)
             {
                 timer.Stop();
                 return;

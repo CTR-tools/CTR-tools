@@ -99,8 +99,10 @@ namespace CTRFramework
             {
                 ReadScene(PatchedContainer.FromReader(br).GetReader());
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine("failed to read scene with patch container: " + ex.Message);
+
                 //try to load scene without patch table
                 ReadScene(br);
             }
@@ -114,7 +116,7 @@ namespace CTRFramework
         {
             header = Instance<SceneHeader>.FromReader(br);
 
-            if (header == null)
+            if (header is null)
                 throw new Exception("Scene header is null. Halt parsing.");
 
 
@@ -495,7 +497,7 @@ namespace CTRFramework
         /// <param name="lod"></param>
         public void ExportTextures(string path, Detail lod)
         {
-            if (ctrvram == null)
+            if (ctrvram is null)
             {
                 Helpers.Panic(this, PanicType.Info, "No export textures as no vram found.\r\nMake sure VRM file is in the same folder.");
                 return;
@@ -521,7 +523,7 @@ namespace CTRFramework
                 foreach (var quad in quads)
                     foreach (var tex in quad.tex)
                     {
-                        if (tex == null)
+                        if (tex is null)
                         {
                             Helpers.Panic(this, PanicType.Error, $"tex is null for whatever reason... {quad.id}");
                             continue;
@@ -666,7 +668,7 @@ namespace CTRFramework
                         case Detail.Med:
                             foreach (var tex in qb.tex)
                             {
-                                if (tex == null) continue;
+                                if (tex is null) continue;
 
                                 if (tex.lod2.Position != 0)
                                     result[tex.lod2.Tag] = tex.lod2;
@@ -676,7 +678,7 @@ namespace CTRFramework
                         case Detail.High:
                             foreach (var tex in qb.tex)
                             {
-                                if (tex == null) continue;
+                                if (tex is null) continue;
 
                                 foreach (var x in tex.hi)
                                     if (x != null)

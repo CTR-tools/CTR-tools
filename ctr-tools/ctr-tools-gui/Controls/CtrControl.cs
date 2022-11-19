@@ -121,7 +121,7 @@ namespace CTRTools.Controls
 
         private void actionSaveCtr_Click(object sender, EventArgs e)
         {
-            if (ctr == null) return;
+            if (ctr is null) return;
 
             if (fbd.ShowDialog() != DialogResult.OK) return;
 

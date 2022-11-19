@@ -165,7 +165,7 @@ namespace ctrviewer
         /// </summary>
         public void UpdateEffects()
         {
-            if (effect == null)
+            if (effect is null)
                 effect = new BasicEffect(graphics.GraphicsDevice);
 
             effect.VertexColorEnabled = eng.Settings.VertexLighting;
@@ -176,7 +176,7 @@ namespace ctrviewer
             effect.FogStart = eng.Cameras[CameraType.DefaultCamera].FarClip / 4 * 3;
             effect.FogEnd = eng.Cameras[CameraType.DefaultCamera].FarClip;
 
-            if (alphaTestEffect == null)
+            if (alphaTestEffect is null)
                 alphaTestEffect = new AlphaTestEffect(GraphicsDevice);
 
             alphaTestEffect.AlphaFunction = CompareFunction.Greater;
@@ -184,7 +184,7 @@ namespace ctrviewer
             alphaTestEffect.VertexColorEnabled = eng.Settings.VertexLighting;
             alphaTestEffect.DiffuseColor = effect.DiffuseColor;
 
-            if (instanceEffect == null)
+            if (instanceEffect is null)
                 instanceEffect = new BasicEffect(graphics.GraphicsDevice);
 
             instanceEffect.VertexColorEnabled = true;
@@ -383,6 +383,10 @@ namespace ctrviewer
             menu.Find("genmips").Click += ToggleMips;
             menu.Find("console").Click += ToggleConsole;
 
+            menu.Find("tod2").Click += HandleTodChange;
+            menu.Find("tod2").PressedLeft += HandleTodChange;
+            menu.Find("tod2").PressedRight += HandleTodChange;
+
             menu.Find("flag").Click += ChangeFlag;
             menu.Find("flag").PressedLeft += ChangeFlag;
             menu.Find("flag").PressedRight += ChangeFlag;
@@ -427,6 +431,11 @@ namespace ctrviewer
         {
             Game1.currentflag = (sender as IntRangeMenuItem).Value;
             GameConsole.Write($"flag is now: {currentflag.ToString("X4")}");
+        }
+
+        public void HandleTodChange(object sender, EventArgs args)
+        {
+            SetTimeOfDay((PreferredTimeOfDay)((sender as IntRangeMenuItem).Value));
         }
 
         public void ToggleKartMode(object sender, EventArgs args) => eng.Settings.KartMode = (sender as BoolMenuItem).Value;
@@ -849,9 +858,9 @@ namespace ctrviewer
         /// </summary>
         private void LoadMenuModelsScene()
         {
-            if (big == null) return;
+            if (big is null) return;
 
-            if (menu_models == null)
+            if (menu_models is null)
                 menu_models = LoadSceneFromBig(215);
 
             if (menu_models != null)
@@ -1139,7 +1148,7 @@ namespace ctrviewer
 
             foreach (var node in childVisData)
             {
-                if (node == null) continue;
+                if (node is null) continue;
 
                 if (node.IsLeaf) // leaves don't have children
                 {
@@ -1175,7 +1184,7 @@ namespace ctrviewer
         {
             bool result = false;
 
-            if (big == null)
+            if (big is null)
             {
                 //check file in settings, most of the time this will be it
                 if (File.Exists(eng.Settings.BigFileLocation))
@@ -1207,7 +1216,7 @@ namespace ctrviewer
             if (!File.Exists(eng.Settings.BigFileLocation))
                 return false;
 
-            if (result == true && big == null)
+            if (result == true && big is null)
                 big = BigFileReader.FromFile(eng.Settings.BigFileLocation);
 
             GameConsole.Write(result ? $"Bigfile location: {eng.Settings.BigFileLocation}" : "Bigfile not found.");
@@ -1242,7 +1251,7 @@ namespace ctrviewer
                 loadedLevel = -1;
 
             //test whether big file is ready
-            if (big == null && !FindBigFile())
+            if (big is null && !FindBigFile())
             {
                 GameConsole.Write("Missing BIGFILE!");
                 return;
@@ -1425,15 +1434,6 @@ namespace ctrviewer
                         case "loadbig":
                             LoadLevelsFromBig(menu.SelectedItem.Value);
                             break;
-                        case "tod_day":
-                            SetTimeOfDay(PreferredTimeOfDay.Day);
-                            break;
-                        case "tod_evening":
-                            SetTimeOfDay(PreferredTimeOfDay.Evening);
-                            break;
-                        case "tod_night":
-                            SetTimeOfDay(PreferredTimeOfDay.Night);
-                            break;
                         case "link":
                             menu.SetMenu(font, menu.SelectedItem.Param);
                             break;
@@ -1590,7 +1590,7 @@ namespace ctrviewer
             if (!RenderEnabled) return;
 
             //if we got no camera passed, fall back to default
-            if (cam == null)
+            if (cam is null)
                 cam = eng.Cameras[CameraType.DefaultCamera];
 
 

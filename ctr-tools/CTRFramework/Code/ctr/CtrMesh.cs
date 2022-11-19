@@ -843,7 +843,7 @@ namespace CTRFramework
         /// <param name="vram"></param>
         public void ExportTextures(string path, Tim vram = null)
         {
-            if (vram == null)
+            if (vram is null)
             {
                 Helpers.Panic(this, PanicType.Warning, $"No vram passed for '{Name}'.");
                 return;

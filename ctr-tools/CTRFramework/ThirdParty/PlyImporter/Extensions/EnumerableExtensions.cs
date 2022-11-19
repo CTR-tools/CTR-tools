@@ -11,8 +11,8 @@ public static class EnumerableExtensions
 
     public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
     {
-        if (source == null) throw new ArgumentNullException("source");
-        if (rng == null) throw new ArgumentNullException("rng");
+        if (source is null) throw new ArgumentNullException("source");
+        if (rng is null) throw new ArgumentNullException("rng");
 
         return source.ShuffleIterator(rng);
     }

@@ -77,7 +77,7 @@ namespace ctrviewer.Engine.Render
 
             texture = ContentVault.GetTexture(textureName, false);
             replacement = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
-            if (replacement == null)
+            if (replacement is null)
                 replacement = texture;
 
             /*
@@ -161,7 +161,7 @@ namespace ctrviewer.Engine.Render
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
-            if (indices == null || verts == null)
+            if (indices is null || verts is null)
             {
                 GameConsole.Write("Bad trilist.");
                 return;

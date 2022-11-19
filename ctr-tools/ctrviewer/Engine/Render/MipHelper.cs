@@ -88,7 +88,7 @@ namespace ctrviewer.Engine.Render
 
             bitmap = FixBitmap(bitmap, out alpha, out bytes, fix);
 
-            if (tex == null)
+            if (tex is null)
             {
                 tex = new Texture2D(device, bitmap.Width, bitmap.Height, mipmaps, SurfaceFormat.Color);
                 tex.SetData<byte>(bytes, 0, bytes.Length);
@@ -150,9 +150,9 @@ namespace ctrviewer.Engine.Render
         /*
         public static Texture2D Paint(GraphicsDevice graphics, RenderTarget2D rendertarget, SpriteBatch spriteBatch, Texture2D texture)
         {
-            if (rendertarget == null) return null;
-            if (spriteBatch == null) return null;
-            if (texture == null) return null;
+            if (rendertarget is null) return null;
+            if (spriteBatch is null) return null;
+            if (texture is null) return null;
 
             graphics.SetRenderTarget(rendertarget);
             spriteBatch.Draw(

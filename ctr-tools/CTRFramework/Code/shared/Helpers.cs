@@ -44,7 +44,7 @@ namespace CTRFramework.Shared
         //avoids excessive fragmentation
         public static void WriteToFile(string fileName, string content, System.Text.Encoding encoding = null)
         {
-            if (encoding == null)
+            if (encoding is null)
                 encoding = System.Text.Encoding.Default;
 
             CheckFolder(fileName);
@@ -161,7 +161,7 @@ namespace CTRFramework.Shared
             //var thisAssembly = Assembly.GetExecutingAssembly();
             //using (var stream = thisAssembly.GetManifestResourceStream($"CTRFramework.Data.{resource}"))
             {
-                //if (stream == null)
+                //if (stream is null)
                 //     return "";
 
                 using (var reader = new StreamReader(GetStreamFromZip(resource)))

@@ -26,8 +26,8 @@ namespace ctrviewer.Engine
 
         public static void Draw(GraphicsDevice gd, SpriteBatch g)
         {
-            if (Font == null) return;
-            if (gd == null) return;
+            if (Font is null) return;
+            if (gd is null) return;
 
             float scale = gd.Viewport.Height / 1080f;
 
