@@ -345,16 +345,16 @@ namespace ctrviewer.Engine.Gui
 
                 //draw menu item background
                 batch.Draw(background, rect,
-                    i == Selection ? MenuItemSelectedColor : MenuItemBackColor); ;
+                    i == Selection ? MenuItemSelectedColor : MenuItemBackColor);
 
                 //draw menu item text shadow
                 batch.DrawString(fnt, s, loc + shadow_offset - new Vector2(m.Width / 2 * scale, 5 * scale), Color.Black,
-                   0, new Vector2(0, 0), scale, SpriteEffects.None, 1.0f);
+                   0, new Vector2(0, 0), scale, SpriteEffects.None, 0.1f);
 
                 //draw menu item text
                 batch.DrawString(fnt, s, loc - new Vector2(m.Width / 2 * scale, 5 * scale),
                    m.Enabled ? (m == SelectedItem ? Color.White : Game1.CtrMainFontColor) : Color.DarkGray,// (i == selection ? (m.Enabled ? Color.Red : Color.DarkRed) : (m.Enabled ? Color.White : Color.Gray)),
-                   0, new Vector2(0, 0), scale, SpriteEffects.None, 0.5f);
+                   0, new Vector2(0, 0), scale, SpriteEffects.None, 0.2f);
 
                 //next line
                 loc.Y += (int)(40 * scale);
@@ -385,7 +385,7 @@ namespace ctrviewer.Engine.Gui
                 new Vector2(0, 0),
                 graphics.Viewport.Height / 1080f,
                 SpriteEffects.None,
-                 0.5f
+                0.5f
                 );
         }
     }

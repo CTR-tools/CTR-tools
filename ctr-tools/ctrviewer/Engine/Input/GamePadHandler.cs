@@ -25,6 +25,9 @@ namespace ctrviewer.Engine.Input
         private static GamePadState oldState = GamePad.GetState(GamePadIndex);
         private static GamePadState newState = GamePad.GetState(GamePadIndex);
 
+        public static float TriggerDeadZone = 0.1f;
+        
+
         public static GamePadState State => newState;
 
         public static void Update()

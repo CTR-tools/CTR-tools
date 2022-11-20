@@ -16,7 +16,6 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
 using System.IO;
 using System.Threading.Tasks;
 
@@ -271,6 +270,8 @@ namespace ctrviewer
             UpdateTargetFramerate();
 
             Content.RootDirectory = "Content";
+
+            InactiveSleepTime = new TimeSpan(0);
 
 
             //hardware switch is disabled due to wrong resolution + crash after AA change
@@ -595,6 +596,12 @@ namespace ctrviewer
             ContentVault.Models.Add(name, coll);
         }
 
+        /*
+        public void PushVertex(List<VertexPositionColorTexture> list, Vector3 pos, Color color, Vector2 uv)
+        {
+            list.Add(new VertexPositionColorTexture());
+        }
+        */
 
         public void GenerateBasicSky(string name, Color top, Color bottom, Gradient[] grad, int size = 10)
         {
@@ -614,7 +621,7 @@ namespace ctrviewer
             //top half
             if (top.A > 0)
             {
-                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), DataConverter.ToColor(grad[0].ColorFrom), Vector2.Zero));
                 vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, -size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
                 vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
                 vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
@@ -1027,14 +1034,14 @@ namespace ctrviewer
                 foreach (var ph in s.Instances)
                 {
                     var model = new InstancedModel(
-                            ph.ModelName,
-                            DataConverter.ToVector3(ph.Pose.Position),
-                            new Vector3(
-                                ph.Pose.Rotation.Y,
-                                ph.Pose.Rotation.X,
-                                ph.Pose.Rotation.Z
-                            ) * (float)(Math.PI * 2f),
-                            new Vector3(ph.Scale.Y, ph.Scale.X, ph.Scale.Z)
+                        ph.ModelName,
+                        DataConverter.ToVector3(ph.Pose.Position),
+                        new Vector3(
+                            ph.Pose.Rotation.Y,
+                            ph.Pose.Rotation.X,
+                            ph.Pose.Rotation.Z
+                        ) * (float)(Math.PI * 2f),
+                        new Vector3(ph.Scale.Y, ph.Scale.X, ph.Scale.Z)
                     );
 
                     //treat special case for hubs
@@ -1090,6 +1097,9 @@ namespace ctrviewer
 
             loadingStatus = "populate bsp...";
 
+            eng.bspBranches = new LineCollection();
+            eng.bspLeaves.Clear();
+
             foreach (var s in Scenes)
             {
                 if (s.visdata.Count > 0)
@@ -1098,13 +1108,19 @@ namespace ctrviewer
                 //add instance boxes
                 foreach (var node in s.instvisdata)
                 {
-                    eng.bbox.Add(
-                        new WireBox(
-                            DataConverter.ToVector3(node.bbox.Min),
-                            DataConverter.ToVector3(node.bbox.Max),
-                            node.flag.HasFlag(VisDataFlags.NoCollision) ? Color.Green : Color.Red, 1 / 100f));
+                    eng.bspBranches.PushBox(
+                        DataConverter.ToVector3(node.bbox.Min),
+                        DataConverter.ToVector3(node.bbox.Max),
+                        node.flag.HasFlag(VisDataFlags.NoCollision) ? Color.Green : Color.Red,
+                        1 / 100f
+                    );
                 }
             }
+
+            eng.bspBranches.Seal();
+
+            foreach (var value in eng.bspLeaves.Values)
+                value.Seal();
 
             loadingStatus = "updating effects...";
 
@@ -1152,24 +1168,25 @@ namespace ctrviewer
 
                 if (node.IsLeaf) // leaves don't have children
                 {
-                    eng.bbox.Add(
-                        new WireBox(
-                            DataConverter.ToVector3(node.bbox.Min),
-                            DataConverter.ToVector3(node.bbox.Max),
-                            node.ptrInstanceNodes != 0 ? Color.Yellow : Color.Magenta, 1 / 100f));
+                    eng.bspBranches.PushBox(
+                        DataConverter.ToVector3(node.bbox.Min),
+                        DataConverter.ToVector3(node.bbox.Max),
+                        node.ptrInstanceNodes != 0 ? Color.Yellow : Color.Magenta,
+                        1 / 100f
+                    );
 
                     continue;
                 }
 
                 // show those children in different color than the parent
-                if (!eng.bbox2.ContainsKey(level))
-                    eng.bbox2.Add(level, new List<WireBox>());
+                if (!eng.bspLeaves.ContainsKey(level))
+                    eng.bspLeaves.Add(level, new LineCollection());
 
-                eng.bbox2[level].Add(
-                    new WireBox(
-                        DataConverter.ToVector3(node.bbox.Min),
-                        DataConverter.ToVector3(node.bbox.Max),
-                        colorLevelsOfBsp[level % colorLevelsOfBsp.Length], 1 / 100f));
+                eng.bspLeaves[level].PushBox(
+                    DataConverter.ToVector3(node.bbox.Min),
+                    DataConverter.ToVector3(node.bbox.Max),
+                    colorLevelsOfBsp[level % colorLevelsOfBsp.Length], 1 / 100f
+                );
 
                 BspPopulate(node, scene, level + 1);
             }
@@ -1605,11 +1622,9 @@ namespace ctrviewer
                 graphics.GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);
             }
 
-
             //if sky exists and enabled
             if (eng.sky != null && eng.Settings.ShowSky)
                 eng.sky.DrawSky(graphics, eng.Cameras[CameraType.SkyCamera], effect, null);
-
 
 
             effect.View = cam.ViewMatrix;
@@ -1654,13 +1669,11 @@ namespace ctrviewer
                 //texture enabled makes visdata invisible
                 effect.TextureEnabled = false;
 
-                foreach (var x in eng.bbox)
-                    x.Draw(graphics, effect);
+                eng.bspBranches.Draw(graphics, effect);
 
                 if (eng.Settings.VisDataLeaves)
-                    foreach (var key in eng.bbox2.Keys)
-                        foreach (var x in eng.bbox2[key])
-                            x.Draw(graphics, effect);
+                    foreach (var value in eng.bspLeaves.Values)
+                        value.Draw(graphics, effect);
             }
         }
 
@@ -1737,90 +1750,76 @@ namespace ctrviewer
                 DrawLevel();
             }
 
-            //if we're using internal resolution, draw rendertarget to screenbuffer, applying 16bits postfx
-
             GraphicsDevice.SetRenderTarget(null);
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, effect: eng.Settings.InternalPSXResolution ? ContentVault.GetShader("16bits") : null);
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Opaque, SamplerState.PointClamp, effect: eng.Settings.InternalPSXResolution ? ContentVault.GetShader("16bits") : null);
             spriteBatch.Draw(eng.screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
             spriteBatch.End();
-            
-
+       
             //level done.
+
 
             //start drawing menu stuff
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp);
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.AnisotropicClamp);
 
             //draw menu (visibility check is inside this method)
             menu.Draw(GraphicsDevice, spriteBatch, font, tint);
 
             //print instructions if nothing is loaded yet
-            if (Scenes.Count == 0 && !IsLoading)
-                spriteBatch.DrawString(font,
+            if (!IsLoading && Scenes.Count == 0)
+                DrawString(
                     "Crash Team Racing level viewer\r\n\r\n" +
                     "No levels loaded.\r\n" +
                     "Put LEV/VRM files in levels folder,\r\n" +
                     "or put BIGFILE.BIG in root folder,\r\n" +
                     "or insert/mount CTR CD and use load level menu.\r\n\r\n" +
                     "Press ESC to open menu.",
-                    new Vector2(20 * graphics.GraphicsDevice.Viewport.Height / 1080f, 20 * graphics.GraphicsDevice.Viewport.Height / 1080f),
-                    CtrMainFontColor,
-                    0,
-                    Vector2.Zero,
-                    graphics.GraphicsDevice.Viewport.Height / 1080f,
-                    SpriteEffects.None,
-                    0.5f);
-
-            //spriteBatch.DrawString(font, $"{newms.ToString()}", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString($"{newms.ToString()}").X / 2), graphics.PreferredBackBufferHeight / 2), Color.Yellow);
+                    new Vector2(20 * graphics.GraphicsDevice.Viewport.Height / 1080f, 20 * graphics.GraphicsDevice.Viewport.Height / 1080f)
+                );
 
             //print fov value, if it's changing
-            if (KeyboardHandler.IsAnyDown(Keys.OemMinus, Keys.OemPlus))
-                spriteBatch.DrawString(font, String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##")), new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(String.Format("FOV {0}", eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##"))).X - 20, 20), CtrMainFontColor);
+            if (InputHandlers.Process(GameAction.FovUp) || InputHandlers.Process(GameAction.FovDown))
+            {
+                string text = $"FOV: {eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##")}";
+                DrawString(text, new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20));
+            }
 
             //print speed scale, if it's changing
-            if (GamePad.GetState(0).Triggers.Left > 0 || GamePad.GetState(0).Triggers.Right > 0)
-                spriteBatch.DrawString(
-                    font,
-                    $"Speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}",
-                    new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString($"Speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}").X - 20, 20),
-                    CtrMainFontColor);
+            if (GamePadHandler.State.Triggers.Left > 0 || GamePadHandler.State.Triggers.Right > 0)
+            {
+                string text = $"Camera speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}";
+                DrawString(text, new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20));
+            }
 
             //print camera position, if enabled
             if (eng.Settings.ShowCamPos)
-                spriteBatch.DrawString(font, $"({eng.Cameras[CameraType.DefaultCamera].Position.X.ToString("0.00")}, {eng.Cameras[CameraType.DefaultCamera].Position.Y.ToString("0.00")}, {eng.Cameras[CameraType.DefaultCamera].Position.Z.ToString("0.00")})", new Vector2(20, 20), CtrMainFontColor,
-                    0,
-                    Vector2.Zero,
-                    graphics.GraphicsDevice.Viewport.Height / 1080f,
-                    SpriteEffects.None,
-                    0.5f);
+            {
+                var campos = eng.Cameras[CameraType.DefaultCamera].Position;
 
+                DrawString(
+                    $"({campos.X.ToString("0.00")}, {campos.Y.ToString("0.00")}, {campos.Z.ToString("0.00")})",
+                    new Vector2(20, 20)
+                    );
+            }
+        
             //print kart mode info, if it's enabled
-            if (eng.Settings.KartMode)
-                if (karts.Count > 0)
-                    spriteBatch.DrawString(font, $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {karts[0].Speed}", new Vector2(20, 20), CtrMainFontColor,
-                    0,
-                    Vector2.Zero,
-                    graphics.GraphicsDevice.Viewport.Height / 1080f,
-                    SpriteEffects.None,
-                    0.5f);
+            if (eng.Settings.KartMode && karts.Count > 0)
+                DrawString(
+                    $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {(karts[0].Speed * 100).ToString("0.00")}", 
+                    new Vector2(20, 20)
+                );
 
             //draw console, if enabled
             if (eng.Settings.ShowConsole)
                 GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);
 
-            if (gameTime.IsRunningSlowly)
-                spriteBatch.DrawString(font, $"IsRunningSlowly", new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, 20), CtrMainFontColor,
-                0,
-                Vector2.Zero,
-                graphics.GraphicsDevice.Viewport.Height / 1080f,
-                SpriteEffects.None,
-                0.5f);
 
             //newmenu.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
 
             //menu stuff done.
+
 
             //reset depth state to default cause spritebatch uses none
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
@@ -1829,7 +1828,28 @@ namespace ctrviewer
 
             IsDrawing = false;
         }
+ 
+        private void DrawString(string text, Vector2 position, Color color)
+        {
+            spriteBatch.DrawString(
+                font, 
+                text,
+                position,
+                color,
+                0,
+                Vector2.Zero,
+                graphics.GraphicsDevice.Viewport.Height / 1080f,
+                SpriteEffects.None,
+                0.5f);
+        }
 
+        private void DrawString(string text, Vector2 position) => DrawString(text, position, CtrMainFontColor);
+
+        private void MaybeDrawString(bool condition, string text, Vector2 position)
+        {
+            if (condition)
+                DrawString(text, position);
+        }
 
         enum TextAlign
         {

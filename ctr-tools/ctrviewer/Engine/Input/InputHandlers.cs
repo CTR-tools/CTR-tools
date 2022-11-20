@@ -15,7 +15,9 @@ namespace ctrviewer.Engine.Input
         ForceQuit,
         ToggleConsole,
         ToggleFullscreen,
-        Screenshot
+        Screenshot,
+        FovUp,
+        FovDown
     }
 
 
@@ -48,6 +50,9 @@ namespace ctrviewer.Engine.Input
                 case GameAction.ToggleFullscreen: return KeyboardHandler.IsAltComboPressed(Keys.Enter);
 
                 case GameAction.Screenshot: return KeyboardHandler.IsPressed(Keys.PrintScreen);
+
+                case GameAction.FovDown: return KeyboardHandler.IsDown(Keys.OemMinus);
+                case GameAction.FovUp: return KeyboardHandler.IsDown(Keys.OemPlus);
             }
 
             return false;

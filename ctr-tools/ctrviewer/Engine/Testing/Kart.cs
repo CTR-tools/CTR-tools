@@ -275,7 +275,11 @@ namespace ctrviewer.Engine.Testing
                 Collide(scenes, gameTime);
             }
 
-            Position += GetResultingPower(gameTime);
+            var result = GetResultingPower(gameTime);
+
+            Speed = result.Length();
+
+            Position += result;
 
             Powers[PowerType.Gravity].Enabled = true;
             Powers[PowerType.GodZ].Enabled = false;

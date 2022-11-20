@@ -50,8 +50,8 @@ namespace ctrviewer.Engine
         public List<MGLevel> MeshLow = new List<MGLevel>();
 
         //bounding boxes for visdata
-        public List<WireBox> bbox = new List<WireBox>();
-        public Dictionary<int, List<WireBox>> bbox2 = new Dictionary<int, List<WireBox>>();
+        public LineCollection bspBranches = new LineCollection();
+        public Dictionary<int, LineCollection> bspLeaves = new Dictionary<int, LineCollection>();
 
 
         //sky
@@ -180,14 +180,14 @@ namespace ctrviewer.Engine
         public void Clear()
         {
             sky = null;
+            bspBranches = null;
+            bspLeaves.Clear();
             ContentVault.Clear();
             instanced.Clear();
             MeshHigh.Clear();
             MeshMed.Clear();
             MeshLow.Clear();
             paths.Clear();
-            bbox.Clear();
-            bbox2.Clear();
         }
 
         public void Dispose()
