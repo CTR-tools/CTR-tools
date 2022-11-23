@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ctrviewer.Engine.Render
 {
@@ -109,7 +110,6 @@ namespace ctrviewer.Engine.Render
 
             if (EngineSettings.Instance.ShowWater)
             {
-                //foreach (var ql in waterq)
                 foreach (var ql in Trilists)
                     if (ql.Value.type == TriListType.Water)
                         ql.Value.Draw(graphics, effect, null);

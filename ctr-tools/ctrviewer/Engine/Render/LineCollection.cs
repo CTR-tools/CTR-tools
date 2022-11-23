@@ -5,11 +5,10 @@ using System.Collections.Generic;
 namespace ctrviewer.Engine.Render
 {
     //a collection of lines, used to render bsp tree
-    public class LineCollection : IRenderable
+    public class LineCollection : List<VertexPositionColor>, IRenderable
     {
         public bool Sealed = false;
 
-        private List<VertexPositionColor> Entries = new List<VertexPositionColor>();
         private int numLines => verts is null ? 0 : verts.Length / 2;
 
         //vertex buffer used by monogame
@@ -36,7 +35,7 @@ namespace ctrviewer.Engine.Render
             if (!CanWrite) return;
 
             var vert = new VertexPositionColor(scale != 1f ? new Vector3(x, y, z) * scale : new Vector3(x, y, z), color);
-            Entries.Add(vert);
+            Add(vert);
         }
 
         //adds single vert to the list, intended to be private
@@ -44,7 +43,7 @@ namespace ctrviewer.Engine.Render
         {
             if (!CanWrite) return;
 
-            Entries.Add(new VertexPositionColor(scale != 1f ? pos * scale : pos, color));
+            Add(new VertexPositionColor(scale != 1f ? pos * scale : pos, color));
         }
 
         //adds a line to the list
@@ -96,14 +95,14 @@ namespace ctrviewer.Engine.Render
         //dumps all vertices to buffer and locks the collection
         public void Seal()
         {
-            verts = Entries.ToArray();
+            verts = ToArray();
             Sealed = true;
         }
 
         //render stuff
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alphaEffect = null)
         {
-            if (!Sealed) return;
+            if (!Sealed || graphics is null || effect is null) return;
 
             foreach (var pass in effect.CurrentTechnique.Passes)
             {

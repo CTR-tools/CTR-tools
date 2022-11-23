@@ -19,8 +19,6 @@ namespace ctrviewer.Engine.Render
     {
         public float Speed = 1.0f;
 
-        public bool forcepos = true;
-
         public float Timer = 0;
 
         public List<AnimationKey> Keys = new List<AnimationKey>();

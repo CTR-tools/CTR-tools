@@ -329,6 +329,22 @@ namespace ctrviewer
             ContentVault.AddShader("16bits", Content.Load<Effect>("shaders\\16bits"));
             ContentVault.AddShader("scanlines", Content.Load<Effect>("shaders\\scanlines"));
 
+
+            var rotateLeft = new SimpleAnimation();
+            rotateLeft.Keys.Clear();
+            rotateLeft.Keys.Add(new AnimationKey() { Parent = rotateLeft, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1f), Time = 0 });
+            rotateLeft.Keys.Add(new AnimationKey() { Parent = rotateLeft, Position = new Vector3(0, 0, 0), Rotation = new Vector3(3.1415f * 2, 0, 0), Scale = new Vector3(1), Time = 8000 });
+            rotateLeft.State = rotateLeft.Keys[0];
+
+            var rotateRight = new SimpleAnimation();
+            rotateRight.Keys.Clear();
+            rotateRight.Keys.Add(new AnimationKey() { Parent = rotateRight, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1f), Time = 0 });
+            rotateRight.Keys.Add(new AnimationKey() { Parent = rotateRight, Position = new Vector3(0, 0, 0), Rotation = new Vector3(-3.1415f * 2, 0, 0), Scale = new Vector3(1), Time = 8000 });
+            rotateRight.State = rotateRight.Keys[0];
+
+            ContentVault.AddVectorAnim("rotate_left", rotateLeft);
+            ContentVault.AddVectorAnim("rotate_right", rotateRight);
+
             LoadGenericTextures();
             effect.Texture = ContentVault.Textures["test"];
             //effect.TextureEnabled = true;
@@ -590,8 +606,7 @@ namespace ctrviewer
 
             modl.Seal();
 
-            var coll = new TriListCollection();
-            coll.Entries.Add(modl);
+            var coll = new TriListCollection() { modl };
 
             ContentVault.Models.Add(name, coll);
         }
@@ -745,8 +760,7 @@ namespace ctrviewer
 
             modl.Seal();
 
-            var coll = new TriListCollection();
-            coll.Entries.Add(modl);
+            var coll = new TriListCollection() { modl };
 
             ContentVault.Models.Add(name, coll);
         }
@@ -883,18 +897,19 @@ namespace ctrviewer
 
             if (!Directory.Exists(mdlpath)) return;
 
-            string[] models = Directory.GetFiles(mdlpath, "*.ctr");
+            string[] files = Directory.GetFiles(mdlpath, "*.ctr");
 
-            if (models.Length == 0) return;
+            int posX = 0;
 
-            foreach (var s in models)
+            foreach (var filename in files)
             {
-                var model = CtrModel.FromFile(s);
+                var model = CtrModel.FromFile(filename);
 
                 if (!ContentVault.Models.ContainsKey(model.Name))
                 {
                     ContentVault.Models.Add(model.Name, DataConverter.ToTriListCollection(model));
-                    eng.external.Add(new InstancedModel(model.Name, Vector3.Zero, Vector3.Zero, new Vector3(0.1f)));
+                    eng.external.Add(new InstancedModel(model.Name, new Vector3(posX, 0, 0), Vector3.Zero, new Vector3(0.1f)) { anim = ContentVault.GetVectorAnim("rotate_left") });
+                    posX += 2;
                 }
             }
         }

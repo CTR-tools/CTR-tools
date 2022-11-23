@@ -4,13 +4,11 @@ using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
 {
-    public class TriListCollection : IRenderable
+    public class TriListCollection : List<TriList>, IRenderable
     {
-        public List<TriList> Entries = new List<TriList>();
-
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
-            foreach (var entry in Entries)
+            foreach (var entry in this)
                 entry.Draw(graphics, effect, alpha);
         }
     }

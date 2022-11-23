@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
@@ -33,8 +34,6 @@ namespace ctrviewer.Engine.Render
         private Texture2D replacement;
         private short[] indices;
 
-        float lerp = 0;
-
         public int numVerts => verts.Count;
 
         public int numFaces => indices.Length / 3;
@@ -65,13 +64,13 @@ namespace ctrviewer.Engine.Render
             verts.AddRange(t.verts);
             textureEnabled = t.textureEnabled;
             textureName = t.textureName;
-            GenerateIndices();
+            indices = GenerateIndices();
         }
 
 
         public void Seal()
         {
-            indices = GenerateIndices().ToArray();
+            indices = GenerateIndices();
             verts_sealed = verts.ToArray();
             Sealed = true;
 
@@ -149,12 +148,12 @@ namespace ctrviewer.Engine.Render
             */
         }
 
-        public List<short> GenerateIndices()
+        public short[] GenerateIndices()
         {
-            List<short> indices = new List<short>();
+            var indices = new short[numVerts];
 
             for (int i = 0; i < numVerts; i++)
-                indices.Add((short)i);
+                indices[i] = (short)i;
 
             return indices;
         }

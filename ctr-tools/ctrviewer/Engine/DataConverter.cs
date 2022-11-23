@@ -37,9 +37,9 @@ namespace ctrviewer.Engine
         {
             //GameConsole.Write(model.Name);
 
-            TriListCollection coll = new TriListCollection();
+            var coll = new TriListCollection();
 
-            Dictionary<string, TriList> kek = new Dictionary<string, TriList>();
+            var kek = new Dictionary<string, TriList>();
 
             for (int i = 0; i < model.Entries[0].verts.Count / 3; i++)
             {
@@ -48,7 +48,7 @@ namespace ctrviewer.Engine
                 if (!kek.ContainsKey(texture))
                     kek.Add(texture, new TriList());
 
-                List<VertexPositionColorTexture> li = new List<VertexPositionColorTexture>();
+                var li = new List<VertexPositionColorTexture>();
 
                 for (int j = i * 3; j < i * 3 + 3; j++)
                 {
@@ -66,7 +66,7 @@ namespace ctrviewer.Engine
             foreach (var list in kek.Values)
                 list.Seal();
 
-            coll.Entries.AddRange(kek.Values);
+            coll.AddRange(kek.Values);
 
             return coll;
         }

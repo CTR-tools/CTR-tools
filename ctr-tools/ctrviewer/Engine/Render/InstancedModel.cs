@@ -37,7 +37,10 @@ namespace ctrviewer.Engine.Render
 
             foreach (var entry in rotated)
                 if (entry == ModelName)
+                {
+                    anim = ContentVault.GetVectorAnim("rotate_left");
                     ShouldRotate = true;
+                }
         }
 
         public void Update(GameTime gameTime)
