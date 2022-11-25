@@ -59,7 +59,7 @@ namespace bigtool
             {
                 var bigfile = BigFile.FromFile(Helpers.PathCombine(bigPath, $"{bigName}{ext}"));
 
-                if (bigfile.Entries.Count == 0)
+                if (bigfile.Count == 0)
                 {
                     Console.WriteLine("No files to process.");
                     return;

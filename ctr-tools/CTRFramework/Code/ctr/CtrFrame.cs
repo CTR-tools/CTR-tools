@@ -7,7 +7,7 @@ namespace CTRFramework
     public class CtrFrame
     {
         public Vector4s posOffset = new Vector4s(0, 0, 0, 0);
-        public int vrenderMode = 0x1C; //explain
+        public int vertOffset = 0x1C;
         public List<Vector3b> Vertices = new List<Vector3b>();
 
         public CtrFrame()
@@ -32,12 +32,11 @@ namespace CTRFramework
                     Helpers.Panic(this, PanicType.Assume, "skip value not null");
             }
 
-            vrenderMode = br.ReadInt32();
+            vertOffset = br.ReadInt32();
 
-            if (!(new List<int> { 0x1C, 0x22 }).Contains(vrenderMode))
-            {
-                Helpers.Panic(this, PanicType.Assume, $"check vrender {vrenderMode.ToString("X8")}");
-            }
+            Helpers.Panic(this, PanicType.Assume, $"vertOffset: {vertOffset.ToString("X8")}");
+
+            br.Seek(vertOffset - 0x1C);
 
             for (int i = 0; i < numVerts; i++)
                 Vertices.Add(new Vector3b(br));
@@ -47,7 +46,7 @@ namespace CTRFramework
         {
             posOffset.Write(bw);
             bw.Write(new byte[16]);
-            bw.Write(vrenderMode);
+            bw.Write(vertOffset);
 
             foreach (var vertex in Vertices)
                 vertex.Write(bw);

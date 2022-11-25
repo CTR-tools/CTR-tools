@@ -7,10 +7,8 @@ using System.Text;
 
 namespace CTRFramework.Big
 {
-    public class BigFile
+    public class BigFile : List<BigEntry>
     {
-        public List<BigEntry> Entries = new List<BigEntry>();
-
         public int TotalSize
         {
             get
@@ -19,7 +17,7 @@ namespace CTRFramework.Big
                 //ideally you should calculate the amount of sectors used for size/offset array
                 int size = Meta.SectorSize * 3;
 
-                foreach (var entry in Entries)
+                foreach (var entry in this)
                     size += entry.SizePadded;
 
                 return size;
@@ -66,7 +64,7 @@ namespace CTRFramework.Big
             using (var reader = BigFileReader.FromFile(filename))
             {
                 while (reader.NextFile())
-                    Entries.Add(reader.ReadEntry());
+                    Add(reader.ReadEntry());
             }
 
             Helpers.Panic(this, PanicType.Info, "BIG loaded.");
@@ -85,7 +83,7 @@ namespace CTRFramework.Big
             for (int i = 0; i < files.Length; i++)
             {
                 files[i] = Helpers.PathCombine(path, bigname, files[i]);
-                Entries.Add(new BigEntry(files[i]));
+                Add(new BigEntry(files[i]));
             }
         }
 
@@ -96,11 +94,11 @@ namespace CTRFramework.Big
         public void Extract(string path)
         {
             Helpers.Panic(this, PanicType.Info, $"Exporting BIG to: {path}");
-            Helpers.Panic(this, PanicType.Info, $"{Entries.Count} files:");
+            Helpers.Panic(this, PanicType.Info, $"{Count} files:");
 
             var biglist = new StringBuilder();
 
-            foreach (var entry in Entries)
+            foreach (var entry in this)
             {
                 string filename = Helpers.PathCombine(path, entry.Name);
                 //Helpers.CheckFolder(Path.GetDirectoryName(filename));
@@ -128,18 +126,18 @@ namespace CTRFramework.Big
             var sw = new Stopwatch();
             sw.Start();
 
-            Helpers.Panic(this, PanicType.Info, $"we'll need {TotalSize / 1024.0f / 1024.0f}MB for {Entries.Count} files:");
+            Helpers.Panic(this, PanicType.Info, $"we'll need {TotalSize / 1024.0f / 1024.0f}MB for {Count} files:");
 
             byte[] final_big = new byte[TotalSize];
 
             using (var bw = new BinaryWriterEx(new MemoryStream(final_big, 0, TotalSize)))
             {
                 bw.Write((int)0);
-                bw.Write(Entries.Count);
+                bw.Write(Count);
 
                 bw.Jump(3 * Meta.SectorSize);
 
-                foreach (var entry in Entries)
+                foreach (var entry in this)
                 {
                     Console.Write(".");
 
@@ -155,7 +153,7 @@ namespace CTRFramework.Big
 
                 bw.Jump(8);
 
-                foreach (var entry in Entries)
+                foreach (var entry in this)
                 {
                     bw.Write(entry.Offset);
                     bw.Write(entry.Size);
