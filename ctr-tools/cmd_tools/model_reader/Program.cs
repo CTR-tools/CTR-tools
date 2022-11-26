@@ -1,8 +1,6 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
 using CTRFramework.Vram;
-using System;
-using System.IO;
 
 namespace model_reader
 {

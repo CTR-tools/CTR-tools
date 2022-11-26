@@ -109,7 +109,7 @@ namespace CTRFramework
             //loop through all models
 
             foreach (var model in Models)
-                foreach (var mesh in model.Entries)
+                foreach (var mesh in model)
                     foreach (var tl in mesh.tl)
                     {
                         if (tl is null)

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using SharpDX.Mathematics.Interop;
 
 namespace ctrviewer.Engine.Render
 {

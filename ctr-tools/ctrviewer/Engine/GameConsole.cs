@@ -26,6 +26,8 @@ namespace ctrviewer.Engine
 
         public static void Draw(GraphicsDevice gd, SpriteBatch g)
         {
+            if (!EngineSettings.Instance.ShowConsole) return;
+
             if (Font is null) return;
             if (gd is null) return;
 

@@ -10,14 +10,13 @@ using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework
 {
-    public class CtrModel : IRead
+    public class CtrModel : List<CtrMesh>, IRead
     {
         List<UIntPtr> PatchTable = new List<UIntPtr>();
 
         public string path;
         string name = "defaultname";
         CtrThreadID gameEvent = CtrThreadID.None;
-        public List<CtrMesh> Entries = new List<CtrMesh>();
 
         #region Component model
         [Browsable(true), DisplayName("Model name"), Description(""), Category("CTR Model")]
@@ -80,7 +79,7 @@ namespace CTRFramework
             br.Jump(PsxPtr.FromReader(br));
 
             for (int i = 0; i < numEntries; i++)
-                Entries.Add(CtrMesh.FromReader(br));
+                Add(CtrMesh.FromReader(br));
         }
 
         /// <summary>
@@ -94,7 +93,7 @@ namespace CTRFramework
             path = Helpers.PathCombine(path, Name);
             Helpers.CheckFolder(path);
 
-            foreach (var entry in Entries)
+            foreach (var entry in this)
             {
                 string name = $"{Name}.{entry.Name}.{i.ToString("00")}{(entry.IsAnimated ? ".Animated" : "")}";
                 string fn = Helpers.PathCombine(path, $"{name}.obj");
@@ -147,14 +146,14 @@ namespace CTRFramework
             bw.BaseStream.Position = 20;
 
             bw.Write((ushort)gameEvent);
-            bw.Write((ushort)Entries.Count);
+            bw.Write((ushort)Count);
 
             bw.Write((UIntPtr)bw.BaseStream.Position, PatchTable);
 
-            foreach (var ctr in Entries)
+            foreach (var ctr in this)
                 ctr.Write(bw, CtrWriteMode.Header, PatchTable);
 
-            foreach (var ctr in Entries)
+            foreach (var ctr in this)
                 ctr.Write(bw, CtrWriteMode.Data, PatchTable);
 
             bw.Write(PatchTable.Count * 4);
@@ -168,12 +167,12 @@ namespace CTRFramework
             int curPtr = 0x18;
             //ptrHeaders = (UIntPtr)curPtr;
 
-            curPtr += 64 * Entries.Count;
+            curPtr += 64 * Count;
 
             if (curPtr % 4 != 0)
                 curPtr = ((curPtr / 4) + 1) * 4;
 
-            foreach (var ctr in Entries)
+            foreach (var ctr in this)
             {
                 ctr.ptrCmd = (UIntPtr)curPtr;
                 curPtr += (4 + ctr.drawList.Count * 4 + 4);
@@ -230,7 +229,7 @@ namespace CTRFramework
             var ctr = new CtrModel();
 
             foreach (var obj in objlist)
-                ctr.Entries.Add(CtrMesh.FromObj(obj.ObjectName, obj));
+                ctr.Add(CtrMesh.FromObj(obj.ObjectName, obj));
 
             ctr.name = objlist[0].ObjectName;
 
@@ -254,14 +253,14 @@ namespace CTRFramework
             var ply = PlyHandler.FromFile(filename);
             var ctr = new CtrModel();
             ctr.name = Path.GetFileNameWithoutExtension(filename);
-            ctr.Entries.Add(CtrMesh.FromPly(ctr.Name, ply));
+            ctr.Add(CtrMesh.FromPly(ctr.Name, ply));
 
             return ctr;
         }
 
         public void ExportPly(string path)
         {
-            foreach (var entry in Entries)
+            foreach (var entry in this)
                 entry.ExportPly(Helpers.PathCombine(path, $"{Name}.ply"));
         }
 
@@ -271,7 +270,7 @@ namespace CTRFramework
 
             sb.AppendLine($"Model: {name} (thread: {gameEvent})");
 
-            foreach (var entry in Entries)
+            foreach (var entry in this)
                 sb.Append(entry.ToString());
 
             sb.Append("\r\n");

@@ -4,7 +4,7 @@
     {
         private int _value = 0;
 
-        public int Value
+        public new int Value
         {
             get { return _value; }
             set { _value = value; }

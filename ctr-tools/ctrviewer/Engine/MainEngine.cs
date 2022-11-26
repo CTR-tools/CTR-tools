@@ -1,11 +1,9 @@
-﻿using CTRFramework.Lang;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.DirectoryServices.ActiveDirectory;
 //using System.Drawing;
 using System.IO;
 
@@ -151,7 +149,7 @@ namespace ctrviewer.Engine
             UpdateAntiAlias();
             CreateScreenBuffer();
         }
-               
+
         public void UpdateFOV()
         {
             foreach (var camera in Cameras.Values)

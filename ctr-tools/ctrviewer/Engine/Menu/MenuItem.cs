@@ -19,12 +19,13 @@ namespace ctrviewer.Engine.Gui
 
         public event EventHandler PressedLeft;
         public virtual void OnPressedLeft(object sender, EventArgs args = null) => PressedLeft?.Invoke(this, args);
-        public void PressLeft() { 
-            if (Enabled) 
-                if (PressedLeft is null) 
-                    OnClick(this); 
-                else 
-                    OnPressedLeft(this); 
+        public void PressLeft()
+        {
+            if (Enabled)
+                if (PressedLeft is null)
+                    OnClick(this);
+                else
+                    OnPressedLeft(this);
         }
 
         public event EventHandler PressedRight;

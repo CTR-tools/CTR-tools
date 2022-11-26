@@ -49,7 +49,7 @@ namespace CTRTools.Controls
 
                 if (ctr != null)
                 {
-                    ctr.Entries.AddRange(model.Entries);
+                    ctr.AddRange(model);
                 }
                 else
                 {
@@ -71,7 +71,7 @@ namespace CTRTools.Controls
 
             if (ctr != null)
             {
-                foreach (var model in ctr.Entries)
+                foreach (var model in ctr)
                     listBox1.Items.Add(model.Name);
 
                 propertyGrid1.SelectedObject = ctr;
@@ -128,7 +128,7 @@ namespace CTRTools.Controls
             try
             {
                 if (optionTwoSided.Checked)
-                    foreach (var mesh in ctr.Entries)
+                    foreach (var mesh in ctr)
                         foreach (var cmd in mesh.drawList)
                             cmd.flags &= ~CtrDrawFlags.d;
 
@@ -142,13 +142,12 @@ namespace CTRTools.Controls
 
         private void actionExportObj_Click(object sender, EventArgs e)
         {
+            if (ctr == null) return;
+
             try
             {
-                if (ctr != null)
-                {
-                    if (fbd.ShowDialog() == DialogResult.OK)
-                        ctr.Export(fbd.SelectedPath);
-                }
+                if (fbd.ShowDialog() == DialogResult.OK)
+                    ctr.Export(fbd.SelectedPath);
             }
             catch (Exception ex)
             {
@@ -159,7 +158,7 @@ namespace CTRTools.Controls
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex != -1)
-                propertyGrid1.SelectedObject = ctr.Entries[listBox1.SelectedIndex];
+                propertyGrid1.SelectedObject = ctr[listBox1.SelectedIndex];
         }
 
         private void button1_Click(object sender, EventArgs e)

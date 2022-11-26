@@ -15,7 +15,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -85,7 +84,6 @@ namespace ctrviewer
                 graphics.PreferredBackBufferWidth = graphics.PreferredBackBufferWidth * eng.Settings.WindowScale / 100;
                 graphics.PreferredBackBufferHeight = graphics.PreferredBackBufferHeight * eng.Settings.WindowScale / 100;
             }
-
         }
 
         public void SwitchDisplayMode(GraphicsDeviceManager graphics)
@@ -340,16 +338,16 @@ namespace ctrviewer
 
 
             var rotateLeft = new SimpleAnimation();
-            rotateLeft.Keys.Clear();
-            rotateLeft.Keys.Add(new AnimationKey() { Parent = rotateLeft, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1f), Time = 0 });
-            rotateLeft.Keys.Add(new AnimationKey() { Parent = rotateLeft, Position = new Vector3(0, 0, 0), Rotation = new Vector3(3.1415f * 2, 0, 0), Scale = new Vector3(1), Time = 8000 });
-            rotateLeft.State = rotateLeft.Keys[0];
+            rotateLeft.Clear();
+            rotateLeft.Add(new AnimationKey() { Parent = rotateLeft, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1f), Time = 0 });
+            rotateLeft.Add(new AnimationKey() { Parent = rotateLeft, Position = new Vector3(0, 0, 0), Rotation = new Vector3(3.1415f * 2, 0, 0), Scale = new Vector3(1), Time = 8000 });
+            rotateLeft.State = rotateLeft[0];
 
             var rotateRight = new SimpleAnimation();
-            rotateRight.Keys.Clear();
-            rotateRight.Keys.Add(new AnimationKey() { Parent = rotateRight, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1f), Time = 0 });
-            rotateRight.Keys.Add(new AnimationKey() { Parent = rotateRight, Position = new Vector3(0, 0, 0), Rotation = new Vector3(-3.1415f * 2, 0, 0), Scale = new Vector3(1), Time = 8000 });
-            rotateRight.State = rotateRight.Keys[0];
+            rotateRight.Clear();
+            rotateRight.Add(new AnimationKey() { Parent = rotateRight, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1f), Time = 0 });
+            rotateRight.Add(new AnimationKey() { Parent = rotateRight, Position = new Vector3(0, 0, 0), Rotation = new Vector3(-3.1415f * 2, 0, 0), Scale = new Vector3(1), Time = 8000 });
+            rotateRight.State = rotateRight[0];
 
             ContentVault.AddVectorAnim("rotate_left", rotateLeft);
             ContentVault.AddVectorAnim("rotate_right", rotateRight);
@@ -505,7 +503,7 @@ namespace ctrviewer
             IsLoading = true;
             ControlsEnabled = false;
 
-            Task loadlevel = new Task(() =>
+            var loadlevel = new Task(() =>
             {
                 int levelId = (sender as IntMenuItem).Value;
                 if (levelId > -1)
@@ -517,6 +515,8 @@ namespace ctrviewer
             loadlevel.Start();
 
             await loadlevel;
+
+            GC.Collect();
 
             IsLoading = false;
             ControlsEnabled = true;
@@ -627,16 +627,16 @@ namespace ctrviewer
             vptc.Clear();
 
             vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To  / 25f, -5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From  / 25f, 5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From  / 25f, -5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
             modl.PushQuad(vptc);
             vptc.Clear();
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To  / 25f, 5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To  / 25f, -5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From  / 25f, 5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From  / 25f, -5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
             modl.PushQuad(vptc);
             vptc.Clear();
 
@@ -1307,10 +1307,10 @@ namespace ctrviewer
             }
         }
 
-        public bool updatemouse = false;
-        public static bool RenderEnabled = true;
-        public static bool ControlsEnabled = true;
-        public static bool IsDrawing = false;
+        bool updatemouse = false;
+        static bool RenderEnabled = true;
+        static bool ControlsEnabled = true;
+        static bool IsDrawing = false;
 
         bool captureMouse = false;
 
@@ -1330,7 +1330,7 @@ namespace ctrviewer
                 Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
 
             //allow fullscreen toggle before checking for controls
-            if (KeyboardHandler.IsComboPressed(Keys.RightAlt, Keys.Enter))
+            if (InputHandlers.Process(GameAction.ToggleFullscreen))
                 eng.Settings.Windowed ^= true;
 
             if (!ControlsEnabled) return;
@@ -1620,21 +1620,25 @@ namespace ctrviewer
             alphaTestEffect.Projection = effect.Projection;
 
 
-            //render ctr models from external folder
-            foreach (var v in eng.external)
-                v.Draw(graphics, instanceEffect, alphaTestEffect, cam);
+            //render level mesh depending on lod
+            foreach (var qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshMed))
+                qb.Draw(graphics, effect, alphaTestEffect);
 
             //maybe render game models
             if (eng.Settings.ShowModels)
             {
-                //render all instanced models
-                foreach (var v in eng.instanced)
-                    v.Draw(graphics, instanceEffect, alphaTestEffect, cam);
-
                 //render karts
                 //if (KartMode)
                 foreach (var k in karts)
                     k.Draw(graphics, instanceEffect, alphaTestEffect, cam);
+
+                //render ctr models from external folder
+                foreach (var v in eng.external)
+                    v.Draw(graphics, instanceEffect, alphaTestEffect, cam);
+
+                //render all instanced models
+                foreach (var v in eng.instanced)
+                    v.Draw(graphics, instanceEffect, alphaTestEffect, cam);
             }
 
             //maybe render bot paths
@@ -1644,10 +1648,6 @@ namespace ctrviewer
                 foreach (var v in eng.paths)
                     v.Draw(graphics, instanceEffect, null, cam);
             }
-
-            //render level mesh depending on lod
-            foreach (var qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshMed))
-                qb.Draw(graphics, effect, alphaTestEffect);
 
             //maybe render visdata wireboxes
             if (eng.Settings.VisData)
@@ -1736,13 +1736,15 @@ namespace ctrviewer
                 DrawLevel();
             }
 
+            //level done. switch to main buffer
+
             GraphicsDevice.SetRenderTarget(null);
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Opaque, SamplerState.PointClamp, effect: eng.Settings.InternalPSXResolution ? ContentVault.GetShader("16bits") : null);
+
+            //draw shaded game buffer
+
+            spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Opaque, SamplerState.PointClamp, effect: eng.Settings.InternalPSXResolution ? ContentVault.GetShader("16bits") : null);
             spriteBatch.Draw(eng.screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
             spriteBatch.End();
-       
-            //level done.
-
 
             //start drawing menu stuff
 
@@ -1771,7 +1773,7 @@ namespace ctrviewer
             }
 
             //print speed scale, if it's changing
-            if (GamePadHandler.State.Triggers.Left > 0 || GamePadHandler.State.Triggers.Right > 0)
+            if (GamePadHandler.LeftTrigger > 0 || GamePadHandler.RightTrigger > 0)
             {
                 string text = $"Camera speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}";
                 DrawString(text, new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20));
@@ -1787,17 +1789,16 @@ namespace ctrviewer
                     new Vector2(20, 20)
                     );
             }
-        
+
             //print kart mode info, if it's enabled
             if (eng.Settings.KartMode && karts.Count > 0)
                 DrawString(
-                    $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {(karts[0].Speed * 100).ToString("0.00")}", 
+                    $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {(karts[0].Speed * 100).ToString("0.00")}",
                     new Vector2(20, 20)
                 );
 
-            //draw console, if enabled
-            if (eng.Settings.ShowConsole)
-                GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);
+
+            GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);
 
 
             //newmenu.Draw(gameTime, spriteBatch);
@@ -1814,11 +1815,11 @@ namespace ctrviewer
 
             IsDrawing = false;
         }
- 
+
         private void DrawString(string text, Vector2 position, Color color)
         {
             spriteBatch.DrawString(
-                font, 
+                font,
                 text,
                 position,
                 color,

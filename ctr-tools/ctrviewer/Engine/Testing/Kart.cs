@@ -218,7 +218,7 @@ namespace ctrviewer.Engine.Testing
         {
             if (path != null)
             {
-                GameConsole.Write(path.Keys[path.frame].TimeValue + " " + path.frame);
+                GameConsole.Write(path[path.frame].TimeValue + " " + path.frame);
 
                 path.Update(gameTime);
                 Position = path.State.Position;

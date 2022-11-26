@@ -11,17 +11,11 @@ namespace bash_dat
         public int unk1;
         public int unk2;
         public int unk3; //possible vals = 1, 2, 8, 16
-        public byte[] data;
+        public byte[] data = new byte[0];
 
-        public BashTex(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public BashTex(BinaryReaderEx br) => Read(br);
 
-        public static BashTex FromReader(BinaryReaderEx br)
-        {
-            return new BashTex(br);
-        }
+        public static BashTex FromReader(BinaryReaderEx br) => new BashTex(br);
 
         public void Read(BinaryReaderEx br)
         {

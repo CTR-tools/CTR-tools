@@ -33,7 +33,7 @@ namespace ctrviewer.Loaders
                     {
                         Helpers.Panic(this, PanicType.Info, "doin low");
 
-                        foreach (QuadBlock qb in scene.quads)
+                        foreach (var qb in scene.quads)
                         {
                             monolist.Clear();
                             vts = qb.GetVertexListq(scene.verts, -1);
@@ -83,7 +83,7 @@ namespace ctrviewer.Loaders
                     {
                         Helpers.Panic(this, PanicType.Info, "doin med");
 
-                        foreach (QuadBlock qb in scene.quads)
+                        foreach (var qb in scene.quads)
                         {
                             for (int j = 0; j < 4; j++)
                             {
@@ -160,16 +160,16 @@ namespace ctrviewer.Loaders
                     {
                         Helpers.Panic(this, PanicType.Info, "doin hi");
 
-                        foreach (QuadBlock qb in scene.quads)
+                        foreach (var qb in scene.quads)
                         {
                             for (int j = 0; j < 4; j++)
                             {
                                 monolist.Clear();
                                 vts = qb.GetVertexListq(scene.verts, j);
 
-                                List<Vertex> subdiv = Helpers.Subdivide(vts);
+                                var subdiv = Helpers.Subdivide(vts);
 
-                                List<Vertex> evenmore = new List<Vertex>();
+                                var evenmore = new List<Vertex>();
                                 evenmore.AddRange(Helpers.Subdivide(new List<Vertex> { subdiv[0], subdiv[1], subdiv[2], subdiv[3] }));
                                 evenmore.AddRange(Helpers.Subdivide(new List<Vertex> { subdiv[4], subdiv[5], subdiv[6], subdiv[7] }));
                                 evenmore.AddRange(Helpers.Subdivide(new List<Vertex> { subdiv[8], subdiv[9], subdiv[10], subdiv[11] }));
@@ -180,7 +180,6 @@ namespace ctrviewer.Loaders
                                     foreach (var x in evenmore)
                                         monolist.Add(DataConverter.ToVptc(x, Vector2.Zero));
 
-                                    bool isAnimated = false;
                                     string texTag = (qb?.tex[j]?.lod2 is null ? "test" : qb.tex[j].lod2.Tag);
 
                                     Push(Trilists, texTag, monolist, TriListType.Basic, BlendState.Opaque);

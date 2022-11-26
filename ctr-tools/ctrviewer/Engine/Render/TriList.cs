@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
@@ -114,8 +113,6 @@ namespace ctrviewer.Engine.Render
                     verts.AddRange(new List<VertexPositionColorTexture>() { lv[0 + i * 4], lv[1 + i * 4], lv[2 + i * 4], lv[2 + i * 4], lv[1 + i * 4], lv[3 + i * 4] });
             }
         }
-
-        bool forward = true;
 
         public void Update(GameTime gameTime)
         {

@@ -637,8 +637,8 @@ namespace CTRFramework
             if (lod == Detail.Models)
             {
                 foreach (var model in Models)
-                    foreach (var entry in model.Entries)
-                        foreach (var tl in entry.matIndices)
+                    foreach (var mesh in model)
+                        foreach (var tl in mesh.matIndices)
                             if (tl != null)
                                 result[tl.Tag] = tl;
 

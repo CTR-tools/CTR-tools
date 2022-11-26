@@ -26,12 +26,15 @@ namespace ctrviewer.Engine.Input
         private static GamePadState newState = GamePad.GetState(GamePadIndex);
 
         public static float TriggerDeadZone = 0.1f;
-        
+
 
         public static GamePadState State => newState;
 
         public static Vector2 RightStick => State.ThumbSticks.Right;
         public static Vector2 LeftStick => State.ThumbSticks.Left;
+
+        public static float LeftTrigger => State.Triggers.Left;
+        public static float RightTrigger => State.Triggers.Right;
 
         public static void Update()
         {

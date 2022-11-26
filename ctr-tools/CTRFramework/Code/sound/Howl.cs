@@ -22,8 +22,6 @@ namespace CTRFramework.Sound
         public static Dictionary<int, string> banknames = new Dictionary<int, string>();
         public static Dictionary<int, string> samplenames = new Dictionary<int, string>();
 
-        string name;
-
         string reg;
 
         public HowlVersion version;     //freezes the game if changed, game code tests against fixed number for some reason. maybe like version.
