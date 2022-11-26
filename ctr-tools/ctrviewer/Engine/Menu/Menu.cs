@@ -273,9 +273,18 @@ namespace ctrviewer.Engine.Gui
             //ContentVault.Sounds["menu_up"].Play(0.15f, 0, 0);
         }
 
-        public void Update()
+        Color c1 = new Color(128, 0, 0, 128);
+        Color c2 = new Color(128, 128, 0, 128);
+
+        public void Update(GameTime gameTime)
         {
             if (!Visible) return;
+
+            lerpphase += gameTime.ElapsedGameTime.TotalMilliseconds / 1000f;
+            if (lerpphase > 1f)
+                lerpphase -= 1f;
+
+            MenuItemSelectedColor = Color.Lerp(c1, c2, (float)Math.Sin((float)lerpphase * Math.PI));
 
             if (InputHandlers.Process(GameAction.MenuUp)) Previous();
             if (InputHandlers.Process(GameAction.MenuDown)) Next();
@@ -297,7 +306,7 @@ namespace ctrviewer.Engine.Gui
         public static Color MenuItemBackColor = new Color(0, 0, 0, 128);
         public static Color MenuItemSelectedColor = new Color(128, 0, 0, 128);
 
-
+        double lerpphase = 0;
 
         public void Draw(GraphicsDevice graphics, SpriteBatch batch, SpriteFont fnt, Texture2D background)
         {

@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -316,6 +317,8 @@ namespace ctrviewer
 
         Texture2D tint;
 
+        CtrModel cone;
+
         /// <summary>
         /// Monogame: default content loading method
         /// </summary>
@@ -323,11 +326,17 @@ namespace ctrviewer
         {
             GameConsole.Write("LoadContent()");
 
+            var sw = new Stopwatch();
+            sw.Start();
+
             ContentVault.AddSound("menu_up", Content.Load<SoundEffect>("sfx\\menu_up"));
             ContentVault.AddSound("menu_down", Content.Load<SoundEffect>("sfx\\menu_down"));
 
             ContentVault.AddShader("16bits", Content.Load<Effect>("shaders\\16bits"));
             ContentVault.AddShader("scanlines", Content.Load<Effect>("shaders\\scanlines"));
+
+            if (File.Exists("models\\cone.ctr"))
+                cone = CtrModel.FromFile("models\\cone.ctr");
 
 
             var rotateLeft = new SimpleAnimation();
@@ -359,13 +368,12 @@ namespace ctrviewer
             BigFileExists = FindBigFile();
 
             InitMenu();
-
             LoadCones();
-
             LoadScenesFromFolder();
 
-            if (Scenes.Count > 0)
-                LoadAllScenes();
+            sw.Stop();
+
+            GameConsole.Write($"Initial content loading done: {sw.Elapsed.TotalSeconds}");
         }
 
 
@@ -574,53 +582,13 @@ namespace ctrviewer
         public void AddCone(string name, Color c)
         {
             if (ContentVault.Models.ContainsKey(name)) return;
-
-            var modl = new TriList();
-            modl.textureEnabled = false;
-
-            //convert this abomination to a model import
-            var vptc = new List<VertexPositionColorTexture>();
-
-            Color c1 = Color.Lerp(Color.LightGray, c, 0.5f);
-            Color c2 = Color.Lerp(Color.Black, c, 0.5f);
-
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), c1, new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), c1, new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), c2, new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), c1, new Vector2(0, 0)));
-            modl.PushQuad(vptc);
-
-            vptc.Clear();
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), c1, new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), c1, new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(0, 0, 0), c2, new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), c1, new Vector2(0, 0)));
-            modl.PushQuad(vptc);
-
-            vptc.Clear();
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, -10), c1, new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(10, 50, 10), c1, new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, -10), c1, new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-10, 50, 10), c1, new Vector2(0, 0)));
-            modl.PushQuad(vptc);
-
-            modl.Seal();
-
-            var coll = new TriListCollection() { modl };
-
-            ContentVault.Models.Add(name, coll);
+            ContentVault.AddModel(name, DataConverter.ToTriListCollection(cone, c, true));
         }
-
-        /*
-        public void PushVertex(List<VertexPositionColorTexture> list, Vector3 pos, Color color, Vector2 uv)
-        {
-            list.Add(new VertexPositionColorTexture());
-        }
-        */
 
         public void GenerateBasicSky(string name, Color top, Color bottom, Gradient[] grad, int size = 10)
         {
-            if (top.A == 0 && top.B == 0)
+            //check the condition against actual values here...
+            if (top.A == 0 && bottom.A == 0)
             {
                 GameConsole.Write("no backcolors to use");
                 //dont return, we still want to draw grad
@@ -865,6 +833,12 @@ namespace ctrviewer
         /// <returns>CtrScene instance.</returns>
         private CtrScene LoadSceneFromBig(int index)
         {
+            if (big is null)
+            {
+                GameConsole.Write("tried to load scene while no big is loaded.");
+                return null;
+            }
+
             var vram = big.ReadEntry(index).ParseAs<CtrVrm>();
             var scene = big.ReadEntry(index + 1).ParseAs<CtrScene>();
             scene.SetVram(vram);
@@ -879,8 +853,6 @@ namespace ctrviewer
         /// </summary>
         private void LoadMenuModelsScene()
         {
-            if (big is null) return;
-
             if (menu_models is null)
                 menu_models = LoadSceneFromBig(215);
 
@@ -932,6 +904,9 @@ namespace ctrviewer
 
             foreach (var filename in filelist)
                 Scenes.Add(CtrScene.FromFile(filename, false));
+
+            if (Scenes.Count > 0)
+                LoadAllScenes();
         }
 
         /// <summary>
@@ -1074,11 +1049,7 @@ namespace ctrviewer
 
                 //put all restart points
                 foreach (var n in s.respawnPts)
-                {
-                    eng.paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Pose.Position), Vector3.Zero, new Vector3(0.03f)));
-                }
-
-
+                    eng.paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Pose.Position), Vector3.Zero, new Vector3(0.1f)));
 
                 //spawn kart if needed
                 if (Scenes.Count > 0 && karts.Count == 0)
@@ -1102,11 +1073,11 @@ namespace ctrviewer
                 if (s.nav.paths.Count == 3)
                 {
                     foreach (var n in s.nav.paths[0].Frames)
-                        eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
+                        eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
                     foreach (var n in s.nav.paths[1].Frames)
-                        eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
+                        eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
                     foreach (var n in s.nav.paths[2].Frames)
-                        eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, new Vector3(0.03f)));
+                        eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
                 }
             }
 
@@ -1450,7 +1421,7 @@ namespace ctrviewer
 
             if (menu.Visible)
             {
-                menu.Update();
+                menu.Update(gameTime);
 
                 if (menu.Exec)
                 {

@@ -30,6 +30,9 @@ namespace ctrviewer.Engine.Input
 
         public static GamePadState State => newState;
 
+        public static Vector2 RightStick => State.ThumbSticks.Right;
+        public static Vector2 LeftStick => State.ThumbSticks.Left;
+
         public static void Update()
         {
             if (!GamePad.GetState(GamePadIndex).IsConnected)

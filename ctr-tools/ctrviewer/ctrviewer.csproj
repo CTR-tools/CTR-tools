@@ -60,6 +60,11 @@
   <ItemGroup>
     <ProjectReference Include="..\CTRFramework\CTRFramework.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="Content\models\cone.ctr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
     <Exec Command="dotnet tool restore" />

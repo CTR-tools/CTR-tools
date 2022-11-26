@@ -47,7 +47,23 @@ namespace ctrviewer.Engine.Render
 
             double amount = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
 
-            if (usemouse && Game.IsActive)
+            //handle keyboard rotations
+            var rotationAmount = (float)(rotationSpeed * amount * 20);
+
+            if (KeyboardHandler.IsDown(Keys.Left))
+                leftRightRot += rotationAmount;
+
+            if (KeyboardHandler.IsDown(Keys.Right))
+                leftRightRot -= rotationAmount;
+
+            if (KeyboardHandler.IsDown(Keys.Up))
+                upDownRot += rotationAmount;
+
+            if (KeyboardHandler.IsDown(Keys.Down))
+                upDownRot -= rotationAmount;
+
+            //handle mouse rotation
+            if (usemouse)
             {
                 leftRightRot -= MouseHandler.DeltaX * mouseScale / 1000f;
                 upDownRot -= MouseHandler.DeltaY * mouseScale / 1000f;
@@ -55,22 +71,25 @@ namespace ctrviewer.Engine.Render
                 UpdateViewMatrix();
             }
 
+            Vector2 gamepadrot = GamePadHandler.RightStick * (float)(amount * 4 * gamePadScale);
 
-            leftRightRot -= (float)(GamePadHandler.State.ThumbSticks.Right.X * amount * 4 * gamePadScale);
-            upDownRot += (float)(GamePadHandler.State.ThumbSticks.Right.Y * amount * 4 * gamePadScale);
+            leftRightRot -= gamepadrot.X;
+            upDownRot += gamepadrot.Y;
 
+
+            //handle movement
 
             Vector3 moveVector = new Vector3(0, 0, 0);
 
-            if (move && Game.IsActive)
+            if (move)
             {
-                if (KeyboardHandler.IsDown(Keys.W) || GamePadHandler.IsPressed(Buttons.DPadUp))
+                if (KeyboardHandler.IsDown(Keys.W) || GamePadHandler.IsDown(Buttons.DPadUp))
                     moveVector += Vector3.Forward;
-                if (KeyboardHandler.IsDown(Keys.S) || GamePadHandler.IsPressed(Buttons.DPadDown))
+                if (KeyboardHandler.IsDown(Keys.S) || GamePadHandler.IsDown(Buttons.DPadDown))
                     moveVector += Vector3.Backward;
-                if (KeyboardHandler.IsDown(Keys.D) || GamePadHandler.IsPressed(Buttons.DPadRight))
+                if (KeyboardHandler.IsDown(Keys.D) || GamePadHandler.IsDown(Buttons.DPadRight))
                     moveVector += Vector3.Right;
-                if (KeyboardHandler.IsDown(Keys.A) || GamePadHandler.IsPressed(Buttons.DPadLeft))
+                if (KeyboardHandler.IsDown(Keys.A) || GamePadHandler.IsDown(Buttons.DPadLeft))
                     moveVector += Vector3.Left;
 
                 //compensate diagonal movement
@@ -107,7 +126,7 @@ namespace ctrviewer.Engine.Render
 
                 moveVector += new Vector3(GamePadHandler.State.ThumbSticks.Left.X / 100f, 0, -GamePadHandler.State.ThumbSticks.Left.Y / 100f);
 
-                if (KeyboardHandler.IsDown(Keys.LeftShift) || GamePadHandler.State.Buttons.A == ButtonState.Pressed)
+                if (KeyboardHandler.IsDown(Keys.LeftShift) || GamePadHandler.IsDown(Buttons.A))
                     moveVector *= 2;
 
                 speedScale -= (float)(GamePadHandler.State.Triggers.Left / 20f * amount);
@@ -121,21 +140,6 @@ namespace ctrviewer.Engine.Render
 
                 moveVector *= speedScale * speedScale;
                 //moveVector *= (1 + padState.Triggers.Right * 3);
-
-                var rotationAmount = (float)(rotationSpeed * amount * 20);
-
-                if (KeyboardHandler.IsDown(Keys.Left))
-                    leftRightRot += rotationAmount;
-
-                if (KeyboardHandler.IsDown(Keys.Right))
-                    leftRightRot -= rotationAmount;
-
-                if (KeyboardHandler.IsDown(Keys.Up))
-                    upDownRot += rotationAmount;
-
-                if (KeyboardHandler.IsDown(Keys.Down))
-                    upDownRot -= rotationAmount;
-
             }
 
             AddToCameraPosition(moveVector * (float)amount);

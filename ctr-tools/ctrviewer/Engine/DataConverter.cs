@@ -17,23 +17,29 @@ namespace ctrviewer.Engine
 
         public static Vector3 ToVector3(Vector4s s, float scale = 1.0f) => new Vector3(s.X * scale, s.Y * scale, s.Z * scale);
 
-        public static Color ToColor(Vector4b s) => new Color(s.X, s.Y, s.Z, s.W);
+        public static Color ToColor(Vector4b s) => new Color(s.X / 255f, s.Y / 255f, s.Z / 255f, 1f);// s.W);
 
         public static VertexPositionColorTexture ToVptc(Vertex v, System.Numerics.Vector2 uv, float scale = 1.0f)
         {
-            VertexPositionColorTexture mono_v = new VertexPositionColorTexture();
-            mono_v.Position = ToVector3(v.Position, scale);
-            mono_v.Color = new Color(
-                v.Color.X / 255f,
-                v.Color.Y / 255f,
-                v.Color.Z / 255f
-                );
-            mono_v.TextureCoordinate = new Microsoft.Xna.Framework.Vector2(uv.X / 255.0f, uv.Y / 255.0f);
-            return mono_v;
+            return ToVptc(v, uv, Color.Gray, false, scale);
         }
 
+        public static VertexPositionColorTexture ToVptc(Vertex v, System.Numerics.Vector2 uv, Color color, bool lerp = false, float scale = 1.0f)
+        {
+            return new VertexPositionColorTexture()
+            {
+                Position = ToVector3(v.Position, scale),
+                Color = lerp ? Color.Lerp(color, ToColor(v.Color), 0.5f) : ToColor(v.Color),
+                TextureCoordinate = new Microsoft.Xna.Framework.Vector2(uv.X / 255.0f, uv.Y / 255.0f)
+            };
+        }
 
         public static TriListCollection ToTriListCollection(CtrModel model, float scale = 1f)
+        {
+            return ToTriListCollection(model, Color.Gray, false, scale);
+        }
+
+        public static TriListCollection ToTriListCollection(CtrModel model, Color color, bool lerp = false, float scale = 1f)
         {
             //GameConsole.Write(model.Name);
 
@@ -53,7 +59,7 @@ namespace ctrviewer.Engine
                 for (int j = i * 3; j < i * 3 + 3; j++)
                 {
                     Vertex x = model.Entries[0].verts[j];
-                    li.Add(DataConverter.ToVptc(x, x.uv, 0.01f * scale));
+                    li.Add(DataConverter.ToVptc(x, x.uv, color, lerp, 0.01f * scale));
                 }
 
                 TriList t = kek[texture];
