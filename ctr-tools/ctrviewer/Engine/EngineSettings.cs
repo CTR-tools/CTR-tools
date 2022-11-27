@@ -49,6 +49,16 @@ namespace ctrviewer.Engine
             }
         }
 
+        private int _language = 0;
+        public int Language
+        {
+            get => _language;
+            set
+            {
+                UpdateIntValue(ref _language, value, 0, 2);
+                onLanguageChanged?.Invoke();
+            }
+        }
 
         private bool _fps30 = false;
         public bool Fps30
@@ -177,6 +187,8 @@ namespace ctrviewer.Engine
         public DelegateNoArgs onAnisotropyChanged = null;
         [XmlIgnore]
         public DelegateNoArgs onFilteringChanged = null;
+        [XmlIgnore]
+        public DelegateNoArgs onLanguageChanged = null;
         [XmlIgnore]
         public DelegateNoArgs onInternalPsxResolutionChanged = null;
         [XmlIgnore]

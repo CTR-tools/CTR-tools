@@ -27,22 +27,36 @@ namespace ctrviewer.Engine.Gui
                 SelectedValue = 0;
         }
 
+        public bool ClickAdvances = true;
+        public bool DirectionClicks = true;
+
         public override void OnClick(object sender, EventArgs args = null)
         {
-            OnPressedRight(sender, args);
+            if (ClickAdvances)
+                OnPressedRight(sender, args);
+            else
+                base.OnClick(args);
         }
 
         public override void OnPressedLeft(object sender, EventArgs args = null)
         {
             ChangeValue(-1);
             CalcWidth();
-            base.OnClick(args);
+
+            base.OnPressedLeft(args);
+
+            if (DirectionClicks)
+                base.OnClick(args);
         }
         public override void OnPressedRight(object sender, EventArgs args = null)
         {
             ChangeValue(1);
             CalcWidth();
-            base.OnClick(args);
+
+            base.OnPressedRight(args);
+
+            if (DirectionClicks)
+                base.OnClick(args);
         }
 
         public override string ToString() => $"{Text}: << {Label} >>";

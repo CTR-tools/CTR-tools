@@ -140,8 +140,8 @@ namespace ctrviewer.Engine
 
         public void UpdateAntiAlias()
         {
-            game.graphics.PreferMultiSampling = Settings.AntiAlias;
-            game.graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = Settings.AntiAliasLevel;
+            Game1.graphics.PreferMultiSampling = Settings.AntiAlias;
+            Game1.graphics.GraphicsDevice.PresentationParameters.MultiSampleCount = Settings.AntiAliasLevel;
         }
 
         public void UpdateAntiAliasAndBuffer()

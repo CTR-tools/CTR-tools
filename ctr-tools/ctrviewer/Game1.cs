@@ -16,8 +16,10 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using Locale = ctrviewer.Resources.Localization;
 
 namespace ctrviewer
 {
@@ -40,7 +42,8 @@ namespace ctrviewer
     {
         MainEngine eng;
 
-        public GraphicsDeviceManager graphics;
+        public static GraphicsDeviceManager graphics;
+
         SpriteBatch spriteBatch;
         SpriteFont font;
 
@@ -264,6 +267,8 @@ namespace ctrviewer
         /// </summary>
         protected override void Initialize()
         {
+            SetLang();
+
             GameConsole.Write($"ctrviewer - {version}");
 
             UpdateTargetFramerate();
@@ -333,8 +338,8 @@ namespace ctrviewer
             ContentVault.AddShader("16bits", Content.Load<Effect>("shaders\\16bits"));
             ContentVault.AddShader("scanlines", Content.Load<Effect>("shaders\\scanlines"));
 
-            if (File.Exists("models\\cone.ctr"))
-                cone = CtrModel.FromFile("models\\cone.ctr");
+            if (File.Exists("Content\\models\\cone.ctr"))
+                cone = CtrModel.FromFile("Content\\models\\cone.ctr");
 
 
             var rotateLeft = new SimpleAnimation();
@@ -360,8 +365,8 @@ namespace ctrviewer
             tint.SetData(new Color[] { Color.White });
 
             //load fonts
-            GameConsole.Font = Content.Load<SpriteFont>("debug");
-            font = Content.Load<SpriteFont>("File");
+            GameConsole.Font = Content.Load<SpriteFont>("fonts\\debug");
+            font = Content.Load<SpriteFont>("fonts\\default");
 
             BigFileExists = FindBigFile();
 
@@ -374,6 +379,12 @@ namespace ctrviewer
             GameConsole.Write($"Initial content loading done: {sw.Elapsed.TotalSeconds}");
         }
 
+        public enum Language
+        {
+            English = 0,
+            Spanish = 1,
+            Russian = 2
+        }
 
         #region menustuff
         public void InitMenu()
@@ -420,6 +431,10 @@ namespace ctrviewer
 
             menu.Find("fps30").Click += UpdateFps30;
 
+            menu.Find("lang").Click += Restart;
+            menu.Find("lang").PressedLeft += UpdateLang;
+            menu.Find("lang").PressedRight += UpdateLang;
+
             foreach (var level in Enum.GetNames(typeof(Level)))
             {
                 var item = menu.Find(level.ToString());
@@ -450,6 +465,37 @@ namespace ctrviewer
         }
 
         #region [click events]
+        
+        public void SetLocale(Language lang)
+        {
+            var culture = "en-US";
+
+            switch (lang)
+            {
+                case Language.English: default: break;
+                case Language.Russian: culture = "ru-RU"; break;
+                case Language.Spanish: culture = "es-ES"; break;
+            }
+
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+        }
+
+        public void SetLang()
+        {
+            SetLocale((Language)EngineSettings.Instance.Language);
+        }
+
+        public void Restart(object sender, EventArgs args)
+        {
+            Program.Restart = true;
+            Exit();
+        }
+
+        public void UpdateLang(object sender, EventArgs args)
+        {
+            EngineSettings.Instance.Language = (sender as IntRangeMenuItem).Value;
+        }
+
         public void ChangeFlag(object sender, EventArgs args)
         {
             Game1.currentflag = (sender as IntRangeMenuItem).Value;
@@ -563,6 +609,12 @@ namespace ctrviewer
         /// </summary>
         public void LoadCones()
         {
+            if (cone is null)
+            {
+                GameConsole.Write("Cone doen't exist!");
+                return;
+            }
+
             AddCone("greencone", Color.Green);
             AddCone("yellowcone", Color.Yellow);
             AddCone("redcone", Color.Red);
@@ -1326,9 +1378,6 @@ namespace ctrviewer
 
             if (!IsActive) return;
 
-            if (!graphics.IsFullScreen)
-                Window.Title = $"ctrviewer [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
-
             //allow fullscreen toggle before checking for controls
             if (InputHandlers.Process(GameAction.ToggleFullscreen))
                 eng.Settings.Windowed ^= true;
@@ -1464,7 +1513,7 @@ namespace ctrviewer
 
                     foreach (var m in menu.items)
                     {
-                        if (m.Action == "link" && m.Text.ToUpper() == "BACK")
+                        if (m.Action == "link" && m.Text == Locale.MenuGeneric_Back)
                         {
                             menu.SetMenu(font, m.Param);
                             togglemenu = false;
@@ -1619,11 +1668,6 @@ namespace ctrviewer
             alphaTestEffect.View = effect.View;
             alphaTestEffect.Projection = effect.Projection;
 
-
-            //render level mesh depending on lod
-            foreach (var qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshMed))
-                qb.Draw(graphics, effect, alphaTestEffect);
-
             //maybe render game models
             if (eng.Settings.ShowModels)
             {
@@ -1640,6 +1684,10 @@ namespace ctrviewer
                 foreach (var v in eng.instanced)
                     v.Draw(graphics, instanceEffect, alphaTestEffect, cam);
             }
+
+            //render level mesh depending on lod
+            foreach (var qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshMed))
+                qb.Draw(graphics, effect, alphaTestEffect);
 
             //maybe render bot paths
             if (eng.Settings.ShowBotPaths)
@@ -1690,6 +1738,8 @@ namespace ctrviewer
             spriteBatch.End();
 
         }
+
+        float guiScale = 1f;
 
         /// <summary>
         /// Monogame: default draw method
@@ -1748,21 +1798,22 @@ namespace ctrviewer
 
             //start drawing menu stuff
 
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.AnisotropicClamp);
+            guiScale = graphics.GraphicsDevice.Viewport.Height / 1080f;
 
-            //draw menu (visibility check is inside this method)
-            menu.Draw(GraphicsDevice, spriteBatch, font, tint);
+            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.AnisotropicClamp);
 
             //print instructions if nothing is loaded yet
             if (!IsLoading && Scenes.Count == 0)
                 DrawString(
-                    "Crash Team Racing level viewer\r\n\r\n" +
-                    "No levels loaded.\r\n" +
-                    "Put LEV/VRM files in levels folder,\r\n" +
-                    "or put BIGFILE.BIG in root folder,\r\n" +
-                    "or insert/mount CTR CD and use load level menu.\r\n\r\n" +
-                    "Press ESC to open menu.",
-                    new Vector2(20 * graphics.GraphicsDevice.Viewport.Height / 1080f, 20 * graphics.GraphicsDevice.Viewport.Height / 1080f)
+                    Locale.GreetingInfo_Title + "\r\n" +
+                    Locale.GreetingInfo_NoLevels + "\r\n\r\n" +
+                    Locale.GreetingInfo_LevFiles + "\r\n" +
+                    Locale.GreetingInfo_Bigfile + "\r\n" +
+                    Locale.GreetingInfo_CD + "\r\n\r\n" +
+                    Locale.GreetingInfo_Escape + "\r\n\r\n" +
+                    Locale.GreetingInfo_Replacements + "\r\n" +
+                    Locale.GreetingInfo_Models,
+                    20, 20
                 );
 
             //print fov value, if it's changing
@@ -1800,6 +1851,8 @@ namespace ctrviewer
 
             GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);
 
+            //draw menu (visibility check is inside this method)
+            menu.Draw(GraphicsDevice, spriteBatch, font, tint, guiScale);
 
             //newmenu.Draw(gameTime, spriteBatch);
 
@@ -1813,29 +1866,31 @@ namespace ctrviewer
 
             base.Draw(gameTime);
 
+            if (!graphics.IsFullScreen)
+                Window.Title = $"ctrviewer - draw calls: {GraphicsDevice.Metrics.DrawCount} [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
+
             IsDrawing = false;
         }
+        void DrawString(string text, int x, int y) => DrawString(text, new Vector2(x, y));
+        void DrawString(string text, Vector2 position) => DrawString(text, position, CtrMainFontColor);
 
-        private void DrawString(string text, Vector2 position, Color color)
+        void DrawString(string text, Vector2 position, Color color)
         {
             spriteBatch.DrawString(
                 font,
                 text,
-                position,
+                position * guiScale,
                 color,
                 0,
                 Vector2.Zero,
-                graphics.GraphicsDevice.Viewport.Height / 1080f,
+                guiScale,
                 SpriteEffects.None,
                 0.5f);
         }
 
-        private void DrawString(string text, Vector2 position) => DrawString(text, position, CtrMainFontColor);
-
-        private void MaybeDrawString(bool condition, string text, Vector2 position)
+        void MaybeDrawString(bool condition, string text, Vector2 position)
         {
-            if (condition)
-                DrawString(text, position);
+            if (condition) DrawString(text, position);
         }
 
         enum TextAlign
@@ -1873,7 +1928,7 @@ namespace ctrviewer
             spriteBatch.DrawString(font, text, position, color,
                    0,
                    Vector2.Zero,
-                   graphics.PreferredBackBufferHeight / 1080f,
+                   guiScale,
                    SpriteEffects.None,
                    0.5f
             );

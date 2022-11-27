@@ -4,14 +4,19 @@ namespace ctrviewer
 {
     public class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        public static bool Restart = false;
+
         [STAThread]
         public static void Main()
         {
-            using (var game = new Game1())
-                game.Run();
+            do
+            {
+                Restart = false;
+
+                using (var game = new Game1())
+                    game.Run();
+            }
+            while (Restart);
         }
     }
 }

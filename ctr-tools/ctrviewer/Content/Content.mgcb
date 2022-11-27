@@ -13,19 +13,19 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin debug.spritefont
+#begin fonts/debug.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:debug.spritefont
+/build:fonts/debug.spritefont
 
-#begin File.spritefont
+#begin fonts/default.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:File.spritefont
+/build:fonts/default.spritefont
 
 #begin flag.png
 /importer:TextureImporter

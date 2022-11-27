@@ -129,7 +129,7 @@
 110=levels\tracks\space\relic\data.vrm
 111=levels\tracks\space\relic\data.lev
 
-# coco1 name is taken from demo, final build calls it alphalt1
+# coco1 name is taken from demo, final build calls it asphalt1
 
 112=levels\tracks\coco1\1P\data.vrm
 113=levels\tracks\coco1\1P\data.lev
@@ -140,7 +140,7 @@
 118=levels\tracks\coco1\relic\data.vrm
 119=levels\tracks\coco1\relic\data.lev
 
-# arena2 name is taken from demo, final build calls it alphalt2
+# arena2 name is taken from demo, final build calls it asphalt2
 
 120=levels\tracks\arena2\1P\data.vrm
 121=levels\tracks\arena2\1P\data.lev

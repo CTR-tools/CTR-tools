@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Bool_No" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="Bool_Off" xml:space="preserve">
+    <value>Выкл.</value>
+  </data>
+  <data name="Bool_On" xml:space="preserve">
+    <value>Вкл.</value>
+  </data>
+  <data name="Bool_Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="GreetingInfo_Bigfile" xml:space="preserve">
+    <value>или поместите BIGFILE.BIG в корень приложения,</value>
+  </data>
+  <data name="GreetingInfo_CD" xml:space="preserve">
+    <value>или смонтируйте CD образ игры и воспользуйтесь меню.</value>
+  </data>
+  <data name="GreetingInfo_Escape" xml:space="preserve">
+    <value>Нажмите ESC, чтобы открыть меню.</value>
+  </data>
+  <data name="GreetingInfo_LevFiles" xml:space="preserve">
+    <value>Поместите файлы LEV/VRM в папку levels,</value>
+  </data>
+  <data name="GreetingInfo_Models" xml:space="preserve">
+    <value>Пользовательские модели CTR помещаются в папку models</value>
+  </data>
+  <data name="GreetingInfo_NoLevels" xml:space="preserve">
+    <value>Нет уровней для загрузки.</value>
+  </data>
+  <data name="GreetingInfo_Replacements" xml:space="preserve">
+    <value>Новые PNG текстуры помещаются в папку newtex.</value>
+  </data>
+  <data name="GreetingInfo_Title" xml:space="preserve">
+    <value>CTR-tools: загрузчик уровней Crash Team Racing (PS1)</value>
+  </data>
+  <data name="MainMenu_KartMode" xml:space="preserve">
+    <value>Режим водителя</value>
+  </data>
+  <data name="MainMenu_Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="MainMenu_LevelOptions" xml:space="preserve">
+    <value>Настройки уровня</value>
+  </data>
+  <data name="MainMenu_LoadLevel" xml:space="preserve">
+    <value>Смена уровня</value>
+  </data>
+  <data name="MainMenu_Quit" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="MainMenu_Resume" xml:space="preserve">
+    <value>Продолжить</value>
+  </data>
+  <data name="MainMenu_TimeOfDay" xml:space="preserve">
+    <value>Время суток</value>
+  </data>
+  <data name="MainMenu_VideoOptions" xml:space="preserve">
+    <value>Настройки видео</value>
+  </data>
+  <data name="MenuGeneric_Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="VideoMenu_BackfaceCulling" xml:space="preserve">
+    <value>Отсечение граней</value>
+  </data>
+  <data name="VideoMenu_BotPaths" xml:space="preserve">
+    <value>Путевые точки</value>
+  </data>
+  <data name="VideoMenu_GameObjects" xml:space="preserve">
+    <value>Игровые объекты</value>
+  </data>
+  <data name="VideoMenu_InvisibleMeshes" xml:space="preserve">
+    <value>Невидимые объекты</value>
+  </data>
+  <data name="VideoMenu_QuadFlag" xml:space="preserve">
+    <value>Поверхность</value>
+  </data>
+  <data name="VideoMenu_RenderBranches" xml:space="preserve">
+    <value>Показать ветви дерева</value>
+  </data>
+  <data name="VideoMenu_Replacements" xml:space="preserve">
+    <value>Замена текстур</value>
+  </data>
+  <data name="VideoMenu_Skybox" xml:space="preserve">
+    <value>Небо</value>
+  </data>
+  <data name="VideoMenu_ToggleLod" xml:space="preserve">
+    <value>Переключить детализацию</value>
+  </data>
+  <data name="VideoMenu_VertexLighting" xml:space="preserve">
+    <value>Вертексное освещение</value>
+  </data>
+  <data name="VideoMenu_VisibilityTree" xml:space="preserve">
+    <value>Дерево видимости</value>
+  </data>
+  <data name="VideoMenu_Water" xml:space="preserve">
+    <value>Вода</value>
+  </data>
+  <data name="VideoMenu_Wireframe" xml:space="preserve">
+    <value>Каркас</value>
+  </data>
+</root>
