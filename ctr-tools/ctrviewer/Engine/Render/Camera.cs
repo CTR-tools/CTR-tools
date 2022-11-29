@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace ctrviewer.Engine.Render
 {
@@ -13,7 +15,8 @@ namespace ctrviewer.Engine.Render
         {
             get
             {
-                return Game.GraphicsDevice.Viewport.AspectRatio;
+                var mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
+                return (float)mode.Width / (float)mode.Height / (EngineSettings.Instance.StereoPair ? 2f : 1f);
             }
         }
 
@@ -42,7 +45,7 @@ namespace ctrviewer.Engine.Render
         public override void Update(GameTime gameTime)
         {
             ViewMatrix = Matrix.CreateLookAt(Position, Target, Vector3.Up);
-            UpdateProjectionMatrix();
+            //UpdateProjectionMatrix();
 
             base.Update(gameTime);
         }

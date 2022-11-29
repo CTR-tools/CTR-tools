@@ -95,7 +95,7 @@ namespace ctrviewer.Engine.Testing
 
     public class Kart : InstancedModel
     {
-        public SimpleAnimation path;
+        public AnimationPlayer path;
 
         Dictionary<PowerType, Power> Powers = new Dictionary<PowerType, Power>();
 
@@ -218,9 +218,7 @@ namespace ctrviewer.Engine.Testing
         {
             if (path != null)
             {
-                GameConsole.Write(path[path.frame].TimeValue + " " + path.frame);
-
-                path.Update(gameTime);
+                path.Advance(gameTime);
                 Position = path.State.Position;
                 Rotation = path.State.Rotation;
                 return;

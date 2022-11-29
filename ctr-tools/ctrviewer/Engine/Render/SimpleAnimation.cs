@@ -1,5 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Assimp;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace ctrviewer.Engine.Render
 {
@@ -8,62 +11,103 @@ namespace ctrviewer.Engine.Render
         public Vector3 Position;
         public Vector3 Rotation;
         public Vector3 Scale;
-
         public float Time;
-        public float TimeValue => Time / (Parent != null ? Parent.Speed : 1.0f);
 
-        public SimpleAnimation Parent;
+        public static AnimationKey Lerp(AnimationKey from, AnimationKey to, float amount)
+        {
+            return new AnimationKey
+            {
+                Position = Vector3.Lerp(from.Position, to.Position, amount),
+                Rotation = Vector3.Lerp(from.Rotation, to.Rotation, amount),
+                Scale = Vector3.Lerp(from.Scale, to.Scale, amount),
+                Time = MathHelper.Lerp(from.Time, to.Time, amount)
+            };
+        }
     }
 
     public class SimpleAnimation : List<AnimationKey>
     {
-        public float Speed = 1.0f;
+        
+    }
+
+    public class AnimationPlayer
+    {
+        public bool Paused = true;
+
+        public SimpleAnimation Animation;
+
+        public int NumFrames => Animation.Count;
+
+        public float Speed = 1f;
 
         public float Timer = 0;
 
         public AnimationKey State;
 
-        public SimpleAnimation()
+        public AnimationPlayer(SimpleAnimation anim)
         {
-            Add(new AnimationKey() { Parent = this, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1f), Time = 0 });
-            Add(new AnimationKey() { Parent = this, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1), Time = 2000 });
-            //Keys.Add(new AnimationKey() { Position = new Vector3(0, 0, 0), Rotation = new Vector3(6.28f, 0, 0), Scale = new Vector3(1), TimeValue = 3000 });
-            //Keys.Add(new AnimationKey() { Position = new Vector3(0, 0, 0), Rotation = new Vector3(6.28f, 0, 0), Scale = new Vector3(1), TimeValue = 4500 });
-
-            State = this[0];
+            Animation = anim;
+            State = anim[0];
         }
 
-        public int frame;
-
-        public void Update(GameTime gameTime)
+        public AnimationPlayer()
         {
-            if (Count == 0) return;
+            Animation.Add(new AnimationKey() { Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1), Time = 0 });
+            Animation.Add(new AnimationKey() { Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1), Time = 2000 });
 
-            frame = Count - 1;
+            State = Animation[0];
+        }
+
+        public void Run()
+        {
+            Paused = false;
+        }
+
+        public void Pause()
+        {
+            Paused = true;
+        }
+
+        private int frame;
+
+        private float NextFrameTime => NextFrame.Time * Speed;
+        private float ThisFrameTime => ThisFrame.Time * Speed;
+
+        private float FrameDuration => (NextFrame.Time - ThisFrame.Time) / Speed;
+
+        private AnimationKey ThisFrame => Animation[frame];
+        private AnimationKey NextFrame => frame + 1 < Animation.Count ? Animation[frame + 1] : null ;
+
+        public static AnimationPlayer Create(string animName) => new AnimationPlayer(ContentVault.GetVectorAnim(animName));
+
+        public void Load(string animName)
+        {
+            Animation = ContentVault.GetVectorAnim(animName);
+        }
+
+        public void Advance(GameTime gameTime)
+        {
+            if (Paused) return;
+            if (NumFrames == 0) return;
 
             Timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-            if (Timer >= this[frame].TimeValue)
+            //reset
+            if (NextFrame is null)
             {
                 Timer = 0;
-                State = this[0];
+                frame = 0;
                 return;
             }
 
-            while (this[frame].TimeValue > Timer)
-                frame--;
-
-            if (frame < 0)
-                frame = 0;
-
-            float timeScale = (Timer - this[frame].TimeValue) / (this[frame + 1].TimeValue - this[frame].TimeValue);
-
-            State = new AnimationKey()
+            if (Timer >= FrameDuration)
             {
-                Position = Vector3.Lerp(this[frame].Position, this[frame + 1].Position, timeScale),
-                Rotation = Vector3.Lerp(this[frame].Rotation, this[frame + 1].Rotation, timeScale),
-                Scale = Vector3.Lerp(this[frame].Scale, this[frame + 1].Scale, timeScale)
-            };
+                Timer -= FrameDuration;
+                frame++;
+                return;
+            }
+
+            State = AnimationKey.Lerp(ThisFrame, NextFrame, Timer / FrameDuration);
         }
     }
 }

@@ -90,11 +90,9 @@ namespace ctrviewer.Engine
 
             foreach (var point in path.Frames)
             {
-                anim.Add(new AnimationKey() { Parent = anim, Position = ToVector3(point.position), Rotation = new Vector3(0), Scale = new Vector3(1), Time = time });
+                anim.Add(new AnimationKey() { Position = ToVector3(point.position), Rotation = Vector3.One, Scale = Vector3.One, Time = time });
                 time += 200;
             }
-
-            anim.State = anim[0];
 
             return anim;
         }
@@ -110,20 +108,16 @@ namespace ctrviewer.Engine
             {
                 anim.Add(new AnimationKey()
                 {
-                    Parent = anim,
                     Position = ToVector3(point.Position),
                     Rotation = new Vector3(ToVector3(point.Rotation).X, ToVector3(point.Rotation).Y, ToVector3(point.Rotation).Z),
                     Scale = new Vector3(1),
                     Time = time
                 });
 
-                time += 200;
+                time += 1000;
             }
 
             anim.Add(anim[0]);
-
-            anim.State = anim[0];
-            anim.Speed = 0.5f;
 
             return anim;
         }
@@ -148,28 +142,23 @@ namespace ctrviewer.Engine
 
                 anim.Add(new AnimationKey()
                 {
-                    Parent = anim,
                     Position = ToVector3(spawn.Pose.Position),
                     Rotation = new Vector3(0),
                     Scale = new Vector3(1f),
                     Time = time
                 });
 
-                time += 250;
+                time += 500;
                 spawn = spawn.Next;
             }
             while (spawn != zerospawn && spawn.Next != null);
 
-            anim.State = anim[0];
-            anim.Speed = 0.5f;
-
             anim.Add(new AnimationKey()
             {
-                Parent = anim,
                 Position = anim[0].Position,
                 Rotation = new Vector3(0),//anim.Keys[0].Rotation,
                 Scale = new Vector3(1f),
-                Time = time + 200
+                Time = time + 500
             });
 
             return anim;

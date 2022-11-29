@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-//using System.Drawing;
 using System.IO;
 
 namespace ctrviewer.Engine
@@ -124,8 +123,10 @@ namespace ctrviewer.Engine
                 Cameras.Add(camera, new FirstPersonCamera(game));
         }
 
-        public void UpdateProjectionMatrices()
+        public void UpdateProjectionMatrices(Viewport viewport)
         {
+            Game1.graphics.GraphicsDevice.Viewport = viewport;
+
             foreach (var camera in Cameras.Values)
                 camera.UpdateProjectionMatrix();
         }

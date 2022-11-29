@@ -79,8 +79,10 @@ namespace ctrviewer
 
         public void SetResolution(GraphicsDeviceManager graphics)
         {
-            graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            var mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
+
+            graphics.PreferredBackBufferWidth = mode.Width;
+            graphics.PreferredBackBufferHeight = mode.Height;
 
             if (eng.Settings.Windowed)
             {
@@ -342,17 +344,17 @@ namespace ctrviewer
                 cone = CtrModel.FromFile("Content\\models\\cone.ctr");
 
 
-            var rotateLeft = new SimpleAnimation();
-            rotateLeft.Clear();
-            rotateLeft.Add(new AnimationKey() { Parent = rotateLeft, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1f), Time = 0 });
-            rotateLeft.Add(new AnimationKey() { Parent = rotateLeft, Position = new Vector3(0, 0, 0), Rotation = new Vector3(3.1415f * 2, 0, 0), Scale = new Vector3(1), Time = 8000 });
-            rotateLeft.State = rotateLeft[0];
+            var rotateLeft = new SimpleAnimation()
+            {
+                new AnimationKey() { Position = Vector3.Zero, Rotation = Vector3.Zero, Scale = Vector3.One, Time = 0 },
+                new AnimationKey() { Position = Vector3.Zero, Rotation = new Vector3(3.1415f * 2, 0, 0), Scale = Vector3.One, Time = 1000 }
+            };
 
-            var rotateRight = new SimpleAnimation();
-            rotateRight.Clear();
-            rotateRight.Add(new AnimationKey() { Parent = rotateRight, Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1f), Time = 0 });
-            rotateRight.Add(new AnimationKey() { Parent = rotateRight, Position = new Vector3(0, 0, 0), Rotation = new Vector3(-3.1415f * 2, 0, 0), Scale = new Vector3(1), Time = 8000 });
-            rotateRight.State = rotateRight[0];
+            var rotateRight = new SimpleAnimation()
+            {
+                new AnimationKey() { Position = Vector3.Zero, Rotation = Vector3.Zero, Scale = Vector3.One, Time = 0 },
+                new AnimationKey() { Position = Vector3.Zero, Rotation = new Vector3(-3.1415f * 2, 0, 0), Scale = Vector3.One, Time = 1000 }
+            };
 
             ContentVault.AddVectorAnim("rotate_left", rotateLeft);
             ContentVault.AddVectorAnim("rotate_right", rotateRight);
@@ -932,7 +934,7 @@ namespace ctrviewer
                 if (!ContentVault.Models.ContainsKey(model.Name))
                 {
                     ContentVault.Models.Add(model.Name, DataConverter.ToTriListCollection(model));
-                    eng.external.Add(new InstancedModel(model.Name, new Vector3(posX, 0, 0), Vector3.Zero, new Vector3(0.1f)) { anim = ContentVault.GetVectorAnim("rotate_left") });
+                    eng.external.Add(new InstancedModel(model.Name, new Vector3(posX, 0, 0), Vector3.Zero, new Vector3(0.1f)) { anim = AnimationPlayer.Create("rotate_left") });
                     posX += 2;
                 }
             }
@@ -1118,7 +1120,9 @@ namespace ctrviewer
                 {
                     karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
                     karts[0].ModelName = eng.Settings.PlayerModel;
-                    //karts[0].path = ContentVault.GetVectorAnim("defaultCameraPath");
+
+                    karts[0].path = AnimationPlayer.Create("defaultCameraPath");
+                    karts[0].path.Run();
                 }
 
                 //put all botpaths
@@ -1198,7 +1202,7 @@ namespace ctrviewer
             var childVisData = scene.GetVisDataChildren(visDat); // if node has children get those children
 
             // has any children?
-            //if (childVisData.Count == 0) return;
+            if (childVisData.Count == 0) return;
 
             foreach (var node in childVisData)
             {
@@ -1767,24 +1771,22 @@ namespace ctrviewer
             //clear the backgound
             GraphicsDevice.Clear(eng.BackgroundColor);
 
+
             //if we're using stereoscopic effect, draw level twice for left and right viewport
             if (eng.Settings.StereoPair)
             {
-                graphics.GraphicsDevice.Viewport = vpLeft;
-                eng.UpdateProjectionMatrices();
+                eng.UpdateProjectionMatrices(vpLeft);
                 DrawLevel(eng.Cameras[CameraType.LeftEyeCamera]);
 
-                graphics.GraphicsDevice.Viewport = vpRight;
-                eng.UpdateProjectionMatrices();
+                eng.UpdateProjectionMatrices(vpRight);
                 DrawLevel(eng.Cameras[CameraType.RightEyeCamera]);
-
-                graphics.GraphicsDevice.Viewport = vpFull;
-                eng.UpdateProjectionMatrices();
             }
             else
             {
                 DrawLevel();
             }
+
+            eng.UpdateProjectionMatrices(vpFull);
 
             //level done. switch to main buffer
 
