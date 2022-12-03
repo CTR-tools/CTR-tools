@@ -153,6 +153,9 @@
   <data name="GreetingInfo_Title" xml:space="preserve">
     <value>CTR-tools: загрузчик уровней Crash Team Racing (PS1)</value>
   </data>
+  <data name="MainMenu_GeneralOptions" xml:space="preserve">
+    <value>Общие настройки</value>
+  </data>
   <data name="MainMenu_KartMode" xml:space="preserve">
     <value>Режим водителя</value>
   </data>
@@ -180,14 +183,50 @@
   <data name="MenuGeneric_Back" xml:space="preserve">
     <value>Назад</value>
   </data>
+  <data name="TimeOfDay_Day" xml:space="preserve">
+    <value>День</value>
+  </data>
+  <data name="TimeOfDay_Evening" xml:space="preserve">
+    <value>Вечер</value>
+  </data>
+  <data name="TimeOfDay_Night" xml:space="preserve">
+    <value>Ночь</value>
+  </data>
+  <data name="VideoMenu_30fps" xml:space="preserve">
+    <value>30 кадров</value>
+  </data>
+  <data name="VideoMenu_Anisotropy" xml:space="preserve">
+    <value>Уровень анизотропии</value>
+  </data>
+  <data name="VideoMenu_Antialias" xml:space="preserve">
+    <value>Сглаживание (AA)</value>
+  </data>
   <data name="VideoMenu_BackfaceCulling" xml:space="preserve">
     <value>Отсечение граней</value>
   </data>
   <data name="VideoMenu_BotPaths" xml:space="preserve">
     <value>Путевые точки</value>
   </data>
+  <data name="VideoMenu_CameraPosition" xml:space="preserve">
+    <value>Показать положение камеры</value>
+  </data>
+  <data name="VideoMenu_Console" xml:space="preserve">
+    <value>Показать консоль</value>
+  </data>
+  <data name="VideoMenu_Crosseyed" xml:space="preserve">
+    <value>Поменять кадры местами</value>
+  </data>
+  <data name="VideoMenu_Filtering" xml:space="preserve">
+    <value>Фильтрация текстур</value>
+  </data>
   <data name="VideoMenu_GameObjects" xml:space="preserve">
     <value>Игровые объекты</value>
+  </data>
+  <data name="VideoMenu_GenerateMipmaps" xml:space="preserve">
+    <value>Генерировать мипмапы</value>
+  </data>
+  <data name="VideoMenu_InternalResolution" xml:space="preserve">
+    <value>Разрешение PSX (512x216)</value>
   </data>
   <data name="VideoMenu_InvisibleMeshes" xml:space="preserve">
     <value>Невидимые объекты</value>
@@ -204,6 +243,9 @@
   <data name="VideoMenu_Skybox" xml:space="preserve">
     <value>Небо</value>
   </data>
+  <data name="VideoMenu_StereoMode" xml:space="preserve">
+    <value>Стерео режим (VR)</value>
+  </data>
   <data name="VideoMenu_ToggleLod" xml:space="preserve">
     <value>Переключить детализацию</value>
   </data>
@@ -213,8 +255,14 @@
   <data name="VideoMenu_VisibilityTree" xml:space="preserve">
     <value>Дерево видимости</value>
   </data>
+  <data name="VideoMenu_Vsync" xml:space="preserve">
+    <value>Верт. синхронизация</value>
+  </data>
   <data name="VideoMenu_Water" xml:space="preserve">
     <value>Вода</value>
+  </data>
+  <data name="VideoMenu_Windowed" xml:space="preserve">
+    <value>В окне</value>
   </data>
   <data name="VideoMenu_Wireframe" xml:space="preserve">
     <value>Каркас</value>

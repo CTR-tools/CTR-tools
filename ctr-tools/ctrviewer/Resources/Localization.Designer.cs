@@ -196,6 +196,15 @@ namespace ctrviewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to General options.
+        /// </summary>
+        internal static string MainMenu_GeneralOptions {
+            get {
+                return ResourceManager.GetString("MainMenu_GeneralOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kart mode.
         /// </summary>
         internal static string MainMenu_KartMode {
@@ -214,7 +223,7 @@ namespace ctrviewer.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Level option.
+        ///   Looks up a localized string similar to Level options.
         /// </summary>
         internal static string MainMenu_LevelOptions {
             get {
@@ -277,6 +286,60 @@ namespace ctrviewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        internal static string TimeOfDay_Day {
+            get {
+                return ResourceManager.GetString("TimeOfDay_Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Evening.
+        /// </summary>
+        internal static string TimeOfDay_Evening {
+            get {
+                return ResourceManager.GetString("TimeOfDay_Evening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Night.
+        /// </summary>
+        internal static string TimeOfDay_Night {
+            get {
+                return ResourceManager.GetString("TimeOfDay_Night", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 30 FPS.
+        /// </summary>
+        internal static string VideoMenu_30fps {
+            get {
+                return ResourceManager.GetString("VideoMenu_30fps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anisotropy level.
+        /// </summary>
+        internal static string VideoMenu_Anisotropy {
+            get {
+                return ResourceManager.GetString("VideoMenu_Anisotropy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Antialias.
+        /// </summary>
+        internal static string VideoMenu_Antialias {
+            get {
+                return ResourceManager.GetString("VideoMenu_Antialias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Backface culling.
         /// </summary>
         internal static string VideoMenu_BackfaceCulling {
@@ -295,11 +358,65 @@ namespace ctrviewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show camera position.
+        /// </summary>
+        internal static string VideoMenu_CameraPosition {
+            get {
+                return ResourceManager.GetString("VideoMenu_CameraPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show console.
+        /// </summary>
+        internal static string VideoMenu_Console {
+            get {
+                return ResourceManager.GetString("VideoMenu_Console", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Crosseyed.
+        /// </summary>
+        internal static string VideoMenu_Crosseyed {
+            get {
+                return ResourceManager.GetString("VideoMenu_Crosseyed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Texture filtering.
+        /// </summary>
+        internal static string VideoMenu_Filtering {
+            get {
+                return ResourceManager.GetString("VideoMenu_Filtering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Game Objects.
         /// </summary>
         internal static string VideoMenu_GameObjects {
             get {
                 return ResourceManager.GetString("VideoMenu_GameObjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate mipmaps.
+        /// </summary>
+        internal static string VideoMenu_GenerateMipmaps {
+            get {
+                return ResourceManager.GetString("VideoMenu_GenerateMipmaps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Internal PSX Resolution (512x216).
+        /// </summary>
+        internal static string VideoMenu_InternalResolution {
+            get {
+                return ResourceManager.GetString("VideoMenu_InternalResolution", resourceCulture);
             }
         }
         
@@ -349,6 +466,15 @@ namespace ctrviewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stereoscopic mode (VR).
+        /// </summary>
+        internal static string VideoMenu_StereoMode {
+            get {
+                return ResourceManager.GetString("VideoMenu_StereoMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Toggle LoD.
         /// </summary>
         internal static string VideoMenu_ToggleLod {
@@ -376,11 +502,29 @@ namespace ctrviewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VSync/FPS lock.
+        /// </summary>
+        internal static string VideoMenu_Vsync {
+            get {
+                return ResourceManager.GetString("VideoMenu_Vsync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Water.
         /// </summary>
         internal static string VideoMenu_Water {
             get {
                 return ResourceManager.GetString("VideoMenu_Water", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Windowed.
+        /// </summary>
+        internal static string VideoMenu_Windowed {
+            get {
+                return ResourceManager.GetString("VideoMenu_Windowed", resourceCulture);
             }
         }
         

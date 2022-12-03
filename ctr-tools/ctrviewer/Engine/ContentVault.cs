@@ -21,6 +21,8 @@ namespace ctrviewer.Engine
 
         public static bool AddVectorAnim(string name, SimpleAnimation anim)
         {
+            GameConsole.Write($"Adding anim: {name}");
+
             if (VectorAnims.ContainsKey(name))
             {
                 VectorAnims[name] = anim;

@@ -41,8 +41,18 @@ namespace ctrviewer.Engine.Render
         {
             for (int i = 0; i < numVerts; i++)
             {
-                VertexPositionColorTexture v = verts[i];
+                var v = verts[i];
                 v.Color = c;
+                verts[i] = v;
+            }
+        }
+
+        public void Move(Vector3 move)
+        {
+            for (int i = 0; i < numVerts; i++)
+            {
+                var v = verts[i];
+                v.Position += move;
                 verts[i] = v;
             }
         }

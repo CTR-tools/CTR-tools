@@ -343,7 +343,9 @@ namespace ctrviewer
             if (File.Exists("Content\\models\\cone.ctr"))
                 cone = CtrModel.FromFile("Content\\models\\cone.ctr");
 
+            LoadCones();
 
+            /*
             var rotateLeft = new SimpleAnimation()
             {
                 new AnimationKey() { Position = Vector3.Zero, Rotation = Vector3.Zero, Scale = Vector3.One, Time = 0 },
@@ -355,9 +357,10 @@ namespace ctrviewer
                 new AnimationKey() { Position = Vector3.Zero, Rotation = Vector3.Zero, Scale = Vector3.One, Time = 0 },
                 new AnimationKey() { Position = Vector3.Zero, Rotation = new Vector3(-3.1415f * 2, 0, 0), Scale = Vector3.One, Time = 1000 }
             };
+            */
 
-            ContentVault.AddVectorAnim("rotate_left", rotateLeft);
-            ContentVault.AddVectorAnim("rotate_right", rotateRight);
+            foreach (var file in Directory.GetFiles("Content\\anim"))
+                ContentVault.AddVectorAnim(Path.GetFileNameWithoutExtension(file), SimpleAnimation.FromFile(file));
 
             LoadGenericTextures();
             effect.Texture = ContentVault.Textures["test"];
@@ -373,7 +376,7 @@ namespace ctrviewer
             BigFileExists = FindBigFile();
 
             InitMenu();
-            LoadCones();
+
             LoadScenesFromFolder();
 
             sw.Stop();
@@ -383,9 +386,9 @@ namespace ctrviewer
 
         public enum Language
         {
-            English = 0,
-            Spanish = 1,
-            Russian = 2
+            English,
+            Spanish,
+            Russian
         }
 
         #region menustuff
@@ -474,9 +477,10 @@ namespace ctrviewer
 
             switch (lang)
             {
-                case Language.English: default: break;
-                case Language.Russian: culture = "ru-RU"; break;
-                case Language.Spanish: culture = "es-ES"; break;
+                case Language.English: break;
+                case Language.Spanish: if (File.Exists("es-ES\\ctrviewer.resources.dll")) culture = "es-ES"; break;
+                case Language.Russian: if (File.Exists("ru-RU\\ctrviewer.resources.dll")) culture = "ru-RU"; break;
+                default: GameConsole.Write("Unsupported locale: {lang}, default = english"); break;
             }
 
             System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
@@ -827,9 +831,10 @@ namespace ctrviewer
                 var lowtex = s.GetTexturesList(Detail.Low);
                 var medtex = s.GetTexturesList(Detail.Med);
                 var mdltex = s.GetTexturesList(Detail.Models);
+                var hitex = s.GetTexturesList(Detail.High);
 
                 foreach (var t in s.ctrvram.textures)
-                    if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key) || mdltex.ContainsKey(t.Key))
+                    if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key) || mdltex.ContainsKey(t.Key) || hitex.ContainsKey(t.Key))
                         tasks.Add(LoadTextureAsync(t, replacements));
             }
 
@@ -1004,9 +1009,8 @@ namespace ctrviewer
             }
             */
 
-            loadingStatus = "loading textures...";
-
             //loading textures between scenes and conversion to monogame for alpha textures info
+            loadingStatus = "loading textures...";
             LoadTextures().Wait();
 
             loadingStatus = "converting scenes...";
@@ -1121,8 +1125,8 @@ namespace ctrviewer
                     karts[0].Position = DataConverter.ToVector3(Scenes[0].header.startGrid[0].Position);
                     karts[0].ModelName = eng.Settings.PlayerModel;
 
-                    karts[0].path = AnimationPlayer.Create("defaultCameraPath");
-                    karts[0].path.Run();
+                    //karts[0].path = AnimationPlayer.Create("defaultCameraPath");
+                    //karts[0].path.Run();
                 }
 
                 //put all botpaths
@@ -1138,7 +1142,22 @@ namespace ctrviewer
             }
 
             loadingStatus = "populate bsp...";
+            LoadVisibilityTree();
 
+            loadingStatus = "updating effects...";
+            UpdateEffects();
+
+            MontageHelper.LoadQuad(eng, Scenes[0].quads[quadprev]);
+            eng.instanced.Add(new InstancedModel("montage", Vector3.Zero, Vector3.Zero, Vector3.One));
+
+            RenderEnabled = true;
+        }
+
+        int quadprev = 0;
+
+        public void LoadVisibilityTree()
+        {
+            //reset collections
             eng.bspBranches = new LineCollection();
             eng.bspLeaves.Clear();
 
@@ -1163,12 +1182,6 @@ namespace ctrviewer
 
             foreach (var value in eng.bspLeaves.Values)
                 value.Seal();
-
-            loadingStatus = "updating effects...";
-
-            UpdateEffects();
-
-            RenderEnabled = true;
         }
 
         /// <summary>
@@ -1493,6 +1506,31 @@ namespace ctrviewer
                         case "link":
                             menu.SetMenu(font, menu.SelectedItem.Param);
                             break;
+
+                        case "nextblock":
+                            quadprev++;
+                            if (quadprev < 0) quadprev = 0;
+
+                            MontageHelper.LoadQuad(eng, Scenes[0].quads[quadprev]);
+
+                            foreach (var model in eng.instanced)
+                                if (model.ModelName == "montage")
+                                    model.ModelName = "montage";
+
+                            GameConsole.Write(Scenes[0].quads[quadprev].tex.Count + "");
+                            break;
+                        case "prevblock":
+                            quadprev--;
+
+                            MontageHelper.LoadQuad(eng, Scenes[0].quads[quadprev]);
+
+                            foreach (var model in eng.instanced)
+                                if (model.ModelName == "montage")
+                                    model.ModelName = "montage";
+
+                            GameConsole.Write(Scenes[0].quads[quadprev].tex.Count + "");
+                            break;
+
                         case "toggle":
                             switch (menu.SelectedItem.Param)
                             {

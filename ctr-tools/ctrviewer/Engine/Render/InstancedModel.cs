@@ -1,6 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CTRFramework.Shared;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct2D1.Effects;
 using SharpDX.XInput;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ctrviewer.Engine.Render
 {
@@ -23,7 +28,7 @@ namespace ctrviewer.Engine.Render
 
         private bool ShouldRotate = false;
 
-        private static string[] rotated = new string[] { "c", "t", "r", "fruit", "crystal" };
+        private static List<string> rotated = new List<string>() { "c", "t", "r", "fruit", "crystal" };
 
         public InstancedModel()
         {
@@ -31,23 +36,23 @@ namespace ctrviewer.Engine.Render
 
         public InstancedModel(string name, Vector3 pos, Vector3 rot, Vector3 scale)
         {
+            ModelName = name;
+
             Position = pos;
             Rotation = rot;
-            ModelName = name;
             Scale = scale;
 
-            foreach (var entry in rotated)
-                if (entry == ModelName)
-                {
-                    anim = AnimationPlayer.Create("rotate_left");
-                    anim.Speed = 0.5f;
-                    anim.Run();
-                }
+            if (rotated.Contains(ModelName))
+                anim = AnimationPlayer.Create("fullspin_left", true, 0.5f);
         }
 
         public void Update(GameTime gameTime)
         {
-            anim?.Advance(gameTime);
+            if (anim is not null)
+            {
+                anim.Advance(gameTime);
+                anim.Animate(this);
+            }
         }
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha, FirstPersonCamera camera)
@@ -58,21 +63,10 @@ namespace ctrviewer.Engine.Render
                 return;
             }
 
-            var scale = Scale;
-            var pos = Position;
-            var rot = Rotation;
-
-            if (anim is not null)
-            {
-                scale *= anim.State.Scale;
-                pos += anim.State.Position;
-                rot += anim.State.Rotation;
-            }
-
             effect.World = 
-                Matrix.CreateScale(scale) * 
-                Matrix.CreateFromYawPitchRoll(rot.X, rot.Y, rot.Z) * 
-                Matrix.CreateTranslation(pos);
+                Matrix.CreateScale(Scale) * 
+                Matrix.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z) * 
+                Matrix.CreateTranslation(Position);
 
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ProjectionMatrix;

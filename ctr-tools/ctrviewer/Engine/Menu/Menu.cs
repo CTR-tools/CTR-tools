@@ -120,18 +120,16 @@ namespace ctrviewer.Engine.Gui
 
             menus.Add("video", new List<MenuItem>()
             {
-                new BoolMenuItem() { Text = "Windowed", Name = "window", Value = settings.Windowed },
-                new BoolMenuItem() { Text = "VSync/FPS lock", Name = "vsync", Value = settings.VerticalSync },
-                new BoolMenuItem() { Text = "30 FPS", Name = "fps30", Value = settings.Fps30, Enabled = settings.VerticalSync },
-                new BoolMenuItem() { Text = "Antialias", Name = "antialias", Value = settings.AntiAlias },
-                new BoolMenuItem() { Text = "Texture filtering", Name = "filter", Value = settings.EnableFiltering },
-                new IntRangeMenuItem() { Text = "Anisotropy", Name = "aniso", Enabled = settings.EnableFiltering, SelectedValue = settings.AnisotropyLevel, Values = new List<(int, string)>() { (1, "1x"), (2, "2x"), (4, "4x"), (8, "8x"), (16, "16x") } },
-                new BoolMenuItem() { Text = "Internal PSX Resolution", Name = "intpsx", Value = settings.InternalPSXResolution },
-                new BoolMenuItem() { Text = "Stereoscopic mode", Name = "stereo", Value = settings.StereoPair },
-                new BoolMenuItem() { Text = "Crosseyed", Name = "crosseyed", Value = settings.StereoCrossEyed, Enabled = settings.StereoPair },
-                new BoolMenuItem() { Text = "Generate mipmaps", Name = "genmips", Value = settings.GenerateMips },
-                new BoolMenuItem() { Text = "Show camera position", Name = "campos", Value = settings.ShowCamPos },
-                new BoolMenuItem() { Text = "Show console", Name = "console", Value = settings.ShowConsole },
+                new BoolMenuItem() { Text = Locale.VideoMenu_Windowed, Name = "window", Value = settings.Windowed },
+                new BoolMenuItem() { Text = Locale.VideoMenu_Vsync, Name = "vsync", Value = settings.VerticalSync },
+                new BoolMenuItem() { Text = Locale.VideoMenu_30fps, Name = "fps30", Value = settings.Fps30, Enabled = settings.VerticalSync },
+                new BoolMenuItem() { Text = Locale.VideoMenu_Antialias, Name = "antialias", Value = settings.AntiAlias },
+                new BoolMenuItem() { Text = Locale.VideoMenu_Filtering, Name = "filter", Value = settings.EnableFiltering },
+                new IntRangeMenuItem() { Text = Locale.VideoMenu_Anisotropy, Name = "aniso", Enabled = settings.EnableFiltering, SelectedValue = settings.AnisotropyLevel, Values = new List<(int, string)>() { (1, "1x"), (2, "2x"), (4, "4x"), (8, "8x"), (16, "16x") } },
+                new BoolMenuItem() { Text = Locale.VideoMenu_InternalResolution, Name = "intpsx", Value = settings.InternalPSXResolution },
+                new BoolMenuItem() { Text = Locale.VideoMenu_StereoMode, Name = "stereo", Value = settings.StereoPair },
+                new BoolMenuItem() { Text = Locale.VideoMenu_Crosseyed, Name = "crosseyed", Value = settings.StereoCrossEyed, Enabled = settings.StereoPair },
+                new BoolMenuItem() { Text = Locale.VideoMenu_GenerateMipmaps, Name = "genmips", Value = settings.GenerateMips },
                 new MenuItem(Locale.MenuGeneric_Back, "link", "main", true)
             });
 
@@ -241,16 +239,26 @@ namespace ctrviewer.Engine.Gui
                 new MenuItem(Locale.MenuGeneric_Back, "link", "cupmenu", true)
             });
 
+            menus.Add("general", new List<MenuItem>
+            {
+                new IntRangeMenuItem() { Text = Locale.MainMenu_Language, ClickAdvances = false, DirectionClicks = false, Name = "lang", SelectedValue = settings.Language, Values = new List<(int, string)>() { (0, Locale.Language_English), (1, Locale.Language_Spanish), (2, Locale.Language_Russian) } },
+                new BoolMenuItem() { Text = Locale.VideoMenu_CameraPosition, Name = "campos", Value = settings.ShowCamPos },
+                new BoolMenuItem() { Text = Locale.VideoMenu_Console, Name = "console", Value = settings.ShowConsole },
+                new IntRangeMenuItem() { Text = Locale.MainMenu_TimeOfDay, Name = "tod2", SelectedValue = 0, Values = new List<(int, string)>() { (0, Locale.TimeOfDay_Day), (1, Locale.TimeOfDay_Evening), (2, Locale.TimeOfDay_Night) } },
+                new MenuItem(Locale.MenuGeneric_Back, "link", "main", true)
+            });
+
             menus.Add("main", new List<MenuItem>() {
                 new MenuItem(Locale.MainMenu_Resume, "close", "", true),
                 //new MenuItem("reload level", "load", "", true),
                 new MenuItem(Locale.MainMenu_LoadLevel, "link", "cupmenu", Game1.BigFileExists),
                 new MenuItem(Locale.MainMenu_LevelOptions, "link", "level", true),
                 new MenuItem(Locale.MainMenu_VideoOptions, "link", "video", true),
-                new IntRangeMenuItem() { Text = Locale.MainMenu_TimeOfDay, Name = "tod2", SelectedValue = 0, Values = new List<(int, string)>() { (0, "Day"), (1, "Evening"), (2, "Night") } },
+                new MenuItem(Locale.MainMenu_GeneralOptions, "link", "general", true),
                 new BoolMenuItem() { Text = Locale.MainMenu_KartMode, Name = "kart", Value = settings.KartMode },
+                new MenuItem("Prev QuadBlock", "prevblock", "", true),
+                new MenuItem("Next QuadBlock", "nextblock", "", true),
                 //new MenuItem("Open settings file", "settings", "", true),
-                new IntRangeMenuItem() { Text = Locale.MainMenu_Language, ClickAdvances = false, DirectionClicks = false, Name = "lang", SelectedValue = settings.Language, Values = new List<(int, string)>() { (0, Locale.Language_English), (1, Locale.Language_Spanish), (2, Locale.Language_Russian) } },
                 new MenuItem(Locale.MainMenu_Quit, "exit", "", true),
             });
 

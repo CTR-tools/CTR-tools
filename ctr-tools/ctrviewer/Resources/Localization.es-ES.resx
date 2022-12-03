@@ -174,4 +174,88 @@
   <data name="MenuGeneric_Back" xml:space="preserve">
     <value>Volver</value>
   </data>
+  <data name="TimeOfDay_Day" xml:space="preserve">
+    <value>Día</value>
+  </data>
+  <data name="TimeOfDay_Evening" xml:space="preserve">
+    <value>Tarde</value>
+  </data>
+  <data name="TimeOfDay_Night" xml:space="preserve">
+    <value>Noche</value>
+  </data>
+  <data name="VideoMenu_30fps" xml:space="preserve">
+    <value>30 FPS</value>
+  </data>
+  <data name="VideoMenu_Anisotropy" xml:space="preserve">
+    <value>Nivel de anisotropía</value>
+  </data>
+  <data name="VideoMenu_Antialias" xml:space="preserve">
+    <value>Antialias</value>
+  </data>
+  <data name="VideoMenu_BackfaceCulling" xml:space="preserve">
+    <value>Eliminación de la cara posterior</value>
+  </data>
+  <data name="VideoMenu_BotPaths" xml:space="preserve">
+    <value>Trayectorias de los bots</value>
+  </data>
+  <data name="VideoMenu_CameraPosition" xml:space="preserve">
+    <value>Mostrar la posición de la cámara</value>
+  </data>
+  <data name="VideoMenu_Console" xml:space="preserve">
+    <value>Mostrar la consola</value>
+  </data>
+  <data name="VideoMenu_Crosseyed" xml:space="preserve">
+    <value>Crosseyed</value>
+  </data>
+  <data name="VideoMenu_Filtering" xml:space="preserve">
+    <value>Filtrado de texturas</value>
+  </data>
+  <data name="VideoMenu_GameObjects" xml:space="preserve">
+    <value>Objetos del juego</value>
+  </data>
+  <data name="VideoMenu_GenerateMipmaps" xml:space="preserve">
+    <value>Generación de mipmaps</value>
+  </data>
+  <data name="VideoMenu_InternalResolution" xml:space="preserve">
+    <value>Resolución interna de PSX (512x216)</value>
+  </data>
+  <data name="VideoMenu_InvisibleMeshes" xml:space="preserve">
+    <value>Mallas invisibles</value>
+  </data>
+  <data name="VideoMenu_QuadFlag" xml:space="preserve">
+    <value>QuadFlag</value>
+  </data>
+  <data name="VideoMenu_RenderBranches" xml:space="preserve">
+    <value>Renderizado de ramas BSP</value>
+  </data>
+  <data name="VideoMenu_Replacements" xml:space="preserve">
+    <value>Sustitución de texturas</value>
+  </data>
+  <data name="VideoMenu_Skybox" xml:space="preserve">
+    <value>Skybox</value>
+  </data>
+  <data name="VideoMenu_StereoMode" xml:space="preserve">
+    <value>Modo estereoscópico (VR)</value>
+  </data>
+  <data name="VideoMenu_ToggleLod" xml:space="preserve">
+    <value>Alternar LoD</value>
+  </data>
+  <data name="VideoMenu_VertexLighting" xml:space="preserve">
+    <value>Iluminación de vértices</value>
+  </data>
+  <data name="VideoMenu_VisibilityTree" xml:space="preserve">
+    <value>Árbol de visibilidad</value>
+  </data>
+  <data name="VideoMenu_Vsync" xml:space="preserve">
+    <value>Bloqueo VSync/FPS</value>
+  </data>
+  <data name="VideoMenu_Water" xml:space="preserve">
+    <value>Agua</value>
+  </data>
+  <data name="VideoMenu_Windowed" xml:space="preserve">
+    <value>Ventana</value>
+  </data>
+  <data name="VideoMenu_Wireframe" xml:space="preserve">
+    <value>Wireframe</value>
+  </data>
 </root>

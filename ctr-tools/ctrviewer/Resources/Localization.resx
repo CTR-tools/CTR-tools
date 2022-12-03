@@ -165,6 +165,9 @@
     <value>Español</value>
     <comment>Do not localize, intended to be in the original language.</comment>
   </data>
+  <data name="MainMenu_GeneralOptions" xml:space="preserve">
+    <value>General options</value>
+  </data>
   <data name="MainMenu_KartMode" xml:space="preserve">
     <value>Kart mode</value>
   </data>
@@ -172,7 +175,7 @@
     <value>Language</value>
   </data>
   <data name="MainMenu_LevelOptions" xml:space="preserve">
-    <value>Level option</value>
+    <value>Level options</value>
   </data>
   <data name="MainMenu_LoadLevel" xml:space="preserve">
     <value>Load level</value>
@@ -192,14 +195,50 @@
   <data name="MenuGeneric_Back" xml:space="preserve">
     <value>Back</value>
   </data>
+  <data name="TimeOfDay_Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="TimeOfDay_Evening" xml:space="preserve">
+    <value>Evening</value>
+  </data>
+  <data name="TimeOfDay_Night" xml:space="preserve">
+    <value>Night</value>
+  </data>
+  <data name="VideoMenu_30fps" xml:space="preserve">
+    <value>30 FPS</value>
+  </data>
+  <data name="VideoMenu_Anisotropy" xml:space="preserve">
+    <value>Anisotropy level</value>
+  </data>
+  <data name="VideoMenu_Antialias" xml:space="preserve">
+    <value>Antialias</value>
+  </data>
   <data name="VideoMenu_BackfaceCulling" xml:space="preserve">
     <value>Backface culling</value>
   </data>
   <data name="VideoMenu_BotPaths" xml:space="preserve">
     <value>Bot Paths</value>
   </data>
+  <data name="VideoMenu_CameraPosition" xml:space="preserve">
+    <value>Show camera position</value>
+  </data>
+  <data name="VideoMenu_Console" xml:space="preserve">
+    <value>Show console</value>
+  </data>
+  <data name="VideoMenu_Crosseyed" xml:space="preserve">
+    <value>Crosseyed</value>
+  </data>
+  <data name="VideoMenu_Filtering" xml:space="preserve">
+    <value>Texture filtering</value>
+  </data>
   <data name="VideoMenu_GameObjects" xml:space="preserve">
     <value>Game Objects</value>
+  </data>
+  <data name="VideoMenu_GenerateMipmaps" xml:space="preserve">
+    <value>Generate mipmaps</value>
+  </data>
+  <data name="VideoMenu_InternalResolution" xml:space="preserve">
+    <value>Internal PSX Resolution (512x216)</value>
   </data>
   <data name="VideoMenu_InvisibleMeshes" xml:space="preserve">
     <value>Invisible Meshes</value>
@@ -216,6 +255,9 @@
   <data name="VideoMenu_Skybox" xml:space="preserve">
     <value>Skybox</value>
   </data>
+  <data name="VideoMenu_StereoMode" xml:space="preserve">
+    <value>Stereoscopic mode (VR)</value>
+  </data>
   <data name="VideoMenu_ToggleLod" xml:space="preserve">
     <value>Toggle LoD</value>
   </data>
@@ -225,8 +267,14 @@
   <data name="VideoMenu_VisibilityTree" xml:space="preserve">
     <value>Visibility Tree</value>
   </data>
+  <data name="VideoMenu_Vsync" xml:space="preserve">
+    <value>VSync/FPS lock</value>
+  </data>
   <data name="VideoMenu_Water" xml:space="preserve">
     <value>Water</value>
+  </data>
+  <data name="VideoMenu_Windowed" xml:space="preserve">
+    <value>Windowed</value>
   </data>
   <data name="VideoMenu_Wireframe" xml:space="preserve">
     <value>Wireframe</value>
