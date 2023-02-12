@@ -45,6 +45,12 @@ namespace CTRFramework
                 //oxide.ToObj(Helpers.PathCombine(Meta.BasePath, "oxide.obj"));
             }
 
+            if (cnt > 6)
+            {
+                var credits = Instance<CreditsText>.FromReader(br, ptrs[6]);
+                credits.Save(Helpers.PathCombine(Meta.BasePath, "credits.txt"));
+            }
+
             br.Jump(pos);
         }
     }
