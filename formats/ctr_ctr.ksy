@@ -27,12 +27,12 @@ types:
         type: strz
         encoding: ascii
         size: 16
-      - id: event
-        type: u2
+      - id: thread_id # this is an internal number
+        type: s2
       - id: num_meshes
         type: u2
       - id: ptr_meshes
-        type: u2
+        type: u4
     instances:
       meshes:
         type: ctr_mesh
@@ -54,8 +54,9 @@ types:
         type: u2
       - id: scale
         type: vector3s
-      - id: padding
+      - id: padding # assumed always 0?
         type: u2
+
       - id: ptr_cmd
         type: u4
       - id: ptr_verts
@@ -99,8 +100,8 @@ types:
         type: strz
         encoding: ascii
         size: 16
-      - id: num_frames
-        type: s2
+      - id: num_frames_pack
+        type: u2
       - id: frame_size
         type: u2
       - id: ptr_unk
@@ -108,10 +109,12 @@ types:
       - id: vdata
         type: ctr_anim_frame(frame_size)
         repeat: expr
-        repeat-expr: num_frames2
+        repeat-expr: num_frames
     instances:
-      num_frames2:
-        value: num_frames & 0x8000 == 0 ? num_frames : (num_frames & 0x7FFF) / 2 + 1
+      interp:
+        value: num_frames_pack & 0x8000 > 0 
+      num_frames:
+        value: interp ? (num_frames_pack & 0x7FFF) / 2 + 1 : num_frames_pack
 
   ctr_anim_frame:
     params:
@@ -124,10 +127,12 @@ types:
         type: u2
       - id: skip
         size: 16
-      - id: unk_render # ? unknown, values other than the original often ruin the model. maybe some drawing mode.
+      - id: ptr_data
         type: u4
+      - id: extra_unk
+        size: ptr_data - 0x1C
       - id: data
-        size: frame_size - 28
+        size: frame_size - ptr_data
 
   vector3s:
     seq:      
