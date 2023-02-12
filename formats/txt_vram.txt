@@ -2,25 +2,7 @@ CTR uses native PSX TIM format to store a combined atlas of all textures in a si
 This allows to spend just a few calls to populate vram entirely instead of reading textures one by one.
 This approach creates a certain hurdle for decompilation as we only can extract actual polygon mappings, not the orginal texture sizes. while most of the time it matches, sometimes it divides a larger texture in smaller ones.
 
-
-texture container {
-  dword - 0x20000000
-  until eof {
-    dword - tim size
-    byte[tim size] - psx tim
-  }
-}
-
-psx tim {
-  dword - magic 0x10000000
-  dword - flags 0x02000000
-  dword - tim size
-  word - memoryX
-  word - memoryY
-  word - width
-  word - height
-  byte[] - pixel data
-}
+ksy: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_vrm.ksy
 
 
 PSX VRAM 101
