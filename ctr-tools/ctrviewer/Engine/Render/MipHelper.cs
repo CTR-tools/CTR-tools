@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -25,6 +26,19 @@ namespace ctrviewer.Engine.Render
             }
         }
 
+        //comes from monogame's texture.cs, but it's internal there, how convenient.
+        internal static int CalculateMipLevels(int width, int height = 0, int depth = 0)
+        {
+            int levels = 1;
+            int size = Math.Max(Math.Max(width, height), depth);
+            while (size > 1)
+            {
+                size = size / 2;
+                levels++;
+            }
+            return levels;
+        }
+
         /// <summary>
         /// Loads Mipmapped Texture2D object from GDI+ Bitmap object.
         /// </summary>
@@ -33,31 +47,41 @@ namespace ctrviewer.Engine.Render
         /// <returns>Texture2D object.</returns>
         public static Texture2D LoadTextureFromBitmap(GraphicsDevice device, Bitmap bmp, out bool alpha)
         {
+            int levels = CalculateMipLevels(bmp.Width, bmp.Height);
+
             var mips = new List<Bitmap>();
-
-            mips.Add(bmp);
-
-            int width = bmp.Width >> 1;
-            int height = bmp.Height >> 1;
 
             var old = bmp;
 
-            while (width >= MinMipSize && height >= MinMipSize)
+            int width = bmp.Width;
+            int height = bmp.Height;
+
+            //for every mip level
+            for (int i = 0; i < levels; i++)
             {
-                var mip = new Bitmap(width, height);
+                if (i == 0)
+                {
+                    mips.Add(bmp);
+                }
+                else
+                {
+                    //create new bitmap
+                    var mip = new Bitmap(width, height);
+                    var gr = Graphics.FromImage(mip);
+                    gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-                var gr = Graphics.FromImage(mip);
-                gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    var attributes = new ImageAttributes();
+                    attributes.SetWrapMode(WrapMode.TileFlipXY);
 
-                var attributes = new ImageAttributes();
-                attributes.SetWrapMode(WrapMode.TileFlipXY);
+                    //draw old
+                    gr.DrawImage(old, new Rectangle(0, 0, width, height), 0, 0, old.Width, old.Height, GraphicsUnit.Pixel, attributes);
 
-                gr.DrawImage(old, new Rectangle(0, 0, width, height), 0, 0, old.Width, old.Height, GraphicsUnit.Pixel, attributes);
-                mips.Add(mip);
-                old = mip;
+                    mips.Add(mip);
+                    old = mip;
+                }
 
-                width >>= 1;
-                height >>= 1;
+                if (width > 1) width /= 2;
+                if (height > 1) height /= 2;
             }
 
             bool x = false;
