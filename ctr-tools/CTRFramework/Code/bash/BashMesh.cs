@@ -1,8 +1,10 @@
 ﻿using CTRFramework.Shared;
 using System.Numerics;
 using System.Text;
+using System;
+using System.Collections.Generic;
 
-namespace bash_dat
+namespace CTRFramework.Bash
 {
     public class BashMesh
     {

@@ -1,7 +1,8 @@
-﻿using CTRFramework;
+﻿using System;
+using CTRFramework;
 using CTRFramework.Shared;
 
-namespace bash_dat
+namespace CTRFramework.Bash
 {
     public class BashTex : IRead
     {

@@ -1,7 +1,10 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-namespace bash_dat
+namespace CTRFramework.Bash
 {
     public class BashSfx : IRead
     {
