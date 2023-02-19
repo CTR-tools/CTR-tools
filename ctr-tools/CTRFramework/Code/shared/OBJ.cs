@@ -6,7 +6,7 @@ using System.IO;
 using System.Threading;
 using ThreeDeeBear.Models.Ply;
 
-namespace CTRFramework
+namespace CTRFramework.Shared
 {
     //options
     public partial class OBJ
@@ -169,7 +169,7 @@ namespace CTRFramework
 
         public static void FixCulture()
         {
-            CultureInfo customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
+            var customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
             Thread.CurrentThread.CurrentCulture = customCulture;
         }
