@@ -67,11 +67,9 @@ namespace CTRFramework.Vram
         {
             byte[] x = new byte[datasize];
 
-            Random r = new Random();
-
             for (int i = 0; i < datasize; i++)
             {
-                x[i] = (byte)r.Next(255);
+                x[i] = (byte)Helpers.Random.Next(255);
             }
 
             return x;

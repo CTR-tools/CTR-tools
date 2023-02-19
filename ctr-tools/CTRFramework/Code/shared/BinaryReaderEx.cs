@@ -10,6 +10,8 @@ namespace CTRFramework.Shared
     {
         public long Position => BaseStream.Position;
 
+        public bool CanRead => BaseStream.Position < BaseStream.Length;
+
         public BinaryReaderEx(Stream stream) : base(stream)
         {
         }

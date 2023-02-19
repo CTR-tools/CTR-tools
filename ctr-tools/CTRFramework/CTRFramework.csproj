@@ -84,6 +84,10 @@
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Code\bash\BashMesh.cs" />
+    <Compile Include="Code\bash\BashSfx.cs" />
+    <Compile Include="Code\bash\BashTex.cs" />
+    <Compile Include="Code\bash\BashTexPak.cs" />
     <Compile Include="Code\big\BigFile.cs" />
     <Compile Include="Code\big\BigEntry.cs" />
     <Compile Include="Code\big\BigFileReader.cs" />
@@ -95,6 +99,7 @@
     <Compile Include="Code\ctr\CtrDraw.cs" />
     <Compile Include="Code\Enums.cs" />
     <Compile Include="Code\lang\CharSwap.cs" />
+    <Compile Include="Code\lev\CreditsText.cs" />
     <Compile Include="Code\lev\CtrFace.cs" />
     <Compile Include="Code\lev\CtrTex.cs" />
     <Compile Include="Code\lev\RespawnPoint.cs" />
@@ -108,6 +113,7 @@
     <Compile Include="Code\lev\WaterAnim.cs" />
     <Compile Include="Code\PatchedContainer.cs" />
     <Compile Include="Code\shared\HelpersPanic.cs" />
+    <Compile Include="Code\shared\HelpersTimer.cs" />
     <Compile Include="Code\shared\PsxPtr.cs" />
     <Compile Include="Code\shared\Vectors\Vector3b.cs" />
     <Compile Include="Code\shared\Vectors\Vector3f.cs" />
@@ -131,6 +137,9 @@
     <Compile Include="Code\lev\CtrInstance.cs" />
     <Compile Include="Code\lev\QuadBlock.cs" />
     <Compile Include="Code\lev\SkyBox.cs" />
+    <Compile Include="Code\sound\XA\XaFrame.cs" />
+    <Compile Include="Code\sound\XA\XaStackedFrame.cs" />
+    <Compile Include="Code\sound\XA\XaStackedFrameCollection.cs" />
     <Compile Include="Code\sound\XNF\XaInfoEntry.cs" />
     <Compile Include="Code\sound\XNF\XaInfo.cs" />
     <Compile Include="Code\vrm\CtrVrm.cs" />
