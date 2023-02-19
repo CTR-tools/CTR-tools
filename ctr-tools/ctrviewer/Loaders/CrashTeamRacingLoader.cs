@@ -53,13 +53,13 @@ namespace ctrviewer.Loaders
                                         Push(Trilists, fl.ToString(), monolist, TriListType.Flag, null, "flag");
                                 }
 
-                                if (qb.visDataFlags.HasFlag(VisDataFlags.Water))
+                                if (qb.visDataFlags.HasFlag(VisNodeFlags.Water))
                                 {
                                     Push(Trilists, "water", monolist, TriListType.Water);
                                     continue;
                                 }
 
-                                if (qb.visDataFlags.HasFlag(VisDataFlags.Hidden))
+                                if (qb.visDataFlags.HasFlag(VisNodeFlags.Hidden))
                                 {
                                     Push(Trilists, "invis", monolist, TriListType.Flag);
                                     continue;
@@ -123,13 +123,13 @@ namespace ctrviewer.Loaders
                                             Push(flagq, fl.ToString(), monolist, TriListType.Flag, BlendState.Additive, "flag");
                                     }
 
-                                    if (qb.visDataFlags.HasFlag(VisDataFlags.Water))
+                                    if (qb.visDataFlags.HasFlag(VisNodeFlags.Water))
                                     {
                                         Push(Trilists, "water", monolist, TriListType.Water);
                                         continue;
                                     }
 
-                                    if (qb.visDataFlags.HasFlag(VisDataFlags.Hidden))
+                                    if (qb.visDataFlags.HasFlag(VisNodeFlags.Hidden))
                                     {
                                         Push(flagq, "invis", monolist, TriListType.Flag, BlendState.Additive, "test");
                                         continue;
