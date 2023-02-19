@@ -2,7 +2,7 @@
   "profiles": {
     "model_reader": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\_CTR-data\\CTR_BUILD\\ctr_rebuild\\BIGFILE\\levels\\tracks\\coco1\\1P\\data.lev"
+      "commandLineArgs": "D:\\_CTR-data\\CTR_BUILD\\ctr_rebuild\\BIGFILE\\levels\\menu_models\\data.lev"
     }
   }
 }

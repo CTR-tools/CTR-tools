@@ -11,7 +11,7 @@ namespace howl
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 $"CTR-Tools: howl - {Meta.GetSignature()}",
                 "Extracts samples and music sequences from HOWL and BNK",
-                Meta.GetVersion());
+                Meta.Version);
 
             if (args.Length == 0)
             {
@@ -74,6 +74,11 @@ namespace howl
                 case ".mid":
                     var midseq = Cseq.FromMidi(filename);
                     midseq.Save(Path.ChangeExtension(filename, ".cseq"));
+                    break;
+
+                case ".xa":
+                    var xa = XaStackedFrameCollection.FromFile(filename);
+                    Console.WriteLine(xa.ToString());
                     break;
 
                 default:

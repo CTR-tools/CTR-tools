@@ -14,7 +14,7 @@ namespace model_reader
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 $"CTR-Tools: model_reader - {Meta.GetSignature()}",
                 "Converts LEV, CTR and MPK files to OBJ format.",
-                Meta.GetVersion());
+                Meta.Version);
 
             if (args.Length == 0)
             {

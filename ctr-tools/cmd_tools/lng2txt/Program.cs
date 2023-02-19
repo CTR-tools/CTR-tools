@@ -11,7 +11,7 @@ namespace lng2txt
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 $"CTR-Tools: lng2txt - {Meta.GetSignature()}",
                 "Converts LNG localization files to TXT and back.",
-                Meta.GetVersion());
+                Meta.Version);
 
             if (args.Length == 0)
             {

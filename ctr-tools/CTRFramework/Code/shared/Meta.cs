@@ -23,12 +23,23 @@ namespace CTRFramework.Shared
         public const string ModelsPath = "models";
         public const string BigFileName = "bigfile.big";
         public const string BashPath = "bash_filelist.txt";
+        public const string BashDat = "crashbsh.dat";
 
         public const string LinkDiscord = "https://discord.gg/56xm9Aj";
         public const string LinkGithub = "https://github.com/CTR-tools/CTR-tools";
         #endregion
 
-        public static string GetVersion() => $"CTRFramework {resources.Version} ({resources.BuildDate.Split(',')[0]})";
+        private static string version;
+        public static string Version
+        {
+            get
+            {
+                if (version == null)
+                    version = $"CTRFramework {resources.Version} ({resources.BuildDate.Split(',')[0]})";
+
+                return version;
+            }
+        }
 
         public static string GetSignature() => resources.signature;
 

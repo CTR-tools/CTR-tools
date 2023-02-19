@@ -1,5 +1,8 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
+using CTRFramework.Bash;
+using System.Collections.Generic;
+using System;
 
 namespace bash_dat
 {
@@ -12,7 +15,7 @@ namespace bash_dat
                 $"CTR-tools: bash_dat - {Meta.GetSignature()}",
                 "Extracts binary files from Crash Bash CRASHBSH.DAT file.",
                 "Supports: TEX to BMP, SFX to VH/VB/SEQ, model to OBJ.",
-                Meta.GetVersion());
+                Meta.Version);
 
             if (args.Length == 0)
             {
@@ -53,7 +56,7 @@ namespace bash_dat
         static void LoadDataFile(string exename)
         {
             string dir = Path.GetDirectoryName(exename);
-            string datname = Helpers.FindFirstFile(dir, "crashbsh.dat");
+            string datname = Helpers.FindFirstFile(dir, Meta.BashDat);
 
             if (datname == String.Empty)
             {
@@ -190,46 +193,11 @@ namespace bash_dat
 
         static void LoadTextureFile(string path)
         {
-            var x = BashTexPak.FromFile(path);
-
-            Console.WriteLine(x.numPals + " " + x.numTex);
+            var texpak = BashTexPak.FromFile(path);
+            Helpers.Panic("Bash", PanicType.Info, $"textures: {texpak.numTex}, palettes: {texpak.numPals}");
 
             string extpath = Helpers.PathCombine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path));
-
-            Helpers.CheckFolder(extpath);
-
-            int num = 0;
-
-            foreach (var tex in x.tex)
-            {
-                var bmp = new BMPHeader();
-                bmp.Update(tex.width * 4, tex.height, 16, 4);
-
-                byte[] pal = new byte[16 * 4];
-
-                bool bad = false;
-
-                int palindex = tex.unk2 / 2;
-
-                if (palindex < 0 || palindex > x.pals.Count)
-                {
-                    palindex = 0;
-                    bad = true;
-                }
-
-                for (int i = 0; i < 16; i++)
-                {
-                    pal[i * 4 + 0] = x.pals[palindex][i].B;
-                    pal[i * 4 + 1] = x.pals[palindex][i].G;
-                    pal[i * 4 + 2] = x.pals[palindex][i].R;
-                    pal[i * 4 + 3] = x.pals[palindex][i].A;
-                }
-
-                bmp.UpdateData(pal, Tim.FixPixelOrder(tex.data));
-                bmp.Save($"{extpath}\\tex_{num}{(bad ? "_badpal" : "")}.bmp");
-
-                num++;
-            }
+            texpak.Export(extpath);
         }
 
         static void LoadModelFile(string filename)
@@ -248,11 +216,27 @@ namespace bash_dat
                 foreach (var m in models)
                     Helpers.Panic("LoadModelFile", PanicType.Debug, m.ToString());
 
+                string path;
+
                 for (int i = 0; i < numModels; i++)
                 {
-                    var path = Helpers.PathCombine(Path.GetDirectoryName(filename), $"model_{i.ToString("00")}.obj");
+                    path = Helpers.PathCombine(Path.GetDirectoryName(filename), $"model_{i.ToString("00")}.obj");
                     Helpers.WriteToFile(path, models[i].ToObj());
                 }
+
+                /*
+                br.Jump(0x2f0c4);
+
+                string obj = "";
+
+                for (int i = 0; i < 0xb20 / 8; i++)
+                {
+                    obj += $"v {br.ReadInt16()} {br.ReadInt16()} {br.ReadInt16()}\r\n";
+                }
+
+                path = Helpers.PathCombine(Path.GetDirectoryName(filename), $"test.obj");
+                Helpers.WriteToFile(path, obj);
+                */
             }
         }
 

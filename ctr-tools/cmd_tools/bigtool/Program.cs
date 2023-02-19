@@ -1,4 +1,6 @@
-﻿using CTRFramework.Big;
+﻿using System;
+using System.IO;
+using CTRFramework.Big;
 using CTRFramework.Shared;
 
 namespace bigtool
@@ -11,16 +13,18 @@ namespace bigtool
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 $"CTR-tools: bigtool - {Meta.GetSignature()}",
                 "Builds and extracts Crash Team Racing BIG files",
-                Meta.GetVersion());
+                Meta.Version);
 
             if (args.Length == 0)
             {
                 Console.WriteLine(
-                    "{0}:\r\n\t{1}: {2}\r\n\t{3}: {4}",
+                    "{0}:\r\n\t{1}: {2}\r\n\t{3}: {4}\r\n",
                     "Usage",
                     "Extract example", "bigtool C:\\BIGFILE.BIG",
                     "Build example", "bigtool C:\\BIGFILE.TXT"
                     );
+                Console.Write("Press any key...");
+                Console.ReadKey();
                 return;
             }
 
