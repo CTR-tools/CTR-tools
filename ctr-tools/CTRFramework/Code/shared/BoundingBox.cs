@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace CTRFramework.Shared
 {
-    public class BoundingBox : IReadWrite
+    public class CtrBoundingBox : IReadWrite
     {
         [CategoryAttribute("Values"), DescriptionAttribute("Mininum.")]
         public Vector3s Min
@@ -31,19 +31,19 @@ namespace CTRFramework.Shared
         public Vector3f minf;
         public Vector3f maxf;
 
-        public BoundingBox()
+        public CtrBoundingBox()
         {
             min = new Vector3s(short.MaxValue);
             max = new Vector3s(short.MinValue);
         }
 
-        public BoundingBox(Vector3s vmin, Vector3s vmax)
+        public CtrBoundingBox(Vector3s vmin, Vector3s vmax)
         {
             min = vmin.Clone();
             max = vmax.Clone();
         }
 
-        public BoundingBox(Vector3f vf)
+        public CtrBoundingBox(Vector3f vf)
         {
             minf = vf.Clone();
             maxf = vf.Clone();
@@ -52,7 +52,7 @@ namespace CTRFramework.Shared
             max = maxf.ToVector3s();
         }
 
-        public BoundingBox(Vector3f vmin, Vector3f vmax)
+        public CtrBoundingBox(Vector3f vmin, Vector3f vmax)
         {
             minf = vmin.Clone();
             maxf = vmax.Clone();
@@ -61,14 +61,14 @@ namespace CTRFramework.Shared
             max = maxf.ToVector3s();
         }
 
-        public BoundingBox(BinaryReaderEx br)
+        public CtrBoundingBox(BinaryReaderEx br)
         {
             Read(br);
         }
 
-        public static BoundingBox FromReader(BinaryReaderEx br)
+        public static CtrBoundingBox FromReader(BinaryReaderEx br)
         {
-            return new BoundingBox(br);
+            return new CtrBoundingBox(br);
         }
 
         public void Read(BinaryReaderEx br)
@@ -88,13 +88,13 @@ namespace CTRFramework.Shared
             max.Write(bw);
         }
 
-        public static BoundingBox operator +(BoundingBox a, Vector3f b)
+        public static CtrBoundingBox operator +(CtrBoundingBox a, Vector3f b)
         {
-            return new BoundingBox(a.minf + b, a.maxf + b);
+            return new CtrBoundingBox(a.minf + b, a.maxf + b);
         }
-        public static BoundingBox operator -(BoundingBox a, Vector3f b)
+        public static CtrBoundingBox operator -(CtrBoundingBox a, Vector3f b)
         {
-            return new BoundingBox(a.minf - b, a.maxf - b);
+            return new CtrBoundingBox(a.minf - b, a.maxf - b);
         }
 
         public override string ToString()
@@ -102,19 +102,19 @@ namespace CTRFramework.Shared
             return "BB: min " + numericMin.ToString() + " max " + numericMax.ToString();
         }
 
-        public BoundingBox Clone()
+        public CtrBoundingBox Clone()
         {
-            return new BoundingBox(Min, Max);
+            return new CtrBoundingBox(Min, Max);
         }
 
 
 
-        public static BoundingBox GetBB(List<Vector3f> vertices)
+        public static CtrBoundingBox GetBB(List<Vector3f> vertices)
         {
             if (vertices.Count == 0)
                 return null;
 
-            BoundingBox bb = new BoundingBox(vertices[0]);
+            CtrBoundingBox bb = new CtrBoundingBox(vertices[0]);
 
             foreach (var v in vertices)
             {
