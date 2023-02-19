@@ -174,10 +174,12 @@ namespace CTRFramework.Vram
 
         public void NormalizeUV()
         {
+            var src = (ParentLayout == null ? this : ParentLayout);
+
             for (int i = 0; i < 4; i++)
                 normuv[i] = new Vector2(
-                    (byte)(Helpers.Normalize(min.X, max.X, uv[i].X) * 255),
-                    (byte)(Helpers.Normalize(min.Y, max.Y, uv[i].Y) * 255)
+                    (byte)(Helpers.Normalize(src.min.X, src.max.X, uv[i].X) * 255),
+                    (byte)(Helpers.Normalize(src.min.Y, src.max.Y, uv[i].Y) * 255)
                );
         }
 
@@ -190,45 +192,6 @@ namespace CTRFramework.Vram
                 $"page: ({PageX}, {PageY})\r\n\t" +
                 $"bpp: {bpp}\r\n\t" +
                 $"blend: {blendingMode}";
-        }
-
-        public string Dump()
-        {
-            return $"{PageX}\t{PageY}\t{min}\t{Width * stretch}\t{Height}\t{PalX}\t{PalY}\t{Tag}";
-        }
-
-        //this aint actually ever used for obj export...
-        public string ToObj(int numVerts = 4)
-        {
-            var sb = new StringBuilder();
-
-            //this is to avoid negative UV and make it clamp friendly
-            int[] inds = new int[4] { 0, 1, 2, 3 };
-
-            if (numVerts == 4)
-                inds = new int[4] { 2, 3, 0, 1 };
-
-            for (int i = 0; i < numVerts; i++)
-            {
-                sb.AppendFormat(
-                    "vt {0} {1}\r\n",
-                    normuv[inds[i]].X / 255f,
-                    normuv[inds[i]].Y / 255f
-                );
-            }
-
-            /*
-            foreach (Vector2b v in normuv)
-                sb.AppendFormat(
-                    "vt {0} {1}\r\n",
-
-                    Math.Round(v.X * 1.0, 3).ToString(),
-                    Math.Round(v.Y * 1.0, 3).ToString()
-                );
-                */
-            sb.AppendFormat("\r\nusemtl {0}\r\n", Tag);
-
-            return sb.ToString();
         }
 
         public RotateFlipType DetectRotation()
