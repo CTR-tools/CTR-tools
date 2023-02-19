@@ -1,4 +1,14 @@
 ﻿
+20=intro.tex
+22=credits.tex
+24=mix_team_wins.tex
+26=good_wins.tex
+28=evil_wins.tex
+
+126=level_select1.tex
+
+130=char_select.tex
+
 # title screens in TGA format
 136=screens\screen01.tga
 137=screens\screen02.tga
@@ -174,6 +184,18 @@
 301=music\empty.sfx
 302=music\sky_balls.sfx
 303=music\title.sfx
+
+# warp rooms
+384=warp\data1.tex
+385=warp\data1.mdl
+386=warp\data2.tex
+387=warp\data2.mdl
+388=warp\data3.tex
+389=warp\data3.mdl
+390=warp\data4.tex
+391=warp\data4.mdl
+392=warp\data5.tex
+393=warp\data5.mdl
 
 # addional sfx block
 446=sfx\446.sfx
