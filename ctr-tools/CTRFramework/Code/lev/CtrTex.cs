@@ -23,7 +23,7 @@ namespace CTRFramework
         public bool isAnimated = false;
 
 
-        public CtrTex(BinaryReaderEx br, PsxPtr ptr, VisDataFlags flags)
+        public CtrTex(BinaryReaderEx br, PsxPtr ptr, VisNodeFlags flags)
         {
             Read(br, ptr, flags);
         }
@@ -42,8 +42,8 @@ namespace CTRFramework
             int numhtex = 4;
             int numvtex = 4;
 
-            if (qb.visDataFlags.HasFlag(VisDataFlags.Subdiv4x1)) numvtex = 1;
-            if (qb.visDataFlags.HasFlag(VisDataFlags.Subdiv4x2)) numvtex = 2;
+            if (qb.visDataFlags.HasFlag(VisNodeFlags.Subdiv4x1)) numvtex = 1;
+            if (qb.visDataFlags.HasFlag(VisNodeFlags.Subdiv4x2)) numvtex = 2;
 
             for (int i = 0; i < numvtex * numhtex; i++)
             {
@@ -95,7 +95,7 @@ namespace CTRFramework
 
         Font font = new Font("Courier New", 10);
 
-        public void Read(BinaryReaderEx br, PsxPtr ptr, VisDataFlags flags)
+        public void Read(BinaryReaderEx br, PsxPtr ptr, VisNodeFlags flags)
         {
             int pos = (int)br.Position;
 
@@ -156,8 +156,8 @@ namespace CTRFramework
 
                         int toread = 16;
 
-                        if (flags.HasFlag(VisDataFlags.Subdiv4x2)) toread = 8;
-                        if (flags.HasFlag(VisDataFlags.Subdiv4x1)) toread = 4;
+                        if (flags.HasFlag(VisNodeFlags.Subdiv4x2)) toread = 8;
+                        if (flags.HasFlag(VisNodeFlags.Subdiv4x1)) toread = 4;
 
                         for (int i = 0; i < toread; i++)
                             hi.Add(TextureLayout.FromReader(br));

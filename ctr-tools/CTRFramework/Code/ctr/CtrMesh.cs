@@ -135,7 +135,7 @@ namespace CTRFramework
             //return new TL using first entry data and min/max values.
             //not particularly correct psx TL, but still works for export, as it guesses min/max anyways.
 
-            return new TextureLayout()
+            var parent = new TextureLayout()
             {
                 Page = first.Page,
                 blendingMode = first.blendingMode,
@@ -149,6 +149,13 @@ namespace CTRFramework
                     new Vector2(maxX, maxY)
                 }
             };
+
+            foreach (var t in tl)
+            {
+                t.ParentLayout = parent;
+            }
+
+            return parent;
         }
 
         #region [Constuctors, factories]
@@ -454,7 +461,7 @@ namespace CTRFramework
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
-            sb.AppendLine($"#{Meta.GetVersion()}");
+            sb.AppendLine($"#{Meta.Version}");
             sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
 
             if (tl.Count > 0)
@@ -618,10 +625,10 @@ namespace CTRFramework
 
 
             //get bbox
-            BoundingBox bb = BoundingBox.GetBB(dVerts);
+            CtrBoundingBox bb = CtrBoundingBox.GetBB(dVerts);
 
             //offset the bbox to world origin
-            BoundingBox bb2 = bb - bb.minf;
+            CtrBoundingBox bb2 = bb - bb.minf;
 
             //offset all vertices to world origin
             for (int i = 0; i < dVerts.Count; i++)

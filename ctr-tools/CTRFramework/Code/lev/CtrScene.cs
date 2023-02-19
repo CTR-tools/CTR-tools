@@ -25,8 +25,8 @@ namespace CTRFramework
         public List<QuadBlock> quads = new List<QuadBlock>();
         public List<CtrModel> Models = new List<CtrModel>();
         public List<CtrInstance> Instances = new List<CtrInstance>();
-        public List<VisData> visdata = new List<VisData>();
-        public List<VisData> instvisdata = new List<VisData>();
+        public List<VisNode> visdata = new List<VisNode>();
+        public List<VisNode> instvisdata = new List<VisNode>();
         public SkyBox skybox;
         public Nav nav;
         public SpawnGroup spawnGroups;
@@ -198,7 +198,7 @@ namespace CTRFramework
 
                 br.Jump(node.ptrInstanceNodes);
 
-                instvisdata.Add(VisData.FromReader(br));
+                instvisdata.Add(VisNode.FromReader(br));
 
                 int terminator = -1;
 
@@ -209,7 +209,7 @@ namespace CTRFramework
                     if (terminator != 0)
                     {
                         br.Seek(-4);
-                        instvisdata.Add(VisData.FromReader(br));
+                        instvisdata.Add(VisNode.FromReader(br));
                     }
                 }
                 while (terminator != 0);
@@ -342,7 +342,7 @@ namespace CTRFramework
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
-            sb.AppendLine($"#{Meta.GetVersion()}");
+            sb.AppendLine($"#{Meta.Version}");
             sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
             sb.AppendLine($"mtllib {Path.GetFileName(fname + ".mtl")}\r\n");
 
@@ -716,21 +716,21 @@ namespace CTRFramework
         /// Returns VisData children
         /// </summary>
         /// <param name="node"></param>
-        public List<VisData> GetVisDataChildren(VisData node)
+        public List<VisNode> GetVisDataChildren(VisNode node)
         {
-            var childVisData = new List<VisData>();
+            var childVisData = new List<VisNode>();
 
             if (node.leftChild != 0 && !node.IsLeaf) // in the future: handle leaves different. Draw them?
             {
                 ushort uLeftChild = (ushort)(node.leftChild & 0x3fff);
-                VisData leftChild = visdata.Find(cc => cc.id == uLeftChild);
+                VisNode leftChild = visdata.Find(cc => cc.id == uLeftChild);
                 childVisData.Add(leftChild);
             }
 
             if (node.rightChild != 0 && !node.IsLeaf) // in the future: handle leaves different. Draw them?
             {
                 ushort uRightChild = (ushort)(node.rightChild & 0x3fff);
-                VisData rightChild = visdata.Find(cc => cc.id == uRightChild);
+                VisNode rightChild = visdata.Find(cc => cc.id == uRightChild);
                 childVisData.Add(rightChild);
             }
 
@@ -743,7 +743,7 @@ namespace CTRFramework
         /// Return QuadBlocks associated with the leaf, make sure you pass a leaf and not a branch.
         /// </summary>
         /// <param name="leaf"></param>
-        public List<QuadBlock> GetListOfLeafQuadBlocks(VisData leaf)
+        public List<QuadBlock> GetListOfLeafQuadBlocks(VisNode leaf)
         {
             var leafQuadBlocks = new List<QuadBlock>();
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace CTRFramework
 {
     [Flags]
-    public enum VisDataFlags
+    public enum VisNodeFlags
     {
         None = 0,
         Leaf = 1 << 0,      // defines if entry is leaf or branch, other bits assumed to only be used 1 at a time (? check)
@@ -19,15 +19,15 @@ namespace CTRFramework
         All = -1
     }
 
-    public class VisData : IReadWrite
+    public class VisNode : IReadWrite
     {
         public static readonly int SizeOf = 0x20;
         public int BaseAddress;
 
-        public VisDataFlags flag;
+        public VisNodeFlags flag;
         public byte unk0;
         public ushort id;
-        public BoundingBox bbox;
+        public CtrBoundingBox bbox;
 
         //if branch
         public ushort divX;
@@ -56,16 +56,16 @@ namespace CTRFramework
         public int ptrInst;
 
 
-        public bool IsLeaf => flag.HasFlag(VisDataFlags.Leaf);
+        public bool IsLeaf => flag.HasFlag(VisNodeFlags.Leaf);
 
         #region [Constructors, Factories]
-        public VisData()
+        public VisNode()
         {
         }
 
-        public VisData(BinaryReaderEx br) => Read(br);
+        public VisNode(BinaryReaderEx br) => Read(br);
 
-        public static VisData FromReader(BinaryReaderEx br) => new VisData(br);
+        public static VisNode FromReader(BinaryReaderEx br) => new VisNode(br);
 
         #endregion
 
@@ -82,32 +82,32 @@ namespace CTRFramework
             br.Seek(-0x20);
 
 
-            flag = (VisDataFlags)br.ReadByte();
+            flag = (VisNodeFlags)br.ReadByte();
             unk0 = br.ReadByte();
 
             //flag is likely ushort, just testing if upper byte has any data
             if (unk0 != 0)
                 Helpers.Panic(this, PanicType.Assume, $"unk0 is not null: {unk0.ToString("X2")}");
 
-            if (!IsLeaf && flag != VisDataFlags.None)
+            if (!IsLeaf && flag != VisNodeFlags.None)
                 Helpers.Panic(this, PanicType.Assume, $"branches assumed to have no flags, yet: {((int)flag).ToString("X8")}");
 
-            if (flag.HasFlag(VisDataFlags.Subdiv4x1) && flag.HasFlag(VisDataFlags.Subdiv4x2))
+            if (flag.HasFlag(VisNodeFlags.Subdiv4x1) && flag.HasFlag(VisNodeFlags.Subdiv4x2))
                 Helpers.Panic(this, PanicType.Assume, $"nodes not supposed to use both subdiv flags at the same time???");
 
-            if (flag.HasFlag(VisDataFlags.Leaf)) counter[0]++;
-            if (flag.HasFlag(VisDataFlags.Water)) counter[1]++;
-            if (flag.HasFlag(VisDataFlags.Unk2)) counter[2]++;
-            if (flag.HasFlag(VisDataFlags.Subdiv4x1)) counter[3]++;
-            if (flag.HasFlag(VisDataFlags.Subdiv4x2)) counter[4]++;
-            if (flag.HasFlag(VisDataFlags.Unk5)) counter[5]++;
-            if (flag.HasFlag(VisDataFlags.Hidden)) counter[6]++;
-            if (flag.HasFlag(VisDataFlags.NoCollision)) counter[7]++;
+            if (flag.HasFlag(VisNodeFlags.Leaf)) counter[0]++;
+            if (flag.HasFlag(VisNodeFlags.Water)) counter[1]++;
+            if (flag.HasFlag(VisNodeFlags.Unk2)) counter[2]++;
+            if (flag.HasFlag(VisNodeFlags.Subdiv4x1)) counter[3]++;
+            if (flag.HasFlag(VisNodeFlags.Subdiv4x2)) counter[4]++;
+            if (flag.HasFlag(VisNodeFlags.Unk5)) counter[5]++;
+            if (flag.HasFlag(VisNodeFlags.Hidden)) counter[6]++;
+            if (flag.HasFlag(VisNodeFlags.NoCollision)) counter[7]++;
 
             id = br.ReadUInt16();
-            bbox = BoundingBox.FromReader(br);
+            bbox = CtrBoundingBox.FromReader(br);
 
-            if (flag.HasFlag(VisDataFlags.NoCollision))
+            if (flag.HasFlag(VisNodeFlags.NoCollision))
             {
                 boxX = br.ReadInt16();
                 boxY = br.ReadInt16();
@@ -170,7 +170,7 @@ namespace CTRFramework
             bw.Write(id);
             bbox.Write(bw);
 
-            if (flag.HasFlag(VisDataFlags.NoCollision))
+            if (flag.HasFlag(VisNodeFlags.NoCollision))
             {
                 bw.Write(boxX);
                 bw.Write(boxY);

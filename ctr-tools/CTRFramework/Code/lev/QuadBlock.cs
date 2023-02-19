@@ -49,7 +49,7 @@ namespace CTRFramework
         public long BaseAddress;
 
         //this is copied from bsp tree
-        public VisDataFlags visDataFlags = VisDataFlags.None;
+        public VisNodeFlags visDataFlags = VisNodeFlags.None;
         public List<CtrQuad> MidQuads = new List<CtrQuad>();
 
         /*
@@ -94,7 +94,7 @@ namespace CTRFramework
         public PsxPtr[] ptrTexMid = new PsxPtr[4];    //offsets to mid texture definition
 
         //0x2C
-        public BoundingBox bbox;              //a box that bounds
+        public CtrBoundingBox bbox;              //a box that bounds
 
         //0x38
         public TerrainFlags terrainFlag;
@@ -208,7 +208,7 @@ namespace CTRFramework
                     Helpers.Panic(this, PanicType.Assume, $"ptrTexMid[{i}] {ptrTexMid[i].ToString()}");
             }
 
-            bbox = BoundingBox.FromReader(br);
+            bbox = CtrBoundingBox.FromReader(br);
 
             byte tf = br.ReadByte();
 
@@ -491,7 +491,7 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"g\t{(visDataFlags.HasFlag(VisDataFlags.Hidden) ? "invisible" : "visible")}");
+            sb.AppendLine($"g\t{(visDataFlags.HasFlag(VisNodeFlags.Hidden) ? "invisible" : "visible")}");
             sb.AppendLine($"o\tpiece_{id.ToString("X4")}\r\n");
 
             switch (detail)

@@ -48,7 +48,9 @@ namespace CTRFramework
 
         public virtual void Read(BinaryReaderEx br)
         {
-            Position = br.ReadVector3sPadded(1 / 100f);
+            Position = br.ReadVector3s(1 / 100f);
+            //here's the deal, this value is always 0 in release files, but it was figured out it's some mode ranging from 0 to 4.
+            short value = br.ReadInt16();
             Color = new Vector4b(br);
             MorphColor = new Vector4b(br);
         }

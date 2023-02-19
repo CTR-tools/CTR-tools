@@ -1,6 +1,7 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CTRFramework
 {
@@ -21,16 +22,13 @@ namespace CTRFramework
 
         public List<QuadBlock> QuadBlocks = new List<QuadBlock>();
         public List<Vertex> Vertices = new List<Vertex>();
-        public List<VisData> VisData = new List<VisData>();
+        public List<VisNode> VisData = new List<VisNode>();
 
         public MeshInfo()
         {
         }
 
-        public MeshInfo(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public MeshInfo(BinaryReaderEx br) => Read(br);
 
         public void Read(BinaryReaderEx br)
         {
@@ -38,11 +36,11 @@ namespace CTRFramework
             numVertices = br.ReadUInt32();
             numUnk = br.ReadUInt32();
 
-            PtrWrap<QuadBlock> ptrQuadBlocks2 = new PtrWrap<QuadBlock>(br);
-            PtrWrap<Vertex> ptrVertices2 = new PtrWrap<Vertex>(br);
+            var ptrQuadBlocks2 = new PtrWrap<QuadBlock>(br);
+            var ptrVertices2 = new PtrWrap<Vertex>(br);
             ptrUnk = br.ReadUIntPtr();
 
-            PtrWrap<VisData> ptrVisData2 = new PtrWrap<VisData>(br);
+            var ptrVisData2 = new PtrWrap<VisNode>(br);
             numVisData = br.ReadUInt32();
 
             ptrQuadBlocks = ptrQuadBlocks2.Pointer;
@@ -54,7 +52,7 @@ namespace CTRFramework
 
             QuadBlocks = ptrQuadBlocks2.GetList(br, numQuadBlocks);
             Vertices = ptrVertices2.GetList(br, numVertices);
-            VisData = ptrVisData2.GetList(br, numVisData);
+            VisData = (List<VisNode>)ptrVisData2.GetList(br, numVisData);
         }
     }
 }
