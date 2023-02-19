@@ -9,20 +9,34 @@ namespace CTRTools.Controls
     {
         LNG lng;
         int linesOnLoad = 0;
+        string orginalFilePath = "";
 
         public LangControl()
         {
             InitializeComponent();
         }
 
-        private void actionLoad_Click(object sender, EventArgs e)
+        private void LoadLang(string filename)
         {
-            if (ofd.ShowDialog() == DialogResult.OK)
+            switch (Path.GetExtension(filename).ToLower())
             {
-                lng = LNG.FromFile(ofd.FileName);
-                linesOnLoad = lng.Entries.Count;
-                langBox.Lines = lng.Entries.ToArray();
+                case ".lng":
+                    lng = LNG.FromFile(filename); break;
+                case ".txt":
+                    lng = LNG.FromText(File.ReadAllLines(filename, System.Text.Encoding.Default)); break;
+                default:
+                    MessageBox.Show("Unsupported file."); break;
             }
+
+            linesOnLoad = lng.Entries.Count;
+            langBox.Lines = lng.Entries.ToArray();
+            orginalFilePath = Path.ChangeExtension(filename, ".lng");
+        }
+        private void SaveLang(string filename)
+        {
+            lng = LNG.FromText(langBox.Lines);
+            lng.Save(filename);
+            linesOnLoad = lng.Entries.Count;
         }
 
         private void langBox_KeyDown(object sender, KeyEventArgs e)
@@ -31,44 +45,70 @@ namespace CTRTools.Controls
                 langBox.SelectAll();
         }
 
-        string msg1 = "The number of lines has changed.";
-        string msg2 = "Are you sure you want to save?";
-
-        private void actionSave_Click(object sender, EventArgs e)
-        {
-            //if number of lines changed, ask user if he still wants to save
-            if (langBox.Lines.Length != linesOnLoad && linesOnLoad != 0)
-                if (MessageBox.Show($"{msg1}\r\n{msg2}", "Warning", MessageBoxButtons.YesNo) == DialogResult.No)
-                    return;
-
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                lng = LNG.FromText(langBox.Lines);
-                lng.Save(sfd.FileName);
-                linesOnLoad = lng.Entries.Count;
-            }
-        }
-
         private void LangControl_DragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
             if (files.Length > 0)
-            {
-                switch (Path.GetExtension(files[0]).ToLower())
-                {
-                    case ".lng": lng = LNG.FromFile(files[0]); break;
-                    case ".txt": lng = LNG.FromText(File.ReadAllLines(files[0], System.Text.Encoding.Default)); break;
-                    default: MessageBox.Show("Unsupported file."); return;
-                }
-
-                langBox.Lines = lng.Entries.ToArray();
-            }
+                LoadLang(files[0]);
         }
 
         private void LangControl_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
+        }
+
+
+        string msg1 = "The number of lines has changed.";
+        string msg2 = "Are you sure you want to save?";
+
+        private bool ProceedToSave()
+        {
+            //if number of lines changed, ask user if he still wants to save
+            if (linesOnLoad != 0 && langBox.Lines.Length != linesOnLoad)
+                if (MessageBox.Show($"{msg1}\r\n{msg2}", "Warning", MessageBoxButtons.YesNo) == DialogResult.No)
+                    return false;
+
+            return true;
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ofd.ShowDialog() == DialogResult.OK)
+                LoadLang(sfd.FileName);
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lng == null) return;
+
+            if (ProceedToSave())
+                SaveLang(orginalFilePath);
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lng == null) return;
+
+            if (ProceedToSave())
+            {
+                sfd.FileName = Path.GetFileNameWithoutExtension(orginalFilePath);
+                sfd.InitialDirectory = Path.GetDirectoryName(orginalFilePath);
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                    SaveLang(sfd.FileName);
+            }
+        }
+
+        private void fontToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var fontDialog = new FontDialog() { Font = langBox.Font };
+
+            if (fontDialog.ShowDialog() == DialogResult.OK)
+            {
+                langBox.Font = fontDialog.Font;
+                langBox.SelectionLength = 0;
+            }
         }
     }
 }

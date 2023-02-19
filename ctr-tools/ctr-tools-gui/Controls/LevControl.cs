@@ -20,7 +20,7 @@ namespace CTRTools.Controls
             InitializeComponent();
 
             checkedListBox1.Items.AddRange(Enum.GetNames(typeof(QuadFlags)));
-            checkedListBox2.Items.AddRange(Enum.GetNames(typeof(VisDataFlags)));
+            checkedListBox2.Items.AddRange(Enum.GetNames(typeof(VisNodeFlags)));
         }
 
         private void LevControl_DragDrop(object sender, DragEventArgs e)
@@ -392,7 +392,7 @@ namespace CTRTools.Controls
         {
             if (scn != null)
             {
-                foreach (VisData v in scn.visdata)
+                foreach (VisNode v in scn.visdata)
                 {
                     if (v.IsLeaf)
                     {
@@ -402,7 +402,7 @@ namespace CTRTools.Controls
             }
         }
 
-        private VisDataFlags GetVisDataFlags(CheckedListBox clb)
+        private VisNodeFlags GetVisDataFlags(CheckedListBox clb)
         {
             ushort final = 0;
 
@@ -412,7 +412,7 @@ namespace CTRTools.Controls
                 final |= x;
             }
 
-            return (VisDataFlags)final;
+            return (VisNodeFlags)final;
         }
 
         private void actionRestoreLev(object sender, EventArgs e)
@@ -476,9 +476,9 @@ namespace CTRTools.Controls
             if (scn is null)
                 return;
 
-            foreach (VisData v in scn.visdata)
+            foreach (VisNode v in scn.visdata)
             {
-                v.flag = v.flag | VisDataFlags.Leaf & VisDataFlags.Subdiv4x2;
+                v.flag = v.flag | VisNodeFlags.Leaf & VisNodeFlags.Subdiv4x2;
             }
         }
 
