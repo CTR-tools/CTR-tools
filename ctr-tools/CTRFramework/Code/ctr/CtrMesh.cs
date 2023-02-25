@@ -3,15 +3,19 @@ using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using ThreeDeeBear.Models.Ply;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CTRFramework
 {
     public class CtrMesh : IRead
     {
+        public bool HasUntextured = false;
+
         public string Name { get; set; } = "default_name";
         public int unk0 = 0; //0?
         public short lodDistance = 1000;
@@ -72,40 +76,34 @@ namespace CTRFramework
 
         public bool isTextured => ptrTex == ptrClut;
 
-        //
-        public List<TextureLayout> GroupByPalette(string path, Tim vram)
-        {
-            Helpers.CheckFolder(path);
+        public List<TextureLayout> groupedtl = new List<TextureLayout>();
 
+        public void GroupByPalette()
+        {
             //create separate texture lists, grouped by PalXY
 
-            var dict = new Dictionary<(int, int), List<TextureLayout>>();
+            var dict = new Dictionary<string, List<TextureLayout>>();
 
             foreach (var ttl in tl)
             {
-                if (!dict.ContainsKey((ttl.PalX, ttl.PalY)))
-                    dict[(ttl.PalX, ttl.PalY)] = new List<TextureLayout>();
+                string key = $"{ttl.PalX}_{ttl.PalY}";
 
-                dict[(ttl.PalX, ttl.PalY)].Add(ttl);
+                if (!dict.ContainsKey(key))
+                    dict[key] = new List<TextureLayout>();
+
+                dict[key].Add(ttl);
             }
 
-            Console.WriteLine($"total entries: {dict.Keys.Count}");
+            Helpers.Panic(this, PanicType.Info, $"total entries: {dict.Keys.Count}");
 
             //combine every list to a single texture
 
-            var result = new List<TextureLayout>();
+            //var result = new List<TextureLayout>();
 
             foreach (var ttl in dict.Values)
-                result.Add(Combine(ttl));
+                groupedtl.Add(Combine(ttl));
 
-            //save all grouped textures
-
-            var list = Helpers.LoadTagList("texturenames.txt");
-
-            foreach (var ttl in result)
-                vram.GetTexture(ttl).Save(Helpers.PathCombine(path, (list.ContainsKey(ttl.Tag) ? list[ttl.Tag] : ttl.Tag) + ".png"), System.Drawing.Imaging.ImageFormat.Png);
-
-            return result;
+           // groupedtl.AddRange(result);
         }
 
         private TextureLayout Combine(List<TextureLayout> tl)
@@ -149,6 +147,8 @@ namespace CTRFramework
                     new Vector2(maxX, maxY)
                 }
             };
+
+            parent.NormalizeUV();
 
             foreach (var t in tl)
             {
@@ -304,6 +304,10 @@ namespace CTRFramework
                 t.NormalizeUV();
             }
 
+            GroupByPalette();
+
+
+
 
 
             //if static model
@@ -413,8 +417,15 @@ namespace CTRFramework
                         v.Color = tempColor[1 + z];
                         v.MorphColor = v.Color;
 
+
                         if (d.texIndex != 0)
-                            v.uv = tl[d.texIndex - 1].normuv[z];
+                        {
+                            var tex = tl[d.texIndex - 1];
+
+                            tex.NormalizeUV();
+
+                            v.uv = tex.normuv[z];
+                        }
 
                         verts.Add(v);
                     }
@@ -452,23 +463,36 @@ namespace CTRFramework
             return dist;
         }
 
+        public List<string> GetDistinctGroupedTags()
+        {
+            var dist = new List<string>();
+
+            foreach (var t in groupedtl)
+            {
+                if (!dist.Contains(t.Tag))
+                    dist.Add(t.Tag);
+            }
+
+            return dist;
+        }
+
         /// <summary>
         /// Exports CTR model data to OBJ format.
         /// </summary>
         /// <returns>OBJ text as string.</returns>
         public string ToObj(string filename)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
-            sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
-            sb.AppendLine($"#{Meta.Version}");
-            sb.AppendLine("#Original models: (C) 1999, Activision, Naughty Dog.\r\n");
+            sb.AppendLine("# Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
+            sb.AppendLine($"# {Meta.Version}");
+            sb.AppendLine("# Original models: (C) 1999, Activision, Naughty Dog.\r\n");
 
-            if (tl.Count > 0)
-                sb.AppendLine($"mtllib {filename}.mtl\r\n");
+           // if (tl.Count > 0)
+           if (groupedtl.Count > 0)
+                sb.AppendLine($"mtllib\t{filename}.mtl\r\n");
 
-
-            sb.AppendLine("o " + Name);
+            sb.AppendLine($"o\t{Name}\r\n");
 
             foreach (var v in verts)
             {
@@ -483,25 +507,52 @@ namespace CTRFramework
             {
                 if (matIndices[i] != null)
                 {
+                    for (int j = 0; j < 3; j++)
+                        sb.AppendLine($"vt {(verts[i * 3 + j].uv.X / 255f).ToString("0.###")} {(-verts[i * 3 + j].uv.Y / 255f).ToString("0.###")}");
+                }
+                else
+                {
+                    sb.AppendLine($"vt 0 0");
+                    sb.AppendLine($"vt 0 1");
+                    sb.AppendLine($"vt 1 1");
+                }
+            }
+
+            sb.AppendLine();
+
+            //avoid repeating usemtl
+            string prevtex = "$-----------nullmat------------$";
+
+            for (int i = 0; i < verts.Count / 3; i++)
+            {
+                if (matIndices[i] != null)
+                {
                     //sb.AppendLine(matIndices[i].ToObj(3));
 
-                    sb.AppendLine($"usemtl {matIndices[i].Tag}");
+                    var tex = matIndices[i];
 
-                    for (int j = 0; j < 3; j++)
+                    if (matIndices[i].ParentLayout != null)
+                        tex = tex.ParentLayout;
+
+                    if (prevtex != tex.Tag)
                     {
-                        sb.AppendLine($"vt {verts[i * 3 + j].uv.X / 255f} {-verts[i * 3 + j].uv.Y / 255f}");
+                        sb.AppendLine();
+                        sb.AppendLine($"usemtl\t{tex.Tag}");
+                        prevtex = tex.Tag;
                     }
                 }
                 else
                 {
-                    sb.AppendLine($"usemtl no_texture");
-                    sb.AppendLine($"vt 0 0");
-                    sb.AppendLine($"vt 0 1");
-                    sb.AppendLine($"vt 1 1");
-                    // sb.AppendLine($"vt 1 0");
+                    if (prevtex != "")
+                    {
+                        sb.AppendLine();
+                        sb.AppendLine("usemtl\tno_texture");
+                        prevtex = "";
+                        HasUntextured = true;
+                    }
                 }
 
-                sb.AppendLine($"f {i * 3 + 1}/{i * 3 + 1} {i * 3 + 3}/{i * 3 + 3} {i * 3 + 2}/{i * 3 + 2}");
+                sb.AppendLine($"f\t{i * 3 + 1}/{i * 3 + 1} {i * 3 + 3}/{i * 3 + 3} {i * 3 + 2}/{i * 3 + 2}");
             }
 
             return sb.ToString();
@@ -513,11 +564,11 @@ namespace CTRFramework
         /// <returns>MTL file contents.</returns>
         public string ToMtl()
         {
-            if (tl.Count == 0)
-                return "";
+            if (tl.Count == 0) return "";
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
+            /*
             foreach (var tex in GetDistinctTags())
             {
                 sb.AppendLine($"newmtl {tex}");
@@ -525,9 +576,31 @@ namespace CTRFramework
                 sb.AppendLine();
             }
 
-            sb.AppendLine($"newmtl no_texture");
-            sb.AppendLine($"map_Kd {Name}\\default.png");
-            sb.AppendLine();
+            sb.AppendLine("# now grouped!");
+            */
+
+            foreach (var tex in GetDistinctGroupedTags())
+            {
+                sb.AppendLine($"newmtl {tex}");
+                sb.AppendLine($"map_Kd {Name}\\{tex}.png");
+                sb.AppendLine();
+            }
+
+            bool needDefault = false;
+
+            foreach (var tex in matIndices)
+                if (tex == null)
+                {
+                    needDefault = true;
+                    break;
+                }
+
+            if (needDefault)
+            {
+                sb.AppendLine($"newmtl no_texture");
+                sb.AppendLine($"map_Kd {Name}\\default.png");
+                sb.AppendLine();
+            }
 
             return sb.ToString();
         }
@@ -850,12 +923,15 @@ namespace CTRFramework
         /// <param name="vram"></param>
         public void ExportTextures(string path, Tim vram = null)
         {
+            //var list = Helpers.LoadTagList("texturenames.txt");
+
             if (vram is null)
             {
                 Helpers.Panic(this, PanicType.Warning, $"No vram passed for '{Name}'.");
                 return;
             }
 
+            /*
             if (tl.Count > 0)
             {
                 string texturepath = Helpers.PathCombine(path, Name);
@@ -864,6 +940,20 @@ namespace CTRFramework
 
                 foreach (var tex in tl)
                     vram.GetTexture(tex).Save(Helpers.PathCombine(texturepath, $"{tex.Tag}.png"));
+            */
+            string texturepath = Helpers.PathCombine(path, Name);
+            Helpers.CheckFolder(texturepath);
+
+            if (groupedtl.Count > 0)
+            {
+                foreach (var tex in groupedtl)
+                    vram.GetTexture(tex).Save(Helpers.PathCombine(texturepath, $"{tex.Tag}.png"));
+            }
+
+            if (HasUntextured)
+            {
+                var def = new System.Drawing.Bitmap(Properties.Resources._default);
+                def.Save(Path.Combine(texturepath, "default.png"));
             }
         }
 

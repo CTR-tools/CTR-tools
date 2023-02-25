@@ -22,7 +22,7 @@ namespace CTRFramework
                 //return "";
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             for (int i = 0; i < numVerts; i++)
                 sb.AppendLine(Vertices[i].ToObj());

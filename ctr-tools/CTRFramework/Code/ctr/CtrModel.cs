@@ -104,8 +104,6 @@ namespace CTRFramework
 
                 entry.ExportTextures(path, vram);
 
-                entry.GroupByPalette(Helpers.PathCombine(path, "grouptest"), vram);
-
                 i++;
             }
         }
