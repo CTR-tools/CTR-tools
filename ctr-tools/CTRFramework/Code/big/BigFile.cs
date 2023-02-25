@@ -44,10 +44,10 @@ namespace CTRFramework.Big
             if (!File.Exists(filename))
                 throw new FileNotFoundException($"File doesn't exist: {filename}");
 
-            switch (Path.GetExtension(filename).ToLower())
+            switch (Path.GetExtension(filename).ToUpper())
             {
-                case ".big": LoadFromBig(filename); break;
-                case ".txt": LoadFromTxt(filename); break;
+                case ".BIG": LoadFromBig(filename); break;
+                case ".TXT": LoadFromTxt(filename); break;
 
                 default: throw new Exception("Unsupported file, try BIG or TXT.");
             }

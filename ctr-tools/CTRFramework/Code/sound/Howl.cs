@@ -2,11 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Policy;
 using System.Text;
 using System.Xml;
 
 namespace CTRFramework.Sound
 {
+    public class HowlContext
+    {
+        public Dictionary<int, string> seqnames = new Dictionary<int, string>();
+        public Dictionary<int, string> banknames = new Dictionary<int, string>();
+        public Dictionary<string, string> hashnames = new Dictionary<string, string>();
+
+        public static HowlContext Create() => new HowlContext();
+    }
+
     public enum HowlVersion
     {
         UsDemo = 0x6F,
@@ -18,15 +28,16 @@ namespace CTRFramework.Sound
 
     public class Howl : IReadWrite
     {
-        public static Dictionary<int, string> seqnames = new Dictionary<int, string>();
-        public static Dictionary<int, string> banknames = new Dictionary<int, string>();
+        //remove later
         public static Dictionary<int, string> samplenames = new Dictionary<int, string>();
 
-        string reg;
+        public HowlContext Context;
 
         public HowlVersion version;     //freezes the game if changed, game code tests against fixed number for some reason. maybe like version.
 
         List<ushort> SpuPtrTable = new List<ushort>(); //this is speculated to be related to some vab offsets
+
+        public Dictionary<int, Sample> Samples = new Dictionary<int, Sample>();
 
         public static List<InstrumentShort> SampleTable = new List<InstrumentShort>();
         public static List<InstrumentShort> EngineTable = new List<InstrumentShort>();
@@ -68,24 +79,24 @@ namespace CTRFramework.Sound
 
         private void KnownFileCheck(BinaryReaderEx br)
         {
-            br.Jump(0);
+            Context.hashnames = Helpers.LoadTagList(Meta.HashPath);
 
-            var doc = new XmlDocument();
-            doc.LoadXml(Helpers.GetTextFromResource(Meta.XmlPath));
+            br.Jump(0);
 
             string md5 = Helpers.CalculateMD5(br.BaseStream);
 
             br.Jump(0);
 
+            var doc = Helpers.LoadXml(Meta.XmlPath);
+
             foreach (XmlElement el in doc.SelectNodes("/data/howl/entry"))
             {
                 if (md5.ToLower() != el["md5"].InnerText.ToLower()) continue;
 
-
                 Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.");
 
-                banknames = Helpers.LoadNumberedList(el["banks"].InnerText);
-                samplenames = Helpers.LoadNumberedList(el["samples"].InnerText);
+                Context.banknames = Helpers.LoadNumberedList(el["banks"].InnerText);
+                //Context.hashnames = Helpers.LoadTagList(el["samples"].InnerText);
 
                 string[] lines = Helpers.GetLinesFromResource("howlnames.txt");
 
@@ -97,7 +108,7 @@ namespace CTRFramework.Sound
 
                         for (int i = 0; i < songs.Length; i++)
                         {
-                            seqnames.Add(i, songs[i].Trim());
+                            Context.seqnames.Add(i, songs[i].Trim());
                         }
 
                         break;
@@ -110,10 +121,12 @@ namespace CTRFramework.Sound
             Console.WriteLine("Unknown HOWL file.");
         }
 
+
         public void Read(BinaryReaderEx br)
         {
+            Context = HowlContext.Create();
+
             KnownFileCheck(br);
-            Bank.ReadNames();
 
             char[] magic = br.ReadChars(4);
 
@@ -172,11 +185,21 @@ namespace CTRFramework.Sound
             for (int i = 0; i < numBanks; i++)
             {
                 br.Jump(ptrBanks[i]);
-                var bank = Bank.FromReader(br);
-                bank.Name = banknames[i];
+                var bank = Bank.FromReader(br, Context);
+                bank.Context = Context;
+                bank.Name = Context.banknames[i];
                 bank.Index = i;
                 Banks.Add(bank);
             }
+
+
+            foreach (var bank in Banks)
+                foreach (var sample in bank.samples.Values)
+                {
+                    if (!Samples.ContainsKey(sample.ID))
+                        Samples.Add(sample.ID, sample);
+                }
+
 
             foreach (var ptr in ptrSeqs)
             {
@@ -186,10 +209,22 @@ namespace CTRFramework.Sound
 
             for (int i = 0; i < Songs.Count; i++)
             {
-                Songs[i].name = seqnames.ContainsKey(i) ? seqnames[i] : i.ToString("00");
+                Songs[i].name = Context.seqnames.ContainsKey(i) ? Context.seqnames[i] : i.ToString("00");
                 Songs[i].PatchName = Songs[i].name;
 
                 Songs[i].LoadMetaInstruments();
+            }
+
+            foreach (var sample in SampleTable)
+                sample.Sample = FindSample(sample.SampleID);
+
+            foreach (var cseq in Songs)
+            {
+                foreach (var sample in cseq.samples)
+                    sample.Sample = FindSample(sample.SampleID);
+
+                foreach (var sample in cseq.samplesReverb)
+                    sample.Sample = FindSample(sample.SampleID);
             }
 
             Console.WriteLine(ToString());
@@ -277,7 +312,7 @@ s
 
             bw.JumpNextSector();
 
-            List<uint> offsets = new List<uint>();
+            var offsets = new List<uint>();
 
             foreach (var bank in Banks)
             {
@@ -336,7 +371,16 @@ s
             }
         }
 
-        public void ExportCSEQ(string path, BinaryReaderEx br)
+        public Sample FindSample(int id)
+        {
+            foreach (var bank in Banks)
+                if (bank.samples.ContainsKey(id))
+                        return bank.samples[id];
+
+            return null;
+        }
+
+        public void Export(string path, BinaryReaderEx br)
         {
             //sample table
 
@@ -346,7 +390,7 @@ s
 
             foreach (var sample in SampleTable)
             {
-                sb.AppendLine($"{x.ToString("0000")},\t{x.ToString("X4")},\t{sample.ID},\t{sample._always0},\t{sample.flags},\t{Howl.GetName(sample.SampleID, samplenames)}");
+                sb.AppendLine($"{x.ToString("0000")},\t{x.ToString("X4")},\t{sample.ID},\t{sample._always0},\t{sample.flags},\tsample_name_{sample.ID}");
                 x++;
             }
 
@@ -365,11 +409,14 @@ s
             {
                 br.Jump(ptrBanks[i]);
 
-                string fn = String.Format($"{i.ToString("00")}_{(banknames.ContainsKey(i) ? banknames[i] : "bank")}.bnk");
-                fn = Helpers.PathCombine(pathBank, fn);
+                string filename = String.Format($"{i.ToString("00")}_{(Context.banknames.ContainsKey(i) ? Context.banknames[i] : "bank")}.bnk");
+                filename = Helpers.PathCombine(pathBank, filename);
 
-                Bank.FromReader(br);
+                var bank = Bank.FromReader(br, Context);
+                bank.Save(filename);
+                Banks.Add(bank);
 
+                /*
                 int pos = (int)br.Position;
                 if (i < ptrBanks.Count - 1)
                     pos = ptrBanks[i + 1];
@@ -378,6 +425,7 @@ s
                 Helpers.WriteToFile(fn, br.ReadBytes(pos - ptrBanks[i]));
 
                 Banks.Add(Bank.FromFile(fn));
+                */
             }
 
             Console.WriteLine("---");
@@ -391,17 +439,19 @@ s
             {
                 string fn = "";
 
+                /*
                 if (reg != "")
                 {
                     fn = String.Format(
                         "{0}_{1}.cseq",
                         j.ToString("00"),
-                        seqnames.ContainsKey(j) ? seqnames[j] : "sequence"
+                        context.seqnames.ContainsKey(j) ? context.seqnames[j] : "sequence"
                     );
                 }
                 else
+                */
                 {
-                    fn = String.Format("{0}_{1}.cseq", j.ToString("00"), "sequence");
+                    fn = $"sequence_{j.ToString("00")}.cseq";
                 }
 
                 Console.WriteLine("Extracting " + fn);
@@ -418,8 +468,8 @@ s
                 Cseq seq = Cseq.FromFile(fn);
                 seq.name = $"sequence_{j.ToString("0000")}";
 
-                if (seqnames.ContainsKey(j))
-                    seq.name = seqnames[j];
+                if (Context.seqnames.ContainsKey(j))
+                    seq.name = Context.seqnames[j];
 
                 seq.PatchName = seq.name;
                 seq.LoadMetaInstruments();
@@ -436,9 +486,42 @@ s
 
         public void ExportAllSamples(string path)
         {
-            string output = Helpers.PathCombine(path, "samples");
-            Helpers.CheckFolder(output);
+            string outputwav = Helpers.PathCombine(path, "samples");
+            string outputvag = Helpers.PathCombine(outputwav, "vag");
 
+            Helpers.CheckFolder(outputwav);
+            Helpers.CheckFolder(outputvag);
+
+            foreach (var sample in SampleTable)
+            {
+                var vag = sample.GetVagSample(Context);
+
+                vag.Save(Helpers.PathCombine(outputvag, $"{vag.SampleName}.vag"));
+                vag.ExportWav(Helpers.PathCombine(outputwav, $"{vag.SampleName}.wav"));
+            }
+
+
+            foreach (var song in Songs)
+            {
+                foreach (var sample in song.samples)
+                {
+                    var vag = sample.GetVagSample(Context);
+
+                    vag.Save(Helpers.PathCombine(outputvag, $"{vag.SampleName}.vag"));
+                    vag.ExportWav(Helpers.PathCombine(outputwav, $"{vag.SampleName}.wav"));
+                }
+
+                foreach (var sample in song.samplesReverb)
+                {
+                    var vag = sample.GetVagSample(Context);
+
+                    vag.Save(Helpers.PathCombine(outputvag, $"{vag.SampleName}.vag"));
+                    vag.ExportWav(Helpers.PathCombine(outputwav, $"{vag.SampleName}.wav"));
+                }
+            }
+
+
+            /*
             int i = 0;
 
             foreach (var bank in Banks)
@@ -446,6 +529,7 @@ s
                 bank.ExportAll(i, output);
                 i++;
             }
+            */
         }
 
         public static int GetFreq(int sampleId)

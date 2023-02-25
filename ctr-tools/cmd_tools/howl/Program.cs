@@ -42,7 +42,7 @@ namespace howl
                     {
                         var hwl = Howl.FromReader(br);
 
-                        hwl.ExportCSEQ(path, br);
+                        hwl.Export(path, br);
                         hwl.ExportAllSamples(path);
 
                         //hwl.Banks[1].samples[0x1ae] = hwl.Banks[1].samples[0x143];
