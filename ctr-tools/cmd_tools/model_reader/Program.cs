@@ -1,6 +1,8 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
 using CTRFramework.Vram;
+using System.IO;
+using System;
 
 namespace model_reader
 {
@@ -26,6 +28,8 @@ namespace model_reader
                     "Convert OBJ to CTR", "model_reader C:\\crash.obj",
                     "Extract model pack", "model_reader C:\\shared.mpk"
                     );
+                Console.Write("Press any key...");
+                Console.ReadKey();
                 return;
             }
 
@@ -59,7 +63,7 @@ namespace model_reader
         {
             string basepath = Path.GetDirectoryName(filename);
             string name = Path.GetFileNameWithoutExtension(filename);
-            string ext = Path.GetExtension(filename).ToLower();
+            string ext = Path.GetExtension(filename).ToUpper();
 
             string vrampath = Path.ChangeExtension(filename, "vrm");
 
@@ -76,7 +80,7 @@ namespace model_reader
 
             switch (ext)
             {
-                case ".lev":
+                case ".LEV":
                     {
                         var scene = CtrScene.FromFile(filename);
                         //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
@@ -84,15 +88,14 @@ namespace model_reader
                         //scene.Save(filename + "_test.lev");
                         break;
                     }
-                case ".ctr":
-                case ".dyn":
+                case ".CTR":
                     {
                         var model = CtrModel.FromFile(filename);
                         model.Export(basepath, vrampath == "" ? null : CtrVrm.FromFile(vrampath).GetVram());
 
                         break;
                     }
-                case ".obj":
+                case ".OBJ":
                     {
                         var obj = OBJ.FromFile(filename);
                         var ctr = CtrModel.FromObj(obj);
@@ -100,14 +103,14 @@ namespace model_reader
 
                         break;
                     }
-                case ".ply":
+                case ".PLY":
                     {
                         var ctr = CtrModel.FromPly(filename);
                         ctr.Save(basepath);
 
                         break;
                     }
-                case ".mpk":
+                case ".MPK":
                     {
                         var mpk = ModelPack.FromFile(filename);
                         mpk.Extract(Helpers.PathCombine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
