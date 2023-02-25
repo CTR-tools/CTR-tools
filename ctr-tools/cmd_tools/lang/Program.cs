@@ -1,7 +1,7 @@
 ﻿using CTRFramework.Lang;
 using CTRFramework.Shared;
 
-namespace lng2txt
+namespace lang
 {
     class Program
     {
