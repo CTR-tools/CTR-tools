@@ -638,7 +638,7 @@ namespace CTRFramework
             {
                 foreach (var model in Models)
                     foreach (var mesh in model)
-                        foreach (var tl in mesh.matIndices)
+                        foreach (var tl in mesh.groupedtl)
                             if (tl != null)
                                 result[tl.Tag] = tl;
 

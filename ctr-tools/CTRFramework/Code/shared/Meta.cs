@@ -18,6 +18,7 @@ namespace CTRFramework.Shared
         public const string CseqPath = "cseq.json";
         public const string CseqXmlPath = "cseq.xml";
         public const string SmplPath = "samplenames.txt";
+        public const string HashPath = "samplehashes.txt";
         public const string BankPath = "banknames.txt";
         public const string NewtexName = "newtex";
         public const string ModelsPath = "models";
@@ -43,16 +44,13 @@ namespace CTRFramework.Shared
 
         public static string GetSignature() => resources.signature;
 
-
         static XmlDocument midixml;
 
-        public static bool LoadMidiJson()
+        public static bool LoadMidiMeta()
         {
             try
             {
-                midixml = new XmlDocument();
-                midixml.LoadXml(Helpers.GetTextFromResource(CseqXmlPath));
-
+                midixml = Helpers.LoadXml(CseqXmlPath);
                 return true;
             }
             catch (Exception ex)
@@ -75,7 +73,7 @@ namespace CTRFramework.Shared
         public static MetaInst GetMetaInst(string song, string inst, int index)
         {
             if (midixml is null)
-                if (!Meta.LoadMidiJson())
+                if (!Meta.LoadMidiMeta())
                     return new MetaInst();
 
             try

@@ -79,6 +79,11 @@ namespace CTRFramework.Shared
             }
         }
 
+        public void JumpNextSector()
+        {
+            Jump((int)((BaseStream.Position + 2047) >> 11 << 11));
+        }
+
         public int FromTimeDelta(byte[] value)
         {
             int result = 0;

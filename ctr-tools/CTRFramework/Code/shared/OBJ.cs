@@ -169,9 +169,7 @@ namespace CTRFramework.Shared
 
         public static void FixCulture()
         {
-            var customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
-            customCulture.NumberFormat.NumberDecimalSeparator = ".";
-            Thread.CurrentThread.CurrentCulture = customCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
         }
 
         public static string ASCIIFace(string label, int totalv, int x, int y, int z)

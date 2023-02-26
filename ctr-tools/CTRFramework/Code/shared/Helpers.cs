@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
+using System.Xml;
 
 namespace CTRFramework.Shared
 {
@@ -180,6 +181,15 @@ namespace CTRFramework.Shared
                 }
             }
         }
+
+        public static XmlDocument LoadXml(string resource)
+        {
+            var doc = new XmlDocument();
+            doc.LoadXml(Helpers.GetTextFromResource(resource));
+
+            return doc;
+        }
+
 
         //This is used for filenames mostly, loads list of "123=filename" as dictionary
         public static Dictionary<int, string> LoadNumberedList(string resource)

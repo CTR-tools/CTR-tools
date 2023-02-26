@@ -50,6 +50,8 @@ namespace CTRFramework
             foreach (var vertex in Vertices)
                 sb.AppendLine(vertex.ToObj());
 
+            sb.AppendLine();
+
             foreach (var tri in Faces)
                 sb.AppendLine($"f {tri.X + 1} {tri.Z + 1} {tri.Y + 1}");
 

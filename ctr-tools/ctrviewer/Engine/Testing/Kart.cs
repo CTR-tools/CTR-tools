@@ -35,7 +35,7 @@ namespace ctrviewer.Engine.Testing
         SteerRight,
         DriftLeft,
         DriftRight,
-        Terrain,
+        TerrainFriction,
         GodZ
     }
 
@@ -95,6 +95,8 @@ namespace ctrviewer.Engine.Testing
 
     public class Kart : InstancedModel
     {
+        public byte TrackProgress = 0;
+
         public AnimationPlayer path;
 
         Dictionary<PowerType, Power> Powers = new Dictionary<PowerType, Power>();
@@ -107,7 +109,7 @@ namespace ctrviewer.Engine.Testing
         public Kart(Vector3 pos, Vector3 rot) : base("crash", pos, rot, Vector3.One * 0.06f)
         {
             Powers.Add(PowerType.Gravity, new Power() { MaxValue = KartPhysics.MaxGravity, Direction = Vector3.Down });
-            Powers.Add(PowerType.Terrain, new Power() { MaxValue = 99999f, Direction = Vector3.Zero });
+            Powers.Add(PowerType.TerrainFriction, new Power() { MaxValue = 99999f, Direction = Vector3.Zero });
             Powers.Add(PowerType.Engine, new Power() { MaxValue = KartPhysics.MaxSpeed, Direction = Vector3.Forward, IsInertial = true, FadeValue = KartPhysics.Friction });
             //Powers.Add(PowerType.SteerLeft, new Power() { MaxValue = KartPhysics.MaxTurningStep, Direction = Vector3.Left });
             //Powers.Add(PowerType.SteerRight, new Power() { MaxValue = KartPhysics.MaxTurningStep, Direction = Vector3.Right });
@@ -133,50 +135,46 @@ namespace ctrviewer.Engine.Testing
             return result;
         }
 
-        public Vector3 GetResultingDirection(GameTime gameTime)
-        {
-            return Vector3.Normalize(GetResultingPower(gameTime));
-        }
+        public Vector3 GetResultingDirection(GameTime gameTime) => Vector3.Normalize(GetResultingPower(gameTime));
 
         public void Collide(List<CtrScene> scenes, GameTime gameTime)
         {
-            Powers[PowerType.Terrain].Enabled = false;
+            Powers[PowerType.TerrainFriction].Enabled = false;
 
             foreach (var scene in scenes)
                 foreach (var quad in scene.quads)
-                    if (!quad.visDataFlags.HasFlag(VisDataFlags.Water) && !quad.visDataFlags.HasFlag(VisDataFlags.Hidden))
-                        if (
-                            (quad.bbox.numericMin.X - 1 <= Position.X) &&
-                            (quad.bbox.numericMin.Y - 1 <= Position.Y) &&
-                            (quad.bbox.numericMin.Z - 1 <= Position.Z) &&
-                            (quad.bbox.numericMax.X + 1 >= Position.X) &&
-                            (quad.bbox.numericMax.Y + 1 >= Position.Y) &&
-                            (quad.bbox.numericMax.Z + 1 >= Position.Z)
-                            )
+                    if (
+                        (quad.bbox.numericMin.X - 1 <= Position.X) &&
+                        (quad.bbox.numericMin.Y - 1 <= Position.Y) &&
+                        (quad.bbox.numericMin.Z - 1 <= Position.Z) &&
+                        (quad.bbox.numericMax.X + 1 >= Position.X) &&
+                        (quad.bbox.numericMax.Y + 1 >= Position.Y) &&
+                        (quad.bbox.numericMax.Z + 1 >= Position.Z)
+                        )
+                    {
+                        //GameConsole.Write($"collide with quad bb: {quad.bbox} at {Position}");
+
+                        for (int i = 0; i < 4; i++)
                         {
-                            GameConsole.Write($"collide with quad bb: {quad.bbox} at {Position}");
+                            var vertices = quad.GetVertexListq(scene.verts, i);
 
-                            for (int i = 0; i < 4; i++)
-                            {
-                                List<Vertex> vertices = quad.GetVertexListq(scene.verts, i);
+                            Vector3 p0 = DataConverter.ToVector3(vertices[0].Position);
+                            Vector3 p1 = DataConverter.ToVector3(vertices[1].Position);
+                            Vector3 p2 = DataConverter.ToVector3(vertices[2].Position);
+                            Vector3 p3 = DataConverter.ToVector3(vertices[3].Position);
 
-                                Vector3 p0 = DataConverter.ToVector3(vertices[0].Position);
-                                Vector3 p1 = DataConverter.ToVector3(vertices[1].Position);
-                                Vector3 p2 = DataConverter.ToVector3(vertices[2].Position);
-                                Vector3 p3 = DataConverter.ToVector3(vertices[3].Position);
+                            Vector3 dir = GetResultingDirection(gameTime);
+                            Ray oldray = new Ray(Position, dir);
+                            Ray newray = new Ray(Position + GetResultingPower(gameTime), dir);
 
-                                Vector3 dir = GetResultingDirection(gameTime);
-                                Ray oldray = new Ray(Position, dir);
-                                Ray newray = new Ray(Position + GetResultingPower(gameTime), dir);
-
-                                if (!TestCollision(oldray, newray, p0, p2, p1))
-                                    TestCollision(oldray, newray, p3, p2, p1);
-                            }
+                            if (!TestCollision(scene, quad, oldray, newray, p0, p2, p1))
+                                TestCollision(scene, quad, oldray, newray, p3, p2, p1);
                         }
+                    }
 
         }
 
-        public bool TestCollision(Ray oldray, Ray newray, Vector3 p1, Vector3 p2, Vector3 p3)
+        public bool TestCollision(CtrScene scene, QuadBlock quad, Ray oldray, Ray newray, Vector3 p1, Vector3 p2, Vector3 p3)
         {
             float oldcoll = Collision.IntersectRayTriangle(oldray, p1, p2, p3);
             float newcoll = Collision.IntersectRayTriangle(newray, p1, p2, p3);
@@ -194,16 +192,37 @@ namespace ctrviewer.Engine.Testing
                //(newcoll < 0 && oldcoll > 0)
                )
             {
-                GameConsole.Write("BANG");
+                //GameConsole.Write(quad.trackPos + " " + TrackProgress  + " " + (quad.trackPos > TrackProgress) + " " + (quad.trackPos != 0xFF));
 
-                GameConsole.Write($" face normal: {fn} vector up: {Vector3.Up}");
+                if (quad.trackPos == 0)
+                    TrackProgress = 0;
 
-                Powers[PowerType.Gravity].Value = 0;
+                if (quad.trackPos > TrackProgress && quad.trackPos != 0xFF)
+                {
+                    TrackProgress = quad.trackPos;
+                    GameConsole.Write($"track progress: {TrackProgress}");
+                }
 
-                Powers[PowerType.Terrain].Direction = Vector3.Up;  //oldray.Direction;
-                Powers[PowerType.Terrain].Value = dist;//- dist + oldcoll;
+                //GameConsole.Write($" face normal: {fn} vector up: {Vector3.Up}");
 
-                Powers[PowerType.Terrain].Enabled = true;
+                if (!quad.visDataFlags.HasFlag(VisNodeFlags.Hidden) && !quad.visDataFlags.HasFlag(VisNodeFlags.Water))
+                {
+                    Powers[PowerType.Gravity].Value = 0;
+
+                    Powers[PowerType.TerrainFriction].Direction = Vector3.Up;  //oldray.Direction;
+                    Powers[PowerType.TerrainFriction].Value = dist;//- dist + oldcoll;
+
+                    Powers[PowerType.TerrainFriction].Enabled = true;
+                }
+
+                if (quad.quadFlags.HasFlag(QuadFlags.KillRacer))
+                {
+                    Position = DataConverter.ToVector3(scene.respawnPts[TrackProgress].Pose.Position) ;
+                    Position.Y += 0.25f;
+
+                    Powers[PowerType.Engine].Value = 0;
+                    Powers[PowerType.Gravity].Value = 0;
+                }
 
                 return true;
             }
