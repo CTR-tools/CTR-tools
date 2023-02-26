@@ -21,7 +21,7 @@ namespace ctrviewer.Engine.Render
         public string ModelName
         {
             get { return _modelName; }
-            set { _modelName = value; model = ContentVault.GetModel(_modelName.ToLower()); }
+            set { _modelName = value; model = ContentVault.GetModel(_modelName); }
         }
 
         private TriListCollection model;

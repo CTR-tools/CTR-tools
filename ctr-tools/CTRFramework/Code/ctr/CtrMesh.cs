@@ -508,7 +508,7 @@ namespace CTRFramework
                 if (matIndices[i] != null)
                 {
                     for (int j = 0; j < 3; j++)
-                        sb.AppendLine($"vt {(verts[i * 3 + j].uv.X / 255f).ToString("0.###")} {(-verts[i * 3 + j].uv.Y / 255f).ToString("0.###")}");
+                        sb.AppendLine($"vt\t{(verts[i * 3 + j].uv.X / 255f).ToString("0.###")} {(1.0f-(verts[i * 3 + j].uv.Y / 255f)).ToString("0.###")}");
                 }
                 else
                 {

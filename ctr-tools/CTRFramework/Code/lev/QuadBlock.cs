@@ -489,7 +489,7 @@ namespace CTRFramework
 
         public string ToObj(List<Vertex> v, Detail detail, ref int a, ref int b)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.AppendLine($"g\t{(visDataFlags.HasFlag(VisNodeFlags.Hidden) ? "invisible" : "visible")}");
             sb.AppendLine($"o\tpiece_{id.ToString("X4")}\r\n");
@@ -498,16 +498,20 @@ namespace CTRFramework
             {
                 case Detail.Low:
                     {
-                        List<Vertex> list = GetVertexListq(v, -1);
+                        //get list of quad vertices
+                        var list = GetVertexListq(v, -1);
 
-                        foreach (var vt in list)
+                        //write quad vertices
+                        foreach (var vertex in list)
                         {
-                            sb.AppendLine(vt.ToObj());
-                            sb.AppendLine("vt\t" + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
+                            sb.AppendLine(vertex.ToObj());
+                            sb.AppendLine($"vt\t{vertex.uv.X / 255f} {1.0f - vertex.uv.Y / 255f}");
                         }
 
+                        //write material
                         sb.AppendLine("\r\nusemtl " + (ptrTexLow != UIntPtr.Zero ? texlow.Tag : "default"));
 
+                        //write quad faces
                         if (OBJ.SaveQuads)
                         {
                             sb.Append(OBJ.ASCIIQuad("f", a, b));

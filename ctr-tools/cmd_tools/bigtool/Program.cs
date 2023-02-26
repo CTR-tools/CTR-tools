@@ -69,10 +69,10 @@ namespace bigtool
                     return;
                 }
 
-                switch (ext.ToLower())
+                switch (ext.ToUpper())
                 {
-                    case ".big": bigfile.Extract(Helpers.PathCombine(bigPath, bigName)); break;
-                    case ".txt": bigfile.Save(Helpers.PathCombine(bigPath, $"{bigName}.big")); break;
+                    case ".BIG": bigfile.Extract(Helpers.PathCombine(bigPath, bigName)); break;
+                    case ".TXT": bigfile.Save(Helpers.PathCombine(bigPath, $"{bigName}.big")); break;
                     default: Console.WriteLine($"Unsupported file type: {ext}"); break;
                 }
             }

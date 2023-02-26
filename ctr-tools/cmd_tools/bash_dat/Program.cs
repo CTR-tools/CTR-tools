@@ -33,17 +33,17 @@ namespace bash_dat
             {
                 Helpers.Panic("Bash", PanicType.Info, $"Converting: {arg}");
 
-                string ext = Path.GetExtension(arg).ToLower();
+                string ext = Path.GetExtension(arg).ToUpper();
 
                 switch (ext)
                 {
-                    case ".tex":
+                    case ".TEX":
                         LoadTextureFile(arg);
                         break;
-                    case ".mdl":
+                    case ".MDL":
                         LoadModelFile(arg);
                         break;
-                    case ".sfx":
+                    case ".SFX":
                         LoadSfxFile(arg);
                         break;
                     default:
