@@ -4,7 +4,8 @@ meta:
   title: Crash Team Racing (PS1) model file
   file-extension: ctr
   endian: le
-  
+  bit-endian: be
+
 doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_ctr.ksy
 
 seq:
@@ -39,7 +40,7 @@ types:
         pos: ptr_meshes
         repeat: expr
         repeat-expr: num_meshes
-        
+
   ctr_mesh:
     seq:
       - id: name
@@ -75,16 +76,16 @@ types:
         type: u4
     instances:
       commands:
-        type: u4
+        type: command
         pos: ptr_cmd
         repeat: until
-        repeat-until: _ == 0xFFFFFFFF
+        repeat-until: _.new_face_block and _.swap_first_vertex and _.flip_face_normal and _.cull_backface and _.color_scratchpad and _.read_vertex_stack and _.unk1 and _.unk2 and _.stack_write_index == 0b11111111 and _.color_coord_index == 0b1111111 and _.tex_coord_index == 0b111111111
       anims:
         type: ctr_anim
         pos: ptr_anims
         repeat: expr
         repeat-expr: num_anims
-        
+
   ctr_anim:
     seq:
       - id: ptr
@@ -112,9 +113,9 @@ types:
         repeat-expr: num_frames
     instances:
       interp:
-        value: num_frames_pack & 0x8000 > 0 
+        value: num_frames_pack & 0x8000 > 0
       num_frames:
-        value: interp ? (num_frames_pack & 0x7FFF) / 2 + 1 : num_frames_pack
+        value: "interp ? (num_frames_pack & 0x7FFF) / 2 + 1 : num_frames_pack"
 
   ctr_anim_frame:
     params:
@@ -135,10 +136,35 @@ types:
         size: frame_size - ptr_data
 
   vector3s:
-    seq:      
+    seq:
       - id: x
         type: s2
       - id: y
         type: s2
       - id: z
         type: s2
+
+  command:
+    seq:
+      - id: new_face_block
+        type: b1
+      - id: swap_first_vertex
+        type: b1
+      - id: flip_face_normal
+        type: b1
+      - id: cull_backface
+        type: b1
+      - id: color_scratchpad
+        type: b1
+      - id: read_vertex_stack
+        type: b1
+      - id: unk1
+        type: b1
+      - id: unk2
+        type: b1
+      - id: stack_write_index
+        type: b8
+      - id: color_coord_index
+        type: b7
+      - id: tex_coord_index
+        type: b9
