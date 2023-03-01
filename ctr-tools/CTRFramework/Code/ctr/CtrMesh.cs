@@ -8,9 +8,8 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using ThreeDeeBear.Models.Ply;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace CTRFramework
+namespace CTRFramework.Models
 {
     public class CtrMesh : IRead
     {

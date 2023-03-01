@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CTRFramework
+namespace CTRFramework.Models
 {
     public class CtrFrame
     {

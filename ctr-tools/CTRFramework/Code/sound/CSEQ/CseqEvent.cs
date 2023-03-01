@@ -18,6 +18,7 @@ namespace CTRFramework.Sound
         Unknown8 = 0x08,
         ChangePatch = 0x09,
         BendAssume = 0x0A,
+	//this isnt an opcode.
         Error = 0xFF
     }
 

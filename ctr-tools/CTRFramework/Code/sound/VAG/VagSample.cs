@@ -102,10 +102,15 @@ namespace CTRFramework.Sound
         /// <param name="filename">Target file name.</param>
         public void Save(string filename)
         {
-            using (var bw = new BinaryWriterEx(File.Create(filename)))
+            var ms = new MemoryStream();
+            ms.SetLength(0x30 + Frames.Count * 16);
+
+            using (var bw = new BinaryWriterEx(ms))
             {
                 Write(bw);
             }
+
+            Helpers.WriteToFile(filename, ms.ToArray());
         }
 
         /// <summary>

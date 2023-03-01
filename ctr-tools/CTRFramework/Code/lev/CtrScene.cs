@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
+using CTRFramework.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

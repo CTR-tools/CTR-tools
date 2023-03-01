@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using ThreeDeeBear.Models.Ply;
 
-namespace CTRFramework
+namespace CTRFramework.Models
 {
     public class CtrModel : List<CtrMesh>, IRead
     {

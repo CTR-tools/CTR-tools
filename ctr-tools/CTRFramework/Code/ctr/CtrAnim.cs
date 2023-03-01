@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CTRFramework
+namespace CTRFramework.Models
 {
     public class CtrAnim
     {

@@ -1,6 +1,6 @@
 ﻿using CTRFramework.Shared;
 
-namespace CTRFramework
+namespace CTRFramework.Models
 {
     public class CtrDelta
     {
