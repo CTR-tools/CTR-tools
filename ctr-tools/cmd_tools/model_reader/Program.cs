@@ -1,6 +1,7 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
 using CTRFramework.Vram;
+using CTRFramework.Models;
 using System.IO;
 using System;
 

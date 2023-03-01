@@ -1,5 +1,7 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Sound;
+using System.IO;
+using System;
 
 namespace howl
 {
@@ -16,6 +18,8 @@ namespace howl
             if (args.Length == 0)
             {
                 Console.WriteLine("Usage:\r\n\tExtract HWL:\thowl.exe C:\\example\\KART.HWL\r\n\tExtract BNK:\thowl.exe C:\\example\\01_canyon.bnk");
+                Console.Write("Press any key...");
+                Console.ReadKey();
                 return;
             }
 
@@ -29,7 +33,7 @@ namespace howl
                 return;
             }
 
-            string? basepath = Path.GetDirectoryName(filename);
+            string basepath = Path.GetDirectoryName(filename);
             string name = Path.GetFileNameWithoutExtension(filename);
             string ext = Path.GetExtension(filename);
 

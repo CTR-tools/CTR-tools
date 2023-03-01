@@ -21,6 +21,7 @@ namespace lang
                     "Convert to text", "lng2txt c:\\en.lng",
                     "Convert to .lng", "lng2txt c:\\en.txt"
                     );
+                Console.ReadKey();
                 return;
             }
 
