@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Text;
 
 namespace CTRFramework.Big
@@ -167,6 +168,26 @@ namespace CTRFramework.Big
             sw.Stop();
 
             Helpers.Panic(this, PanicType.Info, $"BIG file created in {sw.Elapsed.TotalSeconds}");
+        }
+
+        public void ToZip(string filename)
+        {
+            Console.Write("zip compress...");
+
+            using (var zip = ZipFile.Open(filename, ZipArchiveMode.Update))
+            {
+                foreach (var entry in this)
+                {
+                    var zipentry = zip.CreateEntry(entry.Name, CompressionLevel.Optimal);
+
+                    using (var entryStream = zipentry.Open())
+                    {
+                        entryStream.Write(entry.Data, 0, entry.Size);
+                    }
+                }
+            }
+
+            Console.Write("done!");
         }
     }
 }

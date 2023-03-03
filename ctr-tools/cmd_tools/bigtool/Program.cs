@@ -62,6 +62,7 @@ namespace bigtool
             try
             {
                 var bigfile = BigFile.FromFile(Helpers.PathCombine(bigPath, $"{bigName}{ext}"));
+                //bigfile.ToZip(Helpers.PathCombine(bigPath, $"{bigName}.zip"));
 
                 if (bigfile.Count == 0)
                 {
