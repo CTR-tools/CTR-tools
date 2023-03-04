@@ -4,7 +4,7 @@ meta:
   title: Crash Team Racing (PS1) model file
   file-extension: ctr
   endian: le
-  
+
 doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_ctr.ksy
 
 seq:
@@ -39,7 +39,7 @@ types:
         pos: ptr_meshes
         repeat: expr
         repeat-expr: num_meshes
-        
+
   ctr_mesh:
     seq:
       - id: name
@@ -75,16 +75,16 @@ types:
         type: u4
     instances:
       commands:
-        type: u4
+        type: command
         pos: ptr_cmd
         repeat: until
-        repeat-until: _ == 0xFFFFFFFF
+        repeat-until: _.value == 0xFFFFFFFF
       anims:
         type: ctr_anim
         pos: ptr_anims
         repeat: expr
         repeat-expr: num_anims
-        
+
   ctr_anim:
     seq:
       - id: ptr
@@ -112,9 +112,9 @@ types:
         repeat-expr: num_frames
     instances:
       interp:
-        value: num_frames_pack & 0x8000 > 0 
+        value: num_frames_pack & 0x8000 > 0
       num_frames:
-        value: interp ? (num_frames_pack & 0x7FFF) / 2 + 1 : num_frames_pack
+        value: "interp ? (num_frames_pack & 0x7FFF) / 2 + 1 : num_frames_pack"
 
   ctr_anim_frame:
     params:
@@ -135,10 +135,38 @@ types:
         size: frame_size - ptr_data
 
   vector3s:
-    seq:      
+    seq:
       - id: x
         type: s2
       - id: y
         type: s2
       - id: z
         type: s2
+
+  command:
+    seq:
+      - id: value
+        type: u4be
+    instances:
+      new_face_block:
+        value: (value & (1 << 31)) >> 31
+      swap_first_vertex:
+        value: (value & (1 << 30)) >> 30
+      flip_face_normal:
+        value: (value & (1 << 29)) >> 29
+      cull_backface:
+        value: (value & (1 << 28)) >> 28
+      color_scratchpad:
+        value: (value & (1 << 27)) >> 27
+      read_vertex_stack:
+        value: (value & (1 << 26)) >> 26
+      unk1:
+        value: (value & (1 << 25)) >> 25
+      unk2:
+        value: (value & (1 << 24)) >> 24
+      stack_write_index:
+        value: (value >> 16) & 0b11111111
+      color_coord_index:
+        value: (value >> 9) & 0b1111111
+      tex_coord_index:
+        value: value & 0b111111111
