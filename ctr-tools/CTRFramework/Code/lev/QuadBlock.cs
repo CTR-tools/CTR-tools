@@ -545,7 +545,7 @@ namespace CTRFramework
                             foreach (var vertex in list)
                             {
                                 sb.AppendLine(vertex.ToObj());
-                                sb.AppendLine("vt\t" + vertex.uv.X / 255f + " " + vertex.uv.Y / -255f);
+                                sb.AppendLine($"vt\t{vertex.uv.X / 255f} {1.0f - vertex.uv.Y / 255f}");
                             }
 
                             string newmat = (ptrTexMid[i] != UIntPtr.Zero ? (tex[i] != null ? tex[i].lod2.Tag : "default") : "default");
