@@ -4,7 +4,6 @@ meta:
   title: Crash Team Racing (PS1) model file
   file-extension: ctr
   endian: le
-  bit-endian: be
 
 doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_ctr.ksy
 
@@ -79,7 +78,7 @@ types:
         type: command
         pos: ptr_cmd
         repeat: until
-        repeat-until: _.new_face_block and _.swap_first_vertex and _.flip_face_normal and _.cull_backface and _.color_scratchpad and _.read_vertex_stack and _.unk1 and _.unk2 and _.stack_write_index == 0b11111111 and _.color_coord_index == 0b1111111 and _.tex_coord_index == 0b111111111
+        repeat-until: _.value == 0xFFFFFFFF
       anims:
         type: ctr_anim
         pos: ptr_anims
@@ -146,25 +145,28 @@ types:
 
   command:
     seq:
-      - id: new_face_block
-        type: b1
-      - id: swap_first_vertex
-        type: b1
-      - id: flip_face_normal
-        type: b1
-      - id: cull_backface
-        type: b1
-      - id: color_scratchpad
-        type: b1
-      - id: read_vertex_stack
-        type: b1
-      - id: unk1
-        type: b1
-      - id: unk2
-        type: b1
-      - id: stack_write_index
-        type: b8
-      - id: color_coord_index
-        type: b7
-      - id: tex_coord_index
-        type: b9
+      - id: value
+        type: u4be
+    instances:
+      new_face_block:
+        value: (value & (1 << 31)) >> 31
+      swap_first_vertex:
+        value: (value & (1 << 30)) >> 30
+      flip_face_normal:
+        value: (value & (1 << 29)) >> 29
+      cull_backface:
+        value: (value & (1 << 28)) >> 28
+      color_scratchpad:
+        value: (value & (1 << 27)) >> 27
+      read_vertex_stack:
+        value: (value & (1 << 26)) >> 26
+      unk1:
+        value: (value & (1 << 25)) >> 25
+      unk2:
+        value: (value & (1 << 24)) >> 24
+      stack_write_index:
+        value: (value >> 16) & 0b11111111
+      color_coord_index:
+        value: (value >> 9) & 0b1111111
+      tex_coord_index:
+        value: value & 0b111111111
