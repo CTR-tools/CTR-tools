@@ -82,7 +82,7 @@ namespace CTRFramework
             (doubleSided ? 1 : 0) << 31);
 
         //0x14
-        //these values are contained in packedFaceData, mask is 8b5b5b5b5b4z where b is bit and z is empty. or is it?
+        //these values are contained in packedFaceData, mask is 8b5b5b5b5b4z where b is bit and z is empty? (double sided face is last bit)
         public byte drawOrderLow;
         public FaceFlags[] faceFlags = new FaceFlags[4];
         public bool doubleSided = false;
@@ -509,7 +509,7 @@ namespace CTRFramework
                         }
 
                         //write material
-                        sb.AppendLine("\r\nusemtl " + (ptrTexLow != UIntPtr.Zero ? texlow.Tag : "default"));
+                        sb.AppendLine("\r\nusemtl\t" + (ptrTexLow != UIntPtr.Zero ? texlow.Tag : "default"));
 
                         //write quad faces
                         if (OBJ.SaveQuads)
@@ -529,57 +529,54 @@ namespace CTRFramework
                     }
                 case Detail.Med:
                     {
+                        string oldmat = "";
+
                         for (int i = 0; i < 4; i++)
                         {
-                            List<Vertex> list = GetVertexListq(v, i);
+                            var list = GetVertexListq(v, i);
 
                             //this normally shouldn't be null
-                            if (list != null)
+                            if (list is null)
                             {
+                                Helpers.Panic(this, PanicType.Error, $"something's wrong with quadblock {id} at {BaseAddress.ToString("X8")}, happens in secret2_4p and temple2_4p");
+                                continue;
+                            }
 
-                                foreach (Vertex vt in list)
-                                {
-                                    sb.AppendLine(vt.ToObj());
-                                    sb.AppendLine("vt\t" + vt.uv.X / 255f + " " + vt.uv.Y / -255f);
-                                }
+                            foreach (var vertex in list)
+                            {
+                                sb.AppendLine(vertex.ToObj());
+                                sb.AppendLine("vt\t" + vertex.uv.X / 255f + " " + vertex.uv.Y / -255f);
+                            }
 
-                                /*
-                                foreach (var subvert in subdiv)
-                                {
-                                    sb.AppendLine(subvert.ToObj());
-                                }
-                                */
+                            string newmat = (ptrTexMid[i] != UIntPtr.Zero ? (tex[i] != null ? tex[i].lod2.Tag : "default") : "default");
 
-                                sb.AppendLine("\r\nusemtl " + (ptrTexMid[i] != UIntPtr.Zero ? (tex[i] != null ? tex[i].lod2.Tag : "default") : "default"));
-                                //sb.AppendLine($"\r\nusemtl {midunk.ToString("X2")}");
+                            sb.AppendLine();
 
-
-                                if (OBJ.SaveQuads)
-                                {
-                                    sb.Append(OBJ.ASCIIQuad("f", a, b));
-                                }
-                                else
-                                {
-                                    sb.AppendLine(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
-
-                                    if (faceFlags[i].faceMode == FaceMode.Normal)
-                                        sb.AppendLine(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
-                                }
-
+                            if (newmat != oldmat)
+                            { 
+                                sb.AppendLine($"usemtl\t{newmat}");
+                                oldmat = newmat;
 
                                 sb.AppendLine();
+                            }
 
-                                b += 4;
-                                a += 4;
+                            if (OBJ.SaveQuads)
+                            {
+                                sb.Append(OBJ.ASCIIQuad("f", a, b));
                             }
                             else
                             {
-                                Helpers.Panic(this, PanicType.Error, $"something's wrong with quadblock {id} at {BaseAddress.ToString("X8")}, happens in secret2_4p and temple2_4p");
+                                sb.AppendLine(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
+
+                                if (faceFlags[i].faceMode == FaceMode.Normal)
+                                    sb.AppendLine(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
                             }
 
+                            sb.AppendLine();
 
+                            b += 4;
+                            a += 4;
                         }
-
                         break;
                     }
             }

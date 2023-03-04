@@ -8,7 +8,7 @@ using System.Text;
 
 namespace CTRFramework.Big
 {
-    public class BigFile : List<BigEntry>
+    public class BigFile : List<BigEntry>, IDisposable
     {
         public int TotalSize
         {
@@ -69,6 +69,18 @@ namespace CTRFramework.Big
             }
 
             Helpers.Panic(this, PanicType.Info, "BIG loaded.");
+        }
+
+        public static BigFile FromBigReader(BigFileReader bfr)
+        {
+            var big = new BigFile();
+
+            bfr.Reset();
+
+            while (bfr.NextFile())
+                big.Add(bfr.ReadEntry());
+
+            return big;
         }
 
         /// <summary>
@@ -178,6 +190,8 @@ namespace CTRFramework.Big
             {
                 foreach (var entry in this)
                 {
+                    if (entry.Size == 0) continue;
+
                     var zipentry = zip.CreateEntry(entry.Name, CompressionLevel.Optimal);
 
                     using (var entryStream = zipentry.Open())
@@ -188,6 +202,11 @@ namespace CTRFramework.Big
             }
 
             Console.Write("done!");
+        }
+
+        public void Dispose()
+        {
+            this.Clear();
         }
     }
 }

@@ -179,6 +179,8 @@ namespace CTRFramework.Big
                 ReadEntry().Save(Helpers.PathCombine(path));
         }
 
+        public BigFile GetBig() => BigFile.FromBigReader(this);
+
         /// <summary>
         /// Moves file cursor in the beginning.
         /// </summary>
