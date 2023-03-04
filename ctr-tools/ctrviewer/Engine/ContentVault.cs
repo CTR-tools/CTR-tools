@@ -91,7 +91,7 @@ namespace ctrviewer.Engine
             }
         }
 
-        public static void AddModel(string name, TriListCollection model) => Models[name] = model;
+        public static void AddModel(string name, TriListCollection model) => Models[name.ToUpper()] = model;
 
         public static SimpleAnimation GetVectorAnim(string name)
         {
@@ -114,10 +114,10 @@ namespace ctrviewer.Engine
 
         public static TriListCollection GetModel(string name)
         {
-            if (!Models.ContainsKey(name))
+            if (!Models.ContainsKey(name.ToUpper()))
                 return null;
 
-            return Models[name];
+            return Models[name.ToUpper()];
         }
 
         public static Texture2D GetTexture(string name, bool useReplacements)

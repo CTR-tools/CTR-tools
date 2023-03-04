@@ -1,6 +1,8 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Remoting.Contexts;
 
 namespace CTRFramework.Sound
 {
@@ -15,6 +17,10 @@ namespace CTRFramework.Sound
         public byte _volume;
         public ushort _freq;
         public ushort SampleID { get; set; }
+
+        //must be populated based on SampleID
+        public Sample Sample;
+
         public short _always0; //not 0 in main sample table, probably length, size or duration
         public uint ADSR { get; set; }  // assumes to be raw psx adsr value passed directly to psyq
 
@@ -34,13 +40,13 @@ namespace CTRFramework.Sound
             get { return _volume / 255f; }
             set
             {
-                if (value < 0)
+                if (value <= 0)
                 {
                     _volume = 0;
                     return;
                 }
 
-                if (value > 1)
+                if (value >= 1)
                 {
                     _volume = 255;
                     return;
@@ -54,21 +60,9 @@ namespace CTRFramework.Sound
         {
         }
 
-        public Instrument(BinaryReaderEx br)
-        {
-            Read(br);
+        public Instrument(BinaryReaderEx br) => Read(br);
 
-            if (flags != 1)
-                Helpers.Panic(this, PanicType.Assume, $"magic1 != 1: {flags}");
-
-            if (_always0 != 0)
-                Helpers.Panic(this, PanicType.Assume, $"always0 != 0: {_always0}");
-        }
-
-        public static Instrument FromReader(BinaryReaderEx br)
-        {
-            return new Instrument(br);
-        }
+        public static Instrument FromReader(BinaryReaderEx br) => new Instrument(br);
 
         public virtual void Read(BinaryReaderEx br)
         {
@@ -78,6 +72,12 @@ namespace CTRFramework.Sound
             _freq = br.ReadUInt16();
             SampleID = br.ReadUInt16();
             ADSR = br.ReadUInt32();
+
+            if (flags != 1)
+                Helpers.Panic(this, PanicType.Assume, $"magic1 != 1: {flags}");
+
+            if (_always0 != 0)
+                Helpers.Panic(this, PanicType.Assume, $"always0 != 0: {_always0}");
         }
 
         public virtual void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
@@ -88,6 +88,23 @@ namespace CTRFramework.Sound
             bw.Write((short)_freq);
             bw.Write((short)SampleID);
             bw.Write(ADSR);
+        }
+        public VagSample GetVagSample(HowlContext context)
+        {
+            using (var br = new BinaryReaderEx(new MemoryStream(Sample.Data)))
+            {
+                var vag = new VagSample();
+                vag.sampleFreq = Frequency;
+                vag.ReadFrames(br, Sample.Data.Length);
+                vag.HashString = Sample.HashString;
+
+                if (context.hashnames.ContainsKey(vag.HashString))
+                    vag.SampleName = context.hashnames[vag.HashString];
+
+                Console.WriteLine($"{vag.HashString}: {vag.SampleName}");
+
+                return vag;
+            }
         }
     }
 
@@ -106,10 +123,7 @@ namespace CTRFramework.Sound
         {
         }
 
-        public new static InstrumentShort FromReader(BinaryReaderEx br)
-        {
-            return new InstrumentShort(br);
-        }
+        public new static InstrumentShort FromReader(BinaryReaderEx br) => new InstrumentShort(br);
 
         public override void Read(BinaryReaderEx br)
         {

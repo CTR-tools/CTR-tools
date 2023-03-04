@@ -54,8 +54,10 @@ namespace CTRFramework.Sound
         }
     }
 
-    public class Bank : IReadWrite
+    public class Bank
     {
+        public HowlContext Context;
+
         public string Name = "default_name";
         public int Index = -1;
 
@@ -78,7 +80,7 @@ namespace CTRFramework.Sound
         {
         }
 
-        public Bank(BinaryReaderEx br) => Read(br);
+        public Bank(BinaryReaderEx br, HowlContext context = null) => Read(br, context);
 
         public static Bank FromFile(string filename)
         {
@@ -88,11 +90,13 @@ namespace CTRFramework.Sound
             }
         }
 
-        public static Bank FromReader(BinaryReaderEx br) => new Bank(br);
+        public static Bank FromReader(BinaryReaderEx br, HowlContext context = null) => new Bank(br, context);
         #endregion
 
-        public void Read(BinaryReaderEx br)
+        public void Read(BinaryReaderEx br, HowlContext context = null)
         {
+            Context = context;
+
             int bankoffset = (int)br.Position;
 
             int sampCnt = br.ReadInt16();
@@ -102,15 +106,13 @@ namespace CTRFramework.Sound
 
             short[] info = br.ReadArrayInt16(sampCnt);
 
-            int sam_start = bankoffset + 0x800;
+            br.JumpNextSector();
+
+            int sam_start = (int)br.BaseStream.Position;
 
             int flag = 0;
-
             int loops = 0;
-
             int frames = 0;
-
-            br.Jump(sam_start);
 
             do
             {
@@ -141,15 +143,11 @@ namespace CTRFramework.Sound
             }
             while (loops < sampCnt);
 
-            Parallel.ForEach(samples.Values, new ParallelOptions()
+            foreach (var sample in samples.Values)
             {
-                MaxDegreeOfParallelism = 32
-            },
-                sample =>
-                {
-                    sample.GetHash();
-                    sample.Name = hashnames.ContainsKey(sample.HashString) ? hashnames[sample.HashString] : "default_name";
-                });
+                sample.GetHash();
+                sample.Name = Context.hashnames.ContainsKey(sample.HashString) ? Context.hashnames[sample.HashString] : "default_name";
+            }
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
@@ -158,11 +156,20 @@ namespace CTRFramework.Sound
 
             foreach (var sample in samples)
                 bw.Write((short)sample.Key);
-
-            bw.Jump((int)((bw.BaseStream.Position + Meta.SectorSize - 1) >> 11 << 11));
+            
+            bw.JumpNextSector();
+            //bw.Jump((int)((bw.BaseStream.Position + Meta.SectorSize - 1) >> 11 << 11));
 
             foreach (var sample in samples)
                 bw.Write(sample.Value.Data);
+        }
+
+        public void Save(string filename)
+        {
+            using (var bw = new BinaryWriterEx(File.OpenWrite(filename)))
+            {
+                Write(bw);
+            }
         }
 
         public void Export(int id, int freq, string path, string pathSfxVag = null, string path2 = null, string name = null)
@@ -188,17 +195,17 @@ namespace CTRFramework.Sound
                     if (freq != -1)
                         vag.sampleFreq = freq;
 
-                    if (Howl.samplenames.ContainsKey(id))
-                        vag.SampleName = Howl.samplenames[id];
-
                     vag.ReadFrames(br, samples[id].Data.Length);
 
                     string hash = samples[id].HashString;
 
+                    if (Context.hashnames.ContainsKey(hash))
+                        vag.SampleName = Context.hashnames[hash];
+
                     vagname = $"{id.ToString("0000")}_{hash}";
 
-                    if (Bank.hashnames.ContainsKey(hash))
-                        vagname += $"_{Bank.hashnames[hash]}";
+                    if (vag.SampleName != "")
+                        vagname += $"_{vag.SampleName}";
 
                     vag.Save(Helpers.PathCombine(pathSfxVag, $"{vagname}.vag"));
                     vag.ExportWav(Helpers.PathCombine(path, $"{vagname}.wav"));

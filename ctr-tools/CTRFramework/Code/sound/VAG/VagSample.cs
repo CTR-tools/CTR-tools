@@ -38,6 +38,7 @@ namespace CTRFramework.Sound
         {
         }
 
+        public string HashString = "";
         public VagSample(BinaryReaderEx br) => Read(br);
 
         public static VagSample FromReader(BinaryReaderEx br) => new VagSample(br);

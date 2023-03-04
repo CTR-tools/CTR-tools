@@ -1,7 +1,7 @@
 ﻿using CTRFramework.Lang;
 using CTRFramework.Shared;
 
-namespace lng2txt
+namespace lang
 {
     class Program
     {
@@ -52,24 +52,16 @@ namespace lng2txt
         {
             Console.WriteLine($"Input file: {filename}");
 
-            string fn = Path.GetFileName(filename);
             string ext = Path.GetExtension(filename);
 
-            switch (ext.ToLower())
+            switch (ext.ToUpper())
             {
-                case ".lng":
+                case ".LNG":
                     var lng = LNG.FromFile(filename);
                     lng.Export(Path.ChangeExtension(filename, "txt"), true);
-
-                    if (fn.ToLower() == "ja.lng")
-                    {
-                        lng = LNG.FromFile(filename, true);
-                        lng.Export(Path.ChangeExtension(filename, "katakana.txt"));
-                    }
-
                     break;
 
-                case ".txt":
+                case ".TXT":
                     lng = LNG.FromText(File.ReadAllLines(filename), true);
                     lng.Save(Path.ChangeExtension(filename, "lng"));
                     break;

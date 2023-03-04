@@ -31,18 +31,18 @@ namespace howl
 
             string? basepath = Path.GetDirectoryName(filename);
             string name = Path.GetFileNameWithoutExtension(filename);
-            string ext = Path.GetExtension(filename).ToLower();
+            string ext = Path.GetExtension(filename);
 
             string path = Helpers.PathCombine(basepath, Path.GetFileNameWithoutExtension(filename));
 
-            switch (ext)
+            switch (ext.ToUpper())
             {
-                case ".hwl":
+                case ".HWL":
                     using (var br = new BinaryReaderEx(File.OpenRead(filename)))
                     {
                         var hwl = Howl.FromReader(br);
 
-                        hwl.ExportCSEQ(path, br);
+                        hwl.Export(path, br);
                         hwl.ExportAllSamples(path);
 
                         //hwl.Banks[1].samples[0x1ae] = hwl.Banks[1].samples[0x143];
@@ -54,29 +54,29 @@ namespace howl
 
                 //the lcd extension comes from doom/final doom
                 //it is speculated, that the bank format comes from libWESS (Williams Entertainment Sound System) 
-                case ".lcd":
-                case ".bnk":
+                case ".LCD":
+                case ".BNK":
                     Bank.ReadNames();
                     var bnk = Bank.FromFile(filename);
                     bnk.ExportAll(0, Helpers.PathCombine(basepath, name));
                     break;
 
-                case ".xnf":
+                case ".XNF":
                     var xnf = XaInfo.FromFile(filename);
                     Console.WriteLine(xnf.ToString());
                     break;
 
-                case ".cseq":
+                case ".CSEQ":
                     var seq = Cseq.FromFile(filename);
                     seq.Songs[0].ExportMIDI(Path.ChangeExtension(filename, ".mid"), seq);
                     break;
 
-                case ".mid":
+                case ".MID":
                     var midseq = Cseq.FromMidi(filename);
                     midseq.Save(Path.ChangeExtension(filename, ".cseq"));
                     break;
 
-                case ".xa":
+                case ".XA":
                     var xa = XaStackedFrameCollection.FromFile(filename);
                     Console.WriteLine(xa.ToString());
                     break;

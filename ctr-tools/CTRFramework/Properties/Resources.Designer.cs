@@ -61,7 +61,17 @@ namespace CTRFramework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 31.08.2022  9:31:08,38 
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap _default {
+            get {
+                object obj = ResourceManager.GetObject("_default", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 25.02.2023 13:47:48,80 
         ///.
         /// </summary>
         public static string BuildDate {
@@ -82,7 +92,16 @@ namespace CTRFramework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2016-2022, DCxDemo*..
+        ///   Looks up a localized string similar to Press any key....
+        /// </summary>
+        public static string PressAnyKey {
+            get {
+                return ResourceManager.GetString("PressAnyKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2016-2023, DCxDemo*..
         /// </summary>
         public static string signature {
             get {
