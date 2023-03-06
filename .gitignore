@@ -30,6 +30,7 @@ $RECYCLE.BIN/
 *.user
 *.suo
 *.exe
+!smallzip.exe
 *.pdb
 *.aps
 *_i.c
