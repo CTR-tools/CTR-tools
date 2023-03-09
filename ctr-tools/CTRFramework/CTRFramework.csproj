@@ -161,6 +161,7 @@
     <Compile Include="Code\sound\VAG\VagFrame.cs" />
     <Compile Include="Code\sound\VAG\VagSample.cs" />
     <Compile Include="Code\vrm\BMPHeader.cs" />
+    <Compile Include="Code\vrm\TextureReplacer.cs" />
     <Compile Include="Code\vrm\Tim.cs" />
     <Compile Include="ThirdParty\Kaitai\KaitaiStream.cs" />
     <Compile Include="ThirdParty\Kaitai\KaitaiStruct.cs" />

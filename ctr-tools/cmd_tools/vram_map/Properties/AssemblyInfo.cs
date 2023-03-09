@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("vram_map")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("vrmtool")]
+[assembly: AssemblyDescription("cmd ctr vram texture replacer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("vram_map")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyProduct("vrmtool")]
+[assembly: AssemblyCopyright("dcxdemo, CTR-Tools")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

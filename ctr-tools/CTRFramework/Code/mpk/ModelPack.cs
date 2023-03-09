@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace CTRFramework
 {
@@ -134,6 +135,8 @@ namespace CTRFramework
                 model.Export(modelsPath, tim);
                 model.Save(modelsPath);
             }
+
+            Helpers.DumpTextureLayoutList(Helpers.PathCombine(path, Meta.LayoutsName), GetTexturesList().Values.ToList());
         }
 
         public override string ToString()

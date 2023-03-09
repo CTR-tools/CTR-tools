@@ -52,7 +52,7 @@ namespace CTRFramework
             }
 
             Helpers.CheckFolder(path);
-            tim.GetTexture(tl).Save(Helpers.PathCombine(path, $"{Name}_{tl.Tag}.png"), ImageFormat.Png);
+            tim.GetTexture(tl).Save(Helpers.PathCombine(path, $"{tl.Tag};{Name}.png"), ImageFormat.Png);
         }
     }
 }

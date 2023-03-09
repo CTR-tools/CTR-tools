@@ -100,6 +100,7 @@ namespace CTRFramework
         Models = 1 << 6,
         TexModels = 1 << 7,
         SkyBox = 1 << 8,
+        DumpLayouts = 1 << 9,
         All = -1
     }
 

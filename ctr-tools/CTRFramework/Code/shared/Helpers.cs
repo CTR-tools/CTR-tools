@@ -5,6 +5,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Reflection;
 using System.Xml;
+using CTRFramework.Vram;
+using System.IO;
 
 namespace CTRFramework.Shared
 {
@@ -313,5 +315,19 @@ namespace CTRFramework.Shared
             };
         }
         #endregion
+
+        public static void DumpTextureLayoutList(string filename, List<TextureLayout> layouts)
+        {
+            using (var bw = new BinaryWriterEx(File.OpenWrite(filename)))
+            {
+                //magick!
+                bw.Write("_layouts".ToCharArray());
+
+                bw.Write((uint)layouts.Count);
+
+                foreach (var layout in layouts)
+                    layout.Write(bw);
+            }
+        }
     }
 }

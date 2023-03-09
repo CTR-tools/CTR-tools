@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Text;
+using System.Linq;
 
 namespace CTRFramework
 {
@@ -466,9 +467,11 @@ namespace CTRFramework
             if (flags.HasFlag(ExportFlags.TexModels)) ExportTextures(path, Detail.Models);
             if (flags.HasFlag(ExportFlags.SkyBox)) ExportSkyBox(path);
 
+
+            if (flags.HasFlag(ExportFlags.DumpLayouts)) Helpers.DumpTextureLayoutList(Helpers.PathCombine(path, Meta.LayoutsName), GetTexturesList().Values.ToList());
+
             Helpers.Panic(this, PanicType.Info, "Additional models: done.");
         }
-
 
         public void LoadTextures()
         {

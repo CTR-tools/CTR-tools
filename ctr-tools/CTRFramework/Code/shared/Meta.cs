@@ -21,6 +21,7 @@ namespace CTRFramework.Shared
         public const string HashPath = "samplehashes.txt";
         public const string BankPath = "banknames.txt";
         public const string NewtexName = "newtex";
+        public const string LayoutsName = "_layouts.bin";
         public const string ModelsPath = "models";
         public const string BigFileName = "bigfile.big";
         public const string BashPath = "bash_filelist.txt";

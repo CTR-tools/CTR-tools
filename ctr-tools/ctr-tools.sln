@@ -24,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cmd_tools", "cmd_tools", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTRFramework_Tests", "CTRFramework_Tests\CTRFramework_Tests.csproj", "{2F78E6DD-9F0D-48DE-9B6A-115F59FBB5CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vram_map", "cmd_tools\vram_map\vram_map.csproj", "{2DEAF563-A41D-4034-B738-51855FBD47AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vrmtool", "cmd_tools\vram_map\vrmtool.csproj", "{2DEAF563-A41D-4034-B738-51855FBD47AE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "merge4bits", "cmd_tools\merge4bits\merge4bits.csproj", "{3DD79DFD-0F39-428C-84B3-3551937FE1F2}"
 EndProject
