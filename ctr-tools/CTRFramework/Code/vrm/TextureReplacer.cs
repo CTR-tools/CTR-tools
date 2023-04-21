@@ -66,7 +66,7 @@ namespace CTRFramework.Vram
 
             try
             {
-                return ReplaceTextures();
+                return Replace();
             }
             catch (Exception ex)
             {
@@ -75,7 +75,7 @@ namespace CTRFramework.Vram
             }
         }
 
-        private TextureReplacerResult ReplaceTextures()
+        private TextureReplacerResult Replace()
         {
 
             string rootPath = Path.GetDirectoryName(Context.vramPath);

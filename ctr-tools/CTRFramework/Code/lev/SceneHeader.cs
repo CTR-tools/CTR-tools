@@ -101,10 +101,9 @@ namespace CTRFramework
         {
         }
 
-        public SceneHeader(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public SceneHeader(BinaryReaderEx br) => Read(br);
+
+        public static SceneHeader FromReader(BinaryReaderEx br) => new SceneHeader(br);
 
         public void Read(BinaryReaderEx br)
         {
@@ -203,9 +202,7 @@ namespace CTRFramework
 
             if (dataEnd - dataStart != SizeOf)
                 throw new Exception("SceneHeader: size mismatch");
-
-
-
+     
             if (ptrBuildStart != PsxPtr.Zero)
             {
                 br.Jump(ptrBuildStart);

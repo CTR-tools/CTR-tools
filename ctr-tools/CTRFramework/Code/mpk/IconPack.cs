@@ -15,15 +15,9 @@ namespace CTRFramework
         {
         }
 
-        public IconPack(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public IconPack(BinaryReaderEx br) => Read(br);
 
-        public static IconPack FromReader(BinaryReaderEx br)
-        {
-            return new IconPack(br);
-        }
+        public static IconPack FromReader(BinaryReaderEx br) => new IconPack(br);
 
         public void Read(BinaryReaderEx br)
         {
@@ -124,7 +118,7 @@ namespace CTRFramework
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (var icon in Icons.Values)
                 sb.AppendLine(icon.Name);

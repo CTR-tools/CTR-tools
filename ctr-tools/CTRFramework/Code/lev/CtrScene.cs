@@ -93,7 +93,7 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            Stopwatch sw = new Stopwatch();
+            var sw = new Stopwatch();
 
             sw.Start();
 
@@ -104,6 +104,9 @@ namespace CTRFramework
             catch (Exception ex)
             {
                 Console.WriteLine("failed to read scene with patch container: " + ex.Message);
+
+                //extra reset is needed here
+                br.BaseStream.Position = 0;
 
                 //try to load scene without patch table
                 ReadScene(br);
@@ -116,11 +119,10 @@ namespace CTRFramework
 
         public void ReadScene(BinaryReaderEx br)
         {
-            header = Instance<SceneHeader>.FromReader(br);
+            header = SceneHeader.FromReader(br);
 
             if (header is null)
                 throw new Exception("Scene header is null. Halt parsing.");
-
 
             mesh = new PtrWrap<MeshInfo>(header.ptrMeshInfo).Get(br);
 
