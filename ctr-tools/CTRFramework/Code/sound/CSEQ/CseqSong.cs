@@ -91,8 +91,7 @@ namespace CTRFramework.Sound
                 Tracks[i].Index = i;
             }
 
-            if (NumTracks != trackNum)
-                Helpers.Panic(this, PanicType.Warning, "NumTracks != trackNum, this is weird");
+            Helpers.PanicIf(NumTracks != trackNum, this, PanicType.Warning, "NumTracks != trackNum, this is weird");
         }
 
         public void ExportMIDI(string fn, Cseq seq, bool hubFilter = false, int hubIndex = 0)

@@ -38,7 +38,7 @@ namespace CTRFramework.Shared
             using (var md5 = System.Security.Cryptography.MD5.Create())
             {
                 var hash = md5.ComputeHash(stream);
-                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                return BitConverter.ToString(hash).Replace("-", "").ToLower();
             }
         }
         #endregion

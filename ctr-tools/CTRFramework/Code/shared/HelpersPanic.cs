@@ -55,6 +55,12 @@ namespace CTRFramework.Shared
             Panic(sender.GetType().Name, panicType, message);
         }
 
+        public static void PanicIf(bool condition, object sender, PanicType panicType, string message)
+        {
+            if (condition)
+                Panic(sender, panicType, message);
+        }
+
         /// <summary>
         /// Call this if something unexpected happened.
         /// </summary>

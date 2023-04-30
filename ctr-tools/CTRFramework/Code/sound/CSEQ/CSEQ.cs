@@ -157,8 +157,7 @@ namespace CTRFramework.Sound
 
             int cseqEnd = (int)br.Position;
 
-            if (cseqEnd - cseqStart != size)
-                Helpers.Panic(this, PanicType.Warning, $"CSEQ size mismatch! {size} vs {cseqEnd - cseqStart}");
+            Helpers.PanicIf(cseqEnd - cseqStart != size, this, PanicType.Warning, $"CSEQ size mismatch! {size} vs {cseqEnd - cseqStart}");
         }
 
         public void LoadMetaInstruments()

@@ -214,7 +214,7 @@ namespace CTRFramework
             {
                 br.Jump(ptrBuildEnd);
                 compilationEnds = Helpers.ParseDate(br.ReadStringNT());
-                Helpers.Panic(this, PanicType.Info, compilationBegins.ToString());
+                Helpers.Panic(this, PanicType.Info, compilationEnds.ToString());
             }
 
             if (ptrBuildType != PsxPtr.Zero)

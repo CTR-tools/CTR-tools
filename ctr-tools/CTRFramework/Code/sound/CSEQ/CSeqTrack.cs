@@ -44,8 +44,7 @@ namespace CTRFramework.Sound
 
             ushort trackType = br.ReadUInt16();
 
-            if (trackType > 0)
-                Helpers.Panic(this, PanicType.Warning, "track type value not boolean at " + br.HexPos());
+            Helpers.PanicIf(trackType > 0, this, PanicType.Warning, "track type value not boolean at " + br.HexPos());
 
             if (trackType == 1)
                 isDrumTrack = true;

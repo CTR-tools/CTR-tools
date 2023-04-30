@@ -49,8 +49,8 @@ namespace CTRFramework
             {
                 if (hi[i] != null)
                 {
-                    if (hi[i].stretch * hi[0].Width > width) width = hi[0].stretch * hi[0].Width;
-                    if (hi[i].Height > height) height = hi[0].Height;
+                    if (hi[i].stretch * hi[i].Width > width) width = hi[i].stretch * hi[i].Width;
+                    if (hi[i].Height > height) height = hi[i].Height;
                 }
             }
 
@@ -58,9 +58,10 @@ namespace CTRFramework
             var gr = Graphics.FromImage(bmp);
 
             gr.SmoothingMode = SmoothingMode.HighQuality;
-            gr.InterpolationMode = InterpolationMode.NearestNeighbor;
+            gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
             gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            gr.CompositingMode = CompositingMode.SourceCopy;
+            //gr.CompositingMode = CompositingMode.SourceCopy;
+            gr.CompositingMode = CompositingMode.SourceOver;
 
             var attributes = new ImageAttributes();
             attributes.SetWrapMode(WrapMode.TileFlipXY);
@@ -69,15 +70,34 @@ namespace CTRFramework
             {
                 if (hi[i] != null)
                 {
-                    hi[i].DetectRotation();
+                    var rotatefliptype = hi[i].DetectRotation();
 
                     var b = vram.GetTexture(hi[i]);
+
+                    var proper = System.Drawing.RotateFlipType.RotateNoneFlipNone;
+
+                    switch (rotatefliptype)
+                    {
+                        case RotateFlipType.None: proper = System.Drawing.RotateFlipType.RotateNoneFlipNone; break;
+                        case RotateFlipType.Rotate90: proper = System.Drawing.RotateFlipType.Rotate90FlipNone; break;
+                        case RotateFlipType.Rotate180: proper = System.Drawing.RotateFlipType.Rotate180FlipNone; break;
+                        case RotateFlipType.Rotate270: proper = System.Drawing.RotateFlipType.Rotate270FlipNone; break;
+                        case RotateFlipType.Flip: proper = System.Drawing.RotateFlipType.RotateNoneFlipY; break;
+                        case RotateFlipType.FlipRotate90: proper = System.Drawing.RotateFlipType.Rotate90FlipY; break;
+                        case RotateFlipType.FlipRotate180: proper = System.Drawing.RotateFlipType.Rotate180FlipY; break;
+                        case RotateFlipType.FlipRotate270: proper = System.Drawing.RotateFlipType.Rotate270FlipY; break;
+                        default: proper = System.Drawing.RotateFlipType.RotateNoneFlipNone; break;
+                    }
+
+                    b.RotateFlip(proper);
+
                     gr.DrawImage(b, new Rectangle((i % 4) * width, (i / 4) * height, width, height), 0, 0, b.Width, b.Height, GraphicsUnit.Pixel, attributes);
+                    //gr.DrawString($"{rotatefliptype}", font, Brushes.Yellow, (i % 4) * width + 1, (i / 4) * height + 1);
                 }
             }
 
-            gr.CompositingMode = CompositingMode.SourceOver;
-
+            /*
+            //gr.CompositingMode = CompositingMode.SourceOver;
             for (int i = 0; i < numvtex * 4; i++)
             {
                 if (hi[i] != null)
@@ -85,25 +105,22 @@ namespace CTRFramework
                     if (hi[i].uv[0].X == hi[i].min.X && hi[i].uv[0].Y == hi[i].min.Y)
                         mode = 1;
 
-                    gr.DrawString($"{mode}", font, Brushes.Yellow, (i % 4) * width + 1, (i / 4) * height + 1);
+                    //gr.DrawString($"{mode}", font, Brushes.Yellow, (i % 4) * width + 1, (i / 4) * height + 1);
                     mode = 0;
                 }
             }
+            */
 
             return bmp;
         }
 
-        Font font = new Font("Courier New", 10);
+        Font font = new Font("Courier New", 7);
 
         public void Read(BinaryReaderEx br, PsxPtr ptr, VisNodeFlags flags)
         {
             int pos = (int)br.Position;
 
-            if (ptr.ExtraBits == HiddenBits.Bit1)
-            {
-                Console.WriteLine("!!!");
-                //Console.ReadKey();
-            }
+            Helpers.PanicIf(ptr.ExtraBits == HiddenBits.Bit1, this, PanicType.Assume, "!!! ctrtex ptr got extra bits");
 
             //this apparently defines animated texture, really
             if (ptr.ExtraBits == HiddenBits.Bit0)
@@ -114,11 +131,8 @@ namespace CTRFramework
                 int numFrames = br.ReadInt16();
                 int whatsthat = br.ReadInt16();
 
-                if (whatsthat != 0)
-                    Helpers.Panic(this, PanicType.Assume, $"whatsthat is not null! {whatsthat}");
-
-                if (br.ReadUInt32() != 0)
-                    Helpers.Panic(this, PanicType.Assume, "not 0!");
+                Helpers.PanicIf(whatsthat != 0, this, PanicType.Assume, $"whatsthat is not null! {whatsthat}");
+                Helpers.PanicIf(br.ReadUInt32() != 0, this, PanicType.Assume, "not 0!");
 
                 uint[] ptrs = br.ReadArrayUInt32(numFrames);
 
@@ -163,7 +177,6 @@ namespace CTRFramework
                             hi.Add(TextureLayout.FromReader(br));
                     }
             }
-
         }
     }
 }

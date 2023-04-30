@@ -446,8 +446,7 @@ namespace CTRFramework
         {
             Helpers.Panic(this, PanicType.Info, $"Exporting scene to: {path}");
 
-            if (path.Contains(" "))
-                Helpers.Panic(this, PanicType.Info, "Warning, the selected path contains space in its name.\r\nThis may affect material import in certain applications.\r\n");
+            Helpers.PanicIf(path.Contains(" "), this, PanicType.Info, "Warning, the selected path contains space in its name.\r\nThis may affect material import in certain applications.\r\n");
 
             if (flags.HasFlag(ExportFlags.MeshLow)) ExportMesh(path, Detail.Low);
             if (flags.HasFlag(ExportFlags.TexLow)) ExportTextures(path, Detail.Low);
@@ -505,7 +504,7 @@ namespace CTRFramework
         {
             if (ctrvram is null)
             {
-                Helpers.Panic(this, PanicType.Info, "No export textures as no vram found.\r\nMake sure VRM file is in the same folder.");
+                Helpers.Panic(this, PanicType.Info, "Can't export textures as no vram found.\r\nMake sure VRM file is in the same folder.");
                 return;
             }
 

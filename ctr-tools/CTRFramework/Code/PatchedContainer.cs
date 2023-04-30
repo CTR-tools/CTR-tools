@@ -8,7 +8,7 @@ namespace CTRFramework
     public class PatchedContainer : IReadWrite
     {
         public byte[] Data;
-        public List<UIntPtr> PatchTable = new List<UIntPtr>();
+        public List<UIntPtr> PatchTable;
 
         public PatchedContainer()
         {
@@ -16,6 +16,10 @@ namespace CTRFramework
 
         public PatchedContainer(BinaryReaderEx br) => Read(br);
 
+        /// <summary>
+        /// Wraps existing data in a new MemoryStream and returns a new reader for it.
+        /// </summary>
+        /// <returns>BinaryReaderEx instance.</returns>
         public BinaryReaderEx GetReader() => new BinaryReaderEx(new MemoryStream(Data));
 
         public void Read(BinaryReaderEx br)
@@ -27,6 +31,8 @@ namespace CTRFramework
 
             if (hasTable)
             {
+                PatchTable = new List<UIntPtr>();
+
                 int numEntries = br.ReadInt32() / 4;
                 for (int i = 0; i < numEntries; i++)
                     PatchTable.Add(br.ReadUIntPtr());

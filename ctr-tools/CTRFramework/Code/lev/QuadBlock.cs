@@ -16,7 +16,8 @@ namespace CTRFramework
         FlipRotate270 = 4,
         FlipRotate180 = 5,
         FlipRotate90 = 6,
-        Flip = 7
+        Flip = 7,
+        NoMatch = -1
     }
 
     public enum FaceMode

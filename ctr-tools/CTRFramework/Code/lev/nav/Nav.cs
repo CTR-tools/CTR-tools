@@ -14,15 +14,9 @@ namespace CTRFramework
         {
         }
 
-        public Nav(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public Nav(BinaryReaderEx br) => Read(br);
 
-        public static Nav FromReader(BinaryReaderEx br)
-        {
-            return new Nav(br);
-        }
+        public static Nav FromReader(BinaryReaderEx br) => new Nav(br);
 
         public void Read(BinaryReaderEx br)
         {

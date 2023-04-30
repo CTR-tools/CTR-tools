@@ -23,6 +23,88 @@ namespace CTRFramework.Vram
         Bit24 = 3
     }
 
+    public class RotationDetector
+    {
+        private static void FlipX(ref Vector2[,] a)
+        {
+            Vector2 buf;
+
+            buf = a[0, 0];
+            a[0, 0] = a[1, 0];
+            a[1, 0] = buf;
+
+            buf = a[0, 1];
+            a[0, 1] = a[1, 1];
+            a[1, 1] = buf;
+        }
+
+        private static void FlipY(ref Vector2[,] a)
+        {
+            Vector2 buf;
+
+            buf = a[0, 0];
+            a[0, 0] = a[0, 1];
+            a[0, 1] = buf;
+
+            buf = a[1, 0];
+            a[1, 0] = a[1, 1];
+            a[1, 1] = buf;
+        }
+
+
+        private static void RotateRight(ref Vector2[,] a)
+        {
+            Vector2 buf;
+
+            buf = a[0, 0];
+            a[0, 0] = a[1, 0];
+            a[1, 0] = a[1, 1];
+            a[1, 1] = a[0, 1];
+            a[0, 1] = buf;
+        }
+
+        private static void RotateLeft(ref Vector2[,] a)
+        {
+            Vector2 buf;
+
+            buf = a[0, 0];
+            a[0, 0] = a[0, 1];
+            a[0, 1] = a[1, 1];
+            a[1, 1] = a[1, 0];
+            a[1, 0] = buf;
+        }
+
+        private static bool Matches(Vector2[,] a, Vector2[,] b)
+        {
+            if (
+                a[0, 0] == b[0, 0] &&
+                a[0, 1] == b[0, 1] &&
+                a[1, 0] == b[1, 0] &&
+                a[1, 1] == b[1, 1]
+                )
+                return true;
+
+            return false;
+        }
+
+        public static RotateFlipType Test(Vector2[,] a, Vector2[,] b)
+        {
+            if (Matches(a, b)) return RotateFlipType.None;
+            RotateRight(ref a); if (Matches(a, b)) return RotateFlipType.Rotate90;
+            RotateRight(ref a); if (Matches(a, b)) return RotateFlipType.Rotate180;
+            RotateRight(ref a); if (Matches(a, b)) return RotateFlipType.Rotate270;
+            RotateRight(ref a);
+            //now we're back to original
+            FlipX(ref a); if (Matches(a, b)) return RotateFlipType.Flip;
+            RotateLeft(ref a); if (Matches(a, b)) return RotateFlipType.FlipRotate90;
+            RotateLeft(ref a); if (Matches(a, b)) return RotateFlipType.FlipRotate180;
+            RotateLeft(ref a); if (Matches(a, b)) return RotateFlipType.FlipRotate270;
+
+            //bummer
+            return RotateFlipType.NoMatch;
+        }
+    }
+
     public class TextureLayout : IReadWrite
     {
         public TextureLayout ParentLayout = null;
@@ -196,7 +278,17 @@ namespace CTRFramework.Vram
 
         public RotateFlipType DetectRotation()
         {
-            return RotateFlipType.None;
+            var vramuv = new Vector2[2,2] {
+                { new Vector2(min.X, min.Y), new Vector2(max.X, min.Y) },
+                { new Vector2(min.X, max.Y), new Vector2(max.X, max.Y) }
+            };
+
+            var target = new Vector2[2, 2] {
+                { uv[0], uv[1] },
+                { uv[2], uv[3] }
+            };
+
+            return RotationDetector.Test(vramuv, target);
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
