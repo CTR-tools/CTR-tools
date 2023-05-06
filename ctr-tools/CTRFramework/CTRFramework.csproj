@@ -115,6 +115,7 @@
     <Compile Include="Code\shared\HelpersPanic.cs" />
     <Compile Include="Code\shared\HelpersTimer.cs" />
     <Compile Include="Code\shared\PsxPtr.cs" />
+    <Compile Include="Code\shared\RotationDetector.cs" />
     <Compile Include="Code\shared\Vectors\Vector3b.cs" />
     <Compile Include="Code\shared\Vectors\Vector3f.cs" />
     <Compile Include="Code\shared\Vectors\Vector3i.cs" />
