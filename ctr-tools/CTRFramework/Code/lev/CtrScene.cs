@@ -515,6 +515,13 @@ namespace CTRFramework
 
             Helpers.Panic(this, PanicType.Debug, $"vram: {ctrvram}");
 
+            //this will be overwritten 5 times for each lod call, shoul move somewhere else 
+            if (enviroMap != null)
+            {
+                string p = Helpers.PathCombine(path, "enviroMap.png");
+                ctrvram.GetTexture(enviroMap).Save(p);
+            }
+
             //check lod path existence
             path = Helpers.PathCombine(path, $"tex{lod}");
             Helpers.CheckFolder(path);
@@ -526,13 +533,6 @@ namespace CTRFramework
             //special case for tageing textures
             if (lod == Detail.Montage)
             {
-                //maybe enviromap is present? put it here just so it doesnt get exported 5 times
-                if (enviroMap != null)
-                {
-                    string p = Helpers.PathCombine(path, "enviroMap.png");
-                    ctrvram.GetTexture(enviroMap).Save(p);
-                }
-
                 var check = new List<string>();
 
                 foreach (var quad in quads)
@@ -540,19 +540,19 @@ namespace CTRFramework
                     {
                         if (tex is null)
                         {
-                            Helpers.Panic(this, PanicType.Error, $"tex is null for whatever reason... {quad.id}");
+                            Helpers.Panic(this, PanicType.Warning, $"tex is null for whatever reason... {quad.id}");
                             continue;
                         }
 
                         try
                         {
-                            //little cache here to only export montage once and speed up export time
-                            if (!check.Contains(tex.lod2.Tag))
-                            {
-                                check.Add(tex.lod2.Tag);
-                                string file = Helpers.PathCombine(path, $"{tex.lod2.Tag}.png");
-                                tex.GetHiBitmap(ctrvram, quad)?.Save(file, System.Drawing.Imaging.ImageFormat.Png);
-                            }
+                            //little cache check here to only export montage once and speed up export time
+                            if (check.Contains(tex.lod2.Tag)) continue;
+                            
+                            check.Add(tex.lod2.Tag);
+                            string file = Helpers.PathCombine(path, $"{tex.lod2.Tag}.png");
+                            tex.GetHiBitmap(ctrvram, quad)?.Save(file, System.Drawing.Imaging.ImageFormat.Png);
+                            
                         }
                         catch (Exception ex)
                         {

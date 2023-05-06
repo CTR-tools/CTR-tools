@@ -1,5 +1,6 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
+using CTRFramework.Models;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -64,11 +65,11 @@ namespace ctrviewer.Engine
 
                 for (int j = i * 3; j < i * 3 + 3; j++)
                 {
-                    Vertex x = model[0].verts[j];
-                    li.Add(DataConverter.ToVptc(x, x.uv, color, lerp, 0.01f * scale));
+                    var vert = model[0].verts[j];
+                    li.Add(DataConverter.ToVptc(vert, vert.uv, color, lerp, 0.01f * scale));
                 }
 
-                TriList t = kek[texture];
+                var t = kek[texture];
                 t.textureName = texture;
                 t.textureEnabled = t.textureName == "test" ? false : true;
                 t.ScrollingEnabled = false;
