@@ -2,6 +2,7 @@
 using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -23,28 +24,36 @@ namespace CTRFramework
         public bool isAnimated = false;
 
 
-        public CtrTex(BinaryReaderEx br, PsxPtr ptr, VisNodeFlags flags)
-        {
-            Read(br, ptr, flags);
-        }
+        public CtrTex(BinaryReaderEx br, PsxPtr ptr, VisNodeFlags flags) => Read(br, ptr, flags);
 
         int mode = 0;
 
-
+        /// <summary>
+        /// Rebuilds final montage result of the hi lod texture. Never appears as an instance in the actual game.
+        /// </summary>
+        /// <param name="vram"></param>
+        /// <param name="qb"></param>
+        /// <returns>Bitmap instance.</returns>
         public Bitmap GetHiBitmap(Tim vram, QuadBlock qb)
         {
-            if (hi.Count == 0)
-                return null;
+            //maybe nothing to process at all?
+            if (hi.Count == 0) return null;
+
+            var sw = new Stopwatch();
+            sw.Start();
 
             int width = 0;
             int height = 0;
 
+            //detect the subdiv mode, 4x4, 4x2 or 4x1 based on quadblock vistree flags
             int numhtex = 4;
             int numvtex = 4;
 
             if (qb.visDataFlags.HasFlag(VisNodeFlags.Subdiv4x1)) numvtex = 1;
             if (qb.visDataFlags.HasFlag(VisNodeFlags.Subdiv4x2)) numvtex = 2;
 
+            //detect the max width and height of a single tile
+            //rest will be upscaled to this value, creating blurry image, thats the drawback
             for (int i = 0; i < numvtex * numhtex; i++)
             {
                 if (hi[i] != null)
@@ -54,62 +63,57 @@ namespace CTRFramework
                 }
             }
 
+            //prepare graphic objects
             var bmp = new Bitmap(width * numhtex, height * numvtex);
             var gr = Graphics.FromImage(bmp);
 
+            //set up GDI rendering params
             gr.SmoothingMode = SmoothingMode.HighQuality;
             gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
             gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            //gr.CompositingMode = CompositingMode.SourceCopy;
             gr.CompositingMode = CompositingMode.SourceOver;
 
             var attributes = new ImageAttributes();
             attributes.SetWrapMode(WrapMode.TileFlipXY);
 
+            //loop through all montageing pieces
             for (int i = 0; i < numvtex * 4; i++)
             {
-                if (hi[i] != null)
+                //a generous null check
+                if (hi[i] == null) continue;
+
+                //get texture
+                var b = vram.GetTexture(hi[i]);
+
+                //detect tranform mode based on UV order
+                var rotatefliptype = hi[i].DetectRotation();
+
+                //convert ctrframework rotatefliptype to GDI rotatefliptype. should optimize this somehow...
+                var proper = System.Drawing.RotateFlipType.RotateNoneFlipNone;
+
+                switch (rotatefliptype)
                 {
-                    var rotatefliptype = hi[i].DetectRotation();
-
-                    var b = vram.GetTexture(hi[i]);
-
-                    var proper = System.Drawing.RotateFlipType.RotateNoneFlipNone;
-
-                    switch (rotatefliptype)
-                    {
-                        case RotateFlipType.None: proper = System.Drawing.RotateFlipType.RotateNoneFlipNone; break;
-                        case RotateFlipType.Rotate90: proper = System.Drawing.RotateFlipType.Rotate90FlipNone; break;
-                        case RotateFlipType.Rotate180: proper = System.Drawing.RotateFlipType.Rotate180FlipNone; break;
-                        case RotateFlipType.Rotate270: proper = System.Drawing.RotateFlipType.Rotate270FlipNone; break;
-                        case RotateFlipType.Flip: proper = System.Drawing.RotateFlipType.RotateNoneFlipY; break;
-                        case RotateFlipType.FlipRotate90: proper = System.Drawing.RotateFlipType.Rotate90FlipY; break;
-                        case RotateFlipType.FlipRotate180: proper = System.Drawing.RotateFlipType.Rotate180FlipY; break;
-                        case RotateFlipType.FlipRotate270: proper = System.Drawing.RotateFlipType.Rotate270FlipY; break;
-                        default: proper = System.Drawing.RotateFlipType.RotateNoneFlipNone; break;
-                    }
-
-                    b.RotateFlip(proper);
-
-                    gr.DrawImage(b, new Rectangle((i % 4) * width, (i / 4) * height, width, height), 0, 0, b.Width, b.Height, GraphicsUnit.Pixel, attributes);
-                    //gr.DrawString($"{rotatefliptype}", font, Brushes.Yellow, (i % 4) * width + 1, (i / 4) * height + 1);
+                    case RotateFlipType.None: proper = System.Drawing.RotateFlipType.RotateNoneFlipNone; break;
+                    case RotateFlipType.Rotate90: proper = System.Drawing.RotateFlipType.Rotate90FlipNone; break;
+                    case RotateFlipType.Rotate180: proper = System.Drawing.RotateFlipType.Rotate180FlipNone; break;
+                    case RotateFlipType.Rotate270: proper = System.Drawing.RotateFlipType.Rotate270FlipNone; break;
+                    case RotateFlipType.Flip: proper = System.Drawing.RotateFlipType.RotateNoneFlipY; break;
+                    case RotateFlipType.FlipRotate90: proper = System.Drawing.RotateFlipType.Rotate90FlipY; break;
+                    case RotateFlipType.FlipRotate180: proper = System.Drawing.RotateFlipType.Rotate180FlipY; break;
+                    case RotateFlipType.FlipRotate270: proper = System.Drawing.RotateFlipType.Rotate270FlipY; break;
+                    default: proper = System.Drawing.RotateFlipType.RotateNoneFlipNone; break;
                 }
+
+                //perform flip/rotate of the original bitmap
+                b.RotateFlip(proper);
+
+                //draw transformed bitmap on the final canvas
+                gr.DrawImage(b, new Rectangle((i % 4) * width, (i / 4) * height, width, height), 0, 0, b.Width, b.Height, GraphicsUnit.Pixel, attributes);
             }
 
-            /*
-            //gr.CompositingMode = CompositingMode.SourceOver;
-            for (int i = 0; i < numvtex * 4; i++)
-            {
-                if (hi[i] != null)
-                {
-                    if (hi[i].uv[0].X == hi[i].min.X && hi[i].uv[0].Y == hi[i].min.Y)
-                        mode = 1;
+            sw.Stop();
 
-                    //gr.DrawString($"{mode}", font, Brushes.Yellow, (i % 4) * width + 1, (i / 4) * height + 1);
-                    mode = 0;
-                }
-            }
-            */
+            Helpers.Panic(this, PanicType.Info, $"texture done in: {sw.Elapsed.TotalMilliseconds}ms");
 
             return bmp;
         }
@@ -162,20 +166,19 @@ namespace CTRFramework
 
                 Helpers.Panic(this, PanicType.Debug, "hiptr: " + ptrHi.ToString("X8"));
 
-                if (CtrScene.ReadHiTex)
-                    //loosely assume we got a valid pointer
-                    if (ptrHi > 0x30000 && ptrHi < 0xB0000)
-                    {
-                        br.Jump(ptrHi);
+                //loosely assume we got a valid pointer
+                if (ptrHi > 0x30000 && ptrHi < 0xB0000)
+                {
+                    br.Jump(ptrHi);
 
-                        int toread = 16;
+                    int toread = 16;
 
-                        if (flags.HasFlag(VisNodeFlags.Subdiv4x2)) toread = 8;
-                        if (flags.HasFlag(VisNodeFlags.Subdiv4x1)) toread = 4;
+                    if (flags.HasFlag(VisNodeFlags.Subdiv4x2)) toread = 8;
+                    if (flags.HasFlag(VisNodeFlags.Subdiv4x1)) toread = 4;
 
-                        for (int i = 0; i < toread; i++)
-                            hi.Add(TextureLayout.FromReader(br));
-                    }
+                    for (int i = 0; i < toread; i++)
+                        hi.Add(TextureLayout.FromReader(br));
+                }
             }
         }
     }

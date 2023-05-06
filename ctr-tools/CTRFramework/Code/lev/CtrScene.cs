@@ -461,6 +461,7 @@ namespace CTRFramework
             //not implemented, should return subdivided mesh. not sure if needed.
             //if (flags.HasFlag(ExportFlags.MeshHigh)) ExportMesh(path, Detail.High);
             if (flags.HasFlag(ExportFlags.TexHigh)) ExportTextures(path, Detail.High);
+            if (flags.HasFlag(ExportFlags.TexMontage)) ExportTextures(path, Detail.Montage);
 
             Helpers.Panic(this, PanicType.Info, "High mesh: done.");
 
@@ -493,6 +494,7 @@ namespace CTRFramework
             ExportTextures(Helpers.PathCombine(path, "texLow"), Detail.Low);
             ExportTextures(Helpers.PathCombine(path, "texHigh"), Detail.High);
             ExportTextures(Helpers.PathCombine(path, "texModels"), Detail.Models);
+            ExportTextures(Helpers.PathCombine(path, "texMontage"), Detail.Montage);
         }
 
         /// <summary>
@@ -502,29 +504,37 @@ namespace CTRFramework
         /// <param name="lod"></param>
         public void ExportTextures(string path, Detail lod)
         {
+            //check if vram is present
             if (ctrvram is null)
             {
                 Helpers.Panic(this, PanicType.Info, "Can't export textures as no vram found.\r\nMake sure VRM file is in the same folder.");
                 return;
             }
 
-            if (enviroMap != null)
-            {
-                string p = Helpers.PathCombine(path, "enviroMap.png");
-                ctrvram.GetTexture(enviroMap).Save(p);
-            }
+            Helpers.Panic(this, PanicType.Info, $"Exporting textures... lod: {lod}");
 
-            Helpers.Panic(this, PanicType.Debug, ctrvram.ToString());
+            Helpers.Panic(this, PanicType.Debug, $"vram: {ctrvram}");
 
-            Helpers.Panic(this, PanicType.Info, "Exporting textures...");
-
+            //check lod path existence
             path = Helpers.PathCombine(path, $"tex{lod}");
             Helpers.CheckFolder(path);
 
-            foreach (var tl in GetTexturesList(lod).Values)
-                ctrvram.GetTexture(tl, path)?.Save(Helpers.PathCombine(path, $"{tl.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
+            //export current lod textures
+            foreach (var layout in GetTexturesList(lod).Values)
+                ctrvram.GetTexture(layout, path)?.Save(Helpers.PathCombine(path, $"{layout.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
 
-            if (lod == Detail.High)
+            //special case for tageing textures
+            if (lod == Detail.Montage)
+            {
+                //maybe enviromap is present? put it here just so it doesnt get exported 5 times
+                if (enviroMap != null)
+                {
+                    string p = Helpers.PathCombine(path, "enviroMap.png");
+                    ctrvram.GetTexture(enviroMap).Save(p);
+                }
+
+                var check = new List<string>();
+
                 foreach (var quad in quads)
                     foreach (var tex in quad.tex)
                     {
@@ -536,16 +546,20 @@ namespace CTRFramework
 
                         try
                         {
-                            string file = Helpers.PathCombine(path, $"{tex.lod2.Tag}.png");
-                            if (!File.Exists(file))
+                            //little cache here to only export montage once and speed up export time
+                            if (!check.Contains(tex.lod2.Tag))
+                            {
+                                check.Add(tex.lod2.Tag);
+                                string file = Helpers.PathCombine(path, $"{tex.lod2.Tag}.png");
                                 tex.GetHiBitmap(ctrvram, quad)?.Save(file, System.Drawing.Imaging.ImageFormat.Png);
+                            }
                         }
                         catch (Exception ex)
                         {
-                            Helpers.Panic(this, PanicType.Error, $"oh no: {ex.Message}");
-                            //Console.ReadKey();
+                            Helpers.Panic(this, PanicType.Error, $"oh no, montage failed for quad id {quad.id}: {ex.Message}");
                         }
                     }
+            }
 
             Helpers.Panic(this, PanicType.Info, "Textures done.");
         }
@@ -583,7 +597,7 @@ namespace CTRFramework
                 midunkstats[quad.midunk]++;
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.AppendLine($"sceneflags: {header.sceneFlags}");
             sb.AppendLine($"{header.ptrSkybox}");

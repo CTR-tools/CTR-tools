@@ -57,13 +57,15 @@ namespace ctrviewer.Engine.Input
                 if (GamePad.GetState(i).IsConnected)
                 {
                     GamePadIndex = i;
-                    break;
+                    Reset();
+                    return;
                 }
         }
 
         public static bool IsPressed(Buttons button) => newState.IsButtonDown(button) && !oldState.IsButtonDown(button);
+        public static bool IsPressed(SonyButtons button) => IsPressed((Buttons)button);
         public static bool IsDown(Buttons button) => newState.IsButtonDown(button);
-
+        public static bool IsDown(SonyButtons button) => IsDown((Buttons)button);
         public static bool AreAllDown(params Buttons[] buttons)
         {
             foreach (var button in buttons)
