@@ -48,7 +48,7 @@
 		"41b4524491b6900cc0ef8c889218a78a": { "list": "HOWL_PALDEMO2", "comment": "PAL PS Magazine demo"  },
 		"3d5e358c2750f0b318a9f23676d15782": { "list": "HOWL", "comment": "PAL release"  },
 
-		"1d19471aec9bd7e0045c7758a58cdd55": { "list": "HOWL_JAP", "comment": "NTSC-J standalone extended demo"  },
-		"aeab71ba44ab09c2da4d45dc5467d719": { "list": "HOWL_JAP",  "comment": "NTSC-J release"  }
+		"1d19471aec9bd7e0045c7758a58cdd55": { "list": "HOWL_JPN", "comment": "NTSC-J standalone extended demo"  },
+		"aeab71ba44ab09c2da4d45dc5467d719": { "list": "HOWL_JPN",  "comment": "NTSC-J release"  }
 	}
 }

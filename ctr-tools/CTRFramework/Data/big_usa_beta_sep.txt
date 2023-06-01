@@ -288,14 +288,14 @@
 
 #242-244 - unknown empty slots
 
-# ==========245 = MAIN MENU/JAP FONT SECTION===============
+# ==========245 = MAIN MENU/JPN FONT SECTION===============
 
 245=levels\menu_models\data.vrm
 246=levels\menu_models\data.lev
 247=levels\adv_player_select\data.vrm
 248=levels\adv_player_select\data.lev
-249=packs\japfont.vrm
-250=packs\japfont.mpk
+249=packs\jpnfont.vrm
+250=packs\jpnfont.mpk
 
 # =================251 = OVERLAYS SECTION===================
 
@@ -641,12 +641,12 @@
 
 # ========537 = LOADING SCREENS SECTION===============
 
-537=screen\title01_jap.tim
+537=screen\title01_jpn.tim
 538=screen\title01_pal.tim
 539=screen\title01_usa.tim
 540=screen\title02_usa.tim
 541=screen\title02_pal.tim
-542=screen\title02_jap.tim
+542=screen\title02_jpn.tim
 
 # ===========543 = CUTSCENES SECTION=================
 

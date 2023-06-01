@@ -5,18 +5,26 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class Nav : IReadWrite
+    public enum Difficulty
+    {
+        Easy = 0,
+        Medium = 1,
+        Hard = 2
+    }
+
+    //a collection of 3 navpaths for each difficulty level
+    public class NavData : IReadWrite
     {
         public List<uint> ptrs = new List<uint>();
-        public List<BotPath> paths = new List<BotPath>();
+        public List<NavPath> paths = new List<NavPath>();
 
-        public Nav()
+        public NavData()
         {
         }
 
-        public Nav(BinaryReaderEx br) => Read(br);
+        public NavData(BinaryReaderEx br) => Read(br);
 
-        public static Nav FromReader(BinaryReaderEx br) => new Nav(br);
+        public static NavData FromReader(BinaryReaderEx br) => new NavData(br);
 
         public void Read(BinaryReaderEx br)
         {
@@ -27,7 +35,7 @@ namespace CTRFramework
                 if (ptrs[i] != 0)
                 {
                     br.Jump(ptrs[i]);
-                    paths.Add(new BotPath(br));
+                    paths.Add(NavPath.FromReader(br));
                 }
             }
         }
@@ -46,25 +54,25 @@ namespace CTRFramework
 
         public string ToObj(ref int startindex)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             startindex += 1;
 
             if (ptrs[0] != 0)
             {
-                sb.AppendLine("o BotPathEasy");
+                sb.AppendLine("o BotPath_Easy");
                 sb.AppendLine(paths[0].ToObj(ref startindex));
             }
 
             if (ptrs[1] != 0)
             {
-                sb.AppendLine("o BotPathMedium");
+                sb.AppendLine("o BotPath_Medium");
                 sb.AppendLine(paths[1].ToObj(ref startindex));
             }
 
             if (ptrs[2] != 0)
             {
-                sb.AppendLine("o BotPathHard");
+                sb.AppendLine("o BotPath_Hard");
                 sb.AppendLine(paths[2].ToObj(ref startindex));
             }
 
@@ -73,12 +81,12 @@ namespace CTRFramework
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (uint u in ptrs)
                 sb.AppendLine(u.ToString("X8"));
 
-            foreach (BotPath p in paths)
+            foreach (NavPath p in paths)
                 sb.AppendLine(p.ToString());
 
             return sb.ToString();

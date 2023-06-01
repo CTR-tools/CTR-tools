@@ -31,7 +31,7 @@
 30=boss_oxide
 31=adventure
 32=mainmenu
-33=mainmenu_jap
+33=mainmenu_jpn
 34=intro
 35=cutscenes
 36=cutscenes_oxide1

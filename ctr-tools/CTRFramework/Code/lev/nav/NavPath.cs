@@ -5,23 +5,23 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class BotPath : IReadWrite
+    //a list of navframes
+    public class NavPath : IReadWrite
     {
         public ushort version;
-        public ushort numFrames => (ushort)Frames.Count;
+        public ushort NumFrames => (ushort)Frames.Count;
         public byte[] data;
         public NavFrame start;
 
         public List<NavFrame> Frames = new List<NavFrame>();
 
-        public BotPath()
+        public NavPath()
         {
         }
 
-        public BotPath(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public static NavPath FromReader(BinaryReaderEx br) => new NavPath(br);
+
+        public NavPath(BinaryReaderEx br) => Read(br);
 
         public void Read(BinaryReaderEx br)
         {
@@ -52,7 +52,7 @@ namespace CTRFramework
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write(version);
-            bw.Write(numFrames);
+            bw.Write(NumFrames);
 
             switch (version)
             {
@@ -74,7 +74,7 @@ namespace CTRFramework
 
         public string ToObj(ref int startindex)
         {
-            if (numFrames == 0)
+            if (NumFrames == 0)
                 return "";
 
             StringBuilder sb = new StringBuilder();
@@ -84,12 +84,12 @@ namespace CTRFramework
 
             sb.Append("\r\nl ");
 
-            for (int i = 0; i < numFrames; i++)
+            for (int i = 0; i < NumFrames; i++)
                 sb.Append($"{startindex + i} ");
 
             sb.AppendLine($"{startindex}");
 
-            startindex += numFrames;
+            startindex += NumFrames;
 
             return sb.ToString();
         }
@@ -98,7 +98,7 @@ namespace CTRFramework
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine("frames = " + numFrames);
+            sb.AppendLine("frames = " + NumFrames);
 
             sb.AppendLine("start: " + start.ToString());
 

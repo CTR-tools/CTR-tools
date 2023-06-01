@@ -5,12 +5,17 @@ namespace CTRFramework.Shared
 {
     public class RespawnPoint : IReadWrite
     {
+        public static readonly int SizeOf = 0x0C;
+
         public Pose Pose { get; set; } = Pose.Zero;
         public short DistanceToFinish;
+
+        // likely FF is "no link"
         public byte next;
-        public byte FFunk; //usually FF, 
+        public byte left;
         public byte prev;
-        public byte FFunk2;
+        public byte right;
+
 
         public RespawnPoint Prev;
         public RespawnPoint Next;
@@ -28,9 +33,9 @@ namespace CTRFramework.Shared
             Pose.Position = br.ReadVector3s(1 / 100f);
             DistanceToFinish = br.ReadInt16();
             next = br.ReadByte();
-            FFunk = br.ReadByte();
+            left = br.ReadByte();
             prev = br.ReadByte();
-            FFunk2 = br.ReadByte();
+            right = br.ReadByte();
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
@@ -38,9 +43,9 @@ namespace CTRFramework.Shared
             bw.WriteVector3s(Pose.Position, 1 / 100f);
             bw.Write(DistanceToFinish);
             bw.Write(next);
-            bw.Write(FFunk);
+            bw.Write(left);
             bw.Write(prev);
-            bw.Write(FFunk2);
+            bw.Write(right);
         }
 
         public override string ToString() => $"{Pose} index: {prev} linked: {next}";

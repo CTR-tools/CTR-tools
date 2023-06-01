@@ -485,7 +485,7 @@
 		<short key="36" title="BassDrum"/>
 		<short key="55" title="Tambourine"/>
 	</song>
-	<song title="jap_main_menu">
+	<song title="jpn_main_menu">
 		<long channel="1" midi="33" pitch="-12" title="Electric Bass"/>
 		<long channel="1" midi="33" pitch="-12" title="Lead 8"/>
 		<long channel="1" midi="33" pitch="-12" title="Jazz Guitar"/>

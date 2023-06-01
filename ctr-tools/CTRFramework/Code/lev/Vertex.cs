@@ -32,10 +32,7 @@ namespace CTRFramework
         {
         }
 
-        public Vertex(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public Vertex(BinaryReaderEx br) => Read(br);
 
         public void SetColor(Vector4b col, Vcolor mode)
         {
@@ -64,10 +61,19 @@ namespace CTRFramework
 
         public string ToObj(float scale = 1.0f)
         {
-            return $"v\t{(Position.X * scale).ToString("0.#####")} {(Position.Y * scale).ToString("0.#####")} {(Position.Z * scale).ToString("0.#####")}\t{(Color.X / 255f).ToString("0.###")} {(Color.Y / 255f).ToString("0.###")} {(Color.Z / 255f).ToString("0.###")}";
+            var x = (Position.X * scale).ToString("0.#####");
+            var y = (Position.Y * scale).ToString("0.#####");
+            var z = (Position.Z * scale).ToString("0.#####");
+
+            var r = (Color.X / 255f).ToString("0.###");
+            var g = (Color.Y / 255f).ToString("0.###");
+            var b = (Color.Z / 255f).ToString("0.###");
+
+            return $"v\t{x} {y} {z}\t{r} {g} {b}";
         }
     }
 
+    //this vertex is used in SkyBox
     public class VertexShort : Vertex
     {
         public VertexShort(BinaryReaderEx br) : base(br)

@@ -89,10 +89,10 @@ namespace bash_dat
                 case "0f35ba94f0ce49b0e6fe8e2012e5f1b4": ptr = 0x34F40; num = 0x276; version = "Spyro 3 PAL Demo"; break;
                 case "db497990f79454bcbd41a770df3692ef": ptr = 0x35238; num = 0x276; version = "Euro Demo xx?"; break;
                 case "b9a576bc33399addb51779c1e2e2bc42": ptr = 0x35850; num = 0x2A6; version = "Sep 14, preview prototype"; break;
-                case "e830b0f1b91c1edeef42a60d3160b752": ptr = 0x3E97c; num = 0x3D2; version = "JAP Trial"; break;
+                case "e830b0f1b91c1edeef42a60d3160b752": ptr = 0x3E97c; num = 0x3D2; version = "JPN Trial"; break;
                 case "f620ac01cd60c55ab0e981104f2b6c48": ptr = 0x3E910; num = 0x3E0; version = "NTSC Release"; break;
                 case "ce7e3fe1bf226cc8dd195e025725fdd1": ptr = 0x3F988; num = 0x4D9; version = "Oct 9 PAL prototype"; break;
-                case "e9ad2756fe43d11e3d93af05acafef71": ptr = 0x3EE30; num = 0x4DD; version = "JAP Release"; break;
+                case "e9ad2756fe43d11e3d93af05acafef71": ptr = 0x3EE30; num = 0x4DD; version = "JPN Release"; break;
                 case "e71360b5c119f87d88acd9964ac56c21": ptr = 0x3F264; num = 0x545; version = "PAL Release"; break;
 
                 default: Console.WriteLine($"Unknown file: {exe_md5}"); return;

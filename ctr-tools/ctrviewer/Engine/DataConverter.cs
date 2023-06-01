@@ -88,7 +88,7 @@ namespace ctrviewer.Engine
             return coll;
         }
 
-        public static SimpleAnimation ToSimpleAnimation(BotPath path)
+        public static SimpleAnimation ToSimpleAnimation(NavPath path)
         {
             var anim = new SimpleAnimation();
             anim.Clear();

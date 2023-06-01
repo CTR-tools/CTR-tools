@@ -1,11 +1,7 @@
-﻿using CTRFramework.Shared;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct2D1.Effects;
-using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ctrviewer.Engine.Render
 {

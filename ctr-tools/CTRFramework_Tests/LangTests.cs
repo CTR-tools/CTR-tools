@@ -12,14 +12,14 @@ namespace CTRFramework_Tests
     {
         List<string> testlist = new List<string>();
         int numStrings = 0;
-        Random random = new Random();
+
         string filenameLng = Helpers.PathCombine(Meta.BasePath, "test.lng");
         string filenameText = Helpers.PathCombine(Meta.BasePath, "test.txt");
 
         private void GenerateTestData()
         {
             string teststring = "test";
-            numStrings = random.Next(300) + 50;
+            numStrings = Helpers.Random.Next(300) + 50;
 
             for (int i = 0; i < numStrings; i++)
             {

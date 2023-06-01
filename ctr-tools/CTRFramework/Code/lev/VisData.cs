@@ -19,6 +19,18 @@ namespace CTRFramework
         All = -1
     }
 
+    //almost like one of those was intended to be "animated", but was dropped along the way
+    //unk2 or unk5 -> arena tiny face banners,
+    //turbos and waterfall in caves
+    //waterfall, signs, arch? in blizzard
+    //waterfall in cove
+    //waterfalls and turbos in labs
+    //waterfall in canyon
+    //upper and lower parts of walls, gears in mines
+    //most animated stuff in oxide
+    //papu waterfalls
+
+
     public class VisNode : IReadWrite
     {
         public static readonly int SizeOf = 0x20;

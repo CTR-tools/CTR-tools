@@ -9,7 +9,6 @@ namespace CTRFramework_Tests
     [TestClass]
     public class PsxPtrTests
     {
-        Random random = new Random();
         List<PsxPtr> initial = new List<PsxPtr>();
         List<PsxPtr> verify = new List<PsxPtr>();
         string filenameTest = Helpers.PathCombine(Meta.BasePath, "psxptrtest.bin");
@@ -20,7 +19,7 @@ namespace CTRFramework_Tests
 
             for (int i = 0; i < 4; i++)
             {
-                PsxPtr ptr = new PsxPtr((uint)random.Next(600000));
+                PsxPtr ptr = new PsxPtr((uint)Helpers.Random.Next(600000));
                 ptr.ExtraBits = (HiddenBits)i;
 
                 initial.Add(ptr);

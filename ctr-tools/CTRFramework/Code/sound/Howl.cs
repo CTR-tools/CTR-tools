@@ -91,7 +91,7 @@ namespace CTRFramework.Sound
 
             foreach (XmlElement el in doc.SelectNodes("/data/howl/entry"))
             {
-                if (md5.ToLower() != el["md5"].InnerText.ToLower()) continue;
+                if (md5.ToUpper() != el["md5"].InnerText.ToUpper()) continue;
 
                 Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.");
 

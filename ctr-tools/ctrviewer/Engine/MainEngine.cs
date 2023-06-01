@@ -1,4 +1,5 @@
-﻿using CTRFramework.Shared;
+﻿using CTRFramework.Lang;
+using CTRFramework.Shared;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,10 +20,10 @@ namespace ctrviewer.Engine
     public class UserContext
     {
         //user display size
-        public Vector2 DisplaySize;
+        public Vector2 DisplaySize = new Vector2(1280, 720);
 
         //selected buffer size
-        public Vector2 BufferSize;
+        public Vector2 BufferSize = new Vector2(1280, 720);
     }
 
     public partial class MainEngine : IDisposable
@@ -89,11 +90,13 @@ namespace ctrviewer.Engine
             GameConsole.Write($"Screenshot saved: {screenshotPath}");
         }
 
-
-        public void CreateScreenBuffer()
+        public void CreateScreenBuffer(int width = 0, int height = 0)
         {
             if (screenBuffer != null)
                 screenBuffer.Dispose();
+
+            if (width > 0) userContext.BufferSize.X = width;
+            if (height > 0) userContext.BufferSize.Y = height;
 
             screenBuffer = new RenderTarget2D(
                 game.GraphicsDevice,

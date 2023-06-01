@@ -49,8 +49,8 @@ namespace CTRFramework
             int numhtex = 4;
             int numvtex = 4;
 
-            if (qb.visDataFlags.HasFlag(VisNodeFlags.Subdiv4x1)) numvtex = 1;
-            if (qb.visDataFlags.HasFlag(VisNodeFlags.Subdiv4x2)) numvtex = 2;
+            if (qb.visNodeFlags.HasFlag(VisNodeFlags.Subdiv4x1)) numvtex = 1;
+            if (qb.visNodeFlags.HasFlag(VisNodeFlags.Subdiv4x2)) numvtex = 2;
 
             //detect the max width and height of a single tile
             //rest will be upscaled to this value, creating blurry image, thats the drawback
@@ -126,29 +126,36 @@ namespace CTRFramework
 
             Helpers.PanicIf(ptr.ExtraBits == HiddenBits.Bit1, this, PanicType.Assume, "!!! ctrtex ptr got extra bits");
 
-            //this apparently defines animated texture, really
+            //this hidden bit defines whether it's animated or not
             if (ptr.ExtraBits == HiddenBits.Bit0)
             {
                 isAnimated = true;
 
+                //this is pointer to group3
                 uint texpos = br.ReadUInt32();
+
                 int numFrames = br.ReadInt16();
-                int whatsthat = br.ReadInt16();
+                int whatsthat = br.ReadInt16(); //maybe current frame at runtime? maybe also offline for a shift?
 
-                Helpers.PanicIf(whatsthat != 0, this, PanicType.Assume, $"whatsthat is not null! {whatsthat}");
-                Helpers.PanicIf(br.ReadUInt32() != 0, this, PanicType.Assume, "not 0!");
-
+                //array of pointers to each frame texlayout
                 uint[] ptrs = br.ReadArrayUInt32(numFrames);
 
+                //reading stuff
                 foreach (uint ptrAnimFrame in ptrs)
                 {
                     br.Jump(ptrAnimFrame);
+
+                    animframes.Add(TextureLayout.FromReader(br));
+                    animframes.Add(TextureLayout.FromReader(br));
+                    animframes.Add(TextureLayout.FromReader(br));
                     animframes.Add(TextureLayout.FromReader(br));
                 }
 
+                //now jump to group3
                 br.Jump(texpos);
             }
 
+            //Read group3
             lod0 = TextureLayout.FromReader(br);
             lod1 = TextureLayout.FromReader(br);
             lod2 = TextureLayout.FromReader(br);

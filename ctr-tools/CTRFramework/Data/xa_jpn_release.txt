@@ -411,7 +411,7 @@
 358=pspbt01	#Pinstripe pre boss battle
 359=pspbt02	#Pinstripe post boss battle
 
-# i assume these are unused UI lines, moved to the end? or some extra jap lines?
+# i assume these are unused UI lines, moved to the end? or some extra jpn lines?
 
 360=cxspk01
 361=cxspk02

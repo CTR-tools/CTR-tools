@@ -652,7 +652,7 @@ namespace CTRFramework.Vram
                 Non full-black with STP bit = Semi-transparent color (alpha = 127)
             */
 
-
+            /*
             //blending modes, might not correspond to ctr modes??
             //0: 0.5 x Back +0.5 x Forward
             //1: 1.0 x Back +1.0 x Forward
@@ -664,6 +664,7 @@ namespace CTRFramework.Vram
             //01 = add
             //10 = sub
             //11 = normal render
+            */
 
             /*
                //http://problemkaputt.de/psx-spx.htm
@@ -673,6 +674,14 @@ namespace CTRFramework.Vram
                 15    Semi Transparency Flag    ;/(*) or Non-Transparent for opaque commands
              */
 
+            /*
+            if (stp == 1)
+                a = 127;
+
+            if (stp == 0 & r == 0 & g == 0 & b == 0)
+                a = 0;
+            */
+            
             if (stp == 0)
             {
                 a = (byte)((col == 0) ? 0 : 255);
@@ -686,6 +695,7 @@ namespace CTRFramework.Vram
                         a = 254; //silly but works. this is to avoid alpha sorting problems. should be properly rewritten via shaders.
                 }
             }
+            
 
             return Color.FromArgb(a, r, g, b);
         }

@@ -256,14 +256,14 @@
 213=levels\adventure\citadel_city\data.lev
 214=levels\adventure\citadel_city\data.ptr
 
-# ==========215 = MAIN MENU/JAP FONT SECTION===============
+# ==========215 = MAIN MENU/JPN FONT SECTION===============
 
 215=levels\menu_models\data.vrm
 216=levels\menu_models\data.lev
 217=levels\adv_player_select\data.vrm
 218=levels\adv_player_select\data.lev
-219=packs\japfont.vrm
-220=packs\japfont.mpk
+219=packs\jpnfont.vrm
+220=packs\jpnfont.mpk
 
 # ==========221 = OVERLAYS SECTION===============
 
@@ -609,12 +609,12 @@
 
 # ========507 = LOADING SCREENS SECTION===============
 
-507=screen\title01_jap.tim
+507=screen\title01_jpn.tim
 508=screen\title01_pal.tim
 509=screen\title01_usa.tim
 510=screen\title02_usa.tim
 511=screen\title02_pal.tim
-512=screen\title02_jap.tim
+512=screen\title02_jpn.tim
 
 # ===========513 = CUTSCENES SECTION=================
 

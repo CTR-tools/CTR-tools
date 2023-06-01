@@ -92,7 +92,7 @@ namespace CTRFramework
         public ushort unkAfterStars;    //0x184 - ever not null?
         public ushort waterLevel;       //0x186 - defines split height for reflections
 
-        public PsxPtr ptrAiNav;         //0x188 - pointer to bot path data
+        public PsxPtr ptrNavData;       //0x188 - pointer to bot path data
 
         byte[] skip3;                   //0x18C - 36 bytes
 
@@ -193,7 +193,7 @@ namespace CTRFramework
             unkAfterStars = br.ReadUInt16();
             waterLevel = br.ReadUInt16();
 
-            ptrAiNav = PsxPtr.FromReader(br);
+            ptrNavData = PsxPtr.FromReader(br);
 
             skip3 = br.ReadBytes(0x24);
 
@@ -308,7 +308,7 @@ namespace CTRFramework
             bw.Write(unkAfterStars);
             bw.Write(waterLevel);
 
-            ptrAiNav.Write(bw, patchTable);
+            ptrNavData.Write(bw, patchTable);
 
             bw.Write(skip3);
 

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using CTRFramework.Shared;
 
 namespace ctrviewer.Loaders
 {
@@ -24,20 +25,24 @@ namespace ctrviewer.Loaders
 
         public void ImportAssimpData(Scene scene)
         {
-            Random random = new Random();
-
             var monolist = new List<VertexPositionColorTexture>();
 
             //if (!scene.HasMeshes)
             //    return;
 
-            Trilists.Add("test", new TriList());
+            Trilists.Add("test", new TriList() { type = TriListType.Basic } );
 
-            List<Vector2> uv = new List<Vector2>();
+            Trilists["test"].textureName = "test";
+            Trilists["test"].textureEnabled = true;
+
+
+            var uv = new List<Vector2>();
             uv.Add(new Vector2(0, 0));
             uv.Add(new Vector2(0, 1));
             uv.Add(new Vector2(1, 0));
             uv.Add(new Vector2(1, 1));
+
+            
 
             foreach (var mesh in scene.Meshes)
             {
@@ -45,14 +50,14 @@ namespace ctrviewer.Loaders
                 {
                     monolist.Clear();
 
-                    int val = random.Next(128 - 32) + 32 * 2;
+                    int val = Helpers.Random.Next(128 - 32) + 32 * 2;
 
                     foreach (var i in face.Indices)
                     {
                         monolist.Add(
                             new VertexPositionColorTexture(
                                 Convert(mesh.Vertices[i]),
-                                new Color(val, val, val) * (1.25f - mesh.Vertices[i].Y / 10f),
+                                new Color(val, val, val) * (1f - mesh.Vertices[i].Y / 40f),
                                 new Vector2(0, 0)
                                 )
                             );
@@ -64,16 +69,15 @@ namespace ctrviewer.Loaders
 
                     switch (face.IndexCount)
                     {
-                        case 3: Trilists["test"].PushTri(monolist); break;
-                        case 4: Trilists["test"].PushQuad(monolist); break;
-                        default: GameConsole.Write("Unsupported face count."); break;
+                        case 3: Trilists["test"].PushTri(monolist, true); break;
+                        case 4: Trilists["test"].PushQuad(monolist, true); break;
+                        default: GameConsole.Write($"Unsupported face count: {face.IndexCount}"); break;
                     }
                 }
             }
 
-            Seal();
 
-            Trilists["test"].textureEnabled = true;
+            Seal();
 
             GameConsole.Write($"numverts: {Trilists["test"].numVerts}");
             GameConsole.Write($"numfaces: {Trilists["test"].numFaces}");

@@ -13,10 +13,7 @@ namespace CTRFramework
         {
         }
 
-        public SkyBox(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public SkyBox(BinaryReaderEx br) => Read(br);
 
         public static SkyBox FromReader(BinaryReaderEx br) => new SkyBox(br);
 

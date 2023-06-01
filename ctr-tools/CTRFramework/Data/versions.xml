@@ -223,17 +223,17 @@
 		<entry>
             <region>NTSC-J</region>
             <name>NTSC-J release</name>
-            <banks>banknames_jap.txt</banks>
-            <samples>samplenames_jap.txt</samples>
-            <sequences>HOWL_JAP</sequences>
+            <banks>banknames_jpn.txt</banks>
+            <samples>samplenames_jpn.txt</samples>
+            <sequences>HOWL_JPN</sequences>
             <md5>aeab71ba44ab09c2da4d45dc5467d719</md5>
         </entry>
 		<entry>
 			<region>NTSC-J</region>
 			<name>NTSC-J standalone extended demo</name>
-			<banks>banknames_jap.txt</banks>
-			<samples>samplenames_jap.txt</samples>
-			<sequences>HOWL_JAP</sequences>
+			<banks>banknames_jpn.txt</banks>
+			<samples>samplenames_jpn.txt</samples>
+			<sequences>HOWL_JPN</sequences>
 			<md5>1d19471aec9bd7e0045c7758a58cdd55</md5>
 		</entry>		
     </howl>

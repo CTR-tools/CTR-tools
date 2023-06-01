@@ -106,7 +106,7 @@ namespace CTRFramework.Sound
             if (Entries.Count == 427) list = "xa_usa_beta_sep.txt";
             if (Entries.Count == 414) list = "xa_usa_release.txt";
             if (Entries.Count == 358) list = "xa_pal_release.txt";
-            if (Entries.Count == 364) list = "xa_jap_release.txt";
+            if (Entries.Count == 364) list = "xa_jpn_release.txt";
 
             if (list == "") return;
 

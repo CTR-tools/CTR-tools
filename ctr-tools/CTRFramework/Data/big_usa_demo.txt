@@ -56,7 +56,7 @@
 192=screens\hint_local3.tim
 193=screens\hint_local4.tim
 
-# ==========194 = JAPFONT SECTION===============
+# ==========194 = JPNFONT SECTION===============
 
-194=packs\japfont\data.mpk
-195=packs\japfont\data.vrm
+194=packs\jpnfont.mpk
+195=packs\jpnfont.vrm

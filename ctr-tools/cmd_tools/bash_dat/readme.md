@@ -20,8 +20,8 @@ This tool is able to:
 - NTSC Release
 - Oct 9 PAL prototype
 - PAL Release
-- JAP Trial
-- JAP Release
+- JPN Trial
+- JPN Release
 
 *Important! File names are partially available only for NTSC-U release.*
 

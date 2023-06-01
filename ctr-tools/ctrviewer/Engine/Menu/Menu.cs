@@ -1,4 +1,5 @@
 ﻿using CTRFramework;
+using CTRFramework.Shared;
 using ctrviewer.Engine.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -122,7 +123,7 @@ namespace ctrviewer.Engine.Gui
             {
                 new BoolMenuItem() { Text = Locale.VideoMenu_Windowed, Name = "window", Value = settings.Windowed },
                 new BoolMenuItem() { Text = Locale.VideoMenu_Vsync, Name = "vsync", Value = settings.VerticalSync },
-                new BoolMenuItem() { Text = Locale.VideoMenu_30fps, Name = "fps30", Value = settings.Fps30, Enabled = settings.VerticalSync },
+                //new BoolMenuItem() { Text = Locale.VideoMenu_30fps, Name = "fps30", Value = settings.Fps30, Enabled = settings.VerticalSync },
                 new BoolMenuItem() { Text = Locale.VideoMenu_Antialias, Name = "antialias", Value = settings.AntiAlias },
                 new BoolMenuItem() { Text = Locale.VideoMenu_Filtering, Name = "filter", Value = settings.EnableFiltering },
                 new IntRangeMenuItem() { Text = Locale.VideoMenu_Anisotropy, Name = "aniso", Enabled = settings.EnableFiltering, SelectedValue = settings.AnisotropyLevel, Values = new List<(int, string)>() { (1, "1x"), (2, "2x"), (4, "4x"), (8, "8x"), (16, "16x") } },
@@ -143,6 +144,7 @@ namespace ctrviewer.Engine.Gui
                 new MenuItem("Battle arenas", "link", "battle_arenas", true),
                 new MenuItem("Adventure", "link", "adventure", true),
                 new MenuItem("Cutscenes", "link", "cutscenes", true),
+                new MenuItem("Custom levels", "link", "custom_levels", true),
                 new MenuItem(Locale.MenuGeneric_Back, "link", "main", true)
             });
 
@@ -154,6 +156,7 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem((int)LevelType.LodRelic) { Text = "relic race", Name = LevelType.LodRelic.ToString() },
                 new MenuItem(Locale.MenuGeneric_Back, "link", "cupmenu", true)
             });
+
 
             menus.Add("cup_wumpa", new List<MenuItem>()
             {
@@ -190,6 +193,12 @@ namespace ctrviewer.Engine.Gui
                 new IntMenuItem((int)Level.SlideColiseum * 8) { Text = "Slide Coliseum", Name = Level.SlideColiseum.ToString() },
                 new MenuItem(Locale.MenuGeneric_Back, "link", "cupmenu", true)
             });
+
+            menus.Add("custom_levels", new List<MenuItem>()
+            {
+                new MenuItem(Locale.MenuGeneric_Back, "link", "cupmenu", true)
+            });
+
 
             menus.Add("cutscenes", new List<MenuItem>()
             {
@@ -256,13 +265,12 @@ namespace ctrviewer.Engine.Gui
                 new MenuItem(Locale.MainMenu_VideoOptions, "link", "video", true),
                 new MenuItem(Locale.MainMenu_GeneralOptions, "link", "general", true),
                 new BoolMenuItem() { Text = Locale.MainMenu_KartMode, Name = "kart", Value = settings.KartMode },
-                new MenuItem("Prev QuadBlock", "prevblock", "", true),
-                new MenuItem("Next QuadBlock", "nextblock", "", true),
+                //new MenuItem("Prev QuadBlock", "prevblock", "", true),
+                //new MenuItem("Next QuadBlock", "nextblock", "", true),
                 //new MenuItem("Open settings file", "settings", "", true),
                 new MenuItem(Locale.MainMenu_Quit, "exit", "", true),
             });
 
-        
             #endregion
 
             items = menus["main"];
@@ -398,8 +406,8 @@ namespace ctrviewer.Engine.Gui
             //draw framework version
             batch.DrawString(
                 fnt,
-                Game1.version,
-                new Vector2(((graphics.Viewport.Width - fnt.MeasureString(Game1.version).X * graphics.Viewport.Height / 1080f) / 2), graphics.Viewport.Height - 60 * graphics.Viewport.Width / 1080f),
+                Meta.Version,
+                new Vector2(((graphics.Viewport.Width - fnt.MeasureString(Meta.Version).X * graphics.Viewport.Height / 1080f) / 2), graphics.Viewport.Height - 60 * graphics.Viewport.Width / 1080f),
                 Color.Aquamarine,
                 0,
                 new Vector2(0, 0),

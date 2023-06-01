@@ -9,6 +9,7 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 using System.Linq;
+using System.Threading;
 
 namespace CTRFramework
 {
@@ -30,7 +31,7 @@ namespace CTRFramework
         public List<VisNode> visdata = new List<VisNode>();
         public List<VisNode> instvisdata = new List<VisNode>();
         public SkyBox skybox;
-        public Nav nav;
+        public NavData nav;
         public SpawnGroup spawnGroups;
         public TrialData trial;
         public IconPack iconpack;
@@ -150,7 +151,7 @@ namespace CTRFramework
 
             vertanims = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
             skybox = new PtrWrap<SkyBox>(header.ptrSkybox).Get(br);
-            nav = new PtrWrap<Nav>(header.ptrAiNav).Get(br);
+            nav = new PtrWrap<NavData>(header.ptrNavData).Get(br);
             iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
             trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
             enviroMap = new PtrWrap<TextureLayout>(header.ptrEnviroMap).Get(br);
@@ -184,7 +185,7 @@ namespace CTRFramework
                     int z = (int)((node.ptrQuadBlock - mesh.ptrQuadBlocks.ToUInt32()) / 0x5C);
 
                     for (int i = z; i < z + node.numQuadBlock; i++)
-                        quads[i].visDataFlags = node.flag;
+                        quads[i].visNodeFlags = node.flag;
 
                     //if (node.flag.HasFlag(VisDataFlags.Unk4))
                     //   throw new Exception("gotcha!");
@@ -337,13 +338,16 @@ namespace CTRFramework
         private void ExportMesh(string path, Detail lod)
         {
             if (quads.Count == 0)
+            {
+                Helpers.Panic(this, PanicType.Info, "No quads in this scene.");
                 return;
+            }
 
             Helpers.CheckFolder(path);
 
             string fname = $"{name}_{lod.ToString()}";
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.AppendLine("#Converted to OBJ using model_reader, CTR-Tools by DCxDemo*.");
             sb.AppendLine($"#{Meta.Version}");
@@ -356,7 +360,7 @@ namespace CTRFramework
             foreach (var quad in quads)
                 sb.AppendLine(quad.ToObj(verts, lod, ref a, ref b));
 
-            if (header.ptrAiNav != PsxPtr.Zero)
+            if (header.ptrNavData != PsxPtr.Zero)
                 sb.AppendLine(nav.ToObj(ref a));
 
             Helpers.WriteToFile(Helpers.PathCombine(path, $"{fname}.obj"), sb.ToString());
@@ -364,7 +368,7 @@ namespace CTRFramework
             sb.Clear();
 
 
-            Dictionary<string, TextureLayout> tex = GetTexturesList(lod);
+            var tex = GetTexturesList(lod);
 
             string lodpath = Helpers.PathCombine(path, "tex" + lod.ToString());
             Helpers.CheckFolder(lodpath);
@@ -391,23 +395,6 @@ namespace CTRFramework
                     Helpers.Panic(this, PanicType.Warning, $"tl position == 0? {tl.Tag}");
                 }
             }
-
-            /*
-             //generates bunch of labeled textures for each byte value
-            Helpers.CheckFolder(Helpers.PathCombine(path, "midunk"));
-
-            for (int i = 0; i < 256; i++)
-            {
-                sb.AppendLine($"newmtl {i.ToString("X2")}");
-                sb.AppendLine($"map_Kd midunk\\{i.ToString("X2")}.png\r\n");
-
-                Bitmap bmp = new Bitmap(64, 64);
-                Graphics graphics = Graphics.FromImage(bmp);
-                graphics.FillRectangle(Brushes.White, new Rectangle(0, 0, 64, 64));
-                graphics.DrawString(i.ToString("X2"), new Font("Consolas", 24, FontStyle.Bold), Brushes.Black, new Point(0, 0));
-                bmp.Save(Helpers.PathCombine(path, $"midunk\\{i.ToString("X2")}.png"));
-            }
-            */
 
             /*
                 importers will warn about missing texture here
@@ -515,24 +502,44 @@ namespace CTRFramework
 
             Helpers.Panic(this, PanicType.Debug, $"vram: {ctrvram}");
 
-            //this will be overwritten 5 times for each lod call, shoul move somewhere else 
+            //this will be overwritten 5 times for each lod call, should move somewhere else 
             if (enviroMap != null)
             {
                 string p = Helpers.PathCombine(path, "enviroMap.png");
                 ctrvram.GetTexture(enviroMap).Save(p);
             }
 
-            //check lod path existence
-            path = Helpers.PathCombine(path, $"tex{lod}");
-            Helpers.CheckFolder(path);
+            var textures = GetTexturesList(lod).Values;
 
-            //export current lod textures
-            foreach (var layout in GetTexturesList(lod).Values)
-                ctrvram.GetTexture(layout, path)?.Save(Helpers.PathCombine(path, $"{layout.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
+            if (textures.Count > 0)
+            {
+                //check lod path existence
+                path = Helpers.PathCombine(path, $"tex{lod}");
+                Helpers.CheckFolder(path);
+
+                //export current lod textures
+                foreach (var layout in textures)
+                    ctrvram.GetTexture(layout, path)?.Save(Helpers.PathCombine(path, $"{layout.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
+            }
+
+            /*
+            //hardcoded animated
+            Helpers.CheckFolder("animTex");
+
+            foreach (var quad in quads)
+                foreach (var tex in quad.tex)
+                    foreach (var anim in tex.animframes)
+                    {
+                        ctrvram.GetTexture(anim, "animTex")?.Save($"animTex\\{anim.Tag}.png");
+                    }
+            */
 
             //special case for tageing textures
             if (lod == Detail.Montage)
             {
+                path = Helpers.PathCombine(path, $"tex{lod}");
+                Helpers.CheckFolder(path);
+
                 var check = new List<string>();
 
                 foreach (var quad in quads)
@@ -561,7 +568,7 @@ namespace CTRFramework
                     }
             }
 
-            Helpers.Panic(this, PanicType.Info, "Textures done.");
+            Helpers.Panic(this, PanicType.Info, "...requested LoD export done.");
         }
 
         public override string ToString()

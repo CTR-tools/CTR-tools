@@ -50,7 +50,7 @@ namespace CTRFramework
         public long BaseAddress;
 
         //this is copied from bsp tree
-        public VisNodeFlags visDataFlags = VisNodeFlags.None;
+        public VisNodeFlags visNodeFlags = VisNodeFlags.None;
         public List<CtrQuad> MidQuads = new List<CtrQuad>();
 
         /*
@@ -129,10 +129,9 @@ namespace CTRFramework
         {
         }
 
-        public QuadBlock(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public static QuadBlock FromReader(BinaryReaderEx br) => new QuadBlock(br);
+
+        public QuadBlock(BinaryReaderEx br) => Read(br);
 
         public void GenerateCtrQuads(List<Vertex> vertices)
         {
@@ -179,7 +178,7 @@ namespace CTRFramework
 
             quadFlags = (QuadFlags)br.ReadUInt16();
 
-            uint buf = br.ReadUInt32(); //big endian or little??
+            uint buf = br.ReadUInt32();
 
             drawOrderLow = (byte)(buf & 0xFF);
 
@@ -193,6 +192,7 @@ namespace CTRFramework
 
             byte extradata = (byte)(buf >> 28);
 
+            //never happens
             if (extradata > 0 && extradata != 8)
                 Helpers.Panic(this, PanicType.Assume, $"gotcha! blockflags -> {(extradata).ToString("X2")}");
 
@@ -268,7 +268,7 @@ namespace CTRFramework
                 }
 
                 br.Jump(ptr);
-                tex[cntr] = new CtrTex(br, ptr, visDataFlags);
+                tex[cntr] = new CtrTex(br, ptr, visNodeFlags);
 
                 cntr++;
             }
@@ -492,7 +492,7 @@ namespace CTRFramework
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine($"g\t{(visDataFlags.HasFlag(VisNodeFlags.Hidden) ? "invisible" : "visible")}");
+            sb.AppendLine($"g\t{(visNodeFlags.HasFlag(VisNodeFlags.Hidden) ? "invisible" : "visible")}");
             sb.AppendLine($"o\tpiece_{id.ToString("X4")}\r\n");
 
             switch (detail)

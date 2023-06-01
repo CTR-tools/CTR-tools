@@ -246,8 +246,8 @@
 230=levels\menu_models\data.vrm
 231=levels\menu_models\data.lev
 
-232=packs\japfont.vrm
-233=packs\japfont.mpk
+232=packs\jpnfont.vrm
+233=packs\jpnfont.mpk
 
 234=overlays\234_04.bin
 235=overlays\235_05.bin
