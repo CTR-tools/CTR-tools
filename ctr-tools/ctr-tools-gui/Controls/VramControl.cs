@@ -7,6 +7,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using CTRFramework;
+using CTRFramework.Vram;
+using CTRFramework.Models;
 
 namespace CTRTools.Controls
 {
@@ -89,76 +92,30 @@ namespace CTRTools.Controls
             return true;
         }
 
-        //
-        private void ReplaceTextures(Dictionary<string, TextureLayout> textures, Tim vrm)
+        private void ReplaceTextures(Dictionary<string, TextureLayout> layouts, Tim vrm)
         {
             if (!DataExists()) return;
 
-            //dumping vram before the change
-            if (optionDebugVram.Checked)
-                //only dump if file doesn't exist (to compare to earliest version of vram)
-                if (!File.Exists(Helpers.PathCombine(pathFileParent, "test_old.bmp")))
-                    vrm.SaveBMP(Helpers.PathCombine(pathFileParent, "test_old.bmp"), BMPHeader.GrayScalePalette(16));
-
-            foreach (var png in Directory.GetFiles(pathFolder.Text, "*.png"))
+            //create replacer and context
+            var textureReplacer = new TextureReplacer()
             {
-                string tag = Path.GetFileNameWithoutExtension(png);
-
-                Helpers.Panic(vrm, PanicType.Info, $"replacing {tag}... ");
-
-                if (!textures.ContainsKey(tag))
+                Context = new TextureReplacerContext()
                 {
-                    Helpers.Panic(vrm, PanicType.Warning, "unknown texture entry");
-                    continue;
+                    vramPath = pathVram.Text,
+                    newtexPath = pathFolder.Text,
+                    dumpVram = optionDebugVram.Checked,
+                    textures = layouts
                 }
-
-                Tim newtex = vrm.GetTimTexture(textures[tag]);
-                newtex.LoadDataFromBitmap(png);
-
-                vrm.DrawTim(newtex);
-            }
-
-
-            if (optionDebugVram.Checked)
-                vrm.SaveBMP(Helpers.PathCombine(pathFileParent, "test_new.bmp"), BMPHeader.GrayScalePalette(16));
-
-            //now onto saving vram...
-
-            //backup existing file
-            Helpers.BackupFile(pathVram.Text);
-            File.Delete(pathVram.Text);
-
-            var tims = new List<Tim>() {
-                vrm.GetTrueColorTexture(new Rectangle(512, 0, 384, 256)),
-                vrm.GetTrueColorTexture(new Rectangle(512, 256, 512, 256))
             };
 
-            //special case for shared.vrm
-            if (Path.GetFileName(pathVram.Text) == "shared.vrm")
+            var result = textureReplacer.TryReplace();
+
+            switch (result)
             {
-                tims = new List<Tim>() {
-                    vrm.GetTrueColorTexture(new Rectangle(896, 0, 128, 256)),
-                    vrm.GetTrueColorTexture(new Rectangle(0, 216, 512, 48)),
-                    //hardcoded ntsc-u regions, pal has different layout, so should rewrite ctrvram to store frames and reuse them
-                };
+                case TextureReplacerResult.OK: MessageBox.Show("Replace succesful."); break;
+                case TextureReplacerResult.MissingContent: MessageBox.Show("Not enough content provided to replacer."); break;
+                case TextureReplacerResult.GeneralError: MessageBox.Show("Replacement failed."); break;
             }
-
-            //should move this to ctrvram i guess
-            using (var bw = new BinaryWriterEx(File.Create(pathVram.Text)))
-            {
-                bw.Write((int)0x20);
-
-                foreach (var tim in tims)
-                {
-                    bw.Write(tim.Filesize);
-                    tim.Write(bw);
-                }
-
-                bw.Write((int)0);
-            }
-
-            //ctr.GetTrueColorTexture(512, 0, 384, 256).Write(Helpers.PathCombine(Path.GetDirectoryName(pathFolder.Text), "x01.tim"));
-            //ctr.GetTrueColorTexture(512, 256, 512, 256).Write(Helpers.PathCombine(Path.GetDirectoryName(pathFolder.Text), "x02.tim"));
         }
 
         private void actionExtract_Click(object sender, EventArgs e)
@@ -248,12 +205,12 @@ namespace CTRTools.Controls
 
         private void MaybeLoadFile(string path)
         {
-            string ext = Path.GetExtension(path).ToLower();
+            string ext = Path.GetExtension(path);
 
-            switch (ext)
+            switch (ext.ToUpper())
             {
-                case ".lev": mode = FileSourceMode.Lev; break;
-                case ".mpk": mode = FileSourceMode.Mpk; break;
+                case ".LEV": mode = FileSourceMode.Lev; break;
+                case ".MPK": mode = FileSourceMode.Mpk; break;
                 default: MessageBox.Show("Not a supported CTR file."); return;
             }
 
@@ -365,15 +322,15 @@ namespace CTRTools.Controls
 
         private void button2_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
+            var ofd = new OpenFileDialog();
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                Bitmap src = (Bitmap)Bitmap.FromFile(ofd.FileName);
+                var src = (Bitmap)Bitmap.FromFile(ofd.FileName);
                 pictureBox2.Image = src;
 
-                Bitmap dst = new Bitmap(src.Width, src.Height / 2);
+                var dst = new Bitmap(src.Width, src.Height / 2);
 
-                Graphics g = Graphics.FromImage(dst);
+                var g = Graphics.FromImage(dst);
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
                 g.DrawImage(src, new Point(0, 0));
 

@@ -18,11 +18,11 @@ namespace CTRTools.Controls
 
         private void LoadLang(string filename)
         {
-            switch (Path.GetExtension(filename).ToLower())
+            switch (Path.GetExtension(filename).ToUpper())
             {
-                case ".lng":
+                case ".LNG":
                     lng = LNG.FromFile(filename); break;
-                case ".txt":
+                case ".TXT":
                     lng = LNG.FromText(File.ReadAllLines(filename, System.Text.Encoding.Default)); break;
                 default:
                     MessageBox.Show("Unsupported file."); break;

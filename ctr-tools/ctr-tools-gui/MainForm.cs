@@ -58,21 +58,20 @@ namespace CTRTools
 
         public void MaybeSwitchTab(string filename)
         {
-            switch (Path.GetExtension(filename).ToLower())
+            switch (Path.GetExtension(filename).ToUpper())
             {
-                case ".dyn":
-                case ".ctr":
-                case ".obj":
-                case ".ply": tabControl.SelectedTab = tabCtr; break;
-                case ".vrm": tabControl.SelectedTab = tabVram; break;
-                case ".mpk": tabControl.SelectedTab = tabVram; break;
-                case ".big": tabControl.SelectedTab = tabBig; break;
-                case ".xnf": tabControl.SelectedTab = tabXa; break;
-                case ".hwl": tabControl.SelectedTab = tabHowl; break;
-                case ".cseq": tabControl.SelectedTab = tabCseq; break;
-                case ".lng":
-                case ".txt": tabControl.SelectedTab = tabLang; break;
-                case ".lev":
+                case ".CTR":
+                case ".OBJ":
+                case ".PLY": tabControl.SelectedTab = tabCtr; break;
+                case ".VRM": tabControl.SelectedTab = tabVram; break;
+                case ".MPK": tabControl.SelectedTab = tabVram; break;
+                case ".BIG": tabControl.SelectedTab = tabBig; break;
+                case ".XNF": tabControl.SelectedTab = tabXa; break;
+                case ".HWL": tabControl.SelectedTab = tabHowl; break;
+                case ".CSEQ": tabControl.SelectedTab = tabCseq; break;
+                case ".LNG":
+                case ".TXT": tabControl.SelectedTab = tabLang; break;
+                case ".LEV":
                     if (tabControl.SelectedTab != tabVram)
                         tabControl.SelectedTab = tabLev;
                     break;

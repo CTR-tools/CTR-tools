@@ -1,5 +1,6 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
+using CTRFramework.Models;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -32,15 +33,15 @@ namespace CTRTools.Controls
         {
             try
             {
-                CtrModel model = new CtrModel();
+                var model = new CtrModel();
 
-                switch (Path.GetExtension(filename).ToLower())
+                switch (Path.GetExtension(filename).ToUpper())
                 {
-                    case ".obj":
+                    case ".OBJ":
                         OBJ obj = OBJ.FromFile(filename);
                         model = CtrModel.FromObj(obj);
                         break;
-                    case ".ply":
+                    case ".PLY":
                         model = CtrModel.FromPly(filename);
                         break;
                     default:
@@ -63,7 +64,6 @@ namespace CTRTools.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void UpdateUI()
@@ -85,15 +85,14 @@ namespace CTRTools.Controls
 
             foreach (var file in files)
             {
-                switch (Path.GetExtension(file).ToLower())
+                switch (Path.GetExtension(file).ToUpper())
                 {
-                    case ".ctr":
-                    case ".dyn":
+                    case ".CTR":
                         LoadCtr(file);
                         break;
 
-                    case ".obj":
-                    case ".ply":
+                    case ".OBJ":
+                    case ".PLY":
                         LoadModel(file);
                         break;
 

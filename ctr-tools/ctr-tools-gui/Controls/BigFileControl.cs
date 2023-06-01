@@ -3,10 +3,13 @@ using CTRFramework.Big;
 using CTRFramework.Lang;
 using CTRFramework.Shared;
 using CTRFramework.Vram;
+using CTRFramework.Models;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
+using System.Linq;
+using System.Drawing;
 
 namespace CTRTools.Controls
 {
@@ -30,6 +33,7 @@ namespace CTRTools.Controls
         {
             InitializeComponent();
             onReaderUpdated += LoadFromReader;
+            fileTree.NodeMouseClick += (sender, args) => fileTree.SelectedNode = args.Node;
         }
 
         private void LoadBigFull(string path)
@@ -44,11 +48,14 @@ namespace CTRTools.Controls
             bigLoader.RunWorkerAsync(path);
         }
 
+        TreeNode root;
 
         private void LoadFromReader(object sender, EventArgs e)
         {
-            TreeNode tn = new TreeNode("root");
-            tn.Expand();
+            if (root is null)
+                root = new TreeNode("root");
+
+            root.Expand();
 
             Reader.Reset();
 
@@ -59,7 +66,7 @@ namespace CTRTools.Controls
 
                 string[] s = Reader.Filename.Split('\\');
 
-                TreeNode curnode = tn;
+                var curnode = root;
 
                 for (int i = 0; i < s.Length - 1; i++)
                     curnode = GetOrCreateNode(curnode, s[i]);
@@ -67,17 +74,17 @@ namespace CTRTools.Controls
                 TreeNode final = new TreeNode(s[s.Length - 1]);
                 final.Tag = Reader.FileCursor;
 
-                switch (Path.GetExtension(s[s.Length - 1]))
+                switch (Path.GetExtension(s[s.Length - 1]).ToUpper())
                 {
-                    case ".lev": final.ImageIndex = final.SelectedImageIndex = 1; break;
-                    case ".vrm":
-                    case ".tim": final.ImageIndex = final.SelectedImageIndex = 2; break;
-                    case ".ctr": final.ImageIndex = final.SelectedImageIndex = 3; break;
-                    case ".bin": final.ImageIndex = final.SelectedImageIndex = 4; break;
-                    case ".str": final.ImageIndex = final.SelectedImageIndex = 5; break;
-                    case ".mpk": final.ImageIndex = final.SelectedImageIndex = 6; break;
-                    case ".ptr": final.ImageIndex = final.SelectedImageIndex = 7; break;
-                    case ".lng": final.ImageIndex = final.SelectedImageIndex = 8; break;
+                    case ".LEV": final.ImageIndex = final.SelectedImageIndex = 1; break;
+                    case ".VRM":
+                    case ".TIM": final.ImageIndex = final.SelectedImageIndex = 2; break;
+                    case ".CTR": final.ImageIndex = final.SelectedImageIndex = 3; break;
+                    case ".BIN": final.ImageIndex = final.SelectedImageIndex = 4; break;
+                    case ".STR": final.ImageIndex = final.SelectedImageIndex = 5; break;
+                    case ".MPK": final.ImageIndex = final.SelectedImageIndex = 6; break;
+                    case ".PTR": final.ImageIndex = final.SelectedImageIndex = 7; break;
+                    case ".LNG": final.ImageIndex = final.SelectedImageIndex = 8; break;
                     default: final.ImageIndex = final.SelectedImageIndex = 0; break;
                 }
 
@@ -86,11 +93,11 @@ namespace CTRTools.Controls
 
             if (fileTree.InvokeRequired)
             {
-                fileTree.BeginInvoke(new MethodInvoker(delegate { UpdateListBox(tn); }));
+                fileTree.BeginInvoke(new MethodInvoker(delegate { UpdateListBox(root); }));
             }
             else
             {
-                UpdateListBox(tn);
+                UpdateListBox(root);
             }
         }
 
@@ -102,13 +109,49 @@ namespace CTRTools.Controls
             fileTree.EndUpdate();
         }
 
-        private TreeNode GetOrCreateNode(TreeNode tn, string name)
+        private TreeNode GetOrCreateNode(TreeNode parent, string name)
         {
-            foreach (TreeNode n in tn.Nodes)
-                if (n.Text == name) return n;
+            foreach (TreeNode node in parent.Nodes)
+                if (node.Text == name) return node;
 
-            TreeNode child = new TreeNode(name);
-            tn.Nodes.Add(child);
+            var child = new TreeNode(name);
+            parent.Nodes.Add(child);
+
+            //temporary list, should be moved to a text file
+            switch (name)
+            {
+                case "levels":
+                    child.ToolTipText = "Contains most levels in the game, including race tracks, battle arenas,\r\n" +
+                        "adventure hubs, main menu and adventure selection screens.";
+                    break;
+                case "packs":
+                    child.ToolTipText = "Various game data combined into separate packages,\r\n"+
+                        "to be loaded at once in the specific game mode.\r\n" +
+                        "Weapons, crates, kart models, fonts, rewards, etc.";
+                    break;
+                case "overlays":
+                    child.ToolTipText = "Additional game code that can be loaded and unloaded dynamically at runtime.";
+                    break;
+                case "lang":
+                    child.ToolTipText = "Localization files to translate the game on the fly.";
+                    break;
+                case "models":
+                    child.ToolTipText = "Various instanced models, including karts models,\r\n"+
+                        "podium scenes and boss hub custscenes.";
+                    break;
+                case "screen":
+                    child.ToolTipText = "Copyright loading screens used during the initial game loading.";
+                    break;
+                case "cutscenes":
+                    child.ToolTipText = "Intro and outro cutscenes, including Oxide monologues.";
+                    break;
+                case "credits":
+                    child.ToolTipText = "All the credits scenes, a scene per character.";
+                    break;
+                case "thumbs":
+                    child.ToolTipText = "Level preview movies on the level selection screen.";
+                    break;
+            }
 
             return child;
         }
@@ -135,24 +178,15 @@ namespace CTRTools.Controls
             }
         }
 
-        private void actionLoadBig_Click(object sender, EventArgs e)
-        {
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                LoadBigFull(ofd.FileName);
-                expandAll.Text = "Expand";
-            }
-        }
-
         private void BigFileControl_DragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
             if (files.Length > 0)
             {
-                switch (Path.GetExtension(files[0]).ToLower())
+                switch (Path.GetExtension(files[0]).ToUpper())
                 {
-                    case ".big":
+                    case ".BIG":
                         LoadBigFull(files[0]);
                         break;
 
@@ -161,13 +195,6 @@ namespace CTRTools.Controls
                         break;
                 }
             }
-        }
-
-        private void actionExportAll_Click(object sender, EventArgs e)
-        {
-            if (Reader != null)
-                if (fbd.ShowDialog() == DialogResult.OK)
-                    Reader.ExtractAll(fbd.SelectedPath);
         }
 
         private void BigFileControl_DragEnter(object sender, DragEventArgs e)
@@ -182,38 +209,38 @@ namespace CTRTools.Controls
                 if (fileTree.SelectedNode.Tag != null)
                 {
                     Reader.FileCursor = (int)fileTree.SelectedNode.Tag;
-                    BigEntry en = Reader.ReadEntry();
+                    var entry = Reader.ReadEntry();
 
-                    switch (Path.GetExtension(en.Name).ToLower())
+                    switch (Path.GetExtension(entry.Name).ToUpper())
                     {
-                        case ".lng":
-                            var lng = en.ParseAs<LNG>();
+                        case ".LNG":
+                            var lng = entry.ParseAs<LNG>();
                             fileInfo.Lines = lng.Entries.ToArray();
                             break;
 
-                        case ".lev":
-                            var lev = en.ParseAs<CtrScene>();
+                        case ".LEV":
+                            var lev = entry.ParseAs<CtrScene>();
                             fileInfo.Text = lev.ToString();
                             break;
 
-                        case ".ctr":
-                            var pc = en.ParseAs<PatchedContainer>();
+                        case ".CTR":
+                            var pc = entry.ParseAs<PatchedContainer>();
                             var ctr = CtrModel.FromReader(pc.GetReader());
                             fileInfo.Text = ctr.ToString();
                             break;
 
-                        case ".vrm":
-                            var vrm = en.ParseAs<CtrVrm>();
+                        case ".VRM":
+                            var vrm = entry.ParseAs<CtrVrm>();
                             fileInfo.Text = vrm.ToString();
                             break;
 
-                        case ".tim":
-                            var tim = en.ParseAs<Tim>();
+                        case ".TIM":
+                            var tim = entry.ParseAs<Tim>();
                             fileInfo.Text = tim.ToString();
                             break;
 
-                        case ".mpk":
-                            var mpk = en.ParseAs<ModelPack>();
+                        case ".MPK":
+                            var mpk = entry.ParseAs<ModelPack>();
                             fileInfo.Text = mpk.ToString();
                             break;
                     }
@@ -263,6 +290,54 @@ namespace CTRTools.Controls
 
             if (sfd.ShowDialog() == DialogResult.OK)
                 Helpers.WriteToFile(sfd.FileName, _reader.ReadEntry().Data);
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                LoadBigFull(ofd.FileName);
+                expandAll.Text = "Expand";
+            }
+        }
+
+        private void extractToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Reader != null)
+                if (fbd.ShowDialog() == DialogResult.OK)
+                    Reader.ExtractAll(fbd.SelectedPath);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void fileTree_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void saveAsZIPToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Reader is null) return;
+
+            try
+            {
+                if (zfd.ShowDialog() == DialogResult.OK)
+                {
+                    using (var big = BigFile.FromBigReader(Reader))
+                    {
+                        big.ToZip(zfd.FileName);
+                    }
+
+                    MessageBox.Show("Done.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Can't write ZIP: {ex.Message}");
+            }
         }
     }
 }

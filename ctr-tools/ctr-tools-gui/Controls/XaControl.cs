@@ -21,9 +21,9 @@ namespace CTRTools.Controls
         {
             try
             {
-                switch (Path.GetExtension(filename).ToLower())
+                switch (Path.GetExtension(filename).ToUpper())
                 {
-                    case ".xnf":
+                    case ".XNF":
                         xnf = XaInfo.FromFile(filename);
                         break;
 

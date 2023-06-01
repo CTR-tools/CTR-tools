@@ -83,9 +83,9 @@ namespace CTRTools.Controls
 
             if (files.Length > 0)
             {
-                switch (Path.GetExtension(files[0]).ToLower())
+                switch (Path.GetExtension(files[0]).ToUpper())
                 {
-                    case ".hwl": LoadHowl(files[0]); break;
+                    case ".HWL": LoadHowl(files[0]); break;
                     default: MessageBox.Show("Unsupported file."); break;
                 }
             }

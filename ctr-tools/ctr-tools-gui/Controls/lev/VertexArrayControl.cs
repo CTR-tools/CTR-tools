@@ -8,8 +8,6 @@ namespace CTRTools.Controls
 {
     public partial class VertexArrayControl : UserControl
     {
-        Random random = new Random();
-
         public List<Vertex> VertexArray = new List<Vertex>();
 
         public VertexArrayControl()
@@ -62,7 +60,7 @@ namespace CTRTools.Controls
         {
             foreach (var vertex in VertexArray)
             {
-                vertex.Color = new Vector4b((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255), 0);
+                vertex.Color = new Vector4b((byte)Helpers.Random.Next(255), (byte)Helpers.Random.Next(255), (byte)Helpers.Random.Next(255), 0);
                 vertex.MorphColor = vertex.Color;
             }
         }

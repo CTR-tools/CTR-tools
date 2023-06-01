@@ -30,7 +30,7 @@ namespace CTRTools.Controls
 
         public void LoadMeta()
         {
-            if (!Meta.LoadMidiJson())
+            if (!Meta.LoadMidiMeta())
             {
                 MessageBox.Show("Couldn't load Json!");
             }
@@ -43,7 +43,7 @@ namespace CTRTools.Controls
                 patchBox.Items.AddRange(Meta.GetPatchList().ToArray());
             }
 
-            Howl.samplenames = Helpers.LoadNumberedList(Meta.SmplPath);
+            //howl.Context.samplenames = Helpers.LoadNumberedList(Meta.SmplPath);
         }
 
         private void LoadCseq(string filename)

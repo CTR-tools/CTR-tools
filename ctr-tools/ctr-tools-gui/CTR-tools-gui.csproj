@@ -68,6 +68,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="_moveordelete\Char.cs" />
     <Compile Include="Controls\CseqControl.cs">
       <SubType>UserControl</SubType>
@@ -133,11 +138,6 @@
     <Compile Include="_moveordelete\LevelSlot.cs" />
     <Compile Include="_moveordelete\Mcs.cs" />
     <Compile Include="_moveordelete\Mem.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -189,6 +189,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\VramControl.resx">
@@ -217,9 +218,9 @@
     <Content Include="icons\ctr.png" />
     <Content Include="icons\lev.png" />
     <Content Include="icons\str.png" />
-    <Content Include="Properties\ctr-tools-logo.png" />
-    <Content Include="Properties\icon_discord.png" />
-    <Content Include="Properties\icon_github.png" />
+    <Content Include="icons\ctr-tools-logo.png" />
+    <Content Include="icons\icon_discord.png" />
+    <Content Include="icons\icon_github.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CTRFramework\CTRFramework.csproj">

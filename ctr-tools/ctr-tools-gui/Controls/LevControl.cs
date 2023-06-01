@@ -180,21 +180,19 @@ namespace CTRTools.Controls
         }
 
 
-        Random r = new Random();
-
         private void button13_Click(object sender, EventArgs e)
         {
             if (scn is null) return;
 
-            foreach (QuadBlock qb in scn.quads)
-                qb.terrainFlag = (TerrainFlags)r.Next(20);
+            foreach (var qb in scn.quads)
+                qb.terrainFlag = (TerrainFlags)Helpers.Random.Next(20);
         }
 
         private void button14_Click(object sender, EventArgs e)
         {
             if (scn is null) return;
 
-            foreach (QuadBlock qb in scn.quads)
+            foreach (var qb in scn.quads)
                 qb.WeatherIntensity = 255;
         }
 
@@ -202,7 +200,7 @@ namespace CTRTools.Controls
         {
             if (scn is null) return;
 
-            foreach (QuadBlock qb in scn.quads)
+            foreach (var qb in scn.quads)
                 qb.WeatherIntensity = 0;
         }
 
@@ -210,9 +208,9 @@ namespace CTRTools.Controls
         {
             if (scn != null)
             {
-                foreach (QuadBlock qb in scn.quads)
+                foreach (var qb in scn.quads)
                 {
-                    qb.WeatherIntensity = (byte)r.Next(255);
+                    qb.WeatherIntensity = (byte)Helpers.Random.Next(255);
                 }
             }
         }
@@ -238,7 +236,7 @@ namespace CTRTools.Controls
             {
                 if (scn.nav != null)
                 {
-                    foreach (BotPath ai in scn.nav.paths)
+                    foreach (NavPath ai in scn.nav.paths)
                     {
                         foreach (NavFrame f in ai.Frames)
                         {
@@ -300,7 +298,7 @@ namespace CTRTools.Controls
                 foreach (var vis in scn.visdata)
                     vis.Write(bw);
 
-                bw.Jump(scn.header.ptrAiNav.Address + 4);
+                bw.Jump(scn.header.ptrNavData.Address + 4);
                 scn.nav.Write(bw);
             }
         }
@@ -452,8 +450,8 @@ namespace CTRTools.Controls
 
         private System.Drawing.Drawing2D.LinearGradientBrush GetGradient(Gradient grad, int size)
         {
-            Vector4b from = grad.ColorFrom;
-            Vector4b to = grad.ColorTo;
+            Vector4b from = grad.FromColor;
+            Vector4b to = grad.ToColor;
 
             Color cfrom = Color.FromArgb(255, from.X, from.Y, from.Z);
             Color cto = Color.FromArgb(255, to.X, to.Y, to.Z);
@@ -478,7 +476,7 @@ namespace CTRTools.Controls
 
             foreach (VisNode v in scn.visdata)
             {
-                v.flag = v.flag | VisNodeFlags.Leaf & VisNodeFlags.Subdiv4x2;
+                v.flag = v.flag | VisNodeFlags.Unk5 | VisNodeFlags.Unk2 | VisNodeFlags.Subdiv4x1 | VisNodeFlags.Subdiv4x2;
             }
         }
 
@@ -554,8 +552,8 @@ namespace CTRTools.Controls
             {
                 //pt.AngleY = 0;
 
-                pt.FFunk = 0;
-                pt.FFunk2 = 0;
+                pt.left = 0;
+                pt.right = 0;
             }
 
             foreach (var quad in scn.quads)
@@ -563,6 +561,11 @@ namespace CTRTools.Controls
                 //if (quad.visDataFlags.HasFlag(VisDataFlags.Subdiv4x2))
                 //    quad.SetFaceColor(scn.verts, new Vector4b(255, 0, 0, 0));
             }
+        }
+
+        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
