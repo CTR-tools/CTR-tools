@@ -7,20 +7,17 @@ namespace ctrviewer.Engine.Render
 {
     public class AnimationKey
     {
-        public float Time;
-        public Vector3 Position;
-        public Vector3 Rotation;
-        public Vector3 Scale;
+        public float Time = 0;
+        public Vector3 Position = Vector3.Zero;
+        public Vector3 Rotation = Vector3.Zero;
+        public Vector3 Scale = Vector3.One;
 
-        public static AnimationKey Lerp(AnimationKey from, AnimationKey to, float amount)
+        public void Lerp(AnimationKey from, AnimationKey to, float amount)
         {
-            return new AnimationKey
-            {
-                Position = Vector3.Lerp(from.Position, to.Position, amount),
-                Rotation = Vector3.Lerp(from.Rotation, to.Rotation, amount),
-                Scale = Vector3.Lerp(from.Scale, to.Scale, amount),
-                Time = MathHelper.Lerp(from.Time, to.Time, amount)
-            };
+            Position = Vector3.Lerp(from.Position, to.Position, amount);
+            Rotation = Vector3.Lerp(from.Rotation, to.Rotation, amount);
+            Scale = Vector3.Lerp(from.Scale, to.Scale, amount);
+            Time = MathHelper.Lerp(from.Time, to.Time, amount);
         }
 
         public AnimationKey()
@@ -130,7 +127,7 @@ namespace ctrviewer.Engine.Render
             }
 
             Animation = anim;
-            State = anim[0];
+            State = new AnimationKey();
         }
 
         public AnimationPlayer()
@@ -138,7 +135,7 @@ namespace ctrviewer.Engine.Render
             Animation.Add(new AnimationKey() { Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1), Time = 0 });
             Animation.Add(new AnimationKey() { Position = new Vector3(0, 0, 0), Rotation = new Vector3(0, 0, 0), Scale = new Vector3(1), Time = 2000 });
 
-            State = Animation[0];
+            State = new AnimationKey();
         }
 
         private int _thisframe;
@@ -180,7 +177,7 @@ namespace ctrviewer.Engine.Render
                     _thisframe = 0;
             }
 
-            State = AnimationKey.Lerp(ThisFrame, NextFrame, Timer / FrameDuration);
+            State.Lerp(ThisFrame, NextFrame, Timer / FrameDuration);
         }
 
         public void Animate(InstancedModel model)
