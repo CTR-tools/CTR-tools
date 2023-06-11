@@ -4,18 +4,18 @@ using System.Text;
 
 namespace CTRFramework
 {
-    public class SkyBox : IRead
+    public class CtrSkyBox : IRead
     {
         public List<Vertex> Vertices = new List<Vertex>();
         public List<Vector4s> Faces = new List<Vector4s>();
 
-        public SkyBox()
+        public CtrSkyBox()
         {
         }
 
-        public SkyBox(BinaryReaderEx br) => Read(br);
+        public CtrSkyBox(BinaryReaderEx br) => Read(br);
 
-        public static SkyBox FromReader(BinaryReaderEx br) => new SkyBox(br);
+        public static CtrSkyBox FromReader(BinaryReaderEx br) => new CtrSkyBox(br);
 
         public void Read(BinaryReaderEx br)
         {

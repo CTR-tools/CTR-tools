@@ -20,6 +20,7 @@ namespace CTRFramework
         public string path;
         public string name;
 
+
         public SceneHeader header;
         public MeshInfo mesh;
 
@@ -30,7 +31,7 @@ namespace CTRFramework
         public List<CtrInstance> Instances = new List<CtrInstance>();
         public List<VisNode> visdata = new List<VisNode>();
         public List<VisNode> instvisdata = new List<VisNode>();
-        public SkyBox skybox;
+        public CtrSkyBox skybox;
         public NavData nav;
         public SpawnGroup spawnGroups;
         public TrialData trial;
@@ -54,17 +55,24 @@ namespace CTRFramework
             path = filename;
             name = Path.GetFileNameWithoutExtension(filename);
 
+            Helpers.Panic(this, PanicType.Info, $"Loading scene '{name}' from {path}...");
+
             using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
                 Read(br);
             }
 
+            Helpers.Panic(this, PanicType.Info, $"Scene loaded.");
+
+            //if vram passed as param
             if (vram != null)
             {
                 ctrvram = vram;
+                BuildMontageCache();
                 return;
             }
 
+            //otherwise try to read from file
             string vrmpath = Path.ChangeExtension(filename, ".vrm");
 
             if (File.Exists(vrmpath))
@@ -74,17 +82,51 @@ namespace CTRFramework
 
                 SetVram(CtrVrm.FromFile(vrmpath));
             }
+
+            Helpers.Panic(this, PanicType.Warning, "No VRAM found. Can't build montage cache.");
+        }
+
+        public void BuildMontageCache()
+        {
+            foreach (var quad in quads)
+                foreach (var tex in quad.tex)
+                {
+                    if (tex is null)
+                    {
+                        Helpers.Panic(this, PanicType.Warning, $"tex is null for whatever reason... {quad.id}");
+                        continue;
+                    }
+
+                    try
+                    {
+                        //little cache check here to only export montage once and speed up export time
+                        if (MontageCache.ContainsKey(tex.lod2.Tag)) continue;
+                        tex.GetHiBitmap(ctrvram, quad, MontageCache);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helpers.Panic(this, PanicType.Error, $"Montage failed for {quad.id}: {ex.Message}.");
+                    }
+                }
         }
 
         public void SetVram(CtrVrm c)
         {
             vram = c;
             ctrvram = c.GetVram();
+            BuildMontageCache();
             LoadTextures();
         }
 
+        /// <summary>
+        /// Factory method, reads CtrScene from LEV file.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="readHi"></param>
+        /// <returns></returns>
         public static CtrScene FromFile(string filename, bool readHi = true)
         {
+            //get rid of this maybe? not slow anymore.
             CtrScene.ReadHiTex = readHi;
 
             return new CtrScene(filename);
@@ -100,16 +142,18 @@ namespace CTRFramework
 
             try
             {
+                //try to load scene with patch container
                 ReadScene(PatchedContainer.FromReader(br).GetReader());
             }
             catch (Exception ex)
             {
                 Console.WriteLine("failed to read scene with patch container: " + ex.Message);
 
-                //extra reset is needed here
+                //but maybe it's a sampler level?
+                //extra reset is needed here. it's 0 cause we don't have stacked scenes anyways.
                 br.BaseStream.Position = 0;
 
-                //try to load scene without patch table
+                //try to load scene without patch table. just throw if fails too.
                 ReadScene(br);
             }
 
@@ -118,7 +162,12 @@ namespace CTRFramework
             Helpers.Panic(this, PanicType.Measure, $"CtrScene.Read: {sw.ElapsedMilliseconds}");
         }
 
-        public void ReadScene(BinaryReaderEx br)
+        /// <summary>
+        /// Main scene parsing function.
+        /// </summary>
+        /// <param name="br"></param>
+        /// <exception cref="Exception"></exception>
+        private void ReadScene(BinaryReaderEx br)
         {
             header = SceneHeader.FromReader(br);
 
@@ -150,7 +199,7 @@ namespace CTRFramework
             }
 
             vertanims = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
-            skybox = new PtrWrap<SkyBox>(header.ptrSkybox).Get(br);
+            skybox = new PtrWrap<CtrSkyBox>(header.ptrSkybox).Get(br);
             nav = new PtrWrap<NavData>(header.ptrNavData).Get(br);
             iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
             trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
@@ -220,12 +269,6 @@ namespace CTRFramework
                 while (terminator != 0);
             }
 
-            foreach (var node in instvisdata)
-            {
-                Helpers.Panic(this, PanicType.Assume, node.ToString());
-            }
-            //Console.ReadKey();
-
             //assign anim color target to vertex
             foreach (var va in vertanims)
             {
@@ -256,7 +299,7 @@ namespace CTRFramework
             Console.ReadKey();
             */
 
-            //read pickups
+            //read instances
             for (int i = 0; i < header.numInstances; i++)
             {
                 br.Jump(header.ptrInstancesPtr.Address + 4 * i);
@@ -265,7 +308,7 @@ namespace CTRFramework
                 Instances.Add(CtrInstance.FromReader(br));
             }
 
-
+            //read models
             br.Jump(header.ptrModelsPtr);
 
             List<uint> modelPtr = br.ReadListUInt32(header.numModels);
@@ -286,6 +329,7 @@ namespace CTRFramework
                 }
             }
 
+
             foreach (var va in vertanims)
             {
                 Helpers.Panic(this, PanicType.Info, va.ToString());
@@ -297,7 +341,6 @@ namespace CTRFramework
             {
                 waterAnim.Add(WaterAnim.FromReader(br));
             }
-
 
 
             if (sceneDebug)
@@ -330,8 +373,10 @@ namespace CTRFramework
             //Console.ReadKey();
         }
 
+        #region [Export functions]
+
         /// <summary>
-        /// Generates OBJ file based on lod selection 
+        /// Generates OBJ file based on lod selection.
         /// </summary>
         /// <param name="path"></param>
         /// <param name="lod">LOD level (Detail enum)</param>
@@ -410,8 +455,14 @@ namespace CTRFramework
             sb.Clear();
         }
 
+        /// <summary>
+        /// Exports all instanced models.
+        /// </summary>
+        /// <param name="dir"></param>
         private void ExportModels(string dir)
         {
+            if (Models.Count == 0) return;
+
             dir = Helpers.PathCombine(dir, Meta.ModelsPath);
 
             Helpers.CheckFolder(dir);
@@ -423,12 +474,21 @@ namespace CTRFramework
             }
         }
 
+        /// <summary>
+        /// Exports skybox.
+        /// </summary>
+        /// <param name="path"></param>
         private void ExportSkyBox(string path)
         {
             if (skybox != null)
                 Helpers.WriteToFile(Helpers.PathCombine(path, $"{name}_sky.obj"), skybox.ToObj());
         }
 
+        /// <summary>
+        /// Main content extraction method. Expects a path and export flags mask. For complete extraction use ExportFlags.All.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="flags"></param>
         public void Export(string path, ExportFlags flags)
         {
             Helpers.Panic(this, PanicType.Info, $"Exporting scene to: {path}");
@@ -464,11 +524,17 @@ namespace CTRFramework
 
         public void LoadTextures()
         {
-            if (ctrvram != null)
+            if (ctrvram is null)
             {
-                foreach (var tl in GetTexturesList().Values)
-                    ctrvram.GetTexture(tl);
+                Helpers.Panic(this, PanicType.Warning, "No VRAM to load textures from.");
+                return;
             }
+           
+            //here's the trick, Tim class contains static textures dictionary that is reused later
+            //doing this loop we populate that array. gotta come up with better solution really.
+
+            foreach (var tl in GetTexturesList().Values)
+                ctrvram.GetTexture(tl);
         }
 
         /// <summary>
@@ -483,6 +549,9 @@ namespace CTRFramework
             ExportTextures(Helpers.PathCombine(path, "texModels"), Detail.Models);
             ExportTextures(Helpers.PathCombine(path, "texMontage"), Detail.Montage);
         }
+
+
+        public Dictionary<string, Bitmap> MontageCache = new Dictionary<string, Bitmap>();
 
         /// <summary>
         /// Exports textures for a specific level of detail, defined by Detail enum.
@@ -522,17 +591,16 @@ namespace CTRFramework
                     ctrvram.GetTexture(layout, path)?.Save(Helpers.PathCombine(path, $"{layout.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
             }
 
-            /*
+            
             //hardcoded animated
             Helpers.CheckFolder("animTex");
 
             foreach (var quad in quads)
                 foreach (var tex in quad.tex)
-                    foreach (var anim in tex.animframes)
-                    {
-                        ctrvram.GetTexture(anim, "animTex")?.Save($"animTex\\{anim.Tag}.png");
-                    }
-            */
+                    if (tex.animframes.Count > 0)
+                        foreach (var anim in tex.animframes)
+                            ctrvram.GetTexture(anim, "animTex")?.Save($"animTex\\{anim.Tag}.png");
+            
 
             //special case for tageing textures
             if (lod == Detail.Montage)
@@ -540,36 +608,242 @@ namespace CTRFramework
                 path = Helpers.PathCombine(path, $"tex{lod}");
                 Helpers.CheckFolder(path);
 
-                var check = new List<string>();
-
-                foreach (var quad in quads)
-                    foreach (var tex in quad.tex)
-                    {
-                        if (tex is null)
-                        {
-                            Helpers.Panic(this, PanicType.Warning, $"tex is null for whatever reason... {quad.id}");
-                            continue;
-                        }
-
-                        try
-                        {
-                            //little cache check here to only export montage once and speed up export time
-                            if (check.Contains(tex.lod2.Tag)) continue;
-                            
-                            check.Add(tex.lod2.Tag);
-                            string file = Helpers.PathCombine(path, $"{tex.lod2.Tag}.png");
-                            tex.GetHiBitmap(ctrvram, quad)?.Save(file, System.Drawing.Imaging.ImageFormat.Png);
-                            
-                        }
-                        catch (Exception ex)
-                        {
-                            Helpers.Panic(this, PanicType.Error, $"oh no, montage failed for quad id {quad.id}: {ex.Message}");
-                        }
-                    }
+                foreach (var bmp in MontageCache)
+                {
+                    bmp.Value.Save(Helpers.PathCombine(path, $"{bmp.Key}.png"));
+                }
             }
 
             Helpers.Panic(this, PanicType.Info, "...requested LoD export done.");
         }
+
+        #endregion
+
+        /// <summary>
+        /// Returns tagged list of TextureLayouts used in the scene for a specific LoD level.
+        /// </summary>
+        /// <param name="lod"></param>
+        /// <returns></returns>
+        public Dictionary<string, TextureLayout> GetTexturesList(Detail lod)
+        {
+            var result = new Dictionary<string, TextureLayout>();
+
+            if (lod == Detail.Models)
+            {
+                foreach (var model in Models)
+                    foreach (var mesh in model)
+                        foreach (var tl in mesh.groupedtl)
+                            if (tl != null)
+                                result[tl.Tag] = tl;
+
+                if (iconpack != null)
+                    foreach (var i in iconpack.Icons.Values)
+                        if (i.tl != null)
+                        {
+                            result[i.tl.Tag] = i.tl;
+                        }
+                        else
+                        {
+                            //hmm
+                            Helpers.Panic(this, PanicType.Error, i.Name);
+                        }
+            }
+            else
+            {
+                foreach (var qb in quads)
+                {
+                    switch (lod)
+                    {
+                        case Detail.Low:
+                            if (qb.ptrTexLow != UIntPtr.Zero)
+                                result[qb.texlow.Tag] = qb.texlow;
+                            break;
+
+                        case Detail.Med:
+                            foreach (var tex in qb.tex)
+                            {
+                                if (tex is null) continue;
+
+                                if (tex.lod2.Position != 0)
+                                    result[tex.lod2.Tag] = tex.lod2;
+                            }
+                            break;
+
+                        case Detail.High:
+                            foreach (var tex in qb.tex)
+                            {
+                                if (tex is null) continue;
+
+                                foreach (var x in tex.hi)
+                                    if (x != null)
+                                        result[x.Tag] = x;
+                            }
+                            break;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns tagged list of TextureLayouts used in the scene for all LoD levels.
+        /// Every scene texture must be here for texture replacer to work with.
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, TextureLayout> GetTexturesList()
+        {
+            var result = new Dictionary<string, TextureLayout>();
+
+            foreach (var t in GetTexturesList(Detail.Low))
+                result[t.Key] = t.Value;
+
+            foreach (var t in GetTexturesList(Detail.Med))
+                result[t.Key] = t.Value;
+
+            foreach (var t in GetTexturesList(Detail.High))
+                result[t.Key] = t.Value;
+
+            foreach (var t in GetTexturesList(Detail.Models))
+                result[t.Key] = t.Value;
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Returns VisNode children (move to VisNode class?)
+        /// </summary>
+        /// <param name="node"></param>
+        public List<VisNode> GetVisNodeChildren(VisNode node)
+        {
+            var childVisData = new List<VisNode>();
+
+            if (node.leftChild != 0 && !node.IsLeaf) // in the future: handle leaves different. Draw them?
+            {
+                ushort uLeftChild = (ushort)(node.leftChild & 0x3fff);
+                VisNode leftChild = visdata.Find(cc => cc.id == uLeftChild);
+                childVisData.Add(leftChild);
+            }
+
+            if (node.rightChild != 0 && !node.IsLeaf) // in the future: handle leaves different. Draw them?
+            {
+                ushort uRightChild = (ushort)(node.rightChild & 0x3fff);
+                VisNode rightChild = visdata.Find(cc => cc.id == uRightChild);
+                childVisData.Add(rightChild);
+            }
+
+            return childVisData;
+        }
+
+        private int levelShiftOffset = -52; // offset (found in Unity)
+
+        /// <summary>
+        /// Return QuadBlocks associated with the leaf, make sure you pass a leaf and not a branch.
+        /// </summary>
+        /// <param name="leaf"></param>
+        public List<QuadBlock> GetListOfLeafQuadBlocks(VisNode leaf)
+        {
+            var leafQuadBlocks = new List<QuadBlock>();
+
+            if (!leaf.IsLeaf)
+                return leafQuadBlocks;
+
+            uint ptrQuadBlock = (uint)(((leaf.ptrQuadBlock) / QuadBlock.SizeOf) + levelShiftOffset);
+            uint numQuadBlock = leaf.numQuadBlock;
+            for (int i = 0; i < numQuadBlock; i++)
+            {
+                long index = ptrQuadBlock + i;
+                QuadBlock quad = quads[(int)Math.Min(Math.Max(index, 0), quads.Count - 1)];
+                leafQuadBlocks.Add(quad);
+            }
+
+            return leafQuadBlocks;
+        }
+
+
+        /// <summary>
+        /// Writes current scene to BinaryReader.
+        /// </summary>
+        /// <param name="bw"></param>
+        /// <param name="patchTable"></param>
+        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable)
+        {
+            bw.Jump(SceneHeader.SizeOf);
+
+            //write enviro map
+            if (enviroMap != null)
+            {
+                header.ptrEnviroMap.Address = (UIntPtr)bw.BaseStream.Position;
+                enviroMap.Write(bw, patchTable);
+            }
+            else
+            {
+                header.ptrEnviroMap.Address = UIntPtr.Zero;
+            }
+
+            //write respawn table
+            foreach (var respawn in respawnPts)
+                respawn.Write(bw, patchTable);
+
+            //write instances
+            header.ptrInstances.Address = (UIntPtr)bw.BaseStream.Position;
+
+            foreach (var pickup in Instances)
+                pickup.Write(bw, patchTable);
+
+            //reserve space for model pointers
+            header.ptrModelsPtr.Address = (UIntPtr)bw.BaseStream.Position;
+
+            foreach (var model in Models)
+                bw.Write(-1);
+
+            header.ptrMeshInfo.Address = (UIntPtr)bw.BaseStream.Position;
+
+            bw.Seek(MeshInfo.SizeOf);
+
+            //write quadblocks
+            mesh.numQuadBlocks = (uint)quads.Count;
+            mesh.ptrQuadBlocks = (UIntPtr)bw.BaseStream.Position;
+
+            foreach (var quad in quads)
+                quad.Write(bw, patchTable);
+
+            //write vertices
+            mesh.numVertices = (uint)vertanims.Count;
+            mesh.ptrVertices = (UIntPtr)bw.BaseStream.Position;
+
+            foreach (var vert in verts)
+                vert.Write(bw, patchTable);
+
+
+            //finally jump back and write header
+
+            bw.Jump(0);
+            header.Write(bw, patchTable);
+
+            //bw.Jump(header.ptrMeshInfo);
+            //mesh.Write(bw, patchTable);
+        }
+
+        /// <summary>
+        /// Saves current scene as a LEV file.
+        /// </summary>
+        /// <param name="filename"></param>
+        public void Save(string filename)
+        {
+            var cont = new PatchedContainer();
+
+            using (var ms = new MemoryStream())
+            using (var bw = new BinaryWriterEx(ms))
+            {
+                Write(bw, cont.PatchTable);
+                cont.Data = ms.ToArray();
+            }
+
+            cont.Save(filename);
+        }
+
 
         public override string ToString()
         {
@@ -656,210 +930,6 @@ namespace CTRFramework
             return sb.ToString();
         }
 
-        public Dictionary<string, TextureLayout> GetTexturesList(Detail lod)
-        {
-            var result = new Dictionary<string, TextureLayout>();
-
-            if (lod == Detail.Models)
-            {
-                foreach (var model in Models)
-                    foreach (var mesh in model)
-                        foreach (var tl in mesh.groupedtl)
-                            if (tl != null)
-                                result[tl.Tag] = tl;
-
-                if (iconpack != null)
-                    foreach (var i in iconpack.Icons.Values)
-                        if (i.tl != null)
-                        {
-                            result[i.tl.Tag] = i.tl;
-                        }
-                        else
-                        {
-                            //hmm
-                            Helpers.Panic(this, PanicType.Error, i.Name);
-                        }
-            }
-            else
-            {
-                foreach (var qb in quads)
-                {
-                    switch (lod)
-                    {
-                        case Detail.Low:
-                            if (qb.ptrTexLow != UIntPtr.Zero)
-                                result[qb.texlow.Tag] = qb.texlow;
-                            break;
-
-                        case Detail.Med:
-                            foreach (var tex in qb.tex)
-                            {
-                                if (tex is null) continue;
-
-                                if (tex.lod2.Position != 0)
-                                    result[tex.lod2.Tag] = tex.lod2;
-                            }
-                            break;
-
-                        case Detail.High:
-                            foreach (var tex in qb.tex)
-                            {
-                                if (tex is null) continue;
-
-                                foreach (var x in tex.hi)
-                                    if (x != null)
-                                        result[x.Tag] = x;
-                            }
-                            break;
-                    }
-                }
-            }
-
-            return result;
-        }
-
-
-        public Dictionary<string, TextureLayout> GetTexturesList()
-        {
-            var result = new Dictionary<string, TextureLayout>();
-
-            foreach (var t in GetTexturesList(Detail.Low))
-                result[t.Key] = t.Value;
-
-            foreach (var t in GetTexturesList(Detail.Med))
-                result[t.Key] = t.Value;
-
-            foreach (var t in GetTexturesList(Detail.High))
-                result[t.Key] = t.Value;
-
-            foreach (var t in GetTexturesList(Detail.Models))
-                result[t.Key] = t.Value;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Returns VisData children
-        /// </summary>
-        /// <param name="node"></param>
-        public List<VisNode> GetVisDataChildren(VisNode node)
-        {
-            var childVisData = new List<VisNode>();
-
-            if (node.leftChild != 0 && !node.IsLeaf) // in the future: handle leaves different. Draw them?
-            {
-                ushort uLeftChild = (ushort)(node.leftChild & 0x3fff);
-                VisNode leftChild = visdata.Find(cc => cc.id == uLeftChild);
-                childVisData.Add(leftChild);
-            }
-
-            if (node.rightChild != 0 && !node.IsLeaf) // in the future: handle leaves different. Draw them?
-            {
-                ushort uRightChild = (ushort)(node.rightChild & 0x3fff);
-                VisNode rightChild = visdata.Find(cc => cc.id == uRightChild);
-                childVisData.Add(rightChild);
-            }
-
-            return childVisData;
-        }
-
-        private int levelShiftOffset = -52; // offset (found in Unity)
-
-        /// <summary>
-        /// Return QuadBlocks associated with the leaf, make sure you pass a leaf and not a branch.
-        /// </summary>
-        /// <param name="leaf"></param>
-        public List<QuadBlock> GetListOfLeafQuadBlocks(VisNode leaf)
-        {
-            var leafQuadBlocks = new List<QuadBlock>();
-
-            if (!leaf.IsLeaf)
-                return leafQuadBlocks;
-
-            uint ptrQuadBlock = (uint)(((leaf.ptrQuadBlock) / QuadBlock.SizeOf) + levelShiftOffset);
-            uint numQuadBlock = leaf.numQuadBlock;
-            for (int i = 0; i < numQuadBlock; i++)
-            {
-                long index = ptrQuadBlock + i;
-                QuadBlock quad = quads[(int)Math.Min(Math.Max(index, 0), quads.Count - 1)];
-                leafQuadBlocks.Add(quad);
-            }
-
-            return leafQuadBlocks;
-        }
-
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable)
-        {
-            bw.Jump(SceneHeader.SizeOf);
-
-            //write enviro map
-            if (enviroMap != null)
-            {
-                header.ptrEnviroMap.Address = (UIntPtr)bw.BaseStream.Position;
-                enviroMap.Write(bw, patchTable);
-            }
-            else
-            {
-                header.ptrEnviroMap.Address = UIntPtr.Zero;
-            }
-
-            //write respawn table
-            foreach (var respawn in respawnPts)
-                respawn.Write(bw, patchTable);
-
-            //write instances
-            header.ptrInstances.Address = (UIntPtr)bw.BaseStream.Position;
-
-            foreach (var pickup in Instances)
-                pickup.Write(bw, patchTable);
-
-            //reserve space for model pointers
-            header.ptrModelsPtr.Address = (UIntPtr)bw.BaseStream.Position;
-
-            foreach (var model in Models)
-                bw.Write(-1);
-
-            header.ptrMeshInfo.Address = (UIntPtr)bw.BaseStream.Position;
-
-            bw.Seek(MeshInfo.SizeOf);
-
-            //write quadblocks
-            mesh.numQuadBlocks = (uint)quads.Count;
-            mesh.ptrQuadBlocks = (UIntPtr)bw.BaseStream.Position;
-
-            foreach (var quad in quads)
-                quad.Write(bw, patchTable);
-
-            //write vertices
-            mesh.numVertices = (uint)vertanims.Count;
-            mesh.ptrVertices = (UIntPtr)bw.BaseStream.Position;
-
-            foreach (var vert in verts)
-                vert.Write(bw, patchTable);
-
-
-            //finally jump back and write header
-
-            bw.Jump(0);
-            header.Write(bw, patchTable);
-
-            //bw.Jump(header.ptrMeshInfo);
-            //mesh.Write(bw, patchTable);
-        }
-
-        public void Save(string filename)
-        {
-            var cont = new PatchedContainer();
-
-            using (var ms = new MemoryStream())
-            using (var bw = new BinaryWriterEx(ms))
-            {
-                Write(bw, cont.PatchTable);
-                cont.Data = ms.ToArray();
-            }
-
-            cont.Save(filename);
-        }
 
         public void Dispose()
         {

@@ -5,6 +5,7 @@ using System.Numerics;
 
 namespace CTRFramework
 {
+    //this is only used in roo's tubes
     public class VertexAnim : IReadWrite
     {
         public uint ptrVertex;

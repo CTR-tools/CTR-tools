@@ -437,14 +437,7 @@ namespace CTRFramework
                     {
                         if (tex[i] != null)
                         {
-                            if (!tex[i].isAnimated)
-                            {
-                                buf[j].uv = tex[i].lod2.normuv[j];
-                            }
-                            else
-                            {
-                                buf[j].uv = tex[i].animframes[1].normuv[j];
-                            }
+                            buf[j].uv = tex[i].lod2.normuv[j];
                         }
                         else
                         {

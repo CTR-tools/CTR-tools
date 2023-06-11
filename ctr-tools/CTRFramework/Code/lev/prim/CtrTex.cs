@@ -34,8 +34,14 @@ namespace CTRFramework
         /// <param name="vram"></param>
         /// <param name="qb"></param>
         /// <returns>Bitmap instance.</returns>
-        public Bitmap GetHiBitmap(Tim vram, QuadBlock qb)
+        public Bitmap GetHiBitmap(Tim vram, QuadBlock qb, Dictionary<string, Bitmap> cache = null)
         {
+
+            //check cache
+            if (cache != null)
+                if (cache.ContainsKey(lod2.Tag))
+                    return cache[lod2.Tag];
+
             //maybe nothing to process at all?
             if (hi.Count == 0) return null;
 
@@ -115,6 +121,11 @@ namespace CTRFramework
 
             Helpers.Panic(this, PanicType.Info, $"texture done in: {sw.Elapsed.TotalMilliseconds}ms");
 
+            if (cache != null)
+                cache.Add(lod2.Tag, bmp);
+            else
+                Helpers.Panic(this, PanicType.Assume, "WTF cache null");
+
             return bmp;
         }
 
@@ -126,6 +137,8 @@ namespace CTRFramework
 
             Helpers.PanicIf(ptr.ExtraBits == HiddenBits.Bit1, this, PanicType.Assume, "!!! ctrtex ptr got extra bits");
 
+            int currentFrame = 0;
+
             //this hidden bit defines whether it's animated or not
             if (ptr.ExtraBits == HiddenBits.Bit0)
             {
@@ -135,7 +148,8 @@ namespace CTRFramework
                 uint texpos = br.ReadUInt32();
 
                 int numFrames = br.ReadInt16();
-                int whatsthat = br.ReadInt16(); //maybe current frame at runtime? maybe also offline for a shift?
+                //this can be used to offset the animation frame, used in cove waterfall
+                currentFrame = br.ReadInt16();
 
                 //array of pointers to each frame texlayout
                 uint[] ptrs = br.ReadArrayUInt32(numFrames);
@@ -145,6 +159,7 @@ namespace CTRFramework
                 {
                     br.Jump(ptrAnimFrame);
 
+                    //read 4 anim lods. check why initial 4 textures are empty. maybe some extra data?
                     animframes.Add(TextureLayout.FromReader(br));
                     animframes.Add(TextureLayout.FromReader(br));
                     animframes.Add(TextureLayout.FromReader(br));
@@ -159,6 +174,10 @@ namespace CTRFramework
             lod0 = TextureLayout.FromReader(br);
             lod1 = TextureLayout.FromReader(br);
             lod2 = TextureLayout.FromReader(br);
+
+            if (isAnimated)
+                //duh
+                lod2 = animframes[currentFrame * 4 + 7];
 
             //Console.WriteLine(br.Position.ToString("X8"));
             //Console.ReadKey();
