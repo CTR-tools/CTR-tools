@@ -900,7 +900,6 @@ namespace ctrviewer
                     if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key) || mdltex.ContainsKey(t.Key) || hitex.ContainsKey(t.Key))
                         if (s.MontageCache.ContainsKey(t.Key))
                         {
-                            GameConsole.Write("found!");
                             tasks.Add(LoadTextureAsync(new KeyValuePair<string, System.Drawing.Bitmap>(t.Key, s.MontageCache[t.Key]), replacements));
                         }
                         else
