@@ -30,11 +30,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "merge4bits", "cmd_tools\mer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ctrviewer", "ctrviewer\ctrviewer.csproj", "{4977E0CC-1608-417F-9CF3-68470A51C528}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bigtool", "cmd_tools\bigtool\bigtool.csproj", "{38C9A5A1-FC5A-4070-9F15-6F6340555B2F}"
-EndProject
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "model_reader", "cmd_tools\model_reader\model_reader.csproj", "{EE68E73B-EC67-49AF-AA8E-051C78BDC3C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "howl", "cmd_tools\howl\howl.csproj", "{2AE0ECC5-4F60-4A9F-BAF2-C2B59B21E063}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bigtool", "cmd_tools\bigtool\bigtool.csproj", "{A972D893-DC83-4DD2-A8C5-9C3B91C06333}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -132,6 +133,14 @@ Global
 		{2AE0ECC5-4F60-4A9F-BAF2-C2B59B21E063}.Release|x64.Build.0 = Release|x64
 		{2AE0ECC5-4F60-4A9F-BAF2-C2B59B21E063}.Release|x86.ActiveCfg = Release|x86
 		{2AE0ECC5-4F60-4A9F-BAF2-C2B59B21E063}.Release|x86.Build.0 = Release|x86
+		{A972D893-DC83-4DD2-A8C5-9C3B91C06333}.Debug|x64.ActiveCfg = Debug|x64
+		{A972D893-DC83-4DD2-A8C5-9C3B91C06333}.Debug|x64.Build.0 = Debug|x64
+		{A972D893-DC83-4DD2-A8C5-9C3B91C06333}.Debug|x86.ActiveCfg = Debug|x86
+		{A972D893-DC83-4DD2-A8C5-9C3B91C06333}.Debug|x86.Build.0 = Debug|x86
+		{A972D893-DC83-4DD2-A8C5-9C3B91C06333}.Release|x64.ActiveCfg = Release|x64
+		{A972D893-DC83-4DD2-A8C5-9C3B91C06333}.Release|x64.Build.0 = Release|x64
+		{A972D893-DC83-4DD2-A8C5-9C3B91C06333}.Release|x86.ActiveCfg = Release|x86
+		{A972D893-DC83-4DD2-A8C5-9C3B91C06333}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +153,7 @@ Global
 		{38C9A5A1-FC5A-4070-9F15-6F6340555B2F} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
 		{EE68E73B-EC67-49AF-AA8E-051C78BDC3C9} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
 		{2AE0ECC5-4F60-4A9F-BAF2-C2B59B21E063} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
+		{A972D893-DC83-4DD2-A8C5-9C3B91C06333} = {1ABEE12F-A18C-4F32-A69C-E5EC20467116}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E9B47DD5-5D7F-44E8-8DDD-E8D9058D81D2}
