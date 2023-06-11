@@ -760,7 +760,7 @@ namespace CTRFramework.Models
                 {
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].X,
-                    stackIndex = 87,
+                    stackIndex = 80, //explain this index
                     flags = CtrDrawFlags.s | CtrDrawFlags.d //| CtrDrawFlags.k
                 };
 
@@ -768,7 +768,7 @@ namespace CTRFramework.Models
                 {
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].Z,
-                    stackIndex = 88,
+                    stackIndex = 81,
                     flags = CtrDrawFlags.d //| CtrDrawFlags.k
                 };
 
@@ -776,7 +776,7 @@ namespace CTRFramework.Models
                 {
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].Y,
-                    stackIndex = 89,
+                    stackIndex = 82,
                     flags = CtrDrawFlags.d //| CtrDrawFlags.k
                 };
 
