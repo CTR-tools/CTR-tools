@@ -6,6 +6,7 @@ using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace ctrviewer.Loaders
@@ -142,6 +143,9 @@ namespace ctrviewer.Loaders
                                         blendState == BlendState.Additive ? BlendState.Additive : (isAlpha ? BlendState.AlphaBlend : BlendState.Opaque)//isAlpha ? (blendState == BlendState.Additive ? blendState : BlendState.Opaque) : BlendState.Opaque
                                         );
 
+                                    if (qb.doubleSided)
+                                        Trilists[texTag].CullingEnabled = false;
+
                                     if (isAnimated)
                                         foreach (var ql in Trilists)
                                             if (ql.Value.type == TriListType.Animated)
@@ -189,6 +193,18 @@ namespace ctrviewer.Loaders
 
                         break;
                     }
+            }
+
+            //move double sided to the end
+            foreach (var trilist in Trilists.ToList())
+            {
+                if (!trilist.Value.CullingEnabled)
+                {
+                    var value = trilist.Value;
+                    var key = trilist.Key;
+                    Trilists.Remove(key);
+                    Trilists.Add(key, value);
+                }
             }
 
             Seal();
