@@ -593,13 +593,23 @@ namespace CTRFramework
 
             
             //hardcoded animated
-            Helpers.CheckFolder("animTex");
+            Helpers.CheckFolder("data\\animTex");
 
             foreach (var quad in quads)
+            {
+                if (quad is null) continue;
+
                 foreach (var tex in quad.tex)
+                {
+                    if (tex is null) continue;
+
                     if (tex.animframes.Count > 0)
                         foreach (var anim in tex.animframes)
-                            ctrvram.GetTexture(anim, "animTex")?.Save($"animTex\\{anim.Tag}.png");
+                            //must implement cached export here too
+                            if (!File.Exists($"data\\animTex\\{anim.Tag}.png"))
+                                ctrvram.GetTexture(anim, "animTex")?.Save($"data\\animTex\\{anim.Tag}.png");
+                }
+            }
             
 
             //special case for tageing textures
@@ -609,9 +619,7 @@ namespace CTRFramework
                 Helpers.CheckFolder(path);
 
                 foreach (var bmp in MontageCache)
-                {
                     bmp.Value.Save(Helpers.PathCombine(path, $"{bmp.Key}.png"));
-                }
             }
 
             Helpers.Panic(this, PanicType.Info, "...requested LoD export done.");
