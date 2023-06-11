@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Sound;
+using NAudio.Wave;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -7,7 +8,7 @@ namespace CTRTools.Controls
 {
     public partial class HowlControl : UserControl
     {
-        Howl howl;
+        public Howl howl;
 
         public HowlControl()
         {
@@ -26,19 +27,28 @@ namespace CTRTools.Controls
             label1.Text = $"Howl loaded from {filename}.";
 
 
-            listBox1.BeginUpdate();
+            sampleTableListBox.BeginUpdate();
 
-            listBox1.Items.Clear();
+            sampleTableListBox.Items.Clear();
 
             foreach (var entry in Howl.SampleTable)
-                listBox1.Items.Add(Howl.GetName(entry.SampleID, Howl.samplenames));
+                sampleTableListBox.Items.Add(Howl.GetName(entry.SampleID, Howl.samplenames));
 
-            listBox1.EndUpdate();
+            sampleTableListBox.EndUpdate();
 
 
-            treeBanks.BeginUpdate();
+            songListBox.BeginUpdate();
+            songListBox.Items.Clear();
 
-            treeBanks.Nodes.Clear();
+            foreach (var entry in howl.Songs)
+                songListBox.Items.Add(entry.name);
+
+            songListBox.EndUpdate();
+
+
+            banksTreeView.BeginUpdate();
+
+            banksTreeView.Nodes.Clear();
 
             foreach (var bank in howl.Banks)
             {
@@ -59,10 +69,10 @@ namespace CTRTools.Controls
                     bankNode.Nodes.Add(sampleNode);
                 }
 
-                treeBanks.Nodes.Add(bankNode);
+                banksTreeView.Nodes.Add(bankNode);
             }
 
-            treeBanks.EndUpdate();
+            banksTreeView.EndUpdate();
         }
 
         private void actionExport_Click(object sender, EventArgs e)
@@ -98,9 +108,9 @@ namespace CTRTools.Controls
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex < 0) return;
+            if (sampleTableListBox.SelectedIndex < 0) return;
 
-            propertyGrid1.SelectedObject = Howl.SampleTable[listBox1.SelectedIndex];
+            propertyGrid1.SelectedObject = Howl.SampleTable[sampleTableListBox.SelectedIndex];
         }
 
         private void actionSave_Click(object sender, EventArgs e)
@@ -113,6 +123,52 @@ namespace CTRTools.Controls
 
         private void treeBanks_AfterSelect(object sender, TreeViewEventArgs e)
         {
+        }
+
+        private void songListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var seq = howl.Songs[songListBox.SelectedIndex];
+
+            var savedialog = new SaveFileDialog();
+            savedialog.Filter = "CTR CSEQ (*.cseq)|*.cseq";
+            savedialog.FileName = seq.name;
+
+            if (savedialog.ShowDialog() == DialogResult.OK)
+            {
+
+
+                howl.Songs[songListBox.SelectedIndex].Save(savedialog.FileName);
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (howl is null) return;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+                LoadHowl(ofd.FileName);
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (howl is null) return;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                howl.Save(sfd.FileName);
+            }
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (howl is null) return;
+
+            var fbd = new FolderBrowserDialog();
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                //unimplemented
+            }
         }
     }
 }

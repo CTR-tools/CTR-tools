@@ -1,8 +1,10 @@
 ﻿using CTRFramework.Shared;
+using CTRFramework.Sound;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using CTRTools.Controls;
 
 namespace CTRTools
 {
@@ -76,6 +78,11 @@ namespace CTRTools
                         tabControl.SelectedTab = tabLev;
                     break;
             }
+        }
+
+        private void howlControl1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

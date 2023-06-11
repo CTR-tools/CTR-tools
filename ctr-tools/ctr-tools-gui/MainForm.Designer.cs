@@ -335,6 +335,7 @@
             this.howlControl1.Name = "howlControl1";
             this.howlControl1.Size = new System.Drawing.Size(605, 406);
             this.howlControl1.TabIndex = 0;
+            this.howlControl1.Load += new System.EventHandler(this.howlControl1_Load);
             // 
             // statusStrip1
             // 
