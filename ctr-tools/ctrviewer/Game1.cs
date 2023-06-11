@@ -3,6 +3,7 @@ using CTRFramework.Big;
 using CTRFramework.Shared;
 using CTRFramework.Sound;
 using CTRFramework.Vram;
+using CTRFramework.Models;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Gui;
 using ctrviewer.Engine.Input;
@@ -20,6 +21,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Locale = ctrviewer.Resources.Localization;
+using ctrviewer.Engine.Menu;
 
 namespace ctrviewer
 {
@@ -40,6 +42,8 @@ namespace ctrviewer
 
     public partial class Game1 : Game
     {
+        Rectangle lastWindowState;
+
         MainEngine eng;
 
         public static GraphicsDeviceManager graphics;
@@ -69,7 +73,7 @@ namespace ctrviewer
         public static int currentflag = -1;
 
         //get version only once, because we don't want this to be allocated every frame.
-        public static string version = Meta.GetVersion();
+        //public static string version = Meta.Version;
 
         public static bool BigFileExists = false;
 
@@ -77,19 +81,73 @@ namespace ctrviewer
 
         public void SwitchDisplayMode() => SwitchDisplayMode(graphics);
 
+
+        bool wasFullscreen = false;
+
         public void SetResolution(GraphicsDeviceManager graphics)
         {
             var mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 
-            graphics.PreferredBackBufferWidth = mode.Width;
-            graphics.PreferredBackBufferHeight = mode.Height;
-
-            if (eng.Settings.Windowed)
+            if (!eng.Settings.Windowed)
             {
-                graphics.PreferredBackBufferWidth = graphics.PreferredBackBufferWidth * eng.Settings.WindowScale / 100;
-                graphics.PreferredBackBufferHeight = graphics.PreferredBackBufferHeight * eng.Settings.WindowScale / 100;
+                graphics.PreferredBackBufferWidth = mode.Width;
+                graphics.PreferredBackBufferHeight = mode.Height;
+
+                wasFullscreen = true;
             }
+            else
+            {
+                if (wasFullscreen)
+                {
+                    graphics.PreferredBackBufferWidth = lastWindowState.Width;
+                    graphics.PreferredBackBufferHeight = lastWindowState.Height;
+                }
+                else
+                {
+                    graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+                    graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+                }
+
+                if (graphics.PreferredBackBufferWidth < 320)
+                    graphics.PreferredBackBufferWidth = 320;
+
+                if (graphics.PreferredBackBufferHeight < 240)
+                    graphics.PreferredBackBufferHeight = 240;
+
+                wasFullscreen = false;
+                lastWindowState = Window.ClientBounds;
+            }
+
+            eng.Cameras[CameraType.DefaultCamera].SetAspectRatio(
+                graphics.PreferredBackBufferWidth,
+                graphics.PreferredBackBufferHeight
+                );
+
+            mode = null;
         }
+
+        public void UpdateInternalResolution()
+        {
+            if (EngineSettings.Instance.InternalPSXResolution)
+                SetInternalResolution(512, 216);
+            else
+                SetInternalResolution();
+        }
+
+        public void SetInternalResolution(int width = 0, int height = 0)
+        {
+            if (width == 0 || height == 0)
+            {
+                width = graphics.PreferredBackBufferWidth;
+                height = graphics.PreferredBackBufferHeight;
+            }
+
+            eng.CreateScreenBuffer(width, height);
+
+            UpdateSplitscreenViewports(graphics, eng.screenBuffer);
+        }
+
+
 
         public void SwitchDisplayMode(GraphicsDeviceManager graphics)
         {
@@ -100,8 +158,10 @@ namespace ctrviewer
             UpdateSplitscreenViewports(graphics);
 
             graphics.IsFullScreen = !eng.Settings.Windowed;
+
             graphics.ApplyChanges();
 
+            //if windowed menu item exists, set proper state
             if (menu != null)
                 (menu.Find("window") as BoolMenuItem).Value = eng.Settings.Windowed;
 
@@ -198,13 +258,16 @@ namespace ctrviewer
         public void UpdateVSync()
         {
             graphics.SynchronizeWithVerticalRetrace = eng.Settings.VerticalSync;
-            IsFixedTimeStep = eng.Settings.VerticalSync;
+            IsFixedTimeStep = false;
 
             graphics.ApplyChanges();
         }
 
 
-        Vector3 todNight = new Vector3(0.1f, 0.3f, 0.5f) * 2;
+
+        #region [Time of day stuff]
+
+        Vector3 todNight = new Vector3(0.2f, 0.5f, 0.7f) * 2;
         Vector3 todEvening = new Vector3(0.85f, 0.7f, 0.35f) * 2;
         Vector3 todDay = new Vector3(1) * 2;
 
@@ -220,31 +283,11 @@ namespace ctrviewer
             UpdateEffects();
         }
 
-        public void SetInternalResolution(int width = 0, int height = 0)
-        {
-            if (width == 0 || height == 0)
-            {
-                width = graphics.PreferredBackBufferWidth;
-                height = graphics.PreferredBackBufferHeight;
-            }
-
-            eng.userContext.BufferSize = new Vector2(width, height);
-            eng.CreateScreenBuffer();
-
-            UpdateSplitscreenViewports(graphics, eng.screenBuffer);
-        }
-
-        public void UpdateInternalResolution()
-        {
-            if (EngineSettings.Instance.InternalPSXResolution)
-                SetInternalResolution(512, 216);
-            else
-                SetInternalResolution();
-        }
+        #endregion
 
         public void Window_ClientSizeChanged(object sender, EventArgs e)
         {
-            UpdateSplitscreenViewports(graphics);
+            
             SwitchDisplayMode();
         }
 
@@ -271,14 +314,13 @@ namespace ctrviewer
         {
             SetLang();
 
-            GameConsole.Write($"ctrviewer - {version}");
+            GameConsole.Write($"ctrviewer - {Meta.Version}");
 
             UpdateTargetFramerate();
 
             Content.RootDirectory = "Content";
 
             InactiveSleepTime = new TimeSpan(0);
-
 
             //hardware switch is disabled due to wrong resolution + crash after AA change
             graphics.HardwareModeSwitch = false;
@@ -307,6 +349,8 @@ namespace ctrviewer
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             UpdateEffects();
+            eng.Cameras[CameraType.DefaultCamera].SetAspectRatio(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            UpdateCameras(new GameTime());
 
             GamePadHandler.Update();
 
@@ -337,6 +381,7 @@ namespace ctrviewer
             ContentVault.AddSound("menu_up", Content.Load<SoundEffect>("sfx\\menu_up"));
             ContentVault.AddSound("menu_down", Content.Load<SoundEffect>("sfx\\menu_down"));
 
+            ContentVault.AddShader("tutorial", Content.Load<Effect>("shaders\\tutorial"));
             ContentVault.AddShader("16bits", Content.Load<Effect>("shaders\\16bits"));
             ContentVault.AddShader("scanlines", Content.Load<Effect>("shaders\\scanlines"));
 
@@ -377,7 +422,9 @@ namespace ctrviewer
 
             InitMenu();
 
-            LoadScenesFromFolder();
+            //LoadScenesFromFolder();
+
+            //LoadAllScenes();
 
             sw.Stop();
 
@@ -434,7 +481,7 @@ namespace ctrviewer
             menu.Find("aniso").PressedLeft += UpdateAniso;
             menu.Find("aniso").PressedRight += UpdateAniso;
 
-            menu.Find("fps30").Click += UpdateFps30;
+            //menu.Find("fps30").Click += UpdateFps30;
 
             menu.Find("lang").Click += Restart;
             menu.Find("lang").PressedLeft += UpdateLang;
@@ -467,10 +514,12 @@ namespace ctrviewer
 
             foreach (var lod in Enum.GetNames(typeof(LevelType)))
                 menu.Find(lod.ToString()).Click += SetLodAndReload;
+
+            PopulateCustomLevelsMenu();
         }
 
         #region [click events]
-        
+
         public void SetLocale(Language lang)
         {
             var culture = "en-US";
@@ -537,7 +586,7 @@ namespace ctrviewer
         public void ToggleVsync(object sender, EventArgs args)
         {
             eng.Settings.VerticalSync = (sender as BoolMenuItem).Value;
-            menu.Find("fps30").Enabled = eng.Settings.VerticalSync;
+            //menu.Find("fps30").Enabled = eng.Settings.VerticalSync;
         }
 
         public void ToggleAntialias(object sender, EventArgs args) => eng.Settings.AntiAlias = (sender as BoolMenuItem).Value;
@@ -550,7 +599,7 @@ namespace ctrviewer
 
         public void UpdateAniso(object sender, EventArgs args) => eng.Settings.AnisotropyLevel = (sender as IntRangeMenuItem).SelectedValue;
 
-        public async void LoadLevelAsync(object sender, EventArgs args)
+        public void LoadLevelAsync(object sender, EventArgs args)
         {
             IsLoading = true;
             ControlsEnabled = false;
@@ -566,7 +615,7 @@ namespace ctrviewer
 
             loadlevel.Start();
 
-            await loadlevel;
+            loadlevel.Wait();
 
             GC.Collect();
 
@@ -636,13 +685,21 @@ namespace ctrviewer
         /// Creates "cone" used for botpaths.
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="c"></param>
-        public void AddCone(string name, Color c)
+        /// <param name="color"></param>
+        public void AddCone(string name, Color color)
         {
             if (ContentVault.Models.ContainsKey(name)) return;
-            ContentVault.AddModel(name, DataConverter.ToTriListCollection(cone, c, true));
+            ContentVault.AddModel(name, DataConverter.ToTriListCollection(cone, color, true));
         }
 
+        /// <summary>
+        /// generates top 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="top"></param>
+        /// <param name="bottom"></param>
+        /// <param name="grad"></param>
+        /// <param name="size"></param>
         public void GenerateBasicSky(string name, Color top, Color bottom, Gradient[] grad, int size = 10)
         {
             //check the condition against actual values here...
@@ -662,105 +719,105 @@ namespace ctrviewer
             //top half
             if (top.A > 0)
             {
-                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), DataConverter.ToColor(grad[0].ColorFrom), Vector2.Zero));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, -size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), DataConverter.ToColor(grad[0].FromColor), Vector2.Zero));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, -size), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
                 modl.PushQuad(vptc);
                 vptc.Clear();
 
-                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
-                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(-size, 0, size), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, size), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(0, size, 0), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
+                vptc.Add(new VertexPositionColorTexture(new Vector3(size, 0, -size), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
                 modl.PushQuad(vptc);
                 vptc.Clear();
             }
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].FromColor), new Vector2(0, 0)));
             modl.PushQuad(vptc);
             vptc.Clear();
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].FromColor), new Vector2(0, 0)));
             modl.PushQuad(vptc);
             vptc.Clear();
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
-            modl.PushQuad(vptc);
-            vptc.Clear();
-
-
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
-            modl.PushQuad(vptc);
-            vptc.Clear();
-
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
-            modl.PushQuad(vptc);
-            vptc.Clear();
-
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
             modl.PushQuad(vptc);
             vptc.Clear();
 
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].FromColor), new Vector2(0, 0)));
             modl.PushQuad(vptc);
             vptc.Clear();
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].FromColor), new Vector2(0, 0)));
             modl.PushQuad(vptc);
             vptc.Clear();
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
             modl.PushQuad(vptc);
             vptc.Clear();
 
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, -5), DataConverter.ToColor(grad[2].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, -5), DataConverter.ToColor(grad[2].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].FromColor), new Vector2(0, 0)));
             modl.PushQuad(vptc);
             vptc.Clear();
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, -5), DataConverter.ToColor(grad[1].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, -5), DataConverter.ToColor(grad[1].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].FromColor), new Vector2(0, 0)));
             modl.PushQuad(vptc);
             vptc.Clear();
 
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ColorTo), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
-            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].ColorFrom), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, -5), DataConverter.ToColor(grad[0].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, -5), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].To / 25f, 5), DataConverter.ToColor(grad[2].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[2].From / 25f, 5), DataConverter.ToColor(grad[2].FromColor), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].To / 25f, 5), DataConverter.ToColor(grad[1].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[1].From / 25f, 5), DataConverter.ToColor(grad[1].FromColor), new Vector2(0, 0)));
+            modl.PushQuad(vptc);
+            vptc.Clear();
+
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].To / 25f, 5), DataConverter.ToColor(grad[0].ToColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(-5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
+            vptc.Add(new VertexPositionColorTexture(new Vector3(5, grad[0].From / 25f, 5), DataConverter.ToColor(grad[0].FromColor), new Vector2(0, 0)));
             modl.PushQuad(vptc);
             vptc.Clear();
 
@@ -800,11 +857,10 @@ namespace ctrviewer
         /// Loads all necessary textures and processes as required (generates mips, loads replacements, etc)
         /// Should be called after all scenes are already loaded to Scenes array.
         /// </summary>
-        private Task LoadTextures()
+        private void LoadTextures()
         {
             GameConsole.Write("LoadTextures()");
 
-            var tasks = new List<Task>();
             var replacements = new Dictionary<string, string>();
 
             //try to load all png replacement textures, if newtex folder exists
@@ -826,6 +882,8 @@ namespace ctrviewer
                 }
             }
 
+            var tasks = new List<Task>();
+
             foreach (var s in Scenes)
             {
                 var lowtex = s.GetTexturesList(Detail.Low);
@@ -833,12 +891,25 @@ namespace ctrviewer
                 var mdltex = s.GetTexturesList(Detail.Models);
                 var hitex = s.GetTexturesList(Detail.High);
 
+                //maybe no vram?
+                if (s.ctrvram is null) continue;
+
+                int i = 0;
+
                 foreach (var t in s.ctrvram.textures)
                     if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key) || mdltex.ContainsKey(t.Key) || hitex.ContainsKey(t.Key))
-                        tasks.Add(LoadTextureAsync(t, replacements));
+                        if (s.MontageCache.ContainsKey(t.Key))
+                        {
+                            GameConsole.Write("found!");
+                            tasks.Add(LoadTextureAsync(new KeyValuePair<string, System.Drawing.Bitmap>(t.Key, s.MontageCache[t.Key]), replacements));
+                        }
+                        else
+                        {
+                            tasks.Add(LoadTextureAsync(t, replacements));
+                        }
             }
 
-            return Task.WhenAll(tasks);
+            Task.WaitAll(tasks.ToArray());
         }
 
         private Task LoadTextureAsync(KeyValuePair<string, System.Drawing.Bitmap> t, Dictionary<string, string> replacements = null)
@@ -880,9 +951,12 @@ namespace ctrviewer
             ContentVault.AddTexture("flag", Content.Load<Texture2D>("flag"));
             ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas ? "logo_xmas" : "logo"));
 
-            //and shader!
+            //and shaders!
             ContentVault.AddShader("16bits", Content.Load<Effect>("shaders\\16bits"));
             ContentVault.AddShader("scanlines", Content.Load<Effect>("shaders\\scanlines"));
+            ContentVault.AddShader("tutorial", Content.Load<Effect>("shaders\\tutorial"));
+
+            ContentVault.GetShader("16bits").Parameters["bMirrorX"].SetValue(false);
         }
 
         /// <summary>
@@ -945,27 +1019,50 @@ namespace ctrviewer
             }
         }
 
+        public void LoadLevelFromFile(string filename, string vramname = "")
+        {
+            if (!File.Exists(filename)) return;
+
+            Scenes.Clear();
+            var scene = CtrScene.FromFile(filename);
+            Scenes.Add(scene);
+            LoadAllScenes();
+            ResetCamera();
+        }
+
         /// <summary>
         /// Loads all .lev files from levels folder.
         /// </summary>
-        private void LoadScenesFromFolder()
+        private void PopulateCustomLevelsMenu()
         {
             if (!Directory.Exists("levels"))
-                return;
-
-            string[] filelist = Directory.GetFiles("levels", "*.lev");
-
-            if (filelist.Length == 0)
             {
-                GameConsole.Write("no levs to load in levels folder.");
+                GameConsole.Write("No custom levels to load.");
                 return;
             }
 
-            foreach (var filename in filelist)
-                Scenes.Add(CtrScene.FromFile(filename, false));
+            var customLevelsMenu = Menu.menus["custom_levels"];
+            customLevelsMenu.Clear();
 
-            if (Scenes.Count > 0)
-                LoadAllScenes();
+            string[] dirs = Directory.GetDirectories("levels");
+
+            foreach (var dir in dirs)
+            {
+                var infoXml = Helpers.PathCombine(dir, "info.xml");
+
+                if (File.Exists(infoXml))
+                {
+                    var info = CustomLevelInfo.FromFile(infoXml);
+
+                    var customLevel = new StringMenuItem(info.FullLevelPath) { Text = info.LevelName, Name = info.LevelName };
+                    customLevel.Click += (o, i) => { LoadLevelFromFile(((StringMenuItem)o).Value); };
+
+                    customLevelsMenu.Add(customLevel);
+                }
+            }
+
+            //add link to upper menu
+            customLevelsMenu.Add(new MenuItem(Locale.MenuGeneric_Back, "link", "cupmenu", true));
         }
 
         /// <summary>
@@ -999,7 +1096,9 @@ namespace ctrviewer
                 {
                     try
                     {
-                        eng.MeshHigh.Add(RawLevelLoader.FromFile(file));
+                        GameConsole.Write($"Trying to import {file}...");
+                        eng.MeshMed.Add(RawLevelLoader.FromFile(file));
+                        GameConsole.Write($"Success!");
                     }
                     catch
                     {
@@ -1011,7 +1110,8 @@ namespace ctrviewer
 
             //loading textures between scenes and conversion to monogame for alpha textures info
             loadingStatus = "loading textures...";
-            LoadTextures().Wait();
+
+            LoadTextures();
 
             loadingStatus = "converting scenes...";
 
@@ -1068,7 +1168,7 @@ namespace ctrviewer
                 for (int i = 0; i < 8; i++)
                     if (s.header.startGrid[i].Position != System.Numerics.Vector3.Zero)
                         eng.instanced.Add(new InstancedModel(
-                           ((CharIndex)i).ToString().ToLower(),
+                           ((CharIndex)i).ToString().ToUpper(),
                            DataConverter.ToVector3(s.header.startGrid[i].Position),
                            new Vector3(
                                 s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
@@ -1130,6 +1230,7 @@ namespace ctrviewer
                 }
 
                 //put all botpaths
+                if (s.nav is not null) //this null check is for test level, actual game got ptr to empty struct 
                 if (s.nav.paths.Count == 3)
                 {
                     foreach (var n in s.nav.paths[0].Frames)
@@ -1146,9 +1247,6 @@ namespace ctrviewer
 
             loadingStatus = "updating effects...";
             UpdateEffects();
-
-            MontageHelper.LoadQuad(eng, Scenes[0].quads[quadprev]);
-            eng.instanced.Add(new InstancedModel("montage", Vector3.Zero, Vector3.Zero, Vector3.One));
 
             RenderEnabled = true;
         }
@@ -1172,7 +1270,7 @@ namespace ctrviewer
                     eng.bspBranches.PushBox(
                         DataConverter.ToVector3(node.bbox.Min),
                         DataConverter.ToVector3(node.bbox.Max),
-                        node.flag.HasFlag(VisDataFlags.NoCollision) ? Color.Green : Color.Red,
+                        node.flag.HasFlag(VisNodeFlags.NoCollision) ? Color.Green : Color.Red,
                         1 / 100f
                     );
                 }
@@ -1210,9 +1308,9 @@ namespace ctrviewer
         /// <param name="visDat"></param>
         /// <param name="scene"></param>
         /// <param name="level"></param>
-        private void BspPopulate(VisData visDat, CtrScene scene, int level)
+        private void BspPopulate(VisNode visDat, CtrScene scene, int level)
         {
-            var childVisData = scene.GetVisDataChildren(visDat); // if node has children get those children
+            var childVisData = scene.GetVisNodeChildren(visDat); // if node has children get those children
 
             // has any children?
             if (childVisData.Count == 0) return;
@@ -1352,6 +1450,9 @@ namespace ctrviewer
 
             loadingStatus = "finished.";
 
+            if (karts.Count > 0)
+                karts[0].TrackProgress = 0;
+
             GameConsole.Write($"loading done in {sw.Elapsed.TotalSeconds} seconds");
         }
 
@@ -1393,20 +1494,31 @@ namespace ctrviewer
             //update input before window active check to avoid random camera jumpscares
             InputHandlers.Update();
 
+            //move on is windows isn't active
             if (!IsActive) return;
 
-            //allow fullscreen toggle before checking for controls
-            if (InputHandlers.Process(GameAction.ToggleFullscreen))
-                eng.Settings.Windowed ^= true;
+            //allow fullscreen toggle before checking for controls enabled
+            if (InputHandlers.Process(GameAction.ToggleFullscreen)) eng.Settings.Windowed ^= true;
 
+            //move on if can't control stuff
             if (!ControlsEnabled) return;
 
+            //handle exit
+            if (InputHandlers.Process(GameAction.ForceQuit)) Exit();
 
+            //handle screenshot
             if (InputHandlers.Process(GameAction.Screenshot))
                 eng.TakeScreenShot();
 
+            //handle console toggle
+            if (InputHandlers.Process(GameAction.ToggleConsole))
+                eng.Settings.ShowConsole ^= true;
+
+            //? drop
             newmenu.Update(gameTime);
 
+
+            //process karts in kart mode
             if (eng.Settings.KartMode)
                 foreach (var kart in karts)
                 {
@@ -1436,10 +1548,7 @@ namespace ctrviewer
                         }
                 }
 
-
-            if (InputHandlers.Process(GameAction.ForceQuit))
-                Exit();
-
+            //handle stereo mode
             if (eng.Settings.StereoPair)
             {
                 if (GamePadHandler.IsDown(Buttons.RightShoulder) || KeyboardHandler.IsDown(Keys.OemOpenBrackets))
@@ -1450,13 +1559,11 @@ namespace ctrviewer
 
                 if (eng.Settings.StereoPairSeparation < 0) eng.Settings.StereoPairSeparation = 0;
 
-                if (GamePadHandler.IsDown(Buttons.RightShoulder) && GamePadHandler.IsDown(Buttons.LeftShoulder))
+                if (GamePadHandler.AreAllDown(Buttons.RightShoulder, Buttons.LeftShoulder, Buttons.RightStick))
                     eng.Settings.StereoPairSeparation = 10;
             }
 
-            if (InputHandlers.Process(GameAction.ToggleConsole))
-                eng.Settings.ShowConsole ^= true;
-
+            //handle char switch
             if (KeyboardHandler.IsPressed(Keys.O) || GamePadHandler.IsPressed(Buttons.LeftShoulder))
             {
                 selectedChar--;
@@ -1465,7 +1572,7 @@ namespace ctrviewer
                     selectedChar = 14;
 
                 if (karts.Count > 0)
-                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
+                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToUpper();
             }
 
             if (KeyboardHandler.IsPressed(Keys.P) || GamePadHandler.IsPressed(Buttons.RightShoulder))
@@ -1476,15 +1583,18 @@ namespace ctrviewer
                     selectedChar = 0;
 
                 if (karts.Count > 0)
-                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToLower();
+                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToUpper();
             }
 
+            //handle FOV
             if (KeyboardHandler.IsDown(Keys.OemMinus)) eng.Settings.FieldOfView--;
             if (KeyboardHandler.IsDown(Keys.OemPlus)) eng.Settings.FieldOfView++;
 
+            //handle menu toggle
             if (InputHandlers.Process(GameAction.MenuToggle))
                 menu.Visible ^= true;
 
+            //if menu is on the screen, handle menu
             if (menu.Visible)
             {
                 menu.Update(gameTime);
@@ -1506,31 +1616,6 @@ namespace ctrviewer
                         case "link":
                             menu.SetMenu(font, menu.SelectedItem.Param);
                             break;
-
-                        case "nextblock":
-                            quadprev++;
-                            if (quadprev < 0) quadprev = 0;
-
-                            MontageHelper.LoadQuad(eng, Scenes[0].quads[quadprev]);
-
-                            foreach (var model in eng.instanced)
-                                if (model.ModelName == "montage")
-                                    model.ModelName = "montage";
-
-                            GameConsole.Write(Scenes[0].quads[quadprev].tex.Count + "");
-                            break;
-                        case "prevblock":
-                            quadprev--;
-
-                            MontageHelper.LoadQuad(eng, Scenes[0].quads[quadprev]);
-
-                            foreach (var model in eng.instanced)
-                                if (model.ModelName == "montage")
-                                    model.ModelName = "montage";
-
-                            GameConsole.Write(Scenes[0].quads[quadprev].tex.Count + "");
-                            break;
-
                         case "toggle":
                             switch (menu.SelectedItem.Param)
                             {
@@ -1586,9 +1671,9 @@ namespace ctrviewer
                 }
             }
 
-
             base.Update(gameTime);
         }
+
 
         private void UpdateCameras(GameTime gameTime)
         {
@@ -1597,7 +1682,7 @@ namespace ctrviewer
                 eng.Cameras[CameraType.DefaultCamera].speedScale -= 0.1f * GamePadHandler.State.Triggers.Left;
                 eng.Cameras[CameraType.DefaultCamera].speedScale += 0.1f * GamePadHandler.State.Triggers.Right;
 
-                if (MouseHandler.IsLeftButtonHeld)
+                if (MouseHandler.IsRightButtonHeld)
                 {
                     if (captureMouse)
                     {
@@ -1665,6 +1750,14 @@ namespace ctrviewer
             if (eng.Cameras[CameraType.DefaultCamera].speedScale > 5)
                 eng.Cameras[CameraType.DefaultCamera].speedScale = 5;
 
+
+
+            eng.Cameras[CameraType.LeftEyeCamera].SetAspectRatio(eng.Cameras[CameraType.DefaultCamera].AspectRatio);
+            eng.Cameras[CameraType.RightEyeCamera].SetAspectRatio(eng.Cameras[CameraType.DefaultCamera].AspectRatio);
+
+            eng.Cameras[CameraType.SkyCamera].SetAspectRatio(eng.Cameras[CameraType.DefaultCamera].AspectRatio);
+
+
             eng.Cameras[CameraType.SkyCamera].Update(gameTime, updatemouse, false);
             eng.Cameras[CameraType.DefaultCamera].Update(gameTime, updatemouse, true);
 
@@ -1730,6 +1823,20 @@ namespace ctrviewer
             //render level mesh depending on lod
             foreach (var qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshMed))
                 qb.Draw(graphics, effect, alphaTestEffect);
+
+ 
+            /*
+            if (cam != null)
+            {
+                ContentVault.GetShader("tutorial")?.Parameters["World"]?.SetValue(Matrix.Identity);
+                ContentVault.GetShader("tutorial")?.Parameters["View"]?.SetValue(effect.View);
+                ContentVault.GetShader("tutorial")?.Parameters["Projection"]?.SetValue(effect.Projection);
+
+
+                foreach (var qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshMed))
+                    qb.DrawTest(graphics, ContentVault.GetShader("tutorial"));
+            }
+            */
 
             //maybe render bot paths
             if (eng.Settings.ShowBotPaths)
@@ -1834,6 +1941,7 @@ namespace ctrviewer
 
             spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Opaque, SamplerState.PointClamp, effect: eng.Settings.InternalPSXResolution ? ContentVault.GetShader("16bits") : null);
             spriteBatch.Draw(eng.screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
+
             spriteBatch.End();
 
             //start drawing menu stuff
@@ -1907,10 +2015,11 @@ namespace ctrviewer
             base.Draw(gameTime);
 
             if (!graphics.IsFullScreen)
-                Window.Title = $"ctrviewer - draw calls: {GraphicsDevice.Metrics.DrawCount} [{Math.Round(1000.0f / gameTime.ElapsedGameTime.TotalMilliseconds)} FPS]";
+                Window.Title = $"ctrviewer - draw calls: {GraphicsDevice.Metrics.DrawCount} [{Math.Round(10000000.0f / gameTime.ElapsedGameTime.Ticks)} FPS]";
 
             IsDrawing = false;
         }
+
         void DrawString(string text, int x, int y) => DrawString(text, new Vector2(x, y));
         void DrawString(string text, Vector2 position) => DrawString(text, position, CtrMainFontColor);
 
