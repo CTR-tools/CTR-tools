@@ -228,7 +228,7 @@ namespace ctrviewer.Engine.Testing
                 //if it isnt water or hidden quad
                 if (!quad.visNodeFlags.HasFlag(VisNodeFlags.Hidden) && !quad.visNodeFlags.HasFlag(VisNodeFlags.Water))
                 {
-                    //apply terraion friction
+                    //apply terrain friction
 
                     Powers[PowerType.Gravity].Value = 0;
 

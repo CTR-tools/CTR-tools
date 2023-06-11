@@ -97,7 +97,7 @@ namespace ctrviewer.Engine.Render
             */
         }
 
-        public void PushTri(List<VertexPositionColorTexture> lv)
+        public void PushTri(List<VertexPositionColorTexture> lv, bool fixOrder = false)
         {
             if (Sealed)
             {
@@ -106,10 +106,19 @@ namespace ctrviewer.Engine.Render
             }
 
             if (lv != null)
+            {
+                if (fixOrder)
+                {
+                    var x = lv[2];
+                    lv[2] = lv[1];
+                    lv[1] = x;
+                }
+
                 verts.AddRange(lv);
+            }
         }
 
-        public void PushQuad(List<VertexPositionColorTexture> lv)
+        public void PushQuad(List<VertexPositionColorTexture> lv, bool fixOrder = false)
         {
             if (Sealed)
             {
@@ -120,7 +129,14 @@ namespace ctrviewer.Engine.Render
             if (lv != null)
             {
                 for (int i = 0; i < lv.Count / 4; i++)
-                    verts.AddRange(new List<VertexPositionColorTexture>() { lv[0 + i * 4], lv[1 + i * 4], lv[2 + i * 4], lv[2 + i * 4], lv[1 + i * 4], lv[3 + i * 4] });
+                    if (!fixOrder)
+                    {
+                        verts.AddRange(new List<VertexPositionColorTexture>() { lv[0 + i * 4], lv[1 + i * 4], lv[2 + i * 4], lv[2 + i * 4], lv[1 + i * 4], lv[3 + i * 4] });
+                    }
+                    else
+                    {
+                        verts.AddRange(new List<VertexPositionColorTexture>() { lv[0 + i * 4], lv[2 + i * 4], lv[1 + i * 4], lv[2 + i * 4], lv[0 + i * 4], lv[3 + i * 4] });
+                    }
             }
         }
 
@@ -163,6 +179,40 @@ namespace ctrviewer.Engine.Render
                 indices[i] = (short)i;
 
             return indices;
+        }
+
+        public void DrawTest(GraphicsDeviceManager graphics, Effect effect)
+        {
+
+            if (effect == null)
+            {
+                GameConsole.Write("missing shader");
+            }
+
+            else
+            {
+                if (textureEnabled)
+                {
+                    
+                    effect.Parameters["VertexColorEnabled"]?.SetValue(1);
+                    effect.Parameters["bDiffuseMapEnabled"]?.SetValue(1);
+                    effect.Parameters["DiffuseMap"]?.SetValue(texture);
+                    effect.Parameters["bNormalMapEnabled"]?.SetValue(1);
+                    effect.Parameters["NormalMap"]?.SetValue(ContentVault.GetTexture("normalmap", false));
+                }
+
+                foreach (var pass in effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+
+                    graphics.GraphicsDevice.DrawUserIndexedPrimitives(
+                        PrimitiveType.TriangleList,
+                        verts_sealed, 0, numVerts,
+                        indices, 0, numFaces,
+                        VertexPositionColorTexture.VertexDeclaration
+                    );
+                }
+            }
         }
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)

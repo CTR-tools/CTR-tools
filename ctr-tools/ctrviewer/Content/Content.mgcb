@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin flag.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=True
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:flag.png
+
 #begin fonts/debug.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -27,7 +39,7 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/default.spritefont
 
-#begin flag.png
+#begin logo_xmas.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -37,7 +49,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:flag.png
+/build:logo_xmas.png
 
 #begin logo.png
 /importer:TextureImporter
@@ -50,18 +62,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:logo.png
-
-#begin logo_xmas.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=True
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:logo_xmas.png
 
 #begin sfx/menu_down.wav
 /importer:WavImporter
@@ -86,6 +86,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:shaders/scanlines.fx
+
+#begin shaders/tutorial.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:shaders/tutorial.fx
 
 #begin test.png
 /importer:TextureImporter

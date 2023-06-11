@@ -1,7 +1,9 @@
 ﻿using CTRFramework;
+using CTRFramework.Shared;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ctrviewer.Engine.Render
 {
@@ -31,7 +33,7 @@ namespace ctrviewer.Engine.Render
             }
         }
 
-        public MGLevel(SkyBox sb)
+        public MGLevel(CtrSkyBox sb)
         {
             TriList skybox = new TriList();
 
@@ -81,6 +83,12 @@ namespace ctrviewer.Engine.Render
 
             //foreach (var ql in animatedq)
             //    ql.Value.Update(gameTime);
+        }
+
+        public void DrawTest(GraphicsDeviceManager graphics, Effect effect)
+        {
+            foreach (var ql in Trilists)
+                ql.Value.DrawTest(graphics, ContentVault.GetShader("tutorial"));
         }
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
