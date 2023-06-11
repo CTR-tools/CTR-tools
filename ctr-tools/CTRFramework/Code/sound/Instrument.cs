@@ -98,8 +98,8 @@ namespace CTRFramework.Sound
                 vag.ReadFrames(br, Sample.Data.Length);
                 vag.HashString = Sample.HashString;
 
-                if (context.hashnames.ContainsKey(vag.HashString))
-                    vag.SampleName = context.hashnames[vag.HashString];
+                if (context.HashNames.ContainsKey(vag.HashString))
+                    vag.SampleName = context.HashNames[vag.HashString];
 
                 Console.WriteLine($"{vag.HashString}: {vag.SampleName}");
 

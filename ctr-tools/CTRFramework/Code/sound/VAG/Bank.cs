@@ -146,7 +146,7 @@ namespace CTRFramework.Sound
             foreach (var sample in samples.Values)
             {
                 sample.GetHash();
-                sample.Name = Context.hashnames.ContainsKey(sample.HashString) ? Context.hashnames[sample.HashString] : "default_name";
+                sample.Name = Context.HashNames.ContainsKey(sample.HashString) ? Context.HashNames[sample.HashString] : "default_name";
             }
         }
 
@@ -199,8 +199,8 @@ namespace CTRFramework.Sound
 
                     string hash = samples[id].HashString;
 
-                    if (Context.hashnames.ContainsKey(hash))
-                        vag.SampleName = Context.hashnames[hash];
+                    if (Context.HashNames.ContainsKey(hash))
+                        vag.SampleName = Context.HashNames[hash];
 
                     vagname = $"{id.ToString("0000")}_{hash}";
 

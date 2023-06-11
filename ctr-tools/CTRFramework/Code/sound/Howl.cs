@@ -10,9 +10,9 @@ namespace CTRFramework.Sound
 {
     public class HowlContext
     {
-        public Dictionary<int, string> seqnames = new Dictionary<int, string>();
+        public Dictionary<int, string> SongNames = new Dictionary<int, string>();
         public Dictionary<int, string> banknames = new Dictionary<int, string>();
-        public Dictionary<string, string> hashnames = new Dictionary<string, string>();
+        public Dictionary<string, string> HashNames = new Dictionary<string, string>();
 
         public static HowlContext Create() => new HowlContext();
     }
@@ -79,7 +79,7 @@ namespace CTRFramework.Sound
 
         private void KnownFileCheck(BinaryReaderEx br)
         {
-            Context.hashnames = Helpers.LoadTagList(Meta.HashPath);
+            Context.HashNames = Helpers.LoadTagList(Meta.HashPath);
 
             br.Jump(0);
 
@@ -108,7 +108,7 @@ namespace CTRFramework.Sound
 
                         for (int i = 0; i < songs.Length; i++)
                         {
-                            Context.seqnames.Add(i, songs[i].Trim());
+                            Context.SongNames.Add(i, songs[i].Trim());
                         }
 
                         break;
@@ -209,7 +209,7 @@ namespace CTRFramework.Sound
 
             for (int i = 0; i < Songs.Count; i++)
             {
-                Songs[i].name = Context.seqnames.ContainsKey(i) ? Context.seqnames[i] : i.ToString("00");
+                Songs[i].name = Context.SongNames.ContainsKey(i) ? Context.SongNames[i] : i.ToString("00");
                 Songs[i].PatchName = Songs[i].name;
 
                 Songs[i].LoadMetaInstruments();
@@ -433,54 +433,57 @@ s
             string pathSeq = Helpers.PathCombine(path, "songs");
             Helpers.CheckFolder(pathSeq);
 
-            int j = 0;
+            int songIndex = 0;
 
             foreach (int ptrSeq in ptrSeqs)
             {
-                string fn = "";
-
-                /*
-                if (reg != "")
+                string seqFileName = "";
+                
+                if (Context.SongNames is null)
                 {
-                    fn = String.Format(
-                        "{0}_{1}.cseq",
-                        j.ToString("00"),
-                        context.seqnames.ContainsKey(j) ? context.seqnames[j] : "sequence"
-                    );
+                    //fallback for missing 
+                    seqFileName = $"sequence_{songIndex.ToString("00")}.cseq";
                 }
                 else
-                */
                 {
-                    fn = $"sequence_{j.ToString("00")}.cseq";
+                    seqFileName = String.Format(
+                        "{0}_{1}.cseq",
+                        songIndex.ToString("00"),
+                        Context.SongNames.ContainsKey(songIndex) ? Context.SongNames[songIndex] : "sequence"
+                    );
                 }
 
-                Console.WriteLine("Extracting " + fn);
+                Helpers.Panic("HOWL", PanicType.Info, $"Extracting {seqFileName}");
 
-                fn = Helpers.PathCombine(pathSeq, fn);
+                var seqFullPath = Helpers.PathCombine(pathSeq, seqFileName);
 
                 br.Jump(ptrSeq);
                 int size = br.ReadInt32();
                 br.Jump(ptrSeq);
 
                 byte[] data = br.ReadBytes(size);
-                Helpers.WriteToFile(fn, data);
+                Helpers.WriteToFile(seqFullPath, data);
 
-                Cseq seq = Cseq.FromFile(fn);
-                seq.name = $"sequence_{j.ToString("0000")}";
+                var seq = Cseq.FromFile(seqFullPath);
+                seq.name = seqFileName;
 
-                if (Context.seqnames.ContainsKey(j))
-                    seq.name = Context.seqnames[j];
+                if (Context.SongNames.ContainsKey(songIndex))
+                    seq.name = Context.SongNames[songIndex];
 
                 seq.PatchName = seq.name;
                 seq.LoadMetaInstruments();
                 int i = 0;
+
+                var midiFolder = Helpers.PathCombine(pathSeq, "midi");
+                Helpers.CheckFolder(midiFolder);
+
                 foreach (var s in seq.Songs)
                 {
-                    s.ExportMIDI(Helpers.PathCombine(pathSeq, $"{seq.name}_{i}.mid"), seq);
+                    s.ExportMIDI(Helpers.PathCombine(midiFolder, $"{seq.name}_{i}.mid"), seq);
                     i++;
                 }
 
-                j++;
+                songIndex++;
             }
         }
 

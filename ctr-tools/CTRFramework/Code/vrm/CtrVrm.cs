@@ -13,48 +13,43 @@ namespace CTRFramework.Vram
         {
         }
 
-        public CtrVrm(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public CtrVrm(BinaryReaderEx br) => Read(br);
 
         public void Read(BinaryReaderEx br)
         {
+            // if it starts with 0x20 magic value, it's an endless stream of tims, however, actual game is hardcoded for 2 pages max
             if (br.ReadInt32() == 0x20)
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    br.ReadInt32(); //data size
+                    int pos = (int)br.BaseStream.Position;
+                    int size = br.ReadInt32(); //data size
                     Tims.Add(Tim.FromReader(br));
+
+                    if (br.BaseStream.Position - pos != size)
+                        Helpers.Panic(this, PanicType.Error, "VRAM: tim size mismatch.");
                 }
             }
-            else
+            else //it's supposed to be just a single tim file
             {
                 br.Jump(0);
                 Tims.Add(Tim.FromReader(br));
             }
         }
 
-        public static CtrVrm FromReader(BinaryReaderEx br)
-        {
-            return new CtrVrm(br);
-        }
+        public static CtrVrm FromReader(BinaryReaderEx br) => new CtrVrm(br);
 
         public static CtrVrm FromFile(string filename)
         {
+            //return empty vram if no file found
             if (!File.Exists(filename))
             {
                 Helpers.Panic("CtrVram", PanicType.Warning, "Missing VRAM file, return empty.");
                 return new CtrVrm();
             }
 
-
-            byte[] data = File.ReadAllBytes(filename);
-
-            using (var br = new BinaryReaderEx(new MemoryStream(data)))
+            using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                //    using (var br = new BinaryReaderEx(File.OpenRead(filename)))
-                //{
                 return FromReader(br);
             }
         }
