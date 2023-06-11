@@ -9,8 +9,7 @@ namespace CTRFramework.Lang
 {
     public class LNG : IReadWrite, IDisposable
     {
-        private readonly string missing = "MISSING MSG";
-        public bool ForceKatakana = false;
+        private readonly string missing = "MISSING MSG\0";
 
         public List<string> Entries = new List<string>();
 
@@ -18,11 +17,7 @@ namespace CTRFramework.Lang
         {
         }
 
-        public LNG(BinaryReaderEx br, bool forceKatakana = false)
-        {
-            ForceKatakana = forceKatakana;
-            Read(br);
-        }
+        public LNG(BinaryReaderEx br) => Read(br);
 
         /// <summary>
         /// Reads ctr localization file from stream using binary reader.
@@ -41,7 +36,7 @@ namespace CTRFramework.Lang
             {
                 br.Jump(u);
 
-                string entry = br.ReadStringNT(ForceKatakana);
+                string entry = br.ReadStringNT();
                 entry = entry.Replace((char)0x0D, '|');
                 //you probably can use it with other chars as well?
                 //probably better use U+0303, but it's only Ñ in PAL
@@ -69,11 +64,11 @@ namespace CTRFramework.Lang
         /// </summary>
         /// <param name="filename">Source file name.</param>
         /// <returns>LNG object.</returns>
-        public static LNG FromFile(string filename, bool forceKatana = false)
+        public static LNG FromFile(string filename)
         {
             using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                return new LNG(br, forceKatana);
+                return new LNG(br);
             }
         }
 
@@ -204,7 +199,7 @@ namespace CTRFramework.Lang
             foreach (var entry in Entries)
                 bw.Write(entry is null ? ptrMissing : list[entry]);
 
-            bw.Write("MISSING MSG\0".ToCharArray());
+            bw.Write(missing.ToCharArray());
 
             bw.Jump(4);
             bw.Write(lastoff);
