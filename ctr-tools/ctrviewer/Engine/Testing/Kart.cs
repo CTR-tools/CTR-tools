@@ -12,6 +12,7 @@ namespace ctrviewer.Engine.Testing
     {
         public static float MaxAcceleration = 0.01f;
         public static float MaxSpeed = 0.25f;
+        public static float MaxBackSpeed = 0.1f;
         public static float MaxTurningStep = 0.025f;
         public static float MaxDriftingStep = 0.05f;
         public static float MaxJumpStep = 0.001f;
@@ -29,7 +30,7 @@ namespace ctrviewer.Engine.Testing
     {
         Gravity,
         Engine,
-        EngineBackward,
+        BackPedal,
         Jump,
         SteerLeft,
         SteerRight,
@@ -97,7 +98,7 @@ namespace ctrviewer.Engine.Testing
     {
         public byte TrackProgress = 0;
 
-        public AnimationPlayer path;
+        public AnimationPlayer linkedPath;
 
         Dictionary<PowerType, Power> Powers = new Dictionary<PowerType, Power>();
 
@@ -106,11 +107,12 @@ namespace ctrviewer.Engine.Testing
         public float Speed = 0;
         public float Accel = 0;
         public float Gravity = 0;
-        public Kart(Vector3 pos, Vector3 rot) : base("crash", pos, rot, Vector3.One * 0.06f)
+        public Kart(Vector3 pos, Vector3 rot) : base("crash", pos, rot, Vector3.One * 0.05f)
         {
             Powers.Add(PowerType.Gravity, new Power() { MaxValue = KartPhysics.MaxGravity, Direction = Vector3.Down });
             Powers.Add(PowerType.TerrainFriction, new Power() { MaxValue = 99999f, Direction = Vector3.Zero });
             Powers.Add(PowerType.Engine, new Power() { MaxValue = KartPhysics.MaxSpeed, Direction = Vector3.Forward, IsInertial = true, FadeValue = KartPhysics.Friction });
+            Powers.Add(PowerType.BackPedal, new Power() { MaxValue = KartPhysics.MaxBackSpeed, Direction = Vector3.Forward, IsInertial = true, FadeValue = KartPhysics.Friction });
             //Powers.Add(PowerType.SteerLeft, new Power() { MaxValue = KartPhysics.MaxTurningStep, Direction = Vector3.Left });
             //Powers.Add(PowerType.SteerRight, new Power() { MaxValue = KartPhysics.MaxTurningStep, Direction = Vector3.Right });
             //Powers.Add(PowerType.DriftLeft, new Power() { MaxValue = KartPhysics.MaxDriftingStep, Direction = Vector3.Left });
@@ -124,18 +126,24 @@ namespace ctrviewer.Engine.Testing
             return value * KartPhysics.TargetFps / 1000f * (float)gameTime.ElapsedGameTime.TotalMilliseconds;
         }
 
+        Vector3 resultingPower;
+        Vector3 resultingDirection;
+
         public Vector3 GetResultingPower(GameTime gameTime)
         {
-            Vector3 result = Vector3.Zero;
+            resultingPower = Vector3.Zero;
 
             foreach (var power in Powers.Values)
                 if (power.Enabled)
-                    result += power.Direction * GetDelta(gameTime, power.Value);
+                    resultingPower += power.Direction * GetDelta(gameTime, power.Value);
 
-            return result;
+            resultingDirection = Vector3.Normalize(resultingPower);
+
+            return resultingPower;
         }
 
-        public Vector3 GetResultingDirection(GameTime gameTime) => Vector3.Normalize(GetResultingPower(gameTime));
+        private Ray oldray;
+        private Ray newray;
 
         public void Collide(List<CtrScene> scenes, GameTime gameTime)
         {
@@ -163,9 +171,13 @@ namespace ctrviewer.Engine.Testing
                             Vector3 p2 = DataConverter.ToVector3(vertices[2].Position);
                             Vector3 p3 = DataConverter.ToVector3(vertices[3].Position);
 
-                            Vector3 dir = GetResultingDirection(gameTime);
-                            Ray oldray = new Ray(Position, dir);
-                            Ray newray = new Ray(Position + GetResultingPower(gameTime), dir);
+                            GetResultingPower(gameTime);
+
+                            oldray.Position = Position;
+                            oldray.Direction = resultingDirection;
+
+                            newray.Position = Position + resultingPower;
+                            newray.Direction = resultingDirection;
 
                             if (!TestCollision(scene, quad, oldray, newray, p0, p2, p1))
                                 TestCollision(scene, quad, oldray, newray, p3, p2, p1);
@@ -174,6 +186,9 @@ namespace ctrviewer.Engine.Testing
 
         }
 
+        /// <summary>
+        /// Handles kart to quad collision logic.
+        /// </summary>
         public bool TestCollision(CtrScene scene, QuadBlock quad, Ray oldray, Ray newray, Vector3 p1, Vector3 p2, Vector3 p3)
         {
             float oldcoll = Collision.IntersectRayTriangle(oldray, p1, p2, p3);
@@ -194,19 +209,27 @@ namespace ctrviewer.Engine.Testing
             {
                 //GameConsole.Write(quad.trackPos + " " + TrackProgress  + " " + (quad.trackPos > TrackProgress) + " " + (quad.trackPos != 0xFF));
 
-                if (quad.trackPos == 0)
-                    TrackProgress = 0;
-
-                if (quad.trackPos > TrackProgress && quad.trackPos != 0xFF)
+                //handle track progress
+                switch (quad.trackPos)
                 {
-                    TrackProgress = quad.trackPos;
-                    GameConsole.Write($"track progress: {TrackProgress}");
+                    case 0: TrackProgress = 0; break;
+                    case 0xFF: break;
+                    default:
+                        if (quad.trackPos > TrackProgress)
+                        {
+                            TrackProgress = quad.trackPos;
+                            GameConsole.Write($"track progress: {TrackProgress}");
+                        }
+                        break;
                 }
 
                 //GameConsole.Write($" face normal: {fn} vector up: {Vector3.Up}");
 
-                if (!quad.visDataFlags.HasFlag(VisNodeFlags.Hidden) && !quad.visDataFlags.HasFlag(VisNodeFlags.Water))
+                //if it isnt water or hidden quad
+                if (!quad.visNodeFlags.HasFlag(VisNodeFlags.Hidden) && !quad.visNodeFlags.HasFlag(VisNodeFlags.Water))
                 {
+                    //apply terraion friction
+
                     Powers[PowerType.Gravity].Value = 0;
 
                     Powers[PowerType.TerrainFriction].Direction = Vector3.Up;  //oldray.Direction;
@@ -215,6 +238,7 @@ namespace ctrviewer.Engine.Testing
                     Powers[PowerType.TerrainFriction].Enabled = true;
                 }
 
+                //maybe kill racer?
                 if (quad.quadFlags.HasFlag(QuadFlags.KillRacer))
                 {
                     Position = DataConverter.ToVector3(scene.respawnPts[TrackProgress].Pose.Position) ;
@@ -235,22 +259,25 @@ namespace ctrviewer.Engine.Testing
 
         public void Update(GameTime gameTime, List<CtrScene> scenes)
         {
-            if (path != null)
+            // if path is attached, follow the path
+            if (linkedPath != null)
             {
-                path.Advance(gameTime);
-                Position = path.State.Position;
-                Rotation = path.State.Rotation;
+                linkedPath.Advance(gameTime);
+                Position = linkedPath.State.Position;
+                Rotation = linkedPath.State.Rotation;
                 return;
             }
 
             oldPosition = Position;
 
+            //update powers
             foreach (var power in Powers)
                 power.Value.Update(gameTime);
 
+            // boost gravity
             Powers[PowerType.Gravity].Boost(GetDelta(gameTime, KartPhysics.GravityStep));
 
-            //turning
+            // handle turning
 
             if (KeyboardHandler.IsAnyDown(Keys.A, Keys.Left) || GamePadHandler.IsDown(Buttons.DPadLeft))
                 Rotation.X += GetDelta(gameTime, KartPhysics.MaxTurningStep * (KeyboardHandler.IsAnyDown(Keys.S, Keys.Down) ? 2 : 1));
@@ -263,11 +290,17 @@ namespace ctrviewer.Engine.Testing
             Powers[PowerType.Engine].Direction = Vector3.Transform(Vector3.Backward, Matrix.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z));
 
 
-            //go forward
+            // handle movement
 
-            if (KeyboardHandler.IsDown(Keys.W) || GamePadHandler.IsDown(Buttons.A))
+            if (InputHandlers.Process(GameAction.KartAccelerate))
             {
                 Powers[PowerType.Engine].Boost(GetDelta(gameTime, KartPhysics.MaxAcceleration));
+            }
+
+            if (InputHandlers.Process(GameAction.KartBackPedal))
+            {
+                Powers[PowerType.BackPedal].Boost(GetDelta(gameTime, KartPhysics.MaxAcceleration));
+                Powers[PowerType.BackPedal].Direction = -Powers[PowerType.Engine].Direction;
             }
 
 
