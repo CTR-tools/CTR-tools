@@ -99,7 +99,7 @@ namespace CTRFramework
 
                     try
                     {
-                        //little cache check here to only export montage once and speed up export time
+                        //skip if already in cache
                         if (MontageCache.ContainsKey(tex.lod2.Tag)) continue;
                         tex.GetHiBitmap(ctrvram, quad, MontageCache);
                     }
@@ -593,7 +593,7 @@ namespace CTRFramework
 
             
             //hardcoded animated
-            Helpers.CheckFolder("data\\animTex");
+            Helpers.CheckFolder(Helpers.PathCombine(path, "data\\animTex"));
 
             foreach (var quad in quads)
             {

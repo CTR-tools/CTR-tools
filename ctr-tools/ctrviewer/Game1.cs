@@ -483,9 +483,9 @@ namespace ctrviewer
 
             //menu.Find("fps30").Click += UpdateFps30;
 
-            menu.Find("lang").Click += Restart;
-            menu.Find("lang").PressedLeft += UpdateLang;
-            menu.Find("lang").PressedRight += UpdateLang;
+            //menu.Find("lang").Click += Restart;
+            //menu.Find("lang").PressedLeft += UpdateLang;
+            //menu.Find("lang").PressedRight += UpdateLang;
 
             foreach (var level in Enum.GetNames(typeof(Level)))
             {
@@ -1230,14 +1230,18 @@ namespace ctrviewer
 
                 //put all botpaths
                 if (s.nav is not null) //this null check is for test level, actual game got ptr to empty struct 
-                if (s.nav.paths.Count == 3)
                 {
-                    foreach (var n in s.nav.paths[0].Frames)
-                        eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
-                    foreach (var n in s.nav.paths[1].Frames)
-                        eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
-                    foreach (var n in s.nav.paths[2].Frames)
-                        eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
+                    if (s.nav.paths[0] != null)
+                        foreach (var n in s.nav.paths[0].Frames)
+                            eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
+
+                    if (s.nav.paths[1] != null)
+                        foreach (var n in s.nav.paths[1].Frames)
+                            eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
+
+                    if (s.nav.paths[2] != null)
+                        foreach (var n in s.nav.paths[2].Frames)
+                            eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
                 }
             }
 

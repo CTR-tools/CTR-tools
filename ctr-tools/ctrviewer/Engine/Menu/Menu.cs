@@ -250,7 +250,7 @@ namespace ctrviewer.Engine.Gui
 
             menus.Add("general", new List<MenuItem>
             {
-                new IntRangeMenuItem() { Text = Locale.MainMenu_Language, ClickAdvances = false, DirectionClicks = false, Name = "lang", SelectedValue = settings.Language, Values = new List<(int, string)>() { (0, Locale.Language_English), (1, Locale.Language_Spanish), (2, Locale.Language_Russian) } },
+                //new IntRangeMenuItem() { Text = Locale.MainMenu_Language, ClickAdvances = false, DirectionClicks = false, Name = "lang", SelectedValue = settings.Language, Values = new List<(int, string)>() { (0, Locale.Language_English), (1, Locale.Language_Spanish), (2, Locale.Language_Russian) } },
                 new BoolMenuItem() { Text = Locale.VideoMenu_CameraPosition, Name = "campos", Value = settings.ShowCamPos },
                 new BoolMenuItem() { Text = Locale.VideoMenu_Console, Name = "console", Value = settings.ShowConsole },
                 new IntRangeMenuItem() { Text = Locale.MainMenu_TimeOfDay, Name = "tod2", SelectedValue = 0, Values = new List<(int, string)>() { (0, Locale.TimeOfDay_Day), (1, Locale.TimeOfDay_Evening), (2, Locale.TimeOfDay_Night) } },
