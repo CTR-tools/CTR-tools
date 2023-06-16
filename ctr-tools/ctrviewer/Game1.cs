@@ -1231,18 +1231,23 @@ namespace ctrviewer
                 //put all botpaths
                 if (s.nav is not null) //this null check is for test level, actual game got ptr to empty struct 
                 {
-                    if (s.nav.paths[0] != null)
-                        foreach (var n in s.nav.paths[0].Frames)
-                            eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
+                    if (s.nav.paths.Count > 0) //??
+                    {
 
-                    if (s.nav.paths[1] != null)
-                        foreach (var n in s.nav.paths[1].Frames)
-                            eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
+                        if (s.nav.paths[0] != null)
+                            foreach (var n in s.nav.paths[0].Frames)
+                                eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
 
-                    if (s.nav.paths[2] != null)
-                        foreach (var n in s.nav.paths[2].Frames)
-                            eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
+                        if (s.nav.paths[1] != null)
+                            foreach (var n in s.nav.paths[1].Frames)
+                                eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
+
+                        if (s.nav.paths[2] != null)
+                            foreach (var n in s.nav.paths[2].Frames)
+                                eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
+                    }
                 }
+
             }
 
             loadingStatus = "populate bsp...";

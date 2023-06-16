@@ -150,7 +150,8 @@ namespace CTRFramework
                 Console.WriteLine("failed to read scene with patch container: " + ex.Message);
 
                 //but maybe it's a sampler level?
-                //extra reset is needed here. it's 0 cause we don't have stacked scenes anyways.
+                //extra reset is needed here. it's 0 cause we don't have stacked scenes in a single lev anyways.
+                //unless does it work in bigfile? guess not, gotta test.
                 br.BaseStream.Position = 0;
 
                 //try to load scene without patch table. just throw if fails too.
@@ -516,6 +517,8 @@ namespace CTRFramework
             if (flags.HasFlag(ExportFlags.TexModels)) ExportTextures(path, Detail.Models);
             if (flags.HasFlag(ExportFlags.SkyBox)) ExportSkyBox(path);
 
+            if (flags.HasFlag(ExportFlags.AnimTex)) ExportTextures(path, Detail.Anim );
+
 
             if (flags.HasFlag(ExportFlags.DumpLayouts)) Helpers.DumpTextureLayoutList(Helpers.PathCombine(path, Meta.LayoutsName), GetTexturesList().Values.ToList());
 
@@ -591,23 +594,26 @@ namespace CTRFramework
                     ctrvram.GetTexture(layout, path)?.Save(Helpers.PathCombine(path, $"{layout.Tag}.png"), System.Drawing.Imaging.ImageFormat.Png);
             }
 
-            
-            //hardcoded animated
-            Helpers.CheckFolder(Helpers.PathCombine(path, "data\\animTex"));
-
-            foreach (var quad in quads)
+            if (lod == Detail.Anim)
             {
-                if (quad is null) continue;
+                var animPath = Helpers.PathCombine(path, "animTex");
+                //hardcoded animated
+                Helpers.CheckFolder(animPath);
 
-                foreach (var tex in quad.tex)
+                foreach (var quad in quads)
                 {
-                    if (tex is null) continue;
+                    if (quad is null) continue;
 
-                    if (tex.animframes.Count > 0)
-                        foreach (var anim in tex.animframes)
-                            //must implement cached export here too
-                            if (!File.Exists($"data\\animTex\\{anim.Tag}.png"))
-                                ctrvram.GetTexture(anim, "animTex")?.Save($"data\\animTex\\{anim.Tag}.png");
+                    foreach (var tex in quad.tex)
+                    {
+                        if (tex is null) continue;
+
+                        if (tex.animframes.Count > 0)
+                            foreach (var anim in tex.animframes)
+                                //must implement cached export here too
+                                if (!File.Exists($"{animPath}\\{anim.Tag}.png"))
+                                    ctrvram.GetTexture(anim)?.Save($"{animPath}\\{anim.Tag}.png");
+                    }
                 }
             }
             
@@ -954,6 +960,12 @@ namespace CTRFramework
             spawnGroups = null;
             respawnPts.Clear();
             ctrvram = null;
+        }
+
+
+        public void FromObj(OBJ obj)
+        {
+
         }
     }
 }

@@ -8,7 +8,7 @@ namespace CTRFramework
     public class PatchedContainer : IReadWrite
     {
         public byte[] Data;
-        public List<UIntPtr> PatchTable;
+        public List<UIntPtr> PatchTable = new List<UIntPtr>();
 
         public PatchedContainer()
         {

@@ -102,6 +102,7 @@ namespace CTRFramework
         SkyBox = 1 << 8,
         DumpLayouts = 1 << 9,
         TexMontage = 1 << 10,
+        AnimTex = 1 << 11,
         All = -1
     }
 
@@ -166,7 +167,7 @@ namespace CTRFramework
     //defines mesh quality while exporting to OBJ
     public enum Detail
     {
-        High, Med, Low, Models, Montage //hacky hack to have another folder for model textures
+        High, Med, Low, Models, Montage, Anim //hacky hack to have another folder for model textures
     }
 
     public enum VecFormat
