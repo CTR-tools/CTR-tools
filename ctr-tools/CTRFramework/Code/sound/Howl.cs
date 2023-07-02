@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Policy;
 using System.Text;
+using System.Windows.Forms.VisualStyles;
 using System.Xml;
 
 namespace CTRFramework.Sound
@@ -79,13 +80,15 @@ namespace CTRFramework.Sound
 
         private void KnownFileCheck(BinaryReaderEx br)
         {
+            int pos = (int)br.BaseStream.Position;
+
             Context.HashNames = Helpers.LoadTagList(Meta.HashPath);
 
-            br.Jump(0);
+            br.Jump(pos);
 
             string md5 = Helpers.CalculateMD5(br.BaseStream);
 
-            br.Jump(0);
+            br.Jump(pos);
 
             var doc = Helpers.LoadXml(Meta.XmlPath);
 
@@ -375,28 +378,13 @@ s
         {
             foreach (var bank in Banks)
                 if (bank.samples.ContainsKey(id))
-                        return bank.samples[id];
+                    return bank.samples[id];
 
             return null;
         }
 
         public void Export(string path, BinaryReaderEx br)
         {
-            //sample table
-
-            var sb = new StringBuilder();
-
-            int x = 0;
-
-            foreach (var sample in SampleTable)
-            {
-                sb.AppendLine($"{x.ToString("0000")},\t{x.ToString("X4")},\t{sample.ID},\t{sample._always0},\t{sample.flags},\tsample_name_{sample.ID}");
-                x++;
-            }
-
-            //Helpers.WriteToFile(Helpers.PathCombine(path, "test.txt"), sb.ToString());
-
-
             Cseq.PatchMidi = true;
             Cseq.IgnoreVolume = true;
 
@@ -498,6 +486,8 @@ s
             foreach (var sample in SampleTable)
             {
                 var vag = sample.GetVagSample(Context);
+
+                if (vag == null) continue;
 
                 vag.Save(Helpers.PathCombine(outputvag, $"{vag.SampleName}.vag"));
                 vag.ExportWav(Helpers.PathCombine(outputwav, $"{vag.SampleName}.wav"));

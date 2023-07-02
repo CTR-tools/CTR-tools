@@ -17,7 +17,6 @@ namespace CTRFramework.Shared
         public const string HowlPath = "howlnames.txt";
         public const string CseqPath = "cseq.json";
         public const string CseqXmlPath = "cseq.xml";
-        public const string SmplPath = "samplenames.txt";
         public const string HashPath = "samplehashes.txt";
         public const string BankPath = "banknames.txt";
         public const string NewtexName = "newtex";

@@ -26,7 +26,7 @@ namespace CTRFramework
             int numEntries = br.ReadInt32();
 
             Console.WriteLine(numEntries + " ");
-            Console.ReadKey();
+            //Console.ReadKey();
 
             var ptrText = br.ReadListUInt32(numEntries);
 

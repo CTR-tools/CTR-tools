@@ -91,6 +91,13 @@ namespace CTRFramework.Sound
         }
         public VagSample GetVagSample(HowlContext context)
         {
+            if (Sample is null)
+            {
+                Helpers.Panic(this, PanicType.Warning, $"Sample data not found! {this.ID}");
+                //Console.ReadKey();
+                return null;
+            }
+
             using (var br = new BinaryReaderEx(new MemoryStream(Sample.Data)))
             {
                 var vag = new VagSample();

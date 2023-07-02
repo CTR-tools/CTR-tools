@@ -210,7 +210,6 @@
     <None Include="Data\big_usa_beta_sep.txt" />
     <None Include="Data\big_usa_release.txt" />
     <None Include="Data\howlnames.txt" />
-    <None Include="Data\samplenames.txt" />
     <None Include="Data\versions.xml" />
     <None Include="Data\banknames.txt" />
     <None Include="Data\big_usa_beta_14th.txt" />
