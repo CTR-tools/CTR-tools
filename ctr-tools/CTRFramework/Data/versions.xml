@@ -215,7 +215,7 @@
 			<name>PAL PS Magazine demo</name>
 			<banks>banknames_pal.txt</banks>
 			<samples>samplenames_pal.txt</samples>
-			<sequences>HOWL_PALDEMO2</sequences>
+			<sequences>HOWL_PALDEMO</sequences>
 			<md5>41b4524491b6900cc0ef8c889218a78a</md5>
 		</entry>
 

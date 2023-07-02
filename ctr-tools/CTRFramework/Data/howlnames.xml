@@ -1,0 +1,20 @@
+﻿<cseq>
+	<list id="release">
+		canyon; mines; bluff; cove; temple; pyramid; tubes; skyway; sewer; caves; castle; labs; pass; station; park; arena; coliseum; turbo; nitro_court; rampage_ruins; parking_lot; skull_rock; north_bowl; rocky_road; lab_basement; boss_challenge; adv_gem_valley; character_select; intro; cutscenes; cutscenes_oxide1; cutscenes_oxide2; credits
+	</list>
+	<list id="release_japan">
+		canyon; mines; bluff; cove; temple; pyramid; tubes; skyway; sewer; caves; castle; labs; pass; station; park; arena; coliseum; turbo; nitro_court; rampage_ruins; parking_lot; skull_rock; north_bowl; rocky_road; lab_basement; boss_challenge; adv_gem_valley; jpn_main_menu; character_select; jpn_intro; cutscenes; cutscenes_oxide1; cutscenes_oxide2; credits
+	</list>
+	<list id="demo_euro">
+		canyon; mines; bluff; cove; temple; pyramid; tubes; skyway_canyon; sewer; caves; castle_canyon; labs_canyon; pass; station_canyon; park; arena; coliseum_canyon; turbo_canyon; nitro_court_canyon
+	</list>
+	<list id="demo_ntsc">
+		canyon; mines; bluff; cove; temple; pyramid; tubes; skyway_canyon; sewer; caves; castle_canyon; labs_canyon; pass; station_canyon; park; arena; coliseum_canyon; turbo_canyon; nitro_court_canyon
+	</list>
+	<list id="proto">
+		canyon; mines; bluff; cove; temple; pyramid; tubes; skyway; sewer; caves; castle; labs; pass; station; park; arena; coliseum; turbo; nitro_court; rampage_ruins; parking_lot; skull_rock; north_bowl; rocky_road; lab_basement; boss_challenge; adv_gem_valley; character_select; intro; cutscenes
+	</list>
+	<list id="beta_aug">
+		canyon; mines; bluff; cove; temple; pyramid; tubes; skyway; sewer; caves; castle; labs; pass; station; park; arena; coliseum; turbo; lab_basement; adv_gem_valley; character_select
+	</list>
+</cseq>
