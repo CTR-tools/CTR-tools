@@ -129,8 +129,6 @@ namespace CTRFramework
             return bmp;
         }
 
-        Font font = new Font("Courier New", 7);
-
         public void Read(BinaryReaderEx br, PsxPtr ptr, VisNodeFlags flags)
         {
             int pos = (int)br.Position;
@@ -151,12 +149,19 @@ namespace CTRFramework
                 //this can be used to offset the animation frame, used in cove waterfall
                 currentFrame = br.ReadInt16();
 
+                //always 0 i suppose
+                int test = br.ReadInt32();
+
+                Helpers.PanicIf(test != 0, this, PanicType.Assume, $"!!! test: {test}");
+
                 //array of pointers to each frame texlayout
                 uint[] ptrs = br.ReadArrayUInt32(numFrames);
 
                 //reading stuff
                 foreach (uint ptrAnimFrame in ptrs)
                 {
+                    Helpers.Panic(this, PanicType.Warning, $"{ptrAnimFrame.ToString("X8")}");
+
                     br.Jump(ptrAnimFrame);
 
                     //read 4 anim lods. check why initial 4 textures are empty. maybe some extra data?
