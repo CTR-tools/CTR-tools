@@ -120,9 +120,9 @@
 
 # not original names for these 2
 
-93=intro01	#Sony Computah Entertaymentoh, yeeeeeeeey
-94=intro02	#Naughty Dog, jaja!
-95=intro03	#Kurashu Bandicu Reysingu
+93=intro01	#Soni Compyuta Enteteimento, yeeeeeeeey
+94=intro02	#Noti Dogu, jaja!
+95=intro03	#Kurashu Bandiku Reshingu
 
 # =========== GAME section ==============
 # names in this section are based XA leftovers found in game data
@@ -411,7 +411,7 @@
 358=pspbt01	#Pinstripe pre boss battle
 359=pspbt02	#Pinstripe post boss battle
 
-# i assume these are unused UI lines, moved to the end? or some extra jpn lines?
+# extra oxide boss race taunts
 
 360=cxspk01
 361=cxspk02

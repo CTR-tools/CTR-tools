@@ -287,7 +287,7 @@ namespace ctrviewer
 
         public void Window_ClientSizeChanged(object sender, EventArgs e)
         {
-            
+
             SwitchDisplayMode();
         }
 
@@ -425,6 +425,9 @@ namespace ctrviewer
             //LoadScenesFromFolder();
 
             //LoadAllScenes();
+
+            //force garbage collection
+            GC.Collect();
 
             sw.Stop();
 
@@ -1085,7 +1088,7 @@ namespace ctrviewer
             LoadMenuModelsScene();
             TestLoadExtrenalModels();
 
-            /*
+
             //loads custom models using assimp
             if (Directory.Exists("custom"))
             {
@@ -1105,7 +1108,7 @@ namespace ctrviewer
                     }
                 }
             }
-            */
+
 
             //loading textures between scenes and conversion to monogame for alpha textures info
             loadingStatus = "loading textures...";
@@ -1395,7 +1398,19 @@ namespace ctrviewer
                 return false;
 
             if (result == true && big is null)
-                big = BigFileReader.FromFile(eng.Settings.BigFileLocation);
+            {
+                //worth it?
+                if (eng.Settings.PreloadToRam)
+                {
+                    big = BigFileReader.FromFile(eng.Settings.BigFileLocation, LoadingMode.ToRam);
+                    GameConsole.Write("Loaded BIGFILE in RAM.");
+                }
+                else
+                {
+                    big = BigFileReader.FromFile(eng.Settings.BigFileLocation);
+                    GameConsole.Write("Loading BIGFILE from disk.");
+                }
+            }
 
             GameConsole.Write(result ? $"Bigfile location: {eng.Settings.BigFileLocation}" : "Bigfile not found.");
 
@@ -1774,7 +1789,23 @@ namespace ctrviewer
 
             eng.UpdateStereoCamera(CameraType.LeftEyeCamera, eng.Settings.StereoPairSeparation);
             eng.Cameras[CameraType.LeftEyeCamera].Update(gameTime, updatemouse, true);
+
+
+            if (Scenes != null && Scenes.Count > 0)
+            {
+                var quad = eng.Cameras[CameraType.DefaultCamera].FindLookAt(Scenes[0].quads);
+
+                if (quad != null)
+                {
+                    GameConsole.Write(quad.id.ToString("X8"));
+                }
+                else
+                {
+                    GameConsole.Write("no quads in sight");
+                }
+            }
         }
+
 
         /// <summary>
         /// Draws everything level related using the provided camera.

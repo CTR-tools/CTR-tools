@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Windows.Forms.VisualStyles;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CTRFramework.Sound
 {
@@ -15,7 +17,25 @@ namespace CTRFramework.Sound
         public Dictionary<int, string> banknames = new Dictionary<int, string>();
         public Dictionary<string, string> HashNames = new Dictionary<string, string>();
 
+        public Dictionary<int, Sample> Samples = new Dictionary<int, Sample>();
+
+        public int MaxSampleIndex()
+        {
+            int max = 0;
+
+            foreach (var entry in Samples)
+            {
+                if (entry.Key > max)
+                    max = entry.Key;
+            }
+
+            return max;
+        }
+
         public static HowlContext Create() => new HowlContext();
+
+        //this is speculated to be sample size basically, maybe empty word is the  
+        public List<SpuAddr> SpuPtrTable = new List<SpuAddr>();
     }
 
     public enum HowlVersion
@@ -27,6 +47,12 @@ namespace CTRFramework.Sound
         Ntsc = 0x80
     }
 
+    public struct SpuAddr
+    {
+        public ushort Ptr; //always 0 in the file, populated at runtime
+        public ushort Size; //this is vag data size / 8
+    }
+
     public class Howl : IReadWrite
     {
         //remove later
@@ -36,9 +62,8 @@ namespace CTRFramework.Sound
 
         public HowlVersion version;     //freezes the game if changed, game code tests against fixed number for some reason. maybe like version.
 
-        List<ushort> SpuPtrTable = new List<ushort>(); //this is speculated to be related to some vab offsets
 
-        public Dictionary<int, Sample> Samples = new Dictionary<int, Sample>();
+
 
         public static List<InstrumentShort> SampleTable = new List<InstrumentShort>();
         public static List<InstrumentShort> EngineTable = new List<InstrumentShort>();
@@ -155,12 +180,19 @@ namespace CTRFramework.Sound
 
             int sampleDataSize = br.ReadInt32();    //whole sample data size to the last seq pointer
 
+            Context.SpuPtrTable.Clear();
+
             for (int i = 0; i < numSpuPtrTable; i++)
             {
-                if (br.ReadUInt16() != 0)
-                    Helpers.Panic(this, PanicType.Assume, "upper word is not 0.");
+                Context.SpuPtrTable.Add(
+                    new SpuAddr() { 
+                        Ptr = br.ReadUInt16(), 
+                        Size = br.ReadUInt16() 
+                    }
+                );
 
-                SpuPtrTable.Add(br.ReadUInt16());
+                if (Context.SpuPtrTable[i].Ptr != 0)
+                    Helpers.Panic(this, PanicType.Assume, "ptr is not 0.");
             }
 
             SampleTable = InstanceList<InstrumentShort>.FromReader(br, (UIntPtr)br.Position, numSampleTable);
@@ -197,10 +229,10 @@ namespace CTRFramework.Sound
 
 
             foreach (var bank in Banks)
-                foreach (var sample in bank.samples.Values)
+                foreach (var sample in bank.Entries.Values)
                 {
-                    if (!Samples.ContainsKey(sample.ID))
-                        Samples.Add(sample.ID, sample);
+                    if (!Context.Samples.ContainsKey(sample.ID))
+                        Context.Samples.Add(sample.ID, sample);
                 }
 
 
@@ -278,27 +310,55 @@ s
             */
         }
 
+        //replace with global indexed sample table later
+        public void UpdateSpuTable()
+        {
+            //fixup spuaddr table
+            Context.SpuPtrTable.Clear();
+
+            //populate with empty entries
+            for (int i = 0; i < Context.MaxSampleIndex()+1; i++)
+                Context.SpuPtrTable.Add(new SpuAddr());
+
+            //iterate through all samples and calculate the correct value
+            for (int i = 0; i < Context.SpuPtrTable.Count(); i++)
+            {
+                if (Context.Samples.ContainsKey(i))
+                {
+                    Context.SpuPtrTable[i] = new SpuAddr() { Size = (ushort)(Context.Samples[i].Data.Length / 8) };
+                }
+            }
+
+            for (int i = 0; i < Context.SpuPtrTable.Count(); i++)
+            {
+                if (Context.SpuPtrTable[i].Size == 0)
+                    Console.Write($"{i}, ");
+            }
+        }
+
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
+            UpdateSpuTable();
+
             Console.WriteLine("Writing HOWL...");
 
             bw.Write("HOWL".ToCharArray());
             bw.Write((int)version);
             bw.Seek(8);
 
-            bw.Write(SpuPtrTable.Count);
+            bw.Write(Context.SpuPtrTable.Count);
             bw.Write(SampleTable.Count);
             bw.Write(EngineTable.Count);
 
             bw.Write(Banks.Count);
             bw.Write(Songs.Count);
 
-            bw.Write(SpuPtrTable.Count * 4 + (SampleTable.Count + EngineTable.Count) * 8 + (Banks.Count + Songs.Count) * 2); //sampleDataSize
+            bw.Write(Context.SpuPtrTable.Count * 4 + (SampleTable.Count + EngineTable.Count) * 8 + (Banks.Count + Songs.Count) * 2); //sampleDataSize
 
-            foreach (var value in SpuPtrTable)
+            foreach (var value in Context.SpuPtrTable)
             {
-                bw.Write((short)0);
-                bw.Write(value);
+                bw.Write(value.Ptr);
+                bw.Write(value.Size);
             }
 
             foreach (var instrument in SampleTable)
@@ -377,8 +437,8 @@ s
         public Sample FindSample(int id)
         {
             foreach (var bank in Banks)
-                if (bank.samples.ContainsKey(id))
-                    return bank.samples[id];
+                if (bank.Entries.ContainsKey(id))
+                    return bank.Entries[id];
 
             return null;
         }
@@ -429,7 +489,7 @@ s
                 
                 if (Context.SongNames is null)
                 {
-                    //fallback for missing 
+                    //fallback for missing song list
                     seqFileName = $"sequence_{songIndex.ToString("00")}.cseq";
                 }
                 else
@@ -536,7 +596,7 @@ s
 
         public override string ToString()
         {
-            return $"Version: {version}\r\nspuIndices: {SpuPtrTable.Count}\r\nSamples: {SampleTable.Count}\r\nBanks: {Banks.Count}\r\nSequences: {Songs.Count}";
+            return $"Version: {version}\r\nspuIndices: {Context.SpuPtrTable.Count}\r\nSamples: {SampleTable.Count}\r\nBanks: {Banks.Count}\r\nSequences: {Songs.Count}";
         }
     }
 }

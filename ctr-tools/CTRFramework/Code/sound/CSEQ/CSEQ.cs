@@ -20,6 +20,7 @@ namespace CTRFramework.Sound
         public static int ActiveInstrument = 0;
         public string PatchName = "";
 
+        //this is hardcoded in the game, cseq doesnt contain this data
         public static byte[] hubTracksMask = new byte[]
         {
             0x1F, 0x17, 0x08, 0x1F,

@@ -89,28 +89,39 @@ namespace CTRFramework.Sound
             bw.Write((short)SampleID);
             bw.Write(ADSR);
         }
+
         public VagSample GetVagSample(HowlContext context)
         {
+            /*
             if (Sample is null)
             {
                 Helpers.Panic(this, PanicType.Warning, $"Sample data not found! {this.ID}");
                 //Console.ReadKey();
                 return null;
             }
+            */
 
             using (var br = new BinaryReaderEx(new MemoryStream(Sample.Data)))
             {
-                var vag = new VagSample();
-                vag.sampleFreq = Frequency;
-                vag.ReadFrames(br, Sample.Data.Length);
-                vag.HashString = Sample.HashString;
+                VagSample vag;
 
-                if (context.HashNames.ContainsKey(vag.HashString))
-                    vag.SampleName = context.HashNames[vag.HashString];
+                if (context.Samples.ContainsKey(this.SampleID))
+                {
+                    vag = context.Samples[SampleID].GetHeaderlessVag();
+                    vag.sampleFreq = Frequency;
 
-                Console.WriteLine($"{vag.HashString}: {vag.SampleName}");
+                    if (context.HashNames.ContainsKey(Sample.HashString))
+                        vag.SampleName = context.HashNames[Sample.HashString];
 
-                return vag;
+                    Console.WriteLine($"{Sample.HashString}: {vag.SampleName}");
+
+                    return vag;
+                }
+                else
+                {
+                    Helpers.Panic(this, PanicType.Warning, $"Missing sample ID???!!! {this.ID} {this.SampleID}");
+                    return null;
+                }
             }
         }
     }

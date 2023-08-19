@@ -6,8 +6,8 @@ namespace CTRFramework.Sound
 {
     public class VagFrame : IReadWrite
     {
-        public byte predict_nr = 0;
-        public byte shift_factor = 0;
+        private byte predict_nr = 0;
+        private byte shift_factor = 0;
         public byte flags = 0;
 
         public byte[] data = new byte[14];
@@ -32,15 +32,9 @@ namespace CTRFramework.Sound
         {
         }
 
-        public VagFrame(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public VagFrame(BinaryReaderEx br) => Read(br);
 
-        public static VagFrame FromReader(BinaryReaderEx br)
-        {
-            return new VagFrame(br);
-        }
+        public static VagFrame FromReader(BinaryReaderEx br) => new VagFrame(br);
 
         /// <summary>
         /// Reads Vag frame from stream using binary reader.

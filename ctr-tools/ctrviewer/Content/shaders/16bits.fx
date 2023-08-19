@@ -13,9 +13,10 @@ Texture2D SpriteTexture;
 //==============================================
 //SHADER SETTINGS
 //==============================================
-bool	bMirrorX			= false;
-bool	bChopColor			= true;
-int		iChopColorBits		= 5;
+bool	bMirrorX		= false;
+bool	bChopColor		= true;
+int		iChopColorBits	= 5;
+float4	cTod			= float4(1.0, 1.0, 1.0, 1.0);
 //==============================================
 
 sampler2D SpriteTextureSampler = sampler_state
@@ -56,8 +57,6 @@ float4 chopColor(float4 pixel)
 	return pixel;
 }
 
-float bightness = 1;
-
 float4 main(Vertex input) : COLOR
 {
     float4 pixel = tex2D(SpriteTextureSampler, getUV(input));
@@ -67,7 +66,7 @@ float4 main(Vertex input) : COLOR
     //if ((int)(input.TextureCoordinates.y * BUFFER_HEIGHT * 2) % SCANLINE_WIDTH >= SCANLINE_WIDTH / 2)
     //    color = color * SCANLINE_BRIGHTNESS;
 
-	return bightness * pixel;
+    return pixel * cTod;
 }
 
 

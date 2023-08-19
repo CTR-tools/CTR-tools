@@ -1,7 +1,12 @@
-﻿using ctrviewer.Engine.Input;
+﻿using Assimp;
+using CTRFramework;
+using ctrviewer.Engine.Input;
+using ctrviewer.Engine.Testing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using SharpDX;
 using System;
+using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
 {
@@ -29,7 +34,9 @@ namespace ctrviewer.Engine.Render
         public float mouseScale = 1.0f;
         public float gamePadScale = 0.75f;
 
-        Vector3 slowdown = new Vector3(0, 0, 0);
+        Microsoft.Xna.Framework.Vector3 slowdown = new Microsoft.Xna.Framework.Vector3(0, 0, 0);
+
+        Microsoft.Xna.Framework.Vector3 cameraFinalTarget = Microsoft.Xna.Framework.Vector3.Zero;
 
         public FirstPersonCamera(Game game) : base(game)
         {
@@ -71,7 +78,7 @@ namespace ctrviewer.Engine.Render
                 UpdateViewMatrix();
             }
 
-            Vector2 gamepadrot = GamePadHandler.RightStick * (float)(amount * 4 * gamePadScale);
+            Microsoft.Xna.Framework.Vector2 gamepadrot = GamePadHandler.RightStick * (float)(amount * 4 * gamePadScale);
 
             leftRightRot -= gamepadrot.X;
             upDownRot += gamepadrot.Y;
@@ -79,18 +86,18 @@ namespace ctrviewer.Engine.Render
 
             //handle movement
 
-            Vector3 moveVector = new Vector3(0, 0, 0);
+            Microsoft.Xna.Framework.Vector3 moveVector = new Microsoft.Xna.Framework.Vector3(0, 0, 0);
 
             if (move)
             {
                 if (KeyboardHandler.IsDown(Keys.W) || GamePadHandler.IsDown(Buttons.DPadUp))
-                    moveVector += Vector3.Forward;
+                    moveVector += Microsoft.Xna.Framework.Vector3.Forward;
                 if (KeyboardHandler.IsDown(Keys.S) || GamePadHandler.IsDown(Buttons.DPadDown))
-                    moveVector += Vector3.Backward;
+                    moveVector += Microsoft.Xna.Framework.Vector3.Backward;
                 if (KeyboardHandler.IsDown(Keys.D) || GamePadHandler.IsDown(Buttons.DPadRight))
-                    moveVector += Vector3.Right;
+                    moveVector += Microsoft.Xna.Framework.Vector3.Right;
                 if (KeyboardHandler.IsDown(Keys.A) || GamePadHandler.IsDown(Buttons.DPadLeft))
-                    moveVector += Vector3.Left;
+                    moveVector += Microsoft.Xna.Framework.Vector3.Left;
 
                 //compensate diagonal movement
                 if (
@@ -103,9 +110,9 @@ namespace ctrviewer.Engine.Render
 
 
                 if (KeyboardHandler.IsDown(Keys.Q))
-                    moveVector += Vector3.Up;
+                    moveVector += Microsoft.Xna.Framework.Vector3.Up;
                 if (KeyboardHandler.IsDown(Keys.Z))
-                    moveVector += Vector3.Down;
+                    moveVector += Microsoft.Xna.Framework.Vector3.Down;
 
                 moveVector *= 33f;
                 moveVector *= 0.0001f;
@@ -124,7 +131,7 @@ namespace ctrviewer.Engine.Render
                 slowdown *= 0.75f;
 
 
-                moveVector += new Vector3(GamePadHandler.State.ThumbSticks.Left.X / 100f, 0, -GamePadHandler.State.ThumbSticks.Left.Y / 100f);
+                moveVector += new Microsoft.Xna.Framework.Vector3(GamePadHandler.State.ThumbSticks.Left.X / 100f, 0, -GamePadHandler.State.ThumbSticks.Left.Y / 100f);
 
                 if (KeyboardHandler.IsDown(Keys.LeftShift) || GamePadHandler.IsDown(Buttons.A))
                     moveVector *= 2;
@@ -148,37 +155,38 @@ namespace ctrviewer.Engine.Render
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            AddToCameraPosition(new Vector3(0, 0, 0));
+            AddToCameraPosition(new Microsoft.Xna.Framework.Vector3(0, 0, 0));
         }
 
-        private void AddToCameraPosition(Vector3 vectorToAdd)
+        private void AddToCameraPosition(Microsoft.Xna.Framework.Vector3 vectorToAdd)
         {
-            Matrix cameraRotation = Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
-            Vector3 rotatedVector = Vector3.Transform(vectorToAdd, cameraRotation);
+            Microsoft.Xna.Framework.Matrix cameraRotation = Microsoft.Xna.Framework.Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
+            Microsoft.Xna.Framework.Vector3 rotatedVector = Microsoft.Xna.Framework.Vector3.Transform(vectorToAdd, cameraRotation);
             Position += translationSpeed * rotatedVector;
             Target += translationSpeed * rotatedVector;
+
             UpdateViewMatrix();
         }
 
         public void UpdateViewMatrix(float x = 0, float y = 0, float z = 0)
         {
-            Matrix cameraRotation = Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
+            Microsoft.Xna.Framework.Matrix cameraRotation = Microsoft.Xna.Framework.Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
 
-            Vector3 cameraOriginalTarget = new Vector3(0, 0, -1);
-            Vector3 cameraOriginalUpVector = new Vector3(0, 1, 0);
+            Microsoft.Xna.Framework.Vector3 cameraOriginalTarget = new Microsoft.Xna.Framework.Vector3(0, 0, -1);
+            Microsoft.Xna.Framework.Vector3 cameraOriginalUpVector = new Microsoft.Xna.Framework.Vector3(0, 1, 0);
 
-            Vector3 cameraRotatedTarget = Vector3.Transform(cameraOriginalTarget, cameraRotation);
-            Vector3 cameraFinalTarget = Position + cameraRotatedTarget;
+            Microsoft.Xna.Framework.Vector3 cameraRotatedTarget = Microsoft.Xna.Framework.Vector3.Transform(cameraOriginalTarget, cameraRotation);
+            cameraFinalTarget = Position + cameraRotatedTarget;
 
-            Vector3 cameraRotatedUpVector = Vector3.Transform(cameraOriginalUpVector, cameraRotation);
+            Microsoft.Xna.Framework.Vector3 cameraRotatedUpVector = Microsoft.Xna.Framework.Vector3.Transform(cameraOriginalUpVector, cameraRotation);
 
-            ViewMatrix = Matrix.CreateLookAt(Position, cameraFinalTarget, cameraRotatedUpVector);
+            ViewMatrix = Microsoft.Xna.Framework.Matrix.CreateLookAt(Position, cameraFinalTarget, cameraRotatedUpVector);
         }
 
 
-        public Matrix GetYawPitchRollMatrix()
+        public Microsoft.Xna.Framework.Matrix GetYawPitchRollMatrix()
         {
-            return Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
+            return Microsoft.Xna.Framework.Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
         }
 
         public void Copy(GameTime gameTime, FirstPersonCamera c)
@@ -188,6 +196,63 @@ namespace ctrviewer.Engine.Render
             Position = c.Position;
             Target = c.Target;
             Update(gameTime);
+        }
+
+
+        public QuadBlock FindLookAt(List<QuadBlock> quads)
+        {
+            QuadBlock result = null;
+
+            var distance = 0f;
+            var result_distance = 999999f;
+
+            var ray = new SharpDX.Ray(
+                new SharpDX.Vector3(
+                    Position.X,
+                    Position.Y,
+                    Position.Z
+                ),
+                new SharpDX.Vector3(
+                    cameraFinalTarget.X,
+                    cameraFinalTarget.Y,
+                    cameraFinalTarget.Z
+                ));
+
+            ray.Direction.X += ray.Position.X;
+            ray.Direction.Y += ray.Position.Y;
+            ray.Direction.Z += ray.Position.Z;
+            ray.Direction.Normalize();
+
+            GameConsole.Write(ray.ToString());
+
+            var box = new SharpDX.BoundingBox();
+
+            foreach (var quad in quads)
+            {
+                box = new SharpDX.BoundingBox(
+                    new SharpDX.Vector3(
+                        quad.bbox.Min.X,
+                         quad.bbox.Min.Y,
+                          quad.bbox.Min.Z
+                        ),
+                    new SharpDX.Vector3(
+                        quad.bbox.Max.X,
+                         quad.bbox.Max.Y,
+                          quad.bbox.Max.Z
+                        )
+                    );
+
+                if (SharpDX.Collision.RayIntersectsBox(ref ray, ref box, out distance))
+                {
+                    if (result_distance > distance)
+                    {
+                        result = quad;
+                        result_distance = distance;
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

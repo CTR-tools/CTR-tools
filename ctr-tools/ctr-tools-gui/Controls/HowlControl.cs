@@ -54,11 +54,11 @@ namespace CTRTools.Controls
             {
                 var bankNode = new TreeNode()
                 {
-                    Text = bank.Name + $" [{bank.samples.Count}]",
+                    Text = bank.Name + $" [{bank.numEntries}]",
                     Tag = bank
                 };
 
-                foreach (var sample in bank.samples.Values)
+                foreach (var sample in bank.Entries.Values)
                 {
                     var sampleNode = new TreeNode()
                     {

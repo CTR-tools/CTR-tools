@@ -38,7 +38,15 @@ namespace CTRFramework.Sound
         {
         }
 
-        public string HashString = "";
+        //this is for headerless vag, just pass raw vag data
+        public VagSample(byte[] data)
+        {
+            using (var br = new BinaryReaderEx(new MemoryStream(data)))
+            {
+                ReadFrames(br, data.Length);
+            }
+        }
+
         public VagSample(BinaryReaderEx br) => Read(br);
 
         public static VagSample FromReader(BinaryReaderEx br) => new VagSample(br);
@@ -176,6 +184,21 @@ namespace CTRFramework.Sound
                 wav.Jump(40);
                 wav.Write(streamSize - 44);
             }
+        }
+
+        public byte[] GetData()
+        {
+            byte[] data = new byte[Frames.Count * 16];
+
+            using (var bw = new BinaryWriterEx(new MemoryStream(data)))
+            {
+                foreach (var frame in Frames)
+                {
+                    frame.Write(bw);
+                }
+            }
+
+            return data;
         }
     }
 }

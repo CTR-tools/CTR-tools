@@ -9,11 +9,11 @@ doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_hwl.ksy
 
 seq:
   - id: header
-    type: howl_hdr
-  - id: unk_array
-    type: ptr_array # ?
+    type: howl_header
+  - id: spu_addr_table
+    type: spu_addr # ?
     repeat: expr
-    repeat-expr: header.num_ptr_array
+    repeat-expr: header.num_spu_addr
   - id: sfx_instruments
     type: instrument
     repeat: expr
@@ -33,7 +33,7 @@ seq:
 
 types:
 
-  howl_hdr:
+  howl_header:
     seq:
       - id: magic # HOWL char string
         size: 4
@@ -41,11 +41,11 @@ types:
         encoding: ascii
       - id: version # const in game code
         type: u4
-      - id: reserved1
+      - id: reserved1 # null
         type: u4
-      - id: reserved2
+      - id: reserved2 # null
         type: u4
-      - id: num_ptr_array # ?
+      - id: num_spu_addr # ?
         type: u4
       - id: num_sfx_instruments
         type: u4
@@ -58,11 +58,11 @@ types:
       - id: sample_data_size
         type: u4
 
-  ptr_array:
+  spu_addr:
     seq:
-      - id: val1
+      - id: ptr # null, allocated at runtime
         type: u2
-      - id: val2
+      - id: size # vag data size / 8
         type: u2
 
   instrument:
@@ -73,7 +73,7 @@ types:
         type: u1
       - id: pitch
         type: u2
-      - id: sample_id
+      - id: sample_id # index in spuaddr table
         type: u2
       - id: unk2
         type: u2
@@ -86,6 +86,11 @@ types:
       bank:
         type: bank
         pos: ptr * 0x800
+
+  # be aware that bank sample data is not covered here
+  # it's just a stream of headerless vag sample data
+  # the format doesnt provide bank sizes, so it has to be calculated
+  # using the individual sample sizes and it starts at 0x800 padding
 
   bank:
     seq:

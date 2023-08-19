@@ -176,7 +176,7 @@ namespace CTRTools.Controls
             bnk.ExportAll(1, Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename));
 
             listBox2.Items.Clear();
-            foreach (var samp in bnk.samples)
+            foreach (var samp in bnk.Entries)
             {
                 listBox2.Items.Add(samp.Key);
             }
@@ -402,7 +402,7 @@ namespace CTRTools.Controls
                 {
                     Bank b = Bank.FromFile(s);
 
-                    foreach (var v in b.samples)
+                    foreach (var v in b.Entries)
                     {
                         x.Add(Path.GetFileNameWithoutExtension(s) + "," + v.Key.ToString("000"));
                     }

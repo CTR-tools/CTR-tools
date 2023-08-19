@@ -6,6 +6,11 @@ using System.Xml;
 
 namespace CTRFramework.Big
 {
+    public enum LoadingMode
+    {
+        FromDisk, ToRam
+    }
+
     public class BigFileReader : BinaryReaderEx
     {
         public string Version = "Unknown.";
@@ -46,7 +51,17 @@ namespace CTRFramework.Big
             KnownFileCheck();
         }
 
-        public static BigFileReader FromFile(string filename) => new BigFileReader(File.OpenRead(filename));
+        public static BigFileReader FromFile(string filename, LoadingMode mode = LoadingMode.FromDisk)
+        {
+            switch (mode)
+            {
+                case LoadingMode.FromDisk: return new BigFileReader(File.OpenRead(filename));
+                case LoadingMode.ToRam: return new BigFileReader(new MemoryStream(File.ReadAllBytes(filename)));
+            }
+
+            Helpers.Panic("BigFileReader", PanicType.Error, "Can't create stream!!!");
+            return null;
+        }
 
         /// <summary>
         /// Sanity check for CTR BIG format.
