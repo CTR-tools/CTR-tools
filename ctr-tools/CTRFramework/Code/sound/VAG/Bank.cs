@@ -3,7 +3,6 @@ using Force.Crc32;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -72,7 +71,7 @@ namespace CTRFramework.Sound
 
         public VagSample GetHeaderlessVag() => new VagSample(Data) { sampleFreq = 22100 };
 
-        public void ConvertToWav(string path) => GetHeaderlessVag().Save(path);
+        public void ConvertToWav(string path) => GetHeaderlessVag().ExportWav(path);
     }
 
     public class Bank
@@ -85,8 +84,8 @@ namespace CTRFramework.Sound
         public static Dictionary<int, string> banknames = new Dictionary<int, string>();
 
         public Dictionary<int, Sample> Entries = new Dictionary<int, Sample>();
-
         public ushort numEntries => (ushort)Entries.Count;
+
 
         public bool Contains(int key) => Entries.ContainsKey(key);
 
@@ -146,7 +145,7 @@ namespace CTRFramework.Sound
 
             }*/
 
-            
+
             int sam_start = (int)br.BaseStream.Position;
 
             int flag = 0;
@@ -172,6 +171,9 @@ namespace CTRFramework.Sound
                     };
 
                     sample.Context = context;
+
+                    if (!context.Samples.ContainsKey(indexTable[loops]))
+                        context.Samples.Add(indexTable[loops], sample);
 
                     Entries.Add(sample.ID, sample);
 
@@ -204,7 +206,7 @@ namespace CTRFramework.Sound
 
             //write sample data 
             foreach (var sample in Entries)
-                bw.Write(sample.Value.Data);
+                bw.Write(Context.Samples[sample.Value.ID].Data);
         }
 
         public void Save(string filename)

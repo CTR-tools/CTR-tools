@@ -3,11 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Windows.Forms.VisualStyles;
 using System.Xml;
-using System.Xml.Serialization;
 
 namespace CTRFramework.Sound
 {
@@ -185,9 +181,10 @@ namespace CTRFramework.Sound
             for (int i = 0; i < numSpuPtrTable; i++)
             {
                 Context.SpuPtrTable.Add(
-                    new SpuAddr() { 
-                        Ptr = br.ReadUInt16(), 
-                        Size = br.ReadUInt16() 
+                    new SpuAddr()
+                    {
+                        Ptr = br.ReadUInt16(),
+                        Size = br.ReadUInt16()
                     }
                 );
 
@@ -222,7 +219,7 @@ namespace CTRFramework.Sound
                 br.Jump(ptrBanks[i]);
                 var bank = Bank.FromReader(br, Context);
                 bank.Context = Context;
-                bank.Name = Context.banknames[i];
+                bank.Name = Context.banknames.ContainsKey(i) ? Context.banknames[i] : $"bank_{i.ToString("0000")}";
                 bank.Index = i;
                 Banks.Add(bank);
             }
@@ -310,6 +307,7 @@ s
             */
         }
 
+
         //replace with global indexed sample table later
         public void UpdateSpuTable()
         {
@@ -317,7 +315,7 @@ s
             Context.SpuPtrTable.Clear();
 
             //populate with empty entries
-            for (int i = 0; i < Context.MaxSampleIndex()+1; i++)
+            for (int i = 0; i < Context.MaxSampleIndex() + 1; i++)
                 Context.SpuPtrTable.Add(new SpuAddr());
 
             //iterate through all samples and calculate the correct value
@@ -328,13 +326,8 @@ s
                     Context.SpuPtrTable[i] = new SpuAddr() { Size = (ushort)(Context.Samples[i].Data.Length / 8) };
                 }
             }
-
-            for (int i = 0; i < Context.SpuPtrTable.Count(); i++)
-            {
-                if (Context.SpuPtrTable[i].Size == 0)
-                    Console.Write($"{i}, ");
-            }
         }
+
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
@@ -486,7 +479,7 @@ s
             foreach (int ptrSeq in ptrSeqs)
             {
                 string seqFileName = "";
-                
+
                 if (Context.SongNames is null)
                 {
                     //fallback for missing song list
@@ -583,6 +576,33 @@ s
                 i++;
             }
             */
+        }
+
+        public void ReplaceVagSample(int sampleIndex, string filename)
+        {
+            if (!File.Exists(filename)) return;
+
+            if (!Context.Samples.ContainsKey(sampleIndex))
+            {
+                Helpers.Panic(this, PanicType.Error, "no sample index found in the table!");
+                return;
+            }
+
+            //read vag sample
+            var vag = VagSample.FromFile(filename);
+
+            //copy data to existing sample in the table
+            Context.Samples[sampleIndex].Data = vag.GetData();
+
+            //now find all inst entries and copy the frequency there
+            foreach (var inst in SampleTable)
+            {
+                if (inst.SampleID == sampleIndex)
+                {
+                    inst.Frequency = vag.sampleFreq;
+                    inst.Volume = 1.0f;
+                }
+            }
         }
 
         public static int GetFreq(int sampleId)
