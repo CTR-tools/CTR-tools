@@ -241,7 +241,7 @@ namespace ctrviewer.Engine.Testing
                 //maybe kill racer?
                 if (quad.quadFlags.HasFlag(QuadFlags.KillRacer))
                 {
-                    Position = DataConverter.ToVector3(scene.respawnPts[TrackProgress].Pose.Position) ;
+                    Position = DataConverter.ToVector3(scene.respawnPts[TrackProgress].Pose.Position);
                     Position.Y += 0.25f;
 
                     Powers[PowerType.Engine].Value = 0;

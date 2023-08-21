@@ -1,7 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ctrviewer.Engine.Render
 {

@@ -1,10 +1,7 @@
-﻿using Assimp;
-using CTRFramework;
+﻿using CTRFramework;
 using ctrviewer.Engine.Input;
-using ctrviewer.Engine.Testing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using SharpDX;
 using System;
 using System.Collections.Generic;
 

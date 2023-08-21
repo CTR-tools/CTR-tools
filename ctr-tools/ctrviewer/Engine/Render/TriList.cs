@@ -193,7 +193,7 @@ namespace ctrviewer.Engine.Render
             {
                 if (textureEnabled)
                 {
-                    
+
                     effect.Parameters["VertexColorEnabled"]?.SetValue(1);
                     effect.Parameters["bDiffuseMapEnabled"]?.SetValue(1);
                     effect.Parameters["DiffuseMap"]?.SetValue(texture);

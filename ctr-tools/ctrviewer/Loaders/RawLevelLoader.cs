@@ -1,11 +1,10 @@
 ﻿using Assimp;
+using CTRFramework.Shared;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using CTRFramework.Shared;
 
 namespace ctrviewer.Loaders
 {
@@ -30,7 +29,7 @@ namespace ctrviewer.Loaders
             //if (!scene.HasMeshes)
             //    return;
 
-            Trilists.Add("test", new TriList() { type = TriListType.Basic } );
+            Trilists.Add("test", new TriList() { type = TriListType.Basic });
 
             Trilists["test"].textureName = "test";
             Trilists["test"].textureEnabled = true;
@@ -42,7 +41,7 @@ namespace ctrviewer.Loaders
             uv.Add(new Vector2(1, 0));
             uv.Add(new Vector2(1, 1));
 
-            
+
 
             foreach (var mesh in scene.Meshes)
             {

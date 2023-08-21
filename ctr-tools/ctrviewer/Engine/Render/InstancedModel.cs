@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Render
@@ -56,9 +55,9 @@ namespace ctrviewer.Engine.Render
                 return;
             }
 
-            effect.World = 
-                Matrix.CreateScale(Scale) * 
-                Matrix.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z) * 
+            effect.World =
+                Matrix.CreateScale(Scale) *
+                Matrix.CreateFromYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z) *
                 Matrix.CreateTranslation(Position);
 
             effect.View = camera.ViewMatrix;

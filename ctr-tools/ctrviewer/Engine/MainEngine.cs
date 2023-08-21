@@ -1,5 +1,4 @@
-﻿using CTRFramework.Lang;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

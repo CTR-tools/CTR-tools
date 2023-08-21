@@ -1,7 +1,6 @@
-﻿using System;
-using CTRFramework;
+﻿using CTRFramework;
 using CTRFramework.Shared;
-using System.Numerics;
+using System;
 
 namespace map_conv_test
 {
@@ -11,7 +10,8 @@ namespace map_conv_test
         {
             OBJ.FixCulture();
 
-            if (args.Length == 0) {
+            if (args.Length == 0)
+            {
                 Console.WriteLine("Expecting OBJ file.");
                 Console.WriteLine("Must be built in quads.");
                 return;
@@ -33,7 +33,7 @@ namespace map_conv_test
                 },
                 verts = obj.CtrVerts,
                 quads = obj.CtrQuads,
-                
+
                 mesh = new MeshInfo()
                 {
                     numQuadBlocks = (uint)obj.CtrQuads.Count,

@@ -1,9 +1,7 @@
 ﻿using CTRFramework;
-using CTRFramework.Shared;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace ctrviewer.Engine.Render
 {

@@ -147,7 +147,7 @@ namespace ctrviewer.Engine.Render
         private float FrameDuration => (NextFrame.Time - ThisFrame.Time) / Speed;
 
         private AnimationKey ThisFrame => Animation[_thisframe];
-        private AnimationKey NextFrame => _nextframe < Animation.Count ? Animation[_nextframe] : null ;
+        private AnimationKey NextFrame => _nextframe < Animation.Count ? Animation[_nextframe] : null;
 
         public static AnimationPlayer Create(string animName, bool run = false, float speed = 1f) => new AnimationPlayer(ContentVault.GetVectorAnim(animName)) { Speed = speed, IsPlaying = run };
 
@@ -167,7 +167,7 @@ namespace ctrviewer.Engine.Render
             if (NumFrames == 0) return;
 
             Timer += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            
+
             if (Timer >= FrameDuration)
             {
                 Timer -= FrameDuration;

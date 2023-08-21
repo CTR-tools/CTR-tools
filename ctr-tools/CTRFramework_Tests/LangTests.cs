@@ -1,7 +1,6 @@
 ﻿using CTRFramework.Lang;
 using CTRFramework.Shared;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.IO;
 

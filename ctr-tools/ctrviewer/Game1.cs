@@ -1,12 +1,13 @@
 ﻿using CTRFramework;
 using CTRFramework.Big;
+using CTRFramework.Models;
 using CTRFramework.Shared;
 using CTRFramework.Sound;
 using CTRFramework.Vram;
-using CTRFramework.Models;
 using ctrviewer.Engine;
 using ctrviewer.Engine.Gui;
 using ctrviewer.Engine.Input;
+using ctrviewer.Engine.Menu;
 using ctrviewer.Engine.Render;
 using ctrviewer.Engine.Testing;
 using ctrviewer.Loaders;
@@ -21,7 +22,6 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Locale = ctrviewer.Resources.Localization;
-using ctrviewer.Engine.Menu;
 
 namespace ctrviewer
 {
@@ -1863,7 +1863,7 @@ namespace ctrviewer
             foreach (var qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshMed))
                 qb.Draw(graphics, effect, alphaTestEffect);
 
- 
+
             /*
             if (cam != null)
             {

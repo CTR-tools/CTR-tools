@@ -1,9 +1,6 @@
 ﻿using CTRFramework.Shared;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace ctrviewer.Engine.Menu
