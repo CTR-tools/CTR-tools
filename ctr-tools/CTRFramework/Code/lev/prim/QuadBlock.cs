@@ -547,7 +547,7 @@ namespace CTRFramework
                             sb.AppendLine();
 
                             if (newmat != oldmat)
-                            { 
+                            {
                                 sb.AppendLine($"usemtl\t{newmat}");
                                 oldmat = newmat;
 

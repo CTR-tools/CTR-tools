@@ -1,6 +1,5 @@
 ﻿using CTRFramework.Shared;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace CTRFramework.Sound
@@ -21,7 +20,7 @@ namespace CTRFramework.Sound
             byte[] top = br.ReadBytes(4);
             header = br.ReadBytes(8);
             byte[] bottom = br.ReadBytes(4);
-            data = br.ReadBytes(28*4);
+            data = br.ReadBytes(28 * 4);
 
             byte[] check = new byte[8];
 

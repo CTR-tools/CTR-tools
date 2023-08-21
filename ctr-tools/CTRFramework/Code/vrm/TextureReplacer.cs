@@ -3,11 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace CTRFramework.Vram
 {
@@ -36,7 +31,7 @@ namespace CTRFramework.Vram
             }
 
             if (!File.Exists(vramPath))
-            { 
+            {
                 Helpers.Panic(this, PanicType.Warning, "No VRAM file provided!");
                 return false;
             }
@@ -54,7 +49,7 @@ namespace CTRFramework.Vram
         }
     }
 
-    public  class TextureReplacer
+    public class TextureReplacer
     {
         public TextureReplacerContext Context;
 

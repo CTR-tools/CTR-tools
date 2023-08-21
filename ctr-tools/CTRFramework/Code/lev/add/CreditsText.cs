@@ -1,10 +1,8 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Text;
 
 namespace CTRFramework
 {
@@ -13,7 +11,7 @@ namespace CTRFramework
         public List<string> Entries = new List<string>();
 
         public CreditsText()
-        { 
+        {
         }
 
         public static CreditsText FromReader(BinaryReaderEx br) => new CreditsText(br);

@@ -23,7 +23,7 @@ namespace ThreeDeeBear.Models.Ply
 
         public void Export(string filename)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.AppendLine("ply");
             sb.AppendLine("format ascii 1.0");

@@ -18,7 +18,7 @@ namespace CTRFramework.Sound
         {
             get
             {
-                var name = "default_name";
+                var name = $"0x{HashString}";
 
                 if (Context is null)
                     return name;
@@ -114,8 +114,7 @@ namespace CTRFramework.Sound
 
         public void Read(BinaryReaderEx br, HowlContext context = null)
         {
-            if (context != null)
-                Context = context;
+            if (context != null) Context = context;
 
             int bankoffset = (int)br.Position;
 
@@ -129,23 +128,34 @@ namespace CTRFramework.Sound
             br.JumpNextSector();
 
 
-            /*
-            for (int i = 0; i < indexTable.Length; i++)
+            foreach (int index in indexTable)
             {
-                if (!context.Samples.ContainsKey(i))
+                //if sample cache doesnt have this sample yet
+                if (!Context.Samples.ContainsKey(index))
                 {
+                    //create a sample
                     var sample = new Sample()
                     {
-                        ID = i,
-                        Data = br.ReadBytes(context.SpuPtrTable[i].Size * 8)
+                        Data = br.ReadBytes(Context.SpuPtrTable[index].Size * 8),
+                        ID = index
                     };
 
-                    context.Samples.Add(i, sample);
+                    //add a sample
+                    Context.Samples.Add(index, sample);
+                }
+                else
+                {
+                    br.Seek(Context.SpuPtrTable[index].Size * 8);
                 }
 
-            }*/
+                //add link to the list
+                Entries.Add(index, Context.Samples[index]);
+            }
 
+            return;
 
+            /*
+            //this is the older sample guessing algo
             int sam_start = (int)br.BaseStream.Position;
 
             int flag = 0;
@@ -185,6 +195,7 @@ namespace CTRFramework.Sound
                 }
             }
             while (loops < numSamples);
+            */
         }
 
         /// <summary>

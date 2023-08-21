@@ -62,7 +62,7 @@ namespace CTRFramework.Sound
         /// Converted from C++ source: https://github.com/ColdSauce/psxsdk/blob/master/tools/vag2wav.c
         /// </summary>
         /// <returns>Array of bytes.</returns>
-        public byte[] GetRawData(ref double s_1, ref double s_2)
+        public byte[] GetRawWaveData(ref double s_1, ref double s_2)
         {
             if (flags == 7)
                 return new byte[0];

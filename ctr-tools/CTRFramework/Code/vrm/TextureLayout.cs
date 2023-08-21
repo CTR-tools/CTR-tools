@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
-using System.Text;
 
 namespace CTRFramework.Vram
 {
@@ -196,7 +195,7 @@ namespace CTRFramework.Vram
 
         public RotateFlipType DetectRotation()
         {
-            var vramuv = new Vector2[2,2] {
+            var vramuv = new Vector2[2, 2] {
                 { new Vector2(min.X, min.Y), new Vector2(max.X, min.Y) },
                 { new Vector2(min.X, max.Y), new Vector2(max.X, max.Y) }
             };

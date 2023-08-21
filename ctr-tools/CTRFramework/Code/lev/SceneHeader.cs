@@ -47,7 +47,7 @@ namespace CTRFramework
 
         public PsxPtr ptrLowTexArray = PsxPtr.Zero;   //0xD4 - assumed to be a pointer to low textures array, there is no number of entries though
 
-        public Vector4b backColor = new Vector4b(0,0,0,0);      //0xD8 - base background color, used to clear the screen
+        public Vector4b backColor = new Vector4b(0, 0, 0, 0);      //0xD8 - base background color, used to clear the screen
         public SceneFlags sceneFlags;   //0xDC - this actually toggles some render stuff, bit0 - gradient sky, bit1 - ???, bit2 - toggles between water and animated vertices?
 
         public PsxPtr ptrBuildStart = PsxPtr.Zero;    //0xE0 - pointer to string, date, assumed visdata compilation start
@@ -202,7 +202,7 @@ namespace CTRFramework
 
             if (dataEnd - dataStart != SizeOf)
                 throw new Exception("SceneHeader: size mismatch");
-     
+
             if (ptrBuildStart != PsxPtr.Zero)
             {
                 br.Jump(ptrBuildStart);
@@ -292,7 +292,7 @@ namespace CTRFramework
 
 
             //bw.Write(skip2);
-            bw.Seek(4*4); //this must coincide with the skip amount in read!
+            bw.Seek(4 * 4); //this must coincide with the skip amount in read!
 
             bgColorTop.Write(bw);
             bgColorBottom.Write(bw);

@@ -681,7 +681,7 @@ namespace CTRFramework.Vram
             if (stp == 0 & r == 0 & g == 0 & b == 0)
                 a = 0;
             */
-            
+
             if (stp == 0)
             {
                 a = (byte)((col == 0) ? 0 : 255);
@@ -695,7 +695,7 @@ namespace CTRFramework.Vram
                         a = 254; //silly but works. this is to avoid alpha sorting problems. should be properly rewritten via shaders.
                 }
             }
-            
+
 
             return Color.FromArgb(a, r, g, b);
         }

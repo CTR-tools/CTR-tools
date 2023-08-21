@@ -1,10 +1,7 @@
-﻿using System;
+﻿using CTRFramework.Shared;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using CTRFramework.Shared;
+using System.Text;
 
 namespace CTRFramework.Sound
 {
@@ -36,7 +33,7 @@ namespace CTRFramework.Sound
 
             for (int i = 0; i < Count; i++)
                 sb.AppendLine($"{i.ToString("0000")}: {this[i]}");
-            
+
             return sb.ToString();
         }
     }

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace CTRFramework.Shared
 {
@@ -24,7 +19,7 @@ namespace CTRFramework.Shared
             timers[label]?.Stop();
             int i = (int)timers[label].ElapsedMilliseconds;
             timers.Remove(label);
-            return i;          
+            return i;
         }
     }
 }

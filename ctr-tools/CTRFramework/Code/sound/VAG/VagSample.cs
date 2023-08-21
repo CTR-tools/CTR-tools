@@ -39,12 +39,14 @@ namespace CTRFramework.Sound
         }
 
         //this is for headerless vag, just pass raw vag data
-        public VagSample(byte[] data)
+        public VagSample(byte[] data, int freq = 0)
         {
             using (var br = new BinaryReaderEx(new MemoryStream(data)))
             {
                 ReadFrames(br, data.Length);
             }
+
+            if (freq > 0) sampleFreq = freq;
         }
 
         public VagSample(BinaryReaderEx br) => Read(br);
@@ -71,6 +73,8 @@ namespace CTRFramework.Sound
         /// <param name="br">BinaryReaderEx instance.</param>
         public void Read(BinaryReaderEx br)
         {
+            Frames.Clear();
+
             var magic = new string(br.ReadChars(4));
 
             //vagedit exports vags without magic string for some reason, so only warn
@@ -174,7 +178,7 @@ namespace CTRFramework.Sound
                 double s_2 = 0.0;
 
                 foreach (var frame in Frames)
-                    wav.Write(frame.GetRawData(ref s_1, ref s_2));
+                    wav.Write(frame.GetRawWaveData(ref s_1, ref s_2));
 
                 int streamSize = (int)wav.BaseStream.Position;
 

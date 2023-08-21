@@ -1,15 +1,14 @@
-﻿using CTRFramework.Shared;
+﻿using CTRFramework.Models;
+using CTRFramework.Shared;
 using CTRFramework.Vram;
-using CTRFramework.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Text;
-using System.Linq;
-using System.Threading;
 
 namespace CTRFramework
 {
@@ -517,7 +516,7 @@ namespace CTRFramework
             if (flags.HasFlag(ExportFlags.TexModels)) ExportTextures(path, Detail.Models);
             if (flags.HasFlag(ExportFlags.SkyBox)) ExportSkyBox(path);
 
-            if (flags.HasFlag(ExportFlags.AnimTex)) ExportTextures(path, Detail.Anim );
+            if (flags.HasFlag(ExportFlags.AnimTex)) ExportTextures(path, Detail.Anim);
 
 
             if (flags.HasFlag(ExportFlags.DumpLayouts)) Helpers.DumpTextureLayoutList(Helpers.PathCombine(path, Meta.LayoutsName), GetTexturesList().Values.ToList());
@@ -532,7 +531,7 @@ namespace CTRFramework
                 Helpers.Panic(this, PanicType.Warning, "No VRAM to load textures from.");
                 return;
             }
-           
+
             //here's the trick, Tim class contains static textures dictionary that is reused later
             //doing this loop we populate that array. gotta come up with better solution really.
 
@@ -616,7 +615,7 @@ namespace CTRFramework
                     }
                 }
             }
-            
+
 
             //special case for tageing textures
             if (lod == Detail.Montage)

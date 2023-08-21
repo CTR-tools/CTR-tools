@@ -1,12 +1,11 @@
-﻿using System;
+﻿using CTRFramework.Vram;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
 using System.Xml;
-using CTRFramework.Vram;
-using System.IO;
 
 namespace CTRFramework.Shared
 {

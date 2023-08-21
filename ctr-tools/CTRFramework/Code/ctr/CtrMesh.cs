@@ -102,7 +102,7 @@ namespace CTRFramework.Models
             foreach (var ttl in dict.Values)
                 groupedtl.Add(Combine(ttl));
 
-           // groupedtl.AddRange(result);
+            // groupedtl.AddRange(result);
         }
 
         private TextureLayout Combine(List<TextureLayout> tl)
@@ -487,8 +487,8 @@ namespace CTRFramework.Models
             sb.AppendLine($"# {Meta.Version}");
             sb.AppendLine("# Original models: (C) 1999, Activision, Naughty Dog.\r\n");
 
-           // if (tl.Count > 0)
-           if (groupedtl.Count > 0)
+            // if (tl.Count > 0)
+            if (groupedtl.Count > 0)
                 sb.AppendLine($"mtllib\t{filename}.mtl\r\n");
 
             sb.AppendLine($"o\t{Name}\r\n");
@@ -507,7 +507,7 @@ namespace CTRFramework.Models
                 if (matIndices[i] != null)
                 {
                     for (int j = 0; j < 3; j++)
-                        sb.AppendLine($"vt\t{(verts[i * 3 + j].uv.X / 255f).ToString("0.###")} {(1.0f-(verts[i * 3 + j].uv.Y / 255f)).ToString("0.###")}");
+                        sb.AppendLine($"vt\t{(verts[i * 3 + j].uv.X / 255f).ToString("0.###")} {(1.0f - (verts[i * 3 + j].uv.Y / 255f)).ToString("0.###")}");
                 }
                 else
                 {

@@ -16,7 +16,7 @@ namespace CTRFramework.Shared
         }
 
         public Gradient(BinaryReaderEx br) => Read(br);
- 
+
         public static Gradient FromReader(BinaryReaderEx br) => new Gradient(br);
 
         public void Read(BinaryReaderEx br)

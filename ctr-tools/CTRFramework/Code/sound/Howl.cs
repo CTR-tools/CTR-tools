@@ -25,7 +25,7 @@ namespace CTRFramework.Sound
                     max = entry.Key;
             }
 
-            return max;
+            return max + 1;
         }
 
         public static HowlContext Create() => new HowlContext();
@@ -67,15 +67,6 @@ namespace CTRFramework.Sound
         public List<Bank> Banks = new List<Bank>();
         public List<Cseq> Songs = new List<Cseq>();
 
-        public static string GetName(int x, Dictionary<int, string> dict)
-        {
-            string result = $"{x.ToString("0000")}_{x.ToString("X4")}";
-
-            if (dict.ContainsKey(x))
-                result += "_" + dict[x];
-
-            return result;
-        }
 
         List<int> ptrBanks = new List<int>();
         List<int> ptrSeqs = new List<int>();
@@ -224,14 +215,14 @@ namespace CTRFramework.Sound
                 Banks.Add(bank);
             }
 
-
+            /*
             foreach (var bank in Banks)
                 foreach (var sample in bank.Entries.Values)
                 {
                     if (!Context.Samples.ContainsKey(sample.ID))
                         Context.Samples.Add(sample.ID, sample);
                 }
-
+            */
 
             foreach (var ptr in ptrSeqs)
             {
@@ -319,7 +310,7 @@ s
                 Context.SpuPtrTable.Add(new SpuAddr());
 
             //iterate through all samples and calculate the correct value
-            for (int i = 0; i < Context.SpuPtrTable.Count(); i++)
+            for (int i = 0; i < Context.SpuPtrTable.Count() + 1; i++)
             {
                 if (Context.Samples.ContainsKey(i))
                 {
@@ -331,7 +322,7 @@ s
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            UpdateSpuTable();
+            //UpdateSpuTable();
 
             Console.WriteLine("Writing HOWL...");
 
@@ -591,8 +582,9 @@ s
             //read vag sample
             var vag = VagSample.FromFile(filename);
 
-            //copy data to existing sample in the table
+            //copy data to existing sample in the table and update the size
             Context.Samples[sampleIndex].Data = vag.GetData();
+            Context.SpuPtrTable[sampleIndex] = new SpuAddr() { Size = (ushort)(Context.Samples[sampleIndex].Data.Length / 8) };
 
             //now find all inst entries and copy the frequency there
             foreach (var inst in SampleTable)

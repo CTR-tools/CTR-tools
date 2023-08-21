@@ -1,11 +1,11 @@
-﻿using CTRFramework.Shared;
+﻿using CTRFramework.Models;
+using CTRFramework.Shared;
 using CTRFramework.Vram;
-using CTRFramework.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Linq;
+using System.Text;
 
 namespace CTRFramework
 {

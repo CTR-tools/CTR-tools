@@ -10,6 +10,8 @@ namespace CTRFramework.Sound
     /// </summary>
     public class Instrument : IReadWrite
     {
+        public Sample GetSample(int sampleIndex, HowlContext context) => context.Samples.ContainsKey(sampleIndex) ? context.Samples[sampleIndex] : null;
+
         public static readonly int SizeOf = 0x0C;
 
         public byte flags;  //0 - regular, 1 - music sample, 2 - looped sample? but insts can be looped as well, 3 - ?, 4 - taunt?, others?
