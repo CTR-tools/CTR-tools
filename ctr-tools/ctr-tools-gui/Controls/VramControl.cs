@@ -7,9 +7,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using CTRFramework;
-using CTRFramework.Vram;
-using CTRFramework.Models;
 
 namespace CTRTools.Controls
 {

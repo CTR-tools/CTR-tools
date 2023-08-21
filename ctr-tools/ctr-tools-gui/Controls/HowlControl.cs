@@ -1,7 +1,10 @@
 ﻿using CTRFramework.Sound;
+using NAudio.Midi;
 using NAudio.Wave;
 using System;
 using System.IO;
+using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Windows.Forms;
 
 namespace CTRTools.Controls
@@ -26,25 +29,8 @@ namespace CTRTools.Controls
             howl = Howl.FromFile(filename);
             label1.Text = $"Howl loaded from {filename}.";
 
-
-            sampleTableListBox.BeginUpdate();
-
-            sampleTableListBox.Items.Clear();
-
-            foreach (var entry in Howl.SampleTable)
-                sampleTableListBox.Items.Add(Howl.GetName(entry.SampleID, Howl.samplenames));
-
-            sampleTableListBox.EndUpdate();
-
-
-            songListBox.BeginUpdate();
-            songListBox.Items.Clear();
-
-            foreach (var entry in howl.Songs)
-                songListBox.Items.Add(entry.name);
-
-            songListBox.EndUpdate();
-
+            PopulateSamplesTab();
+            PopulateSongsTab();
 
             banksTreeView.BeginUpdate();
 
@@ -73,6 +59,34 @@ namespace CTRTools.Controls
             }
 
             banksTreeView.EndUpdate();
+        }
+
+        private void PopulateSamplesTab()
+        {
+            sampleTableListBox.BeginUpdate();
+
+            sampleTableListBox.Items.Clear();
+
+            foreach (var entry in Howl.SampleTable)
+            {
+                var sample = entry.GetSample(entry.SampleID, howl.Context);
+                sample.Context = howl.Context; //duh
+                sampleTableListBox.Items.Add(entry.GetSample(entry.SampleID, howl.Context).Name);
+            }
+
+            sampleTableListBox.EndUpdate();
+        }
+
+        private void PopulateSongsTab()
+        {
+            songListBox.BeginUpdate();
+
+            songListBox.Items.Clear();
+
+            foreach (var entry in howl.Songs)
+                songListBox.Items.Add(entry.name);
+
+            songListBox.EndUpdate();
         }
 
         private void actionExport_Click(object sender, EventArgs e)
@@ -106,11 +120,36 @@ namespace CTRTools.Controls
             e.Effect = DragDropEffects.Copy;
         }
 
+        AudioFileReader wave;
+        WaveOut output;
+
+        private void PlaySample(VagSample sample, float volume)
+        {
+            if (output != null)
+            {
+                output.Stop();
+                wave.Close();
+                wave = null;
+            }
+
+            File.Delete("temp.wav");
+            sample.ExportWav("temp.wav");
+
+            wave = new AudioFileReader("temp.wav");
+            output = new WaveOut();
+
+            output.Volume = volume;
+            output.Init(wave);
+            output.Play();
+        }
+
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (sampleTableListBox.SelectedIndex < 0) return;
 
-            propertyGrid1.SelectedObject = Howl.SampleTable[sampleTableListBox.SelectedIndex];
+            var samp = Howl.SampleTable[sampleTableListBox.SelectedIndex];
+            propertyGrid1.SelectedObject = samp;
+            PlaySample(samp.GetVagSample(howl.Context), samp.Volume);
         }
 
         private void actionSave_Click(object sender, EventArgs e)
@@ -127,18 +166,7 @@ namespace CTRTools.Controls
 
         private void songListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var seq = howl.Songs[songListBox.SelectedIndex];
 
-            var savedialog = new SaveFileDialog();
-            savedialog.Filter = "CTR CSEQ (*.cseq)|*.cseq";
-            savedialog.FileName = seq.name;
-
-            if (savedialog.ShowDialog() == DialogResult.OK)
-            {
-
-
-                howl.Songs[songListBox.SelectedIndex].Save(savedialog.FileName);
-            }
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -169,6 +197,87 @@ namespace CTRTools.Controls
             {
                 //unimplemented
             }
+        }
+
+        private void replaceSampleButton_Click(object sender, EventArgs e)
+        {
+            if (howl is null) return;
+
+            int sampleIndex = Howl.SampleTable[sampleTableListBox.SelectedIndex].SampleID;
+
+            var ofd = new OpenFileDialog();
+            ofd.Filter = "PSX VAG sample file (*.vag)|*.vag";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                howl.ReplaceVagSample(sampleIndex, ofd.FileName);
+            }
+        }
+
+        private void cseqSave_Click(object sender, EventArgs e)
+        {
+            var seq = howl.Songs[songListBox.SelectedIndex];
+
+            var savedialog = new SaveFileDialog();
+            savedialog.Filter = "CTR CSEQ (*.cseq)|*.cseq";
+            savedialog.FileName = seq.name;
+
+            if (savedialog.ShowDialog() == DialogResult.OK)
+            {
+                howl.Songs[songListBox.SelectedIndex].Save(savedialog.FileName);
+            }
+        }
+
+        private void cseqImport_Click(object sender, EventArgs e)
+        {
+            var seq = howl.Songs[songListBox.SelectedIndex];
+
+            var ofd = new OpenFileDialog();
+            ofd.Filter = "MIDI File (*.mid)|*.mid";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+                ImportMIDI(seq, ofd.FileName);
+        }
+
+        private void ImportMIDI(Cseq seq, string filename)
+        {
+            var midi = new MidiFile(filename);
+            var newMidi = new CseqSong();
+
+            //find a way to read from midi
+            newMidi.BeatsPerMinute = (int)numericUpDown1.Value;
+            newMidi.TicksPerQuarterNote = midi.DeltaTicksPerQuarterNote;
+
+            for (int i = 1; i < midi.Tracks; i++)
+            {
+                var track = new CSeqTrack();
+                //track.name = $"track_{i.ToString("00")}";
+                track.FromMidiEventList(midi.Events.GetTrackEvents(i).ToList());
+
+                newMidi.Tracks.Add(track);
+            }
+
+            foreach (var x in newMidi.Tracks.ToList())
+            {
+                if (x.isDrumTrack)
+                    newMidi.Tracks.Remove(x);
+            }
+
+            //fix track index
+            for (int i = 0; i < newMidi.Tracks.Count; i++)
+                newMidi.Tracks[i].Index = i;
+
+
+            foreach (var x in newMidi.Tracks)
+            {
+                var c = new CseqEvent();
+                c.eventType = CseqEventType.ChangePatch;
+                c.pitch = (byte)x.Index;
+                c.wait = 0;
+                x.cseqEventCollection.Insert(0, c);
+            }
+
+            seq.Songs[0] = newMidi;
         }
     }
 }

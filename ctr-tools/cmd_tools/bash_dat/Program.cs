@@ -1,8 +1,5 @@
-﻿using CTRFramework.Shared;
-using CTRFramework.Vram;
-using CTRFramework.Bash;
-using System.Collections.Generic;
-using System;
+﻿using CTRFramework.Bash;
+using CTRFramework.Shared;
 
 namespace bash_dat
 {

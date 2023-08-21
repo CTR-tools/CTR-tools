@@ -1,15 +1,13 @@
 ﻿using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Lang;
+using CTRFramework.Models;
 using CTRFramework.Shared;
 using CTRFramework.Vram;
-using CTRFramework.Models;
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
-using System.Linq;
-using System.Drawing;
 
 namespace CTRTools.Controls
 {
@@ -125,7 +123,7 @@ namespace CTRTools.Controls
                         "adventure hubs, main menu and adventure selection screens.";
                     break;
                 case "packs":
-                    child.ToolTipText = "Various game data combined into separate packages,\r\n"+
+                    child.ToolTipText = "Various game data combined into separate packages,\r\n" +
                         "to be loaded at once in the specific game mode.\r\n" +
                         "Weapons, crates, kart models, fonts, rewards, etc.";
                     break;
@@ -136,7 +134,7 @@ namespace CTRTools.Controls
                     child.ToolTipText = "Localization files to translate the game on the fly.";
                     break;
                 case "models":
-                    child.ToolTipText = "Various instanced models, including karts models,\r\n"+
+                    child.ToolTipText = "Various instanced models, including karts models,\r\n" +
                         "podium scenes and boss hub custscenes.";
                     break;
                 case "screen":

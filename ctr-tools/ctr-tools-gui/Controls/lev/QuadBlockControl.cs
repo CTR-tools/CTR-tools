@@ -1,6 +1,6 @@
-﻿using System;
+﻿using CTRFramework;
+using System;
 using System.Windows.Forms;
-using CTRFramework;
 
 
 namespace CTRTools.Controls.lev
@@ -10,7 +10,8 @@ namespace CTRTools.Controls.lev
         QuadBlock quadBlock;
         QuadBlock QuadBlock
         {
-            get {
+            get
+            {
                 return quadBlock;
             }
 

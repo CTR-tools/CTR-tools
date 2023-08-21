@@ -1,9 +1,9 @@
 ﻿using CTRFramework;
+using CTRFramework.Models;
 using CTRFramework.Shared;
 using CTRFramework.Vram;
-using CTRFramework.Models;
-using System.IO;
 using System;
+using System.IO;
 
 namespace model_reader
 {

@@ -1,9 +1,7 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
 using System;
-using System.Drawing;
 using System.IO;
-using System.Text;
 
 namespace vrmtool
 {
@@ -55,7 +53,7 @@ namespace vrmtool
             {
                 Helpers.Panic("TextureReplacer", PanicType.Warning, "_layouts.bin not found");
                 return;
-            }    
+            }
 
             //create replacer and context
             var textureReplacer = new TextureReplacer()

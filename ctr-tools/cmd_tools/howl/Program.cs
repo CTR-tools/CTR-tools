@@ -1,7 +1,7 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Sound;
-using System.IO;
 using System;
+using System.IO;
 
 namespace howl
 {
@@ -48,9 +48,6 @@ namespace howl
 
                         hwl.Export(path, br);
                         hwl.ExportAllSamples(path);
-
-                        //hwl.Banks[1].samples[0x1ae] = hwl.Banks[1].samples[0x143];
-                        //hwl.Save(Path.ChangeExtension(filename, ".hwl_test"));
 
                         Console.WriteLine("Done!");
                     }
