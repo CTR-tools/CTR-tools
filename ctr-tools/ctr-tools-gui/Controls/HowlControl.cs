@@ -1,7 +1,9 @@
-﻿using CTRFramework.Sound;
+﻿using CTRFramework.Shared;
+using CTRFramework.Sound;
 using NAudio.Midi;
 using NAudio.Wave;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
@@ -11,27 +13,37 @@ namespace CTRTools.Controls
 {
     public partial class HowlControl : UserControl
     {
-        public Howl howl;
+        string loadedFilename = "";
+        Howl howl;
 
         public HowlControl()
         {
             InitializeComponent();
         }
 
-        private void actionLoad_Click(object sender, EventArgs e)
-        {
-            if (ofd.ShowDialog() == DialogResult.OK)
-                LoadHowl(ofd.FileName);
-        }
-
         private void LoadHowl(string filename)
         {
-            howl = Howl.FromFile(filename);
-            label1.Text = $"Howl loaded from {filename}.";
+            try
+            {
+                howl = Howl.FromFile(filename);
+                label1.Text = $"Howl loaded from {filename}.";
 
-            PopulateSamplesTab();
-            PopulateSongsTab();
+                loadedFilename = filename;
 
+                PopulateSamplesTab();
+                PopulateSongsTab();
+                PopulateBanksTab();
+
+                HowlPlayer.Context = howl.Context;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{ex.Message}\r\n\r\n{ex}", "Error!");
+            }
+        }
+
+        private void PopulateBanksTab()
+        {
             banksTreeView.BeginUpdate();
 
             banksTreeView.Nodes.Clear();
@@ -89,18 +101,19 @@ namespace CTRTools.Controls
             songListBox.EndUpdate();
         }
 
-        private void actionExport_Click(object sender, EventArgs e)
+        /// <summary>
+        /// A wrapper howl null check that warns user if howl is not loaded.
+        /// </summary>
+        /// <returns>bool: HOWL loaded state</returns>
+        private bool IsHowlLoaded()
         {
-            if (howl is null)
-                return;
-
-            if (fbd.ShowDialog() == DialogResult.OK)
-            {
-                howl.ExportCSEQ(fbd.SelectedPath);
-                label2.Text = $"Exported to {fbd.SelectedPath}";
-            }
+            if (howl == null)
+                MessageBox.Show("HOWL is not loaded yet!", "Missing HOWL file");
+  
+            return howl != null;
         }
 
+        #region [drag/drop handling]
         private void HowlControl_DragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
@@ -119,85 +132,71 @@ namespace CTRTools.Controls
         {
             e.Effect = DragDropEffects.Copy;
         }
+        #endregion
 
-        AudioFileReader wave;
-        WaveOut output;
+        #region [audio hadling]
 
-        private void PlaySample(VagSample sample, float volume)
+        #endregion
+
+        private void sampleTableListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (output != null)
-            {
-                output.Stop();
-                wave.Close();
-                wave = null;
-            }
+            if (!IsHowlLoaded()) return;
 
-            File.Delete("temp.wav");
-            sample.ExportWav("temp.wav");
-
-            wave = new AudioFileReader("temp.wav");
-            output = new WaveOut();
-
-            output.Volume = volume;
-            output.Init(wave);
-            output.Play();
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
             if (sampleTableListBox.SelectedIndex < 0) return;
 
             var samp = Howl.SampleTable[sampleTableListBox.SelectedIndex];
             propertyGrid1.SelectedObject = samp;
-            PlaySample(samp.GetVagSample(howl.Context), samp.Volume);
+            HowlPlayer.Play(samp);
         }
 
-        private void actionSave_Click(object sender, EventArgs e)
-        {
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                howl.Save(sfd.FileName);
-            }
-        }
 
-        private void treeBanks_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-        }
-
-        private void songListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
+        #region [File menu event handlers]
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (howl is null) return;
-
             if (ofd.ShowDialog() == DialogResult.OK)
                 LoadHowl(ofd.FileName);
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (howl is null) return;
+            if (!IsHowlLoaded()) return;
+
+            Helpers.BackupFile(loadedFilename);
+            howl.Save(loadedFilename);
+
+            label1.Text = "saved to " + loadedFilename;
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!IsHowlLoaded()) return;
+            sfd.FileName = loadedFilename;
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                howl.Save(sfd.FileName);
+                loadedFilename = sfd.FileName;
+
+                Helpers.BackupFile(loadedFilename);
+                howl.Save(loadedFilename);
+ 
+                label1.Text = "saved to " + loadedFilename;
             }
         }
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (howl is null) return;
-
-            var fbd = new FolderBrowserDialog();
+            if (!IsHowlLoaded()) return;
 
             if (fbd.ShowDialog() == DialogResult.OK)
             {
-                //unimplemented
+                howl.ExportCSEQ(fbd.SelectedPath);
+                label2.Text = $"Exported to {fbd.SelectedPath}";
             }
         }
+        #endregion
+
+
 
         private void replaceSampleButton_Click(object sender, EventArgs e)
         {
@@ -216,6 +215,8 @@ namespace CTRTools.Controls
 
         private void cseqSave_Click(object sender, EventArgs e)
         {
+            if (songListBox.SelectedIndex == -1) return;
+
             var seq = howl.Songs[songListBox.SelectedIndex];
 
             var savedialog = new SaveFileDialog();
@@ -230,6 +231,8 @@ namespace CTRTools.Controls
 
         private void cseqImport_Click(object sender, EventArgs e)
         {
+            if (songListBox.SelectedIndex == -1) return;
+
             var seq = howl.Songs[songListBox.SelectedIndex];
 
             var ofd = new OpenFileDialog();
@@ -248,6 +251,9 @@ namespace CTRTools.Controls
             newMidi.BeatsPerMinute = (int)numericUpDown1.Value;
             newMidi.TicksPerQuarterNote = midi.DeltaTicksPerQuarterNote;
 
+            int absoluteTime = 0;
+
+            //foreach track in midi file, why 1?
             for (int i = 1; i < midi.Tracks; i++)
             {
                 var track = new CSeqTrack();
@@ -257,10 +263,58 @@ namespace CTRTools.Controls
                 newMidi.Tracks.Add(track);
             }
 
-            foreach (var x in newMidi.Tracks.ToList())
+            //calculate end track
+            foreach (var track in newMidi.Tracks)
+            {
+                var last = track.cseqEventCollection.Count;
+                if (last == 0) continue;
+
+                var test = track.cseqEventCollection[last - 1].absoluteTime;
+
+                if (test > absoluteTime)
+                    absoluteTime = test;
+            }
+
+            //put proper end tracks
+            foreach (var track in newMidi.Tracks.ToList())
+            {
+                var last = track.cseqEventCollection.Count;
+
+                if (last != 0)
+                {
+
+                    var test = absoluteTime - track.cseqEventCollection[last - 1].absoluteTime;
+
+                    track.cseqEventCollection.Add(new CseqEvent()
+                    {
+                        absoluteTime = absoluteTime,
+                        wait = test,
+                        eventType = CseqEventType.EndTrack
+                    });
+                }
+                else
+                {
+                    newMidi.Tracks.Remove(track);
+                }
+            }
+
+            var percTable = new List<byte>();
+
+            foreach (var x in newMidi.Tracks)
             {
                 if (x.isDrumTrack)
-                    newMidi.Tracks.Remove(x);
+                {
+                    foreach (var evt in x.cseqEventCollection)
+                    {
+                        if (!percTable.Contains(evt.pitch))
+                            percTable.Add(evt.pitch);
+                    }
+
+                    foreach (var evt in x.cseqEventCollection)
+                    {
+                        evt.pitch = (byte)percTable.IndexOf(evt.pitch);
+                    }
+                }
             }
 
             //fix track index
@@ -277,7 +331,95 @@ namespace CTRTools.Controls
                 x.cseqEventCollection.Insert(0, c);
             }
 
+
+
             seq.Songs[0] = newMidi;
+        }
+
+        private void findFreeIndexButton_Click(object sender, EventArgs e)
+        {
+            if (!IsHowlLoaded()) return;
+
+            int index = 1;
+
+            do
+            {
+                if (howl.Context.Samples.ContainsKey(index))
+                {
+                    index++;
+                }
+                else
+                {
+                    MessageBox.Show("found free index: " + index);
+
+                    howl.Context.Samples.Add(index, new Sample() { ID = index } );
+                    Howl.SampleTable[sampleTableListBox.SelectedIndex].SampleID = (ushort)index;
+
+                    propertyGrid1.SelectedObject = Howl.SampleTable[sampleTableListBox.SelectedIndex];
+
+                    return;
+                }
+            }
+            while (index < 2048);
+
+            if (index >= 2048)
+            { 
+                MessageBox.Show("Index search overflow!");
+                return;
+            }
+        }
+
+        private void addToSfxBank_Click(object sender, EventArgs e)
+        {
+            if (!IsHowlLoaded()) return;
+
+            var index = Howl.SampleTable[sampleTableListBox.SelectedIndex].SampleID;
+
+            if (!howl.Banks[0].Entries.ContainsKey(index))
+            {
+                howl.Banks[0].Entries.Add(index, howl.Context.Samples[index]);
+            }
+            else
+            {
+                MessageBox.Show("Already in the SFX bank!");
+            }
+        }
+
+        private void wipeButton_Click(object sender, EventArgs e)
+        {
+            if (!IsHowlLoaded()) return;
+
+            var index = Howl.SampleTable[sampleTableListBox.SelectedIndex].SampleID;
+            howl.Context.Samples[index].Data = new byte[0];
+            howl.Context.SpuPtrTable[index] = new SpuAddr() { Size = 0 };
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void editSongButton_Click(object sender, EventArgs e)
+        {
+            if (songListBox.SelectedIndex == -1) return;
+
+            cseqControl1.seq = howl.Songs[songListBox.SelectedIndex];
+            tabControl1.SelectedTab = tabSong;
+            cseqControl1.FillUI();
+        }
+
+        private void songListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void songListBox_DoubleClick(object sender, EventArgs e)
+        {
+            if (songListBox.SelectedIndex == -1) return;
+
+            cseqControl1.seq = howl.Songs[songListBox.SelectedIndex];
+            tabControl1.SelectedTab = tabSong;
+            cseqControl1.FillUI();
         }
     }
 }

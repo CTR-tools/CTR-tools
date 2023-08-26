@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\HowlPlayer.cs" />
     <Compile Include="Controls\DrawerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -79,6 +80,12 @@
     </Compile>
     <Compile Include="Controls\FontControl.Designer.cs">
       <DependentUpon>FontControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SampleControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\SampleControl.Designer.cs">
+      <DependentUpon>SampleControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -179,6 +186,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\lev\VertexArrayControl.resx">
       <DependentUpon>VertexArrayControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\SampleControl.resx">
+      <DependentUpon>SampleControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\XaControl.resx">
       <DependentUpon>XaControl.cs</DependentUpon>

@@ -7,6 +7,7 @@
 		<long midi="27" title="Guitar"/>
 		<long midi="11" title="Vibraphone"/>
 		<long midi="83" title="Lead 4"/>
+		
 		<short key="35" title="Bass drum"/>
 		<short key="42" title="Closed Hi-Hat"/>
 		<short key="38" title="Snare drum"/>
@@ -23,12 +24,14 @@
 		<short key="64" title="Bonga 1"/>
 		<short key="61" title="Bonga 2"/>
 	</song>
+	
 	<song title="mines">
 		<long midi="2" pitch="-12" title="Electric Grand Piano"/>
 		<long midi="22" pitch="12" title="Harmonica"/>
 		<long midi="32" pitch="-12" title="Acoustic Bass"/>
 		<long midi="118" pitch="-24" title="Synth Drum"/>
 		<long midi="107" title="Koto"/>
+		
 		<short key="46" title="Open Hi-hat"/>
 		<short key="38" title="Acoustic Snare"/>
 		<short key="69" title="Cabasa"/>
@@ -40,11 +43,13 @@
 		<short key="87" title="Open Surdo"/>
 		<short key="53" title="Ride Bell"/>
 	</song>
+	
 	<song title="bluff">
 		<long midi="34" pitch="-12" title="Electric Bass"/>
 		<long midi="67" pitch="-12" title="Baritone Sax"/>
-		<long midi="45" title="Pizzacato Strings"/>
-		<long midi="21" pitch="12" title="Accordian"/>
+		<long midi="4" title="Rhodes Piano"/>
+		<long midi="16" pitch="12" title="Hammond Organ"/>
+		
 		<short key="35" title="Acoustic BassDrum"/>
 		<short key="44" title="Pedal Hi-Hat"/>
 		<short key="40" title="Electric SnareDrum"/>
@@ -52,6 +57,7 @@
 		<short key="83" title="Jingle Bell"/>
 		<short key="39" title="Hand Clap"/>
 	</song>
+	
 	<song title="cove">
 		<long midi="27" title="Guitar"/>
 		<long midi="62" pitch="-12" title="Synth Brass"/>
@@ -59,6 +65,7 @@
 		<long midi="114" title="Steel Drums"/>
 		<long midi="34" pitch="-12" title="Electric Bass"/>
 		<long midi="11" title="Vibraphone"/>
+		
 		<short key="63" title="Open Hi-Conga"/>
 		<short key="61" title="Low Bongo"/>
 		<short key="67" title="High Agogo"/>
@@ -70,12 +77,14 @@
 		<short key="45" title="Low Tom"/>
 		<short key="43" title="High Floor Tom"/>
 	</song>
+	
 	<song title="temple">
 		<long midi="84" title="Charang"/>
 		<long midi="30" pitch="-12" title="Distortion Guitar"/>
 		<long midi="13" title="Xylophone"/>
 		<long midi="12" title="Marimba"/>
 		<long midi="26" pitch="-24" title="Electric Guitar"/>
+		
 		<short key="77" title="Woodblock"/>
 		<short key="44" title="Pedal Hi-Hat"/>
 		<short key="35" title="Acoustic BassDrum"/>
@@ -85,11 +94,13 @@
 		<short key="64" title="Low Conga"/>
 		<short key="63" title="Open High Conga"/>
 	</song>
+	
 	<song title="pyramid">
 		<long midi="26" pitch="-36" title="Electric Guitar"/>
 		<long midi="12" title="Marimba"/>
 		<long midi="52" pitch="12" title="Choir"/>
 		<long midi="15" pitch="-12" title="Dulcimer"/>
+		
 		<short key="36" title="Bass Drum"/>
 		<short key="40" title="Electric SnareDrum"/>
 		<short key="38" title="Accoustic SnareDrum"/>
@@ -100,11 +111,13 @@
 		<short key="63" title="Open Hi Conga"/>
 		<short key="61" title="Low Bongo"/>
 	</song>
+	
 	<song title="tubes">
 		<long midi="8" pitch="12" title="Celesta"/>
 		<long midi="18" pitch="-12" title="Rock Organ"/>
 		<long midi="25" pitch="-12" title="Steel Acoustic Guitar"/>
 		<long midi="11" title="Vibraphone"/>
+		
 		<short key="35" title="Accoustic Bass Drum"/>
 		<short key="35" title="Bass Drum"/>
 		<short key="38" title="Accoustic Snare"/>
@@ -115,6 +128,7 @@
 		<short key="32" title="Square Click"/>
 		<short key="49" title="Crash Cymbal"/>
 	</song>
+	
 	<song title="skyway">
 		<long midi="71" title="Clarinet"/>
 		<long midi="75" pitch="-12" title="Pan Flute"/>
@@ -122,6 +136,7 @@
 		<long midi="61" title="Brass"/>
 		<long midi="87" title="Lead"/>
 		<long midi="3" title="Piano"/>
+		
 		<short key="65" title="High Timbale"/>
 		<short key="68" title="Low Agogo"/>
 		<short key="67" title="High Agogo"/>
@@ -132,11 +147,13 @@
 		<short key="38" title="Acoustic SnareDrum"/>
 		<short key="42" title="Closed Hi-Hat"/>
 	</song>
+	
 	<song title="sewer">
 		<long midi="25" pitch="12" title="Guitar"/>
 		<long midi="30" pitch="-14" title="Distort Guitar"/>
 		<long midi="18" title="Organ"/>
 		<long midi="26" pitch="-12" title="Bass"/>
+		
 		<short key="63" title="Open Hi Conga"/>
 		<short key="60" title="Hi Bongo"/>
 		<short key="67" title="Agogo"/>
@@ -146,12 +163,14 @@
 		<short key="66" title="Low Timbale"/>
 		<short key="40" title="Snare"/>
 	</song>
+	
 	<song title="caves">
 		<long midi="81" pitch="-12" title="Lead 2"/>
 		<long midi="33" pitch="-12" title="Electric Bass"/>
 		<long midi="15" title="Dulcimer"/>
 		<long midi="38" title="Synth Bass"/>
 		<long midi="56" title="Trumpet"/>
+		
 		<short key="63" title="High Conga"/>
 		<short key="64" title="Low Conga"/>
 		<short key="68" title="Agogo"/>
@@ -160,6 +179,7 @@
 		<short key="36" title="Bass Drum"/>
 		<short key="38" title="Acoustic Snare"/>
 	</song>
+	
 	<song title="castle">
 		<long midi="61" pitch="-12" title="Brass"/>
 		<long midi="60" title="French Horn"/>
@@ -168,6 +188,7 @@
 		<long midi="45" title="Pizzicato"/>
 		<long midi="33" pitch="-12" title="Finger Bass"/>
 		<long midi="44" title="Tremlo Strings"/>
+		
 		<short key="87" title="Tinpani"/>
 		<short key="57" title="Crash"/>
 		<short key="44" title="Pedal Hi-hat"/>
@@ -177,12 +198,14 @@
 		<short key="58" title="Drumroll"/>
 		<short key="55" title="Tamborine"/>
 	</song>
+	
 	<song title="labs">
 		<long midi="38" pitch="-24" title="Bass"/>
 		<long midi="94" pitch="12" title="Voice"/>
 		<long midi="80" pitch="-4" title="Lead 1"/>
 		<long midi="66" pitch="-24" title="Sax"/>
 		<long midi="113" pitch="24" title="Agogo"/>
+		
 		<short key="44" title="Pedal Hi-Hat"/>
 		<short key="27" title="High Q"/>
 		<short key="35" title="Bass Drum1"/>
@@ -193,6 +216,7 @@
 		<short key="36" title="Bass Drum2"/>
 		<short key="40" title="Electric Snare"/>
 	</song>
+	
 	<song title="pass">
 		<long midi="7" pitch="-12" title="Clavi"/>
 		<long midi="36" title="SlapBass"/>

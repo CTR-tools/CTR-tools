@@ -14,16 +14,19 @@ namespace CTRFramework.Sound
 
         public static readonly int SizeOf = 0x0C;
 
-        public byte flags;  //0 - regular, 1 - music sample, 2 - looped sample? but insts can be looped as well, 3 - ?, 4 - taunt?, others?
-        public byte _volume;
-        public ushort _freq;
+        //category maybe?
+        public byte flags { get; set; } = 0; //0 - regular, 1 - music sample, 2 - looped sample? but insts can be looped as well, 3 - ?, 4 - taunt?, others?
+        public byte _volume = 255;
+        public ushort _freq = 4096;
         public ushort SampleID { get; set; }
 
         //must be populated based on SampleID
         public Sample Sample;
 
-        public short _always0; //not 0 in main sample table, probably length, size or duration
-        public uint ADSR { get; set; }  // assumes to be raw psx adsr value passed directly to psyq
+        //this is assumed to be sample length, 1 second is about 300. whatever it is.
+        //0 in music samples
+        public short timeToPlay { get; set; } = 0;
+        public uint ADSR { get; set; } = 532775167;  // assumed to be the raw psx adsr value passed directly to psyq.
 
         public MetaInst metaInst { get; set; }
 
@@ -69,7 +72,7 @@ namespace CTRFramework.Sound
         {
             flags = br.ReadByte();
             _volume = br.ReadByte();
-            _always0 = br.ReadInt16();
+            timeToPlay = br.ReadInt16();
             _freq = br.ReadUInt16();
             SampleID = br.ReadUInt16();
             ADSR = br.ReadUInt32();
@@ -77,8 +80,8 @@ namespace CTRFramework.Sound
             if (flags != 1)
                 Helpers.Panic(this, PanicType.Assume, $"magic1 != 1: {flags}");
 
-            if (_always0 != 0)
-                Helpers.Panic(this, PanicType.Assume, $"always0 != 0: {_always0}");
+            if (timeToPlay != 0)
+                Helpers.Panic(this, PanicType.Assume, $"always0 != 0: {timeToPlay}");
         }
 
         public virtual void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
@@ -150,7 +153,7 @@ namespace CTRFramework.Sound
             _volume = br.ReadByte();
             _freq = br.ReadUInt16();
             SampleID = br.ReadUInt16();
-            _always0 = br.ReadInt16();
+            timeToPlay = br.ReadInt16();
 
             if (flags != 0 && flags != 1 && flags != 2 && flags != 4)
             {
@@ -163,11 +166,11 @@ namespace CTRFramework.Sound
         {
             bw.Write((byte)flags);
             bw.Write((byte)_volume);
-            bw.Write((short)_freq);
+            bw.Write((ushort)_freq);
             bw.Write((ushort)SampleID);
-            bw.Write((short)_always0);
+            bw.Write((short)timeToPlay);
         }
 
-        public override string ToString() => $"magic:{flags}\tvol:{_volume}\tfreq:{_freq}\tid:{SampleID}\tzero:{_always0}";
+        public override string ToString() => $"magic:{flags}\tvol:{_volume}\tfreq:{_freq}\tid:{SampleID}\tzero:{timeToPlay}";
     }
 }

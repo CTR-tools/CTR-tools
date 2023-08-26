@@ -35,10 +35,18 @@ namespace CTRTools.Controls
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSongs = new System.Windows.Forms.TabPage();
+            this.editSongButton = new System.Windows.Forms.Button();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.cseqImport = new System.Windows.Forms.Button();
+            this.cseqSave = new System.Windows.Forms.Button();
             this.songListBox = new System.Windows.Forms.ListBox();
+            this.tabSong = new System.Windows.Forms.TabPage();
             this.tabBanks = new System.Windows.Forms.TabPage();
             this.banksTreeView = new System.Windows.Forms.TreeView();
             this.tabSampleTable = new System.Windows.Forms.TabPage();
+            this.wipeButton = new System.Windows.Forms.Button();
+            this.addToSfxBank = new System.Windows.Forms.Button();
+            this.findFreeIndexButton = new System.Windows.Forms.Button();
             this.replaceSampleButton = new System.Windows.Forms.Button();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.sampleTableListBox = new System.Windows.Forms.ListBox();
@@ -49,17 +57,19 @@ namespace CTRTools.Controls
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cseqSave = new System.Windows.Forms.Button();
-            this.cseqImport = new System.Windows.Forms.Button();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cseqControl1 = new CTRTools.Controls.CseqControl();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabSongs.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.tabSong.SuspendLayout();
             this.tabBanks.SuspendLayout();
             this.tabSampleTable.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -103,6 +113,7 @@ namespace CTRTools.Controls
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabSongs);
+            this.tabControl1.Controls.Add(this.tabSong);
             this.tabControl1.Controls.Add(this.tabBanks);
             this.tabControl1.Controls.Add(this.tabSampleTable);
             this.tabControl1.Location = new System.Drawing.Point(6, 45);
@@ -113,6 +124,7 @@ namespace CTRTools.Controls
             // 
             // tabSongs
             // 
+            this.tabSongs.Controls.Add(this.editSongButton);
             this.tabSongs.Controls.Add(this.numericUpDown1);
             this.tabSongs.Controls.Add(this.cseqImport);
             this.tabSongs.Controls.Add(this.cseqSave);
@@ -125,6 +137,53 @@ namespace CTRTools.Controls
             this.tabSongs.Text = "tabSongs";
             this.tabSongs.UseVisualStyleBackColor = true;
             // 
+            // editSongButton
+            // 
+            this.editSongButton.Location = new System.Drawing.Point(227, 64);
+            this.editSongButton.Name = "editSongButton";
+            this.editSongButton.Size = new System.Drawing.Size(242, 23);
+            this.editSongButton.TabIndex = 4;
+            this.editSongButton.Text = "Edit selected song (or double click)";
+            this.editSongButton.UseVisualStyleBackColor = true;
+            this.editSongButton.Click += new System.EventHandler(this.editSongButton_Click);
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(349, 37);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDown1.TabIndex = 3;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
+            // 
+            // cseqImport
+            // 
+            this.cseqImport.Location = new System.Drawing.Point(227, 35);
+            this.cseqImport.Name = "cseqImport";
+            this.cseqImport.Size = new System.Drawing.Size(115, 23);
+            this.cseqImport.TabIndex = 2;
+            this.cseqImport.Text = "Import MIDI";
+            this.cseqImport.UseVisualStyleBackColor = true;
+            this.cseqImport.Click += new System.EventHandler(this.cseqImport_Click);
+            // 
+            // cseqSave
+            // 
+            this.cseqSave.Location = new System.Drawing.Point(227, 6);
+            this.cseqSave.Name = "cseqSave";
+            this.cseqSave.Size = new System.Drawing.Size(115, 23);
+            this.cseqSave.TabIndex = 1;
+            this.cseqSave.Text = "Export CSEQ";
+            this.cseqSave.UseVisualStyleBackColor = true;
+            this.cseqSave.Click += new System.EventHandler(this.cseqSave_Click);
+            // 
             // songListBox
             // 
             this.songListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -135,6 +194,17 @@ namespace CTRTools.Controls
             this.songListBox.Size = new System.Drawing.Size(218, 355);
             this.songListBox.TabIndex = 0;
             this.songListBox.SelectedIndexChanged += new System.EventHandler(this.songListBox_SelectedIndexChanged);
+            this.songListBox.DoubleClick += new System.EventHandler(this.songListBox_DoubleClick);
+            // 
+            // tabSong
+            // 
+            this.tabSong.Controls.Add(this.cseqControl1);
+            this.tabSong.Location = new System.Drawing.Point(4, 22);
+            this.tabSong.Name = "tabSong";
+            this.tabSong.Size = new System.Drawing.Size(614, 373);
+            this.tabSong.TabIndex = 3;
+            this.tabSong.Text = "tabSong";
+            this.tabSong.UseVisualStyleBackColor = true;
             // 
             // tabBanks
             // 
@@ -159,6 +229,9 @@ namespace CTRTools.Controls
             // 
             // tabSampleTable
             // 
+            this.tabSampleTable.Controls.Add(this.wipeButton);
+            this.tabSampleTable.Controls.Add(this.addToSfxBank);
+            this.tabSampleTable.Controls.Add(this.findFreeIndexButton);
             this.tabSampleTable.Controls.Add(this.replaceSampleButton);
             this.tabSampleTable.Controls.Add(this.propertyGrid1);
             this.tabSampleTable.Controls.Add(this.sampleTableListBox);
@@ -168,6 +241,39 @@ namespace CTRTools.Controls
             this.tabSampleTable.TabIndex = 2;
             this.tabSampleTable.Text = "tabSampleTable";
             this.tabSampleTable.UseVisualStyleBackColor = true;
+            // 
+            // wipeButton
+            // 
+            this.wipeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.wipeButton.Location = new System.Drawing.Point(326, 342);
+            this.wipeButton.Name = "wipeButton";
+            this.wipeButton.Size = new System.Drawing.Size(125, 23);
+            this.wipeButton.TabIndex = 19;
+            this.wipeButton.Text = "Wipe sample";
+            this.wipeButton.UseVisualStyleBackColor = true;
+            this.wipeButton.Click += new System.EventHandler(this.wipeButton_Click);
+            // 
+            // addToSfxBank
+            // 
+            this.addToSfxBank.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.addToSfxBank.Location = new System.Drawing.Point(195, 342);
+            this.addToSfxBank.Name = "addToSfxBank";
+            this.addToSfxBank.Size = new System.Drawing.Size(125, 23);
+            this.addToSfxBank.TabIndex = 18;
+            this.addToSfxBank.Text = "Add to SFX bank";
+            this.addToSfxBank.UseVisualStyleBackColor = true;
+            this.addToSfxBank.Click += new System.EventHandler(this.addToSfxBank_Click);
+            // 
+            // findFreeIndexButton
+            // 
+            this.findFreeIndexButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.findFreeIndexButton.Location = new System.Drawing.Point(326, 313);
+            this.findFreeIndexButton.Name = "findFreeIndexButton";
+            this.findFreeIndexButton.Size = new System.Drawing.Size(125, 23);
+            this.findFreeIndexButton.TabIndex = 17;
+            this.findFreeIndexButton.Text = "Find next free index";
+            this.findFreeIndexButton.UseVisualStyleBackColor = true;
+            this.findFreeIndexButton.Click += new System.EventHandler(this.findFreeIndexButton_Click);
             // 
             // replaceSampleButton
             // 
@@ -197,9 +303,9 @@ namespace CTRTools.Controls
             this.sampleTableListBox.FormattingEnabled = true;
             this.sampleTableListBox.Location = new System.Drawing.Point(8, 7);
             this.sampleTableListBox.Name = "sampleTableListBox";
-            this.sampleTableListBox.Size = new System.Drawing.Size(181, 329);
+            this.sampleTableListBox.Size = new System.Drawing.Size(181, 355);
             this.sampleTableListBox.TabIndex = 14;
-            this.sampleTableListBox.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            this.sampleTableListBox.SelectedIndexChanged += new System.EventHandler(this.sampleTableListBox_SelectedIndexChanged);
             // 
             // ofd
             // 
@@ -225,7 +331,10 @@ namespace CTRTools.Controls
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.saveToolStripMenuItem,
-            this.exportToolStripMenuItem});
+            this.saveAsToolStripMenuItem,
+            this.exportToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -233,60 +342,58 @@ namespace CTRTools.Controls
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.S)));
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.saveAsToolStripMenuItem.Text = "Save as";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.exportToolStripMenuItem.Text = "Export";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
-            // cseqSave
+            // toolStripSeparator1
             // 
-            this.cseqSave.Location = new System.Drawing.Point(227, 6);
-            this.cseqSave.Name = "cseqSave";
-            this.cseqSave.Size = new System.Drawing.Size(115, 23);
-            this.cseqSave.TabIndex = 1;
-            this.cseqSave.Text = "Export CSEQ";
-            this.cseqSave.UseVisualStyleBackColor = true;
-            this.cseqSave.Click += new System.EventHandler(this.cseqSave_Click);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(181, 6);
             // 
-            // cseqImport
+            // exitToolStripMenuItem
             // 
-            this.cseqImport.Location = new System.Drawing.Point(227, 35);
-            this.cseqImport.Name = "cseqImport";
-            this.cseqImport.Size = new System.Drawing.Size(115, 23);
-            this.cseqImport.TabIndex = 2;
-            this.cseqImport.Text = "Import MIDI";
-            this.cseqImport.UseVisualStyleBackColor = true;
-            this.cseqImport.Click += new System.EventHandler(this.cseqImport_Click);
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // numericUpDown1
+            // cseqControl1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(349, 37);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown1.TabIndex = 3;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            120,
-            0,
-            0,
-            0});
+            this.cseqControl1.AllowDrop = true;
+            this.cseqControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cseqControl1.Location = new System.Drawing.Point(3, 3);
+            this.cseqControl1.Name = "cseqControl1";
+            this.cseqControl1.Size = new System.Drawing.Size(608, 367);
+            this.cseqControl1.TabIndex = 0;
             // 
             // HowlControl
             // 
@@ -303,11 +410,12 @@ namespace CTRTools.Controls
             this.groupBox1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabSongs.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            this.tabSong.ResumeLayout(false);
             this.tabBanks.ResumeLayout(false);
             this.tabSampleTable.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -338,5 +446,14 @@ namespace CTRTools.Controls
         private Button cseqImport;
         private Button cseqSave;
         private NumericUpDown numericUpDown1;
+        private ToolStripMenuItem saveAsToolStripMenuItem;
+        private Button findFreeIndexButton;
+        private Button addToSfxBank;
+        private Button wipeButton;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripMenuItem exitToolStripMenuItem;
+        private TabPage tabSong;
+        private CseqControl cseqControl1;
+        private Button editSongButton;
     }
 }

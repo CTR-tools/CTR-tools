@@ -14,7 +14,7 @@ namespace CTRFramework.Sound
 
         public byte unk0 = 0; //is it part of this struct?
 
-        private int BPM = 0;
+        private int BPM = 120;
         private int TPQN = 0;
 
         public int BeatsPerMinute

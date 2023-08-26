@@ -71,7 +71,7 @@ namespace CTRTools.Controls
             }
         }
 
-        private void FillUI(string filename)
+        public void FillUI(string filename = "empty")
         {
             if (seq is null) return;
 
@@ -311,7 +311,6 @@ namespace CTRTools.Controls
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-
             string filename = "";
 
             if (instrumentList.SelectedNode.Parent != null)
@@ -320,48 +319,24 @@ namespace CTRTools.Controls
                 {
                     var sd = instrumentList.SelectedNode.Tag as Instrument;
                     instrumentInfo.SelectedObject = sd;
-                    filename = Helpers.PathCombine(samplePath, $"{sd.ID}{((Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""))}.wav");
+                    //PlaySample(sd.GetVagSample(seq.Context), sd.Volume);
+                    HowlPlayer.Play(sd);
                 }
 
                 if (instrumentList.SelectedNode.Parent.Index == 0)
                 {
                     var sd = seq.samplesReverb[instrumentList.SelectedNode.Index];
                     instrumentInfo.SelectedObject = sd;
-                    filename = Helpers.PathCombine(samplePath, $"{sd.ID}{((Howl.samplenames.ContainsKey(sd.SampleID) ? "_" + Howl.samplenames[sd.SampleID] : ""))}.wav");
+                    //PlaySample(sd.GetVagSample(seq.Context), sd.Volume);
+                    HowlPlayer.Play(sd);
                 }
-
-
-                if (File.Exists(filename))
-                {
-                    try
-                    {
-                        if (waveOut != null)
-                        {
-                            if (waveOut.PlaybackState == PlaybackState.Playing)
-                                waveOut.Stop();
-
-                            waveOut.Dispose();
-                        }
-
-                        waveOut = new WaveOut();
-
-                        waveFile = new AudioFileReader(filename);
-
-                        waveOut.Init(waveFile);
-                        waveOut.Play();
-                    }
-                    catch (Exception ex)
-                    {
-                        trackInfoBox.Text = ex.Message;
-                    }
-                }
-
             }
             else
             {
                 instrumentInfo.SelectedObject = null;
             }
         }
+
 
         private void trackBox_DoubleClick(object sender, EventArgs e)
         {
@@ -536,6 +511,8 @@ namespace CTRTools.Controls
 
         private void button5_Click(object sender, EventArgs e)
         {
+            if (seq is null) return; 
+
             seq.Songs.Clear();
             sequenceBox.Items.Clear();
         }

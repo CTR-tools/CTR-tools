@@ -227,7 +227,7 @@ namespace CTRFramework.Sound
             foreach (var ptr in ptrSeqs)
             {
                 br.Jump(ptr);
-                Songs.Add(Cseq.FromReader(br));
+                Songs.Add(Cseq.FromReader(br, Context));
             }
 
             for (int i = 0; i < Songs.Count; i++)
@@ -587,12 +587,14 @@ s
             Context.SpuPtrTable[sampleIndex] = new SpuAddr() { Size = (ushort)(Context.Samples[sampleIndex].Data.Length / 8) };
 
             //now find all inst entries and copy the frequency there
+            //should not do this for instruments, or like implement some relative frequency updates?
             foreach (var inst in SampleTable)
             {
                 if (inst.SampleID == sampleIndex)
                 {
                     inst.Frequency = vag.sampleFreq;
                     inst.Volume = 1.0f;
+                    inst.timeToPlay = 0;
                 }
             }
         }

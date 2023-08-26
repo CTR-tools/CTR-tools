@@ -33,6 +33,8 @@ namespace CTRFramework.Sound
 
     public partial class Cseq : IReadWrite
     {
+        public HowlContext Context;
+
         public string path;
         public string name;
 
@@ -57,7 +59,7 @@ namespace CTRFramework.Sound
             Read(br);
         }
 
-        public static Cseq FromReader(BinaryReaderEx br) => new Cseq(br);
+        public static Cseq FromReader(BinaryReaderEx br, HowlContext context = null) => new Cseq(br) { Context = context };
 
         public static Cseq FromFile(string filename)
         {

@@ -88,7 +88,7 @@
             this.tabControl.Location = new System.Drawing.Point(0, 2);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(632, 424);
+            this.tabControl.Size = new System.Drawing.Size(784, 534);
             this.tabControl.TabIndex = 1;
             // 
             // tabAbout
@@ -102,7 +102,7 @@
             this.tabAbout.Controls.Add(this.githubLogo);
             this.tabAbout.Location = new System.Drawing.Point(4, 22);
             this.tabAbout.Name = "tabAbout";
-            this.tabAbout.Size = new System.Drawing.Size(624, 398);
+            this.tabAbout.Size = new System.Drawing.Size(776, 508);
             this.tabAbout.TabIndex = 7;
             this.tabAbout.Text = "About";
             // 
@@ -111,9 +111,9 @@
             this.warning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.warning.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.warning.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.warning.Location = new System.Drawing.Point(3, 28);
+            this.warning.Location = new System.Drawing.Point(3, 83);
             this.warning.Name = "warning";
-            this.warning.Size = new System.Drawing.Size(618, 61);
+            this.warning.Size = new System.Drawing.Size(770, 61);
             this.warning.TabIndex = 10;
             this.warning.Text = "Warning! This tool is in the early stage of development.\r\nSome features may be mi" +
     "ssing or won\'t work as intended.";
@@ -123,9 +123,9 @@
             // 
             this.signLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.signLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.signLabel.Location = new System.Drawing.Point(3, 319);
+            this.signLabel.Location = new System.Drawing.Point(3, 374);
             this.signLabel.Name = "signLabel";
-            this.signLabel.Size = new System.Drawing.Size(618, 24);
+            this.signLabel.Size = new System.Drawing.Size(770, 24);
             this.signLabel.TabIndex = 9;
             this.signLabel.Text = "Signature from DLL";
             this.signLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -134,9 +134,9 @@
             // 
             this.labelVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.labelVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labelVersion.Location = new System.Drawing.Point(3, 188);
+            this.labelVersion.Location = new System.Drawing.Point(3, 243);
             this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(618, 24);
+            this.labelVersion.Size = new System.Drawing.Size(770, 24);
             this.labelVersion.TabIndex = 6;
             this.labelVersion.Text = "Framework version from DLL";
             this.labelVersion.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -146,9 +146,9 @@
             this.appLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.appLogo.ErrorImage = null;
             this.appLogo.Image = global::CTRTools.Properties.Resources.ctr_tools_logo;
-            this.appLogo.Location = new System.Drawing.Point(3, 101);
+            this.appLogo.Location = new System.Drawing.Point(3, 156);
             this.appLogo.Name = "appLogo";
-            this.appLogo.Size = new System.Drawing.Size(618, 84);
+            this.appLogo.Size = new System.Drawing.Size(770, 84);
             this.appLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.appLogo.TabIndex = 3;
             this.appLogo.TabStop = false;
@@ -159,7 +159,7 @@
             this.discordLogo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.discordLogo.Image = global::CTRTools.Properties.Resources.icon_discord;
             this.discordLogo.InitialImage = null;
-            this.discordLogo.Location = new System.Drawing.Point(322, 239);
+            this.discordLogo.Location = new System.Drawing.Point(398, 294);
             this.discordLogo.Name = "discordLogo";
             this.discordLogo.Size = new System.Drawing.Size(64, 64);
             this.discordLogo.TabIndex = 5;
@@ -172,7 +172,7 @@
             this.githubLogo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.githubLogo.ErrorImage = null;
             this.githubLogo.Image = global::CTRTools.Properties.Resources.icon_github;
-            this.githubLogo.Location = new System.Drawing.Point(243, 239);
+            this.githubLogo.Location = new System.Drawing.Point(319, 294);
             this.githubLogo.Name = "githubLogo";
             this.githubLogo.Size = new System.Drawing.Size(64, 64);
             this.githubLogo.TabIndex = 4;
@@ -339,9 +339,9 @@
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 429);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 539);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(632, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(784, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -350,7 +350,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(632, 451);
+            this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabControl);
             this.DoubleBuffered = true;
