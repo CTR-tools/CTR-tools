@@ -68,7 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\HowlPlayer.cs" />
+    <Compile Include="Controls\howl\HowlPlayer.cs" />
     <Compile Include="Controls\DrawerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -81,10 +81,10 @@
     <Compile Include="Controls\FontControl.Designer.cs">
       <DependentUpon>FontControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SampleControl.cs">
+    <Compile Include="Controls\howl\SampleControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\SampleControl.Designer.cs">
+    <Compile Include="Controls\howl\SampleControl.Designer.cs">
       <DependentUpon>SampleControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -93,10 +93,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="_moveordelete\Char.cs" />
-    <Compile Include="Controls\CseqControl.cs">
+    <Compile Include="Controls\howl\CseqControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\CseqControl.Designer.cs">
+    <Compile Include="Controls\howl\CseqControl.Designer.cs">
       <DependentUpon>CseqControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\lev\QuadBlockControl.cs">
@@ -135,10 +135,10 @@
     <Compile Include="Controls\EmuControl.Designer.cs">
       <DependentUpon>EmuControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\HowlControl.cs">
+    <Compile Include="Controls\howl\HowlControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\HowlControl.Designer.cs">
+    <Compile Include="Controls\howl\HowlControl.Designer.cs">
       <DependentUpon>HowlControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\LangControl.cs">
@@ -171,7 +171,7 @@
     <Compile Include="Controls\VramControl.Designer.cs">
       <DependentUpon>VramControl.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Controls\CseqControl.resx">
+    <EmbeddedResource Include="Controls\howl\CseqControl.resx">
       <DependentUpon>CseqControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -187,7 +187,7 @@
     <EmbeddedResource Include="Controls\lev\VertexArrayControl.resx">
       <DependentUpon>VertexArrayControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\SampleControl.resx">
+    <EmbeddedResource Include="Controls\howl\SampleControl.resx">
       <DependentUpon>SampleControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\XaControl.resx">
@@ -203,7 +203,7 @@
     <EmbeddedResource Include="Controls\EmuControl.resx">
       <DependentUpon>EmuControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\HowlControl.resx">
+    <EmbeddedResource Include="Controls\howl\HowlControl.resx">
       <DependentUpon>HowlControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\LangControl.resx">
@@ -256,6 +256,7 @@
       <Name>CTRFramework</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
