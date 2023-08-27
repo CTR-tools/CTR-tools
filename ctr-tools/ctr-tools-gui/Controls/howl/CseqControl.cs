@@ -101,7 +101,10 @@ namespace CTRTools.Controls
 
             foreach (var sample in samples)
             {
-                var node = new TreeNode(sample.Tag + (Howl.samplenames.ContainsKey(sample.SampleID) ? "_" + Howl.samplenames[sample.SampleID] : ""));
+                var vag = sample.GetSample(sample.SampleID, seq.Context);
+                vag.Context = seq.Context;
+
+                var node = new TreeNode(vag.Name);
                 node.Tag = sample;
                 instruments.Nodes.Add(node);
             }
@@ -319,7 +322,6 @@ namespace CTRTools.Controls
                 {
                     var sd = instrumentList.SelectedNode.Tag as Instrument;
                     instrumentInfo.SelectedObject = sd;
-                    //PlaySample(sd.GetVagSample(seq.Context), sd.Volume);
                     HowlPlayer.Play(sd);
                 }
 
@@ -327,7 +329,6 @@ namespace CTRTools.Controls
                 {
                     var sd = seq.samplesReverb[instrumentList.SelectedNode.Index];
                     instrumentInfo.SelectedObject = sd;
-                    //PlaySample(sd.GetVagSample(seq.Context), sd.Volume);
                     HowlPlayer.Play(sd);
                 }
             }

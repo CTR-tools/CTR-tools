@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CTRFramework.Sound
 {
@@ -21,7 +22,9 @@ namespace CTRFramework.Sound
                 var name = $"0x{HashString}";
 
                 if (Context is null)
+                {
                     return name;
+                }
 
                 if (Context.HashNames.ContainsKey(HashString))
                     name = Context.HashNames[HashString];

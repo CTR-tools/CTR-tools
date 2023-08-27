@@ -111,7 +111,7 @@ namespace CTRFramework.Sound
                 Console.WriteLine($"{md5}\r\n{el["name"].InnerText} [{el["region"].InnerText}] detected.");
 
                 Context.banknames = Helpers.LoadNumberedList(el["banks"].InnerText);
-                //Context.hashnames = Helpers.LoadTagList(el["samples"].InnerText);
+
 
                 string[] lines = Helpers.GetLinesFromResource("howlnames.txt");
 

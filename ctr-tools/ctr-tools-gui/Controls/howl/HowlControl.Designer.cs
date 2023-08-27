@@ -41,6 +41,7 @@ namespace CTRTools.Controls
             this.cseqSave = new System.Windows.Forms.Button();
             this.songListBox = new System.Windows.Forms.ListBox();
             this.tabSong = new System.Windows.Forms.TabPage();
+            this.cseqControl1 = new CTRTools.Controls.CseqControl();
             this.tabBanks = new System.Windows.Forms.TabPage();
             this.banksTreeView = new System.Windows.Forms.TreeView();
             this.tabSampleTable = new System.Windows.Forms.TabPage();
@@ -61,7 +62,7 @@ namespace CTRTools.Controls
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cseqControl1 = new CTRTools.Controls.CseqControl();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabSongs.SuspendLayout();
@@ -206,6 +207,17 @@ namespace CTRTools.Controls
             this.tabSong.Text = "tabSong";
             this.tabSong.UseVisualStyleBackColor = true;
             // 
+            // cseqControl1
+            // 
+            this.cseqControl1.AllowDrop = true;
+            this.cseqControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cseqControl1.Location = new System.Drawing.Point(3, 3);
+            this.cseqControl1.Name = "cseqControl1";
+            this.cseqControl1.Size = new System.Drawing.Size(608, 367);
+            this.cseqControl1.TabIndex = 0;
+            // 
             // tabBanks
             // 
             this.tabBanks.Controls.Add(this.banksTreeView);
@@ -229,6 +241,7 @@ namespace CTRTools.Controls
             // 
             // tabSampleTable
             // 
+            this.tabSampleTable.Controls.Add(this.textBox1);
             this.tabSampleTable.Controls.Add(this.wipeButton);
             this.tabSampleTable.Controls.Add(this.addToSfxBank);
             this.tabSampleTable.Controls.Add(this.findFreeIndexButton);
@@ -301,9 +314,9 @@ namespace CTRTools.Controls
             this.sampleTableListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.sampleTableListBox.FormattingEnabled = true;
-            this.sampleTableListBox.Location = new System.Drawing.Point(8, 7);
+            this.sampleTableListBox.Location = new System.Drawing.Point(8, 33);
             this.sampleTableListBox.Name = "sampleTableListBox";
-            this.sampleTableListBox.Size = new System.Drawing.Size(181, 355);
+            this.sampleTableListBox.Size = new System.Drawing.Size(181, 329);
             this.sampleTableListBox.TabIndex = 14;
             this.sampleTableListBox.SelectedIndexChanged += new System.EventHandler(this.sampleTableListBox_SelectedIndexChanged);
             // 
@@ -384,16 +397,13 @@ namespace CTRTools.Controls
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // cseqControl1
+            // textBox1
             // 
-            this.cseqControl1.AllowDrop = true;
-            this.cseqControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cseqControl1.Location = new System.Drawing.Point(3, 3);
-            this.cseqControl1.Name = "cseqControl1";
-            this.cseqControl1.Size = new System.Drawing.Size(608, 367);
-            this.cseqControl1.TabIndex = 0;
+            this.textBox1.Location = new System.Drawing.Point(8, 7);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(181, 20);
+            this.textBox1.TabIndex = 20;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // HowlControl
             // 
@@ -414,6 +424,7 @@ namespace CTRTools.Controls
             this.tabSong.ResumeLayout(false);
             this.tabBanks.ResumeLayout(false);
             this.tabSampleTable.ResumeLayout(false);
+            this.tabSampleTable.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -455,5 +466,6 @@ namespace CTRTools.Controls
         private TabPage tabSong;
         private CseqControl cseqControl1;
         private Button editSongButton;
+        private TextBox textBox1;
     }
 }

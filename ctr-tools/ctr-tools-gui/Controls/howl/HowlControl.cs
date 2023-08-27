@@ -11,6 +11,8 @@ using System.Windows.Forms;
 
 namespace CTRTools.Controls
 {
+
+
     public partial class HowlControl : UserControl
     {
         string loadedFilename = "";
@@ -73,17 +75,42 @@ namespace CTRTools.Controls
             banksTreeView.EndUpdate();
         }
 
-        private void PopulateSamplesTab()
+
+        private Dictionary<int, Instrument> SampleCache = new Dictionary<int, Instrument>();
+
+        private void PopulateSamplesTab(string searchTerm = null)
         {
             sampleTableListBox.BeginUpdate();
 
             sampleTableListBox.Items.Clear();
 
+            SampleCache.Clear();
+
+            int i = 0;
+
             foreach (var entry in Howl.SampleTable)
             {
                 var sample = entry.GetSample(entry.SampleID, howl.Context);
                 sample.Context = howl.Context; //duh
-                sampleTableListBox.Items.Add(entry.GetSample(entry.SampleID, howl.Context).Name);
+
+                if (searchTerm is null || searchTerm == "")
+                {
+                    SampleCache.Add(i, entry);
+                    i++;
+                }
+                else
+                {
+                    if (sample.Name.ToUpper().Contains(searchTerm.ToUpper()))
+                    {
+                        SampleCache.Add(i, entry);
+                        i++;
+                    }
+                }
+            }
+
+            foreach (var sample in SampleCache)
+            {
+                sampleTableListBox.Items.Add(sample.Value.Sample.Name);
             }
 
             sampleTableListBox.EndUpdate();
@@ -144,7 +171,7 @@ namespace CTRTools.Controls
 
             if (sampleTableListBox.SelectedIndex < 0) return;
 
-            var samp = Howl.SampleTable[sampleTableListBox.SelectedIndex];
+            var samp = SampleCache[sampleTableListBox.SelectedIndex];
             propertyGrid1.SelectedObject = samp;
             HowlPlayer.Play(samp);
         }
@@ -202,7 +229,7 @@ namespace CTRTools.Controls
         {
             if (howl is null) return;
 
-            int sampleIndex = Howl.SampleTable[sampleTableListBox.SelectedIndex].SampleID;
+            int sampleIndex = SampleCache[sampleTableListBox.SelectedIndex].SampleID;
 
             var ofd = new OpenFileDialog();
             ofd.Filter = "PSX VAG sample file (*.vag)|*.vag";
@@ -340,7 +367,7 @@ namespace CTRTools.Controls
         {
             if (!IsHowlLoaded()) return;
 
-            int index = 1;
+            int index = 0;
 
             do
             {
@@ -353,9 +380,9 @@ namespace CTRTools.Controls
                     MessageBox.Show("found free index: " + index);
 
                     howl.Context.Samples.Add(index, new Sample() { ID = index } );
-                    Howl.SampleTable[sampleTableListBox.SelectedIndex].SampleID = (ushort)index;
+                    SampleCache[sampleTableListBox.SelectedIndex].SampleID = (ushort)index;
 
-                    propertyGrid1.SelectedObject = Howl.SampleTable[sampleTableListBox.SelectedIndex];
+                    propertyGrid1.SelectedObject = SampleCache[sampleTableListBox.SelectedIndex];
 
                     return;
                 }
@@ -373,7 +400,7 @@ namespace CTRTools.Controls
         {
             if (!IsHowlLoaded()) return;
 
-            var index = Howl.SampleTable[sampleTableListBox.SelectedIndex].SampleID;
+            var index = SampleCache[sampleTableListBox.SelectedIndex].SampleID;
 
             if (!howl.Banks[0].Entries.ContainsKey(index))
             {
@@ -389,7 +416,7 @@ namespace CTRTools.Controls
         {
             if (!IsHowlLoaded()) return;
 
-            var index = Howl.SampleTable[sampleTableListBox.SelectedIndex].SampleID;
+            var index = SampleCache[sampleTableListBox.SelectedIndex].SampleID;
             howl.Context.Samples[index].Data = new byte[0];
             howl.Context.SpuPtrTable[index] = new SpuAddr() { Size = 0 };
         }
@@ -420,6 +447,12 @@ namespace CTRTools.Controls
             cseqControl1.seq = howl.Songs[songListBox.SelectedIndex];
             tabControl1.SelectedTab = tabSong;
             cseqControl1.FillUI();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            sampleTableListBox.Items.Clear();
+            PopulateSamplesTab(textBox1.Text);
         }
     }
 }
