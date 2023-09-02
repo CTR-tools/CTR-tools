@@ -205,6 +205,37 @@ namespace CTRFramework.Sound
 
                         break;
                     }
+                case MidiCommandCode.ControlChange:
+                    {
+                        var control = midi as ControlChangeEvent;
+
+                        switch (control.Controller)
+                        {
+                            //balance
+                            case MidiController.Pan:
+                                {
+                                    cmd.eventType = CseqEventType.PanAssume;
+                                    cmd.pitch = (byte)(control.ControllerValue / 127f * 255f);
+
+                                    break;
+                                }
+
+                            //volume
+                            case MidiController.MainVolume:
+                                {
+                                    cmd.eventType = CseqEventType.VelAssume;
+                                    cmd.pitch = (byte)(control.ControllerValue / 127f * 255f);
+
+                                    break;
+                                }
+                            default:
+                                Helpers.Panic("Command", PanicType.Warning, $"Unimplemented MIDI controller: {control.Controller}");
+                                return null;
+                        }
+
+                        break;
+                    }
+
                 default:
                     Helpers.Panic("Command", PanicType.Warning, $"Unimplemented MIDI event: {midi.CommandCode}");
                     return null;

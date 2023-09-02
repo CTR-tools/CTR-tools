@@ -20,6 +20,10 @@ namespace CTRTools.Controls
         //??
         string loadedfile = "";
 
+        public void SetContext(HowlContext howl)
+        {
+            instrumentControl1.Context = howl;
+        }
 
         public CseqControl()
         {
@@ -129,7 +133,7 @@ namespace CTRTools.Controls
 
             tabControl1.SelectedIndex = 1;
 
-            instrumentInfo.SelectedObject = (CseqSong)sequenceBox.SelectedItem;
+            //instrumentInfo.SelectedObject = (CseqSong)sequenceBox.SelectedItem;
         }
 
         private void trackBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -171,25 +175,9 @@ namespace CTRTools.Controls
             seq?.Save(Helpers.PathCombine(Meta.BasePath, "test.cseq"));
         }
 
-        Bank bnk = new Bank();
 
         public void LoadBank(string filename)
         {
-            bnk = Bank.FromFile(filename);
-            bnk.ExportAll(1, Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename));
-
-            listBox2.Items.Clear();
-            foreach (var samp in bnk.Entries)
-            {
-                listBox2.Items.Add(samp.Key);
-            }
-
-            if (seq != null)
-            {
-                seq.Bank = bnk;
-                MessageBox.Show(seq.CheckBankForSamples() ? "samples OK!" : "samples missing");
-                trackInfoBox.Text = seq.ListMissingSamples();
-            }
         }
 
 
@@ -295,7 +283,14 @@ namespace CTRTools.Controls
 
         private void exportSamplesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            seq?.ExportSamples();
+            if (seq.Context == null) return;
+
+            var fbd = new FolderBrowserDialog();
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                seq.ExportSamples(fbd.SelectedPath);
+            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -321,20 +316,20 @@ namespace CTRTools.Controls
                 if (instrumentList.SelectedNode.Parent.Index == 1)
                 {
                     var sd = instrumentList.SelectedNode.Tag as Instrument;
-                    instrumentInfo.SelectedObject = sd;
+                    instrumentControl1.Instrument = sd;
                     HowlPlayer.Play(sd);
                 }
 
                 if (instrumentList.SelectedNode.Parent.Index == 0)
                 {
                     var sd = seq.samplesReverb[instrumentList.SelectedNode.Index];
-                    instrumentInfo.SelectedObject = sd;
+                    instrumentControl1.Instrument = sd;
                     HowlPlayer.Play(sd);
                 }
             }
             else
             {
-                instrumentInfo.SelectedObject = null;
+                instrumentControl1.Clear();
             }
         }
 
@@ -512,10 +507,22 @@ namespace CTRTools.Controls
 
         private void button5_Click(object sender, EventArgs e)
         {
-            if (seq is null) return; 
+            if (seq is null) return;
 
             seq.Songs.Clear();
             sequenceBox.Items.Clear();
+        }
+
+        private void exportAllButton_Click(object sender, EventArgs e)
+        {
+            if (seq.Context == null) return;
+
+            var fbd = new FolderBrowserDialog();
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                seq.ExportSamples(fbd.SelectedPath);
+            }
         }
     }
 }

@@ -9,11 +9,18 @@ namespace CTRFramework.Sound
 {
     public class HowlContext
     {
+        public Howl howl;   //link to self in case som child needs it
+
         public Dictionary<int, string> SongNames = new Dictionary<int, string>();
         public Dictionary<int, string> banknames = new Dictionary<int, string>();
         public Dictionary<string, string> HashNames = new Dictionary<string, string>();
 
         public Dictionary<int, Sample> Samples = new Dictionary<int, Sample>();
+
+        public HowlContext(Howl pHowl)
+        {
+            howl = pHowl;
+        }
 
         public int MaxSampleIndex()
         {
@@ -28,7 +35,7 @@ namespace CTRFramework.Sound
             return max + 1;
         }
 
-        public static HowlContext Create() => new HowlContext();
+        public static HowlContext Create(Howl howl = null) => new HowlContext(howl);
 
         //this is speculated to be sample size basically, maybe empty word is the  
         public List<SpuAddr> SpuPtrTable = new List<SpuAddr>();
@@ -71,6 +78,8 @@ namespace CTRFramework.Sound
         List<int> ptrBanks = new List<int>();
         List<int> ptrSeqs = new List<int>();
 
+
+        int sampleDataSize => Context.SpuPtrTable.Count * 4 + (SampleTable.Count + EngineTable.Count) * 8 + (Banks.Count + Songs.Count) * 2; //sampleDataSize
 
         #region [Constructors, Factories]
         public Howl()
@@ -139,7 +148,7 @@ namespace CTRFramework.Sound
 
         public void Read(BinaryReaderEx br)
         {
-            Context = HowlContext.Create();
+            Context = HowlContext.Create(this);
 
             KnownFileCheck(br);
 
@@ -337,7 +346,7 @@ s
             bw.Write(Banks.Count);
             bw.Write(Songs.Count);
 
-            bw.Write(Context.SpuPtrTable.Count * 4 + (SampleTable.Count + EngineTable.Count) * 8 + (Banks.Count + Songs.Count) * 2); //sampleDataSize
+            bw.Write(sampleDataSize);
 
             foreach (var value in Context.SpuPtrTable)
             {
@@ -569,7 +578,7 @@ s
             */
         }
 
-        public void ReplaceVagSample(int sampleIndex, string filename)
+        public void ReplaceVagSample(int sampleIndex, string filename, Instrument instr = null)
         {
             if (!File.Exists(filename)) return;
 
@@ -585,6 +594,11 @@ s
             //copy data to existing sample in the table and update the size
             Context.Samples[sampleIndex].Data = vag.GetData();
             Context.SpuPtrTable[sampleIndex] = new SpuAddr() { Size = (ushort)(Context.Samples[sampleIndex].Data.Length / 8) };
+
+            if (instr != null)
+            {
+                instr.Frequency = vag.sampleFreq;
+            }
 
             //now find all inst entries and copy the frequency there
             //should not do this for instruments, or like implement some relative frequency updates?

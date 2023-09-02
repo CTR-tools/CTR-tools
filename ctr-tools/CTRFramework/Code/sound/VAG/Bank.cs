@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace CTRFramework.Sound
 {
@@ -72,10 +71,13 @@ namespace CTRFramework.Sound
             return _hash;
         }
 
-        public VagSample GetHeaderlessVag() => new VagSample(Data) { sampleFreq = 22100 };
+        public VagSample GetVag(int freq = 22100) => new VagSample(Data) { sampleFreq = freq };
 
-        public void ConvertToWav(string path) => GetHeaderlessVag().ExportWav(path);
+        public void SaveVag(string path, int freq = 22100) => GetVag(freq).Save(path);
+
+        public void SaveWav(string path, int freq = 22100) => GetVag(freq).ExportWav(path);
     }
+
 
     public class Bank
     {

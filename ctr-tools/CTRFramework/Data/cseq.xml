@@ -166,7 +166,7 @@
 	
 	<song title="caves">
 		<long midi="81" pitch="-12" title="Lead 2"/>
-		<long midi="33" pitch="-12" title="Electric Bass"/>
+		<long midi="32" pitch="-24" title="Acoustic Bass"/>
 		<long midi="15" title="Dulcimer"/>
 		<long midi="38" title="Synth Bass"/>
 		<long midi="56" title="Trumpet"/>

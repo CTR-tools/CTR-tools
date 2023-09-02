@@ -44,16 +44,13 @@ namespace CTRTools.Controls
             this.copyInstrumentVolumeToTracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
             this.loadBankToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportSamplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.defaultSampleRateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.testJsonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alistAlBankSamplesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadMIDIMappingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setSamplePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tutorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -63,29 +60,23 @@ namespace CTRTools.Controls
             this.sequenceBox = new System.Windows.Forms.ListBox();
             this.seqInfoBox = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabTrackInfo = new System.Windows.Forms.TabPage();
             this.trackInfoBox = new System.Windows.Forms.TextBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabInstruments = new System.Windows.Forms.TabPage();
+            this.exportAllButton = new System.Windows.Forms.Button();
             this.instrumentList = new System.Windows.Forms.TreeView();
-            this.instrumentInfo = new System.Windows.Forms.PropertyGrid();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabMeta = new System.Windows.Forms.TabPage();
             this.metaInstInfo = new System.Windows.Forms.TextBox();
             this.metaInstList = new System.Windows.Forms.ListBox();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.listBox2 = new System.Windows.Forms.ListBox();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
+            this.instrumentControl1 = new CTRTools.Controls.InstrumentControl();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
+            this.tabTrackInfo.SuspendLayout();
+            this.tabInstruments.SuspendLayout();
+            this.tabMeta.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -98,7 +89,7 @@ namespace CTRTools.Controls
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.menuStrip1.Size = new System.Drawing.Size(640, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(835, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -165,12 +156,9 @@ namespace CTRTools.Controls
             this.copyInstrumentVolumeToTracksToolStripMenuItem,
             this.toolStripMenuItem6,
             this.loadBankToolStripMenuItem,
-            this.exportSamplesToolStripMenuItem,
             this.defaultSampleRateToolStripMenuItem,
-            this.testJsonToolStripMenuItem,
             this.alistAlBankSamplesToolStripMenuItem,
-            this.reloadMIDIMappingsToolStripMenuItem,
-            this.setSamplePathToolStripMenuItem});
+            this.reloadMIDIMappingsToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "Options";
@@ -220,14 +208,6 @@ namespace CTRTools.Controls
             this.loadBankToolStripMenuItem.ToolTipText = "Loads BNK file and checks whether it contains the samples used by CSEQ.";
             this.loadBankToolStripMenuItem.Click += new System.EventHandler(this.loadBankToolStripMenuItem_Click);
             // 
-            // exportSamplesToolStripMenuItem
-            // 
-            this.exportSamplesToolStripMenuItem.Name = "exportSamplesToolStripMenuItem";
-            this.exportSamplesToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.exportSamplesToolStripMenuItem.Text = "Export samples";
-            this.exportSamplesToolStripMenuItem.ToolTipText = "Exports all the samples used by currently loaded CSEQ";
-            this.exportSamplesToolStripMenuItem.Click += new System.EventHandler(this.exportSamplesToolStripMenuItem_Click);
-            // 
             // defaultSampleRateToolStripMenuItem
             // 
             this.defaultSampleRateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -268,13 +248,6 @@ namespace CTRTools.Controls
             this.toolStripMenuItem5.Text = "44100";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
             // 
-            // testJsonToolStripMenuItem
-            // 
-            this.testJsonToolStripMenuItem.Name = "testJsonToolStripMenuItem";
-            this.testJsonToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.testJsonToolStripMenuItem.Text = "List all samples";
-            this.testJsonToolStripMenuItem.Click += new System.EventHandler(this.testJsonToolStripMenuItem_Click);
-            // 
             // alistAlBankSamplesToolStripMenuItem
             // 
             this.alistAlBankSamplesToolStripMenuItem.Name = "alistAlBankSamplesToolStripMenuItem";
@@ -289,13 +262,6 @@ namespace CTRTools.Controls
             this.reloadMIDIMappingsToolStripMenuItem.Text = "Reload MIDI mappings";
             this.reloadMIDIMappingsToolStripMenuItem.ToolTipText = "Might be useful if you\'re editing JSON file.";
             this.reloadMIDIMappingsToolStripMenuItem.Click += new System.EventHandler(this.reloadMIDIMappingsToolStripMenuItem_Click);
-            // 
-            // setSamplePathToolStripMenuItem
-            // 
-            this.setSamplePathToolStripMenuItem.Name = "setSamplePathToolStripMenuItem";
-            this.setSamplePathToolStripMenuItem.Size = new System.Drawing.Size(254, 22);
-            this.setSamplePathToolStripMenuItem.Text = "Set sample path";
-            this.setSamplePathToolStripMenuItem.Click += new System.EventHandler(this.setSamplePathToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -387,26 +353,25 @@ namespace CTRTools.Controls
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabTrackInfo);
+            this.tabControl1.Controls.Add(this.tabInstruments);
+            this.tabControl1.Controls.Add(this.tabMeta);
             this.tabControl1.Location = new System.Drawing.Point(151, 27);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(486, 450);
+            this.tabControl1.Size = new System.Drawing.Size(681, 450);
             this.tabControl1.TabIndex = 5;
             // 
-            // tabPage1
+            // tabTrackInfo
             // 
-            this.tabPage1.Controls.Add(this.trackInfoBox);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(478, 424);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Track Info";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabTrackInfo.Controls.Add(this.trackInfoBox);
+            this.tabTrackInfo.Location = new System.Drawing.Point(4, 22);
+            this.tabTrackInfo.Name = "tabTrackInfo";
+            this.tabTrackInfo.Padding = new System.Windows.Forms.Padding(3);
+            this.tabTrackInfo.Size = new System.Drawing.Size(673, 424);
+            this.tabTrackInfo.TabIndex = 0;
+            this.tabTrackInfo.Text = "Track Info";
+            this.tabTrackInfo.UseVisualStyleBackColor = true;
             // 
             // trackInfoBox
             // 
@@ -416,53 +381,55 @@ namespace CTRTools.Controls
             this.trackInfoBox.Multiline = true;
             this.trackInfoBox.Name = "trackInfoBox";
             this.trackInfoBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.trackInfoBox.Size = new System.Drawing.Size(472, 418);
+            this.trackInfoBox.Size = new System.Drawing.Size(667, 418);
             this.trackInfoBox.TabIndex = 5;
             this.trackInfoBox.Text = "  ";
             this.trackInfoBox.TextChanged += new System.EventHandler(this.trackInfoBox_TextChanged);
             // 
-            // tabPage2
+            // tabInstruments
             // 
-            this.tabPage2.Controls.Add(this.instrumentList);
-            this.tabPage2.Controls.Add(this.instrumentInfo);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(478, 424);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Instruments / Samples";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabInstruments.Controls.Add(this.exportAllButton);
+            this.tabInstruments.Controls.Add(this.instrumentControl1);
+            this.tabInstruments.Controls.Add(this.instrumentList);
+            this.tabInstruments.Location = new System.Drawing.Point(4, 22);
+            this.tabInstruments.Name = "tabInstruments";
+            this.tabInstruments.Padding = new System.Windows.Forms.Padding(3);
+            this.tabInstruments.Size = new System.Drawing.Size(673, 424);
+            this.tabInstruments.TabIndex = 1;
+            this.tabInstruments.Text = "Instruments / Samples";
+            this.tabInstruments.UseVisualStyleBackColor = true;
+            // 
+            // exportAllButton
+            // 
+            this.exportAllButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.exportAllButton.Location = new System.Drawing.Point(6, 395);
+            this.exportAllButton.Name = "exportAllButton";
+            this.exportAllButton.Size = new System.Drawing.Size(220, 23);
+            this.exportAllButton.TabIndex = 5;
+            this.exportAllButton.Text = "Export all VAGs";
+            this.exportAllButton.UseVisualStyleBackColor = true;
+            this.exportAllButton.Click += new System.EventHandler(this.exportAllButton_Click);
             // 
             // instrumentList
             // 
             this.instrumentList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.instrumentList.Location = new System.Drawing.Point(6, 14);
+            this.instrumentList.Location = new System.Drawing.Point(6, 6);
             this.instrumentList.Name = "instrumentList";
-            this.instrumentList.Size = new System.Drawing.Size(302, 395);
+            this.instrumentList.Size = new System.Drawing.Size(220, 383);
             this.instrumentList.TabIndex = 3;
             this.instrumentList.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
-            // instrumentInfo
+            // tabMeta
             // 
-            this.instrumentInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.instrumentInfo.Location = new System.Drawing.Point(314, 14);
-            this.instrumentInfo.Name = "instrumentInfo";
-            this.instrumentInfo.Size = new System.Drawing.Size(149, 395);
-            this.instrumentInfo.TabIndex = 2;
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.metaInstInfo);
-            this.tabPage3.Controls.Add(this.metaInstList);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(478, 424);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Meta";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabMeta.Controls.Add(this.metaInstInfo);
+            this.tabMeta.Controls.Add(this.metaInstList);
+            this.tabMeta.Location = new System.Drawing.Point(4, 22);
+            this.tabMeta.Name = "tabMeta";
+            this.tabMeta.Size = new System.Drawing.Size(673, 424);
+            this.tabMeta.TabIndex = 2;
+            this.tabMeta.Text = "Meta";
+            this.tabMeta.UseVisualStyleBackColor = true;
             // 
             // metaInstInfo
             // 
@@ -474,7 +441,7 @@ namespace CTRTools.Controls
             this.metaInstInfo.Multiline = true;
             this.metaInstInfo.Name = "metaInstInfo";
             this.metaInstInfo.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.metaInstInfo.Size = new System.Drawing.Size(346, 409);
+            this.metaInstInfo.Size = new System.Drawing.Size(541, 409);
             this.metaInstInfo.TabIndex = 1;
             // 
             // metaInstList
@@ -490,70 +457,6 @@ namespace CTRTools.Controls
             this.metaInstList.TabIndex = 0;
             this.metaInstList.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.button4);
-            this.tabPage4.Controls.Add(this.button3);
-            this.tabPage4.Controls.Add(this.button2);
-            this.tabPage4.Controls.Add(this.button1);
-            this.tabPage4.Controls.Add(this.listBox2);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(478, 424);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Bank";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // button4
-            // 
-            this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(132, 93);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 4;
-            this.button4.Text = "Save";
-            this.button4.UseVisualStyleBackColor = true;
-            // 
-            // button3
-            // 
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(132, 64);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 3;
-            this.button3.Text = "Replace";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // button2
-            // 
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(132, 35);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Remove";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(132, 6);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Add";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // listBox2
-            // 
-            this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(6, 6);
-            this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(120, 407);
-            this.listBox2.TabIndex = 0;
-            // 
             // ofd
             // 
             this.ofd.Filter = "Crash Team Racing CSEQ (*.cseq)|*.cseq";
@@ -561,6 +464,17 @@ namespace CTRTools.Controls
             // sfd
             // 
             this.sfd.Filter = "MIDI File (*.mid)|*.mid";
+            // 
+            // instrumentControl1
+            // 
+            this.instrumentControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.instrumentControl1.Instrument = null;
+            this.instrumentControl1.Location = new System.Drawing.Point(232, 6);
+            this.instrumentControl1.Name = "instrumentControl1";
+            this.instrumentControl1.Size = new System.Drawing.Size(438, 415);
+            this.instrumentControl1.TabIndex = 4;
             // 
             // CseqControl
             // 
@@ -572,7 +486,7 @@ namespace CTRTools.Controls
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
             this.Name = "CseqControl";
-            this.Size = new System.Drawing.Size(640, 480);
+            this.Size = new System.Drawing.Size(835, 480);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
             this.menuStrip1.ResumeLayout(false);
@@ -580,12 +494,11 @@ namespace CTRTools.Controls
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
+            this.tabTrackInfo.ResumeLayout(false);
+            this.tabTrackInfo.PerformLayout();
+            this.tabInstruments.ResumeLayout(false);
+            this.tabMeta.ResumeLayout(false);
+            this.tabMeta.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -602,9 +515,9 @@ namespace CTRTools.Controls
         private ListBox trackBox;
         private ListBox sequenceBox;
         private TabControl tabControl1;
-        private TabPage tabPage1;
+        private TabPage tabTrackInfo;
         private TextBox trackInfoBox;
-        private TabPage tabPage2;
+        private TabPage tabInstruments;
         private ToolStripMenuItem optionsToolStripMenuItem;
         private ToolStripMenuItem exportSEQToolStripMenuItem;
         private ToolStripMenuItem loadBankToolStripMenuItem;
@@ -618,30 +531,22 @@ namespace CTRTools.Controls
         private ToolStripMenuItem patchMIDIInstrumentsToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem6;
         private ToolStripSeparator toolStripSeparator1;
-        private ToolStripMenuItem testJsonToolStripMenuItem;
-        private ToolStripMenuItem exportSamplesToolStripMenuItem;
         private ComboBox patchBox;
         private ToolStripMenuItem ignoreOriginalVolumeToolStripMenuItem;
-        private PropertyGrid instrumentInfo;
         private TreeView instrumentList;
         private ToolStripMenuItem copyInstrumentVolumeToTracksToolStripMenuItem;
         private ToolStripMenuItem alistAlBankSamplesToolStripMenuItem;
-        private TabPage tabPage3;
+        private TabPage tabMeta;
         private TextBox metaInstInfo;
         private ListBox metaInstList;
         private ToolStripMenuItem reloadMIDIMappingsToolStripMenuItem;
-        private TabPage tabPage4;
-        private Button button4;
-        private Button button3;
-        private Button button2;
-        private Button button1;
-        private ListBox listBox2;
         private OpenFileDialog ofd;
         private SaveFileDialog sfd;
         private ToolStripMenuItem importMIDIToolStripMenuItem;
         private ToolStripMenuItem saveAsToolStripMenuItem;
-        private ToolStripMenuItem setSamplePathToolStripMenuItem;
         private Button button5;
+        private InstrumentControl instrumentControl1;
+        private Button exportAllButton;
     }
 }
 

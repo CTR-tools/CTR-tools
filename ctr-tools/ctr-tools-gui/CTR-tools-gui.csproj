@@ -81,11 +81,11 @@
     <Compile Include="Controls\FontControl.Designer.cs">
       <DependentUpon>FontControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\howl\SampleControl.cs">
+    <Compile Include="Controls\howl\InstrumentControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\howl\SampleControl.Designer.cs">
-      <DependentUpon>SampleControl.cs</DependentUpon>
+    <Compile Include="Controls\howl\InstrumentControl.Designer.cs">
+      <DependentUpon>InstrumentControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -187,8 +187,8 @@
     <EmbeddedResource Include="Controls\lev\VertexArrayControl.resx">
       <DependentUpon>VertexArrayControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\howl\SampleControl.resx">
-      <DependentUpon>SampleControl.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\howl\InstrumentControl.resx">
+      <DependentUpon>InstrumentControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\XaControl.resx">
       <DependentUpon>XaControl.cs</DependentUpon>

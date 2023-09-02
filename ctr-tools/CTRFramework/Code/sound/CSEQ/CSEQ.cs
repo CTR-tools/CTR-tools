@@ -3,7 +3,6 @@ using NAudio.Midi;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace CTRFramework.Sound
 {
@@ -46,7 +45,7 @@ namespace CTRFramework.Sound
 
         public List<CseqSong> Songs = new List<CseqSong>();
 
-        public Bank Bank = new Bank();
+        //public Bank Bank = new Bank();
 
         #region [Constructors, factories]
 
@@ -172,16 +171,6 @@ namespace CTRFramework.Sound
                 samples[i].metaInst = Meta.GetMetaInst(PatchName, "short", i);
         }
 
-        public void LoadBank(string filename)
-        {
-            Bank = Bank.FromFile(filename);
-        }
-
-        public void LoadBank(Bank bank)
-        {
-            Bank = bank;
-        }
-
         /*
         /// <summary>Exports every instrument to a SFZ text file.</summary>
         /// <param name="fileName">Target file name.</param>
@@ -277,56 +266,21 @@ namespace CTRFramework.Sound
                 bw.BaseStream.SetLength(bw.BaseStream.Position);
         }
 
-        public void ExportSamples()
+        public void ExportSamples(string path)
         {
-            if (Bank != null)
-            {
-                foreach (var s in samples)
-                {
-                    Bank.Export(s.SampleID, s.Frequency, path, name, s.Tag);
-                }
+            if (Context == null) return;
 
-                foreach (var s in samplesReverb)
-                {
-                    Bank.Export(s.SampleID, s.Frequency, path, name, s.Tag);
-                }
-            }
-        }
-
-        public bool CheckBankForSamples()
-        {
-            foreach (var x in samplesReverb)
+            foreach (var entry in samples)
             {
-                if (!Bank.Contains(x.SampleID))
-                    return false;
+                var sample = Context.Samples[entry.SampleID];
+                sample.GetVag(entry.Frequency).Save(Helpers.PathCombine(path, $"{sample.Name}_{entry.Frequency}.vag"));
             }
 
-            foreach (var x in samples)
+            foreach (var entry in samplesReverb)
             {
-                if (!Bank.Contains(x.SampleID))
-                    return false;
+                var sample = Context.Samples[entry.SampleID];
+                sample.GetVag(entry.Frequency).Save(Helpers.PathCombine(path, $"{sample.Name}_{entry.Frequency}.vag"));
             }
-
-            return true;
-        }
-
-        public string ListMissingSamples()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            foreach (var x in samplesReverb)
-            {
-                if (!Bank.Contains(x.SampleID))
-                    sb.Append("long: " + x.SampleID + "\r\n");
-            }
-
-            foreach (var x in samples)
-            {
-                if (!Bank.Contains(x.SampleID))
-                    sb.Append("short: " + x.SampleID + "\r\n");
-            }
-
-            return sb.ToString();
         }
 
         public List<int> GetAllIDs()

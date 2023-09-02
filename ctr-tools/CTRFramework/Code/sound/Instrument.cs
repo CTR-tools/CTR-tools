@@ -1,6 +1,7 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace CTRFramework.Sound
@@ -14,10 +15,12 @@ namespace CTRFramework.Sound
 
         public static readonly int SizeOf = 0x0C;
 
-        //category maybe?
+        [Description("probably used for sound category plus loop flag.\r\n0 - regular\r\n1 - music sample\r\n2 - looped sample\r\n4 - voice clip")]
         public byte flags { get; set; } = 0; //0 - regular, 1 - music sample, 2 - looped sample? but insts can be looped as well, 3 - ?, 4 - taunt?, others?
         public byte _volume = 255;
         public ushort _freq = 4096;
+
+        [Description("Global sample index")]
         public ushort SampleID { get; set; }
 
         //must be populated based on SampleID
@@ -25,7 +28,9 @@ namespace CTRFramework.Sound
 
         //this is assumed to be sample length, 1 second is about 300. whatever it is.
         //0 in music samples
+        [Description("Defines the delay to send NoteOff event for this sample. Should be 0 for music category. Usually same as sample length (300 ~ 1sec), but can differ.")]
         public short timeToPlay { get; set; } = 0;
+
         public uint ADSR { get; set; } = 532775167;  // assumed to be the raw psx adsr value passed directly to psyq.
 
         public MetaInst metaInst { get; set; }
@@ -33,15 +38,17 @@ namespace CTRFramework.Sound
         public string Tag => $"{ID}_{Frequency}";
         public string ID => $"{SampleID.ToString("0000")}_{SampleID.ToString("X4")}";
 
+        [Description("Defines frequency to play sample at. Stored as 4096 = 44100, so expect minor differeces between introduces freq and actual freq.")]
         public int Frequency
         {
             get { return (int)Math.Round(_freq / 4096f * 44100f); }
             set { _freq = (ushort)Math.Round(value / 44100f * 4096f); }
         }
 
+        [Description("Defines how loud this sample will be played in the game. Used for playback here as well. Game stores it in the byte range of 0-255, gui maps it to 0.0-1.0")]
         public float Volume
         {
-            get { return _volume / 255f; }
+            get { return (float)Math.Round(_volume / 255f, 3); }
             set
             {
                 if (value <= 0)
@@ -86,9 +93,9 @@ namespace CTRFramework.Sound
 
         public virtual void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.Write((byte)1);
+            bw.Write(flags);
             bw.Write((byte)_volume);
-            bw.Write((short)0);
+            bw.Write((short)timeToPlay);
             bw.Write((short)_freq);
             bw.Write((short)SampleID);
             bw.Write(ADSR);
@@ -111,7 +118,7 @@ namespace CTRFramework.Sound
 
                 if (context.Samples.ContainsKey(this.SampleID))
                 {
-                    vag = context.Samples[SampleID].GetHeaderlessVag();
+                    vag = context.Samples[SampleID].GetVag();
                     vag.sampleFreq = Frequency;
 
                     if (context.HashNames.ContainsKey(Sample.HashString))

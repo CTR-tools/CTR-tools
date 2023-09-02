@@ -41,15 +41,10 @@ namespace CTRTools.Controls
             this.cseqSave = new System.Windows.Forms.Button();
             this.songListBox = new System.Windows.Forms.ListBox();
             this.tabSong = new System.Windows.Forms.TabPage();
-            this.cseqControl1 = new CTRTools.Controls.CseqControl();
             this.tabBanks = new System.Windows.Forms.TabPage();
             this.banksTreeView = new System.Windows.Forms.TreeView();
             this.tabSampleTable = new System.Windows.Forms.TabPage();
-            this.wipeButton = new System.Windows.Forms.Button();
-            this.addToSfxBank = new System.Windows.Forms.Button();
-            this.findFreeIndexButton = new System.Windows.Forms.Button();
-            this.replaceSampleButton = new System.Windows.Forms.Button();
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.sampleTableListBox = new System.Windows.Forms.ListBox();
             this.fbd = new System.Windows.Forms.FolderBrowserDialog();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
@@ -62,7 +57,8 @@ namespace CTRTools.Controls
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.cseqControl1 = new CTRTools.Controls.CseqControl();
+            this.instrumentControl1 = new CTRTools.Controls.InstrumentControl();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabSongs.SuspendLayout();
@@ -194,7 +190,6 @@ namespace CTRTools.Controls
             this.songListBox.Name = "songListBox";
             this.songListBox.Size = new System.Drawing.Size(218, 355);
             this.songListBox.TabIndex = 0;
-            this.songListBox.SelectedIndexChanged += new System.EventHandler(this.songListBox_SelectedIndexChanged);
             this.songListBox.DoubleClick += new System.EventHandler(this.songListBox_DoubleClick);
             // 
             // tabSong
@@ -206,17 +201,6 @@ namespace CTRTools.Controls
             this.tabSong.TabIndex = 3;
             this.tabSong.Text = "tabSong";
             this.tabSong.UseVisualStyleBackColor = true;
-            // 
-            // cseqControl1
-            // 
-            this.cseqControl1.AllowDrop = true;
-            this.cseqControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cseqControl1.Location = new System.Drawing.Point(3, 3);
-            this.cseqControl1.Name = "cseqControl1";
-            this.cseqControl1.Size = new System.Drawing.Size(608, 367);
-            this.cseqControl1.TabIndex = 0;
             // 
             // tabBanks
             // 
@@ -241,12 +225,8 @@ namespace CTRTools.Controls
             // 
             // tabSampleTable
             // 
+            this.tabSampleTable.Controls.Add(this.instrumentControl1);
             this.tabSampleTable.Controls.Add(this.textBox1);
-            this.tabSampleTable.Controls.Add(this.wipeButton);
-            this.tabSampleTable.Controls.Add(this.addToSfxBank);
-            this.tabSampleTable.Controls.Add(this.findFreeIndexButton);
-            this.tabSampleTable.Controls.Add(this.replaceSampleButton);
-            this.tabSampleTable.Controls.Add(this.propertyGrid1);
             this.tabSampleTable.Controls.Add(this.sampleTableListBox);
             this.tabSampleTable.Location = new System.Drawing.Point(4, 22);
             this.tabSampleTable.Name = "tabSampleTable";
@@ -255,59 +235,13 @@ namespace CTRTools.Controls
             this.tabSampleTable.Text = "tabSampleTable";
             this.tabSampleTable.UseVisualStyleBackColor = true;
             // 
-            // wipeButton
+            // textBox1
             // 
-            this.wipeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.wipeButton.Location = new System.Drawing.Point(326, 342);
-            this.wipeButton.Name = "wipeButton";
-            this.wipeButton.Size = new System.Drawing.Size(125, 23);
-            this.wipeButton.TabIndex = 19;
-            this.wipeButton.Text = "Wipe sample";
-            this.wipeButton.UseVisualStyleBackColor = true;
-            this.wipeButton.Click += new System.EventHandler(this.wipeButton_Click);
-            // 
-            // addToSfxBank
-            // 
-            this.addToSfxBank.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.addToSfxBank.Location = new System.Drawing.Point(195, 342);
-            this.addToSfxBank.Name = "addToSfxBank";
-            this.addToSfxBank.Size = new System.Drawing.Size(125, 23);
-            this.addToSfxBank.TabIndex = 18;
-            this.addToSfxBank.Text = "Add to SFX bank";
-            this.addToSfxBank.UseVisualStyleBackColor = true;
-            this.addToSfxBank.Click += new System.EventHandler(this.addToSfxBank_Click);
-            // 
-            // findFreeIndexButton
-            // 
-            this.findFreeIndexButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.findFreeIndexButton.Location = new System.Drawing.Point(326, 313);
-            this.findFreeIndexButton.Name = "findFreeIndexButton";
-            this.findFreeIndexButton.Size = new System.Drawing.Size(125, 23);
-            this.findFreeIndexButton.TabIndex = 17;
-            this.findFreeIndexButton.Text = "Find next free index";
-            this.findFreeIndexButton.UseVisualStyleBackColor = true;
-            this.findFreeIndexButton.Click += new System.EventHandler(this.findFreeIndexButton_Click);
-            // 
-            // replaceSampleButton
-            // 
-            this.replaceSampleButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.replaceSampleButton.Location = new System.Drawing.Point(195, 313);
-            this.replaceSampleButton.Name = "replaceSampleButton";
-            this.replaceSampleButton.Size = new System.Drawing.Size(125, 23);
-            this.replaceSampleButton.TabIndex = 16;
-            this.replaceSampleButton.Text = "Import VAG";
-            this.replaceSampleButton.UseVisualStyleBackColor = true;
-            this.replaceSampleButton.Click += new System.EventHandler(this.replaceSampleButton_Click);
-            // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.propertyGrid1.Location = new System.Drawing.Point(195, 7);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(416, 300);
-            this.propertyGrid1.TabIndex = 15;
+            this.textBox1.Location = new System.Drawing.Point(8, 7);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(181, 20);
+            this.textBox1.TabIndex = 20;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // sampleTableListBox
             // 
@@ -397,13 +331,27 @@ namespace CTRTools.Controls
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // textBox1
+            // cseqControl1
             // 
-            this.textBox1.Location = new System.Drawing.Point(8, 7);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(181, 20);
-            this.textBox1.TabIndex = 20;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.cseqControl1.AllowDrop = true;
+            this.cseqControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cseqControl1.Location = new System.Drawing.Point(3, 3);
+            this.cseqControl1.Name = "cseqControl1";
+            this.cseqControl1.Size = new System.Drawing.Size(608, 367);
+            this.cseqControl1.TabIndex = 0;
+            // 
+            // instrumentControl1
+            // 
+            this.instrumentControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.instrumentControl1.Instrument = null;
+            this.instrumentControl1.Location = new System.Drawing.Point(195, 7);
+            this.instrumentControl1.Name = "instrumentControl1";
+            this.instrumentControl1.Size = new System.Drawing.Size(416, 363);
+            this.instrumentControl1.TabIndex = 21;
             // 
             // HowlControl
             // 
@@ -445,7 +393,6 @@ namespace CTRTools.Controls
         private TabPage tabSongs;
         private TreeView banksTreeView;
         private TabPage tabSampleTable;
-        private PropertyGrid propertyGrid1;
         private ListBox sampleTableListBox;
         private ListBox songListBox;
         private MenuStrip menuStrip1;
@@ -453,19 +400,16 @@ namespace CTRTools.Controls
         private ToolStripMenuItem openToolStripMenuItem;
         private ToolStripMenuItem saveToolStripMenuItem;
         private ToolStripMenuItem exportToolStripMenuItem;
-        private Button replaceSampleButton;
         private Button cseqImport;
         private Button cseqSave;
         private NumericUpDown numericUpDown1;
         private ToolStripMenuItem saveAsToolStripMenuItem;
-        private Button findFreeIndexButton;
-        private Button addToSfxBank;
-        private Button wipeButton;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem exitToolStripMenuItem;
         private TabPage tabSong;
         private CseqControl cseqControl1;
         private Button editSongButton;
         private TextBox textBox1;
+        private InstrumentControl instrumentControl1;
     }
 }

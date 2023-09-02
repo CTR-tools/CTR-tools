@@ -1,18 +1,16 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Sound;
 using NAudio.Midi;
-using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
+using System.Media;
+using System.Text;
 using System.Windows.Forms;
 
 namespace CTRTools.Controls
 {
-
-
     public partial class HowlControl : UserControl
     {
         string loadedFilename = "";
@@ -36,7 +34,10 @@ namespace CTRTools.Controls
                 PopulateSongsTab();
                 PopulateBanksTab();
 
+                //pass context whereever it's needed
                 HowlPlayer.Context = howl.Context;
+                instrumentControl1.Context = howl.Context;
+                cseqControl1.SetContext(howl.Context);
             }
             catch (Exception ex)
             {
@@ -83,6 +84,7 @@ namespace CTRTools.Controls
             sampleTableListBox.BeginUpdate();
 
             sampleTableListBox.Items.Clear();
+            instrumentControl1.Clear();
 
             SampleCache.Clear();
 
@@ -135,8 +137,11 @@ namespace CTRTools.Controls
         private bool IsHowlLoaded()
         {
             if (howl == null)
+            {
+                SystemSounds.Exclamation.Play();
                 MessageBox.Show("HOWL is not loaded yet!", "Missing HOWL file");
-  
+            }
+
             return howl != null;
         }
 
@@ -167,13 +172,9 @@ namespace CTRTools.Controls
 
         private void sampleTableListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!IsHowlLoaded()) return;
-
-            if (sampleTableListBox.SelectedIndex < 0) return;
-
-            var samp = SampleCache[sampleTableListBox.SelectedIndex];
-            propertyGrid1.SelectedObject = samp;
-            HowlPlayer.Play(samp);
+            var inst = SampleCache[sampleTableListBox.SelectedIndex];
+            instrumentControl1.Instrument = inst;
+            HowlPlayer.Play(inst);
         }
 
 
@@ -189,10 +190,17 @@ namespace CTRTools.Controls
         {
             if (!IsHowlLoaded()) return;
 
-            Helpers.BackupFile(loadedFilename);
-            howl.Save(loadedFilename);
+            try
+            {
+                Helpers.BackupFile(loadedFilename);
+                howl.Save(loadedFilename);
 
-            label1.Text = "saved to " + loadedFilename;
+                label1.Text = "saved to " + loadedFilename;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.ToString(), "Warning!");
+            }
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -206,7 +214,7 @@ namespace CTRTools.Controls
 
                 Helpers.BackupFile(loadedFilename);
                 howl.Save(loadedFilename);
- 
+
                 label1.Text = "saved to " + loadedFilename;
             }
         }
@@ -227,17 +235,6 @@ namespace CTRTools.Controls
 
         private void replaceSampleButton_Click(object sender, EventArgs e)
         {
-            if (howl is null) return;
-
-            int sampleIndex = SampleCache[sampleTableListBox.SelectedIndex].SampleID;
-
-            var ofd = new OpenFileDialog();
-            ofd.Filter = "PSX VAG sample file (*.vag)|*.vag";
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                howl.ReplaceVagSample(sampleIndex, ofd.FileName);
-            }
         }
 
         private void cseqSave_Click(object sender, EventArgs e)
@@ -281,7 +278,7 @@ namespace CTRTools.Controls
             int absoluteTime = 0;
 
             //foreach track in midi file, why 1?
-            for (int i = 1; i < midi.Tracks; i++)
+            for (int i = 0; i < midi.Tracks; i++)
             {
                 var track = new CSeqTrack();
                 //track.name = $"track_{i.ToString("00")}";
@@ -325,6 +322,7 @@ namespace CTRTools.Controls
                 }
             }
 
+
             var percTable = new List<byte>();
 
             foreach (var x in newMidi.Tracks)
@@ -333,15 +331,30 @@ namespace CTRTools.Controls
                 {
                     foreach (var evt in x.cseqEventCollection)
                     {
-                        if (!percTable.Contains(evt.pitch))
-                            percTable.Add(evt.pitch);
+                        if (evt.eventType == CseqEventType.NoteOn || evt.eventType == CseqEventType.NoteOff)
+                            if (!percTable.Contains(evt.pitch))
+                                percTable.Add(evt.pitch);
                     }
 
                     foreach (var evt in x.cseqEventCollection)
                     {
-                        evt.pitch = (byte)percTable.IndexOf(evt.pitch);
+                        if (evt.eventType == CseqEventType.NoteOn || evt.eventType == CseqEventType.NoteOff)
+                            evt.pitch = (byte)percTable.IndexOf(evt.pitch);
                     }
                 }
+            }
+
+            if (percTable.Count > 0)
+            {
+                var sb = new StringBuilder();
+
+                sb.Append("");
+
+                for (int i = 0; i < percTable.Count; i++)
+                    sb.AppendLine($"{i}={percTable[i]}");
+
+                Clipboard.SetText(sb.ToString());
+                MessageBox.Show("copied to clipboard:\r\n" + sb.ToString());
             }
 
             //fix track index
@@ -363,68 +376,7 @@ namespace CTRTools.Controls
             seq.Songs[0] = newMidi;
         }
 
-        private void findFreeIndexButton_Click(object sender, EventArgs e)
-        {
-            if (!IsHowlLoaded()) return;
-
-            int index = 0;
-
-            do
-            {
-                if (howl.Context.Samples.ContainsKey(index))
-                {
-                    index++;
-                }
-                else
-                {
-                    MessageBox.Show("found free index: " + index);
-
-                    howl.Context.Samples.Add(index, new Sample() { ID = index } );
-                    SampleCache[sampleTableListBox.SelectedIndex].SampleID = (ushort)index;
-
-                    propertyGrid1.SelectedObject = SampleCache[sampleTableListBox.SelectedIndex];
-
-                    return;
-                }
-            }
-            while (index < 2048);
-
-            if (index >= 2048)
-            { 
-                MessageBox.Show("Index search overflow!");
-                return;
-            }
-        }
-
-        private void addToSfxBank_Click(object sender, EventArgs e)
-        {
-            if (!IsHowlLoaded()) return;
-
-            var index = SampleCache[sampleTableListBox.SelectedIndex].SampleID;
-
-            if (!howl.Banks[0].Entries.ContainsKey(index))
-            {
-                howl.Banks[0].Entries.Add(index, howl.Context.Samples[index]);
-            }
-            else
-            {
-                MessageBox.Show("Already in the SFX bank!");
-            }
-        }
-
-        private void wipeButton_Click(object sender, EventArgs e)
-        {
-            if (!IsHowlLoaded()) return;
-
-            var index = SampleCache[sampleTableListBox.SelectedIndex].SampleID;
-            howl.Context.Samples[index].Data = new byte[0];
-            howl.Context.SpuPtrTable[index] = new SpuAddr() { Size = 0 };
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e) => Application.Exit();
 
         private void editSongButton_Click(object sender, EventArgs e)
         {
@@ -433,11 +385,6 @@ namespace CTRTools.Controls
             cseqControl1.seq = howl.Songs[songListBox.SelectedIndex];
             tabControl1.SelectedTab = tabSong;
             cseqControl1.FillUI();
-        }
-
-        private void songListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void songListBox_DoubleClick(object sender, EventArgs e)

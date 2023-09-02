@@ -73,7 +73,7 @@ namespace CTRFramework.Sound
             {
                 var newevent = CseqEvent.FromMidiEvent(evt);
 
-                if (newevent != null)
+                if (newevent != null && newevent.eventType != CseqEventType.Error)
                     cseqEventCollection.Add(newevent);
             }
 
