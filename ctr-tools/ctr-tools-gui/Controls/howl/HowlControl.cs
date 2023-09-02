@@ -398,6 +398,7 @@ namespace CTRTools.Controls
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            instrumentControl1.Clear();
             sampleTableListBox.Items.Clear();
             PopulateSamplesTab(textBox1.Text);
         }

@@ -515,6 +515,7 @@ namespace CTRTools.Controls
 
         private void exportAllButton_Click(object sender, EventArgs e)
         {
+            if (seq is null) return;
             if (seq.Context == null) return;
 
             var fbd = new FolderBrowserDialog();

@@ -26,16 +26,31 @@ namespace CTRTools.Controls
 
         public void UpdateForm()
         {
+            SetButtonsState(instrument != null);
+
             if (instrument != null)
             {
                 instrumentProperties.SelectedObject = instrument;
             }
         }
 
+        public void SetButtonsState(bool state)
+        {
+            exportVagButton.Enabled = state;
+            exportWavButton.Enabled = state;
+            wipeButton.Enabled = state;
+            replaceSampleButton.Enabled = state;
+            addToSfxBank.Enabled = state;
+            findFreeIndexButton.Enabled = state;
+            octaveUpButton.Enabled = state;
+            octaveDownButton.Enabled = state;
+        }
+
         private void replaceSampleButton_Click(object sender, EventArgs e)
         {
             if (Context is null) return;
             if (Context.howl is null) return;
+            if (Instrument is null) return;
 
             var ofd = new OpenFileDialog();
             ofd.Filter = "PSX VAG sample file (*.vag)|*.vag";
@@ -114,7 +129,7 @@ namespace CTRTools.Controls
 
         public void Clear()
         {
-            instrument = null;
+            Instrument = null;
             instrumentProperties.SelectedObject = null;
         }
 
@@ -122,6 +137,7 @@ namespace CTRTools.Controls
         {
             if (Context is null) return;
             if (Context.howl is null) return;
+            if (Instrument is null) return;
 
             var index = Instrument.SampleID;
 
@@ -139,6 +155,7 @@ namespace CTRTools.Controls
         {
             if (Context is null) return;
             if (Context.howl is null) return;
+            if (Instrument is null) return;
 
             var index = Instrument.SampleID;
 
@@ -154,14 +171,22 @@ namespace CTRTools.Controls
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if (Instrument == null) return;
+
             Instrument.Frequency *= 2;
             instrumentProperties.Refresh();
+
+            HowlPlayer.Play(Instrument);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (Instrument == null) return;
+
             Instrument.Frequency /= 2;
             instrumentProperties.Refresh();
+
+            HowlPlayer.Play(Instrument);
         }
     }
 }
