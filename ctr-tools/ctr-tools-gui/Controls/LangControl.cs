@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Lang;
+using CTRFramework.Shared;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -34,6 +35,9 @@ namespace CTRTools.Controls
         }
         private void SaveLang(string filename)
         {
+            if (lng is null) return;
+
+            Helpers.BackupFile(orginalFilePath);
             lng = LNG.FromText(langBox.Lines);
             lng.Save(filename);
             linesOnLoad = lng.Entries.Count;
@@ -80,7 +84,7 @@ namespace CTRTools.Controls
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (lng == null) return;
+            if (lng is null) return;
 
             if (ProceedToSave())
                 SaveLang(orginalFilePath);
@@ -88,7 +92,7 @@ namespace CTRTools.Controls
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (lng == null) return;
+            if (lng is null) return;
 
             if (ProceedToSave())
             {
@@ -108,6 +112,20 @@ namespace CTRTools.Controls
             {
                 langBox.Font = fontDialog.Font;
                 langBox.SelectionLength = 0;
+            }
+        }
+
+        private void exportStringsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lng is null) return;
+
+            var saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Text file (*.txt)|*.txt";
+            saveDialog.FileName = Path.ChangeExtension(orginalFilePath, ".txt");
+
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
+                lng.Export(saveDialog.FileName);
             }
         }
     }

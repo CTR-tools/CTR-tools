@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "howl": {
-      "commandName": "Project",
-      "commandLineArgs": "02_NTSC.HWL",
-      "workingDirectory": "D:\\_CTR-data\\howl"
-    }
-  }
-}

@@ -1,5 +1,7 @@
 ﻿using CTRFramework.Lang;
 using CTRFramework.Shared;
+using System;
+using System.IO;
 
 namespace lang
 {
