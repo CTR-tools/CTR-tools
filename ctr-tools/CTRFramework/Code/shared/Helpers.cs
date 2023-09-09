@@ -328,5 +328,14 @@ namespace CTRFramework.Shared
                     layout.Write(bw);
             }
         }
+
+        public static bool ContainsKana(string text)
+        {
+            foreach (char c in text.ToCharArray())
+                if (c >= 0x3040 && c <= 0x30FF)
+                    return true;
+
+            return false;
+        }
     }
 }

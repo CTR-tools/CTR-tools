@@ -23,7 +23,7 @@ namespace CTRTools.Controls
                 case ".LNG":
                     lng = LNG.FromFile(filename); break;
                 case ".TXT":
-                    lng = LNG.FromText(File.ReadAllLines(filename, System.Text.Encoding.Default)); break;
+                    lng = LNG.FromText(File.ReadAllLines(filename, System.Text.Encoding.UTF8)); break;
                 default:
                     MessageBox.Show("Unsupported file."); break;
             }

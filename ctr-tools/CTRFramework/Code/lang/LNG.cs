@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 
 namespace CTRFramework.Lang
@@ -187,7 +188,52 @@ namespace CTRFramework.Lang
                 result = result.Replace("ñ", (char)0x03 + "n");
                 result = result.Replace("Ñ", (char)0x03 + "N");
 
-                bw.Write(Encoding.Default.GetBytes(result));
+                //maybe contains japanese characters?
+                if (Helpers.ContainsKana(result))
+                {
+                    //we want to decompose any glyph using dakuten and handakuten into 2 glyphs, so normalize to form D first
+                    result = result.Normalize(NormalizationForm.FormD);
+
+                    var src = new List<byte>();
+
+                    foreach (var c in result)
+                    {
+                        if (BinaryReaderEx.japaneseCharset.IndexOf(c) > -1)
+                        {
+                            //exceptions for dakuten and handakuten
+                            if (c == '\u3099') { src.Add(0x01); continue; }
+                            if (c == '\u309A') { src.Add(0x02); continue; }
+
+                            src.Add((byte)(0x80 + BinaryReaderEx.japaneseCharset.IndexOf(c)));
+                        }
+                        else
+                        {
+                            //probably should handle overflow here...
+                            src.Add((byte)c);
+                        }
+                    }
+
+                    //now unicode's conjoining char comes after, while ctr expects it before.
+                    for (int i = 1; i < src.Count; i++)
+                    {
+                        if (src[i] == 1 || src[i] == 2)
+                        {
+                            byte x = src[i];
+                            src[i] = src[i - 1];
+                            src[i - 1] = x;
+                        }
+                    }
+
+                    //write string bytes
+                    bw.Write(src.ToArray());
+                }
+                else
+                {
+                    //be aware ASCII is 0-127, anything beyond is turned into "?"
+                    bw.Write(Encoding.ASCII.GetBytes(result));
+                }
+
+                //and null terminate
                 bw.Write((byte)0);
             }
 
