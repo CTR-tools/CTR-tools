@@ -408,7 +408,7 @@ namespace ctrviewer
                 ContentVault.AddVectorAnim(Path.GetFileNameWithoutExtension(file), SimpleAnimation.FromFile(file));
 
             LoadGenericTextures();
-            effect.Texture = ContentVault.Textures["test"];
+            effect.Texture = ContentVault.Textures["TEST"];
             //effect.TextureEnabled = true;
 
             tint = new Texture2D(GraphicsDevice, 1, 1);
@@ -451,6 +451,7 @@ namespace ctrviewer
             menu.Find("wire").Click += ToggleWireFrame;
             menu.Find("newtex").Click += ToggleReplacements;
             menu.Find("vcolor").Click += ToggleVertexColors;
+            menu.Find("textures").Click += ToggleTextures;
             menu.Find("nocull").Click += ToggleBackfaceCulling;
             menu.Find("skybox").Click += ToggleSkybox;
             menu.Find("water").Click += ToggleWater;
@@ -647,6 +648,7 @@ namespace ctrviewer
 
         public void ToggleVertexColors(object sender, EventArgs args) => eng.Settings.VertexLighting = (sender as BoolMenuItem).Value;
 
+        public void ToggleTextures(object sender, EventArgs args) => eng.Settings.Textures = (sender as BoolMenuItem).Value;
         public void ToggleBackfaceCulling(object sender, EventArgs args) => eng.Settings.BackFaceCulling = (sender as BoolMenuItem).Value;
 
         public void ToggleSkybox(object sender, EventArgs args) => eng.Settings.ShowSky = (sender as BoolMenuItem).Value;
@@ -889,15 +891,13 @@ namespace ctrviewer
 
             foreach (var s in Scenes)
             {
+                //maybe no vram?
+                if (s.ctrvram is null) continue;
+
                 var lowtex = s.GetTexturesList(Detail.Low);
                 var medtex = s.GetTexturesList(Detail.Med);
                 var mdltex = s.GetTexturesList(Detail.Models);
                 var hitex = s.GetTexturesList(Detail.High);
-
-                //maybe no vram?
-                if (s.ctrvram is null) continue;
-
-                int i = 0;
 
                 foreach (var t in s.ctrvram.textures)
                     if (lowtex.ContainsKey(t.Key) || medtex.ContainsKey(t.Key) || mdltex.ContainsKey(t.Key) || hitex.ContainsKey(t.Key))
@@ -988,8 +988,12 @@ namespace ctrviewer
         /// </summary>
         private void LoadMenuModelsScene()
         {
-            if (menu_models is null)
-                menu_models = LoadSceneFromBig(215);
+            //here's the thing. if we don't load the main menu scene every time
+            //the rgb order is reversed for some reason. find a solution to use cache with the correct rgb order
+            //only affects kart models loaded from this scene.
+
+            //if (menu_models is null)
+            menu_models = LoadSceneFromBig(215);
 
             if (menu_models != null)
                 Scenes.Add(menu_models);
@@ -998,7 +1002,7 @@ namespace ctrviewer
         /// <summary>
         /// Loads all .ctr models found in relative modelpath.
         /// </summary>
-        public void TestLoadExtrenalModels()
+        public void TestLoadExternalModels()
         {
             string mdlpath = Helpers.PathCombine(Meta.BasePath, Meta.ModelsPath);
 
@@ -1021,6 +1025,27 @@ namespace ctrviewer
             }
         }
 
+        public void LoadCustomLevel(string infoXmlPath)
+        {
+            var info = CustomLevelInfo.FromFile(infoXmlPath);
+
+            Scenes.Clear();
+
+            if (info.FullLevelPath == "" && File.Exists(info.FullLevelPath)) return;
+
+            var scene = CtrScene.FromFile(info.FullLevelPath);
+
+            if (info.VramFile != "" && File.Exists(info.VramFile))
+                scene.SetVram(CtrVrm.FromFile(info.VramFile));
+
+            if (info.FullLightMapPath != "" && File.Exists(info.FullLightMapPath))
+                scene.ApplyLightMap(info.FullLightMapPath);
+
+            Scenes.Add(scene);
+            LoadAllScenes();
+            ResetCamera();
+        }
+
         public void LoadLevelFromFile(string filename, string vramname = "")
         {
             if (!File.Exists(filename)) return;
@@ -1033,7 +1058,7 @@ namespace ctrviewer
         }
 
         /// <summary>
-        /// Loads all .lev files from levels folder.
+        /// Populates custom load level menu with all .lev files found in levels folder.
         /// </summary>
         private void PopulateCustomLevelsMenu()
         {
@@ -1056,8 +1081,8 @@ namespace ctrviewer
                 {
                     var info = CustomLevelInfo.FromFile(infoXml);
 
-                    var customLevel = new StringMenuItem(info.FullLevelPath) { Text = info.LevelName, Name = info.LevelName };
-                    customLevel.Click += (o, i) => { LoadLevelFromFile(((StringMenuItem)o).Value); };
+                    var customLevel = new StringMenuItem(infoXml) { Text = info.LevelName, Name = info.LevelName };
+                    customLevel.Click += (o, i) => { LoadCustomLevel(((StringMenuItem)o).Value); };
 
                     customLevelsMenu.Add(customLevel);
                 }
@@ -1086,7 +1111,7 @@ namespace ctrviewer
             LoadCones();
             LoadGenericTextures();
             LoadMenuModelsScene();
-            TestLoadExtrenalModels();
+            TestLoadExternalModels();
 
 
             //loads custom models using assimp
@@ -1234,21 +1259,17 @@ namespace ctrviewer
                 //put all botpaths
                 if (s.nav is not null) //this null check is for test level, actual game got ptr to empty struct 
                 {
-                    if (s.nav.paths.Count > 0) //??
-                    {
-
-                        if (s.nav.paths[0] != null)
+                        if (s.nav.paths.Count >= 1 && s.nav.paths[0] != null)
                             foreach (var n in s.nav.paths[0].Frames)
                                 eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
 
-                        if (s.nav.paths[1] != null)
+                        if (s.nav.paths.Count >= 2 && s.nav.paths[1] != null)
                             foreach (var n in s.nav.paths[1].Frames)
                                 eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
 
-                        if (s.nav.paths[2] != null)
+                        if (s.nav.paths.Count >= 3 && s.nav.paths[2] != null)
                             foreach (var n in s.nav.paths[2].Frames)
                                 eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
-                    }
                 }
 
             }

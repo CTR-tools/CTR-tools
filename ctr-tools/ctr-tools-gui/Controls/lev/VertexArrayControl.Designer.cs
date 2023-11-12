@@ -44,16 +44,22 @@ namespace CTRTools.Controls
             this.applyColorsButton = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.cd = new System.Windows.Forms.ColorDialog();
+            this.label4 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.blueSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.greenSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.redSlider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.button1);
+            this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.rainbowButton);
             this.groupBox1.Controls.Add(this.darkenButton);
@@ -201,10 +207,38 @@ namespace CTRTools.Controls
             this.textBox3.Size = new System.Drawing.Size(480, 355);
             this.textBox3.TabIndex = 12;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(151, 263);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(76, 13);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Load light map";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(154, 279);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 20;
+            this.button1.Text = "Load image";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(265, 80);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(274, 278);
+            this.pictureBox1.TabIndex = 13;
+            this.pictureBox1.TabStop = false;
+            // 
             // VertexArrayControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.groupBox1);
             this.Name = "VertexArrayControl";
@@ -214,6 +248,7 @@ namespace CTRTools.Controls
             ((System.ComponentModel.ISupportInitialize)(this.blueSlider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.greenSlider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.redSlider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,5 +271,8 @@ namespace CTRTools.Controls
         private System.Windows.Forms.TrackBar redSlider;
         private System.Windows.Forms.Button rainbowButton;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

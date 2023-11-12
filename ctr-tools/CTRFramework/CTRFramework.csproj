@@ -111,6 +111,7 @@
     <Compile Include="Code\lev\prim\VertexAnim.cs" />
     <Compile Include="Code\lang\LNG.cs" />
     <Compile Include="Code\lev\prim\WaterAnim.cs" />
+    <Compile Include="Code\lev\vis\PvsStruct.cs" />
     <Compile Include="Code\PatchedContainer.cs" />
     <Compile Include="Code\shared\HelpersPanic.cs" />
     <Compile Include="Code\shared\HelpersTimer.cs" />
@@ -164,6 +165,8 @@
     <Compile Include="Code\vrm\BMPHeader.cs" />
     <Compile Include="Code\vrm\TextureReplacer.cs" />
     <Compile Include="Code\vrm\Tim.cs" />
+    <Compile Include="ThirdParty\ColourQuantization\MedianCut.cs" />
+    <Compile Include="ThirdParty\ColourQuantization\Octree.cs" />
     <Compile Include="ThirdParty\Kaitai\KaitaiStream.cs" />
     <Compile Include="ThirdParty\Kaitai\KaitaiStruct.cs" />
     <Compile Include="ThirdParty\PlyImporter\Extensions\ArrayExtensions.cs" />
@@ -198,6 +201,7 @@
     <None Include="Data\readme.md" />
     <None Include="packages.config" />
     <None Include="Data\versions.json" />
+    <None Include="ThirdParty\ColourQuantization\LICENSE.md" />
     <None Include="ThirdParty\Kaitai\README.md" />
     <None Include="ThirdParty\PlyImporter\LICENSE" />
     <None Include="ThirdParty\PlyImporter\README.md" />

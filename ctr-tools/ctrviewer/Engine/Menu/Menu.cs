@@ -105,6 +105,7 @@ namespace ctrviewer.Engine.Gui
                 new BoolMenuItem() { Text = Locale.VideoMenu_Wireframe, Name = "wire", Value = settings.DrawWireframe },
                 new BoolMenuItem() { Text = Locale.VideoMenu_Replacements, Name = "newtex", Value = settings.UseTextureReplacements },
                 new BoolMenuItem() { Text = Locale.VideoMenu_VertexLighting, Name = "vcolor", Value = settings.VertexLighting },
+                new BoolMenuItem() { Text = Locale.VideoMenu_Textures, Name = "textures", Value = settings.Textures },
                 new BoolMenuItem() { Text = Locale.VideoMenu_BackfaceCulling, Name = "nocull", Value = settings.BackFaceCulling },
                 new BoolMenuItem() { Text = Locale.VideoMenu_Skybox, Name = "skybox", Value = settings.ShowSky },
                 new BoolMenuItem() { Text = Locale.VideoMenu_Water, Name = "water", Value = settings.ShowWater },
@@ -392,12 +393,12 @@ namespace ctrviewer.Engine.Gui
 
             //draw logo
             batch.Draw(
-                ContentVault.Textures["logo"],
+                ContentVault.Textures["LOGO"],
                 new Vector2((graphics.Viewport.Width / 2), 50 * graphics.Viewport.Height / 1080f),
-                new Rectangle(0, 0, ContentVault.Textures["logo"].Width, ContentVault.Textures["logo"].Height),
+                new Rectangle(0, 0, ContentVault.Textures["LOGO"].Width, ContentVault.Textures["LOGO"].Height),
                 Color.White,
                 0,
-                new Vector2(ContentVault.Textures["logo"].Width / 2, 0),
+                new Vector2(ContentVault.Textures["LOGO"].Width / 2, 0),
                 scale,
                 SpriteEffects.None,
                 0.5f

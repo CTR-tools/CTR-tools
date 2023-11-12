@@ -87,6 +87,12 @@
     <Compile Include="Controls\howl\InstrumentControl.Designer.cs">
       <DependentUpon>InstrumentControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\VramLayout.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\VramLayout.Designer.cs">
+      <DependentUpon>VramLayout.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -189,6 +195,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\howl\InstrumentControl.resx">
       <DependentUpon>InstrumentControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\VramLayout.resx">
+      <DependentUpon>VramLayout.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\XaControl.resx">
       <DependentUpon>XaControl.cs</DependentUpon>

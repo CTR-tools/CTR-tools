@@ -43,7 +43,6 @@ namespace CTRFramework
     }
 
 
-
     public class QuadBlock : IReadWrite
     {
         public static readonly int SizeOf = 0x5C;
@@ -111,19 +110,22 @@ namespace CTRFramework
         //public byte[] midflags = new byte[2];
 
         public PsxPtr ptrTexLow;            //offset to LOD texture definition
-        public PsxPtr ptrAddVis;         //pointes to 4 extra visData structs, to be renamed
+        public PsxPtr ptrPvsStruct;         //points to 4 extra visData structs, to be renamed
 
-        public PsxPtr mosaicPtr1;
-        public PsxPtr mosaicPtr2;
-        public PsxPtr mosaicPtr3;
-        public PsxPtr mosaicPtr4;
+        //public PsxPtr mosaicPtr1;
+        //public PsxPtr mosaicPtr2;
+        //public PsxPtr mosaicPtr3;
+        //public PsxPtr mosaicPtr4;
 
         public List<Vector2> faceNormal = new List<Vector2>();    //face normal vector or smth. 4*2 for mid + 2 for low
+
 
         //additional data
         public TextureLayout texlow;
 
         public List<CtrTex> tex = new List<CtrTex>() { null, null, null, null };
+
+        public PvsStruct pvsStruct;
 
         public QuadBlock()
         {
@@ -232,19 +234,23 @@ namespace CTRFramework
                 Helpers.Panic(this, PanicType.Assume, $"ptrTexLow {ptrTexLow.ToString()}");
 
 
-            ptrAddVis = PsxPtr.FromReader(br);
+            ptrPvsStruct = PsxPtr.FromReader(br);
 
-            if (ptrAddVis.ExtraBits != HiddenBits.None)
-                Helpers.Panic(this, PanicType.Assume, $"mosaicStruct {ptrAddVis.ToString()}");
+            if (ptrPvsStruct.ExtraBits != HiddenBits.None)
+                Helpers.Panic(this, PanicType.Assume, $"mosaicStruct {ptrPvsStruct.ToString()}");
 
 
             for (int i = 0; i < 5; i++)
                 faceNormal.Add(br.ReadVector2s(1 / 4096f));
 
-            //done reading
-
             if (br.Position - BaseAddress != SizeOf)
                 Helpers.Panic(this, PanicType.Error, "SizeOf mismatch!");
+
+            // ===================================
+            // quadblock raw data complete, now proceed to additional data parsing
+            // ===================================
+
+
 
             //read texture layouts
             int texpos = (int)br.Position;
@@ -273,17 +279,21 @@ namespace CTRFramework
                 cntr++;
             }
 
-            if (ptrAddVis != UIntPtr.Zero)
+            if (ptrPvsStruct != PsxPtr.Zero)
             {
-                br.Jump(ptrAddVis);
+                br.Jump(ptrPvsStruct);
+                pvsStruct = PvsStruct.FromReader(br, 0, 0);
 
-                mosaicPtr1 = PsxPtr.FromReader(br);
-                mosaicPtr2 = PsxPtr.FromReader(br);
-                mosaicPtr3 = PsxPtr.FromReader(br);
-                mosaicPtr4 = PsxPtr.FromReader(br);
+                //mosaicPtr1 = PsxPtr.FromReader(br);
+                //mosaicPtr2 = PsxPtr.FromReader(br);
+                //mosaicPtr3 = PsxPtr.FromReader(br);
+                //mosaicPtr4 = PsxPtr.FromReader(br);
             }
 
+
             br.Jump(texpos);
+
+
         }
 
         public void ColTest(List<Vertex> vertices)
@@ -378,6 +388,29 @@ namespace CTRFramework
             v1.uv = v2.uv;
             v2.uv = v;
         }
+
+        /*
+        public void NormalTest(List<Vertex> verts)
+        {
+            var a = verts[ind[0]].Position;
+            var b = verts[ind[1]].Position;
+            var c = verts[ind[2]].Position;
+
+            var u = a - c;
+            var v = b - c;
+
+            var normal = Vector3.Cross(u, v);
+
+            var scaled = Vector3.Normalize(normal);
+
+            var kek = normal / scaled;
+
+            Helpers.Panic(this, PanicType.Info, kek.ToString());
+
+            Console.ReadKey();
+        }
+        */
+
 
         /// <summary>
         /// Returns 4 vertices of a quad. -1 for low, 0 1 2 3 for individual med quads.
@@ -619,7 +652,7 @@ namespace CTRFramework
             //bw.Write(midflags);
 
             bw.Write(ptrTexLow, patchTable);
-            bw.Write(ptrAddVis, patchTable);
+            bw.Write(ptrPvsStruct, patchTable);
 
             foreach (Vector2 v in faceNormal)
                 bw.WriteVector2s(v, 1 / 4096f);

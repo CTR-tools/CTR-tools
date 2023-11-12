@@ -59,24 +59,26 @@ namespace ctrviewer.Engine
             return true;
         }
 
-        public static bool AddTexture(string name, Texture2D texture)
+        public static void AddTexture(string name, Texture2D texture)
         {
+            name = name.ToUpper();
+
             lock (Textures)
             {
                 if (Textures.ContainsKey(name))
                 {
                     Textures[name] = texture;
                     Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate texture: '{name}'.");
-                    return true;
                 }
 
                 Textures.Add(name, texture);
-                return true;
             }
         }
 
         public static bool AddReplacementTexture(string name, Texture2D texture)
         {
+            name = name.ToUpper();
+
             lock (ReplacementTextures)
             {
                 if (ReplacementTextures.ContainsKey(name))
@@ -114,14 +116,18 @@ namespace ctrviewer.Engine
 
         public static TriListCollection GetModel(string name)
         {
-            if (!Models.ContainsKey(name.ToUpper()))
+            name = name.ToUpper();
+
+            if (!Models.ContainsKey(name))
                 return null;
 
-            return Models[name.ToUpper()];
+            return Models[name];
         }
 
         public static Texture2D GetTexture(string name, bool useReplacements)
         {
+            name = name.ToUpper();
+
             if (useReplacements)
             {
                 if (ReplacementTextures.ContainsKey(name))

@@ -59,7 +59,7 @@ namespace CTRTools.Controls
                     trackBar1.Maximum = scn.Instances.Count - 1;
                 }
 
-                vertexArrayControl1.VertexArray = scn.verts;
+                vertexArrayControl1.Scene = scn;
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace CTRTools.Controls
 
             foreach (QuadBlock qb in scn.quads)
             {
-                qb.ptrAddVis = PsxPtr.Zero;
+                qb.ptrPvsStruct = PsxPtr.Zero;
                 qb.ptrTexMid = new PsxPtr[] { PsxPtr.Zero, PsxPtr.Zero, PsxPtr.Zero, PsxPtr.Zero };
             }
         }
@@ -257,7 +257,7 @@ namespace CTRTools.Controls
             using (var bw = new BinaryWriterEx(File.OpenWrite(path)))
             {
                 //update scene data with controls data
-                scn.verts = vertexArrayControl1.VertexArray;
+                //scn.verts = vertexArrayControl1.VertexArray;
 
 
                 bw.Jump(4);
@@ -297,9 +297,12 @@ namespace CTRTools.Controls
 
                 foreach (var vis in scn.visdata)
                     vis.Write(bw);
-
-                bw.Jump(scn.header.ptrNavData.Address + 4);
-                scn.nav.Write(bw);
+                
+                if (scn.nav != null)
+                { 
+                    //bw.Jump(scn.header.ptrNavData.Address + 4);
+                    //scn.nav.Write(bw);
+                }
             }
         }
 

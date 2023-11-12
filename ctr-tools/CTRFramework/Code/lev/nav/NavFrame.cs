@@ -29,6 +29,8 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
+            Helpers.Panic(this, PanicType.Debug, $"frame starts at {br.HexPos()}... [total stream length: {br.BaseStream.Length.ToString("X8")}]...");
+
             position = br.ReadVector3s(1 / 100f);
             angle = new Vector3s(br);
             unk11 = br.ReadByte();
@@ -37,6 +39,8 @@ namespace CTRFramework
             unk3 = br.ReadUInt16();
             pos = br.ReadByte();
             unk5 = br.ReadByte();
+
+            Helpers.Panic(this, PanicType.Debug, $"frame done, now at {br.HexPos()}");
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
@@ -53,7 +57,7 @@ namespace CTRFramework
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.Append(position.ToString());
             sb.Append(", " + angle.ToString());

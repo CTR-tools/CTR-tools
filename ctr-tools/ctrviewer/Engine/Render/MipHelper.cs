@@ -125,6 +125,7 @@ namespace ctrviewer.Engine.Render
             return tex;
         }
 
+        //intended to fix reverse RGB order and detect alpha
         public static Bitmap FixBitmap(Bitmap bitmap, out bool alpha, out byte[] bytes, bool swapRB = false)
         {
             BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
@@ -145,17 +146,17 @@ namespace ctrviewer.Engine.Render
                 byte R = bytes[i * 4 + 2];
                 byte A = bytes[i * 4 + 3];
 
-                if (A != 255)
-                    alpha = true;
-
+                //detect magenta
                 if (B == 255 && G == 0 && R == 255)
                 {
                     B = 0;
+                    //G is 0 already if you're confused
                     R = 0;
                     A = 0;
-
-                    alpha = true;
                 }
+
+                //detect alpha
+                if (A != 255) alpha = true;
 
                 bytes[i * 4 + 0] = swapRB ? B : R;
                 bytes[i * 4 + 1] = G;

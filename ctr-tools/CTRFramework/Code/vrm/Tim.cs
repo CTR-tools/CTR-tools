@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using ColourQuantization;
 
 namespace CTRFramework.Vram
 {
@@ -487,7 +488,10 @@ namespace CTRFramework.Vram
                 return;
             }
 
-            List<ushort> palette = new List<ushort>();
+            //despite limiting to 16 it still produces more colors...
+            bitmap = Octree.Quantize(bitmap, 16);
+
+            var palette = new List<ushort>();
 
             byte[] newdata = new byte[bitmap.Width * bitmap.Height / 2];
 
@@ -534,6 +538,8 @@ namespace CTRFramework.Vram
                     this.data[j] = (ushort)(newdata[j * 2] | newdata[j * 2 + 1] << 8);
 
             }
+
+            Helpers.Panic(this, PanicType.Info, $"palette length: {palette.Count}");
 
             if (palette.Count < 16)
             {

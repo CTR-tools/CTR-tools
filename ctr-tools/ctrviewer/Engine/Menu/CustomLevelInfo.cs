@@ -12,9 +12,13 @@ namespace ctrviewer.Engine.Menu
         public string LevelType { get; set; } = "";
         public string LevelFile { get; set; } = "";
         public string VramFile { get; set; } = "";
+
+        public string LightMap { get; set; } = "";
         public string ThumbnailImage { get; set; } = "";
         public string Directory { get; set; } = "";
+
         public string FullLevelPath => (Directory != null && LevelFile != null) ? Helpers.PathCombine(Directory, LevelFile) : "";
+        public string FullLightMapPath => (Directory != "" && LightMap != "") ? Helpers.PathCombine(Directory, LightMap) : "";
 
         public override string ToString()
         {

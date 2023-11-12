@@ -44,8 +44,6 @@
             this.ctrControl = new CTRTools.Controls.CtrControl();
             this.tabLev = new System.Windows.Forms.TabPage();
             this.levControl = new CTRTools.Controls.LevControl();
-            this.tabCseq = new System.Windows.Forms.TabPage();
-            this.cseqControl = new CTRTools.Controls.CseqControl();
             this.tabLang = new System.Windows.Forms.TabPage();
             this.langControl = new CTRTools.Controls.LangControl();
             this.tabXa = new System.Windows.Forms.TabPage();
@@ -53,6 +51,8 @@
             this.tabHowl = new System.Windows.Forms.TabPage();
             this.howlControl1 = new CTRTools.Controls.HowlControl();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.vramLayout1 = new CTRTools.Controls.VramLayout();
             this.tabControl.SuspendLayout();
             this.tabAbout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appLogo)).BeginInit();
@@ -62,10 +62,10 @@
             this.tabVram.SuspendLayout();
             this.tabCtr.SuspendLayout();
             this.tabLev.SuspendLayout();
-            this.tabCseq.SuspendLayout();
             this.tabLang.SuspendLayout();
             this.tabXa.SuspendLayout();
             this.tabHowl.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -79,10 +79,10 @@
             this.tabControl.Controls.Add(this.tabVram);
             this.tabControl.Controls.Add(this.tabCtr);
             this.tabControl.Controls.Add(this.tabLev);
-            this.tabControl.Controls.Add(this.tabCseq);
             this.tabControl.Controls.Add(this.tabLang);
             this.tabControl.Controls.Add(this.tabXa);
             this.tabControl.Controls.Add(this.tabHowl);
+            this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.tabControl.HotTrack = true;
             this.tabControl.Location = new System.Drawing.Point(0, 2);
@@ -184,7 +184,7 @@
             this.tabBig.Controls.Add(this.bigFileControl);
             this.tabBig.Location = new System.Drawing.Point(4, 22);
             this.tabBig.Name = "tabBig";
-            this.tabBig.Size = new System.Drawing.Size(776, 508);
+            this.tabBig.Size = new System.Drawing.Size(936, 508);
             this.tabBig.TabIndex = 5;
             this.tabBig.Text = "BIG archive";
             this.tabBig.UseVisualStyleBackColor = true;
@@ -196,7 +196,7 @@
             this.bigFileControl.Location = new System.Drawing.Point(0, 0);
             this.bigFileControl.MinimumSize = new System.Drawing.Size(488, 223);
             this.bigFileControl.Name = "bigFileControl";
-            this.bigFileControl.Size = new System.Drawing.Size(776, 508);
+            this.bigFileControl.Size = new System.Drawing.Size(936, 508);
             this.bigFileControl.TabIndex = 0;
             // 
             // tabVram
@@ -204,7 +204,7 @@
             this.tabVram.Controls.Add(this.vramControl);
             this.tabVram.Location = new System.Drawing.Point(4, 22);
             this.tabVram.Name = "tabVram";
-            this.tabVram.Size = new System.Drawing.Size(776, 508);
+            this.tabVram.Size = new System.Drawing.Size(936, 508);
             this.tabVram.TabIndex = 8;
             this.tabVram.Text = "VRAM textures";
             this.tabVram.UseVisualStyleBackColor = true;
@@ -216,7 +216,7 @@
             this.vramControl.Location = new System.Drawing.Point(0, 0);
             this.vramControl.MinimumSize = new System.Drawing.Size(461, 218);
             this.vramControl.Name = "vramControl";
-            this.vramControl.Size = new System.Drawing.Size(776, 508);
+            this.vramControl.Size = new System.Drawing.Size(936, 508);
             this.vramControl.TabIndex = 0;
             // 
             // tabCtr
@@ -224,7 +224,7 @@
             this.tabCtr.Controls.Add(this.ctrControl);
             this.tabCtr.Location = new System.Drawing.Point(4, 22);
             this.tabCtr.Name = "tabCtr";
-            this.tabCtr.Size = new System.Drawing.Size(776, 508);
+            this.tabCtr.Size = new System.Drawing.Size(936, 508);
             this.tabCtr.TabIndex = 9;
             this.tabCtr.Text = "CTR models";
             this.tabCtr.UseVisualStyleBackColor = true;
@@ -235,7 +235,7 @@
             this.ctrControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ctrControl.Location = new System.Drawing.Point(0, 0);
             this.ctrControl.Name = "ctrControl";
-            this.ctrControl.Size = new System.Drawing.Size(776, 508);
+            this.ctrControl.Size = new System.Drawing.Size(936, 508);
             this.ctrControl.TabIndex = 0;
             // 
             // tabLev
@@ -243,7 +243,7 @@
             this.tabLev.Controls.Add(this.levControl);
             this.tabLev.Location = new System.Drawing.Point(4, 22);
             this.tabLev.Name = "tabLev";
-            this.tabLev.Size = new System.Drawing.Size(776, 508);
+            this.tabLev.Size = new System.Drawing.Size(936, 508);
             this.tabLev.TabIndex = 0;
             this.tabLev.Text = "LEV scenes";
             this.tabLev.UseVisualStyleBackColor = true;
@@ -254,34 +254,15 @@
             this.levControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.levControl.Location = new System.Drawing.Point(0, 0);
             this.levControl.Name = "levControl";
-            this.levControl.Size = new System.Drawing.Size(776, 508);
+            this.levControl.Size = new System.Drawing.Size(936, 508);
             this.levControl.TabIndex = 0;
-            // 
-            // tabCseq
-            // 
-            this.tabCseq.Controls.Add(this.cseqControl);
-            this.tabCseq.Location = new System.Drawing.Point(4, 22);
-            this.tabCseq.Name = "tabCseq";
-            this.tabCseq.Size = new System.Drawing.Size(776, 508);
-            this.tabCseq.TabIndex = 10;
-            this.tabCseq.Text = "CSEQ music";
-            this.tabCseq.UseVisualStyleBackColor = true;
-            // 
-            // cseqControl
-            // 
-            this.cseqControl.AllowDrop = true;
-            this.cseqControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cseqControl.Location = new System.Drawing.Point(0, 0);
-            this.cseqControl.Name = "cseqControl";
-            this.cseqControl.Size = new System.Drawing.Size(776, 508);
-            this.cseqControl.TabIndex = 11;
             // 
             // tabLang
             // 
             this.tabLang.Controls.Add(this.langControl);
             this.tabLang.Location = new System.Drawing.Point(4, 22);
             this.tabLang.Name = "tabLang";
-            this.tabLang.Size = new System.Drawing.Size(776, 508);
+            this.tabLang.Size = new System.Drawing.Size(936, 508);
             this.tabLang.TabIndex = 12;
             this.tabLang.Text = "LNG text";
             this.tabLang.UseVisualStyleBackColor = true;
@@ -293,7 +274,7 @@
             this.langControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.langControl.Location = new System.Drawing.Point(0, 0);
             this.langControl.Name = "langControl";
-            this.langControl.Size = new System.Drawing.Size(776, 508);
+            this.langControl.Size = new System.Drawing.Size(936, 508);
             this.langControl.TabIndex = 0;
             // 
             // tabXa
@@ -301,7 +282,7 @@
             this.tabXa.Controls.Add(this.xaControl);
             this.tabXa.Location = new System.Drawing.Point(4, 22);
             this.tabXa.Name = "tabXa";
-            this.tabXa.Size = new System.Drawing.Size(776, 508);
+            this.tabXa.Size = new System.Drawing.Size(936, 508);
             this.tabXa.TabIndex = 13;
             this.tabXa.Text = "XA audio";
             this.tabXa.UseVisualStyleBackColor = true;
@@ -312,7 +293,7 @@
             this.xaControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.xaControl.Location = new System.Drawing.Point(0, 0);
             this.xaControl.Name = "xaControl";
-            this.xaControl.Size = new System.Drawing.Size(776, 508);
+            this.xaControl.Size = new System.Drawing.Size(936, 508);
             this.xaControl.TabIndex = 0;
             // 
             // tabHowl
@@ -320,9 +301,9 @@
             this.tabHowl.Controls.Add(this.howlControl1);
             this.tabHowl.Location = new System.Drawing.Point(4, 22);
             this.tabHowl.Name = "tabHowl";
-            this.tabHowl.Size = new System.Drawing.Size(776, 508);
+            this.tabHowl.Size = new System.Drawing.Size(936, 508);
             this.tabHowl.TabIndex = 14;
-            this.tabHowl.Text = "HOWL";
+            this.tabHowl.Text = "HOWL music/sfx";
             this.tabHowl.UseVisualStyleBackColor = true;
             // 
             // howlControl1
@@ -333,9 +314,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.howlControl1.Location = new System.Drawing.Point(3, 3);
             this.howlControl1.Name = "howlControl1";
-            this.howlControl1.Size = new System.Drawing.Size(770, 502);
+            this.howlControl1.Size = new System.Drawing.Size(930, 502);
             this.howlControl1.TabIndex = 0;
-            this.howlControl1.Load += new System.EventHandler(this.howlControl1_Load);
             // 
             // statusStrip1
             // 
@@ -344,6 +324,23 @@
             this.statusStrip1.Size = new System.Drawing.Size(944, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.vramLayout1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Size = new System.Drawing.Size(936, 508);
+            this.tabPage1.TabIndex = 15;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // vramLayout1
+            // 
+            this.vramLayout1.Location = new System.Drawing.Point(8, 3);
+            this.vramLayout1.Name = "vramLayout1";
+            this.vramLayout1.Size = new System.Drawing.Size(920, 502);
+            this.vramLayout1.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -354,6 +351,7 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabControl);
             this.DoubleBuffered = true;
+            this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "MainForm";
             this.Text = "CTR-tools-gui";
@@ -368,10 +366,10 @@
             this.tabVram.ResumeLayout(false);
             this.tabCtr.ResumeLayout(false);
             this.tabLev.ResumeLayout(false);
-            this.tabCseq.ResumeLayout(false);
             this.tabLang.ResumeLayout(false);
             this.tabXa.ResumeLayout(false);
             this.tabHowl.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -391,13 +389,11 @@
         private System.Windows.Forms.TabPage tabBig;
         private System.Windows.Forms.TabPage tabVram;
         private System.Windows.Forms.TabPage tabCtr;
-        private System.Windows.Forms.TabPage tabCseq;
         private System.Windows.Forms.TabPage tabLang;
         private System.Windows.Forms.TabPage tabXa;
 
         private Controls.VramControl vramControl;
         private Controls.BigFileControl bigFileControl;
-        private Controls.CseqControl cseqControl;
         private Controls.CtrControl ctrControl;
         private Controls.LevControl levControl;
         private Controls.LangControl langControl;
@@ -405,5 +401,7 @@
         private System.Windows.Forms.TabPage tabHowl;
         private Controls.HowlControl howlControl1;
         private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private Controls.VramLayout vramLayout1;
     }
 }

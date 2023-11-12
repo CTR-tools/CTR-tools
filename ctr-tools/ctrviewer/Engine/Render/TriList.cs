@@ -238,7 +238,7 @@ namespace ctrviewer.Engine.Render
             if (type == TriListType.Water)
                 graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
-            effect.TextureEnabled = textureEnabled;
+            effect.TextureEnabled = EngineSettings.Instance.Textures ? textureEnabled : false;
 
             if (textureEnabled)
                 if (ContentVault.Textures.ContainsKey(textureName))
@@ -275,7 +275,12 @@ namespace ctrviewer.Engine.Render
             }*/
 
 
-            foreach (var pass in (alpha != null ? alpha.CurrentTechnique.Passes : effect.CurrentTechnique.Passes))
+            Effect tempeffect = effect;
+
+            if (alpha != null && EngineSettings.Instance.Textures)
+                tempeffect = alpha;
+
+            foreach (var pass in tempeffect.CurrentTechnique.Passes)
             {
                 pass.Apply();
 

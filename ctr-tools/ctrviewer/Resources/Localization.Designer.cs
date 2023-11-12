@@ -475,6 +475,15 @@ namespace ctrviewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Textures.
+        /// </summary>
+        internal static string VideoMenu_Textures {
+            get {
+                return ResourceManager.GetString("VideoMenu_Textures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Toggle LoD.
         /// </summary>
         internal static string VideoMenu_ToggleLod {

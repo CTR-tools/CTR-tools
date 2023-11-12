@@ -212,7 +212,8 @@ namespace CTRFramework.Lang
                         }
                     }
 
-                    //now unicode's conjoining char comes after, while ctr expects it before.
+                    //now, unicode's conjoining char comes after, while ctr expects it before.
+                    //loop and swap
                     for (int i = 1; i < src.Count; i++)
                     {
                         if (src[i] == 1 || src[i] == 2)

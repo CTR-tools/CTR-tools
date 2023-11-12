@@ -246,6 +246,9 @@
   <data name="VideoMenu_StereoMode" xml:space="preserve">
     <value>Стерео режим (VR)</value>
   </data>
+  <data name="VideoMenu_Textures" xml:space="preserve">
+    <value>Текстуры</value>
+  </data>
   <data name="VideoMenu_ToggleLod" xml:space="preserve">
     <value>Переключить детализацию</value>
   </data>

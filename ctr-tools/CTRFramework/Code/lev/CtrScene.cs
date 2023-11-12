@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace CTRFramework
@@ -146,7 +147,7 @@ namespace CTRFramework
             }
             catch (Exception ex)
             {
-                Console.WriteLine("failed to read scene with patch container: " + ex.Message);
+                Console.WriteLine("failed to read scene with patch container: " + ex.Message + "\r\n" + ex.ToString());
 
                 //but maybe it's a sampler level?
                 //extra reset is needed here. it's 0 cause we don't have stacked scenes in a single lev anyways.
@@ -186,6 +187,12 @@ namespace CTRFramework
                 //quad.GenerateCtrQuads(verts);
             }
 
+
+            //if (sceneDebug)
+            //    SceneTests();
+
+
+
             //Console.WriteLine((mesh.numVertices * Vertex.SizeOf + mesh.ptrVertices.ToUInt32()).ToString("X8"));
             //Console.ReadKey();
 
@@ -204,6 +211,13 @@ namespace CTRFramework
             iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
             trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
             enviroMap = new PtrWrap<TextureLayout>(header.ptrEnviroMap).Get(br);
+
+
+
+
+
+
+
 
             if (header.numSpawnGroups > 0)
             {
@@ -320,6 +334,7 @@ namespace CTRFramework
                 try
                 {
                     var ctr = CtrModel.FromReader(br);
+
                     if (ctr != null)
                         Models.Add(ctr);
                 }
@@ -342,18 +357,42 @@ namespace CTRFramework
                 waterAnim.Add(WaterAnim.FromReader(br));
             }
 
-
-            if (sceneDebug)
-                SceneTests();
         }
 
-        bool sceneDebug = false;
+        bool sceneDebug = true;
 
         /// <summary>
         /// A debug method for testing purposes, called in ReadScene.
         /// </summary>
         private void SceneTests()
         {
+            foreach (var quad in quads)
+            {
+                foreach (var value in quad.faceNormal)
+                {
+                    ushort x = (ushort)(value.X * 4096f);
+                    ushort y = (ushort)(value.X * 4096f);
+
+                    if (x > 0 && y > 0)
+
+                    Console.WriteLine(
+                        x.ToString("X4") + "\t" +
+                        y.ToString("X4") + "\t" +
+                        quad.midunk.ToString("X2") + "\t" + " shifted: \t" +
+                        ((4096 << quad.midunk) / x).ToString("X8") + "\t" +
+                        ((4096 << quad.midunk) / y).ToString("X8")
+                    );
+                }
+
+
+                Console.WriteLine("---");
+                Console.ReadKey();
+            }
+
+
+
+            return;
+
             var sb = new StringBuilder();
 
             var ptrs = new List<uint>();
@@ -405,7 +444,7 @@ namespace CTRFramework
             foreach (var quad in quads)
                 sb.AppendLine(quad.ToObj(verts, lod, ref a, ref b));
 
-            if (header.ptrNavData != PsxPtr.Zero)
+            if (nav != null)
                 sb.AppendLine(nav.ToObj(ref a));
 
             Helpers.WriteToFile(Helpers.PathCombine(path, $"{fname}.obj"), sb.ToString());
@@ -961,6 +1000,48 @@ namespace CTRFramework
             ctrvram = null;
         }
 
+
+        public void ApplyLightMap(string filename)
+        {
+            var bitmap = (Bitmap)Bitmap.FromFile(filename);
+            var graph = Graphics.FromImage(bitmap);
+
+
+          //  var test = new Bitmap(bitmap.Width, bitmap.Height);
+          //  var graph2 = Graphics.FromImage(test);
+
+
+            var min = Vector3.Zero;
+            var max = Vector3.Zero;
+
+            foreach (var vertex in verts)
+            {
+                if (vertex.Position.X < min.X) min.X = vertex.Position.X;
+                if (vertex.Position.X > max.X) max.X = vertex.Position.X;
+                if (vertex.Position.Y < min.Y) min.Y = vertex.Position.Y;
+                if (vertex.Position.Y > max.Y) max.Y = vertex.Position.Y;
+                if (vertex.Position.Z < min.Z) min.Z = vertex.Position.Z;
+                if (vertex.Position.Z > max.Z) max.Z = vertex.Position.Z;
+            }
+
+            min = -min;
+            max += min;
+
+            //graph2.DrawImage(bitmap, Point.Empty);
+
+            foreach (var vertex in verts)
+            {
+                //offset by negative, divide by max to 0-1 range, multiple by widthxheight for bitmap coords
+                var mapped = (vertex.Position + min) / max * new Vector3(bitmap.Width - 1, 0, bitmap.Height - 1);
+
+                var color = bitmap.GetPixel((int)mapped.X, (int)mapped.Z);
+
+                vertex.Color = new Vector4b(color);
+                vertex.MorphColor = vertex.Color;
+
+               // test.SetPixel((int)mapped.X, (int)mapped.Z, Color.Red);
+            }
+        }
 
         public void FromObj(OBJ obj)
         {

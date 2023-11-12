@@ -67,8 +67,10 @@ namespace CTRTools
                 case ".MPK": tabControl.SelectedTab = tabVram; break;
                 case ".BIG": tabControl.SelectedTab = tabBig; break;
                 case ".XNF": tabControl.SelectedTab = tabXa; break;
-                case ".HWL": tabControl.SelectedTab = tabHowl; break;
-                case ".CSEQ": tabControl.SelectedTab = tabCseq; break;
+                case ".WAV":
+                case ".VAG":
+                case ".HWL":
+                case ".CSEQ": tabControl.SelectedTab = tabHowl; break;
                 case ".LNG":
                 case ".TXT": tabControl.SelectedTab = tabLang; break;
                 case ".LEV":
@@ -76,11 +78,6 @@ namespace CTRTools
                         tabControl.SelectedTab = tabLev;
                     break;
             }
-        }
-
-        private void howlControl1_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

@@ -122,6 +122,12 @@ namespace CTRFramework.Shared
         {
             string backupName = $"{fileName}.bkp";
 
+            if (!File.Exists(fileName))
+            {
+                Helpers.Panic("Helpers", PanicType.Error, "cannot backup a file that doesnt exist!");
+                return;
+            }
+
             if (!File.Exists(backupName))
                 File.Copy(fileName, backupName);
         }

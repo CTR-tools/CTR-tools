@@ -237,6 +237,9 @@
   <data name="VideoMenu_StereoMode" xml:space="preserve">
     <value>Modo estereoscópico (VR)</value>
   </data>
+  <data name="VideoMenu_Textures" xml:space="preserve">
+    <value>Texturas</value>
+  </data>
   <data name="VideoMenu_ToggleLod" xml:space="preserve">
     <value>Alternar LoD</value>
   </data>
