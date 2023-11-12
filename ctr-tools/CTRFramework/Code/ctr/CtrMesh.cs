@@ -30,6 +30,8 @@ namespace CTRFramework.Models
         public int numAnims = 0;
         public UIntPtr ptrAnims = UIntPtr.Zero;
         public int unk4 = 0; //?
+        public int unk5 = 0; //?
+
 
         //public Vector4s posOffset = new Vector4s(0, 0, 0, 0);
 
@@ -189,6 +191,7 @@ namespace CTRFramework.Models
             numAnims = br.ReadInt32();
             ptrAnims = br.ReadUIntPtr();
             unk4 = br.ReadInt32();
+            //unk5 = br.ReadInt32(); //?? research animated textures here, known examples - main menu crash wink, intro box 0101 scrolling texture
 
             Helpers.Panic(this, PanicType.Info, $"Mesh: {Name}");
 
@@ -215,6 +218,8 @@ namespace CTRFramework.Models
             if (unk4 != 0)
                 Helpers.Panic(this, PanicType.Assume, $"check unusual unk4 value = {unk4}");
 
+            if (unk5 != 0)
+                Helpers.Panic(this, PanicType.Assume, $"check unusual unk5 value = {unk5}");
 
 
             //read all drawing commands

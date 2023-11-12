@@ -40,7 +40,7 @@ namespace CTRFramework.Models
 
         public CtrModel(BinaryReaderEx br)
         {
-            PatchedContainer cnt = PatchedContainer.FromReader(br);
+            var cnt = PatchedContainer.FromReader(br);
             Read(cnt.GetReader());
             PatchTable = cnt.PatchTable;
         }
@@ -56,7 +56,7 @@ namespace CTRFramework.Models
         {
             if (usePatchCon)
             {
-                PatchedContainer cnt = PatchedContainer.FromReader(br);
+                var cnt = PatchedContainer.FromReader(br);
                 Read(cnt.GetReader());
                 PatchTable = cnt.PatchTable;
             }
