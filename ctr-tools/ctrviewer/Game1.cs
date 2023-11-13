@@ -1,4 +1,5 @@
-﻿using CTRFramework;
+﻿using Assimp;
+using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Models;
 using CTRFramework.Shared;
@@ -84,29 +85,31 @@ namespace ctrviewer
 
         bool wasFullscreen = false;
 
+
+        private void SetResolution(int X, int Y)
+        {
+            graphics.PreferredBackBufferWidth = X;
+            graphics.PreferredBackBufferHeight = Y;
+        }
+
+        private void SetResolution(Rectangle rect) => SetResolution(rect.Width, rect.Height);
+
         public void SetResolution(GraphicsDeviceManager graphics)
         {
-            var mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
-
             if (!eng.Settings.Windowed)
             {
-                graphics.PreferredBackBufferWidth = mode.Width;
-                graphics.PreferredBackBufferHeight = mode.Height;
+                // get screen display mode
+                var mode = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode;
 
+                //set fullscreen resolution
+                SetResolution(mode.Width, mode.Height);
+
+                //remember we once changed reso to fullscreen
                 wasFullscreen = true;
             }
             else
             {
-                if (wasFullscreen)
-                {
-                    graphics.PreferredBackBufferWidth = lastWindowState.Width;
-                    graphics.PreferredBackBufferHeight = lastWindowState.Height;
-                }
-                else
-                {
-                    graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-                    graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
-                }
+                SetResolution(wasFullscreen ? lastWindowState : Window.ClientBounds);
 
                 if (graphics.PreferredBackBufferWidth < 320)
                     graphics.PreferredBackBufferWidth = 320;
@@ -118,12 +121,11 @@ namespace ctrviewer
                 lastWindowState = Window.ClientBounds;
             }
 
+            //update default camera aspect ratio. what about rest of em?
             eng.Cameras[CameraType.DefaultCamera].SetAspectRatio(
                 graphics.PreferredBackBufferWidth,
                 graphics.PreferredBackBufferHeight
-                );
-
-            mode = null;
+            );
         }
 
         public void UpdateInternalResolution()
@@ -664,6 +666,19 @@ namespace ctrviewer
         #endregion
         #endregion
 
+        List<(string Name, Color Color)> coneColors = new List<(string, Color)>()
+        {
+            ( "greencone", Color.Green ),
+            ( "yellowcone", Color.Yellow ),
+            ( "redcone", Color.Red ),
+            ( "purplecone", Color.Purple ),
+            ( "cyancone", Color.Cyan ),
+            ( "limecone", Color.Lime ),
+            ( "goldcone", Color.Gold ),
+            ( "bluecone", Color.Blue ),
+            ( "browncone", Color.Brown ),
+        };
+
         /// <summary>
         /// Loads various colored "cones" used for point indication (like bot paths).
         /// </summary>
@@ -675,15 +690,8 @@ namespace ctrviewer
                 return;
             }
 
-            AddCone("greencone", Color.Green);
-            AddCone("yellowcone", Color.Yellow);
-            AddCone("redcone", Color.Red);
-            AddCone("purplecone", Color.Purple);
-            AddCone("cyancone", Color.Cyan);
-            AddCone("limecone", Color.Lime);
-            AddCone("goldcone", Color.Gold);
-            AddCone("bluecone", Color.Blue);
-            AddCone("browncone", Color.Brown);
+            foreach (var cone in coneColors)
+                AddCone(cone.Name, cone.Color);
         }
 
         /// <summary>
@@ -922,6 +930,11 @@ namespace ctrviewer
             return task;
         }
 
+        /// <summary>
+        /// Loads single texture.
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="replacements"></param>
         private void LoadTexture(KeyValuePair<string, System.Drawing.Bitmap> t, Dictionary<string, string> replacements = null)
         {
             bool alpha = false;
@@ -961,25 +974,6 @@ namespace ctrviewer
             ContentVault.GetShader("16bits").Parameters["bMirrorX"].SetValue(false);
         }
 
-        /// <summary>
-        /// Loads scene and vram by index. Please note that vram file comes first, then goes scene file.
-        /// </summary>
-        /// <param name="index">File index in the BIG file.</param>
-        /// <returns>CtrScene instance.</returns>
-        private CtrScene LoadSceneFromBig(int index)
-        {
-            if (big is null)
-            {
-                GameConsole.Write("tried to load scene while no big is loaded.");
-                return null;
-            }
-
-            var vram = big.ReadEntry(index).ParseAs<CtrVrm>();
-            var scene = big.ReadEntry(index + 1).ParseAs<CtrScene>();
-            scene.SetVram(vram);
-
-            return scene;
-        }
 
         CtrScene menu_models;
 
@@ -988,12 +982,18 @@ namespace ctrviewer
         /// </summary>
         private void LoadMenuModelsScene()
         {
+            if (big is null)
+            {
+                GameConsole.Write("tried to load scene while no big is loaded.");
+                return;
+            }
+
             //here's the thing. if we don't load the main menu scene every time
             //the rgb order is reversed for some reason. find a solution to use cache with the correct rgb order
             //only affects kart models loaded from this scene.
 
             //if (menu_models is null)
-            menu_models = LoadSceneFromBig(215);
+            menu_models = big.ReadScene(215);
 
             if (menu_models != null)
                 Scenes.Add(menu_models);
@@ -1467,7 +1467,7 @@ namespace ctrviewer
             //test whether big file is ready
             if (big is null && !FindBigFile())
             {
-                GameConsole.Write("Missing BIGFILE!");
+                GameConsole.Write(Locale.Errors_MissingBigfile);
                 return;
             }
 
@@ -1484,7 +1484,7 @@ namespace ctrviewer
                 if (absId[i] < 200)
                     absId[i] += (int)levelType * 2;
 
-                Scenes.Add(LoadSceneFromBig(absId[i]));
+                Scenes.Add(big.ReadScene(absId[i]));
             }
 
             LoadAllScenes();
@@ -1538,7 +1538,7 @@ namespace ctrviewer
             //update input before window active check to avoid random camera jumpscares
             InputHandlers.Update();
 
-            //move on is windows isn't active
+            //move on if window isn't active
             if (!IsActive) return;
 
             //allow fullscreen toggle before checking for controls enabled
@@ -1607,28 +1607,9 @@ namespace ctrviewer
                     eng.Settings.StereoPairSeparation = 10;
             }
 
-            //handle char switch
-            if (KeyboardHandler.IsPressed(Keys.O) || GamePadHandler.IsPressed(Buttons.LeftShoulder))
-            {
-                selectedChar--;
-
-                if (selectedChar < 0)
-                    selectedChar = 14;
-
-                if (karts.Count > 0)
-                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToUpper();
-            }
-
-            if (KeyboardHandler.IsPressed(Keys.P) || GamePadHandler.IsPressed(Buttons.RightShoulder))
-            {
-                selectedChar++;
-
-                if (selectedChar > 14)
-                    selectedChar = 0;
-
-                if (karts.Count > 0)
-                    karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToUpper();
-            }
+            //handle kart switch
+            if (KeyboardHandler.IsPressed(Keys.O) || GamePadHandler.IsPressed(Buttons.LeftShoulder)) SelectKart(-1);
+            if (KeyboardHandler.IsPressed(Keys.P) || GamePadHandler.IsPressed(Buttons.RightShoulder)) SelectKart(+1);
 
             //handle FOV
             if (KeyboardHandler.IsDown(Keys.OemMinus)) eng.Settings.FieldOfView--;
@@ -1718,6 +1699,23 @@ namespace ctrviewer
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Change player 1 kart.
+        /// </summary>
+        /// <param name="x"></param>
+        public void SelectKart(int x)
+        {
+            const int numChars = 14;
+
+            selectedChar += x;
+
+            //wrap around the edges
+            if (selectedChar < 0) selectedChar = numChars;
+            if (selectedChar > numChars) selectedChar = 0;
+
+            if (karts.Count > 0)
+                karts[0].ModelName = ((CharIndex)selectedChar).ToString().ToUpper();
+        }
 
         private void UpdateCameras(GameTime gameTime)
         {

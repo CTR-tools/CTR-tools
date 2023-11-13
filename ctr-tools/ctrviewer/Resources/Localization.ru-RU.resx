@@ -129,6 +129,9 @@
   <data name="Bool_Yes" xml:space="preserve">
     <value>Да</value>
   </data>
+  <data name="Errors_MissingBigfile" xml:space="preserve">
+    <value>BIGFILE не загружен!</value>
+  </data>
   <data name="GreetingInfo_Bigfile" xml:space="preserve">
     <value>или поместите BIGFILE.BIG в корень приложения,</value>
   </data>

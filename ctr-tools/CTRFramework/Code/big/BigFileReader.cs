@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -202,6 +203,21 @@ namespace CTRFramework.Big
         public void Reset()
         {
             FileCursor = -1;
+        }
+
+        /// <summary>
+        /// Loads scene and vram by index. Please note that vram file comes first, then goes scene file.
+        /// This function blindly assumes you know what you're doing.
+        /// </summary>
+        /// <param name="index">File index in the BIG file.</param>
+        /// <returns>CtrScene instance.</returns>
+        public CtrScene ReadScene(int index)
+        {
+            var vram = ReadEntry(index).ParseAs<CtrVrm>();
+            var scene = ReadEntry(index + 1).ParseAs<CtrScene>();
+            scene.SetVram(vram);
+
+            return scene;
         }
     }
 }

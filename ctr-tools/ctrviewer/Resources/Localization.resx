@@ -129,6 +129,9 @@
   <data name="Bool_Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
+  <data name="Errors_MissingBigfile" xml:space="preserve">
+    <value>No BIGFILE loaded!</value>
+  </data>
   <data name="GreetingInfo_Bigfile" xml:space="preserve">
     <value>or put BIGFILE.BIG in viewer's root folder,</value>
   </data>

@@ -97,6 +97,15 @@ namespace ctrviewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No BIGFILE loaded!.
+        /// </summary>
+        internal static string Errors_MissingBigfile {
+            get {
+                return ResourceManager.GetString("Errors_MissingBigfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to or put BIGFILE.BIG in viewer&apos;s root folder,.
         /// </summary>
         internal static string GreetingInfo_Bigfile {
