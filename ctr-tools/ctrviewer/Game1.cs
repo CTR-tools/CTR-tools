@@ -1044,6 +1044,8 @@ namespace ctrviewer
             Scenes.Add(scene);
             LoadAllScenes();
             ResetCamera();
+
+            GameConsole.Write($" --- Loaded {info.LevelName} from {info.FullLevelPath} --- ");
         }
 
         public void LoadLevelFromFile(string filename, string vramname = "")
