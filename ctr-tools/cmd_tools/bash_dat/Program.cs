@@ -7,6 +7,8 @@ namespace bash_dat
     {
         static void Main(string[] args)
         {
+            OBJ.FixCulture();
+
             Console.WriteLine(
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 $"CTR-tools: bash_dat - {Meta.GetSignature()}",
