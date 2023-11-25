@@ -7,8 +7,11 @@ using System.Text;
 
 namespace CTRFramework.Bash
 {
+    //Bash mesh header struct
     public class BashMesh
     {
+        public static readonly int SizeOf = 0x34;
+
         //0x0 - null?
         public int zerostart0;
         //0x4 - null?
@@ -22,7 +25,7 @@ namespace CTRFramework.Bash
         //0x10
         public int ptrVerts;
         //0x14
-        public int ptrTriLinks;
+        public int ptrTristripInfo;
         //0x18
         public int ptrAfterVerts;
         //0x1C
@@ -40,7 +43,7 @@ namespace CTRFramework.Bash
 
         public List<Vector3> Vertices = new List<Vector3>();
 
-        public List<ushort> triLinks = new List<ushort>();
+        public List<ushort> tristripInfo = new List<ushort>();
 
         public BashMesh(BinaryReaderEx br) => Read(br);
 
@@ -48,26 +51,17 @@ namespace CTRFramework.Bash
 
         public void Read(BinaryReaderEx br)
         {
+            //bash pointers are relative to current position instead of the file origin
+
             zerostart0 = br.ReadInt32();
             zerostart1 = br.ReadInt32();
-
             u11 = br.ReadInt16();
             u12 = br.ReadInt16();
             anotherZero = br.ReadInt32();
 
-            if (anotherZero != 0)
-            {
-                Console.WriteLine("uzero not null!");
-                Console.ReadKey();
-            }
-
             ptrVerts = (int)(br.Position + br.ReadInt32());
-            ptrTriLinks = (int)(br.Position + br.ReadInt32());
+            ptrTristripInfo = (int)(br.Position + br.ReadInt32());
             ptrAfterVerts = (int)(br.Position + br.ReadInt32());
-
-            int numVerts = (ptrAfterVerts - ptrVerts - 0x14) / 8;
-
-
             ptrSmthElse = (int)(br.Position + br.ReadInt32());
             ptrSmthElse2 = (int)(br.Position + br.ReadInt32());
             ptrLast = (int)(br.Position + br.ReadInt32());
@@ -76,10 +70,20 @@ namespace CTRFramework.Bash
             zeroend1 = br.ReadInt32();
             zeroend2 = br.ReadInt32();
 
+
+            Helpers.PanicIf(zerostart0 != 0, this, PanicType.Assume, $"zerostart0 = {zerostart0}");
+            Helpers.PanicIf(zerostart1 != 0, this, PanicType.Assume, $"zerostart1 = {zerostart1}");
+            Helpers.PanicIf(anotherZero != 0, this, PanicType.Assume, $"anotherZero = {zerostart0}");
+            Helpers.PanicIf(zeroend0 != 0, this, PanicType.Assume, $"zeroend0 = {zeroend0}");
+            Helpers.PanicIf(zeroend1 != 0, this, PanicType.Assume, $"zeroend1 = {zeroend1}");
+            Helpers.PanicIf(zeroend2 != 0, this, PanicType.Assume, $"zeroend2 = {zeroend2}");
+
+
             int pos = (int)br.Position;
 
+            //read tristrip structs
 
-            br.Jump(ptrTriLinks);
+            br.Jump(ptrTristripInfo);
 
             ushort index = 0;
 
@@ -88,53 +92,53 @@ namespace CTRFramework.Bash
                 index = br.ReadUInt16();
 
                 if (index != 0xFFFF)
-                    triLinks.Add(index);
+                    tristripInfo.Add(index);
             }
             while (index != 0xFFFF);
 
+            //read vertices
 
+            //is there a better way to get number of vertices?
+            int numVerts = (ptrAfterVerts - ptrVerts - 0x14) / 8;
 
             br.Jump(ptrVerts + 0x14);
 
             for (int i = 0; i < numVerts; i++)
                 Vertices.Add(br.ReadVector3sPadded(0.01f));
 
+            //jump back to the end of the header, so we dont cofuse the parser
             br.Jump(pos);
         }
 
-        int curVertIndex = 0;
-
-        public Vector3 GetNextVertex()
-        {
-            curVertIndex++;
-            return Vertices[curVertIndex - 1];
-        }
-
-
-        List<Vector3> window = new List<Vector3>();
-
+        /// <summary>
+        /// Extracts Bash model header to OBJ file.
+        /// </summary>
+        /// <returns></returns>
         public string ToObj()
         {
             var sb = new StringBuilder();
 
-            curVertIndex = 0;
-
+            int curVertIndex = 0;
             int numFaces = 0;
 
-            foreach (var link in triLinks)
+            foreach (var strip in tristripInfo)
             {
-                ushort flags = (ushort)(link & 0xFF);
-                ushort count = (ushort)(link >> 8);
+                //tristrip info is 2 bytes, flags + number of faces
+                ushort flags = (ushort)(strip & 0xFF);
+                ushort count = (ushort)(strip >> 8);
 
                 //reached end of the list
-                if (link == 0xFFFF) return sb.ToString();
+                if (strip == 0xFFFF) return sb.ToString();
 
                 for (int i = 0; i < count; i++)
                 {
+                    //take 3 vertices at the cursor
+
                     var a = Vertices[curVertIndex];
                     var b = Vertices[curVertIndex + 1];
                     var c = Vertices[curVertIndex + 2];
 
+                    //flip Y and Z, so we have correct OBJ orientation
                     sb.AppendLine($"v {a.X} {-a.Y} {-a.Z}");
                     sb.AppendLine($"v {b.X} {-b.Y} {-b.Z}");
                     sb.AppendLine($"v {c.X} {-c.Y} {-c.Z}");
@@ -156,10 +160,14 @@ namespace CTRFramework.Bash
 
                     sb.AppendLine();
 
+                    //we added a face
                     numFaces++;
+
+                    //move cursor
                     curVertIndex++;
                 }
 
+                //at the end of the strip, skip the last 2 vertices used.
                 curVertIndex += 2;
             }
 
@@ -169,7 +177,7 @@ namespace CTRFramework.Bash
         public override string ToString()
         {
             return
-                ptrTriLinks.ToString("X8") + " " +
+                ptrTristripInfo.ToString("X8") + " " +
                 ptrVerts.ToString("X8") + " " +
                 ptrAfterVerts.ToString("X8") + " " +
                 ptrSmthElse.ToString("X8") + " " +

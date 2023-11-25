@@ -1,4 +1,7 @@
-﻿using CTRFramework.Bash;
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
+using CTRFramework.Bash;
 using CTRFramework.Shared;
 
 namespace bash_dat
@@ -13,7 +16,7 @@ namespace bash_dat
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
                 $"CTR-tools: bash_dat - {Meta.GetSignature()}",
                 "Extracts binary files from Crash Bash CRASHBSH.DAT file.",
-                "Supports: TEX to BMP, SFX to VH/VB/SEQ, model to OBJ.",
+                "Supports: CRASHBSH.DAT extraction, TEX to BMP, SFX to VH/VB/SEQ, partially MDL to OBJ.",
                 Meta.Version);
 
             if (args.Length == 0)
@@ -25,6 +28,11 @@ namespace bash_dat
                     "Extract textures example", "bash_dat C:\\some_dir\\some_file.tex"
                     );
 
+                Console.WriteLine(
+                    "\r\nImportant! Provide the Crash Bash EXE file to extract DAT contents.\r\n",
+                    "Your EXE file and your DAT file must be located in the same folder."
+                    );
+                
                 return;
             }
 
@@ -219,7 +227,12 @@ namespace bash_dat
 
                 for (int i = 0; i < numModels; i++)
                 {
-                    path = Helpers.PathCombine(Path.GetDirectoryName(filename), $"model_{i.ToString("00")}.obj");
+                    string newfold = Helpers.PathCombine(Path.GetDirectoryName(filename), Path.GetFileNameWithoutExtension(filename));
+
+                    Helpers.CheckFolder(newfold);
+
+                    path = Helpers.PathCombine(newfold, $"model_{i.ToString("00")}.obj");
+
                     Helpers.WriteToFile(path, models[i].ToObj());
                 }
 
