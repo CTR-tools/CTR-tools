@@ -97,7 +97,7 @@ namespace CTRFramework.Bash
             br.Jump(ptrVerts + 0x14);
 
             for (int i = 0; i < numVerts; i++)
-                Vertices.Add(br.ReadVector3sPadded());
+                Vertices.Add(br.ReadVector3sPadded(0.01f));
 
             br.Jump(pos);
         }
@@ -119,52 +119,49 @@ namespace CTRFramework.Bash
 
             curVertIndex = 0;
 
-            window.Add(Vector3.Zero);
-            window.Add(GetNextVertex());
-            window.Add(GetNextVertex());
-
             int numFaces = 0;
-
 
             foreach (var link in triLinks)
             {
                 ushort flags = (ushort)(link & 0xFF);
                 ushort count = (ushort)(link >> 8);
 
-                Console.WriteLine(count + " " + flags + " " + $"{flags & 1}");
-
+                //reached end of the list
                 if (link == 0xFFFF) return sb.ToString();
 
                 for (int i = 0; i < count; i++)
                 {
-                    window.Remove(window.First());
-                    window.Add(GetNextVertex());
+                    var a = Vertices[curVertIndex];
+                    var b = Vertices[curVertIndex + 1];
+                    var c = Vertices[curVertIndex + 2];
 
-                    int color = (int)((float)curVertIndex / Vertices.Count * 255);
+                    sb.AppendLine($"v {a.X} {-a.Y} {-a.Z}");
+                    sb.AppendLine($"v {b.X} {-b.Y} {-b.Z}");
+                    sb.AppendLine($"v {c.X} {-c.Y} {-c.Z}");
 
-                    sb.AppendLine($"v {window[0].X} {-window[0].Y} {-window[0].Z} {color} {color} {color}");
-                    sb.AppendLine($"v {window[1].X} {-window[1].Y} {-window[1].Z} {color} {color} {color}");
-                    sb.AppendLine($"v {window[2].X} {-window[2].Y} {-window[2].Z} {color} {color} {color}");
+                    //just throw in junk UV for meshlab's broken parser
+                    sb.AppendLine($"vt 0 0");
+                    sb.AppendLine($"vt 1 0");
+                    sb.AppendLine($"vt 1 1");
 
-                    sb.AppendLine($"f {3 * numFaces + 1} {3 * numFaces + 2} {3 * numFaces + 3}");
+                    //flip normals each face, but check flag for the initial state
+                    if ( i % 2 == ( (flags & 0x08) > 0 ? 1 : 0) )
+                    {
+                        sb.AppendLine($"f {3 * numFaces + 1}/{3 * numFaces + 1} {3 * numFaces + 3}/{3 * numFaces + 3} {3 * numFaces + 2}/{3 * numFaces + 2}");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"f {3 * numFaces + 1}/{3 * numFaces + 1} {3 * numFaces + 2}/{3 * numFaces + 2} {3 * numFaces + 3}/{3 * numFaces + 3}");
+                    }
+
+                    sb.AppendLine();
 
                     numFaces++;
+                    curVertIndex++;
                 }
+
+                curVertIndex += 2;
             }
-
-            /*
-            foreach (var v in Vertices)
-                sb.AppendLine($"v {v.X} {-v.Y} {-v.Z}");
-
-            //assume it's all quads (it's not)
-            //placeholder until tristrips figured out just to show some broken mesh
-            for (int i = 0; i < Vertices.Count / 4; i++)
-            {
-                sb.AppendLine($"f {4 * i + 1} {4 * i + 2} {4 * i + 3}");
-                sb.AppendLine($"f {4 * i + 3} {4 * i + 2} {4 * i + 4}");
-            }
-            */
-
 
             return sb.ToString();
         }
