@@ -21,8 +21,8 @@ namespace CTRFramework.Models
         public short billboard = 0; //bit0 forces model to always face the camera, check other bits
         public Vector3 scale = new Vector3(4096);
 
-        public UIntPtr ptrCmd = UIntPtr.Zero; //this is null if we have anims
-        public UIntPtr ptrVerts = UIntPtr.Zero;
+        public UIntPtr ptrCmd = UIntPtr.Zero;
+        public UIntPtr ptrVerts = UIntPtr.Zero; //this is null if we have anims
         public UIntPtr ptrTex = UIntPtr.Zero;
         public UIntPtr ptrClut = UIntPtr.Zero;
 
@@ -255,7 +255,7 @@ namespace CTRFramework.Models
             foreach (var draw in drawList)
             {
                 //only increase vertex count for commands that don't take vertex from stack
-                if (!draw.flags.HasFlag(CtrDrawFlags.v))
+                if (!draw.flags.HasFlag(CtrDrawFlags.StackVertex))
                     maxv++;
 
                 //simply find max color index
@@ -271,6 +271,7 @@ namespace CTRFramework.Models
             }
 
             Helpers.Panic(this, PanicType.Info, $"maxv: {maxv}\r\nmaxc: {maxc}\r\nmaxt: {maxt}\r\n");
+
 
             //int ppos = (int)br.Position;
 
@@ -371,7 +372,7 @@ namespace CTRFramework.Models
 
 
                 //if we got no stack vertex flag
-                if (!d.flags.HasFlag(CtrDrawFlags.v))
+                if (!d.flags.HasFlag(CtrDrawFlags.StackVertex))
                 {
                     //push vertex from the array to the buffer
                     stack[d.stackIndex] = vfixed[vertexIndex];
@@ -397,7 +398,7 @@ namespace CTRFramework.Models
                 tempTex[3] = (d.texIndex == 0 ? null : tl[d.texIndex - 1]);
 
 
-                if (d.flags.HasFlag(CtrDrawFlags.l))
+                if (d.flags.HasFlag(CtrDrawFlags.SwapVertex))
                 {
                     tempCoords[1] = tempCoords[0];
                     tempColor[1] = tempColor[0];
@@ -405,7 +406,7 @@ namespace CTRFramework.Models
 
 
                 //if got reset flag, reset tristrip vertex counter
-                if (d.flags.HasFlag(CtrDrawFlags.s))
+                if (d.flags.HasFlag(CtrDrawFlags.NewTriStrip))
                 {
                     stripLength = 0;
                 }
@@ -435,7 +436,7 @@ namespace CTRFramework.Models
                     }
 
                     //if got normal flag, change vertex order to flip normals
-                    if (d.flags.HasFlag(CtrDrawFlags.n))
+                    if (d.flags.HasFlag(CtrDrawFlags.FlipNormal))
                     {
                         Vertex v = verts[verts.Count - 1];
                         verts[verts.Count - 1] = verts[verts.Count - 2];
@@ -766,7 +767,7 @@ namespace CTRFramework.Models
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].X,
                     stackIndex = 80, //explain this index
-                    flags = CtrDrawFlags.s | CtrDrawFlags.d //| CtrDrawFlags.k
+                    flags = CtrDrawFlags.NewTriStrip | CtrDrawFlags.CulledFace //| CtrDrawFlags.k
                 };
 
                 cmd[1] = new CtrDraw()
@@ -774,7 +775,7 @@ namespace CTRFramework.Models
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].Z,
                     stackIndex = 81,
-                    flags = CtrDrawFlags.d //| CtrDrawFlags.k
+                    flags = CtrDrawFlags.CulledFace //| CtrDrawFlags.k
                 };
 
                 cmd[2] = new CtrDraw()
@@ -782,7 +783,7 @@ namespace CTRFramework.Models
                     texIndex = 0,
                     colorIndex = (byte)cfaces[i].Y,
                     stackIndex = 82,
-                    flags = CtrDrawFlags.d //| CtrDrawFlags.k
+                    flags = CtrDrawFlags.CulledFace //| CtrDrawFlags.k
                 };
 
                 newlist.Add(mesh.frame.Vertices[vfaces[i].X]);
@@ -957,7 +958,7 @@ namespace CTRFramework.Models
             if (HasUntextured)
             {
                 var def = new System.Drawing.Bitmap(Properties.Resources._default);
-                def.Save(Path.Combine(texturepath, "default.png"));
+                def.Save(Helpers.PathCombine(texturepath, "default.png"));
             }
         }
 

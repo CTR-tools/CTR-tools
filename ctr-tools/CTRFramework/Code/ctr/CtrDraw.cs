@@ -35,14 +35,14 @@ namespace CTRFramework.Models
         public override string ToString()
         {
             return $"[{Value.ToString("X8")}] " +
-                (flags.HasFlag(CtrDrawFlags.b4) ? "4" : "_") +
-                (flags.HasFlag(CtrDrawFlags.b3) ? "3" : "_") +
-                (flags.HasFlag(CtrDrawFlags.v) ? "v" : "_") +
-                (flags.HasFlag(CtrDrawFlags.k) ? "k" : "_") +
-                (flags.HasFlag(CtrDrawFlags.d) ? "d" : "_") +
-                (flags.HasFlag(CtrDrawFlags.n) ? "n" : "_") +
-                (flags.HasFlag(CtrDrawFlags.l) ? "l" : "_") +
-                (flags.HasFlag(CtrDrawFlags.s) ? "s" : "_") +
+                (flags.HasFlag(CtrDrawFlags.Unused2) ? "4" : "_") +
+                (flags.HasFlag(CtrDrawFlags.Unused1) ? "3" : "_") +
+                (flags.HasFlag(CtrDrawFlags.StackVertex) ? "v" : "_") +
+                (flags.HasFlag(CtrDrawFlags.StackColor) ? "k" : "_") +
+                (flags.HasFlag(CtrDrawFlags.CulledFace) ? "d" : "_") +
+                (flags.HasFlag(CtrDrawFlags.FlipNormal) ? "n" : "_") +
+                (flags.HasFlag(CtrDrawFlags.SwapVertex) ? "l" : "_") +
+                (flags.HasFlag(CtrDrawFlags.NewTriStrip) ? "s" : "_") +
                 $" f: {((byte)flags).ToString("X2")} s: {stackIndex} t: {texIndex} c: {colorIndex}";
         }
     }

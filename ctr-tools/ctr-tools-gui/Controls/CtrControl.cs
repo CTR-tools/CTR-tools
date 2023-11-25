@@ -130,7 +130,7 @@ namespace CTRTools.Controls
                 if (optionTwoSided.Checked)
                     foreach (var mesh in ctr)
                         foreach (var cmd in mesh.drawList)
-                            cmd.flags &= ~CtrDrawFlags.d;
+                            cmd.flags &= ~CtrDrawFlags.CulledFace;
 
                 ctr.Save(fbd.SelectedPath);
             }
