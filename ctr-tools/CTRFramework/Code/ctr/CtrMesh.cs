@@ -306,14 +306,13 @@ namespace CTRFramework.Models
 
 
 
-
-
             //if static model
             if (!IsAnimated)
             {
                 br.Jump(ptrFrame);
+                frame = CtrFrame.FromReader(br, maxv, null);
             }
-            else
+            else // if animated
             {
                 for (int i = 0; i < numAnims; i++)
                 {
@@ -321,15 +320,14 @@ namespace CTRFramework.Models
                     anims.Add(CtrAnim.FromReader(br, maxv));
                 }
 
-                //jump to first animation, read header and jump to vertex garbage
-                br.Jump(animPtrMap[0] + 0x18);
+                //take first frame of the first anim for now
+                frame = anims[0].Frames[0];
             }
 
 
-            frame = CtrFrame.FromReader(br, maxv, false);
-
             foreach (var v in frame.Vertices)
                 Helpers.Panic(this, PanicType.Debug, v.ToString(VecFormat.Hex));
+
 
             var vfixed = new List<Vector3>();
 
@@ -337,10 +335,9 @@ namespace CTRFramework.Models
                 vfixed.Add(new Vector3(v.X, v.Y, v.Z));
 
             for (int i = 0; i < vfixed.Count; i++)
-            //foreach (var v in vfixed)
             {
                 //scale vertices
-                float xx = (vfixed[i].X / 255.0f + frame.Offset.X ) * scale.X;
+                float xx = (vfixed[i].X / 255.0f + frame.Offset.X) * scale.X;
                 float yy = (vfixed[i].Z / 255.0f + frame.Offset.Y) * scale.Y;
                 float zz = (vfixed[i].Y / 255.0f + frame.Offset.Z) * scale.Z;
 
@@ -493,7 +490,7 @@ namespace CTRFramework.Models
             foreach (var v in verts)
             {
                 //while the lev is scaled down by 100, ctr models are scaled down by 1000?
-                sb.AppendLine(v.ToObj(1 / 1000f));
+                sb.AppendLine(v.ToObj(1));
             }
 
             Helpers.Panic(this, PanicType.Debug, $"{matIndices.Count}");

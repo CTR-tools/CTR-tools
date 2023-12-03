@@ -347,5 +347,15 @@ namespace CTRFramework.Shared
 
             return false;
         }
+
+        public static byte FromBitArray(byte[] data)
+        {
+            byte result = 0;
+
+            for (int i = 0; i < 8; i++)
+                result |= (byte)(data[i] << i);
+
+            return result;
+        }
     }
 }

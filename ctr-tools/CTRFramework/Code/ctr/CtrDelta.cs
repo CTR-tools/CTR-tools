@@ -25,12 +25,12 @@ namespace CTRFramework.Models
         private uint packValue()
         {
             return
-                (uint)((Bits.X & 7) << (3 * 0)) |
+                (uint)((Bits.X & 7) << (3 * 2)) |
                 (uint)((Bits.Y & 7) << (3 * 1)) |
-                (uint)((Bits.Z & 7) << (3 * 2)) |
+                (uint)((Bits.Z & 7) << (3 * 0)) |
                 (uint)((Position.X & 0x7F) << (9 + 8 * 2)) |
-                (uint)((Position.Y & 0xFF) << (9 + 8 * 0)) |
-                (uint)((Position.Z & 0xFF) << (9 + 8 * 1));
+                (uint)((Position.Y & 0xFF) << (9 + 8 * 1)) |
+                (uint)((Position.Z & 0xFF) << (9 + 8 * 0));
         }
 
         /// <summary>
@@ -39,13 +39,13 @@ namespace CTRFramework.Models
         /// <returns></returns>
         private void unpackValue(uint value)
         {
-            Bits.X = (byte)((value >> (3 * 0)) & 7);
+            Bits.X = (byte)((value >> (3 * 2)) & 7);
             Bits.Y = (byte)((value >> (3 * 1)) & 7);
-            Bits.Z = (byte)((value >> (3 * 2)) & 7);
+            Bits.Z = (byte)((value >> (3 * 0)) & 7);
 
             Position.X = (byte)((value >> (9 + 8 * 2)) & 0xFF);
-            Position.Y = (byte)((value >> (9 + 8 * 0)) & 0xFF);
-            Position.Z = (byte)((value >> (9 + 8 * 1)) & 0xFF);
+            Position.Y = (byte)((value >> (9 + 8 * 1)) & 0xFF);
+            Position.Z = (byte)((value >> (9 + 8 * 0)) & 0xFF);
 
             //validate decompression
             Helpers.PanicIf(value != packedValue, this, PanicType.Error, $"fail, values do not match: {value.ToString("X8")} != {packedValue.ToString("X8")}");

@@ -113,6 +113,7 @@
     <Compile Include="Code\lev\prim\WaterAnim.cs" />
     <Compile Include="Code\lev\vis\PvsStruct.cs" />
     <Compile Include="Code\PatchedContainer.cs" />
+    <Compile Include="Code\shared\BitStreamReader.cs" />
     <Compile Include="Code\shared\HelpersPanic.cs" />
     <Compile Include="Code\shared\HelpersTimer.cs" />
     <Compile Include="Code\shared\PsxPtr.cs" />

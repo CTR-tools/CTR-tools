@@ -53,18 +53,23 @@ namespace CTRFramework.Models
 
             int ptrFrames = (int)br.BaseStream.Position;
 
+            //first read deltas, cause we need it for decompression
+            if (IsCompressed)
+            {
+                br.Jump(ptrDeltas);
+
+                for (int i = 0; i < numVerts; i++)
+                    deltas.Add(CtrDelta.FromReader(br));
+            }
+
+            ///now jump back to frames
+            br.Jump(ptrFrames);
+
             for (int i = 0; i < numFrames; i++)
             {
                 br.Jump(ptrFrames + i * frameSize);
                 Helpers.Panic(this, PanicType.Debug, $"frame {i} {br.HexPos()}");
-                Frames.Add(CtrFrame.FromReader(br, numVerts, IsCompressed));
-            }
-
-            if (IsCompressed)
-            {
-                br.Jump(ptrDeltas);
-                for (int i = 0; i < numVerts; i++)
-                    deltas.Add(CtrDelta.FromReader(br));
+                Frames.Add(CtrFrame.FromReader(br, numVerts, deltas));
             }
         }
 

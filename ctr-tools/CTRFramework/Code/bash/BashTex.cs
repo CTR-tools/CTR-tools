@@ -70,7 +70,7 @@ namespace CTRFramework.Bash
             data = br.ReadBytes(width * height * 2);
         }
 
-        public string ToString()
+        public override string ToString()
         {
             var sb = new StringBuilder();
 
