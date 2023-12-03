@@ -30,7 +30,7 @@ namespace CTRFramework.Shared
 
         public void Read(BinaryReaderEx br)
         {
-            Pose.Position = br.ReadVector3s(1 / 100f);
+            Pose.Position = br.ReadVector3s(Helpers.GteScaleSmall);
             DistanceToFinish = br.ReadInt16();
             next = br.ReadByte();
             left = br.ReadByte();
@@ -40,7 +40,7 @@ namespace CTRFramework.Shared
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.WriteVector3s(Pose.Position, 1 / 100f);
+            bw.WriteVector3s(Pose.Position, Helpers.GteScaleSmall);
             bw.Write(DistanceToFinish);
             bw.Write(next);
             bw.Write(left);

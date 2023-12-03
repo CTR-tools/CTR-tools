@@ -31,7 +31,7 @@ namespace CTRFramework
         {
             Helpers.Panic(this, PanicType.Debug, $"frame starts at {br.HexPos()}... [total stream length: {br.BaseStream.Length.ToString("X8")}]...");
 
-            position = br.ReadVector3s(1 / 100f);
+            position = br.ReadVector3s(Helpers.GteScaleSmall);
             angle = new Vector3s(br);
             unk11 = br.ReadByte();
             unk12 = br.ReadByte();
@@ -45,7 +45,7 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.WriteVector3s(position, 1 / 100f);
+            bw.WriteVector3s(position, Helpers.GteScaleSmall);
             angle.Write(bw);
             bw.Write(unk11);
             bw.Write(unk12);

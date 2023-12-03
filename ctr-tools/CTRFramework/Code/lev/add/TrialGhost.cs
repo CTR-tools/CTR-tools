@@ -42,8 +42,8 @@ namespace CTRFramework
             trackIndex = (Level)br.ReadUInt16();
             charIndex = (CharIndex)br.ReadUInt16();
 
-            vec1 = br.ReadVector3s(1 / 100f);
-            vec2 = br.ReadVector3s(1 / 100f);
+            vec1 = br.ReadVector3s(Helpers.GteScaleSmall);
+            vec2 = br.ReadVector3s(Helpers.GteScaleSmall);
 
             for (int i = 0; i < 10; i++)
                 unk.Add(br.ReadUInt16());
@@ -63,8 +63,8 @@ namespace CTRFramework
             bw.Write((ushort)trackIndex);
             bw.Write((ushort)charIndex);
 
-            bw.WriteVector3s(vec1, 1 / 100f);
-            bw.WriteVector3s(vec2, 1 / 100f);
+            bw.WriteVector3s(vec1, Helpers.GteScaleSmall);
+            bw.WriteVector3s(vec2, Helpers.GteScaleSmall);
 
             foreach (var ptr in unk)
                 bw.Write(ptr);

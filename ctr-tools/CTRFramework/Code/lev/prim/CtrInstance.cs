@@ -60,7 +60,11 @@ namespace CTRFramework
         {
             name = br.ReadStringFixed(16);
             ptrModel = PsxPtr.FromReader(br);
-            scale = br.ReadVector3sPadded(1 / 4096f / 16f);
+            scale = br.ReadVector3sPadded(Helpers.GteScaleSmall, true);
+
+            //duh
+            if (name.Contains("plant") || name.Contains("seal") || name.Contains("spider")) scale *= 2;
+
             null1 = br.ReadUInt32();
 
             if (null1 != 0)

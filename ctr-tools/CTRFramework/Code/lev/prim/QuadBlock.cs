@@ -241,7 +241,7 @@ namespace CTRFramework
 
 
             for (int i = 0; i < 5; i++)
-                faceNormal.Add(br.ReadVector2s(1 / 4096f));
+                faceNormal.Add(br.ReadVector2s(Helpers.GteScaleLarge));
 
             if (br.Position - BaseAddress != SizeOf)
                 Helpers.Panic(this, PanicType.Error, "SizeOf mismatch!");

@@ -35,14 +35,14 @@ namespace CTRFramework
         public void Read(BinaryReaderEx br)
         {
             ptrVertex = br.ReadUInt32();
-            Position = br.ReadVector3sPadded(1 / 100f);
+            Position = br.ReadVector3sPadded(Helpers.GteScaleSmall);
             color = new Vector4b(br);
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write(ptrVertex);
-            bw.WriteVector3sPadded(Position, 1 / 100f);
+            bw.WriteVector3sPadded(Position, Helpers.GteScaleSmall);
             color.Write(bw);
         }
 

@@ -13,6 +13,10 @@ namespace CTRFramework.Shared
     {
         public static Random Random = new Random();
 
+        // so these are hardcoded fixed point math fractional bits to restore the float value 
+        public static readonly float GteScaleLarge = 1.0f / (1 << 12); //4096 = 1.0
+        public static readonly float GteScaleSmall = 1.0f / (1 << 8);  //256 = 1.0
+
         public static float Normalize(float min, float max, float val) => (val - min) / (max - min);
 
         //parses datetime format found in ctr lev files

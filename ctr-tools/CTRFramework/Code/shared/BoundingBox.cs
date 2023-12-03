@@ -73,8 +73,8 @@ namespace CTRFramework.Shared
 
         public void Read(BinaryReaderEx br)
         {
-            numericMin = br.ReadVector3s(1 / 100f);
-            numericMax = br.ReadVector3s(1 / 100f);
+            numericMin = br.ReadVector3s(Helpers.GteScaleSmall);
+            numericMax = br.ReadVector3s(Helpers.GteScaleSmall);
 
             br.Seek(-2 * 3 * 2);
 

@@ -45,7 +45,7 @@ namespace CTRFramework
 
         public virtual void Read(BinaryReaderEx br)
         {
-            Position = br.ReadVector3s(1 / 100f);
+            Position = br.ReadVector3s(Helpers.GteScaleSmall);
             //here's the deal, this value is always 0 in release files, but it was figured out it's some mode ranging from 0 to 4.
             short value = br.ReadInt16();
             Color = new Vector4b(br);
@@ -54,7 +54,7 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.WriteVector3sPadded(Position, 1 / 100f);
+            bw.WriteVector3sPadded(Position, Helpers.GteScaleSmall);
             Color.Write(bw);
             MorphColor.Write(bw);
         }
@@ -82,7 +82,7 @@ namespace CTRFramework
 
         public override void Read(BinaryReaderEx br)
         {
-            Position = br.ReadVector3sPadded(1 / 100f);
+            Position = br.ReadVector3sPadded(Helpers.GteScaleSmall);
             Color = new Vector4b(br);
         }
     }

@@ -43,14 +43,14 @@ namespace CTRFramework.Shared
 
         public void Read(BinaryReaderEx br)
         {
-            Position = br.ReadVector3s(1 / 100f);
-            Rotation = br.ReadVector3s(1 / 4096f);
+            Position = br.ReadVector3s(Helpers.GteScaleSmall);
+            Rotation = br.ReadVector3s(Helpers.GteScaleLarge);
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.WriteVector3s(Position, 1 / 100f);
-            bw.WriteVector3s(Rotation, 1 / 4096f);
+            bw.WriteVector3s(Position, Helpers.GteScaleSmall);
+            bw.WriteVector3s(Rotation, Helpers.GteScaleLarge);
         }
 
         public override string ToString() => $"Pos: {Position} Rot: {Rotation}";

@@ -333,29 +333,47 @@ namespace CTRFramework.Shared
         public Vector2 ReadVector2b(float scale = 1.0f)
         {
             return new Vector2(
-                ReadByte() * scale,
-                ReadByte() * scale
+                (float)(ReadByte() * scale),
+                (float)(ReadByte() * scale)
                 );
         }
 
-        public Vector3 ReadVector3sPadded(float scale = 1.0f)
+        public Vector3 ReadVector3sPadded(float scale = 1.0f, bool scaleFix = false)
         {
-            short[] values = ReadArrayInt16(4);
+            if (scaleFix)
+            {
+                ushort[] values = ReadArrayUInt16(4);
 
-            return new Vector3(
-                values[0] * scale,
-                values[1] * scale,
-                values[2] * scale
-                );
+                // a special case for labs drum. no idea why
+                if ((values[1] >> 15) == 1)
+                    values[1] = (ushort)((values[1] & 0x7fff) >> 2);
+
+                return new Vector3(
+                    (float)(values[0] * scale),
+                    (float)(values[1] * scale),
+                    (float)(values[2] * scale)
+                    );
+            }
+            else
+            {
+                short[] values = ReadArrayInt16(4);
+
+                return new Vector3(
+                    (float)(values[0] * scale),
+                    (float)(values[1] * scale),
+                    (float)(values[2] * scale)
+                    );
+            }
         }
+
         public Vector3 ReadVector3s(float scale = 1.0f)
         {
             short[] values = ReadArrayInt16(3);
 
             return new Vector3(
-                values[0] * scale,
-                values[1] * scale,
-                values[2] * scale
+                (float)(values[0] * scale),
+                (float)(values[1] * scale),
+                (float)(values[2] * scale)
                 );
         }
         public Vector4b ReadVector4b()
@@ -375,8 +393,8 @@ namespace CTRFramework.Shared
             short[] values = ReadArrayInt16(2);
 
             return new Vector2(
-                values[0] * scale,
-                values[1] * scale
+                (float)(values[0] * scale),
+                (float)(values[1] * scale)
                 );
         }
 
