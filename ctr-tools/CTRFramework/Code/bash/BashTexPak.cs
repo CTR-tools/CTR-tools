@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Text;
 
 namespace CTRFramework.Bash
 {
@@ -50,7 +51,7 @@ namespace CTRFramework.Bash
             {
                 int numCols = br.ReadInt32();
 
-                List<Color> palette = new List<Color>();
+                var palette = new List<Color>();
 
                 for (int j = 0; j < numCols; j++)
                 {
@@ -76,18 +77,26 @@ namespace CTRFramework.Bash
             foreach (var tex in Textures)
             {
                 var bmp = new BMPHeader();
-                bmp.Update(tex.width * 4, tex.height, 16, 4);
+
+                int mul = 2;
+
+                if ((tex.unk21 & 1) == 1) mul = 1;
+                
+                bmp.Update(tex.width * 2 * mul, tex.height, 16, (ushort)((mul == 2) ? 4 : 8));
 
                 byte[] pal = new byte[16 * 4];
 
                 bool bad = false;
 
-                int palindex = tex.unk2 / 2;
+                int palindex = tex.unk21 >> 1;
 
                 if (palindex < 0 || palindex > Palettes.Count)
                 {
                     palindex = 0;
                     bad = true;
+
+                    Console.WriteLine($"bad palette: {palindex}");
+                    Console.ReadKey();
                 }
 
                 for (int i = 0; i < 16; i++)
@@ -99,10 +108,22 @@ namespace CTRFramework.Bash
                 }
 
                 bmp.UpdateData(pal, Tim.FixPixelOrder(tex.data));
-                bmp.Save(Helpers.PathCombine(path, $"tex_{num}{(bad ? "_badpal" : "")}.bmp"));
+                bmp.Save(Helpers.PathCombine(path, $"tex_{num}_{tex.unk3}{(bad ? "_badpal" : "")}.bmp"));
 
                 num++;
             }
+
+            var sb = new StringBuilder();
+
+            int p = 0;
+
+            foreach (var tex in Textures)
+            {
+                sb.AppendLine(p + ":\t" + tex.ToString());
+                p++;
+            }
+
+            File.WriteAllText(Helpers.PathCombine(path, "test.txt"), sb.ToString());
         }
     }
 }

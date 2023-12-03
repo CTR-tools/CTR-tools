@@ -104,7 +104,7 @@ namespace CTRFramework.Bash
             br.Jump(ptrVerts + 0x14);
 
             for (int i = 0; i < numVerts; i++)
-                Vertices.Add(br.ReadVector3sPadded(0.01f));
+                Vertices.Add(br.ReadVector3sPadded(Helpers.GteScaleSmall)); //like in CTR x / 256 looks like proper scale
 
             //jump back to the end of the header, so we dont cofuse the parser
             br.Jump(pos);
