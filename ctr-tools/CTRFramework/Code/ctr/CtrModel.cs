@@ -188,7 +188,7 @@ namespace CTRFramework.Models
                         curPtr = ((curPtr / 4) + 1) * 4;
                 }
 
-                ctr.ptrVerts = (UIntPtr)curPtr;
+                ctr.ptrFrame = (UIntPtr)curPtr;
                 curPtr += (8 + 16 + 4 + ctr.frame.Vertices.Count * 3);
 
                 if (curPtr % 4 != 0)

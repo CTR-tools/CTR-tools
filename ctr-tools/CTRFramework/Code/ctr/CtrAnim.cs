@@ -55,9 +55,9 @@ namespace CTRFramework.Models
 
             for (int i = 0; i < numFrames; i++)
             {
-                br.Jump(ptrFrames + frameSize * i);
+                br.Jump(ptrFrames + i * frameSize);
                 Helpers.Panic(this, PanicType.Debug, $"frame {i} {br.HexPos()}");
-                Frames.Add(CtrFrame.FromReader(br, numVerts));
+                Frames.Add(CtrFrame.FromReader(br, numVerts, IsCompressed));
             }
 
             if (IsCompressed)

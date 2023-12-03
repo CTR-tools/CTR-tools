@@ -19,10 +19,10 @@ namespace CTRFramework.Models
         public int unk0 = 0; //0?
         public short lodDistance = 1000;
         public short billboard = 0; //bit0 forces model to always face the camera, check other bits
-        public Vector3 scale = new Vector3(4096);
+        public Vector3 scale = Vector3.One;
 
         public UIntPtr ptrCmd = UIntPtr.Zero;
-        public UIntPtr ptrVerts = UIntPtr.Zero; //this is null if we have anims
+        public UIntPtr ptrFrame = UIntPtr.Zero; //this is null if we have anims
         public UIntPtr ptrTex = UIntPtr.Zero;
         public UIntPtr ptrClut = UIntPtr.Zero;
 
@@ -32,15 +32,11 @@ namespace CTRFramework.Models
         public int unk4 = 0; //?
         public int unk5 = 0; //?
 
-
-        //public Vector4s posOffset = new Vector4s(0, 0, 0, 0);
-
         public List<Vertex> verts = new List<Vertex>();
         public List<TextureLayout> matIndices = new List<TextureLayout>();
         public List<TextureLayout> goupedTextures = new List<TextureLayout>();
 
         public int cmdNum = 0x40;
-        //public int vrenderMode = 0x1C;
 
         public bool IsAnimated => numAnims > 0;
 
@@ -58,10 +54,6 @@ namespace CTRFramework.Models
             set => scale = value;
         }
         #endregion
-
-
-        //private int maxTex = 0;
-        //private int maxClut = 0;
 
         public List<CtrAnim> anims = new List<CtrAnim>();
 
@@ -180,10 +172,10 @@ namespace CTRFramework.Models
             unk0 = br.ReadInt32();
             lodDistance = br.ReadInt16();
             billboard = br.ReadInt16();
-            scale = br.ReadVector3sPadded();
+            scale = br.ReadVector3sPadded(Helpers.GteScaleSmall);
 
             ptrCmd = br.ReadUIntPtr();
-            ptrVerts = br.ReadUIntPtr();
+            ptrFrame = br.ReadUIntPtr();
             ptrTex = br.ReadUIntPtr();
             ptrClut = br.ReadUIntPtr();
             unk3 = br.ReadInt32();
@@ -243,9 +235,9 @@ namespace CTRFramework.Models
 
             //define temporary arrays
             var tempColor = new Vector4b[4];    //color buffer
-            var tempCoords = new Vector3s[4];   //face buffer
+            var tempCoords = new Vector3[4];   //face buffer
             var tempTex = new TextureLayout[4]; //face buffer
-            var stack = new Vector3s[256];      //vertex buffer
+            var stack = new Vector3[256];      //vertex buffer
 
             int maxv = 0;
             int maxc = 0;
@@ -276,6 +268,7 @@ namespace CTRFramework.Models
             //int ppos = (int)br.Position;
 
             br.Jump(ptrClut);
+
             for (int k = 0; k <= maxc; k++)
                 cols.Add(new Vector4b(br));
 
@@ -318,7 +311,7 @@ namespace CTRFramework.Models
             //if static model
             if (!IsAnimated)
             {
-                br.Jump(ptrVerts);
+                br.Jump(ptrFrame);
             }
             else
             {
@@ -332,27 +325,26 @@ namespace CTRFramework.Models
                 br.Jump(animPtrMap[0] + 0x18);
             }
 
-            frame = CtrFrame.FromReader(br, maxv);
+
+            frame = CtrFrame.FromReader(br, maxv, false);
 
             foreach (var v in frame.Vertices)
                 Helpers.Panic(this, PanicType.Debug, v.ToString(VecFormat.Hex));
 
-            var vfixed = new List<Vector3s>();
+            var vfixed = new List<Vector3>();
 
             foreach (var v in frame.Vertices)
-                vfixed.Add(new Vector3s(v.X, v.Y, v.Z));
+                vfixed.Add(new Vector3(v.X, v.Y, v.Z));
 
-            foreach (Vector3s v in vfixed)
+            for (int i = 0; i < vfixed.Count; i++)
+            //foreach (var v in vfixed)
             {
                 //scale vertices
-                v.X = (short)((((float)(v.X + frame.posOffset.X) / 255.0f) * scale.X));
-                v.Y = (short)(-(((float)(v.Y + frame.posOffset.Z) / 255.0f) * scale.Z));
-                v.Z = (short)((((float)(v.Z + frame.posOffset.Y) / 255.0f) * scale.Y));
+                float xx = (vfixed[i].X / 255.0f + frame.Offset.X ) * scale.X;
+                float yy = (vfixed[i].Z / 255.0f + frame.Offset.Y) * scale.Y;
+                float zz = (vfixed[i].Y / 255.0f + frame.Offset.Z) * scale.Z;
 
-                //flip axis
-                short zz = v.Z;
-                v.Z = (short)-v.Y;
-                v.Y = zz;
+                vfixed[i] = new Vector3(xx, yy, zz);
             }
 
             int vertexIndex = 0;
@@ -391,7 +383,6 @@ namespace CTRFramework.Models
                 tempColor[2] = tempColor[3];
                 tempColor[3] = cols[d.colorIndex];
 
-
                 tempTex[0] = tempTex[1];
                 tempTex[1] = tempTex[2];
                 tempTex[2] = tempTex[3];
@@ -417,11 +408,11 @@ namespace CTRFramework.Models
                     //read 3 vertices and push to the array
                     for (int z = 3 - 1; z >= 0; z--)
                     {
-                        Vertex v = new Vertex();
-                        v.Position = new Vector3(tempCoords[1 + z].X, tempCoords[z + 1].Y, tempCoords[z + 1].Z);
-                        v.Color = tempColor[1 + z];
-                        v.MorphColor = v.Color;
-
+                        var v = new Vertex() {
+                            Position = tempCoords[z + 1],
+                            Color = tempColor[1 + z],
+                            MorphColor = tempColor[1 + z]
+                        };
 
                         if (d.texIndex != 0)
                         {
@@ -713,11 +704,11 @@ namespace CTRFramework.Models
                 dVerts[i] -= bb.minf;
 
             //save converted offset to model
-            mesh.frame.posOffset = new Vector4s(
+            mesh.frame.Offset = new Vector3(
                 (short)(bb.minf.X / bb2.maxf.X * 255),
                 (short)(bb.minf.Y / bb2.maxf.Y * 255),
-                (short)(bb.minf.Z / bb2.maxf.Z * 255),
-                0);
+                (short)(bb.minf.Z / bb2.maxf.Z * 255)
+                );
 
             //save scale to model
             mesh.scale = new Vector3(
@@ -850,7 +841,7 @@ namespace CTRFramework.Models
                     bw.Write(billboard);
                     bw.WriteVector3sPadded(scale);
                     bw.Write(ptrCmd, patchTable);
-                    bw.Write(ptrVerts, patchTable);
+                    bw.Write(ptrFrame, patchTable);
                     bw.Write(ptrTex, patchTable);
                     bw.Write(ptrClut, patchTable);
                     bw.Write(unk3);
@@ -897,7 +888,7 @@ namespace CTRFramework.Models
 
                     //write vertices
 
-                    bw.Jump(ptrVerts + 4);
+                    bw.Jump(ptrFrame + 4);
 
                     frame.Write(bw, patchTable);
 
@@ -975,7 +966,7 @@ namespace CTRFramework.Models
             sb.AppendLine($"scale: {scale.ToString()}");
 
             sb.AppendLine($"ptrCmd: {ptrCmd.ToUInt32().ToString("X8")}");
-            sb.AppendLine($"ptrVerts: {ptrVerts.ToUInt32().ToString("X8")}");
+            sb.AppendLine($"ptrVerts: {ptrFrame.ToUInt32().ToString("X8")}");
             sb.AppendLine($"ptrTex: {ptrTex.ToUInt32().ToString("X8")}");
             sb.AppendLine($"ptrClut: {ptrClut.ToUInt32().ToString("X8")}");
             sb.AppendLine($"unk3: {unk3}");

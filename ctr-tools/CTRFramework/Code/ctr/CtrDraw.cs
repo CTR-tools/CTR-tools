@@ -9,27 +9,41 @@ namespace CTRFramework.Models
         public byte colorIndex;
         public ushort texIndex;
 
-        public uint Value =>
-            (uint)((byte)flags << 24) |
-            (uint)(stackIndex << 16) |
-            (uint)(colorIndex << 9) |
-            texIndex;
+        public uint Value = 0;
 
         public CtrDraw()
         {
         }
 
-        public CtrDraw(uint input)
+        public CtrDraw(uint value)
         {
-            flags = (CtrDrawFlags)(input >> (8 * 3) & 0xFF);
-            stackIndex = (byte)(input >> 16 & 0xFF);
-            colorIndex = (byte)(input >> 9 & 0x7F);
-            texIndex = (ushort)(input & 0x1FF);
+            Value = value;
 
-            if (input != Value)
-                Helpers.Panic(this, PanicType.Error, $"cmd value pack fails: {input.ToString("X8")} <-!!!-> {Value.ToString("X8")}");
+            unpackValue(value);
+
+            var packed = packValue();
+
+            if (value != packed)
+                Helpers.Panic(this, PanicType.Error, $"cmd value pack fails: {value.ToString("X8")} <-!!!-> {packed.ToString("X8")}");
 
             Helpers.Panic(this, PanicType.Debug, ToString());
+        }
+
+        private void unpackValue(uint value)
+        {
+            flags = (CtrDrawFlags)(value >> (8 * 3) & 0xFF);
+            stackIndex = (byte)(value >> 16 & 0xFF);
+            colorIndex = (byte)(value >> 9 & 0x7F);
+            texIndex = (ushort)(value & 0x1FF);
+        }
+
+        private uint packValue()
+        {
+            return
+                (uint)((byte)flags << 24) |
+                (uint)(stackIndex << 16) |
+                (uint)(colorIndex << 9) |
+                texIndex;
         }
 
         public override string ToString()

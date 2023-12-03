@@ -1,42 +1,44 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace CTRFramework.Models
 {
     public class CtrFrame
     {
-        public Vector4s posOffset = new Vector4s(0, 0, 0, 0);
-        public int vertOffset = 0x1C;
+        public Vector3 Offset = new Vector3(0, 0, 0);
+        private float OffsetScale => Helpers.GteScaleSmall;
+
+        public int ptrVerts = 0x1C;
         public List<Vector3b> Vertices = new List<Vector3b>();
 
         public CtrFrame()
         {
         }
 
-        public CtrFrame(BinaryReaderEx br, int numVerts) => Read(br, numVerts);
+        public CtrFrame(BinaryReaderEx br, int numVerts, bool compressed) => Read(br, numVerts, compressed);
 
-        public static CtrFrame FromReader(BinaryReaderEx br, int numVerts) => new CtrFrame(br, numVerts);
+        public static CtrFrame FromReader(BinaryReaderEx br, int numVerts, bool compressed) => new CtrFrame(br, numVerts, compressed);
 
-        public void Read(BinaryReaderEx br, int numVerts)
+        public void Read(BinaryReaderEx br, int numVerts, bool compressed)
         {
-            posOffset = new Vector4s(br);
+            if (compressed)
+                throw new Exception("compressed models are not supported yet.");
 
-            Helpers.Panic(this, PanicType.Debug, posOffset.ToString());
+            Offset = br.ReadVector3sPadded(OffsetScale); //new Vector4s(br);
+
+            Helpers.Panic(this, PanicType.Debug, Offset.ToString());
 
             //skipping 16 zero bytes
-            for (int i = 0; i < 16; i++)
-            {
-                byte x = br.ReadByte();
-                if (x != 0)
-                    Helpers.Panic(this, PanicType.Assume, "skip value not null");
-            }
+            //this is used at runtime
+            br.Seek(16);
 
-            vertOffset = br.ReadInt32();
+            ptrVerts = br.ReadInt32();
 
-            Helpers.Panic(this, PanicType.Assume, $"vertOffset: {vertOffset.ToString("X8")}");
+            Helpers.Panic(this, PanicType.Assume, $"vertOffset: {ptrVerts.ToString("X8")}");
 
-            br.Seek(vertOffset - 0x1C);
+            br.Seek(ptrVerts - 0x1C);
 
             for (int i = 0; i < numVerts; i++)
                 Vertices.Add(new Vector3b(br));
@@ -44,9 +46,10 @@ namespace CTRFramework.Models
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            posOffset.Write(bw);
+            //posOffset.Write(bw);
+            bw.WriteVector3sPadded(Offset, OffsetScale);
             bw.Write(new byte[16]);
-            bw.Write(vertOffset);
+            bw.Write(ptrVerts);
 
             foreach (var vertex in Vertices)
                 vertex.Write(bw);
