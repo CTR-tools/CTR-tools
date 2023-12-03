@@ -1050,5 +1050,6 @@
 989=models\chars\crate\crash.tex
 990=models\chars\crate\crash.mdl
 
-# garbage? contains source code leftovers
-991=dummy.bin
+# this is additional game engine code
+# also contains source code leftovers in some releases (demos and ntsc-u)
+991=overlays\gameeng.bin
