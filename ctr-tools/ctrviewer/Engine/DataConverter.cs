@@ -10,11 +10,10 @@ namespace ctrviewer.Engine
 {
     class DataConverter
     {
-        public static Vector3 ToVector3(Vector3s vector, float scale = 1.0f) => new Vector3(vector.X * scale, vector.Y * scale, vector.Z * scale);
-
+        public static Vector3 ToVector3(Vector3s vector, double scale = 1.0f) => new Vector3((float)(vector.X * scale), (float)(vector.Y * scale), (float)(vector.Z * scale));
         //public static Vector3 ToVector3(Color color) => new Vector3(color.R / 255f, color.G / 255f, color.B / 255f);
 
-        public static Vector3 ToVector3(System.Numerics.Vector3 vector, float scale = 1.0f) => new Vector3(vector.X, vector.Y, vector.Z) * scale;
+        public static Vector3 ToVector3(System.Numerics.Vector3 vector, double scale = 1.0f) => new Vector3((float)(vector.X * scale), (float)(vector.Y * scale), (float)(vector.Z * scale));
 
         public static Vector3 ToVector3(Vector4s s, float scale = 1.0f) => new Vector3(s.X * scale, s.Y * scale, s.Z * scale);
 
@@ -25,13 +24,13 @@ namespace ctrviewer.Engine
             return ToVptc(v, uv, Color.Gray, false, scale);
         }
 
-        public static VertexPositionColorTexture ToVptc(Vertex v, System.Numerics.Vector2 uv, Color color, bool lerp = false, float scale = 1.0f)
+        public static VertexPositionColorTexture ToVptc(Vertex v, System.Numerics.Vector2 uv, Color color, bool lerp = false, double scale = 1.0f)
         {
             return new VertexPositionColorTexture()
             {
                 Position = ToVector3(v.Position, scale),
                 Color = lerp ? Color.Lerp(color, ToColor(v.Color), 0.5f) : ToColor(v.Color),
-                TextureCoordinate = new Microsoft.Xna.Framework.Vector2(uv.X / 255.0f, uv.Y / 255.0f)
+                TextureCoordinate = new Vector2(uv.X / 255.0f, uv.Y / 255.0f)
             };
         }
 
@@ -66,7 +65,7 @@ namespace ctrviewer.Engine
                 for (int j = i * 3; j < i * 3 + 3; j++)
                 {
                     var vert = model[0].verts[j];
-                    li.Add(DataConverter.ToVptc(vert, vert.uv, color, lerp, 0.01f * scale));
+                    li.Add(DataConverter.ToVptc(vert, vert.uv, color, lerp, scale * Helpers.GteScaleSmall));
                 }
 
                 var t = kek[texture];

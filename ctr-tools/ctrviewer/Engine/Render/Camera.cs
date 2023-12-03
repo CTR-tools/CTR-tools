@@ -21,7 +21,7 @@ namespace ctrviewer.Engine.Render
             AspectRatio = width / height / (EngineSettings.Instance.StereoPair ? 2f : 1f);
         }
 
-        public float NearClip = 0.1f;
+        public float NearClip = 0.01f;
         public float FarClip = 1000.0f;
         public float ViewAngle = 80.0f;
 

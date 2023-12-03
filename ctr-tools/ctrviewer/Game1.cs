@@ -330,6 +330,18 @@ namespace ctrviewer
 
             eng = new MainEngine(this);
 
+            GamePadHandler.Reset();
+
+            GamePadHandler.onGamepadConnected += new GamePadHandler.NoArgsEvent(delegate(){
+                string text = $"Gamepad {GamePadHandler.GamePadIndex} connected!";
+                FrontendMessage.SendMessage("msg_gamepad_connect", text, graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20, 5);
+            });
+
+            GamePadHandler.onGamepadDisconnected += new GamePadHandler.NoArgsEvent(delegate () {
+                string text = $"Gamepad disconnected.";
+                FrontendMessage.SendMessage("msg_gamepad_connect", text, graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20, 5);
+            });
+
             eng.Settings.onWindowedChanged += SwitchDisplayMode;
             eng.Settings.onVertexLightingChanged += UpdateEffects;
             eng.Settings.onAntiAliasChanged += eng.UpdateAntiAliasAndBuffer;
@@ -1203,7 +1215,7 @@ namespace ctrviewer
                                 s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
                                 s.header.startGrid[i].Rotation.X * (float)Math.PI * 2,
                                 s.header.startGrid[i].Rotation.Z * (float)Math.PI * 2),
-                           new Vector3(0.06f)
+                           Vector3.One
                             )
                             );
 
@@ -1563,6 +1575,7 @@ namespace ctrviewer
             //? drop
             newmenu.Update(gameTime);
 
+            FrontendMessage.UpdateQueue(gameTime);
 
             //process karts in kart mode
             if (eng.Settings.KartMode)
@@ -1723,8 +1736,8 @@ namespace ctrviewer
         {
             if (IsActive)
             {
-                eng.Cameras[CameraType.DefaultCamera].speedScale -= 0.1f * GamePadHandler.State.Triggers.Left;
-                eng.Cameras[CameraType.DefaultCamera].speedScale += 0.1f * GamePadHandler.State.Triggers.Right;
+                eng.Cameras[CameraType.DefaultCamera].speedScale -= 0.1f * GamePadHandler.LeftTrigger;
+                eng.Cameras[CameraType.DefaultCamera].speedScale += 0.1f * GamePadHandler.RightTrigger;
 
                 if (MouseHandler.IsRightButtonHeld)
                 {
@@ -1945,8 +1958,8 @@ namespace ctrviewer
             spriteBatch.DrawString(font, "LOADING...", new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString("LOADING...").X / 2), graphics.PreferredBackBufferHeight / 2), CtrMainFontColor);
             spriteBatch.DrawString(font, loadingStatus, new Vector2(graphics.PreferredBackBufferWidth / 2 - (font.MeasureString(loadingStatus).X / 2), graphics.PreferredBackBufferHeight / 2 + 40), CtrMainFontColor);
             spriteBatch.End();
-
         }
+
 
         float guiScale = 1f;
 
@@ -2028,14 +2041,16 @@ namespace ctrviewer
             if (InputHandlers.Process(GameAction.FovUp) || InputHandlers.Process(GameAction.FovDown))
             {
                 string text = $"FOV: {eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##")}";
-                DrawString(text, new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20));
+                FrontendMessage.SendMessage("msg_fov_value", text, graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20, 5);
             }
 
             //print speed scale, if it's changing
             if (GamePadHandler.LeftTrigger > 0 || GamePadHandler.RightTrigger > 0)
             {
                 string text = $"Camera speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}";
-                DrawString(text, new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20));
+                //DrawString(text, new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20));
+
+                FrontendMessage.SendMessage("msg_camera_speed", text, graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20, 5);
             }
 
             //print camera position, if enabled
@@ -2049,12 +2064,20 @@ namespace ctrviewer
                     );
             }
 
+
             //print kart mode info, if it's enabled
             if (eng.Settings.KartMode && karts.Count > 0)
                 DrawString(
                     $"Kart mode: WASD - move, PageUp/PageDown - up/down\r\nsp: {(karts[0].Speed * 100).ToString("0.00")}",
                     new Vector2(20, 20)
                 );
+
+
+            foreach (var message in FrontendMessage.MessageList)
+            {
+                DrawString(message.Text, (int)message.X, (int)message.Y);
+            }
+
 
 
             GameConsole.Draw(graphics.GraphicsDevice, spriteBatch);

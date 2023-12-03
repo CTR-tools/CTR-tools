@@ -101,68 +101,60 @@ namespace ctrviewer.Engine.Testing
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
-            if (indices != null && verts != null)
-            {
-                if (verts.Count > 0)
+            if (indices == null || verts == null) return;
+            if (verts.Count <= 0 || indices.Length <= 0) return;
+
+            effect.TextureEnabled = textureEnabled;
+
+            if (textureEnabled)
+                if (ContentVault.Textures.ContainsKey(textureName))
                 {
-                    effect.TextureEnabled = textureEnabled;
-
-                    if (textureEnabled)
-                        if (ContentVault.Textures.ContainsKey(textureName))
-                        {
-                            effect.Texture = ContentVault.Textures[textureName];
-                            if (alpha != null)
-                                alpha.Texture = effect.Texture;
-                        }
-                        else
-                        {
-                            //Console.WriteLine("missing texture: " + textureName);
-                            effect.Texture = ContentVault.Textures["test"];
-                            if (alpha != null)
-                                alpha.Texture = effect.Texture;
-                        }
-
-                    if (!CullingEnabled || !EngineSettings.Instance.BackFaceCulling)
-                        Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
-
-                    foreach (var pass in (alpha != null ? alpha.CurrentTechnique.Passes : effect.CurrentTechnique.Passes))
-                    {
-                        pass.Apply();
-
-                        graphics.GraphicsDevice.DrawUserIndexedPrimitives(
-                            PrimitiveType.TriangleList,
-                            verts_sealed, 0, verts_sealed.Length,
-                            indices, 0, indices.Length / 3,
-                            VertexPositionColorTexture.VertexDeclaration
-                        );
-                    }
-
-                    if (EngineSettings.Instance.DrawWireframe)
-                    {
-                        effect.TextureEnabled = false;
-
-                        Samplers.SetToDevice(graphics, EngineRasterizer.Wireframe);
-
-                        foreach (var pass in effect.CurrentTechnique.Passes)
-                        {
-                            pass.Apply();
-
-                            graphics.GraphicsDevice.DrawUserIndexedPrimitives(
-                                PrimitiveType.TriangleList,
-                                verts_sealed, 0, verts_sealed.Length,
-                                indices, 0, indices.Length / 3,
-                                VertexPositionColorTexture.VertexDeclaration
-                            );
-                        }
-
-                        Samplers.SetToDevice(graphics, EngineRasterizer.Default);
-                    }
-
+                    effect.Texture = ContentVault.Textures[textureName];
+                    if (alpha != null)
+                        alpha.Texture = effect.Texture;
                 }
                 else
                 {
-                    Console.WriteLine("Empty QuadList!");
+                    //Console.WriteLine("missing texture: " + textureName);
+                    effect.Texture = ContentVault.Textures["test"];
+                    if (alpha != null)
+                        alpha.Texture = effect.Texture;
                 }
+
+            if (!CullingEnabled || !EngineSettings.Instance.BackFaceCulling)
+                Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
+
+            foreach (var pass in (alpha != null ? alpha.CurrentTechnique.Passes : effect.CurrentTechnique.Passes))
+            {
+                pass.Apply();
+
+                graphics.GraphicsDevice.DrawUserIndexedPrimitives(
+                    PrimitiveType.TriangleList,
+                    verts_sealed, 0, verts_sealed.Length,
+                    indices, 0, indices.Length / 3,
+                    VertexPositionColorTexture.VertexDeclaration
+                );
+            }
+
+            if (EngineSettings.Instance.DrawWireframe)
+            {
+                effect.TextureEnabled = false;
+
+                Samplers.SetToDevice(graphics, EngineRasterizer.Wireframe);
+
+                foreach (var pass in effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+
+                    graphics.GraphicsDevice.DrawUserIndexedPrimitives(
+                        PrimitiveType.TriangleList,
+                        verts_sealed, 0, verts_sealed.Length,
+                        indices, 0, indices.Length / 3,
+                        VertexPositionColorTexture.VertexDeclaration
+                    );
+                }
+
+                Samplers.SetToDevice(graphics, EngineRasterizer.Default);
             }
         }
     }

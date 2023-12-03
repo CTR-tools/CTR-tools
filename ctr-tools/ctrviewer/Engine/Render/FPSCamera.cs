@@ -49,7 +49,7 @@ namespace ctrviewer.Engine.Render
         {
             base.Update(gameTime);
 
-            double amount = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
+            double amount = gameTime.ElapsedGameTime.TotalMilliseconds / 1000.0f;
 
             //handle keyboard rotations
             var rotationAmount = (float)(rotationSpeed * amount * 20);
@@ -75,7 +75,7 @@ namespace ctrviewer.Engine.Render
                 UpdateViewMatrix();
             }
 
-            Microsoft.Xna.Framework.Vector2 gamepadrot = GamePadHandler.RightStick * (float)(amount * 4 * gamePadScale);
+            var gamepadrot = GamePadHandler.RightStick * (float)(amount * 4 * gamePadScale);
 
             leftRightRot -= gamepadrot.X;
             upDownRot += gamepadrot.Y;
@@ -83,7 +83,7 @@ namespace ctrviewer.Engine.Render
 
             //handle movement
 
-            Microsoft.Xna.Framework.Vector3 moveVector = new Microsoft.Xna.Framework.Vector3(0, 0, 0);
+            var moveVector = Vector3.Zero;
 
             if (move)
             {
@@ -111,6 +111,7 @@ namespace ctrviewer.Engine.Render
                 if (KeyboardHandler.IsDown(Keys.Z))
                     moveVector += Microsoft.Xna.Framework.Vector3.Down;
 
+                //what is this
                 moveVector *= 33f;
                 moveVector *= 0.0001f;
 
@@ -128,22 +129,20 @@ namespace ctrviewer.Engine.Render
                 slowdown *= 0.75f;
 
 
-                moveVector += new Microsoft.Xna.Framework.Vector3(GamePadHandler.State.ThumbSticks.Left.X / 100f, 0, -GamePadHandler.State.ThumbSticks.Left.Y / 100f);
+                //handle movement
+                moveVector.X += GamePadHandler.LeftStick.X / 256f;
+                moveVector.Z += -GamePadHandler.LeftStick.Y / 256f;
 
+                speedScale += (float)((GamePadHandler.LeftTrigger - GamePadHandler.RightTrigger) / 1024f * amount);
+
+                //limit speed scale
+                speedScale = Math.Clamp(speedScale, 0.1f, 3);
+
+                moveVector *= speedScale;
+
+                //handle speedup
                 if (KeyboardHandler.IsDown(Keys.LeftShift) || GamePadHandler.IsDown(Buttons.A))
                     moveVector *= 2;
-
-                speedScale -= (float)(GamePadHandler.State.Triggers.Left / 20f * amount);
-                speedScale += (float)(GamePadHandler.State.Triggers.Right / 20f * amount);
-
-                if (speedScale < 0.1f)
-                    speedScale = 0.1f;
-
-                if (speedScale > 5)
-                    speedScale = 5;
-
-                moveVector *= speedScale * speedScale;
-                //moveVector *= (1 + padState.Triggers.Right * 3);
             }
 
             AddToCameraPosition(moveVector * (float)amount);
@@ -152,38 +151,39 @@ namespace ctrviewer.Engine.Render
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            AddToCameraPosition(new Microsoft.Xna.Framework.Vector3(0, 0, 0));
+            AddToCameraPosition(Vector3.Zero);
         }
 
-        private void AddToCameraPosition(Microsoft.Xna.Framework.Vector3 vectorToAdd)
+        private void AddToCameraPosition(Vector3 vectorToAdd)
         {
-            Microsoft.Xna.Framework.Matrix cameraRotation = Microsoft.Xna.Framework.Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
-            Microsoft.Xna.Framework.Vector3 rotatedVector = Microsoft.Xna.Framework.Vector3.Transform(vectorToAdd, cameraRotation);
-            Position += translationSpeed * rotatedVector;
-            Target += translationSpeed * rotatedVector;
+            var cameraRotation = Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
+            var rotatedVector = Vector3.Transform(vectorToAdd, cameraRotation);
+
+            Position += rotatedVector * translationSpeed;
+            Target += rotatedVector * translationSpeed;
 
             UpdateViewMatrix();
         }
 
-        public void UpdateViewMatrix(float x = 0, float y = 0, float z = 0)
+        public void UpdateViewMatrix()
         {
-            Microsoft.Xna.Framework.Matrix cameraRotation = Microsoft.Xna.Framework.Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
+            var cameraRotation = Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
 
-            Microsoft.Xna.Framework.Vector3 cameraOriginalTarget = new Microsoft.Xna.Framework.Vector3(0, 0, -1);
-            Microsoft.Xna.Framework.Vector3 cameraOriginalUpVector = new Microsoft.Xna.Framework.Vector3(0, 1, 0);
+            var cameraOriginalTarget = -Vector3.UnitZ; //new Vector3(0, 0, -1); 
+            var cameraOriginalUpVector = Vector3.UnitY; // new Vector3(0, 1, 0);
 
-            Microsoft.Xna.Framework.Vector3 cameraRotatedTarget = Microsoft.Xna.Framework.Vector3.Transform(cameraOriginalTarget, cameraRotation);
+            var cameraRotatedTarget = Vector3.Transform(cameraOriginalTarget, cameraRotation);
             cameraFinalTarget = Position + cameraRotatedTarget;
 
-            Microsoft.Xna.Framework.Vector3 cameraRotatedUpVector = Microsoft.Xna.Framework.Vector3.Transform(cameraOriginalUpVector, cameraRotation);
+            var cameraRotatedUpVector = Vector3.Transform(cameraOriginalUpVector, cameraRotation);
 
-            ViewMatrix = Microsoft.Xna.Framework.Matrix.CreateLookAt(Position, cameraFinalTarget, cameraRotatedUpVector);
+            ViewMatrix = Matrix.CreateLookAt(Position, cameraFinalTarget, cameraRotatedUpVector);
         }
 
 
-        public Microsoft.Xna.Framework.Matrix GetYawPitchRollMatrix()
+        public Matrix GetYawPitchRollMatrix()
         {
-            return Microsoft.Xna.Framework.Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
+            return Matrix.CreateFromYawPitchRoll(leftRightRot, upDownRot, 0);
         }
 
         public void Copy(GameTime gameTime, FirstPersonCamera c)
