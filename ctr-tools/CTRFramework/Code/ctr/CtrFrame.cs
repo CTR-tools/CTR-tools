@@ -35,7 +35,9 @@ namespace CTRFramework.Models
 
             ptrVerts = br.ReadInt32();
 
-            Helpers.Panic(this, PanicType.Assume, $"vertOffset: {ptrVerts.ToString("X8")}");
+            Helpers.Panic(this, PanicType.Assume, $"{br.HexPos()} vertOffset: {ptrVerts.ToString("X8")}");
+
+            //Console.ReadKey();
 
             br.Seek(ptrVerts - 0x1C);
 
@@ -52,10 +54,13 @@ namespace CTRFramework.Models
 
                 int[] SignTable = { -1, -2, -4, -8, -16, -32, -64, -128 }; // used for decompression
 
-                //just read a chunk big enough to hold any anim. there will be useless junk in the end, but we won't use it anyways.
-                var temporal = br.ReadBytes(1024 * 1024);
+                Helpers.Panic(this, PanicType.Debug, $"reading bytes from: {br.HexPos()}");
 
-                using (var bs = new BitStreamReader(new MemoryStream(temporal)))
+                //just read a chunk big enough to hold any anim. there will be useless junk in the end, but we won't use it anyways.
+                var temporal = br.ReadBytes(1024);
+
+
+                using (var bs = BitStreamReader.FromByteArray(temporal))
                 {
                     foreach (var delta in deltas)
                     {
@@ -67,35 +72,80 @@ namespace CTRFramework.Models
                         if (delta.Bits.Y == 7) Y = 0;
                         if (delta.Bits.Z == 7) Z = 0;
 
+                        int tX = 0;
+                        int tY = 0;
+                        int tZ = 0;
 
-                        int tX = bs.ReadBits(1) == 1 ? SignTable[delta.Bits.X] : 0;
 
-                        for (int i = 0; i < delta.Bits.X; ++i)
-                        {
-                            tX |= Convert.ToByte(bs.ReadBits(1)) << (delta.Bits.X - 1 - i);
-                        }
+                        var bitsX = new List<byte>();
+                        var bitsY = new List<byte>();
+                        var bitsZ = new List<byte>();
 
-                        int tY = bs.ReadBits(1) == 1 ? SignTable[delta.Bits.Y] : 0;
 
-                        for (int i = 0; i < delta.Bits.Y; ++i)
-                        {
-                            tY |= Convert.ToByte(bs.ReadBits(1)) << (delta.Bits.Y - 1 - i);
-                        }
+                            tX = bs.ReadBits(1) == 1 ? SignTable[delta.Bits.X] : 0;
 
-                        int tZ = bs.ReadBits(1) == 1 ? SignTable[delta.Bits.Z] : 0;
+                            for (int i = 0; i < delta.Bits.X; i++)
+                            {
+                                byte bit = Convert.ToByte(bs.ReadBits(1));
+                                bitsX.Add(bit);
 
-                        for (int i = 0; i < delta.Bits.Z; ++i)
-                        {
-                            tZ |= Convert.ToByte(bs.ReadBits(1)) << (delta.Bits.Z - 1 - i);
-                        }
+                                tX |= bit << (delta.Bits.X - 1 - i);
+                            }
+                        
+
+
+                            tY = bs.ReadBits(1) == 1 ? SignTable[delta.Bits.Y] : 0;
+
+                            for (int i = 0; i < delta.Bits.Y; i++)
+                            {
+                                byte bit = Convert.ToByte(bs.ReadBits(1));
+                                bitsY.Add(bit);
+
+                                tY |= bit << (delta.Bits.Y - 1 - i);
+                            }
+                        
+
+
+                            tZ = bs.ReadBits(1) == 1 ? SignTable[delta.Bits.Z] : 0;
+
+                            for (int i = 0; i < delta.Bits.Z; i++)
+                            {
+                                byte bit = Convert.ToByte(bs.ReadBits(1));
+                                bitsZ.Add(bit);
+
+
+                                tZ |= bit << (delta.Bits.Z - 1 - i);
+                            }
+                        
+
 
 
                         //add temporal delta
-                        X = (X +(delta.Position.X << 1) + tX) % 256;
+                        X = (X + (delta.Position.X << 1) + tX) % 256;
                         Y = (Y + delta.Position.Y + tY) % 256;
                         Z = (Z + delta.Position.Z + tZ) % 256;
 
-                        Vertices.Add(new Vector3b((byte)X, (byte)Y, (byte)Z));
+                        var vertex = new Vector3b((byte)X, (byte)Y, (byte)Z);
+
+                        Vertices.Add(vertex);
+
+                        Helpers.Panic(this, PanicType.Debug, $"delta: {delta.ToString()}\textra: {tX} {tY} {tZ}\tfinal: {vertex.ToString()}");
+
+                        if (Helpers.panicType == PanicType.Debug)
+                        {
+
+                        
+
+
+                        Console.Write("x: ");
+                        foreach (var x in bitsX) Console.Write(x);
+                        Console.Write(" y: ");
+                        foreach (var y in bitsY) Console.Write(y);
+                        Console.Write(" z: ");
+                        foreach (var z in bitsZ) Console.Write(z);
+                        Console.WriteLine();
+                    }
+
                     }
                 }
             }
