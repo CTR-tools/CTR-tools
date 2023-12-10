@@ -92,62 +92,11 @@ namespace ctrviewer.Engine.Gui
 
             #region [menu items]
 
-            var flagtitles = new List<(int, string)>() { (-1, "None") };
+            menus.Add("level", MenuFactory.CreateLevelOptionsMenu());
 
-            foreach (int i in Enum.GetValues(typeof(QuadFlags)))
-            {
-                if (i == 0 || i == -1) continue;
-                flagtitles.Add((i, ((QuadFlags)i).ToString()));
-            }
+            menus.Add("video", MenuFactory.CreateVideoOptionsMenu());
 
-            menus.Add("level", new List<MenuItem>()
-            {
-                new BoolMenuItem() { Text = Locale.VideoMenu_Wireframe, Name = "wire", Value = settings.DrawWireframe },
-                new BoolMenuItem() { Text = Locale.VideoMenu_Replacements, Name = "newtex", Value = settings.UseTextureReplacements },
-                new BoolMenuItem() { Text = Locale.VideoMenu_VertexLighting, Name = "vcolor", Value = settings.VertexLighting },
-                new BoolMenuItem() { Text = Locale.VideoMenu_Textures, Name = "textures", Value = settings.Textures },
-                new BoolMenuItem() { Text = Locale.VideoMenu_BackfaceCulling, Name = "nocull", Value = settings.BackFaceCulling },
-                new BoolMenuItem() { Text = Locale.VideoMenu_Skybox, Name = "skybox", Value = settings.ShowSky },
-                new BoolMenuItem() { Text = Locale.VideoMenu_Water, Name = "water", Value = settings.ShowWater },
-                new BoolMenuItem() { Text = Locale.VideoMenu_InvisibleMeshes, Name = "invis", Value = settings.ShowInvisible },
-                new BoolMenuItem() { Text = Locale.VideoMenu_VisibilityTree, Name = "visbox", Value = settings.VisData },
-                new BoolMenuItem() { Text = Locale.VideoMenu_RenderBranches, Name = "visboxleaf", Value = settings.VisDataLeaves, Enabled = settings.VisData },
-                new BoolMenuItem() { Text = Locale.VideoMenu_GameObjects, Name = "inst", Value = settings.ShowModels },
-                new BoolMenuItem() { Text = Locale.VideoMenu_BotPaths, Name = "paths", Value = settings.ShowBotPaths },
-                new MenuItem(Locale.VideoMenu_ToggleLod, "toggle", "lod", true),
-                new IntRangeMenuItem() { Text = Locale.VideoMenu_QuadFlag, Name = "flag", SelectedValue = 0, Values = flagtitles
-                },
-                new MenuItem(Locale.MenuGeneric_Back, "link", "main", true)
-            });
-
-            menus.Add("video", new List<MenuItem>()
-            {
-                new BoolMenuItem() { Text = Locale.VideoMenu_Windowed, Name = "window", Value = settings.Windowed },
-                new BoolMenuItem() { Text = Locale.VideoMenu_Vsync, Name = "vsync", Value = settings.VerticalSync },
-                //new BoolMenuItem() { Text = Locale.VideoMenu_30fps, Name = "fps30", Value = settings.Fps30, Enabled = settings.VerticalSync },
-                new BoolMenuItem() { Text = Locale.VideoMenu_Antialias, Name = "antialias", Value = settings.AntiAlias },
-                new BoolMenuItem() { Text = Locale.VideoMenu_Filtering, Name = "filter", Value = settings.EnableFiltering },
-                new IntRangeMenuItem() { Text = Locale.VideoMenu_Anisotropy, Name = "aniso", Enabled = settings.EnableFiltering, SelectedValue = settings.AnisotropyLevel, Values = new List<(int, string)>() { (1, "1x"), (2, "2x"), (4, "4x"), (8, "8x"), (16, "16x") } },
-                new BoolMenuItem() { Text = Locale.VideoMenu_InternalResolution, Name = "intpsx", Value = settings.InternalPSXResolution },
-                new BoolMenuItem() { Text = Locale.VideoMenu_StereoMode, Name = "stereo", Value = settings.StereoPair },
-                new BoolMenuItem() { Text = Locale.VideoMenu_Crosseyed, Name = "crosseyed", Value = settings.StereoCrossEyed, Enabled = settings.StereoPair },
-                new BoolMenuItem() { Text = Locale.VideoMenu_GenerateMipmaps, Name = "genmips", Value = settings.GenerateMips },
-                new MenuItem(Locale.MenuGeneric_Back, "link", "main", true)
-            });
-
-            menus.Add("cupmenu", new List<MenuItem>() {
-                new MenuItem("Level type", "link", "level_type", true),
-                new MenuItem("Wumpa cup", "link", "cup_wumpa", true),
-                new MenuItem("Crystal cup", "link", "cup_cryst", true),
-                new MenuItem("Nitro cup", "link", "cup_nitro", true),
-                new MenuItem("Crash cup", "link", "cup_crash", true),
-                new MenuItem("Bonus tracks", "link", "bonus_levels", true),
-                new MenuItem("Battle arenas", "link", "battle_arenas", true),
-                new MenuItem("Adventure", "link", "adventure", true),
-                new MenuItem("Cutscenes", "link", "cutscenes", true),
-                new MenuItem("Custom levels", "link", "custom_levels", true),
-                new MenuItem(Locale.MenuGeneric_Back, "link", "main", true)
-            });
+            menus.Add("cupmenu", MenuFactory.CreateCupMenu());
 
             menus.Add("level_type", new List<MenuItem>()
             {
@@ -258,19 +207,7 @@ namespace ctrviewer.Engine.Gui
                 new MenuItem(Locale.MenuGeneric_Back, "link", "main", true)
             });
 
-            menus.Add("main", new List<MenuItem>() {
-                new MenuItem(Locale.MainMenu_Resume, "close", "", true),
-                //new MenuItem("reload level", "load", "", true),
-                new MenuItem(Locale.MainMenu_LoadLevel, "link", "cupmenu", Game1.BigFileExists),
-                new MenuItem(Locale.MainMenu_LevelOptions, "link", "level", true),
-                new MenuItem(Locale.MainMenu_VideoOptions, "link", "video", true),
-                new MenuItem(Locale.MainMenu_GeneralOptions, "link", "general", true),
-                new BoolMenuItem() { Text = Locale.MainMenu_KartMode, Name = "kart", Value = settings.KartMode },
-                //new MenuItem("Prev QuadBlock", "prevblock", "", true),
-                //new MenuItem("Next QuadBlock", "nextblock", "", true),
-                //new MenuItem("Open settings file", "settings", "", true),
-                new MenuItem(Locale.MainMenu_Quit, "exit", "", true),
-            });
+            menus.Add("main", MenuFactory.CreateMainMenu());
 
             #endregion
 
@@ -353,9 +290,9 @@ namespace ctrviewer.Engine.Gui
             if (maxwidth < graphics.Viewport.Width / 3)
                 maxwidth = graphics.Viewport.Width / 3;
 
-            foreach (MenuItem m in items)
+            foreach (var item in items)
             {
-                string s = m.ToString();
+                string s = item.ToString();
 
                 Vector2 backloc = loc - new Vector2(maxwidth / 2 * scale, 0);
 
@@ -367,7 +304,7 @@ namespace ctrviewer.Engine.Gui
 
                     if (MouseHandler.IsLeftButtonPressed)
                     {
-                        m.DoClick();
+                        item.DoClick();
                         Exec = true;
                     }
                 }
@@ -377,12 +314,12 @@ namespace ctrviewer.Engine.Gui
                     i == Selection ? MenuItemSelectedColor : MenuItemBackColor);
 
                 //draw menu item text shadow
-                batch.DrawString(fnt, s, loc + shadow_offset - new Vector2(m.Width / 2 * scale, 5 * scale), Color.Black,
+                batch.DrawString(fnt, s, loc + shadow_offset - new Vector2(item.Width / 2 * scale, 5 * scale), Color.Black,
                    0, new Vector2(0, 0), scale, SpriteEffects.None, 0.1f);
 
                 //draw menu item text
-                batch.DrawString(fnt, s, loc - new Vector2(m.Width / 2 * scale, 5 * scale),
-                   m.Enabled ? (m == SelectedItem ? Color.White : Game1.CtrMainFontColor) : Color.DarkGray,// (i == selection ? (m.Enabled ? Color.Red : Color.DarkRed) : (m.Enabled ? Color.White : Color.Gray)),
+                batch.DrawString(fnt, s, loc - new Vector2(item.Width / 2 * scale, 5 * scale),
+                   item.Enabled ? (item == SelectedItem ? Color.White : Game1.CtrMainFontColor) : Color.DarkGray,// (i == selection ? (m.Enabled ? Color.Red : Color.DarkRed) : (m.Enabled ? Color.White : Color.Gray)),
                    0, new Vector2(0, 0), scale, SpriteEffects.None, 0.2f);
 
                 //next line
@@ -390,6 +327,12 @@ namespace ctrviewer.Engine.Gui
 
                 i++;
             }
+
+            //maybe draw helper text
+            if (SelectedItem.HelperText != null)
+                batch.DrawString(fnt, SelectedItem.HelperText, new Vector2((graphics.Viewport.Width / 2), graphics.Viewport.Height / 1080f), Color.Orange,
+                    0, Vector2.Zero, scale, SpriteEffects.None, 0.2f);
+
 
             //draw logo
             batch.Draw(

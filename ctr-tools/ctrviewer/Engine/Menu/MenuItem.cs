@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Gui
 {
@@ -11,6 +12,8 @@ namespace ctrviewer.Engine.Gui
         public int Value;
         public bool Enabled = true;
         public float Width;
+
+        public string HelperText;
 
         #region [events]
         public event EventHandler Click;
