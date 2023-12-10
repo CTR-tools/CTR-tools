@@ -440,9 +440,12 @@
 363=packs\4P\oxide.mpk
 
 # ==========364 = BOSS CUTSCENES/PODIUM VRAM=============
+# in this section (models folder) all files have 2 versions
+# the content is same, but it's hardcoded for either top or bottom vram layout
+# this depends on whether hub is loaded to top or bottom half in adventure mode
 
-364=models\cutscenes1.vrm
-365=models\cutscenes2.vrm
+364=models\cutscenes1.vrm	#vram layout 1
+365=models\cutscenes2.vrm	#vram layout 2
 
 # =========366 = PODIUM WIN ANIMS SECTION===============
 
@@ -515,15 +518,16 @@
 429=models\trophy_lose\oxidelose2.ctr
 
 # =========430 = PODIUM TROPHY GIRLS ANIMS SECTION===============
+# actual animations are called tawna1, tawna2, tawna3 and tawna4
 
-430=models\trophy_girl\tawna1dance.ctr
-431=models\trophy_girl\tawna1dance2.ctr
-432=models\trophy_girl\tawna2dance.ctr
-433=models\trophy_girl\tawna2dance2.ctr
-434=models\trophy_girl\tawna3dance.ctr
-435=models\trophy_girl\tawna3dance2.ctr
-436=models\trophy_girl\tawna4dance.ctr
-437=models\trophy_girl\tawna4dance2.ctr
+430=models\trophy_girl\amidance1.ctr
+431=models\trophy_girl\amidance2.ctr
+432=models\trophy_girl\isabelladance1.ctr
+433=models\trophy_girl\isabelladance2.ctr
+434=models\trophy_girl\lizdance1.ctr
+435=models\trophy_girl\lizdance2.ctr
+436=models\trophy_girl\megumidance1.ctr
+437=models\trophy_girl\megumidance2.ctr
 
 # =========438 = ADDITIONAL MODELS SECTION===============
 
@@ -678,6 +682,7 @@
 567=credits\puradance\data.vrm
 568=credits\puradance\data.lev
 569=credits\puradance\data.ptr
+
 570=credits\pinstripedance\data.vrm
 571=credits\pinstripedance\data.lev
 572=credits\pinstripedance\data.ptr
@@ -702,18 +707,19 @@
 591=credits\oxidelose\data.vrm
 592=credits\oxidelose\data.lev
 593=credits\oxidelose\data.ptr
-594=credits\tawna1dance\data.vrm
-595=credits\tawna1dance\data.lev
-596=credits\tawna1dance\data.ptr
-597=credits\tawna2dance\data.vrm
-598=credits\tawna2dance\data.lev
-599=credits\tawna2dance\data.ptr
-600=credits\tawna3dance\data.vrm
-601=credits\tawna3dance\data.lev
-602=credits\tawna3dance\data.ptr
-603=credits\tawna4dance\data.vrm
-604=credits\tawna4dance\data.lev
-605=credits\tawna4dance\data.ptr
+
+594=credits\amidance\data.vrm
+595=credits\amidance\data.lev
+596=credits\amidance\data.ptr
+597=credits\isabelladance\data.vrm
+598=credits\isabelladance\data.lev
+599=credits\isabelladance\data.ptr
+600=credits\lizdance\data.vrm
+601=credits\lizdance\data.lev
+602=credits\lizdance\data.ptr
+603=credits\megumidance\data.vrm
+604=credits\megumidance\data.lev
+605=credits\megumidance\data.ptr
 
 606=null.vrm
 607=null.lev
