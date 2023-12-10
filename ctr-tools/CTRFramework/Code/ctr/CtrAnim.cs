@@ -10,7 +10,7 @@ namespace CTRFramework.Models
         public string Name;
         public short numFrames => (short)Frames.Count;
         public short frameSize = 0;
-        public PsxPtr ptrDeltas = PsxPtr.Zero;   //assumed to be the pointer to deltas (check cb2 specs)
+        public PsxPtr ptrDeltas = PsxPtr.Zero;
         public bool duplicateFrames = false;
 
         public bool IsCompressed => ptrDeltas != PsxPtr.Zero;
@@ -19,15 +19,9 @@ namespace CTRFramework.Models
 
         public List<CtrDelta> deltas = new List<CtrDelta>();
 
-        public static CtrAnim FromReader(BinaryReaderEx br, int numVerts)
-        {
-            return new CtrAnim(br, numVerts);
-        }
+        public static CtrAnim FromReader(BinaryReaderEx br, int numVerts) => new CtrAnim(br, numVerts);
 
-        public CtrAnim(BinaryReaderEx br, int numVerts)
-        {
-            Read(br, numVerts);
-        }
+        public CtrAnim(BinaryReaderEx br, int numVerts) => Read(br, numVerts);
 
         public void Read(BinaryReaderEx br, int numVerts)
         {
@@ -69,7 +63,7 @@ namespace CTRFramework.Models
             {
                 br.Jump(ptrFrames + i * frameSize);
                 Helpers.Panic(this, PanicType.Debug, $"frame {i} {br.HexPos()}");
-                Frames.Add(CtrFrame.FromReader(br, numVerts, deltas));
+                Frames.Add(CtrFrame.FromReader(br, numVerts, IsCompressed ? deltas : null));
             }
         }
 

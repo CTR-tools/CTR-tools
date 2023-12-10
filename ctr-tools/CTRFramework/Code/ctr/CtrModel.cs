@@ -98,7 +98,29 @@ namespace CTRFramework.Models
                 string name = $"{Name}.{entry.Name}.{i.ToString("00")}{(entry.IsAnimated ? ".Animated" : "")}";
                 string fn = Helpers.PathCombine(path, $"{name}.obj");
 
-                Helpers.WriteToFile(fn, entry.ToObj(name));
+                foreach (var mesh in this)
+                {
+                    if (!mesh.IsAnimated)
+                    { 
+                        Helpers.WriteToFile(fn, entry.ToObj(name));
+                    }
+                    else
+                    {
+                        for (int a = 0; a < mesh.anims.Count; a++)
+                        {
+                            for (int f = 0; f < mesh.anims[a].Frames.Count; f++)
+                            {
+                                mesh.frame = mesh.anims[a].Frames[f];
+                                mesh.GetVertexBuffer();
+
+                                string afn = Helpers.PathCombine(path, $"{name}_{mesh.anims[a].Name}_frame{f.ToString("0000")}.obj");
+
+                                Helpers.WriteToFile(afn, entry.ToObj(name));
+                            }
+                        }
+                    }
+                }
+
                 if (entry.tl.Count > 0)
                     Helpers.WriteToFile(Path.ChangeExtension(fn, ".mtl"), entry.ToMtl());
 

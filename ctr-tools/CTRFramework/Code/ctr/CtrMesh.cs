@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Security.Policy;
 using System.Text;
 using ThreeDeeBear.Models.Ply;
 
@@ -37,6 +38,13 @@ namespace CTRFramework.Models
         public List<TextureLayout> goupedTextures = new List<TextureLayout>();
 
         public int cmdNum = 0x40;
+
+        //array lengths to read
+        int maxv = 0;
+        int maxc = 0;
+        int maxt = 0;
+
+
 
         public bool IsAnimated => numAnims > 0;
 
@@ -187,11 +195,8 @@ namespace CTRFramework.Models
 
             Helpers.Panic(this, PanicType.Info, $"Mesh: {Name}");
 
-            if (unk0 != 0)
-                Helpers.Panic(this, PanicType.Assume, $"check unusual unk0 value = {unk0}");
-
-            if (billboard > 1)
-                Helpers.Panic(this, PanicType.Assume, $"check unusual billboard value = {billboard}");
+            Helpers.PanicIf(unk0 != 0, this, PanicType.Assume, $"check unusual unk0 value = {unk0}");
+            Helpers.PanicIf(billboard > 1, this, PanicType.Assume, $"check unusual billboard value = {billboard}");
 
 
             int returnto = (int)br.Position;
@@ -218,30 +223,21 @@ namespace CTRFramework.Models
 
             br.Jump(ptrCmd);
 
+            //check what this actually is
             cmdNum = br.ReadInt32();
 
             uint x;
 
             do
             {
-                x = br.ReadUInt32(); //big endian or little endian?
+                x = br.ReadUInt32();
+
                 if (x != 0xFFFFFFFF)
                     drawList.Add(new CtrDraw(x));
             }
             while (x != 0xFFFFFFFF);
 
 
-            TextureLayout curtl;
-
-            //define temporary arrays
-            var tempColor = new Vector4b[4];    //color buffer
-            var tempCoords = new Vector3[4];   //face buffer
-            var tempTex = new TextureLayout[4]; //face buffer
-            var stack = new Vector3[256];      //vertex buffer
-
-            int maxv = 0;
-            int maxc = 0;
-            int maxt = 0;
 
             //one pass through all draw commands to get the array lengths
             foreach (var draw in drawList)
@@ -265,8 +261,7 @@ namespace CTRFramework.Models
             Helpers.Panic(this, PanicType.Info, $"maxv: {maxv}\r\nmaxc: {maxc}\r\nmaxt: {maxt}\r\n");
 
 
-            //int ppos = (int)br.Position;
-
+            //read clut
             br.Jump(ptrClut);
 
             for (int k = 0; k <= maxc; k++)
@@ -323,6 +318,23 @@ namespace CTRFramework.Models
                 //take first frame of the first anim for now
                 frame = anims[0].Frames[0];
             }
+
+            GetVertexBuffer();
+
+            br.Jump(returnto);
+        }
+
+        public List<Vertex> GetVertexBuffer()
+        {
+            verts.Clear();
+
+            TextureLayout curtl;
+
+            //define temporary arrays
+            var tempColor = new Vector4b[4];    //color buffer
+            var tempCoords = new Vector3[4];    //face buffer
+            var tempTex = new TextureLayout[4]; //face buffer
+            var stack = new Vector3[256];       //vertex buffer
 
 
             foreach (var v in frame.Vertices)
@@ -405,7 +417,8 @@ namespace CTRFramework.Models
                     //read 3 vertices and push to the array
                     for (int z = 3 - 1; z >= 0; z--)
                     {
-                        var v = new Vertex() {
+                        var v = new Vertex()
+                        {
                             Position = tempCoords[z + 1],
                             Color = tempColor[1 + z],
                             MorphColor = tempColor[1 + z]
@@ -440,8 +453,9 @@ namespace CTRFramework.Models
             for (int i = 0; i < verts.Count / 3; i++)
                 verts.Reverse(i * 3, 3);
 
-            br.Jump(returnto);
+            return verts;
         }
+
 
         public List<string> GetDistinctTags()
         {
@@ -481,7 +495,6 @@ namespace CTRFramework.Models
             sb.AppendLine($"# {Meta.Version}");
             sb.AppendLine("# Original models: (C) 1999, Activision, Naughty Dog.\r\n");
 
-            // if (tl.Count > 0)
             if (groupedtl.Count > 0)
                 sb.AppendLine($"mtllib\t{filename}.mtl\r\n");
 
@@ -489,7 +502,6 @@ namespace CTRFramework.Models
 
             foreach (var v in verts)
             {
-                //while the lev is scaled down by 100, ctr models are scaled down by 1000?
                 sb.AppendLine(v.ToObj(1));
             }
 
@@ -812,7 +824,7 @@ namespace CTRFramework.Models
 
         public void ExportPly(string filename)
         {
-            PlyResult ply = new PlyResult(new List<Vector3f>(), new List<int>(), new List<Vector4b>());
+            var ply = new PlyResult(new List<Vector3f>(), new List<int>(), new List<Vector4b>());
 
             foreach (var v in verts)
                 ply.Vertices.Add(new Vector3f(v.Position.X, v.Position.Y, v.Position.Z));

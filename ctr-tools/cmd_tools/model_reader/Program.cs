@@ -22,7 +22,7 @@ namespace model_reader
             if (args.Length == 0)
             {
                 Console.WriteLine(
-                    "{0}:\r\n\t{1}: {2}\r\n\t{3}: {4}\r\n\t{5}: {6}\r\n\t{7}: {8}",
+                    "{0}:\r\n\t{1}: {2}\r\n\t{3}: {4}\r\n\t{5}: {6}\r\n\t{7}: {8}\r\n",
                     "Usage",
                     "Extract level", "model_reader C:\\proto8.lev",
                     "Extract model", "model_reader C:\\crash.ctr",
@@ -78,6 +78,28 @@ namespace model_reader
                     vrampath = "";
                 }
             }
+
+            if (!File.Exists(vrampath))
+            {
+                vrampath = Helpers.FindFirstFile(Path.GetDirectoryName(filename), "cutscenes1.vrm");
+
+                if (!File.Exists(vrampath))
+                {
+                    vrampath = "";
+                }
+            }
+
+            if (!File.Exists(vrampath))
+            {
+                vrampath = Helpers.FindFirstFile(Path.GetDirectoryName(filename), "cutscenes2.vrm");
+
+                if (!File.Exists(vrampath))
+                {
+                    vrampath = "";
+                }
+            }
+
+
 
             switch (ext)
             {

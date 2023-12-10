@@ -10,20 +10,20 @@ namespace ctrviewer.Engine.Testing
 {
     public class KartPhysics
     {
-        public static float MaxAcceleration = 0.01f;
-        public static float MaxSpeed = 0.25f;
-        public static float MaxBackSpeed = 0.1f;
+        public static float MaxAcceleration = 0.01f * 0.625f;
+        public static float MaxSpeed = 0.25f * 0.625f;
+        public static float MaxBackSpeed = 0.1f * 0.625f;
         public static float MaxTurningStep = 0.025f;
         public static float MaxDriftingStep = 0.05f;
-        public static float MaxJumpStep = 0.001f;
+        public static float MaxJumpStep = 0.001f * 0.625f;
 
-        public static float Friction = 0.001f;
-        public static float BrakeFriction = 0.01f;
+        public static float Friction = 0.001f * 0.625f;
+        public static float BrakeFriction = 0.01f * 0.625f;
 
         public static float TargetFps = 60;
 
-        public static float GravityStep = 0.01f;//0.01f;
-        public static float MaxGravity = 0.5f;//1f;
+        public static float GravityStep = 0.01f * 0.625f;//0.01f;
+        public static float MaxGravity = 0.5f * 0.625f;//1f;
     }
 
     enum PowerType
@@ -107,7 +107,7 @@ namespace ctrviewer.Engine.Testing
         public float Speed = 0;
         public float Accel = 0;
         public float Gravity = 0;
-        public Kart(Vector3 pos, Vector3 rot) : base("crash", pos, rot, Vector3.One * 0.05f)
+        public Kart(Vector3 pos, Vector3 rot) : base("crash", pos, rot, Vector3.One * 16)
         {
             Powers.Add(PowerType.Gravity, new Power() { MaxValue = KartPhysics.MaxGravity, Direction = Vector3.Down });
             Powers.Add(PowerType.TerrainFriction, new Power() { MaxValue = 99999f, Direction = Vector3.Zero });

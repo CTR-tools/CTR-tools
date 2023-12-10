@@ -1009,6 +1009,13 @@ namespace ctrviewer
 
             if (menu_models != null)
                 Scenes.Add(menu_models);
+
+            /* //tawna credits levs
+            Scenes.Add(big.ReadScene(594));
+            Scenes.Add(big.ReadScene(597));
+            Scenes.Add(big.ReadScene(600));
+            Scenes.Add(big.ReadScene(603));
+            */
         }
 
         /// <summary>
@@ -1022,7 +1029,7 @@ namespace ctrviewer
 
             string[] files = Directory.GetFiles(mdlpath, "*.ctr");
 
-            int posX = 0;
+            float posX = 0;
 
             foreach (var filename in files)
             {
@@ -1030,9 +1037,9 @@ namespace ctrviewer
 
                 if (!ContentVault.Models.ContainsKey(model.Name))
                 {
-                    ContentVault.Models.Add(model.Name, DataConverter.ToTriListCollection(model));
-                    eng.external.Add(new InstancedModel(model.Name, new Vector3(posX, 0, 0), Vector3.Zero, new Vector3(0.1f)) { anim = AnimationPlayer.Create("rotate_left") });
-                    posX += 2;
+                    ContentVault.AddModel(model.Name, DataConverter.ToTriListCollection(model));
+                    eng.external.Add(new InstancedModel(model.Name, new Vector3(posX, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16) { anim = AnimationPlayer.Create("rotate_left") });
+                    posX += 0.5f;
                 }
             }
         }
@@ -1185,23 +1192,25 @@ namespace ctrviewer
                 if (scene.spawnGroups != null)
                 {
                     foreach (var pa in scene.spawnGroups.Entries)
-                        eng.instanced.Add(new InstancedModel("limecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, new Vector3(0.03f)));
+                        eng.instanced.Add(new InstancedModel("limecone", DataConverter.ToVector3(pa.Position), Vector3.Zero, Vector3.One * 5));
                 }
 
                 if (scene.header.ptru2 != PsxPtr.Zero)
                 {
                     foreach (var v in scene.posu2)
                     {
-                        eng.instanced.Add(new InstancedModel("goldcone", DataConverter.ToVector3(v, 0.01f), Vector3.Zero, new Vector3(0.03f)));
+                        eng.instanced.Add(new InstancedModel("goldcone", DataConverter.ToVector3(v), Vector3.Zero, Vector3.One * 5));
                     }
                 }
             }
 
             loadingStatus = "converting models";
 
+            //convert game models to monogame
             foreach (var scene in Scenes)
                 foreach (var model in scene.Models)
                     ContentVault.AddModel(model.Name, DataConverter.ToTriListCollection(model));
+
 
             foreach (var s in Scenes)
             {
@@ -1215,7 +1224,7 @@ namespace ctrviewer
                                 s.header.startGrid[i].Rotation.Y * (float)Math.PI * 2 + ((float)Math.PI / 2),
                                 s.header.startGrid[i].Rotation.X * (float)Math.PI * 2,
                                 s.header.startGrid[i].Rotation.Z * (float)Math.PI * 2),
-                           Vector3.One
+                           Vector3.One * 16 // default instance scale in lev files
                             )
                             );
 
@@ -1248,7 +1257,7 @@ namespace ctrviewer
 
                 //put all restart points
                 foreach (var n in s.respawnPts)
-                    eng.paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Pose.Position), Vector3.Zero, new Vector3(0.1f)));
+                    eng.paths.Add(new InstancedModel("cyancone", DataConverter.ToVector3(n.Pose.Position), Vector3.Zero, Vector3.One * 20));
 
                 //spawn kart if needed
                 if (Scenes.Count > 0 && karts.Count == 0)
@@ -1259,6 +1268,13 @@ namespace ctrviewer
                 }
 
                 ContentVault.AddVectorAnim("defaultCameraPath", DataConverter.ToSimpleAnimation(Scenes[0].respawnPts));
+
+                /*
+                eng.external.Add(new InstancedModel("tawna1", new Vector3(0, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
+                eng.external.Add(new InstancedModel("tawna2", new Vector3(0.5f, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
+                eng.external.Add(new InstancedModel("tawna3", new Vector3(1f, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
+                eng.external.Add(new InstancedModel("tawna4", new Vector3(1.5f, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
+                */
 
                 //update kart
                 if (Scenes.Count > 0 && karts.Count > 0)
@@ -1275,15 +1291,15 @@ namespace ctrviewer
                 {
                         if (s.nav.paths.Count >= 1 && s.nav.paths[0] != null)
                             foreach (var n in s.nav.paths[0].Frames)
-                                eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
+                                eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 20));
 
                         if (s.nav.paths.Count >= 2 && s.nav.paths[1] != null)
                             foreach (var n in s.nav.paths[1].Frames)
-                                eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
+                                eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 20));
 
                         if (s.nav.paths.Count >= 3 && s.nav.paths[2] != null)
                             foreach (var n in s.nav.paths[2].Frames)
-                                eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 0.1f));
+                                eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 20));
                 }
 
             }
@@ -1316,8 +1332,7 @@ namespace ctrviewer
                     eng.bspBranches.PushBox(
                         DataConverter.ToVector3(node.bbox.Min),
                         DataConverter.ToVector3(node.bbox.Max),
-                        node.flag.HasFlag(VisNodeFlags.NoCollision) ? Color.Green : Color.Red,
-                        1 / 100f
+                        node.flag.HasFlag(VisNodeFlags.NoCollision) ? Color.Green : Color.Red
                     );
                 }
             }
@@ -1371,7 +1386,7 @@ namespace ctrviewer
                         DataConverter.ToVector3(node.bbox.Min),
                         DataConverter.ToVector3(node.bbox.Max),
                         node.ptrInstanceNodes != 0 ? Color.Yellow : Color.Magenta,
-                        1 / 100f
+                        Helpers.GteScaleSmall // TODO: fix to proper float bbox at parse time
                     );
 
                     continue;
@@ -1384,7 +1399,8 @@ namespace ctrviewer
                 eng.bspLeaves[level].PushBox(
                     DataConverter.ToVector3(node.bbox.Min),
                     DataConverter.ToVector3(node.bbox.Max),
-                    colorLevelsOfBsp[level % colorLevelsOfBsp.Length], 1 / 100f
+                    colorLevelsOfBsp[level % colorLevelsOfBsp.Length],
+                    Helpers.GteScaleSmall // TODO: fix to proper float bbox at parse time
                 );
 
                 BspPopulate(node, scene, level + 1);
@@ -1544,11 +1560,35 @@ namespace ctrviewer
 
         int selectedChar = 0;
 
+        bool animationPreviewMode = true;
+        AnimatedTriListCollection animationPreview;
+
+
         /// <summary>
         /// Monogame: default update method
         /// </summary>
         protected override void Update(GameTime gameTime)
         {
+            /*
+            if (animationPreviewMode)
+            {
+                if (animationPreview is null)
+                {
+                    //cutscenes1 dance
+                    var vram = big.ReadEntry(364).ParseAs<CtrVrm>();
+
+                    //ami dance
+                    var entry = big.ReadEntry(430);
+
+                    var model = CtrModel.FromReader(new BinaryReaderEx(new MemoryStream(entry.Data)), true);
+
+                    animationPreview = DataConverter.ToAnimatedTriListCollection(model);
+                }
+
+                animationPreview.Update(gameTime);
+            }
+            */
+
             //update input before window active check to avoid random camera jumpscares
             InputHandlers.Update();
 
@@ -1589,8 +1629,9 @@ namespace ctrviewer
 
                             kart.Update(gameTime, Scenes);
 
-                            eng.Cameras[CameraType.DefaultCamera].Position = kart.Position + new Vector3(0f, 1.2f, 0) +
-                                Vector3.Transform(Vector3.Forward * 2f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -4f));
+                            eng.Cameras[CameraType.DefaultCamera].Position = 
+                                kart.Position + new Vector3(0f, 1.2f * 0.625f, 0) +
+                                Vector3.Transform(Vector3.Forward * 2f * 0.625f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -4f * 0.625f));
 
                             eng.Cameras[CameraType.DefaultCamera].SetRotation((float)Math.PI + kart.Rotation.X, 0);
 
@@ -1988,7 +2029,24 @@ namespace ctrviewer
 
             //clear the backgound
             GraphicsDevice.Clear(eng.BackgroundColor);
+            
 
+            //if (animationPreviewMode)
+            {
+                //var cam = eng.Cameras[CameraType.DefaultCamera];
+
+                //cam.Target = Vector3.Zero;
+                //cam.Position = -Vector3.One * 10;
+
+                //cam.UpdateProjectionMatrix();
+                //cam.UpdateViewMatrix();
+
+                //effect.View = cam.ViewMatrix;
+                //effect.Projection = cam.ProjectionMatrix;
+
+                //animationPreview.Draw(graphics, effect, null);
+            }
+ 
 
             //if we're using stereoscopic effect, draw level twice for left and right viewport
             if (eng.Settings.StereoPair)

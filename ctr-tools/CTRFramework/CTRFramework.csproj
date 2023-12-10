@@ -202,7 +202,7 @@
     <None Include="Data\readme.md" />
     <None Include="packages.config" />
     <None Include="Data\versions.json" />
-    <None Include="ThirdParty\ColourQuantization\LICENSE.md" />
+    <None Include="ThirdParty\ColourQuantization\LICENSE" />
     <None Include="ThirdParty\Kaitai\README.md" />
     <None Include="ThirdParty\PlyImporter\LICENSE" />
     <None Include="ThirdParty\PlyImporter\README.md" />

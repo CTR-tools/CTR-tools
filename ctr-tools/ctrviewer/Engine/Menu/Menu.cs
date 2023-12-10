@@ -328,10 +328,15 @@ namespace ctrviewer.Engine.Gui
                 i++;
             }
 
+
             //maybe draw helper text
             if (SelectedItem.HelperText != null)
-                batch.DrawString(fnt, SelectedItem.HelperText, new Vector2((graphics.Viewport.Width / 2), graphics.Viewport.Height / 1080f), Color.Orange,
+            {
+                var helperPos = loc - new Vector2(Menu.Font.MeasureString(SelectedItem.HelperText).X / 2 * scale, - 20 * scale);
+
+                batch.DrawString(fnt, SelectedItem.HelperText, helperPos, Color.Orange,
                     0, Vector2.Zero, scale, SpriteEffects.None, 0.2f);
+            }
 
 
             //draw logo
@@ -351,7 +356,7 @@ namespace ctrviewer.Engine.Gui
             batch.DrawString(
                 fnt,
                 Meta.Version,
-                new Vector2(((graphics.Viewport.Width - fnt.MeasureString(Meta.Version).X * graphics.Viewport.Height / 1080f) / 2), graphics.Viewport.Height - 60 * graphics.Viewport.Width / 1080f),
+                new Vector2(((graphics.Viewport.Width - fnt.MeasureString(Meta.Version).X * graphics.Viewport.Height / 1080f) / 2), 150 * graphics.Viewport.Height / 1080f),
                 Color.Aquamarine,
                 0,
                 new Vector2(0, 0),

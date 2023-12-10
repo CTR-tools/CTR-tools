@@ -5,6 +5,8 @@ using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Windows.Forms;
+using System;
 
 namespace ctrviewer.Engine
 {
@@ -39,7 +41,7 @@ namespace ctrviewer.Engine
             return ToTriListCollection(model, Color.Gray, false, scale);
         }
 
-        public static TriListCollection ToTriListCollection(CtrModel model, Color color, bool lerp = false, float scale = 1f)
+        public static TriListCollection ToTriListCollection(CtrModel model, Color color, bool lerp = false, float scale = 1f, int animIndex = 0, int frameIndex = 0)
         {
             //GameConsole.Write(model.Name);
 
@@ -47,42 +49,70 @@ namespace ctrviewer.Engine
 
             var kek = new Dictionary<string, TriList>();
 
-            for (int i = 0; i < model[0].verts.Count / 3; i++)
-            {
-                var tex = model[0].matIndices[i];
-
-                if (tex is not null)
-                    if (tex.ParentLayout is not null)
-                        tex = tex.ParentLayout;
-
-                string texture = tex is null ? "test" : tex.Tag;
-
-                if (!kek.ContainsKey(texture))
-                    kek.Add(texture, new TriList());
-
-                var li = new List<VertexPositionColorTexture>();
-
-                for (int j = i * 3; j < i * 3 + 3; j++)
+                for (int i = 0; i < model[0].verts.Count / 3; i++)
                 {
-                    var vert = model[0].verts[j];
-                    li.Add(DataConverter.ToVptc(vert, vert.uv, color, lerp, scale * Helpers.GteScaleSmall));
+                    //load textures
+                    var tex = model[0].matIndices[i];
+
+                    if (tex is not null)
+                        if (tex.ParentLayout is not null)
+                            tex = tex.ParentLayout;
+
+                    string texture = tex is null ? "test" : tex.Tag;
+
+                    if (!kek.ContainsKey(texture))
+                        kek.Add(texture, new TriList());
+
+                    /*
+                    if (model[0].IsAnimated)
+                    {
+                        model[0].frame = model[0].anims[animIndex].Frames[frameIndex];
+                        model[0].GetVertexBuffer();
+                    }
+                    */
+
+                    var li = new List<VertexPositionColorTexture>();
+
+                    for (int j = i * 3; j < i * 3 + 3; j++)
+                    {
+                        var vert = model[0].verts[j];
+                        li.Add(DataConverter.ToVptc(vert, vert.uv, color, lerp, scale * Helpers.GteScaleSmall));
+                    }
+
+                    var t = kek[texture];
+                    t.textureName = texture;
+                    t.textureEnabled = t.textureName == "test" ? false : true;
+                    t.ScrollingEnabled = false;
+                    if (t.textureEnabled)
+                        if (model[0].matIndices[i].blendingMode == CTRFramework.Vram.BlendingMode.Additive)
+                            t.blendState = BlendState.Additive;
+
+                    t.PushTri(li);
                 }
 
-                var t = kek[texture];
-                t.textureName = texture;
-                t.textureEnabled = t.textureName == "test" ? false : true;
-                t.ScrollingEnabled = false;
-                if (t.textureEnabled)
-                    if (model[0].matIndices[i].blendingMode == CTRFramework.Vram.BlendingMode.Additive)
-                        t.blendState = BlendState.Additive;
+                foreach (var list in kek.Values)
+                    list.Seal();
 
-                t.PushTri(li);
+                coll.AddRange(kek.Values);
+
+                return coll;
+        }
+
+
+        public static AnimatedTriListCollection ToAnimatedTriListCollection(CtrModel model, int animIndex = 0)
+        {
+            var coll = new AnimatedTriListCollection();
+
+            if (model[0].IsAnimated)
+            {
+                foreach (var frame in model[0].anims[animIndex].Frames)
+                {
+                    model[0].frame = frame;
+                    model[0].GetVertexBuffer();
+
+                    coll.Add(ToTriListCollection(model));
+                }
             }
-
-            foreach (var list in kek.Values)
-                list.Seal();
-
-            coll.AddRange(kek.Values);
 
             return coll;
         }

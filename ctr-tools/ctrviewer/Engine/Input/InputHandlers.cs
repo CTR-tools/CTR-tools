@@ -40,8 +40,8 @@ namespace ctrviewer.Engine.Input
 
                 case GameAction.MenuUp: return KeyboardHandler.IsAnyPressed(Keys.Up, Keys.W) || GamePadHandler.IsPressed(Buttons.DPadUp);
                 case GameAction.MenuLeft: return KeyboardHandler.IsAnyPressed(Keys.Left, Keys.A) || GamePadHandler.IsPressed(Buttons.DPadLeft);
-                case GameAction.MenuDown: return KeyboardHandler.IsAnyPressed(Keys.Down, Keys.S) || GamePadHandler.IsPressed(Buttons.DPadDown);
                 case GameAction.MenuRight: return KeyboardHandler.IsAnyPressed(Keys.Right, Keys.D) || GamePadHandler.IsPressed(Buttons.DPadRight);
+                case GameAction.MenuDown: return KeyboardHandler.IsAnyPressed(Keys.Down, Keys.S) || GamePadHandler.IsPressed(Buttons.DPadDown);
 
                 case GameAction.MenuBack: return KeyboardHandler.IsAnyPressed(Keys.Back) || GamePadHandler.IsPressed(SonyButtons.Circle);
                 case GameAction.MenuConfirm: return KeyboardHandler.IsAnyPressed(Keys.Enter) || GamePadHandler.IsPressed(SonyButtons.Cross);

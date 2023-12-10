@@ -12,4 +12,25 @@ namespace ctrviewer.Engine.Render
                 entry.Draw(graphics, effect, alpha);
         }
     }
+
+    public class AnimatedTriListCollection : List<TriListCollection>, IRenderable
+    {
+        public int TotalFrames => this.Count;
+        public int CurrentFrame = 0;
+        public float frameDuration = 0.01f;
+
+        public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
+        {
+            this[CurrentFrame].Draw(graphics, effect, alpha);
+        }
+
+
+        public void Update(GameTime gameTime)
+        {
+            CurrentFrame++;
+
+            if (CurrentFrame >= TotalFrames)
+                CurrentFrame = 0;
+        }
+    }
 }
