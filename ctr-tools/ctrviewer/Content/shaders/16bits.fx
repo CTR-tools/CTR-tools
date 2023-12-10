@@ -13,10 +13,24 @@ Texture2D SpriteTexture;
 //==============================================
 //SHADER SETTINGS
 //==============================================
+
 bool	bMirrorX		= false;
+
 bool	bChopColor		= true;
 int		iChopColorBits	= 5;
+
+bool	bMonochrome		= false;
+
+bool	bInvert			= false;
+
+bool	bFadeToBlack	= false;
+float	fFader			= 1;
+
+bool	bMultiply		= false;
+float4	fMult			= float4(1.0, 1.0, 1.0, 1.0);
+
 float4	cTod			= float4(1.0, 1.0, 1.0, 1.0);
+
 //==============================================
 
 sampler2D SpriteTextureSampler = sampler_state
@@ -31,9 +45,11 @@ struct Vertex
     float2 TextureCoordinates : TEXCOORD0;
 };
 
+float max = 0;
+
 float chopComponent(float input, int bits)
 {
-    float max = pow(2, bits) - 1;
+    max = pow(2, bits) - 1;
     return (int)(input * max) / max;
 }
 
@@ -41,7 +57,7 @@ float chopComponent(float input, int bits)
 float2 getUV(Vertex input)
 {
 	float2 uv = input.TextureCoordinates;
-
+	
 	if (bMirrorX)
 		uv = float2(1.0 - uv.x, uv.y);
 
@@ -62,11 +78,35 @@ float4 main(Vertex input) : COLOR
     float4 pixel = tex2D(SpriteTextureSampler, getUV(input));
 	if (bChopColor) pixel = chopColor(pixel);
 
-    // scanline
+    //scanline
     //if ((int)(input.TextureCoordinates.y * BUFFER_HEIGHT * 2) % SCANLINE_WIDTH >= SCANLINE_WIDTH / 2)
-    //    color = color * SCANLINE_BRIGHTNESS;
+    //if (input.TextureCoordinates.y % 2 == 0.0)
+    //    pixel = pixel * SCANLINE_BRIGHTNESS;
 
-    return pixel * cTod;
+    pixel = pixel * cTod;
+	
+
+	if (bMonochrome)
+    {
+        pixel.rgb = 0.2126 * pixel.r + 0.7152 * pixel.g + 0.0722 * pixel.b;
+    }
+	
+	if (bMultiply)
+    {
+        pixel = pixel * fMult;
+    }
+	
+	if (bInvert)
+    {
+        pixel = 1 - pixel;
+    }
+	
+	if (bFadeToBlack)
+    {
+        pixel = pixel * fFader;
+    }
+
+    return pixel;
 }
 
 
