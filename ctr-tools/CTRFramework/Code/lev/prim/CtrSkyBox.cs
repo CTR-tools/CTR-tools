@@ -7,7 +7,7 @@ namespace CTRFramework
     public class CtrSkyBox : IRead
     {
         public List<Vertex> Vertices = new List<Vertex>();
-        public List<Vector4s> Faces = new List<Vector4s>();
+        public List<Vector4s>[] Faces = new List<Vector4s>[8];
 
         public CtrSkyBox()
         {
@@ -29,28 +29,52 @@ namespace CTRFramework
                 Vertices.Add(new VertexShort(br));
 
             for (int i = 0; i < 8; i++)
-                for (int j = 0; j < sizes[i]; j++)
-                    Faces.Add(new Vector4s(br));
-
-            for (int j = 0; j < Faces.Count; j++)
             {
-                Faces[j].X /= 0xC;
-                Faces[j].Y /= 0xC;
-                Faces[j].Z /= 0xC;
+                Faces[i] = new List<Vector4s>();
+
+                for (int j = 0; j < sizes[i]; j++)
+                    Faces[i].Add(new Vector4s(br));
             }
+
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < Faces[i].Count; j++)
+                {
+                    Faces[i][j].X /= 0xC;
+                    Faces[i][j].Y /= 0xC;
+                    Faces[i][j].Z /= 0xC;
+                }
         }
 
         public string ToObj()
         {
             var sb = new StringBuilder();
 
-            foreach (var vertex in Vertices)
-                sb.AppendLine(vertex.ToObj());
+            sb.AppendLine("# ctr skybox");
 
-            sb.AppendLine();
+            int verts = 1;
 
-            foreach (var tri in Faces)
-                sb.AppendLine($"f {tri.X + 1} {tri.Z + 1} {tri.Y + 1}");
+            int i = 0;
+
+            foreach (var face in Faces)
+            {
+                sb.AppendLine($"o segment_{i.ToString("00")}");
+
+                foreach (var tri in face)
+                {
+                    //atm blender's obj importer treats shared vertices wrong, hence we have to duplicate them for each triangle
+                    //https://blenderartists.org/t/blender-3-6-2s-obj-importer-vertex-color-bug/1478553
+
+                    sb.AppendLine(Vertices[tri.X].ToObj());
+                    sb.AppendLine(Vertices[tri.Y].ToObj());
+                    sb.AppendLine(Vertices[tri.Z].ToObj());
+
+                    sb.AppendLine($"f\t{verts} {verts + 1} {verts + 2}\r\n");
+
+                    verts += 3;
+                }
+
+                i++;
+            }
 
             return sb.ToString();
         }
