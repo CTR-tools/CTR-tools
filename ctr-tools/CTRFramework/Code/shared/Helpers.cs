@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
+using System.Numerics;
 using System.Reflection;
 using System.Xml;
 
@@ -13,10 +14,11 @@ namespace CTRFramework.Shared
     {
         public static Random Random = new Random();
 
-        // so these are hardcoded fixed point math fractional bits to restore the float value 
+        // so these are hardcoded fixed point math fractional bits to restore the float value
         public static readonly float GteScaleLarge = 1.0f / (1 << 12); //4096 = 1.0
         public static readonly float GteScaleSmall = 1.0f / (1 << 8);  //256 = 1.0
 
+        //Math.Clump since .NET 6
         public static float Normalize(float min, float max, float val) => (val - min) / (max - min);
 
         //parses datetime format found in ctr lev files
@@ -356,6 +358,22 @@ namespace CTRFramework.Shared
                 result |= (byte)(data[i] << i);
 
             return result;
+        }
+
+        public static Vector3 CloneVector(Vector3 vec) => new Vector3(vec.X, vec.Y, vec.Z);
+
+        public static void Maximize(ref Vector3 src, Vector3 dst)
+        {
+            src.X = Math.Max(src.X, dst.X);
+            src.Y = Math.Max(src.Y, dst.Y);
+            src.Z = Math.Max(src.Z, dst.Z);
+        }
+
+        public static void Minimize(ref Vector3 src, Vector3 dst)
+        {
+            src.X = Math.Min(src.X, dst.X);
+            src.Y = Math.Min(src.Y, dst.Y);
+            src.Z = Math.Min(src.Z, dst.Z);
         }
     }
 }

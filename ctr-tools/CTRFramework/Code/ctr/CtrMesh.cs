@@ -3,11 +3,10 @@ using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework.Models
@@ -19,7 +18,7 @@ namespace CTRFramework.Models
         public string Name { get; set; } = "default_name";
         public int unk0 = 0; //0?
         public short lodDistance = 1000;
-        public short billboard = 0; //bit0 forces model to always face the camera, check other bits
+        public short billboard = 0; //bit0 forces model to always face the camera, check other bits. probably used by orb
         public Vector3 scale = Vector3.One;
 
         public UIntPtr ptrCmd = UIntPtr.Zero;
@@ -37,7 +36,7 @@ namespace CTRFramework.Models
         public List<TextureLayout> matIndices = new List<TextureLayout>();
         public List<TextureLayout> goupedTextures = new List<TextureLayout>();
 
-        public int cmdNum = 0x40;
+        public int unkNum = 0x40;
 
         //array lengths to read
         int maxv = 0;
@@ -224,7 +223,8 @@ namespace CTRFramework.Models
             br.Jump(ptrCmd);
 
             //check what this actually is
-            cmdNum = br.ReadInt32();
+            //usually some low value between 16 and 64
+            unkNum = br.ReadInt32();
 
             uint x;
 
@@ -236,7 +236,6 @@ namespace CTRFramework.Models
                     drawList.Add(new CtrDraw(x));
             }
             while (x != 0xFFFFFFFF);
-
 
 
             //one pass through all draw commands to get the array lengths
@@ -272,24 +271,25 @@ namespace CTRFramework.Models
             br.Jump(ptrTex);
             uint[] texptrs = br.ReadArrayUInt32(maxt);
 
-            Helpers.Panic(this, PanicType.Debug, "texptrs: " + texptrs.Length);
+            Helpers.PanicDebug(this, "texptrs: " + texptrs.Length);
+
             foreach (var u in texptrs)
             {
-                Helpers.Panic(this, PanicType.Debug, "ptr: " + u.ToString("X8"));
+                Helpers.PanicDebug(this, "ptr: " + u.ToString("X8"));
             }
 
             foreach (uint t in texptrs)
             {
-                Helpers.Panic(this, PanicType.Debug, t.ToString("X8"));
+                Helpers.PanicDebug(this, t.ToString("X8"));
 
                 br.Jump(t);
                 var tx = TextureLayout.FromReader(br);
                 tl.Add(tx);
 
-                Helpers.Panic(this, PanicType.Debug, tx.ToString());
+                Helpers.PanicDebug(this, tx.ToString());
             }
 
-            Helpers.Panic(this, PanicType.Debug, "tlcnt: " + tl.Count);
+            Helpers.PanicDebug(this, "tlcnt: " + tl.Count);
 
             foreach (var t in tl)
             {
@@ -324,6 +324,10 @@ namespace CTRFramework.Models
             br.Jump(returnto);
         }
 
+        /// <summary>
+        /// Extracts raw float vertex buffer from raw psx frame data
+        /// </summary>
+        /// <returns></returns>
         public List<Vertex> GetVertexBuffer()
         {
             verts.Clear();
@@ -337,24 +341,14 @@ namespace CTRFramework.Models
             var stack = new Vector3[256];       //vertex buffer
 
 
-            foreach (var v in frame.Vertices)
-                Helpers.Panic(this, PanicType.Debug, v.ToString(VecFormat.Hex));
-
-
             var vfixed = new List<Vector3>();
 
             foreach (var v in frame.Vertices)
-                vfixed.Add(new Vector3(v.X, v.Y, v.Z));
-
-            for (int i = 0; i < vfixed.Count; i++)
             {
-                //scale vertices
-                float xx = (vfixed[i].X / 255.0f + frame.Offset.X) * scale.X;
-                float yy = (vfixed[i].Z / 255.0f + frame.Offset.Y) * scale.Y;
-                float zz = (vfixed[i].Y / 255.0f + frame.Offset.Z) * scale.Z;
-
-                vfixed[i] = new Vector3(xx, yy, zz);
+                Helpers.Panic(this, PanicType.Debug, v.ToString(VecFormat.Hex));
+                vfixed.Add(CalculateFinalVertex(v, frame.Offset, scale));
             }
+
 
             int vertexIndex = 0;
             int stripLength = 0;
@@ -618,14 +612,17 @@ namespace CTRFramework.Models
         /// <param name="colors">Color array.</param>
         /// <param name="faces">Face indices array.</param>
         /// <returns>CtrMesh object.</returns>
-        public static CtrMesh FromRawData(string name, List<Vector3f> vertices, List<Vector4b> colors, List<Vector3i> faces)
+        public static CtrMesh FromRawData(string name, List<Vector3> vertices, List<Vector4b> colors, List<Vector3i> faces)
         {
-            CtrMesh mesh = new CtrMesh();
-            mesh.Name = name + "_hi";
-            mesh.lodDistance = -1;
-            mesh.frame = new CtrFrame();
+            var mesh = new CtrMesh() {
+                Name = name + "_hi",
+                lodDistance = -1,
+                frame = new CtrFrame()
+            };
 
             //mesh.tl.Add(new TextureLayout());
+            /*
+            //this generates black colors in OBJ, but not PLY, wtf.
 
             var cc = new List<Vector4b>();
 
@@ -640,9 +637,11 @@ namespace CTRFramework.Models
             }
 
             colors = cc;
+            */
+
 
             //get distinct values from input lists
-            var dVerts = new List<Vector3f>();
+            var dVerts = new List<Vector3>();
             var dColors = new List<Vector4b>();
 
             foreach (var v in vertices)
@@ -703,10 +702,11 @@ namespace CTRFramework.Models
 
 
             //get bbox
-            CtrBoundingBox bb = CtrBoundingBox.GetBB(dVerts);
+            var bb = CtrBoundingBox.GetBB(dVerts);
 
             //offset the bbox to world origin
-            CtrBoundingBox bb2 = bb - bb.minf;
+            var bb2 = bb - bb.minf;
+
 
             //offset all vertices to world origin
             for (int i = 0; i < dVerts.Count; i++)
@@ -714,17 +714,17 @@ namespace CTRFramework.Models
 
             //save converted offset to model
             mesh.frame.Offset = new Vector3(
-                (short)(bb.minf.X / bb2.maxf.X * 255),
-                (short)(bb.minf.Y / bb2.maxf.Y * 255),
-                (short)(bb.minf.Z / bb2.maxf.Z * 255)
-                );
+                bb.minf.X / bb2.maxf.X,
+                bb.minf.Y / bb2.maxf.Y,
+                bb.minf.Z / bb2.maxf.Z
+            );
 
             //save scale to model
             mesh.scale = new Vector3(
-                bb2.maxf.X * 1000f,
-                bb2.maxf.Y * 1000f,
-                bb2.maxf.Z * 1000f
-                );
+                bb2.maxf.X,
+                bb2.maxf.Y,
+                bb2.maxf.Z
+                ) * 256f;
 
 
             //compress vertices to byte vector 
@@ -793,6 +793,14 @@ namespace CTRFramework.Models
                 mesh.drawList.AddRange(cmd);
             }
 
+
+            foreach (var x in mesh.drawList)
+            {
+                Helpers.PanicAssume("kek", x.ToString());
+            }
+
+            Console.ReadKey();
+
             mesh.frame.Vertices = newlist;
 
             return mesh;
@@ -806,7 +814,7 @@ namespace CTRFramework.Models
         /// <returns>CtrHeader object.</returns>
         public static CtrMesh FromPly(string name, PlyResult ply)
         {
-            List<Vector3i> faces = new List<Vector3i>();
+            var faces = new List<Vector3i>();
 
             for (int i = 0; i < ply.Triangles.Count / 3; i++)
                 faces.Add(new Vector3i(ply.Triangles[i * 3], ply.Triangles[i * 3 + 1], ply.Triangles[i * 3 + 2]));
@@ -824,10 +832,10 @@ namespace CTRFramework.Models
 
         public void ExportPly(string filename)
         {
-            var ply = new PlyResult(new List<Vector3f>(), new List<int>(), new List<Vector4b>());
+            var ply = new PlyResult(new List<Vector3>(), new List<int>(), new List<Vector4b>());
 
             foreach (var v in verts)
-                ply.Vertices.Add(new Vector3f(v.Position.X, v.Position.Y, v.Position.Z));
+                ply.Vertices.Add(Helpers.CloneVector(v.Position));
         }
 
         /// <summary>
@@ -866,10 +874,10 @@ namespace CTRFramework.Models
 
                     bw.Jump(ptrCmd + 4);
 
-                    bw.Write(cmdNum);
+                    bw.Write(unkNum);
 
                     foreach (var c in drawList)
-                        bw.Write(c.Value);
+                        bw.Write(c.RawValue);
 
                     bw.Write(0xFFFFFFFF);
 
@@ -994,6 +1002,32 @@ namespace CTRFramework.Models
             }
 
             return sb.ToString();
+        }
+
+        public static Vector3 CalculateFinalVertex(Vector3b compressed, Vector3 offset, Vector3 scale)
+        {
+            //initial compressed value is in a 0-255 grid
+            //first convert to a 0.0-1.0 float ( / 255)
+            //next apply negative offset (to properly center the model)
+            //next multiply by the model scale, each axis separately
+            //notice: compressed Y and Z are swapped
+
+            float x = (compressed.X / 255.0f + offset.X) * scale.X;
+            float y = (compressed.Z / 255.0f + offset.Y) * scale.Y;
+            float z = (compressed.Y / 255.0f + offset.Z) * scale.Z;
+
+            return new Vector3(x, y, z);
+        }
+
+        //intended to do the inverse of CalculateFinalVertex for export puposes, not tested yet
+        public static Vector3b CalculateSourceVertex(Vector3 final, Vector3 offset, Vector3 scale)
+        {
+            byte x = (byte)((final.X / scale.X - offset.X) * 255);
+            byte y = (byte)((final.Y / scale.Y - offset.Y) * 255);
+            byte z = (byte)((final.Z / scale.Z - offset.Z) * 255);
+
+            //notice the axis swap, not a typo
+            return new Vector3b(x, z, y);
         }
     }
 }

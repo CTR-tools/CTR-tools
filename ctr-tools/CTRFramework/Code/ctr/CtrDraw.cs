@@ -9,7 +9,7 @@ namespace CTRFramework.Models
         public byte colorIndex;
         public ushort texIndex;
 
-        public uint Value = 0;
+        public uint RawValue => packValue();
 
         public CtrDraw()
         {
@@ -17,8 +17,6 @@ namespace CTRFramework.Models
 
         public CtrDraw(uint value)
         {
-            Value = value;
-
             unpackValue(value);
 
             var packed = packValue();
@@ -48,7 +46,7 @@ namespace CTRFramework.Models
 
         public override string ToString()
         {
-            return $"[{Value.ToString("X8")}] " +
+            return $"[{RawValue.ToString("X8")}] " +
                 (flags.HasFlag(CtrDrawFlags.Unused2) ? "4" : "_") +
                 (flags.HasFlag(CtrDrawFlags.Unused1) ? "3" : "_") +
                 (flags.HasFlag(CtrDrawFlags.StackVertex) ? "v" : "_") +

@@ -21,8 +21,8 @@ namespace ctrviewer.Loaders
         {
             if (scene.visdata.Count > 0)
                 boundingBox = new Microsoft.Xna.Framework.BoundingBox(
-                    DataConverter.ToVector3(scene.visdata[0].bbox.numericMin),
-                    DataConverter.ToVector3(scene.visdata[0].bbox.numericMax)
+                    DataConverter.ToVector3(scene.visdata[0].bbox.minf),
+                    DataConverter.ToVector3(scene.visdata[0].bbox.maxf)
                     );
 
             var monolist = new List<VertexPositionColorTexture>();

@@ -1010,12 +1010,12 @@ namespace ctrviewer
             if (menu_models != null)
                 Scenes.Add(menu_models);
 
-            /* //tawna credits levs
+             //tawna credits levs
             Scenes.Add(big.ReadScene(594));
             Scenes.Add(big.ReadScene(597));
             Scenes.Add(big.ReadScene(600));
             Scenes.Add(big.ReadScene(603));
-            */
+            
         }
 
         /// <summary>
@@ -1269,12 +1269,12 @@ namespace ctrviewer
 
                 ContentVault.AddVectorAnim("defaultCameraPath", DataConverter.ToSimpleAnimation(Scenes[0].respawnPts));
 
-                /*
+                
                 eng.external.Add(new InstancedModel("tawna1", new Vector3(0, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
                 eng.external.Add(new InstancedModel("tawna2", new Vector3(0.5f, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
                 eng.external.Add(new InstancedModel("tawna3", new Vector3(1f, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
                 eng.external.Add(new InstancedModel("tawna4", new Vector3(1.5f, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
-                */
+                
 
                 //update kart
                 if (Scenes.Count > 0 && karts.Count > 0)
@@ -1648,6 +1648,28 @@ namespace ctrviewer
                         }
                 }
 
+
+
+            //send messages to gui
+
+            //print fov value, if it's changing
+            if (InputHandlers.Process(GameAction.FovUp) || InputHandlers.Process(GameAction.FovDown))
+            {
+                string text = $"FOV: {eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##")}";
+                FrontendMessage.SendMessage("msg_fov_value", text, graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20, 5);
+            }
+
+            //print speed scale, if it's changing
+            if (GamePadHandler.LeftTrigger > 0 || GamePadHandler.RightTrigger > 0)
+            {
+                string text = $"Camera speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}";
+                //DrawString(text, new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20));
+
+                FrontendMessage.SendMessage("msg_camera_speed", text, graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20, 5);
+            }
+
+
+
             //handle stereo mode
             if (eng.Settings.StereoPair)
             {
@@ -2002,6 +2024,8 @@ namespace ctrviewer
         }
 
 
+        Effect screenShader;
+
         float guiScale = 1f;
 
         /// <summary>
@@ -2010,6 +2034,9 @@ namespace ctrviewer
         /// <param name="gameTime"></param>
         protected override void Draw(GameTime gameTime)
         {
+            if (screenShader is null)
+                screenShader = ContentVault.GetShader("16bits");
+
             IsDrawing = true;
 
             //if we're loading, only draw the loading info.
@@ -2070,10 +2097,10 @@ namespace ctrviewer
 
             //draw shaded game buffer
 
-            spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Opaque, SamplerState.PointClamp, effect: eng.Settings.InternalPSXResolution ? ContentVault.GetShader("16bits") : null);
+            spriteBatch.Begin(SpriteSortMode.Texture, BlendState.Opaque, SamplerState.PointClamp, effect: screenShader);
             spriteBatch.Draw(eng.screenBuffer, new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight), Color.White);
-
             spriteBatch.End();
+
 
             //start drawing menu stuff
 
@@ -2095,21 +2122,8 @@ namespace ctrviewer
                     20, 20
                 );
 
-            //print fov value, if it's changing
-            if (InputHandlers.Process(GameAction.FovUp) || InputHandlers.Process(GameAction.FovDown))
-            {
-                string text = $"FOV: {eng.Cameras[CameraType.DefaultCamera].ViewAngle.ToString("0.##")}";
-                FrontendMessage.SendMessage("msg_fov_value", text, graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20, 5);
-            }
 
-            //print speed scale, if it's changing
-            if (GamePadHandler.LeftTrigger > 0 || GamePadHandler.RightTrigger > 0)
-            {
-                string text = $"Camera speed scale: {eng.Cameras[CameraType.DefaultCamera].speedScale.ToString("0.##")}";
-                //DrawString(text, new Vector2(graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20));
 
-                FrontendMessage.SendMessage("msg_camera_speed", text, graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20, 5);
-            }
 
             //print camera position, if enabled
             if (eng.Settings.ShowCamPos)

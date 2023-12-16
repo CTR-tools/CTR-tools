@@ -4,11 +4,10 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using ThreeDeeBear.Models.Ply;
+using System.Numerics;
 
 namespace CTRFramework.Shared
 {
-
-
     //options
     public partial class OBJ
     {
@@ -26,7 +25,7 @@ namespace CTRFramework.Shared
         public List<Vertex> CtrVerts = new List<Vertex>();
         public List<QuadBlock> CtrQuads = new List<QuadBlock>();
 
-        public List<Vector3f> vertices = new List<Vector3f>();
+        public List<Vector3> vertices = new List<Vector3>();
         public List<Vector4b> colors = new List<Vector4b>();
         public List<int> faces = new List<int>();
 
@@ -107,7 +106,7 @@ namespace CTRFramework.Shared
                     for (int i = 0; i < 3; i++)
                         Single.TryParse(words[i + 1], out coord[i]);
 
-                    var pos = new Vector3f(coord[0], coord[1], coord[2]);
+                    var pos = new Vector3(coord[0], coord[1], coord[2]);
 
                     Console.WriteLine(pos);
 
@@ -128,8 +127,10 @@ namespace CTRFramework.Shared
                             color[2] /= 255;
                         }
 
-                        Vector4b vv = new Vector4b((byte)(255 * color[0]), (byte)(255 * color[1]), (byte)(255 * color[2]), 0);
+                        var vv = new Vector4b((byte)(255 * color[0]), (byte)(255 * color[1]), (byte)(255 * color[2]), 0);
                         colors.Add(vv);
+
+                        Console.WriteLine(vv);
 
                         var ctrvert = new Vertex()
                         {
@@ -139,8 +140,11 @@ namespace CTRFramework.Shared
                         };
 
                         CtrVerts.Add(ctrvert);
+
                         return;
                     }
+
+                    Console.WriteLine("wtf");
 
                     var ctrvert2 = new Vertex()
                     {

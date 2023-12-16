@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using System.Windows.Forms.VisualStyles;
 
 namespace CTRFramework.Models
 {
@@ -53,6 +52,7 @@ namespace CTRFramework.Models
                 int Z = 0;
 
                 //just read a chunk big enough to hold any anim. there will be useless junk in the end, but we won't use it anyways.
+                //proper solution should use frame size from the upper level
                 var temporal = br.ReadBytes(1024 * 4);
 
 
@@ -116,9 +116,14 @@ namespace CTRFramework.Models
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
+            int pos = (int)bw.Position;
+
             //posOffset.Write(bw);
             bw.WriteVector3sPadded(Offset, OffsetScale);
-            bw.Write(new byte[16]);
+            bw.Seek(16);
+
+            ptrVerts = (int)(bw.Position - pos + 4);
+
             bw.Write(ptrVerts);
 
             foreach (var vertex in Vertices)

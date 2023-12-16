@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Numerics;
 
 namespace CTRFramework.Shared
 {
@@ -126,14 +127,14 @@ namespace CTRFramework.Shared
             return true;
         }
 
-        public void Maximize(Vector3f v)
+        public void Maximize(Vector3 v)
         {
             X = Math.Max(X, v.X);
             Y = Math.Max(Y, v.Y);
             Z = Math.Max(Z, v.Z);
         }
 
-        public void Minimize(Vector3f v)
+        public void Minimize(Vector3 v)
         {
             X = Math.Min(X, v.X);
             Y = Math.Min(Y, v.Y);
@@ -171,12 +172,6 @@ namespace CTRFramework.Shared
         public override string ToString()
         {
             return ToString(VecFormat.Braced);
-        }
-
-
-        public Vector3f Clone()
-        {
-            return new Vector3f(x, y, z);
         }
     }
 }

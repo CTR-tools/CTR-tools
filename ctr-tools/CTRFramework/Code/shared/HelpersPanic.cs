@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Diagnostics;
 
 namespace CTRFramework.Shared
 {
@@ -50,11 +51,24 @@ namespace CTRFramework.Shared
         /// <param name="sender">the object that wants to panic</param>
         /// <param name="panicType">type of panic</param>
         /// <param name="message">the message it wants to send</param>
+        //[Conditional("DEBUG")]
         public static void Panic(object sender, PanicType panicType, string message)
         {
             Panic(sender.GetType().Name, panicType, message);
         }
 
+        public static void PanicAssume(object sender, string message)
+        {
+            Panic(sender.GetType().Name, PanicType.Assume, message);
+        }
+
+        public static void PanicDebug(object sender, string message)
+        {
+            Panic(sender.GetType().Name, PanicType.Debug, message);
+        }
+
+
+        //[Conditional("DEBUG")]
         public static void PanicIf(bool condition, object sender, PanicType panicType, string message)
         {
             if (condition)
@@ -67,6 +81,7 @@ namespace CTRFramework.Shared
         /// <param name="sender">the object that wants to panic</param>
         /// <param name="panicType">type of panic</param>
         /// <param name="message">the message it wants to send</param>
+        //[Conditional("DEBUG")]
         public static void Panic(string sender, PanicType pType, string message)
         {
             if (panicLevel.HasFlag(PanicLevel.Silent))

@@ -152,12 +152,12 @@ namespace ctrviewer.Engine.Testing
             foreach (var scene in scenes)
                 foreach (var quad in scene.quads)
                     if (
-                        (quad.bbox.numericMin.X - 1 <= Position.X) &&
-                        (quad.bbox.numericMin.Y - 1 <= Position.Y) &&
-                        (quad.bbox.numericMin.Z - 1 <= Position.Z) &&
-                        (quad.bbox.numericMax.X + 1 >= Position.X) &&
-                        (quad.bbox.numericMax.Y + 1 >= Position.Y) &&
-                        (quad.bbox.numericMax.Z + 1 >= Position.Z)
+                        (quad.bbox.minf.X - 1 <= Position.X) &&
+                        (quad.bbox.minf.Y - 1 <= Position.Y) &&
+                        (quad.bbox.minf.Z - 1 <= Position.Z) &&
+                        (quad.bbox.maxf.X + 1 >= Position.X) &&
+                        (quad.bbox.maxf.Y + 1 >= Position.Y) &&
+                        (quad.bbox.maxf.Z + 1 >= Position.Z)
                         )
                     {
                         //GameConsole.Write($"collide with quad bb: {quad.bbox} at {Position}");

@@ -21,15 +21,11 @@ namespace CTRFramework.Shared
             set => Max = value;
         }
 
-        public Vector3 numericMin = Vector3.Zero;
-        public Vector3 numericMax = Vector3.Zero;
-
-
         private Vector3s min;
         private Vector3s max;
 
-        public Vector3f minf;
-        public Vector3f maxf;
+        public Vector3 minf;
+        public Vector3 maxf;
 
         public CtrBoundingBox()
         {
@@ -43,38 +39,36 @@ namespace CTRFramework.Shared
             max = vmax.Clone();
         }
 
-        public CtrBoundingBox(Vector3f vf)
+        public CtrBoundingBox(Vector3 vf)
         {
-            minf = vf.Clone();
-            maxf = vf.Clone();
+            minf = Helpers.CloneVector(vf);
+            maxf = Helpers.CloneVector(vf);
 
-            min = minf.ToVector3s();
-            max = maxf.ToVector3s();
+            CopyToShort();
         }
 
-        public CtrBoundingBox(Vector3f vmin, Vector3f vmax)
+        public CtrBoundingBox(Vector3 vmin, Vector3 vmax)
         {
-            minf = vmin.Clone();
-            maxf = vmax.Clone();
+            minf = Helpers.CloneVector(vmin);
+            maxf = Helpers.CloneVector(vmax);
 
-            min = minf.ToVector3s();
-            max = maxf.ToVector3s();
+            CopyToShort();
         }
 
-        public CtrBoundingBox(BinaryReaderEx br)
+        public void CopyToShort()
         {
-            Read(br);
+            min = new Vector3s((short)(minf.X * 4096f), (short)(minf.Y * 4096f), (short)(minf.Z * 4096f));
+            max = new Vector3s((short)(maxf.X * 4096f), (short)(maxf.Y * 4096f), (short)(maxf.Z * 4096f));
         }
 
-        public static CtrBoundingBox FromReader(BinaryReaderEx br)
-        {
-            return new CtrBoundingBox(br);
-        }
+        public CtrBoundingBox(BinaryReaderEx br) => Read(br);
+
+        public static CtrBoundingBox FromReader(BinaryReaderEx br) =>new CtrBoundingBox(br);
 
         public void Read(BinaryReaderEx br)
         {
-            numericMin = br.ReadVector3s(Helpers.GteScaleSmall);
-            numericMax = br.ReadVector3s(Helpers.GteScaleSmall);
+            minf = br.ReadVector3s(Helpers.GteScaleSmall);
+            maxf = br.ReadVector3s(Helpers.GteScaleSmall);
 
             br.Seek(-2 * 3 * 2);
 
@@ -88,42 +82,39 @@ namespace CTRFramework.Shared
             max.Write(bw);
         }
 
-        public static CtrBoundingBox operator +(CtrBoundingBox a, Vector3f b)
+        public static CtrBoundingBox operator +(CtrBoundingBox a, Vector3 b)
         {
             return new CtrBoundingBox(a.minf + b, a.maxf + b);
         }
-        public static CtrBoundingBox operator -(CtrBoundingBox a, Vector3f b)
+        public static CtrBoundingBox operator -(CtrBoundingBox a, Vector3 b)
         {
             return new CtrBoundingBox(a.minf - b, a.maxf - b);
         }
 
         public override string ToString()
         {
-            return "BB: min " + numericMin.ToString() + " max " + numericMax.ToString();
+            return "BB: min " + minf.ToString() + " max " + maxf.ToString();
         }
 
-        public CtrBoundingBox Clone()
-        {
-            return new CtrBoundingBox(Min, Max);
-        }
+        public CtrBoundingBox Clone() => new CtrBoundingBox(Min, Max);
 
 
-
-        public static CtrBoundingBox GetBB(List<Vector3f> vertices)
+        public static CtrBoundingBox GetBB(List<Vector3> vertices)
         {
             if (vertices.Count == 0)
                 return null;
 
-            CtrBoundingBox bb = new CtrBoundingBox(vertices[0]);
+            var bb = new CtrBoundingBox(vertices[0]);
 
             foreach (var v in vertices)
             {
-                bb.minf.Minimize(v);
-                bb.maxf.Maximize(v);
+                Helpers.Minimize(ref bb.minf, v);
+                Helpers.Maximize(ref bb.maxf, v);
+
+                Helpers.PanicAssume("xxx", $"{bb.minf} {bb.maxf} {v}");
             }
 
-            bb.min = bb.minf.ToVector3s();
-            bb.max = bb.maxf.ToVector3s();
+            bb.CopyToShort();
 
             return bb;
         }
