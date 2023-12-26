@@ -44,9 +44,7 @@ namespace ctrviewer.Loaders
                                 foreach (Vertex cv in vts)
                                     monolist.Add(DataConverter.ToVptc(cv, cv.uv));
 
-                                TextureLayout t = qb.texlow;
-
-                                string texTag = t.Tag;
+                                string texTag = qb.texlow.Tag;
 
                                 foreach (QuadFlags fl in (QuadFlags[])Enum.GetValues(typeof(QuadFlags)))
                                 {
@@ -68,11 +66,11 @@ namespace ctrviewer.Loaders
 
                                 if (ContentVault.alphalist.Contains(texTag))
                                 {
-                                    Push(Trilists, texTag, monolist, TriListType.Alpha);
+                                    Push(Trilists, "mesh", monolist, TriListType.Alpha, null, texTag);
                                 }
                                 else
                                 {
-                                    Push(Trilists, texTag, monolist);
+                                    Push(Trilists, "mesh", monolist, TriListType.Basic, null, texTag);
                                 }
                             }
                         }
@@ -138,18 +136,19 @@ namespace ctrviewer.Loaders
 
                                     bool isAlpha = ContentVault.alphalist.Contains(texTag);
 
-                                    Push(Trilists, texTag, monolist,
+                                    Push(Trilists, "mesh", monolist,
                                         (isAnimated ? TriListType.Animated : (isAlpha ? TriListType.Alpha : TriListType.Basic)),
                                         blendState == BlendState.Additive ? BlendState.Additive : (isAlpha ? BlendState.AlphaBlend : BlendState.Opaque)//isAlpha ? (blendState == BlendState.Additive ? blendState : BlendState.Opaque) : BlendState.Opaque
+                                       , texTag
                                         );
 
                                     if (qb.doubleSided)
-                                        Trilists[texTag].CullingEnabled = false;
+                                        Trilists["mesh"].CullingEnabled = false;
 
                                     if (isAnimated)
                                         foreach (var ql in Trilists)
                                             if (ql.Value.type == TriListType.Animated)
-                                                Trilists[texTag].ScrollingEnabled = true;
+                                                Trilists["mesh"].ScrollingEnabled = true;
 
                                     //foreach (var ql in Trilists)
                                     //    Trilists[texTag].textureEnabled = false;

@@ -17,7 +17,7 @@ Texture2D SpriteTexture;
 bool	bMirrorX		= false;
 
 bool	bChopColor		= true;
-int		iChopColorBits	= 5;
+int		iChopColorBits	= 8;
 
 bool	bMonochrome		= false;
 

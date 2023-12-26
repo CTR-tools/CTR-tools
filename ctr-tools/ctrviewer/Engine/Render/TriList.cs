@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System;
+using System.Xml.Linq;
+using System.Windows.Forms;
 
 namespace ctrviewer.Engine.Render
 {
@@ -13,6 +16,140 @@ namespace ctrviewer.Engine.Render
         Flag
     }
 
+    public class AnimatedVertexBuffer
+    {
+        public string Name = "default";
+        public bool Sealed = false;
+
+        public int totalFrames = 0;
+        public int frameSize = 0;
+
+        public List<VertexPositionColorTexture> verts = new List<VertexPositionColorTexture>();
+        public VertexPositionColorTexture[] verts_sealed;
+
+        public void PushTri(List<VertexPositionColorTexture> v)
+        {
+            verts.AddRange(v);
+        }
+
+        public void Seal()
+        {
+            if (!Sealed)
+            {
+                verts_sealed = verts.ToArray();
+                verts.Clear();
+            }
+        }
+    }
+
+    public class AnimatedVertexBufferPlayer
+    {
+        public AnimatedVertexBuffer buffer;
+
+        public bool loopEnabled = true;
+        public bool IsPlaying = false;
+
+        public int curFrame = 0;
+
+        public float frameDuration = 0.5f;
+        public float curAnimTime = 0;
+
+        public float interpDistance = 0;
+
+        public void Reset()
+        {
+            curAnimTime = 0;
+            curFrame = 0;
+            interpDistance = 0;
+        }
+
+        public void FrameAdvance(GameTime gameTime)
+        {
+            if (!IsPlaying) return;
+
+            curAnimTime += (float)(gameTime.ElapsedGameTime.TotalMilliseconds / 1000f);
+
+            while (curAnimTime > frameDuration)
+            {
+                curFrame++;
+                curAnimTime -= frameDuration;
+            }
+
+            //keep track of how much we advanced between the frames
+            interpDistance = curAnimTime / frameDuration;
+
+            if (curFrame >= buffer.totalFrames)
+            {
+                curAnimTime = 0;
+
+                if (!loopEnabled)
+                {
+                    IsPlaying = false;
+                    return;
+
+                    //we dont update curFrame, so it can stay at the last frame.
+                }
+
+                curFrame = 0;
+            }
+        }
+    }
+
+    public class TexturedIndexBuffer
+    {
+        public bool Sealed { get; private set; } = false;
+
+        //todo: refactor to a material class, so can just swap material on the fly
+        
+        public string textureName = "";
+
+        public Texture2D Texture { get; private set; }
+        public Texture2D AltTexture { get; private set; }
+
+
+
+        public List<short> indices = new List<short>();
+        public short[] indices_sealed { get; private set; }
+
+        public int numFaces { get; private set; } = 0;
+
+        public TexturedIndexBuffer Clone()
+        {
+            return new TexturedIndexBuffer()
+            {
+                textureName = this.textureName,
+                Sealed = this.Sealed,
+                Texture = this.Texture,
+                AltTexture = this.AltTexture,
+                indices_sealed = this.indices_sealed
+            };
+        }
+
+        public void Seal()
+        {
+            Texture = ContentVault.GetTexture(textureName, false);
+            AltTexture = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
+
+            indices_sealed = indices.ToArray();
+            indices.Clear();
+
+            numFaces = indices_sealed.Length / 3;
+
+            Sealed = true;
+        }
+
+        /// <summary>
+        /// Adds a triangle to the list.
+        /// </summary>
+        public void PushTri(int x, int y, int z)
+        {
+            indices.Add((short)x);
+            indices.Add((short)y);
+            indices.Add((short)z);
+        }
+    }
+
+    //a super class to render entire textured model
     public class TriList : IRenderable
     {
         public TriListType type = TriListType.Basic;
@@ -21,6 +158,11 @@ namespace ctrviewer.Engine.Render
         public bool Sealed = false;
         public List<VertexPositionColorTexture> verts = new List<VertexPositionColorTexture>();
         private VertexPositionColorTexture[] verts_sealed;
+
+
+        public AnimatedVertexBuffer anim = null;
+        public List<AnimatedVertexBuffer> animsList = new List<AnimatedVertexBuffer>();
+
         public List<Color> beginColor = new List<Color>();
         public List<Color> endColor = new List<Color>();
         public Dictionary<int, List<Color>> animatedColors = new Dictionary<int, List<Color>>();
@@ -28,14 +170,10 @@ namespace ctrviewer.Engine.Render
         public bool textureEnabled = true;
         public bool ScrollingEnabled = false;
         public bool CullingEnabled = true;
-        public string textureName = "";
-        private Texture2D texture;
-        private Texture2D replacement;
-        private short[] indices;
 
-        public int numVerts => verts.Count;
+        public List<TexturedIndexBuffer> indexBuffers = new List<TexturedIndexBuffer>();
 
-        public int numFaces => indices.Length / 3;
+        public int numVerts { get; private set; } = 0;
 
         public void SetColor(Color c)
         {
@@ -61,40 +199,83 @@ namespace ctrviewer.Engine.Render
         {
         }
 
-        public TriList(List<VertexPositionColorTexture> v, bool te = false, string name = "")
+        //used in MGLevel building
+        public TriList(List<VertexPositionColorTexture> v, bool te = false, string name = "test")
         {
             verts.AddRange(v);
             textureEnabled = te;
-            textureName = name;
+
+            var buf = new TexturedIndexBuffer() { textureName = name };
+            buf.indices = GenerateIndices(verts.Count);
         }
 
+        //todo: used for skybox only for whatever reason, check why
         public TriList(TriList t)
         {
             verts.AddRange(t.verts);
             textureEnabled = t.textureEnabled;
-            textureName = t.textureName;
-            indices = GenerateIndices();
+
+            foreach (var buf in t.indexBuffers)
+            {
+                indexBuffers.Add(buf.Clone());
+            }
         }
 
+        public TexturedIndexBuffer GetIndexBuffer(string texName)
+        {
+            // ptr intex buffer
+            TexturedIndexBuffer buf = null;
 
+            //lookup for index buffer by texture name
+            foreach (var list in indexBuffers)
+            {
+                if (list.textureName == texName)
+                {
+                    buf = list;
+                    break;
+                }
+            }
+
+            //if missing, add a new one
+            if (buf == null)
+            {
+                buf = new TexturedIndexBuffer() { textureName = texName };
+                indexBuffers.Add(buf);
+            }
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Seal method intended to lock up the trilist, so we can just throw the baked data into the graphics pipeline.
+        /// The intended usage is to populate all the required data of the object and then seal it.
+        /// </summary>
         public void Seal()
         {
-            indices = GenerateIndices();
-            verts_sealed = verts.ToArray();
-            Sealed = true;
-
-            texture = ContentVault.GetTexture(textureName, false);
-            replacement = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
-            if (replacement is null)
-                replacement = texture;
-
-            /*
-            for (int i = 0; i < numVerts; i++)
+            if (Sealed)
             {
-                beginColor.Add(verts[i].Color);
-                endColor.Add(Color.White);
+                GameConsole.Write("Attempted to seal a sealed trilist.");
+                return;
             }
-            */
+
+            //seal all index buffers
+            foreach (var mat in indexBuffers)
+                mat.Seal();
+
+            //seal vertex buffer
+            verts_sealed = verts.ToArray();
+            numVerts = verts_sealed.Length;
+            verts.Clear();
+
+
+            foreach (var anim in animsList)
+                anim.Seal();
+
+            if (anim == null && animsList.Count > 0)
+                anim = animsList[0];
+
+            //we're good to go
+            Sealed = true;
         }
 
         public void PushTri(List<VertexPositionColorTexture> lv, bool fixOrder = false)
@@ -122,22 +303,21 @@ namespace ctrviewer.Engine.Render
         {
             if (Sealed)
             {
-                GameConsole.Write("Trying to update sealed list.");
+                GameConsole.Write("Attempted to push quad to a sealed list.");
                 return;
             }
 
-            if (lv != null)
-            {
-                for (int i = 0; i < lv.Count / 4; i++)
-                    if (!fixOrder)
-                    {
-                        verts.AddRange(new List<VertexPositionColorTexture>() { lv[0 + i * 4], lv[1 + i * 4], lv[2 + i * 4], lv[2 + i * 4], lv[1 + i * 4], lv[3 + i * 4] });
-                    }
-                    else
-                    {
-                        verts.AddRange(new List<VertexPositionColorTexture>() { lv[0 + i * 4], lv[2 + i * 4], lv[1 + i * 4], lv[2 + i * 4], lv[0 + i * 4], lv[3 + i * 4] });
-                    }
-            }
+            if (lv == null) return;
+
+            for (int i = 0; i < lv.Count / 4; i++)
+                if (!fixOrder)
+                {
+                    verts.AddRange(new List<VertexPositionColorTexture>() { lv[0 + i * 4], lv[1 + i * 4], lv[2 + i * 4], lv[2 + i * 4], lv[1 + i * 4], lv[3 + i * 4] });
+                }
+                else
+                {
+                    verts.AddRange(new List<VertexPositionColorTexture>() { lv[0 + i * 4], lv[2 + i * 4], lv[1 + i * 4], lv[2 + i * 4], lv[0 + i * 4], lv[3 + i * 4] });
+                }
         }
 
         public void Update(GameTime gameTime)
@@ -171,16 +351,17 @@ namespace ctrviewer.Engine.Render
             */
         }
 
-        public short[] GenerateIndices()
+        public List<short> GenerateIndices(int numVerts)
         {
-            var indices = new short[numVerts];
+            var indices = new List<short>();
 
             for (int i = 0; i < numVerts; i++)
-                indices[i] = (short)i;
+                indices.Add((short)i);
 
             return indices;
         }
 
+        /*
         public void DrawTest(GraphicsDeviceManager graphics, Effect effect)
         {
 
@@ -193,7 +374,6 @@ namespace ctrviewer.Engine.Render
             {
                 if (textureEnabled)
                 {
-
                     effect.Parameters["VertexColorEnabled"]?.SetValue(1);
                     effect.Parameters["bDiffuseMapEnabled"]?.SetValue(1);
                     effect.Parameters["DiffuseMap"]?.SetValue(texture);
@@ -214,20 +394,33 @@ namespace ctrviewer.Engine.Render
                 }
             }
         }
+        */
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
-            if (indices is null || verts is null)
+            if (indexBuffers is null || verts_sealed is null)
             {
-                GameConsole.Write("Bad trilist.");
+                GameConsole.Write($"Uninitialized trilist!");
                 return;
             }
 
-            if (indices.Length == 0 || verts.Count == 0)
+            if (anim == null)
             {
-                GameConsole.Write("Empty trilist.");
-                return;
+                if (indexBuffers.Count == 0 || verts_sealed.Length == 0)
+                {
+                    GameConsole.Write("Empty static trilist!");
+                    return;
+                }
             }
+            else
+            {
+                if (anim.verts_sealed.Length == 0 || indexBuffers.Count == 0)
+                {
+                    GameConsole.Write("Empty anim trilist!");
+                    return;
+                }
+            }
+
 
             effect.VertexColorEnabled = EngineSettings.Instance.VertexLighting;
 
@@ -238,13 +431,16 @@ namespace ctrviewer.Engine.Render
             if (type == TriListType.Water)
                 graphics.GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
-            effect.TextureEnabled = EngineSettings.Instance.Textures ? textureEnabled : false;
+            //check for global texture setting and use trilist value if true
+            effect.TextureEnabled = EngineSettings.Instance.DrawTextures ? textureEnabled : false;
 
+            /*
+            //todo: check conditions, maybe dont need at all since texture stuff gets assigned after sealing the buffers
             if (textureEnabled)
-                if (ContentVault.Textures.ContainsKey(textureName))
+                if (ContentVault.Textures.ContainsKey(indexBuffers[0].textureName)) //todo: this is has to be done on per index buffer basis
                 {
                     //effect.Texture = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
-                    effect.Texture = EngineSettings.Instance.UseTextureReplacements ? replacement : texture;
+                    effect.Texture = EngineSettings.Instance.UseTextureReplacements ? indexBuffers[1].AltTexture : indexBuffers[1].Texture;
                     if (alpha != null)
                         alpha.Texture = effect.Texture;
                 }
@@ -255,7 +451,9 @@ namespace ctrviewer.Engine.Render
                     if (alpha != null)
                         alpha.Texture = effect.Texture;
                 }
+            */
 
+            
             if (!CullingEnabled || !EngineSettings.Instance.BackFaceCulling)
                 Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
 
@@ -265,6 +463,7 @@ namespace ctrviewer.Engine.Render
                 if (alpha != null)
                     alpha.Alpha = 0.5f;
             }
+            
 
             /*
             if (blendState == BlendState.AlphaBlend)
@@ -274,22 +473,21 @@ namespace ctrviewer.Engine.Render
                     alpha.Alpha = 1f;
             }*/
 
-
-            Effect tempeffect = effect;
-
-            if (alpha != null && EngineSettings.Instance.Textures)
-                tempeffect = alpha;
-
-            foreach (var pass in tempeffect.CurrentTechnique.Passes)
+            foreach (var mat in indexBuffers)
             {
-                pass.Apply();
+                effect.Texture = EngineSettings.Instance.UseTextureReplacements && mat.AltTexture != null ? mat.AltTexture : mat.Texture;
 
-                graphics.GraphicsDevice.DrawUserIndexedPrimitives(
-                    PrimitiveType.TriangleList,
-                    verts_sealed, 0, numVerts,
-                    indices, 0, numFaces,
-                    VertexPositionColorTexture.VertexDeclaration
-                );
+                foreach (var pass in effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+
+                        graphics.GraphicsDevice.DrawUserIndexedPrimitives(
+                            PrimitiveType.TriangleList,
+                            anim == null ? verts_sealed : anim.verts_sealed, anim == null ? 0 : anim.frameSize * (int)Game1.frame, anim == null ? numVerts : anim.frameSize,
+                            mat.indices_sealed, 0, mat.numFaces,
+                            VertexPositionColorTexture.VertexDeclaration
+                        );
+                }
             }
 
             if (type == TriListType.Water || type == TriListType.Flag)
@@ -318,12 +516,15 @@ namespace ctrviewer.Engine.Render
                 {
                     pass.Apply();
 
-                    graphics.GraphicsDevice.DrawUserIndexedPrimitives(
-                        PrimitiveType.TriangleList,
-                        verts_sealed, 0, numVerts,
-                        indices, 0, numFaces,
-                        VertexPositionColorTexture.VertexDeclaration
-                    );
+                    foreach (var mat in indexBuffers)
+                    {
+                        graphics.GraphicsDevice.DrawUserIndexedPrimitives(
+                            PrimitiveType.TriangleList,
+                            anim == null ? verts_sealed : anim.verts_sealed, anim == null ? 0 : anim.frameSize * (int)Game1.frame, anim == null ? numVerts : anim.frameSize,
+                            mat.indices_sealed, 0, mat.numFaces,
+                            VertexPositionColorTexture.VertexDeclaration
+                        );
+                    }
                 }
             }
 

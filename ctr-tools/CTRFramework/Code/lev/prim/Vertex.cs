@@ -10,6 +10,7 @@ namespace CTRFramework
         public static readonly int SizeOf = 16;
 
         public Vector3 Position;
+        public ushort pad;
         public Vector4b Color;
         public Vector4b MorphColor;
 
@@ -47,14 +48,15 @@ namespace CTRFramework
         {
             Position = br.ReadVector3s(Helpers.GteScaleSmall);
             //here's the deal, this value is always 0 in release files, but it was figured out it's some mode ranging from 0 to 4.
-            short value = br.ReadInt16();
+            pad = br.ReadUInt16();
             Color = new Vector4b(br);
             MorphColor = new Vector4b(br);
         }
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            bw.WriteVector3sPadded(Position, Helpers.GteScaleSmall);
+            bw.WriteVector3s(Position, Helpers.GteScaleSmall);
+            bw.Write(pad);
             Color.Write(bw);
             MorphColor.Write(bw);
         }

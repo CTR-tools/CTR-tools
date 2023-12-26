@@ -1,10 +1,24 @@
 ﻿using Assimp;
+
 using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Models;
 using CTRFramework.Shared;
 using CTRFramework.Sound;
 using CTRFramework.Vram;
+
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Threading.Tasks;
+
 using ctrviewer.Engine;
 using ctrviewer.Engine.Gui;
 using ctrviewer.Engine.Input;
@@ -12,17 +26,8 @@ using ctrviewer.Engine.Menu;
 using ctrviewer.Engine.Render;
 using ctrviewer.Engine.Testing;
 using ctrviewer.Loaders;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Threading.Tasks;
 using Locale = ctrviewer.Resources.Localization;
+using System.Security.Cryptography;
 
 namespace ctrviewer
 {
@@ -422,11 +427,14 @@ namespace ctrviewer
                 ContentVault.AddVectorAnim(Path.GetFileNameWithoutExtension(file), SimpleAnimation.FromFile(file));
 
             LoadGenericTextures();
-            effect.Texture = ContentVault.Textures["TEST"];
+            effect.Texture = ContentVault.GetTexture("test", false);
             //effect.TextureEnabled = true;
+
 
             tint = new Texture2D(GraphicsDevice, 1, 1);
             tint.SetData(new Color[] { Color.White });
+
+
 
             //load fonts
             GameConsole.Font = Content.Load<SpriteFont>("fonts\\debug");
@@ -662,7 +670,7 @@ namespace ctrviewer
 
         public void ToggleVertexColors(object sender, EventArgs args) => eng.Settings.VertexLighting = (sender as BoolMenuItem).Value;
 
-        public void ToggleTextures(object sender, EventArgs args) => eng.Settings.Textures = (sender as BoolMenuItem).Value;
+        public void ToggleTextures(object sender, EventArgs args) => eng.Settings.DrawTextures = (sender as BoolMenuItem).Value;
         public void ToggleBackfaceCulling(object sender, EventArgs args) => eng.Settings.BackFaceCulling = (sender as BoolMenuItem).Value;
 
         public void ToggleSkybox(object sender, EventArgs args) => eng.Settings.ShowSky = (sender as BoolMenuItem).Value;
@@ -714,8 +722,39 @@ namespace ctrviewer
         public void AddCone(string name, Color color)
         {
             if (ContentVault.Models.ContainsKey(name)) return;
-            ContentVault.AddModel(name, DataConverter.ToTriListCollection(cone, color, true));
+            ContentVault.AddModel(name, DataConverter.ToTriList(cone[0], color, true));
         }
+
+
+        public void GenerateFinishFlag(string name, Color dark, Color light, int x = 10, int y = 6, float size = 1f)
+        {
+            var modl = new TriList();
+            modl.textureEnabled = false;
+
+            var vptc = new List<VertexPositionColorTexture>();
+
+            for (int j = 0; j < y; j++)
+                for (int i = 0; i < x; i++)
+                {
+                    var col = i % 2 == j % 2 ? dark : light;
+
+                    float xx = i * size;
+                    float yy = j * size;
+
+                    vptc.Add(new VertexPositionColorTexture(new Vector3(xx, yy, 0), col, Vector2.Zero));
+                    vptc.Add(new VertexPositionColorTexture(new Vector3(xx + size, yy, 0), col, Vector2.Zero));
+                    vptc.Add(new VertexPositionColorTexture(new Vector3(xx, yy + size, 0), col, Vector2.Zero));
+                    vptc.Add(new VertexPositionColorTexture(new Vector3(xx + size, yy + size, 0), col, Vector2.Zero));
+
+                    modl.PushQuad(vptc);
+                    vptc.Clear();
+                }
+
+            modl.Seal();
+
+            ContentVault.AddModel(name, modl);
+        }
+
 
         /// <summary>
         /// generates top 
@@ -868,9 +907,7 @@ namespace ctrviewer
 
             modl.Seal();
 
-            var coll = new TriListCollection() { modl };
-
-            ContentVault.Models.Add(name, coll);
+            ContentVault.Models.Add(name, modl);
         }
 
 
@@ -974,9 +1011,10 @@ namespace ctrviewer
 
         private void LoadGenericTextures()
         {
-            ContentVault.AddTexture("test", Content.Load<Texture2D>("test"));
-            ContentVault.AddTexture("flag", Content.Load<Texture2D>("flag"));
-            ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas ? "logo_xmas" : "logo"));
+            ContentVault.AddTexture("test", Content.Load<Texture2D>("textures\\test"));
+            ContentVault.AddTexture("default", Content.Load<Texture2D>("textures\\default"));
+            ContentVault.AddTexture("flag", Content.Load<Texture2D>("textures\\flag"));
+            ContentVault.AddTexture("logo", Content.Load<Texture2D>(IsChristmas ? "textures\\logo_xmas" : "textures\\logo"));
 
             //and shaders!
             ContentVault.AddShader("16bits", Content.Load<Effect>("shaders\\16bits"));
@@ -1037,7 +1075,7 @@ namespace ctrviewer
 
                 if (!ContentVault.Models.ContainsKey(model.Name))
                 {
-                    ContentVault.AddModel(model.Name, DataConverter.ToTriListCollection(model));
+                    ContentVault.AddModel(model.Name, DataConverter.ToTriList(model[0], Color.Gray));
                     eng.external.Add(new InstancedModel(model.Name, new Vector3(posX, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16) { anim = AnimationPlayer.Create("rotate_left") });
                     posX += 0.5f;
                 }
@@ -1170,6 +1208,12 @@ namespace ctrviewer
                 eng.MeshLow.Add(CrashTeamRacingLoader.FromScene(s, Detail.Low));
             }
 
+            //add finish flag
+            GenerateFinishFlag("finish_flag", new Color(160, 160, 160), new Color(255, 255, 255));
+            //add to instances
+            eng.external.Add(new InstancedModel() { ModelName = "finish_flag" });
+
+
             //force 1st scene sky and back color
             if (Scenes.Count > 0)
             {
@@ -1209,7 +1253,7 @@ namespace ctrviewer
             //convert game models to monogame
             foreach (var scene in Scenes)
                 foreach (var model in scene.Models)
-                    ContentVault.AddModel(model.Name, DataConverter.ToTriListCollection(model));
+                    ContentVault.AddModel(model.Name, DataConverter.ToTriList(model[0], Color.Gray));
 
 
             foreach (var s in Scenes)
@@ -1559,9 +1603,6 @@ namespace ctrviewer
         bool captureMouse = false;
 
         int selectedChar = 0;
-
-        bool animationPreviewMode = true;
-        AnimatedTriListCollection animationPreview;
 
 
         /// <summary>
@@ -2028,6 +2069,9 @@ namespace ctrviewer
 
         float guiScale = 1f;
 
+
+        public static float frame = 0;
+
         /// <summary>
         /// Monogame: default draw method
         /// </summary>
@@ -2042,10 +2086,15 @@ namespace ctrviewer
             //if we're loading, only draw the loading info.
             if (IsLoading)
             {
+                frame = 0;
+
                 DrawLoadingScreen(gameTime, spriteBatch);
                 IsDrawing = false;
                 return;
             }
+
+
+            GameConsole.Write("animframe: " + (int)frame);
 
             //reset samplers to default
             Samplers.SetToDevice(graphics, EngineSampler.Default);
@@ -2110,6 +2159,7 @@ namespace ctrviewer
 
             //print instructions if nothing is loaded yet
             if (!IsLoading && Scenes.Count == 0)
+            {
                 DrawString(
                     Locale.GreetingInfo_Title + "\r\n" +
                     Locale.GreetingInfo_NoLevels + "\r\n\r\n" +
@@ -2121,6 +2171,14 @@ namespace ctrviewer
                     Locale.GreetingInfo_Models,
                     20, 20
                 );
+            }
+            else
+            {
+                frame += 0.25f;
+
+                if (frame > 75)
+                    frame = 0;
+            }
 
 
 

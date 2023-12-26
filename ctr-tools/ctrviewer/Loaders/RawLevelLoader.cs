@@ -22,6 +22,7 @@ namespace ctrviewer.Loaders
             }
         }
 
+        //todo: fix assimp import to use texturedindexbuffers (check commented lines)
         public void ImportAssimpData(Scene scene)
         {
             var monolist = new List<VertexPositionColorTexture>();
@@ -31,7 +32,7 @@ namespace ctrviewer.Loaders
 
             Trilists.Add("test", new TriList() { type = TriListType.Basic });
 
-            Trilists["test"].textureName = "test";
+            //Trilists["test"].textureName = "test";
             Trilists["test"].textureEnabled = true;
 
 
@@ -79,7 +80,7 @@ namespace ctrviewer.Loaders
             Seal();
 
             GameConsole.Write($"numverts: {Trilists["test"].numVerts}");
-            GameConsole.Write($"numfaces: {Trilists["test"].numFaces}");
+           // GameConsole.Write($"numfaces: {Trilists["test"].numFaces}");
         }
 
         public Vector3 Convert(Vector3D input) => new Vector3(input.X, input.Y, input.Z);

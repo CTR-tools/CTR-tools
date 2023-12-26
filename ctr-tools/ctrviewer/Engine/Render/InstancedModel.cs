@@ -10,7 +10,7 @@ namespace ctrviewer.Engine.Render
         public Vector3 Rotation = Vector3.Zero;
         public Vector3 Scale = Vector3.One;
 
-        private TriListCollection model;
+        private TriList model;
         public AnimationPlayer anim;
 
         private string _modelName;
@@ -20,6 +20,7 @@ namespace ctrviewer.Engine.Render
             set { _modelName = value; model = ContentVault.GetModel(_modelName); }
         }
 
+        //list of model names to rotate
         private static List<string> rotated = new List<string>() { "c", "t", "t_JAPAN", "r", "fruit", "crystal" };
 
         public InstancedModel()

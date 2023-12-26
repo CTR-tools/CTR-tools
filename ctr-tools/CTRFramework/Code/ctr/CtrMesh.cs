@@ -396,6 +396,8 @@ namespace CTRFramework.Models
                 {
                     tempCoords[1] = tempCoords[0];
                     tempColor[1] = tempColor[0];
+
+                    tempTex[1] = tempTex[0];
                 }
 
 

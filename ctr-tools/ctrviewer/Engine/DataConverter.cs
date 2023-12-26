@@ -5,7 +5,6 @@ using ctrviewer.Engine.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using System;
 
 namespace ctrviewer.Engine
@@ -36,69 +35,99 @@ namespace ctrviewer.Engine
             };
         }
 
-        public static TriListCollection ToTriListCollection(CtrModel model, float scale = 1f)
-        {
-            return ToTriListCollection(model, Color.Gray, false, scale);
-        }
-
-        public static TriListCollection ToTriListCollection(CtrModel model, Color color, bool lerp = false, float scale = 1f, int animIndex = 0, int frameIndex = 0)
+        /// <summary>
+        /// Converts CTR mesh to internal monogame viewer format.
+        /// </summary>
+        public static TriList ToTriList(CtrMesh mesh, Color color, bool lerp = false, float scale = 1f, int animIndex = 0, int frameIndex = 0)
         {
             //GameConsole.Write(model.Name);
 
-            var coll = new TriListCollection();
+            var trilist = new TriList();
 
-            var kek = new Dictionary<string, TriList>();
-
-                for (int i = 0; i < model[0].verts.Count / 3; i++)
+            if (!mesh.IsAnimated)
+            {
+                //first, push all vertices to vertex buffer
+                for (int i = 0; i < mesh.verts.Count / 3; i++)
                 {
-                    //load textures
-                    var tex = model[0].matIndices[i];
-
-                    if (tex is not null)
-                        if (tex.ParentLayout is not null)
-                            tex = tex.ParentLayout;
-
-                    string texture = tex is null ? "test" : tex.Tag;
-
-                    if (!kek.ContainsKey(texture))
-                        kek.Add(texture, new TriList());
-
-                    /*
-                    if (model[0].IsAnimated)
-                    {
-                        model[0].frame = model[0].anims[animIndex].Frames[frameIndex];
-                        model[0].GetVertexBuffer();
-                    }
-                    */
-
                     var li = new List<VertexPositionColorTexture>();
 
                     for (int j = i * 3; j < i * 3 + 3; j++)
                     {
-                        var vert = model[0].verts[j];
-                        li.Add(DataConverter.ToVptc(vert, vert.uv, color, lerp, scale * Helpers.GteScaleSmall));
+                        var vert = mesh.verts[j];
+                        li.Add(DataConverter.ToVptc(vert, vert.uv, color, lerp, scale * Helpers.GteScaleSmall)); //todo: what, why, shouldnt use gte scale here
                     }
 
-                    var t = kek[texture];
-                    t.textureName = texture;
-                    t.textureEnabled = t.textureName == "test" ? false : true;
-                    t.ScrollingEnabled = false;
-                    if (t.textureEnabled)
-                        if (model[0].matIndices[i].blendingMode == CTRFramework.Vram.BlendingMode.Additive)
-                            t.blendState = BlendState.Additive;
+                    trilist.PushTri(li);
+                }
+            }
+            else
+            {
+                foreach (var anim in mesh.anims)
+                {
+                    var buf = new AnimatedVertexBuffer();
 
-                    t.PushTri(li);
+                    buf.totalFrames = anim.numFrames;
+                    buf.frameSize = mesh.verts.Count;
+
+                    foreach (var frame in anim.Frames)
+                    {
+                        mesh.frame = frame;
+                        mesh.GetVertexBuffer();
+
+                        for (int i = 0; i < mesh.verts.Count / 3; i++)
+                        {
+                            var li = new List<VertexPositionColorTexture>();
+
+                            for (int j = i * 3; j < i * 3 + 3; j++)
+                            {
+                                var vert = mesh.verts[j];
+                                li.Add(DataConverter.ToVptc(vert, vert.uv, color, lerp, scale * Helpers.GteScaleSmall)); //todo: what, why, shouldnt use gte scale here
+                            }
+
+                            buf.PushTri(li);
+                        }
+                    }
+
+                    trilist.animsList.Add(buf);
                 }
 
-                foreach (var list in kek.Values)
-                    list.Seal();
+                trilist.anim = trilist.animsList[0];
+            }
 
-                coll.AddRange(kek.Values);
+            //next create index buffers for all textures
+            for (int i = 0; i < mesh.verts.Count / 3; i++)
+            {
+                //load textures
+                var tex = mesh.matIndices[i];
 
-                return coll;
+                if (tex is not null)
+                    if (tex.ParentLayout is not null)
+                        tex = tex.ParentLayout;
+
+                string texture = tex is null ? "default" : tex.Tag;
+
+                // ptr intex buffer
+                var buf = trilist.GetIndexBuffer(texture);
+                buf.PushTri(i * 3 + 0, i * 3 + 1, i * 3 + 2);
+
+                //todo: implement later
+                /*
+                t.textureName = texture;
+                t.textureEnabled = t.textureName == "test" ? false : true;
+                t.ScrollingEnabled = false;
+
+                if (t.textureEnabled)
+                    if (model[0].matIndices[i].blendingMode == CTRFramework.Vram.BlendingMode.Additive)
+                        t.blendState = BlendState.Additive;
+                */
+            }
+
+            trilist.Seal();
+
+            return trilist;
         }
 
-
+        /*
         public static AnimatedTriListCollection ToAnimatedTriListCollection(CtrModel model, int animIndex = 0)
         {
             var coll = new AnimatedTriListCollection();
@@ -116,6 +145,7 @@ namespace ctrviewer.Engine
 
             return coll;
         }
+        */
 
         public static SimpleAnimation ToSimpleAnimation(NavPath path)
         {

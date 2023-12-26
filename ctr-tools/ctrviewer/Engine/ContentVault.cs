@@ -12,7 +12,7 @@ namespace ctrviewer.Engine
         public static Dictionary<string, Texture2D> Textures = new Dictionary<string, Texture2D>();
         public static Dictionary<string, Texture2D> ReplacementTextures = new Dictionary<string, Texture2D>();
         public static Dictionary<string, SoundEffect> Sounds = new Dictionary<string, SoundEffect>();
-        public static Dictionary<string, TriListCollection> Models = new Dictionary<string, TriListCollection>();
+        public static Dictionary<string, TriList> Models = new Dictionary<string, TriList>();
         public static Dictionary<string, Effect> Shaders = new Dictionary<string, Effect>();
         public static Dictionary<string, SimpleAnimation> VectorAnims = new Dictionary<string, SimpleAnimation>();
 
@@ -70,8 +70,10 @@ namespace ctrviewer.Engine
                     Textures[name] = texture;
                     Helpers.Panic("ContentVault", PanicType.Warning, $"Attempted to add a duplicate texture: '{name}'.");
                 }
-
-                Textures.Add(name, texture);
+                else
+                {
+                    Textures.Add(name, texture);
+                }
             }
         }
 
@@ -93,7 +95,7 @@ namespace ctrviewer.Engine
             }
         }
 
-        public static void AddModel(string name, TriListCollection model) => Models[name.ToUpper()] = model;
+        public static void AddModel(string name, TriList model) => Models[name.ToUpper()] = model;
 
         public static SimpleAnimation GetVectorAnim(string name)
         {
@@ -114,7 +116,7 @@ namespace ctrviewer.Engine
             return Shaders[name];
         }
 
-        public static TriListCollection GetModel(string name)
+        public static TriList GetModel(string name)
         {
             name = name.ToUpper();
 
@@ -124,7 +126,7 @@ namespace ctrviewer.Engine
             return Models[name];
         }
 
-        public static Texture2D GetTexture(string name, bool useReplacements)
+        public static Texture2D GetTexture(string name, bool useReplacements = false)
         {
             name = name.ToUpper();
 

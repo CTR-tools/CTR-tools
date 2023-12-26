@@ -88,7 +88,7 @@ namespace ctrviewer.Engine
         public bool KartMode { get; set; } = false;
         public bool DrawWireframe { get; set; } = false;
         public bool PreloadToRam { get; set; } = true;
-        public bool Textures { get; set; } = true;
+        public bool DrawTextures { get; set; } = true;
 
         private bool _enableFiltering = true;
         public bool EnableFiltering

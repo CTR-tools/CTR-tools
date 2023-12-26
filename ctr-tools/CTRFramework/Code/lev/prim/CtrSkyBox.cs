@@ -28,6 +28,11 @@ namespace CTRFramework
             for (int i = 0; i < numVertex; i++)
                 Vertices.Add(new VertexShort(br));
 
+            foreach (var vert in Vertices)
+            {
+                Helpers.PanicAssume(this, vert.Position.ToString());
+            }
+
             for (int i = 0; i < 8; i++)
             {
                 Faces[i] = new List<Vector4s>();

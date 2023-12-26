@@ -41,7 +41,7 @@ namespace ctrviewer.Engine.Gui
                 new BoolMenuItem() { Text = Locale.VideoMenu_Wireframe, Name = "wire", Value = settings.DrawWireframe, HelperText = "Toggles wireframe." },
                 new BoolMenuItem() { Text = Locale.VideoMenu_Replacements, Name = "newtex", Value = settings.UseTextureReplacements, HelperText = "Toggles custom texture replacements from NEWTEX folder." },
                 new BoolMenuItem() { Text = Locale.VideoMenu_VertexLighting, Name = "vcolor", Value = settings.VertexLighting, HelperText = "Toggles baked vertex lighting." },
-                new BoolMenuItem() { Text = Locale.VideoMenu_Textures, Name = "textures", Value = settings.Textures, HelperText = "Toggles texture rendering." },
+                new BoolMenuItem() { Text = Locale.VideoMenu_Textures, Name = "textures", Value = settings.DrawTextures, HelperText = "Toggles texture rendering." },
                 new BoolMenuItem() { Text = Locale.VideoMenu_BackfaceCulling, Name = "nocull", Value = settings.BackFaceCulling, HelperText = "Toggle backface culling (polygons rendered from both sides)." },
                 new BoolMenuItem() { Text = Locale.VideoMenu_Skybox, Name = "skybox", Value = settings.ShowSky, HelperText = "Toggles level skybox." },
                 new BoolMenuItem() { Text = Locale.VideoMenu_Water, Name = "water", Value = settings.ShowWater, HelperText = "Toggles meshes marked as water." },

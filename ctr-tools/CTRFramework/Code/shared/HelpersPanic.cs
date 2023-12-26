@@ -7,11 +7,11 @@ namespace CTRFramework.Shared
     [Flags]
     public enum PanicLevel
     {
-        Silent = 1 << 0,        //omits logger entirely
-        Console = 1 << 1,       //writes message to the console
-        Pause = 1 << 2,         //if console output enabled, additionaly stops and waits for user input
-        File = 1 << 3,          //writes to file
-        Exception = 1 << 4      //throws an exception for Error message
+        Silent = 1 << 0,    //omits logger entirely
+        Console = 1 << 1,   //writes message to the console
+        Pause = 1 << 2,     //if console output enabled, additionaly stops and waits for user input
+        File = 1 << 3,      //writes to file
+        Exception = 1 << 4  //throws an exception for Error message
     }
 
     [Flags]
@@ -55,6 +55,11 @@ namespace CTRFramework.Shared
         public static void Panic(object sender, PanicType panicType, string message)
         {
             Panic(sender.GetType().Name, panicType, message);
+        }
+
+        public static void PanicError(object sender, string message)
+        {
+            Panic(sender.GetType().Name, PanicType.Error, message);
         }
 
         public static void PanicAssume(object sender, string message)

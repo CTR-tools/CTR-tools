@@ -103,9 +103,9 @@ namespace CTRFramework
         public byte TerrainFlagUnknown;     //almost always 0, only found in tiger temple and sewer speedway
 
         //0x3C
-        public short id;
-        public byte trackPos;
-        public byte midunk;
+        public short id;        //quadblock index
+        public byte trackPos;   //progress tracker value, also linked restart index
+        public byte midunk;     //normal scale shift factor
 
         //public byte[] midflags = new byte[2];
 
@@ -244,7 +244,7 @@ namespace CTRFramework
                 faceNormal.Add(br.ReadVector2s(Helpers.GteScaleLarge));
 
             if (br.Position - BaseAddress != SizeOf)
-                Helpers.Panic(this, PanicType.Error, "SizeOf mismatch!");
+                Helpers.PanicError(this, "SizeOf mismatch!");
 
             // ===================================
             // quadblock raw data complete, now proceed to additional data parsing
@@ -330,7 +330,7 @@ namespace CTRFramework
         };
 
         /// <summary>
-        /// Rotates quad UVs 
+        /// Rotates quad UVs, 1 time by default.
         /// </summary>
         /// <param name="buf"></param>
         /// <param name="rotations"></param>
@@ -422,8 +422,9 @@ namespace CTRFramework
         {
             try
             {
-                List<Vertex> buf = new List<Vertex>();
+                var buf = new List<Vertex>();
 
+                //-1 encodes low lod here
                 if (i == -1)
                 {
                     buf.Add(vertexArray[ind2[0, 0]]);
@@ -435,9 +436,7 @@ namespace CTRFramework
                         buf[j].uv = texlow.normuv[j];
 
                     if (buf.Count != 4)
-                    {
-                        Helpers.Panic(this, PanicType.Error, "not a quad! " + buf.Count);
-                    }
+                        Helpers.PanicError(this, $"not a quad! {buf.Count}");
 
                     return buf;
                 }
@@ -445,7 +444,7 @@ namespace CTRFramework
                 {
                     if (i > 4 || i < 0)
                     {
-                        Helpers.Panic(this, PanicType.Error, "Can't have more than 4 quads in a quad block.");
+                        Helpers.PanicError(this, "Can't have more than 4 quads in a quad block.");
                         return null;
                     }
 
@@ -482,14 +481,15 @@ namespace CTRFramework
                     switch (faceFlags[i].Rotation)
                     {
                         case RotateFlipType.None: break;
-                        case RotateFlipType.Rotate90: QuadTexRotate(buf, 1); break; //3142
+                        case RotateFlipType.Rotate90: QuadTexRotate(buf, 1); break;
                         case RotateFlipType.Rotate180: QuadTexRotate(buf, 2); break;
                         case RotateFlipType.Rotate270: QuadTexRotate(buf, 3); break;
                         case RotateFlipType.FlipRotate270: QuadTexFlip(buf); QuadTexRotate(buf, 3); break;
                         case RotateFlipType.FlipRotate180: QuadTexFlip(buf); QuadTexRotate(buf, 2); break;
-                        case RotateFlipType.FlipRotate90: QuadTexFlip(buf); QuadTexRotate(buf, 1); break; //3142
+                        case RotateFlipType.FlipRotate90: QuadTexFlip(buf); QuadTexRotate(buf, 1); break;
                         case RotateFlipType.Flip: QuadTexFlip(buf); break;
-                        default: throw new Exception("Impossible QuadRotation.");
+
+                        default: throw new Exception($"Impossible QuadRotation. {faceFlags[i].Rotation}");
                     }
 
                     //handle degenerated quads
@@ -499,17 +499,19 @@ namespace CTRFramework
                         case FaceMode.SingleUV1: QuadTexRotateTri(buf, 2); break;
                         case FaceMode.SingleUV2: QuadTexRotateTri(buf); break;
                         case FaceMode.Unknown: Helpers.Panic(this, PanicType.Assume, $"quad {id}: both quad flags set"); break;
+
+                        default: throw new Exception($"Impossible FaceMode. {faceFlags[i].faceMode}");
                     }
 
                     if (buf.Count != 4)
-                        Helpers.Panic(this, PanicType.Error, "not a quad! " + buf.Count);
+                        Helpers.PanicError(this, $"not a quad! {buf.Count}");
                 }
 
                 return buf;
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, PanicType.Error, "Can't export quad to MG. Give null.\r\n" + this.id.ToString("X8") + " " + this.BaseAddress.ToString("X8") + "\r\n" + ex.Message);
+                Helpers.PanicError(this, "Can't export quad to MG. Give null.\r\n" + this.id.ToString("X8") + " " + this.BaseAddress.ToString("X8") + "\r\n" + ex.Message);
                 return null;
             }
         }

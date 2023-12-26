@@ -8,7 +8,9 @@ namespace ctrviewer.Engine.Render
     public class MGLevel : IRenderable
     {
         public TriList wire = new TriList();
+
         public Dictionary<string, TriList> Trilists = new Dictionary<string, TriList>();
+
         public Dictionary<string, TriList> flagq = new Dictionary<string, TriList>();
 
         public BoundingBox boundingBox = new BoundingBox();
@@ -33,21 +35,31 @@ namespace ctrviewer.Engine.Render
 
         public MGLevel(CtrSkyBox sb)
         {
-            TriList skybox = new TriList();
+            var skybox = new TriList();
 
             skybox.textureEnabled = false;
             skybox.ScrollingEnabled = false;
 
-            foreach (var face in sb.Faces)
-            for (int i = 0; i < face.Count; i++)
-            {
-                List<VertexPositionColorTexture> tri = new List<VertexPositionColorTexture>();
-                tri.Add(DataConverter.ToVptc(sb.Vertices[(int)face[i].X], System.Numerics.Vector2.Zero));
-                tri.Add(DataConverter.ToVptc(sb.Vertices[(int)face[i].Y], System.Numerics.Vector2.Zero));
-                tri.Add(DataConverter.ToVptc(sb.Vertices[(int)face[i].Z], System.Numerics.Vector2.Zero));
+            //we only need 1 buffer for entire scene
+            skybox.indexBuffers.Add(new TexturedIndexBuffer() { textureName = "default" });
 
-                skybox.PushTri(tri);
-            }
+            int x = 0;
+
+            foreach (var face in sb.Faces)
+                for (int i = 0; i < face.Count; i++)
+                {
+                    var tri = new List<VertexPositionColorTexture>();
+
+                    tri.Add(DataConverter.ToVptc(sb.Vertices[(int)face[i].X], System.Numerics.Vector2.Zero));
+                    tri.Add(DataConverter.ToVptc(sb.Vertices[(int)face[i].Y], System.Numerics.Vector2.Zero));
+                    tri.Add(DataConverter.ToVptc(sb.Vertices[(int)face[i].Z], System.Numerics.Vector2.Zero));
+
+                    skybox.PushTri(tri);
+
+                    skybox.indexBuffers[0].PushTri(x * 3 + 0, x * 3 + 1, x * 3 + 2);
+
+                    x++;
+                }
 
             skybox.Seal();
             skybox.type = TriListType.Basic;
@@ -65,11 +77,19 @@ namespace ctrviewer.Engine.Render
 
             if (!dict.ContainsKey(name))
             {
-                TriList ql = new TriList(new List<VertexPositionColorTexture>() { }, true, (custTex != "" ? custTex : name));
+                var ql = new TriList(new List<VertexPositionColorTexture>() { }, true, (custTex != "" ? custTex : name));
                 ql.blendState = blendState;
                 ql.type = type;
                 dict.Add(name, ql);
             }
+
+
+            var buf = dict[name].GetIndexBuffer(custTex);
+
+            var numVerts = dict[name].verts.Count;
+
+            buf.PushTri(numVerts + 0, numVerts + 1, numVerts + 2);
+            buf.PushTri(numVerts + 3, numVerts + 4, numVerts + 5);
 
             dict[name].PushQuad(monolist);
         }
@@ -84,11 +104,13 @@ namespace ctrviewer.Engine.Render
             //    ql.Value.Update(gameTime);
         }
 
+        /*
         public void DrawTest(GraphicsDeviceManager graphics, Effect effect)
         {
             foreach (var ql in Trilists)
                 ql.Value.DrawTest(graphics, ContentVault.GetShader("tutorial"));
-        }
+        }*/
+
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
@@ -142,7 +164,6 @@ namespace ctrviewer.Engine.Render
             effect.View = camera.ViewMatrix;
 
             foreach (var ql in Trilists)
-                if (ql.Value.type == TriListType.Basic)
                     ql.Value.Draw(graphics, effect, alpha);
 
             //clear z buffer to make sure skybox is behind everything
