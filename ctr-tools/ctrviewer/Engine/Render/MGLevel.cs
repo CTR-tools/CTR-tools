@@ -117,14 +117,14 @@ namespace ctrviewer.Engine.Render
             //foreach (var ql in normalq)
             foreach (var ql in Trilists)
                 if (ql.Value.type == TriListType.Basic)
-                    ql.Value.Draw(graphics, effect, null);
+                    ql.Value.Draw(graphics, effect, alpha);
 
             Samplers.SetToDevice(graphics, EngineSampler.Animated);
 
             //foreach (var ql in animatedq)
             foreach (var ql in Trilists)
                 if (ql.Value.type == TriListType.Animated)
-                    ql.Value.Draw(graphics, effect, null);
+                    ql.Value.Draw(graphics, effect, alpha);
 
             Samplers.SetToDevice(graphics, EngineSampler.Default);
 
@@ -162,6 +162,12 @@ namespace ctrviewer.Engine.Render
         {
             effect.Projection = camera.ProjectionMatrix;
             effect.View = camera.ViewMatrix;
+
+            if (alpha != null)
+            {
+                alpha.Projection = camera.ProjectionMatrix;
+                alpha.View = camera.ViewMatrix;
+            }
 
             foreach (var ql in Trilists)
                     ql.Value.Draw(graphics, effect, alpha);

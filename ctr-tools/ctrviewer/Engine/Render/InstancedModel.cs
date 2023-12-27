@@ -64,11 +64,14 @@ namespace ctrviewer.Engine.Render
             effect.View = camera.ViewMatrix;
             effect.Projection = camera.ProjectionMatrix;
 
-            //alpha.World = effect.World;
-            //alpha.View = effect.View;
-            //alpha.Projection = effect.Projection;
+            if (alpha != null)
+            {
+                alpha.World = effect.World;
+                alpha.View = effect.View;
+                alpha.Projection = effect.Projection;
+            }
 
-            model.Draw(graphics, effect, null);
+            model.Draw(graphics, effect, alpha);
         }
     }
 }

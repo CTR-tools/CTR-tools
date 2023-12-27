@@ -136,25 +136,33 @@ namespace ctrviewer.Loaders
 
                                     bool isAlpha = ContentVault.alphalist.Contains(texTag);
 
-                                    Push(Trilists, "mesh", monolist,
-                                        (isAnimated ? TriListType.Animated : (isAlpha ? TriListType.Alpha : TriListType.Basic)),
-                                        blendState == BlendState.Additive ? BlendState.Additive : (isAlpha ? BlendState.AlphaBlend : BlendState.Opaque)//isAlpha ? (blendState == BlendState.Additive ? blendState : BlendState.Opaque) : BlendState.Opaque
-                                       , texTag
-                                        );
+
+                                    string meshName = "mesh";
 
                                     if (qb.doubleSided)
-                                        Trilists["mesh"].CullingEnabled = false;
+                                    {
+                                        meshName = "mesh_doublesided";
+                                    }
+
+                                    Push(Trilists, meshName, monolist,
+                                        (isAnimated ? TriListType.Animated : (isAlpha ? TriListType.Alpha : TriListType.Basic)),
+                                        blendState == BlendState.Additive ? BlendState.Additive : (isAlpha ? BlendState.AlphaBlend : BlendState.Opaque)//isAlpha ? (blendState == BlendState.Additive ? blendState : BlendState.Opaque) : BlendState.Opaque
+                                        , texTag
+                                    );
 
                                     if (isAnimated)
                                         foreach (var ql in Trilists)
                                             if (ql.Value.type == TriListType.Animated)
-                                                Trilists["mesh"].ScrollingEnabled = true;
+                                                Trilists[meshName].ScrollingEnabled = true;
 
                                     //foreach (var ql in Trilists)
                                     //    Trilists[texTag].textureEnabled = false;
                                 }
                             }
                         }
+
+                        if (Trilists.ContainsKey("mesh_doublesided"))
+                            Trilists["mesh_doublesided"].CullingEnabled = false;
 
                         break;
                     }

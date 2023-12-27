@@ -2,8 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System;
-using System.Xml.Linq;
-using System.Windows.Forms;
 
 namespace ctrviewer.Engine.Render
 {
@@ -106,6 +104,7 @@ namespace ctrviewer.Engine.Render
         public Texture2D Texture { get; private set; }
         public Texture2D AltTexture { get; private set; }
 
+        public bool IsAlpha = false;
 
 
         public List<short> indices = new List<short>();
@@ -130,10 +129,12 @@ namespace ctrviewer.Engine.Render
             Texture = ContentVault.GetTexture(textureName, false);
             AltTexture = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
 
-            indices_sealed = indices.ToArray();
-            indices.Clear();
+            if (ContentVault.alphalist.Contains(textureName)) IsAlpha = true;
 
+            indices_sealed = indices.ToArray();
             numFaces = indices_sealed.Length / 3;
+
+            indices.Clear();
 
             Sealed = true;
         }
@@ -143,6 +144,12 @@ namespace ctrviewer.Engine.Render
         /// </summary>
         public void PushTri(int x, int y, int z)
         {
+            if (Sealed)
+            {
+                GameConsole.Write("Attempeted to push tri to a sealed trilist!");
+                return;
+            }
+
             indices.Add((short)x);
             indices.Add((short)y);
             indices.Add((short)z);
@@ -398,6 +405,17 @@ namespace ctrviewer.Engine.Render
 
         public void Draw(GraphicsDeviceManager graphics, BasicEffect effect, AlphaTestEffect alpha)
         {
+
+            //maybe im dumb, make sure matrices are fine
+            if (alpha != null)
+            {
+                alpha.World = effect.World;
+                alpha.View = effect.View;
+                alpha.Projection = effect.Projection;
+            }
+
+
+            #region [param validation]
             if (indexBuffers is null || verts_sealed is null)
             {
                 GameConsole.Write($"Uninitialized trilist!");
@@ -420,9 +438,7 @@ namespace ctrviewer.Engine.Render
                     return;
                 }
             }
-
-
-            effect.VertexColorEnabled = EngineSettings.Instance.VertexLighting;
+            #endregion
 
             if (!textureEnabled)
                 effect.DiffuseColor /= 2;
@@ -434,28 +450,14 @@ namespace ctrviewer.Engine.Render
             //check for global texture setting and use trilist value if true
             effect.TextureEnabled = EngineSettings.Instance.DrawTextures ? textureEnabled : false;
 
-            /*
-            //todo: check conditions, maybe dont need at all since texture stuff gets assigned after sealing the buffers
-            if (textureEnabled)
-                if (ContentVault.Textures.ContainsKey(indexBuffers[0].textureName)) //todo: this is has to be done on per index buffer basis
-                {
-                    //effect.Texture = ContentVault.GetTexture(textureName, EngineSettings.Instance.UseTextureReplacements);
-                    effect.Texture = EngineSettings.Instance.UseTextureReplacements ? indexBuffers[1].AltTexture : indexBuffers[1].Texture;
-                    if (alpha != null)
-                        alpha.Texture = effect.Texture;
-                }
-                else
-                {
-                    //Console.WriteLine("missing texture: " + textureName);
-                    effect.Texture = ContentVault.GetTexture("test", false);
-                    if (alpha != null)
-                        alpha.Texture = effect.Texture;
-                }
-            */
-
-            
             if (!CullingEnabled || !EngineSettings.Instance.BackFaceCulling)
+            {
                 Samplers.SetToDevice(graphics, EngineRasterizer.DoubleSided);
+            }
+            else
+            {
+                Samplers.SetToDevice(graphics, EngineRasterizer.Default);
+            }
 
             if (type == TriListType.Water || type == TriListType.Flag)
             {
@@ -463,7 +465,7 @@ namespace ctrviewer.Engine.Render
                 if (alpha != null)
                     alpha.Alpha = 0.5f;
             }
-            
+
 
             /*
             if (blendState == BlendState.AlphaBlend)
@@ -473,22 +475,46 @@ namespace ctrviewer.Engine.Render
                     alpha.Alpha = 1f;
             }*/
 
+
+            //actual object rendering here
+
+            Effect fx = effect;
+
             foreach (var mat in indexBuffers)
             {
-                effect.Texture = EngineSettings.Instance.UseTextureReplacements && mat.AltTexture != null ? mat.AltTexture : mat.Texture;
+                //set current texture
+                if (EngineSettings.Instance.DrawTextures)
+                {
+                    effect.Texture = EngineSettings.Instance.UseTextureReplacements && mat.AltTexture != null ? mat.AltTexture : mat.Texture;
 
-                foreach (var pass in effect.CurrentTechnique.Passes)
+                    if (alpha != null)
+                        alpha.Texture = effect.Texture;
+                }
+
+                //maybe transparent?
+                if (alpha != null && mat.IsAlpha)
+                    fx = alpha;
+                else
+                    fx = effect;
+
+                //anim legth fail check. should be animplayer dependent instead
+                if (anim != null)
+                    if (anim.verts_sealed.Length < anim.frameSize * (int)Game1.frame + 1)
+                        continue;
+
+                foreach (var pass in fx.CurrentTechnique.Passes)
                 {
                     pass.Apply();
 
-                        graphics.GraphicsDevice.DrawUserIndexedPrimitives(
-                            PrimitiveType.TriangleList,
-                            anim == null ? verts_sealed : anim.verts_sealed, anim == null ? 0 : anim.frameSize * (int)Game1.frame, anim == null ? numVerts : anim.frameSize,
-                            mat.indices_sealed, 0, mat.numFaces,
-                            VertexPositionColorTexture.VertexDeclaration
-                        );
+                    graphics.GraphicsDevice.DrawUserIndexedPrimitives(
+                        PrimitiveType.TriangleList,
+                        anim == null ? verts_sealed : anim.verts_sealed, anim == null ? 0 : anim.frameSize * (int)Game1.frame, anim == null ? numVerts : anim.frameSize,
+                        mat.indices_sealed, 0, mat.numFaces,
+                        VertexPositionColorTexture.VertexDeclaration
+                    );
                 }
             }
+        
 
             if (type == TriListType.Water || type == TriListType.Flag)
             {
@@ -526,6 +552,22 @@ namespace ctrviewer.Engine.Render
                         );
                     }
                 }
+
+                if (alpha != null)
+                    foreach (var pass in alpha.CurrentTechnique.Passes)
+                    {
+                        pass.Apply();
+
+                        foreach (var mat in indexBuffers)
+                        {
+                            graphics.GraphicsDevice.DrawUserIndexedPrimitives(
+                                PrimitiveType.TriangleList,
+                                anim == null ? verts_sealed : anim.verts_sealed, anim == null ? 0 : anim.frameSize * (int)Game1.frame, anim == null ? numVerts : anim.frameSize,
+                                mat.indices_sealed, 0, mat.numFaces,
+                                VertexPositionColorTexture.VertexDeclaration
+                            );
+                        }
+                    }
             }
 
             if (!textureEnabled)

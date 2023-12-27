@@ -1963,6 +1963,9 @@ namespace ctrviewer
                 effect.Projection = eng.Cameras[CameraType.SkyCamera].ProjectionMatrix;
                 effect.View = eng.Cameras[CameraType.SkyCamera].ViewMatrix;
 
+                alphaTestEffect.Projection = effect.Projection;
+                alphaTestEffect.View = effect.View;
+
                 ContentVault.Models["backsky"].Draw(graphics, effect, null);
 
                 //clear z buffer to make sure skybox is behind everything
@@ -1977,29 +1980,26 @@ namespace ctrviewer
             effect.View = cam.ViewMatrix;
             effect.Projection = cam.ProjectionMatrix;
 
-            alphaTestEffect.View = effect.View;
-            alphaTestEffect.Projection = effect.Projection;
+            //render level mesh depending on lod
+            foreach (var qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshMed))
+                qb.Draw(graphics, effect, alphaTestEffect);
 
             //maybe render game models
             if (eng.Settings.ShowModels)
             {
                 //render karts
                 //if (KartMode)
-                foreach (var k in karts)
-                    k.Draw(graphics, instanceEffect, alphaTestEffect, cam);
+                foreach (var kart in karts)
+                    kart.Draw(graphics, instanceEffect, alphaTestEffect, cam);
 
                 //render ctr models from external folder
-                foreach (var v in eng.external)
-                    v.Draw(graphics, instanceEffect, alphaTestEffect, cam);
+                foreach (var model in eng.external)
+                    model.Draw(graphics, instanceEffect, alphaTestEffect, cam);
 
                 //render all instanced models
-                foreach (var v in eng.instanced)
-                    v.Draw(graphics, instanceEffect, alphaTestEffect, cam);
+                foreach (var model in eng.instanced)
+                    model.Draw(graphics, instanceEffect, alphaTestEffect, cam);
             }
-
-            //render level mesh depending on lod
-            foreach (var qb in (eng.Settings.UseLowLod ? eng.MeshLow : eng.MeshMed))
-                qb.Draw(graphics, effect, alphaTestEffect);
 
 
             /*
@@ -2153,6 +2153,7 @@ namespace ctrviewer
 
             //start drawing menu stuff
 
+            //make better scaling option
             guiScale = graphics.GraphicsDevice.Viewport.Height / 1080f;
 
             spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.AnisotropicClamp);
@@ -2174,7 +2175,7 @@ namespace ctrviewer
             }
             else
             {
-                frame += 0.25f;
+                frame += (float)( gameTime.ElapsedGameTime.TotalMilliseconds / 1000f) * 15;
 
                 if (frame > 75)
                     frame = 0;
