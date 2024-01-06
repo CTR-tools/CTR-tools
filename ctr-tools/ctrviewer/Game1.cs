@@ -1605,6 +1605,8 @@ namespace ctrviewer
         int selectedChar = 0;
 
 
+        MemonicsProcessor cheats = new MemonicsProcessor();
+
         /// <summary>
         /// Monogame: default update method
         /// </summary>
@@ -1635,6 +1637,15 @@ namespace ctrviewer
 
             //move on if window isn't active
             if (!IsActive) return;
+
+            if (GamePadHandler.AreAllDown(Buttons.LeftShoulder, Buttons.RightShoulder))
+            {
+                cheats.Update();
+            }
+            else
+            {
+                cheats.Reset();
+            }
 
             //allow fullscreen toggle before checking for controls enabled
             if (InputHandlers.Process(GameAction.ToggleFullscreen)) eng.Settings.Windowed ^= true;
@@ -2094,7 +2105,7 @@ namespace ctrviewer
             }
 
 
-            GameConsole.Write("animframe: " + (int)frame);
+            //GameConsole.Write("animframe: " + (int)frame);
 
             //reset samplers to default
             Samplers.SetToDevice(graphics, EngineSampler.Default);
