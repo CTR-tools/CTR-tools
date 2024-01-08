@@ -139,7 +139,7 @@ namespace ctrviewer.Engine.Input
                 case 0xFA7E4E1F: ToggleCheat(Cheat.CharPinstripe); break;
                 //ODDNOODLE - fake crash: Circle, Down, Down, Up, Circle, Circle, Down, Left, Right
                 case 0xF635A432: ToggleCheat(Cheat.CharFake); break;
-                //SLEDER - tropy: Down, Left, Right, Up, Down, Right, Right
+                //SLENDER - tropy: Down, Left, Right, Up, Down, Right, Right
                 case 0xF17870C0: ToggleCheat(Cheat.CharTropy); break;
                 //SEASWAN - penta: Down, Right, Triangle, Down, Left, Triangle, Up
                 case 0xF1717048: ToggleCheat(Cheat.CharPenta); break;

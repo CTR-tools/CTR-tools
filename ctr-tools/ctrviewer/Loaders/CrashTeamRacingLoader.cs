@@ -41,7 +41,7 @@ namespace ctrviewer.Loaders
 
                             if (vts != null)
                             {
-                                foreach (Vertex cv in vts)
+                                foreach (var cv in vts)
                                     monolist.Add(DataConverter.ToVptc(cv, cv.uv));
 
                                 string texTag = qb.texlow.Tag;

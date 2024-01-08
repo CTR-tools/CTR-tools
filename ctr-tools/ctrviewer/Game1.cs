@@ -1048,12 +1048,18 @@ namespace ctrviewer
             if (menu_models != null)
                 Scenes.Add(menu_models);
 
+            //for (int i = 242; i <= 257; i++)
+            //{
+            //    var model = big.ReadEntry(i).ParseAs<CtrModel>();
+
+//                ContentVault.AddModel(model.Name, DataConverter.ToTriList(model[0], Color.White));
+ //           }
+
              //tawna credits levs
             Scenes.Add(big.ReadScene(594));
             Scenes.Add(big.ReadScene(597));
             Scenes.Add(big.ReadScene(600));
             Scenes.Add(big.ReadScene(603));
-            
         }
 
         /// <summary>
@@ -1638,15 +1644,6 @@ namespace ctrviewer
             //move on if window isn't active
             if (!IsActive) return;
 
-            if (GamePadHandler.AreAllDown(Buttons.LeftShoulder, Buttons.RightShoulder))
-            {
-                cheats.Update();
-            }
-            else
-            {
-                cheats.Reset();
-            }
-
             //allow fullscreen toggle before checking for controls enabled
             if (InputHandlers.Process(GameAction.ToggleFullscreen)) eng.Settings.Windowed ^= true;
 
@@ -1752,57 +1749,67 @@ namespace ctrviewer
             //if menu is on the screen, handle menu
             if (menu.Visible)
             {
-                menu.Update(gameTime);
 
-                if (menu.Exec)
+                if (GamePadHandler.AreAllDown(Buttons.LeftShoulder, Buttons.RightShoulder))
                 {
-                    switch (menu.SelectedItem.Action)
-                    {
-                        case "settings":
-                            var info = new ProcessStartInfo() { Arguments = Meta.SettingsFile, FileName = "notepad" };
-                            Process.Start(info);
-                            break;
-                        case "close":
-                            menu.Visible = false;
-                            break;
-                        case "loadbig":
-                            LoadLevelsFromBig(menu.SelectedItem.Value);
-                            break;
-                        case "link":
-                            menu.SetMenu(font, menu.SelectedItem.Param);
-                            break;
-                        case "toggle":
-                            switch (menu.SelectedItem.Param)
-                            {
-                                case "lod": eng.Settings.UseLowLod ^= true; break;
-                                case "kart": eng.Settings.KartMode ^= true; break;
-                                default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
-                            }
-                            break;
-
-                        case "exit":
-                            Exit();
-                            break;
-                    }
-
-                    menu.Exec = !menu.Exec;
+                    cheats.Update();
                 }
-
-                //handle "go back"
-                if (InputHandlers.Process(GameAction.MenuBack))
+                else
                 {
-                    bool togglemenu = true;
+                    cheats.Reset();
 
-                    foreach (var m in menu.items)
+                    menu.Update(gameTime);
+
+                    if (menu.Exec)
                     {
-                        if (m.Action == "link" && m.Text == Locale.MenuGeneric_Back)
+                        switch (menu.SelectedItem.Action)
                         {
-                            menu.SetMenu(font, m.Param);
-                            togglemenu = false;
+                            case "settings":
+                                var info = new ProcessStartInfo() { Arguments = Meta.SettingsFile, FileName = "notepad" };
+                                Process.Start(info);
+                                break;
+                            case "close":
+                                menu.Visible = false;
+                                break;
+                            case "loadbig":
+                                LoadLevelsFromBig(menu.SelectedItem.Value);
+                                break;
+                            case "link":
+                                menu.SetMenu(font, menu.SelectedItem.Param);
+                                break;
+                            case "toggle":
+                                switch (menu.SelectedItem.Param)
+                                {
+                                    case "lod": eng.Settings.UseLowLod ^= true; break;
+                                    case "kart": eng.Settings.KartMode ^= true; break;
+                                    default: GameConsole.Write("unimplemented toggle: " + menu.SelectedItem.Param); break;
+                                }
+                                break;
+
+                            case "exit":
+                                Exit();
+                                break;
                         }
+
+                        menu.Exec = !menu.Exec;
                     }
 
-                    if (togglemenu) menu.Visible = !menu.Visible;
+                    //handle "go back"
+                    if (InputHandlers.Process(GameAction.MenuBack))
+                    {
+                        bool togglemenu = true;
+
+                        foreach (var m in menu.items)
+                        {
+                            if (m.Action == "link" && m.Text == Locale.MenuGeneric_Back)
+                            {
+                                menu.SetMenu(font, m.Param);
+                                togglemenu = false;
+                            }
+                        }
+
+                        if (togglemenu) menu.Visible = !menu.Visible;
+                    }
                 }
             }
             else
