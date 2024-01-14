@@ -38,44 +38,67 @@ namespace ctrviewer.Engine.Input
 
     /// <summary>
     /// Intended to process cheat input string and toggle cheat flag if it matches the checksum.
+    /// Original mnemonics derives from Gex 2 by Danny Chan, but also modified a bit, since original one used nintendo ABXY notation + start.
+    /// 
+    /// Up = U or N for north
+    /// Down = D or S for south
+    /// Left = L or W for west
+    /// Right = R or E for east
+    /// X for X, O for circle, A for triangle
+    /// 
+    /// Available letters: ADELNORSUWX
+    /// can also also seamlessly throw in C for circle, but it wasnt in the original game
     /// </summary>
     public class MemonicsProcessor
     {
+
+        /// <summary>
+        /// This is a list of buttons allowed for the mnemonics system.
+        /// As a side effect, pressing other buttons won't affect the proper sequence, maybe better treat it as reset?
+        /// </summary>
         private readonly List<Buttons> AllowedCheatButtons = new List<Buttons>() {
-            Buttons.DPadUp,
-            Buttons.DPadDown,
-            Buttons.DPadLeft,
-            Buttons.DPadRight,
-            Buttons.A,
-            Buttons.B,
-            Buttons.X,
-            Buttons.Y
+            Buttons.DPadUp, //UN
+            Buttons.DPadDown, //DS
+            Buttons.DPadLeft, //LW
+            Buttons.DPadRight, //RE
+            Buttons.A, //A
+            Buttons.B, //O
+            //Buttons.X,
+            Buttons.Y //A
         };
 
         private const uint defaultState = 0xFFFFFFFF;
 
+        /// <summary>
+        /// A single uint to hold states for 32 cheats.
+        /// </summary>
         private uint CheatState = 0;
+
+        /// <summary>
+        /// Input sequence checksum, tested against precalculated mnemonic value.
+        /// </summary>
         private uint Value = defaultState;
 
         /// <summary>
-        /// Returns current cheat state.
+        /// Returns current cheat state. Exposed for the outside users.
         /// </summary>
         /// <param name="cheat"></param>
         /// <returns></returns>
         public bool CheatUnlocked(Cheat cheat) => (CheatState & (uint)cheat) > 0;
 
         /// <summary>
-        /// Toggles current cheat state.
+        /// Toggles current cheat state. Only can toggle within the class.
         /// </summary>
         /// <param name="cheat"></param>
         private void ToggleCheat(Cheat cheat)
         {
             CheatState ^= (uint)cheat;
-            GameConsole.Write($"{cheat} state now: {CheatUnlocked(cheat)}");
+            //GameConsole.Write($"{cheat} state now: {CheatUnlocked(cheat)}");
 
             //send a message to the UI, since we got a state change
             FrontendMessage.SendMessage("cheat_unlock", $"Cheat {(CheatUnlocked(cheat) ? "enabled" : "disabled")}: {cheat}", 10, 10, 5);
 
+            //and reset the input
             Reset();
         }
 
@@ -86,29 +109,33 @@ namespace ctrviewer.Engine.Input
         /// <param name="button"></param>
         private void NextInput(Buttons button)
         {
+            //absolutely arbitrary formula to scramble the checksum value
+            //the way if works now, highest digit is always F
             Value = (Value >> 1) ^ (uint)((0x76281493 ^ ((((int)button + 100) * 32) ^ Value)));
 
-            Clipboard.SetText(Value.ToString("X8"));
+            //copy checksum to clipboard
+            //Clipboard.SetText(Value.ToString("X8"));
 
-            GameConsole.Write($"mnemonic value now: {Value.ToString("X8")}\tpressed: {button}");
+            //GameConsole.Write($"mnemonic value now: {Value.ToString("X8")}\tpressed: {button}");
 
-            MaybeUnlockStuff();
+            //check if we can unlock something
+            MaybeUnlockStuff(Value);
         }
 
         /// <summary>
-        /// Resets the checksum to the initial state.
+        /// Resets the checksum to the initial state. Public since might want to reset by outside events.
         /// </summary>
         public void Reset()
         {
             if (Value != defaultState)
             { 
                 Value = defaultState;
-                GameConsole.Write("reset mnemonic input!");
+                //GameConsole.Write("reset mnemonic input!");
             }
         }
 
         /// <summary>
-        /// Checks whether any of allowed cheat buttons is pressed
+        /// Checks whether any of allowed cheat buttons is pressed. To be called in the parent update class.
         /// </summary>
         public void Update()
         {
@@ -125,9 +152,10 @@ namespace ctrviewer.Engine.Input
         /// <summary>
         /// Unlocks stuff if mnemonic sequence resulted in valid checksum.
         /// </summary>
-        private void MaybeUnlockStuff()
+        private void MaybeUnlockStuff(uint value)
         {
-            switch (Value)
+            //might be a good idea to refactor it to a dictionary<uint, cheat>. less messy.
+            switch (value)
             {
                 //ROODUDE:      Right, Circle, Circle, Down, Up, Down, Right
                 case 0xF17A5059: ToggleCheat(Cheat.CharRoo); break;
