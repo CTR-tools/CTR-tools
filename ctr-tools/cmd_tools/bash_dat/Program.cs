@@ -32,7 +32,7 @@ namespace bash_dat
                     "\r\nImportant! Provide the Crash Bash EXE file to extract DAT contents.\r\n",
                     "Your EXE file and your DAT file must be located in the same folder."
                     );
-                
+
                 return;
             }
 
@@ -92,6 +92,7 @@ namespace bash_dat
             {
                 case "a45627fa6c3d1768f8ad56fb46569f06": ptr = 0x335A0; num = 0x1CA; version = "OPSM 38 Demo"; break;
                 case "ee4963398064c458e9a9b27040d639e0": ptr = 0x33784; num = 0x1E6; version = "Spyro Split / Winter Jampack 2000 / demo disc 1.3"; break;
+                case "9d86be91735f06dba059e00324c1dea6": ptr = 0x3499C; num = 0x229; version = "Aug 23 prototype"; break;
                 case "98e02493600b898bcacbdcb129e9019f": ptr = 0x3483C; num = 0x241; version = "Spyro 3 NTSC Demo"; break;
                 case "0f35ba94f0ce49b0e6fe8e2012e5f1b4": ptr = 0x34F40; num = 0x276; version = "Spyro 3 PAL Demo"; break;
                 case "db497990f79454bcbd41a770df3692ef": ptr = 0x35238; num = 0x276; version = "Euro Demo xx?"; break;
