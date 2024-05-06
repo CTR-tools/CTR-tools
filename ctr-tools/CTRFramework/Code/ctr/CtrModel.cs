@@ -95,7 +95,7 @@ namespace CTRFramework.Models
 
             foreach (var entry in this)
             {
-                string name = $"{Name}.{entry.Name}.{i.ToString("00")}{(entry.IsAnimated ? ".Animated" : "")}";
+                string name = $"{Name}.{entry.Name}.{i.ToString("00")}";
                 string fn = Helpers.PathCombine(path, $"{name}.obj");
 
                 foreach (var mesh in this)

@@ -22,10 +22,10 @@ namespace CTRFramework
 
     public enum FaceMode
     {
-        Normal = 0,
-        SingleUV1 = 1,
-        SingleUV2 = 2,
-        Unknown = 3
+        DrawBoth = 0,
+        DrawLeft = 1,
+        DrawRight = 2,
+        DrawNone = 3
     }
 
     public class FaceFlags
@@ -495,10 +495,10 @@ namespace CTRFramework
                     //handle degenerated quads
                     switch (faceFlags[i].faceMode)
                     {
-                        case FaceMode.Normal: break;
-                        case FaceMode.SingleUV1: QuadTexRotateTri(buf, 2); break;
-                        case FaceMode.SingleUV2: QuadTexRotateTri(buf); break;
-                        case FaceMode.Unknown: Helpers.Panic(this, PanicType.Assume, $"quad {id}: both quad flags set"); break;
+                        case FaceMode.DrawBoth: break;
+                        case FaceMode.DrawLeft: QuadTexRotateTri(buf, 2); break;
+                        case FaceMode.DrawRight: QuadTexRotateTri(buf); break;
+                        case FaceMode.DrawNone: Helpers.Panic(this, PanicType.Assume, $"quad {id}: both quad flags set"); break;
 
                         default: throw new Exception($"Impossible FaceMode. {faceFlags[i].faceMode}");
                     }
@@ -597,7 +597,7 @@ namespace CTRFramework
                             {
                                 sb.AppendLine(OBJ.ASCIIFace("f", a, b, 1, 3, 2, 1, 3, 2));
 
-                                if (faceFlags[i].faceMode == FaceMode.Normal)
+                                if (faceFlags[i].faceMode == FaceMode.DrawBoth)
                                     sb.AppendLine(OBJ.ASCIIFace("f", a, b, 2, 3, 4, 2, 3, 4));
                             }
 

@@ -195,6 +195,14 @@ namespace CTRFramework.Shared
             }
         }
 
+        public static Stream GetResourceAsStream(string resource)
+        {
+            var thisAssembly = Assembly.GetExecutingAssembly();
+            var stream = thisAssembly.GetManifestResourceStream($"CTRFramework.Data.{resource}");
+
+            return stream;
+        }
+
         public static XmlDocument LoadXml(string resource)
         {
             var doc = new XmlDocument();

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace CTRFramework.Sound
+namespace CTRFramework.Audio
 {
     public class XaInfo : IRead
     {

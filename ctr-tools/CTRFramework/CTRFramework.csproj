@@ -116,13 +116,14 @@
     <Compile Include="Code\shared\BitStreamReader.cs" />
     <Compile Include="Code\shared\HelpersPanic.cs" />
     <Compile Include="Code\shared\HelpersTimer.cs" />
+    <Compile Include="Code\shared\HexHelper.cs" />
     <Compile Include="Code\shared\PsxPtr.cs" />
     <Compile Include="Code\shared\RotationDetector.cs" />
     <Compile Include="Code\shared\Vectors\Vector3b.cs" />
     <Compile Include="Code\shared\Vectors\Vector3f.cs" />
     <Compile Include="Code\shared\Vectors\Vector3i.cs" />
     <Compile Include="Code\sound\CSEQ\Events\CseqEvent.cs" />
-    <Compile Include="Code\sound\Instrument.cs" />
+    <Compile Include="Code\sound\SpuInstrument.cs" />
     <Compile Include="Code\sound\VAG\Bank.cs" />
     <Compile Include="Code\shared\BinaryReaderEx.cs" />
     <Compile Include="Code\shared\BinaryWriterEx.cs" />
@@ -200,8 +201,8 @@
     <None Include="app.config" />
     <EmbeddedResource Include="Data\Data.zip" />
     <None Include="Data\readme.md" />
-    <None Include="packages.config" />
     <None Include="Data\versions.json" />
+    <None Include="packages.config" />
     <None Include="ThirdParty\ColourQuantization\LICENSE" />
     <None Include="ThirdParty\Kaitai\README.md" />
     <None Include="ThirdParty\PlyImporter\LICENSE" />
@@ -242,6 +243,7 @@
     <EmbeddedResource Include="Data\default.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Data\ctr_drumfill.mid" />
     <Content Include="Data\howlnames.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

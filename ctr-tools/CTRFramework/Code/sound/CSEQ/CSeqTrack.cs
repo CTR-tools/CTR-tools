@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CTRFramework.Sound
+namespace CTRFramework.Audio
 {
     public class CSeqTrack : IReadWrite
     {
@@ -65,6 +65,36 @@ namespace CTRFramework.Sound
             while (true);
         }
 
+
+        public int GetAverageNote()
+        {
+            int numEntries = 0;
+            float value = 0;
+
+            foreach (var evt in cseqEventCollection)
+            {
+                if (evt.eventType == CseqEventType.NoteOn)
+                {
+                    if (numEntries == 0)
+                    {
+                        value += evt.pitch;
+                    }
+                    else if (numEntries == 1)
+                    {
+                        value = (value + evt.pitch) / 2.0f;
+                    }
+                    else
+                    {
+                        value = value * ((numEntries - 1.0f) / numEntries) + evt.pitch * (1.0f / numEntries);
+                    }
+
+                    numEntries++;
+                }
+            }
+
+            return (int)value;
+        }
+
         public void FromMidiEventList(List<MidiEvent> events)
         {
             cseqEventCollection.Clear();
@@ -111,7 +141,7 @@ namespace CTRFramework.Sound
             }
 
             if (Cseq.UseSampleVolumeForTracks && !Cseq.IgnoreVolume)
-                me.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, (byte)(seq.samplesReverb[instrument].Volume * 127)));
+                me.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, (byte)(seq.Instruments[instrument].Volume * 127)));
 
             foreach (var c in cseqEventCollection)
             {
@@ -137,6 +167,14 @@ namespace CTRFramework.Sound
             var sb = new StringBuilder();
 
             //sb.Append(address + "\r\n");
+
+            if (!isDrumTrack)
+            {
+                int avg = GetAverageNote();
+
+                sb.AppendLine($"average track note: {avg}");
+                sb.AppendLine($"recommended C sample: C{avg / 12}");
+            }
 
             foreach (var c in cseqEventCollection)
                 sb.AppendLine(c.ToString());

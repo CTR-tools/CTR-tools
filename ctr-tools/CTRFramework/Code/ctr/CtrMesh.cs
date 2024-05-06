@@ -1,4 +1,5 @@
-﻿using CTRFramework.Shared;
+﻿using CTRFramework.Code.shared;
+using CTRFramework.Shared;
 using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework.Models
@@ -348,7 +350,6 @@ namespace CTRFramework.Models
                 Helpers.Panic(this, PanicType.Debug, v.ToString(VecFormat.Hex));
                 vfixed.Add(CalculateFinalVertex(v, frame.Offset, scale));
             }
-
 
             int vertexIndex = 0;
             int stripLength = 0;
@@ -858,7 +859,7 @@ namespace CTRFramework.Models
                     bw.Write(unk0);
                     bw.Write(lodDistance);
                     bw.Write(billboard);
-                    bw.WriteVector3sPadded(scale);
+                    bw.WriteVector3s(scale, pad:VectorPadding.Yes);
                     bw.Write(ptrCmd, patchTable);
                     bw.Write(ptrFrame, patchTable);
                     bw.Write(ptrTex, patchTable);
@@ -998,6 +999,7 @@ namespace CTRFramework.Models
             foreach (var entry in anims)
             {
                 sb.AppendLine($"\t\t{entry.Name} ({entry.numFrames} frames)");
+                sb.AppendLine($"dupe frames?: {entry.duplicateFrames}");
                 sb.AppendLine($"\t\t\tcompressed? {entry.IsCompressed}");
                 sb.AppendLine($"\t\t\tnumDeltas: {entry.deltas.Count}");
                 sb.AppendLine($"\t\t\tframeSize: {entry.frameSize}");

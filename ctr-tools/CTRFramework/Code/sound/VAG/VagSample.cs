@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace CTRFramework.Sound
+namespace CTRFramework.Audio
 {
     public class VagSample : IReadWrite
     {
@@ -188,6 +188,22 @@ namespace CTRFramework.Sound
                 wav.Jump(40);
                 wav.Write(streamSize - 44);
             }
+        }
+
+        public byte[] GetRawWaveData()
+        {
+            byte[] buf = new byte[Frames.Count * 500];
+
+            double s_1 = 0.0;
+            double s_2 = 0.0;
+
+            using (var wav = new BinaryWriterEx(new MemoryStream(buf)))
+            {
+                foreach (var frame in Frames)
+                    wav.Write(frame.GetRawWaveData(ref s_1, ref s_2));
+            }
+
+            return buf;
         }
 
         public byte[] GetData()

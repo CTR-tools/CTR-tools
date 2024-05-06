@@ -1,4 +1,5 @@
-﻿using CTRFramework.Shared;
+﻿using CTRFramework;
+using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -119,7 +120,7 @@ namespace CTRFramework.Models
             int pos = (int)bw.Position;
 
             //posOffset.Write(bw);
-            bw.WriteVector3sPadded(Offset, OffsetScale);
+            bw.WriteVector3s(Offset, OffsetScale, VectorPadding.Yes);
             bw.Seek(16);
 
             ptrVerts = (int)(bw.Position - pos + 4);

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CTRFramework.Sound
+namespace CTRFramework.Audio
 {
     public class XaInfoEntry : IReadWrite
     {

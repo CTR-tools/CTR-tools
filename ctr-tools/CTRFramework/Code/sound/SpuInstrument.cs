@@ -3,15 +3,26 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Xml.Serialization;
+using System.Xml;
+using System.Windows.Forms;
+using System.Text;
+using System.Runtime.Remoting.Contexts;
 
-namespace CTRFramework.Sound
+namespace CTRFramework.Audio
 {
     /// <summary>
     /// Describes CSEQ instrument.
     /// </summary>
-    public class Instrument : IReadWrite
+    public class SpuInstrument : IReadWrite
     {
-        public Sample GetSample(int sampleIndex, HowlContext context) => context.Samples.ContainsKey(sampleIndex) ? context.Samples[sampleIndex] : null;
+        public SampleType? Type => Sample?.Type;
+
+        public HowlContext Context;
+
+        public string Name = "default_instrument";
+
+        public Sample GetSample(int sampleIndex, HowlContext context) => context.SamplePool.ContainsKey(sampleIndex) ? context.SamplePool[sampleIndex] : null;
 
         public static readonly int SizeOf = 0x0C;
 
@@ -21,24 +32,24 @@ namespace CTRFramework.Sound
         public ushort _freq = 4096;
 
         [Description("Global sample index")]
-        public ushort SampleID { get; set; }
+        public ushort SampleID { get; set; } = 0;
 
         //must be populated based on SampleID
-        public Sample Sample;
+        public Sample Sample = null;
 
         //this is assumed to be sample length, 1 second is about 300. whatever it is.
         //0 in music samples
         [Description("Defines the delay to send NoteOff event for this sample. Should be 0 for music category. Usually same as sample length (300 ~ 1sec), but can differ.")]
         public short timeToPlay { get; set; } = 0;
 
-        public uint ADSR { get; set; } = 532775167;  // assumed to be the raw psx adsr value passed directly to psyq.
+        public uint ADSR { get; set; } = 0x1FC180FF;  // assumed to be the raw psx SPU adsr value passed directly to psyq.
 
         public MetaInst metaInst { get; set; }
 
         public string Tag => $"{ID}_{Frequency}";
         public string ID => $"{SampleID.ToString("0000")}_{SampleID.ToString("X4")}";
 
-        [Description("Defines frequency to play sample at. Stored as 4096 = 44100, so expect minor differeces between introduces freq and actual freq.")]
+        [Description("Defines frequency played at C5 note (midi 60). Does not always coincide with actual C5. Stored as 4096 = 44100, so expect minor differences between introduced freq and actual freq.")]
         public int Frequency
         {
             get { return (int)Math.Round(_freq / 4096f * 44100f); }
@@ -67,13 +78,13 @@ namespace CTRFramework.Sound
             }
         }
 
-        public Instrument()
+        public SpuInstrument()
         {
         }
 
-        public Instrument(BinaryReaderEx br) => Read(br);
+        public SpuInstrument(BinaryReaderEx br) => Read(br);
 
-        public static Instrument FromReader(BinaryReaderEx br) => new Instrument(br);
+        public static SpuInstrument FromReader(BinaryReaderEx br) => new SpuInstrument(br);
 
         public virtual void Read(BinaryReaderEx br)
         {
@@ -83,6 +94,9 @@ namespace CTRFramework.Sound
             _freq = br.ReadUInt16();
             SampleID = br.ReadUInt16();
             ADSR = br.ReadUInt32();
+
+            if (Sample == null && Context != null)
+                Sample = Context.FindSample(SampleID);
 
             if (flags != 1)
                 Helpers.Panic(this, PanicType.Assume, $"magic1 != 1: {flags}");
@@ -116,9 +130,9 @@ namespace CTRFramework.Sound
             {
                 VagSample vag;
 
-                if (context.Samples.ContainsKey(this.SampleID))
+                if (context.SamplePool.ContainsKey(this.SampleID))
                 {
-                    vag = context.Samples[SampleID].GetVag();
+                    vag = context.SamplePool[SampleID].GetVag();
                     vag.sampleFreq = Frequency;
 
                     if (context.HashNames.ContainsKey(Sample.HashString))
@@ -140,19 +154,19 @@ namespace CTRFramework.Sound
     /// <summary>
     /// Shorter version of CSEQ instrument used for percussion.
     /// </summary>
-    public class InstrumentShort : Instrument
+    public class SpuInstrumentShort : SpuInstrument
     {
         public static readonly new int SizeOf = 8;
 
-        public InstrumentShort()
+        public SpuInstrumentShort()
         {
         }
 
-        public InstrumentShort(BinaryReaderEx br) : base(br)
+        public SpuInstrumentShort(BinaryReaderEx br) : base(br)
         {
         }
 
-        public new static InstrumentShort FromReader(BinaryReaderEx br) => new InstrumentShort(br);
+        public new static SpuInstrumentShort FromReader(BinaryReaderEx br) => new SpuInstrumentShort(br);
 
         public override void Read(BinaryReaderEx br)
         {

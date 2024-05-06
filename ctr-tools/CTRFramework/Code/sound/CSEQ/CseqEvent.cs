@@ -3,7 +3,7 @@ using NAudio.Midi;
 using System;
 using System.Collections.Generic;
 
-namespace CTRFramework.Sound
+namespace CTRFramework.Audio
 {
     public enum CseqEventType
     {
@@ -36,15 +36,9 @@ namespace CTRFramework.Sound
         {
         }
 
-        public CseqEvent(BinaryReaderEx br)
-        {
-            Read(br);
-        }
+        public CseqEvent(BinaryReaderEx br) => Read(br);
 
-        public static CseqEvent FromReader(BinaryReaderEx br)
-        {
-            return new CseqEvent(br);
-        }
+        public static CseqEvent FromReader(BinaryReaderEx br) => new CseqEvent(br);
 
         public void Read(BinaryReaderEx br)
         {
@@ -113,7 +107,7 @@ namespace CTRFramework.Sound
                 {
                     if (eventType == CseqEventType.NoteOn || eventType == CseqEventType.NoteOff)
                     {
-                        p = (byte)seq.samples[pitch].metaInst.Key;
+                        p = (byte)seq.Percussions[pitch].metaInst.Key;
                     }
                 }
                 else
@@ -121,13 +115,13 @@ namespace CTRFramework.Sound
                     if (eventType == CseqEventType.ChangePatch)
                     {
                         Cseq.ActiveInstrument = pitch;
-                        p = (byte)seq.samplesReverb[pitch].metaInst.Midi;
+                        p = (byte)seq.Instruments[pitch].metaInst.Midi;
                     }
                     else if (eventType == CseqEventType.NoteOn || eventType == CseqEventType.NoteOff)
                     {
                         try
                         {
-                            p += (byte)seq.samplesReverb[Cseq.ActiveInstrument].metaInst.Pitch;
+                            p += (byte)seq.Instruments[Cseq.ActiveInstrument].metaInst.Pitch;
                         }
                         catch (Exception ex)
                         {
@@ -141,7 +135,7 @@ namespace CTRFramework.Sound
             switch (eventType)
             {
                 case CseqEventType.NoteOn: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOn, p, velocity)); break;
-                case CseqEventType.NoteOff: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOff, p, velocity)); break;
+                case CseqEventType.NoteOff: events.Add(new NoteEvent(absTime, channel, MidiCommandCode.NoteOff, p, 0)); break; //?
 
                 case CseqEventType.ChangePatch:
                     // events.Add(new ControlChangeEvent(absTime, channel, MidiController.MainVolume, seq.longSamples[pitch].velocity / 2));

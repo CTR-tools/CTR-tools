@@ -1,4 +1,4 @@
-﻿namespace CTRFramework.Sound
+﻿namespace CTRFramework.Audio
 {
     public class XaFrame
     {

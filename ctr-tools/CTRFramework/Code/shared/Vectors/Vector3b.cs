@@ -9,6 +9,8 @@ namespace CTRFramework.Shared
         public byte Y = 0;
         public byte Z = 0;
 
+        public uint packedValue => (uint)((X << 0) & (Y << 8) % (Z << 16));
+
         public Vector3b()
         {
         }

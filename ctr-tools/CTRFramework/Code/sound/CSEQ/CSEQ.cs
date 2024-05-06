@@ -1,17 +1,18 @@
 ﻿using CTRFramework.Shared;
 using NAudio.Midi;
+using NAudio.SoundFont;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace CTRFramework.Sound
+namespace CTRFramework.Audio
 {
     /// <summary>
     /// Global CSEQ settings.
     /// </summary>
     public partial class Cseq
     {
-        public bool USdemo = false;
+        //public bool USdemo = false;
         public static bool PatchMidi = false;
         public static bool IgnoreVolume = false;
         public static bool UseSampleVolumeForTracks = true;
@@ -30,18 +31,20 @@ namespace CTRFramework.Sound
         };
     }
 
-    public partial class Cseq : IReadWrite
+    public partial class Cseq
     {
         public HowlContext Context;
 
         public string path;
-        public string name;
+        public string Name;
 
-        public short numSamples => (short)samples.Count;
-        public short numSamplesReverb => (short)samplesReverb.Count;
+        public short numPercussions => (short)Percussions.Count;
+        public short numInstruments => (short)Instruments.Count;
 
-        public List<InstrumentShort> samples = new List<InstrumentShort>();
-        public List<Instrument> samplesReverb = new List<Instrument>();
+        public short numSongs => (short)Songs.Count;
+
+        public List<SpuInstrument> Instruments = new List<SpuInstrument>();
+        public List<SpuInstrumentShort> Percussions = new List<SpuInstrumentShort>();
 
         public List<CseqSong> Songs = new List<CseqSong>();
 
@@ -53,12 +56,12 @@ namespace CTRFramework.Sound
         {
         }
 
-        public Cseq(BinaryReaderEx br)
+        public Cseq(BinaryReaderEx br, HowlContext context = null)
         {
-            Read(br);
+            Read(br, context);
         }
 
-        public static Cseq FromReader(BinaryReaderEx br, HowlContext context = null) => new Cseq(br) { Context = context };
+        public static Cseq FromReader(BinaryReaderEx br, HowlContext context = null) => new Cseq(br, context);
 
         public static Cseq FromFile(string filename)
         {
@@ -66,12 +69,13 @@ namespace CTRFramework.Sound
             {
                 var seq = FromReader(br);
                 seq.path = Path.GetDirectoryName(filename);
-                seq.name = Path.GetFileNameWithoutExtension(filename);
+                seq.Name = Path.GetFileNameWithoutExtension(filename);
 
                 return seq;
             }
         }
 
+        /*
         public static Cseq FromMidi(string filename)
         {
             var midi = new MidiFile(filename);
@@ -115,47 +119,51 @@ namespace CTRFramework.Sound
 
             return seq;
         }
+        */
 
         #endregion
 
-        public void Read(BinaryReaderEx br)
+        public void Read(BinaryReaderEx br, HowlContext context = null)
         {
+            Context = context is null ? HowlContext.Create() : context;
+
             long cseqStart = br.Position;
 
             int size = br.ReadInt32();
-            byte longCnt = br.ReadByte();
-            byte shortCnt = br.ReadByte();
-            short seqCnt = br.ReadInt16();
+            byte numInstruments = br.ReadByte();
+            byte numPercussions = br.ReadByte();
+            short numSongs = br.ReadInt16();
 
-            for (int i = 0; i < longCnt; i++)
-                samplesReverb.Add(Instrument.FromReader(br));
+            for (int i = 0; i < numInstruments; i++)
+                Instruments.Add(SpuInstrument.FromReader(br));
 
-            for (int i = 0; i < shortCnt; i++)
-                samples.Add(InstrumentShort.FromReader(br));
+            Context.InstrumentPool.AddRange(Instruments);
+
+            for (int i = 0; i < numPercussions; i++)
+                Percussions.Add(SpuInstrumentShort.FromReader(br));
+
+            Context.PercussionPool.AddRange(Percussions);
+
 
             //read offsets
-            short[] seqPtrs = br.ReadArrayInt16(seqCnt);
+            short[] seqPtrs = br.ReadArrayInt16(numSongs);
 
-            //awesome NTSC demo fix
-            //int p = (seqCnt == 4) ? 1 : 3;
+            // and make sure it's padded, since track data must begin at a valid MIPS offset (divisible by 4)
+            br.Pad(4);
 
-            br.Pad();
-
-            //checking whether it's 0 or not
-            //for (int i = 0; i < p; i++)
-            //    if (br.ReadByte() != 0)
-            //       Helpers.Panic(this, PanicType.Warning, "unknown 3 bytes block - not null at " + br.HexPos());
-
-            //saving sequence data offset
+            // remember sequence data offset, we will use it to jump to every song
             int seqStart = (int)br.Position;
 
-            //loop through all sequences
-            for (int i = 0; i < seqCnt; i++)
+            // read all songs
+            for (int i = 0; i < numSongs; i++)
             {
                 br.Jump(seqStart + seqPtrs[i]);
-                Songs.Add(CseqSong.FromReader(br));
+                Songs.Add(CseqSong.FromReader(br, Context));
+
+                // add a generic song name
                 Songs[i].Name = $"Song_{i.ToString("00")}";
             }
+
 
             int cseqEnd = (int)br.Position;
 
@@ -164,11 +172,11 @@ namespace CTRFramework.Sound
 
         public void LoadMetaInstruments()
         {
-            for (int i = 0; i < samplesReverb.Count; i++)
-                samplesReverb[i].metaInst = Meta.GetMetaInst(PatchName, "long", i);
+            for (int i = 0; i < Instruments.Count; i++)
+                Instruments[i].metaInst = Meta.GetMetaInst(PatchName, "long", i);
 
-            for (int i = 0; i < samples.Count; i++)
-                samples[i].metaInst = Meta.GetMetaInst(PatchName, "short", i);
+            for (int i = 0; i < Percussions.Count; i++)
+                Percussions[i].metaInst = Meta.GetMetaInst(PatchName, "short", i);
         }
 
         /*
@@ -208,10 +216,10 @@ namespace CTRFramework.Sound
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             //sanity checks
-            if (samplesReverb.Count > Byte.MaxValue)
+            if (Instruments.Count > Byte.MaxValue)
                 throw new IndexOutOfRangeException("Too many instruments.");
 
-            if (samples.Count > Byte.MaxValue)
+            if (Percussions.Count > Byte.MaxValue)
                 throw new IndexOutOfRangeException("Too many percussion instruments.");
 
             if (Songs.Count > UInt16.MaxValue)
@@ -220,14 +228,14 @@ namespace CTRFramework.Sound
             int cseqStart = (int)bw.BaseStream.Position;
 
             bw.Write((int)0); //filesize, write in the end
-            bw.Write((byte)samplesReverb.Count);
-            bw.Write((byte)samples.Count);
+            bw.Write((byte)Instruments.Count);
+            bw.Write((byte)Percussions.Count);
             bw.Write((short)Songs.Count);
 
-            foreach (var instrument in samplesReverb)
+            foreach (var instrument in Instruments)
                 instrument.Write(bw);
 
-            foreach (var instrument in samples)
+            foreach (var instrument in Percussions)
                 instrument.Write(bw);
 
             long ptrTracks = bw.BaseStream.Position;
@@ -235,10 +243,6 @@ namespace CTRFramework.Sound
             bw.Seek(Songs.Count * 2);
             bw.Pad();
 
-            //it's meant to be like that
-            //foreach (var seq in sequences)
-            //    bw.Write((short)0);
-            //bw.Seek(Songs.Count * 2 + (USdemo ? 1 : 3));
 
             var offsets = new List<long>();
             long ptrSongs = bw.BaseStream.Position;
@@ -258,9 +262,13 @@ namespace CTRFramework.Sound
             foreach (var ptr in offsets)
                 bw.Write((short)ptr);
 
+            int size = cseqEnd - cseqStart;
+
             bw.Jump(cseqStart);
-            bw.Write(cseqEnd - cseqStart);
+            bw.Write(size);
             bw.Jump(cseqEnd);
+
+            Helpers.PanicIf(size > 0x5800, this, PanicType.Warning, $"Song size exceends hardcoded 11 sectors 0x5800! -> {size.ToString("X8")}");
 
             if (bw.BaseStream.Length < bw.BaseStream.Position)
                 bw.BaseStream.SetLength(bw.BaseStream.Position);
@@ -270,15 +278,15 @@ namespace CTRFramework.Sound
         {
             if (Context == null) return;
 
-            foreach (var entry in samples)
+            foreach (var entry in Percussions)
             {
-                var sample = Context.Samples[entry.SampleID];
+                var sample = Context.SamplePool[entry.SampleID];
                 sample.GetVag(entry.Frequency).Save(Helpers.PathCombine(path, $"{sample.Name}_{entry.Frequency}.vag"));
             }
 
-            foreach (var entry in samplesReverb)
+            foreach (var entry in Instruments)
             {
-                var sample = Context.Samples[entry.SampleID];
+                var sample = Context.SamplePool[entry.SampleID];
                 sample.GetVag(entry.Frequency).Save(Helpers.PathCombine(path, $"{sample.Name}_{entry.Frequency}.vag"));
             }
         }
@@ -287,10 +295,10 @@ namespace CTRFramework.Sound
         {
             List<int> ids = new List<int>();
 
-            foreach (var s in samplesReverb)
+            foreach (var s in Instruments)
                 ids.Add(s.SampleID);
 
-            foreach (var s in samples)
+            foreach (var s in Percussions)
                 ids.Add(s.SampleID);
 
             return ids;
@@ -298,11 +306,11 @@ namespace CTRFramework.Sound
 
         public int GetFrequencyBySampleID(int id)
         {
-            foreach (var s in samplesReverb)
+            foreach (var s in Instruments)
                 if (s.SampleID == id)
                     return s.Frequency;
 
-            foreach (var s in samples)
+            foreach (var s in Percussions)
                 if (s.SampleID == id)
                     return s.Frequency;
 
@@ -311,7 +319,7 @@ namespace CTRFramework.Sound
 
         public int GetLongSampleIDByTrack(CSeqTrack ct)
         {
-            return samplesReverb[ct.instrument].SampleID;
+            return Instruments[ct.instrument].SampleID;
         }
 
         public override string ToString() => $"Songs: {Songs.Count}";

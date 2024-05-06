@@ -71,7 +71,7 @@ namespace CTRFramework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 25.02.2023 13:47:48,80 
+        ///   Looks up a localized string similar to 06.05.2024 12:39:50,50 
         ///.
         /// </summary>
         public static string BuildDate {
@@ -101,7 +101,7 @@ namespace CTRFramework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2016-2023, DCxDemo*..
+        ///   Looks up a localized string similar to 2016-2024, DCxDemo*..
         /// </summary>
         public static string signature {
             get {

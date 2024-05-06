@@ -9,10 +9,10 @@ namespace CTRFramework
         public Vertex[] Vertices;
         public byte DrawingOrder = 0;
         public RotateFlipType RotateFlipType = RotateFlipType.None;
-        public FaceMode FaceMode = FaceMode.Normal;
+        public FaceMode FaceMode = FaceMode.DrawBoth;
         public Vector2 FaceNormal = Vector2.Zero;
         public CtrTex Texture;
-        public int numVerts => FaceMode == FaceMode.Normal ? 4 : 3;
+        public int numVerts => FaceMode == FaceMode.DrawBoth ? 4 : 3;
 
         public string ToObj(ref int num)
         {
@@ -36,7 +36,7 @@ namespace CTRFramework
 
             sb.AppendLine($"f {num + 1} {num + 2} {num + 3}");
 
-            if (FaceMode == FaceMode.Normal)
+            if (FaceMode == FaceMode.DrawBoth)
                 sb.AppendLine($"f {num + 3} {num + 2} {num + 4}");
 
             num += numVerts;

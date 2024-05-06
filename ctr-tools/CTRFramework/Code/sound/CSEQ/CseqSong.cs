@@ -3,11 +3,15 @@ using NAudio.Midi;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
-namespace CTRFramework.Sound
+namespace CTRFramework.Audio
 {
-    public class CseqSong : IReadWrite
+    public class CseqSong
     {
+        HowlContext Context;
+
         public string Name = "Song";
 
         public override string ToString() => Name;
@@ -53,15 +57,21 @@ namespace CTRFramework.Sound
         {
         }
 
-        public CseqSong(BinaryReaderEx br) => Read(br);
+        public CseqSong(BinaryReaderEx br, HowlContext context)
+        {
+            Read(br, context);
+        }
 
-        public static CseqSong FromReader(BinaryReaderEx br) => new CseqSong(br);
+        public static CseqSong FromReader(BinaryReaderEx br, HowlContext context = null) => new CseqSong(br, context);
 
         #endregion
 
         //reads CSEQ from given binaryreader
-        public void Read(BinaryReaderEx br)
+        public void Read(BinaryReaderEx br, HowlContext context = null)
         {
+            if (context != null)
+                Context = context;
+
             unk0 = br.ReadByte();
             int trackNum = br.ReadByte();
             BPM = br.ReadInt16();
@@ -96,6 +106,11 @@ namespace CTRFramework.Sound
 
         public void ExportMIDI(string fn, Cseq seq, bool hubFilter = false, int hubIndex = 0)
         {
+            //add mask theme detection, only export from canyon since it's the 1st cseq
+            //if (seq.PatchName != "canyon" && <track is mask>)
+            //  do nothing
+
+            // if it's a hub theme, export 5 midis for every hub
             if (seq.PatchName == "adv_gem_valley" && !hubFilter)
             {
                 for (int i = 0; i < 5; i++)
@@ -138,6 +153,24 @@ namespace CTRFramework.Sound
                     //limit channel if overflow
                     if (availablechannel > 16) availablechannel = 16;
                 }
+            }
+
+            // it's a hub midi? load ctr_drumfill! 
+            if (hubFilter || seq.PatchName == "character_select")
+            {
+                var drumfill = new MidiFile(Helpers.GetResourceAsStream("ctr_drumfill.mid"), false);
+
+                foreach (var drum in drumfill.Events)
+                {
+                    foreach (var midi in drum)
+                    {
+                        midi.AbsoluteTime /= (drumfill.DeltaTicksPerQuarterNote / TicksPerQuarterNote);
+                        Console.WriteLine($"fixing from {midi.AbsoluteTime} to {midi.AbsoluteTime / (drumfill.DeltaTicksPerQuarterNote / TicksPerQuarterNote)}");
+                    }
+                }
+
+                for (int i = 0; i < drumfill.Tracks; i++)
+                    mc.AddTrack(drumfill.Events.GetTrackEvents(i));
             }
 
             mc.PrepareForExport();

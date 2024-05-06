@@ -86,12 +86,15 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
+            //duh
+            if (name.Contains("plant") || name.Contains("seal") || name.Contains("spider")) scale /= 2;
+
             int pos = (int)bw.BaseStream.Position;
             bw.Write(name.ToCharArray().Take(16).ToArray());
             bw.Jump(pos + 16);
             bw.Write(ptrModel, patchTable);
 
-            bw.WriteVector3sPadded(scale, 1 / 4096f / 16f);
+            bw.WriteVector3s(scale, 1 / 4096f / 16f, VectorPadding.Yes);
 
             bw.Write(null1);
             bw.Write(unk1);

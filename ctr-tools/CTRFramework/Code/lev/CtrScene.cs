@@ -974,9 +974,9 @@ namespace CTRFramework
 
             sb.AppendLine($"restarts: length = {respawnPts.Count} maxindex = {maxindex}");
 
-            foreach (var s in respawnPts)
+            foreach (var model in Models)
             {
-                // sb.AppendLine(""+s.Rotation);
+                sb.AppendLine(""+ model.ToString());
             }
 
             return sb.ToString();

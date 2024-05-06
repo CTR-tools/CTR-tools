@@ -1,6 +1,6 @@
 ﻿using CTRFramework.Shared;
 
-namespace CTRFramework.Sound
+namespace CTRFramework.Audio
 {
     public class CseqRootEvent
     {

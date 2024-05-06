@@ -6,10 +6,23 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CTRFramework.Sound
+namespace CTRFramework.Audio
 {
+    // determine sample type by the instrument it is used in.
+    // user should not be allowed to change this, it should be inherited from the instrument
+    // aka fill in automatically based on the sample usage
+    public enum SampleType
+    {
+        Unknown,
+        Instrument,
+        Percussion,
+        SoundEffect
+    }
+
     public class Sample
     {
+        public SampleType Type = SampleType.Unknown;
+
         public HowlContext Context;
 
         private const uint nullhash = 0xFFFFFFFF;
@@ -29,7 +42,6 @@ namespace CTRFramework.Sound
                     name = Context.HashNames[HashString];
 
                 return name;
-
             }
         }
 
@@ -86,17 +98,23 @@ namespace CTRFramework.Sound
         public string Name = "default_name";
         public int Index = -1;
 
-        public static Dictionary<int, string> banknames = new Dictionary<int, string>();
+        public List<short> Entries = new List<short>();
 
-        public Dictionary<int, Sample> Entries = new Dictionary<int, Sample>();
         public ushort numEntries => (ushort)Entries.Count;
 
-
-        public bool Contains(int key) => Entries.ContainsKey(key);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool Contains(short id)
+        {
+            return Entries.Contains(id);
+        }
 
         public static void ReadNames()
         {
-            banknames = Helpers.LoadNumberedList("banknames.txt");
+            //banknames = Helpers.LoadNumberedList("banknames.txt");
         }
 
         #region [Constructors, factories]
@@ -125,82 +143,40 @@ namespace CTRFramework.Sound
 
             ushort numSamples = br.ReadUInt16();
 
+            // sanity check for a bank
             if (numSamples > 1023)
-                throw new Exception("Unlikely a bank.");
+                throw new Exception("Unlikely a CTR bank.");
 
-            short[] indexTable = br.ReadArrayInt16(numSamples);
+            // read all sample index entries
+            Entries = br.ReadListInt16(numSamples);
 
             br.JumpNextSector();
 
-
-            foreach (int index in indexTable)
+            // foreach sample entry
+            foreach (int index in Entries)
             {
-                //if sample cache doesnt have this sample yet
-                if (!Context.Samples.ContainsKey(index))
+                // calculate sample size
+                int sampleSize = Context.SpuPtrTable[index].Size * 8;
+
+                // if sample pool doesnt have this sample yet
+                if (!Context.SamplePool.ContainsKey(index))
                 {
-                    //create a sample
+                    // create a sample
                     var sample = new Sample()
                     {
-                        Data = br.ReadBytes(Context.SpuPtrTable[index].Size * 8),
+                        Data = br.ReadBytes(sampleSize),
                         ID = index
                     };
 
-                    //add a sample
-                    Context.Samples.Add(index, sample);
+                    // add a sample
+                    Context.SamplePool.Add(index, sample);
                 }
                 else
                 {
-                    br.Seek(Context.SpuPtrTable[index].Size * 8);
-                }
-
-                //add link to the list
-                Entries.Add(index, Context.Samples[index]);
-            }
-
-            return;
-
-            /*
-            //this is the older sample guessing algo
-            int sam_start = (int)br.BaseStream.Position;
-
-            int flag = 0;
-            int loops = 0;
-            int frames = 0;
-
-            do
-            {
-                br.Seek(1);
-                flag = br.ReadByte();
-                br.Seek(14);
-
-                frames++;
-
-                if (flag == 7 || flag == 3)
-                {
-                    br.Jump(sam_start);
-
-                    var sample = new Sample()
-                    {
-                        Data = br.ReadBytes(frames * 16),
-                        ID = indexTable[loops]
-                    };
-
-                    sample.Context = context;
-
-                    if (!context.Samples.ContainsKey(indexTable[loops]))
-                        context.Samples.Add(indexTable[loops], sample);
-
-                    Entries.Add(sample.ID, sample);
-
-                    sam_start = (int)br.Position;
-
-                    frames = 0;
-
-                    loops++;
+                    // skip sample data
+                    br.Seek(sampleSize);
                 }
             }
-            while (loops < numSamples);
-            */
         }
 
         /// <summary>
@@ -210,19 +186,24 @@ namespace CTRFramework.Sound
         /// <param name="patchTable"></param>
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
-            //the amount of samples
+            // the amount of samples
             bw.Write(numEntries);
 
-            //write every sample index
-            foreach (var sample in Entries)
-                bw.Write((short)sample.Key);
+            // write every sample index
+            foreach (short index in Entries)
+                bw.Write(index);
 
-            //pad to 0x800
+            // pad to 0x800
             bw.JumpNextSector();
 
-            //write sample data 
-            foreach (var sample in Entries)
-                bw.Write(Context.Samples[sample.Value.ID].Data);
+            // write sample data 
+            foreach (short index in Entries)
+            {
+                if (!Context.SamplePool.ContainsKey(index))
+                    throw new Exception($"sample {index} not found in SamplePool!!!");
+
+                bw.Write(Context.SamplePool[index].Data);
+            }
         }
 
         public void Save(string filename)
@@ -239,7 +220,7 @@ namespace CTRFramework.Sound
 
             //Helpers.CheckFolder(pathSfxVag);
 
-            if (Contains(id))
+            if (Contains((short)id))
             {
                 string vagname = id.ToString("0000"); // Howl.GetName(id, Howl.samplenames);
 
@@ -249,16 +230,16 @@ namespace CTRFramework.Sound
                 if (File.Exists(Helpers.PathCombine(path, $"{vagname}.wav")))
                     return;
 
-                using (var br = new BinaryReaderEx(new MemoryStream(Entries[id].Data)))
+                using (var br = new BinaryReaderEx(new MemoryStream(Context.SamplePool[id].Data)))
                 {
                     var vag = new VagSample();
 
                     if (freq != -1)
                         vag.sampleFreq = freq;
 
-                    vag.ReadFrames(br, Entries[id].Data.Length);
+                    vag.ReadFrames(br, Context.SamplePool[id].Data.Length);
 
-                    string hash = Entries[id].HashString;
+                    string hash = Context.SamplePool[id].HashString;
 
                     if (Context.HashNames.ContainsKey(hash))
                         vag.SampleName = Context.HashNames[hash];
@@ -274,6 +255,7 @@ namespace CTRFramework.Sound
             }
         }
 
+        /*
         public void ExportAll(int bnum, string path, string path2 = null)
         {
             string pathSfxVag = Helpers.PathCombine(path, "vag");
@@ -281,10 +263,30 @@ namespace CTRFramework.Sound
 
             Parallel.ForEach(Entries, new ParallelOptions() { MaxDegreeOfParallelism = 32 }, sample =>
             {
-                Export(sample.Key, Howl.GetFreq(sample.Key), path, pathSfxVag, path2, $"{sample.Key.ToString("0000")}_{sample.Key.ToString("X4")}");
+                Export(sample.ID, Howl.GetFreq(sample.ID), path, pathSfxVag, path2, $"{sample.ID.ToString("0000")}_{sample.ID.ToString("X4")}");
             });
 
             Console.Write(".");
+        }
+        */
+
+
+        /// <summary>
+        /// Validates whether all CSEQ samples are contained in this bank.
+        /// </summary>
+        /// <param name="cseq"></param>
+        /// <returns></returns>
+        public bool MatchesCseq(Cseq cseq)
+        {
+            foreach (var inst in cseq.Instruments)
+                if (!Entries.Contains((short)inst.Sample.ID))
+                    return false;
+
+            foreach (var inst in cseq.Percussions)
+                if (!Entries.Contains((short)inst.Sample.ID))
+                    return false;
+
+            return true;
         }
 
         public override string ToString()

@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace CTRFramework.Sound
+namespace CTRFramework.Audio
 {
     public class XaStackedFrame
     {
