@@ -104,6 +104,15 @@ namespace CTRFramework.Audio
             Helpers.PanicIf(NumTracks != trackNum, this, PanicType.Warning, "NumTracks != trackNum, this is weird");
         }
 
+        enum HubNames
+        {
+            gem_valley = 0,
+            nsanity = 1,
+            lost_ruins = 2,
+            gracier_park = 3,
+            citadel_city = 4
+        };
+
         public void ExportMIDI(string fn, Cseq seq, bool hubFilter = false, int hubIndex = 0)
         {
             //add mask theme detection, only export from canyon since it's the 1st cseq
@@ -115,7 +124,7 @@ namespace CTRFramework.Audio
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    ExportMIDI($"{fn}_hub_{i.ToString("00")}.mid", seq, true, i);
+                    ExportMIDI(Path.Combine(Path.GetDirectoryName(fn), $"advhub_{(HubNames)i}.mid"), seq, true, i);
 
                     Console.WriteLine($"hub_{i}");
                     //Console.ReadKey();
@@ -185,7 +194,6 @@ namespace CTRFramework.Audio
                 Helpers.Panic(this, PanicType.Error, ex.Message);
             }
         }
-
 
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {

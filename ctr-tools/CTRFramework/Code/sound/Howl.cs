@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using NAudio.Wave.SampleProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -542,6 +543,7 @@ namespace CTRFramework.Audio
                     );
                 }
 
+
                 Helpers.Panic("HOWL", PanicType.Info, $"Extracting {seqFileName}");
 
                 var seqFullPath = Helpers.PathCombine(pathSeq, seqFileName);
@@ -560,16 +562,58 @@ namespace CTRFramework.Audio
                     seq.Name = Context.SongNames[songIndex];
 
                 seq.PatchName = seq.Name;
+
+                for (int z = 0; z < seq.Instruments.Count; z++)
+                {
+                    foreach (var instr in Context.InstrumentPool)
+                    {
+                        if (instr.Equals(seq.Instruments[z]))
+                        {
+                            seq.Instruments[z] = instr;
+                        }
+                    }
+                }
+
+                for (int z = 0; z < seq.Percussions.Count; z++)
+                {
+                    foreach (var instr in Context.PercussionPool)
+                    {
+                        if (instr.Equals(seq.Percussions[z]))
+                        {
+                            seq.Percussions[z] = instr as SpuInstrumentShort;
+                        }
+                    }
+                }
+
+                // do this after instruments are patched up
                 seq.LoadMetaInstruments();
-                int i = 0;
 
                 var midiFolder = Helpers.PathCombine(pathSeq, "midi");
                 Helpers.CheckFolder(midiFolder);
+
+
+                // detect whether it has mask tracks
+                bool isLevelTrack = false;
+
+                foreach (var inst in seq.Instruments)
+                {
+                    if (inst.Sample.Name == "aku_xylo_low" || inst.Sample.Name == "uka_xylo_low_distorted")
+                    {
+                        isLevelTrack = true;
+                        break;
+                    }
+                }
+
+
+                int i = 0;
 
                 foreach (var s in seq.Songs)
                 {
                     s.ExportMIDI(Helpers.PathCombine(midiFolder, $"{seq.Name}_{i}.mid"), seq);
                     i++;
+
+                    // only loop over if it's canyon or has no mask tracks
+                    if (isLevelTrack && seq.PatchName != "canyon") break;
                 }
 
                 songIndex++;

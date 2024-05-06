@@ -14,7 +14,7 @@ namespace CTRFramework.Audio
     /// <summary>
     /// Describes CSEQ instrument.
     /// </summary>
-    public class SpuInstrument : IReadWrite
+    public class SpuInstrument : IReadWrite, IEquatable<SpuInstrument>
     {
         public SampleType? Type => Sample?.Type;
 
@@ -149,12 +149,22 @@ namespace CTRFramework.Audio
                 }
             }
         }
+
+        public bool Equals(SpuInstrument other)
+        {
+            return
+                flags == other.flags &&
+                ADSR == other.ADSR &&
+                Volume == other.Volume &&
+                SampleID == other.SampleID &&
+                timeToPlay == other.timeToPlay;
+        }
     }
 
     /// <summary>
     /// Shorter version of CSEQ instrument used for percussion.
     /// </summary>
-    public class SpuInstrumentShort : SpuInstrument
+    public class SpuInstrumentShort : SpuInstrument, IEquatable<SpuInstrumentShort>
     {
         public static readonly new int SizeOf = 8;
 
@@ -190,6 +200,16 @@ namespace CTRFramework.Audio
             bw.Write((ushort)_freq);
             bw.Write((ushort)SampleID);
             bw.Write((short)timeToPlay);
+        }
+
+        public bool Equals(SpuInstrumentShort other)
+        {
+            return
+                flags == other.flags &&
+                Volume == other.Volume &&
+                ADSR == other.ADSR &&
+                SampleID == other.SampleID &&
+                timeToPlay == other.timeToPlay;
         }
 
         public override string ToString() => $"magic:{flags}\tvol:{_volume}\tfreq:{_freq}\tid:{SampleID}\tzero:{timeToPlay}";
