@@ -1,4 +1,5 @@
 ﻿using CTRFramework;
+using CTRFramework.Code.shared;
 using CTRFramework.Models;
 using CTRFramework.Shared;
 using CTRFramework.Vram;

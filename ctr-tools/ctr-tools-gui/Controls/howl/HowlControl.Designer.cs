@@ -35,15 +35,20 @@ namespace CTRTools.Controls
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSongs = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.playButton = new System.Windows.Forms.Button();
             this.editSongButton = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.cseqImport = new System.Windows.Forms.Button();
             this.cseqSave = new System.Windows.Forms.Button();
             this.songListBox = new System.Windows.Forms.ListBox();
             this.tabSong = new System.Windows.Forms.TabPage();
+            this.cseqControl1 = new CTRTools.Controls.CseqControl();
             this.tabBanks = new System.Windows.Forms.TabPage();
             this.banksTreeView = new System.Windows.Forms.TreeView();
             this.tabSampleTable = new System.Windows.Forms.TabPage();
+            this.instrumentControl1 = new CTRTools.Controls.InstrumentControl();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.sampleTableListBox = new System.Windows.Forms.ListBox();
             this.fbd = new System.Windows.Forms.FolderBrowserDialog();
@@ -57,8 +62,7 @@ namespace CTRTools.Controls
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cseqControl1 = new CTRTools.Controls.CseqControl();
-            this.instrumentControl1 = new CTRTools.Controls.InstrumentControl();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabSongs.SuspendLayout();
@@ -121,6 +125,10 @@ namespace CTRTools.Controls
             // 
             // tabSongs
             // 
+            this.tabSongs.Controls.Add(this.propertyGrid1);
+            this.tabSongs.Controls.Add(this.label3);
+            this.tabSongs.Controls.Add(this.button1);
+            this.tabSongs.Controls.Add(this.playButton);
             this.tabSongs.Controls.Add(this.editSongButton);
             this.tabSongs.Controls.Add(this.numericUpDown1);
             this.tabSongs.Controls.Add(this.cseqImport);
@@ -133,6 +141,35 @@ namespace CTRTools.Controls
             this.tabSongs.TabIndex = 0;
             this.tabSongs.Text = "tabSongs";
             this.tabSongs.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(227, 119);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(253, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "WARNING! Playback is CPU intensive and it sucks!";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(348, 93);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(115, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Stop";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // playButton
+            // 
+            this.playButton.Location = new System.Drawing.Point(227, 93);
+            this.playButton.Name = "playButton";
+            this.playButton.Size = new System.Drawing.Size(115, 23);
+            this.playButton.TabIndex = 5;
+            this.playButton.Text = "Play";
+            this.playButton.UseVisualStyleBackColor = true;
+            this.playButton.Click += new System.EventHandler(this.playButton_Click);
             // 
             // editSongButton
             // 
@@ -190,6 +227,7 @@ namespace CTRTools.Controls
             this.songListBox.Name = "songListBox";
             this.songListBox.Size = new System.Drawing.Size(218, 355);
             this.songListBox.TabIndex = 0;
+            this.songListBox.SelectedIndexChanged += new System.EventHandler(this.songListBox_SelectedIndexChanged);
             this.songListBox.DoubleClick += new System.EventHandler(this.songListBox_DoubleClick);
             // 
             // tabSong
@@ -201,6 +239,17 @@ namespace CTRTools.Controls
             this.tabSong.TabIndex = 3;
             this.tabSong.Text = "tabSong";
             this.tabSong.UseVisualStyleBackColor = true;
+            // 
+            // cseqControl1
+            // 
+            this.cseqControl1.AllowDrop = true;
+            this.cseqControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cseqControl1.Location = new System.Drawing.Point(3, 3);
+            this.cseqControl1.Name = "cseqControl1";
+            this.cseqControl1.Size = new System.Drawing.Size(608, 367);
+            this.cseqControl1.TabIndex = 0;
             // 
             // tabBanks
             // 
@@ -234,6 +283,17 @@ namespace CTRTools.Controls
             this.tabSampleTable.TabIndex = 2;
             this.tabSampleTable.Text = "tabSampleTable";
             this.tabSampleTable.UseVisualStyleBackColor = true;
+            // 
+            // instrumentControl1
+            // 
+            this.instrumentControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.instrumentControl1.Instrument = null;
+            this.instrumentControl1.Location = new System.Drawing.Point(195, 7);
+            this.instrumentControl1.Name = "instrumentControl1";
+            this.instrumentControl1.Size = new System.Drawing.Size(416, 363);
+            this.instrumentControl1.TabIndex = 21;
             // 
             // textBox1
             // 
@@ -331,27 +391,12 @@ namespace CTRTools.Controls
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // cseqControl1
+            // propertyGrid1
             // 
-            this.cseqControl1.AllowDrop = true;
-            this.cseqControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cseqControl1.Location = new System.Drawing.Point(3, 3);
-            this.cseqControl1.Name = "cseqControl1";
-            this.cseqControl1.Size = new System.Drawing.Size(608, 367);
-            this.cseqControl1.TabIndex = 0;
-            // 
-            // instrumentControl1
-            // 
-            this.instrumentControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.instrumentControl1.Instrument = null;
-            this.instrumentControl1.Location = new System.Drawing.Point(195, 7);
-            this.instrumentControl1.Name = "instrumentControl1";
-            this.instrumentControl1.Size = new System.Drawing.Size(416, 363);
-            this.instrumentControl1.TabIndex = 21;
+            this.propertyGrid1.Location = new System.Drawing.Point(227, 135);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(242, 232);
+            this.propertyGrid1.TabIndex = 8;
             // 
             // HowlControl
             // 
@@ -364,10 +409,12 @@ namespace CTRTools.Controls
             this.Size = new System.Drawing.Size(640, 480);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.HowlControl_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.HowlControl_DragEnter);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HowlControl_KeyPress);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabSongs.ResumeLayout(false);
+            this.tabSongs.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.tabSong.ResumeLayout(false);
             this.tabBanks.ResumeLayout(false);
@@ -411,5 +458,9 @@ namespace CTRTools.Controls
         private Button editSongButton;
         private TextBox textBox1;
         private InstrumentControl instrumentControl1;
+        private Button playButton;
+        private Button button1;
+        private Label label3;
+        private PropertyGrid propertyGrid1;
     }
 }

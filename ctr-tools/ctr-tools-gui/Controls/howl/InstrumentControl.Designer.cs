@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.octaveUpButton = new System.Windows.Forms.Button();
-            this.octaveDownButton = new System.Windows.Forms.Button();
-            this.exportVagButton = new System.Windows.Forms.Button();
-            this.exportWavButton = new System.Windows.Forms.Button();
             this.wipeButton = new System.Windows.Forms.Button();
+            this.exportWavButton = new System.Windows.Forms.Button();
+            this.exportVagButton = new System.Windows.Forms.Button();
+            this.replaceSampleButton = new System.Windows.Forms.Button();
             this.addToSfxBank = new System.Windows.Forms.Button();
             this.findFreeIndexButton = new System.Windows.Forms.Button();
-            this.replaceSampleButton = new System.Windows.Forms.Button();
+            this.octaveUpButton = new System.Windows.Forms.Button();
+            this.octaveDownButton = new System.Windows.Forms.Button();
             this.instrumentProperties = new System.Windows.Forms.PropertyGrid();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -62,35 +62,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Instrument editor";
             // 
-            // octaveUpButton
+            // wipeButton
             // 
-            this.octaveUpButton.Location = new System.Drawing.Point(6, 19);
-            this.octaveUpButton.Name = "octaveUpButton";
-            this.octaveUpButton.Size = new System.Drawing.Size(165, 23);
-            this.octaveUpButton.TabIndex = 31;
-            this.octaveUpButton.Text = "Octave up";
-            this.octaveUpButton.UseVisualStyleBackColor = true;
-            this.octaveUpButton.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // octaveDownButton
-            // 
-            this.octaveDownButton.Location = new System.Drawing.Point(6, 48);
-            this.octaveDownButton.Name = "octaveDownButton";
-            this.octaveDownButton.Size = new System.Drawing.Size(165, 23);
-            this.octaveDownButton.TabIndex = 30;
-            this.octaveDownButton.Text = "Octave down";
-            this.octaveDownButton.UseVisualStyleBackColor = true;
-            this.octaveDownButton.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // exportVagButton
-            // 
-            this.exportVagButton.Location = new System.Drawing.Point(6, 164);
-            this.exportVagButton.Name = "exportVagButton";
-            this.exportVagButton.Size = new System.Drawing.Size(165, 23);
-            this.exportVagButton.TabIndex = 35;
-            this.exportVagButton.Text = "Export VAG";
-            this.exportVagButton.UseVisualStyleBackColor = true;
-            this.exportVagButton.Click += new System.EventHandler(this.exportVagButton_Click);
+            this.wipeButton.Location = new System.Drawing.Point(6, 222);
+            this.wipeButton.Name = "wipeButton";
+            this.wipeButton.Size = new System.Drawing.Size(165, 23);
+            this.wipeButton.TabIndex = 37;
+            this.wipeButton.Text = "Wipe sample";
+            this.wipeButton.UseVisualStyleBackColor = true;
+            this.wipeButton.Click += new System.EventHandler(this.wipeButton_Click);
             // 
             // exportWavButton
             // 
@@ -102,15 +82,25 @@
             this.exportWavButton.UseVisualStyleBackColor = true;
             this.exportWavButton.Click += new System.EventHandler(this.exportWavButton_Click);
             // 
-            // wipeButton
+            // exportVagButton
             // 
-            this.wipeButton.Location = new System.Drawing.Point(6, 222);
-            this.wipeButton.Name = "wipeButton";
-            this.wipeButton.Size = new System.Drawing.Size(165, 23);
-            this.wipeButton.TabIndex = 37;
-            this.wipeButton.Text = "Wipe sample";
-            this.wipeButton.UseVisualStyleBackColor = true;
-            this.wipeButton.Click += new System.EventHandler(this.wipeButton_Click);
+            this.exportVagButton.Location = new System.Drawing.Point(6, 164);
+            this.exportVagButton.Name = "exportVagButton";
+            this.exportVagButton.Size = new System.Drawing.Size(165, 23);
+            this.exportVagButton.TabIndex = 35;
+            this.exportVagButton.Text = "Export VAG";
+            this.exportVagButton.UseVisualStyleBackColor = true;
+            this.exportVagButton.Click += new System.EventHandler(this.exportVagButton_Click);
+            // 
+            // replaceSampleButton
+            // 
+            this.replaceSampleButton.Location = new System.Drawing.Point(6, 135);
+            this.replaceSampleButton.Name = "replaceSampleButton";
+            this.replaceSampleButton.Size = new System.Drawing.Size(165, 23);
+            this.replaceSampleButton.TabIndex = 34;
+            this.replaceSampleButton.Text = "Import VAG";
+            this.replaceSampleButton.UseVisualStyleBackColor = true;
+            this.replaceSampleButton.Click += new System.EventHandler(this.replaceSampleButton_Click);
             // 
             // addToSfxBank
             // 
@@ -132,15 +122,25 @@
             this.findFreeIndexButton.UseVisualStyleBackColor = true;
             this.findFreeIndexButton.Click += new System.EventHandler(this.findFreeIndexButton_Click);
             // 
-            // replaceSampleButton
+            // octaveUpButton
             // 
-            this.replaceSampleButton.Location = new System.Drawing.Point(6, 135);
-            this.replaceSampleButton.Name = "replaceSampleButton";
-            this.replaceSampleButton.Size = new System.Drawing.Size(165, 23);
-            this.replaceSampleButton.TabIndex = 34;
-            this.replaceSampleButton.Text = "Import VAG";
-            this.replaceSampleButton.UseVisualStyleBackColor = true;
-            this.replaceSampleButton.Click += new System.EventHandler(this.replaceSampleButton_Click);
+            this.octaveUpButton.Location = new System.Drawing.Point(6, 19);
+            this.octaveUpButton.Name = "octaveUpButton";
+            this.octaveUpButton.Size = new System.Drawing.Size(165, 23);
+            this.octaveUpButton.TabIndex = 31;
+            this.octaveUpButton.Text = "Octave up";
+            this.octaveUpButton.UseVisualStyleBackColor = true;
+            this.octaveUpButton.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // octaveDownButton
+            // 
+            this.octaveDownButton.Location = new System.Drawing.Point(6, 48);
+            this.octaveDownButton.Name = "octaveDownButton";
+            this.octaveDownButton.Size = new System.Drawing.Size(165, 23);
+            this.octaveDownButton.TabIndex = 30;
+            this.octaveDownButton.Text = "Octave down";
+            this.octaveDownButton.UseVisualStyleBackColor = true;
+            this.octaveDownButton.Click += new System.EventHandler(this.button1_Click);
             // 
             // instrumentProperties
             // 

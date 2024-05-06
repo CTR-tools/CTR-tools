@@ -68,6 +68,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\AboutControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\AboutControl.Designer.cs">
+      <DependentUpon>AboutControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\howl\HowlPlayer.cs" />
     <Compile Include="Controls\DrawerControl.cs">
       <SubType>UserControl</SubType>
@@ -92,6 +98,18 @@
     </Compile>
     <Compile Include="Controls\VramLayout.Designer.cs">
       <DependentUpon>VramLayout.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HomeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HomeForm.Designer.cs">
+      <DependentUpon>HomeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\howl\InstrumentSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\howl\InstrumentSelectionForm.Designer.cs">
+      <DependentUpon>InstrumentSelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -177,6 +195,9 @@
     <Compile Include="Controls\VramControl.Designer.cs">
       <DependentUpon>VramControl.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Controls\AboutControl.resx">
+      <DependentUpon>AboutControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\howl\CseqControl.resx">
       <DependentUpon>CseqControl.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -220,6 +241,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\LevControl.resx">
       <DependentUpon>LevControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HomeForm.resx">
+      <DependentUpon>HomeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\howl\InstrumentSelectionForm.resx">
+      <DependentUpon>InstrumentSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -265,7 +292,6 @@
       <Name>CTRFramework</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

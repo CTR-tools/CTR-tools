@@ -1,4 +1,4 @@
-﻿using CTRFramework.Sound;
+﻿using CTRFramework.Audio;
 using System;
 using System.Windows.Forms;
 
@@ -7,9 +7,9 @@ namespace CTRTools.Controls
     public partial class InstrumentControl : UserControl
     {
         public HowlContext Context;
-        private Instrument instrument;
+        private SpuInstrument instrument;
 
-        public Instrument Instrument
+        public SpuInstrument Instrument
         {
             get { return instrument; }
             set
@@ -36,14 +36,9 @@ namespace CTRTools.Controls
 
         public void SetButtonsState(bool state)
         {
-            exportVagButton.Enabled = state;
-            exportWavButton.Enabled = state;
-            wipeButton.Enabled = state;
-            replaceSampleButton.Enabled = state;
-            addToSfxBank.Enabled = state;
-            findFreeIndexButton.Enabled = state;
-            octaveUpButton.Enabled = state;
-            octaveDownButton.Enabled = state;
+            foreach (var control in this.Controls)
+                if (control is Button)
+                    (control as Button).Enabled = state;
         }
 
         private void replaceSampleButton_Click(object sender, EventArgs e)
@@ -67,7 +62,7 @@ namespace CTRTools.Controls
             if (Context.howl is null) return;
 
             var index = Instrument.SampleID;
-            Context.Samples[index].Data = new byte[0];
+            Context.SamplePool[index].Data = new byte[0];
             Context.SpuPtrTable[index] = new SpuAddr() { Size = 0 };
         }
 
@@ -80,7 +75,7 @@ namespace CTRTools.Controls
 
             do
             {
-                if (Context.Samples.ContainsKey(index))
+                if (Context.SamplePool.ContainsKey(index))
                 {
                     index++;
                 }
@@ -89,7 +84,7 @@ namespace CTRTools.Controls
                     MessageBox.Show("found free index: " + index);
 
                     //add new empty sample with the given index 
-                    Context.Samples.Add(index, new Sample() { ID = index });
+                    Context.SamplePool.Add(index, new Sample() { ID = index });
 
                     //update sample index
                     Instrument.SampleID = (ushort)index;
@@ -113,13 +108,13 @@ namespace CTRTools.Controls
             if (Context is null) return;
             if (Context.howl is null) return;
 
-            var index = Instrument.SampleID;
+            short index = (short)Instrument.SampleID;
 
             if (Context.howl.Banks.Count == 0) return;
 
-            if (!Context.howl.Banks[0].Entries.ContainsKey(index))
+            if (!Context.howl.Banks[0].Contains(index))
             {
-                Context.howl.Banks[0].Entries.Add(index, Context.Samples[index]);
+                Context.howl.Banks[0].Entries.Add(index);
             }
             else
             {
@@ -147,7 +142,7 @@ namespace CTRTools.Controls
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Context.Samples[index].SaveWav(sfd.FileName, Instrument.Frequency);
+                Context.SamplePool[index].SaveWav(sfd.FileName, Instrument.Frequency);
             }
         }
 
@@ -165,7 +160,7 @@ namespace CTRTools.Controls
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                Context.Samples[index].SaveVag(sfd.FileName, Instrument.Frequency);
+                Context.SamplePool[index].SaveVag(sfd.FileName, Instrument.Frequency);
             }
         }
 

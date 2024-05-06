@@ -12,9 +12,7 @@ namespace CTRTools
         {
             InitializeComponent();
 
-            this.Text = $"{this.Text} - {Meta.Version}";
-            labelVersion.Text = Meta.Version;
-            signLabel.Text = Meta.GetSignature();
+            this.Text = $"CTR-tools-gui - {Meta.Version}";
 
             OBJ.FixCulture();
 

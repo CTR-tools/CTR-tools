@@ -1,5 +1,5 @@
 ﻿using CTRFramework.Shared;
-using CTRFramework.Sound;
+using CTRFramework.Audio;
 using System;
 using System.IO;
 
@@ -59,7 +59,8 @@ namespace howl
                 case ".BNK":
                     Bank.ReadNames();
                     var bnk = Bank.FromFile(filename);
-                    bnk.ExportAll(0, Helpers.PathCombine(basepath, name));
+                    throw new NotImplementedException("commented out bank export since need howl for this to work.");
+                    //bnk.ExportAll(0, Helpers.PathCombine(basepath, name));
                     break;
 
                 case ".XNF":
@@ -72,10 +73,12 @@ namespace howl
                     seq.Songs[0].ExportMIDI(Path.ChangeExtension(filename, ".mid"), seq);
                     break;
 
+                /*
                 case ".MID":
                     var midseq = Cseq.FromMidi(filename);
                     midseq.Save(Path.ChangeExtension(filename, ".cseq"));
                     break;
+                */
 
                 case ".XA":
                     var xa = XaStackedFrameCollection.FromFile(filename);

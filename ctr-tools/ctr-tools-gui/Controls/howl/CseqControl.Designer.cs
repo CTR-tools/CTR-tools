@@ -36,8 +36,6 @@ namespace CTRTools.Controls
             this.exportSEQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importMIDIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.patchMIDIInstrumentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ignoreOriginalVolumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,6 +52,7 @@ namespace CTRTools.Controls
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tutorialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.patchBox = new System.Windows.Forms.ComboBox();
             this.trackBox = new System.Windows.Forms.ListBox();
@@ -63,14 +62,18 @@ namespace CTRTools.Controls
             this.tabTrackInfo = new System.Windows.Forms.TabPage();
             this.trackInfoBox = new System.Windows.Forms.TextBox();
             this.tabInstruments = new System.Windows.Forms.TabPage();
+            this.changeInstrumentButton = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.duplicateInstrumentButton = new System.Windows.Forms.Button();
             this.exportAllButton = new System.Windows.Forms.Button();
             this.instrumentList = new System.Windows.Forms.TreeView();
+            this.instrumentControl1 = new CTRTools.Controls.InstrumentControl();
             this.tabMeta = new System.Windows.Forms.TabPage();
             this.metaInstInfo = new System.Windows.Forms.TextBox();
             this.metaInstList = new System.Windows.Forms.ListBox();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
-            this.instrumentControl1 = new CTRTools.Controls.InstrumentControl();
+            this.findBank = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -99,9 +102,7 @@ namespace CTRTools.Controls
             this.openToolStripMenuItem,
             this.exportSEQToolStripMenuItem,
             this.saveAsToolStripMenuItem,
-            this.importMIDIToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.exitToolStripMenuItem});
+            this.importMIDIToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -110,43 +111,30 @@ namespace CTRTools.Controls
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // exportSEQToolStripMenuItem
             // 
             this.exportSEQToolStripMenuItem.Name = "exportSEQToolStripMenuItem";
-            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.exportSEQToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
             this.exportSEQToolStripMenuItem.Text = "Save";
             this.exportSEQToolStripMenuItem.Click += new System.EventHandler(this.exportSEQToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
             this.saveAsToolStripMenuItem.Text = "Save as...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // importMIDIToolStripMenuItem
             // 
             this.importMIDIToolStripMenuItem.Name = "importMIDIToolStripMenuItem";
-            this.importMIDIToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.importMIDIToolStripMenuItem.Text = "Import MIDI";
+            this.importMIDIToolStripMenuItem.Size = new System.Drawing.Size(294, 22);
+            this.importMIDIToolStripMenuItem.Text = "Import MIDI (not from here! remove later)";
             this.importMIDIToolStripMenuItem.Click += new System.EventHandler(this.importMIDIToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -283,6 +271,7 @@ namespace CTRTools.Controls
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.button5);
             this.groupBox1.Controls.Add(this.patchBox);
             this.groupBox1.Controls.Add(this.trackBox);
@@ -294,6 +283,16 @@ namespace CTRTools.Controls
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "SEQ Info";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(71, 199);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "Check size";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button5
             // 
@@ -388,9 +387,13 @@ namespace CTRTools.Controls
             // 
             // tabInstruments
             // 
+            this.tabInstruments.Controls.Add(this.findBank);
+            this.tabInstruments.Controls.Add(this.changeInstrumentButton);
+            this.tabInstruments.Controls.Add(this.button2);
+            this.tabInstruments.Controls.Add(this.duplicateInstrumentButton);
             this.tabInstruments.Controls.Add(this.exportAllButton);
-            this.tabInstruments.Controls.Add(this.instrumentControl1);
             this.tabInstruments.Controls.Add(this.instrumentList);
+            this.tabInstruments.Controls.Add(this.instrumentControl1);
             this.tabInstruments.Location = new System.Drawing.Point(4, 22);
             this.tabInstruments.Name = "tabInstruments";
             this.tabInstruments.Padding = new System.Windows.Forms.Padding(3);
@@ -398,6 +401,39 @@ namespace CTRTools.Controls
             this.tabInstruments.TabIndex = 1;
             this.tabInstruments.Text = "Instruments / Samples";
             this.tabInstruments.UseVisualStyleBackColor = true;
+            // 
+            // changeInstrumentButton
+            // 
+            this.changeInstrumentButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.changeInstrumentButton.Location = new System.Drawing.Point(6, 369);
+            this.changeInstrumentButton.Name = "changeInstrumentButton";
+            this.changeInstrumentButton.Size = new System.Drawing.Size(107, 23);
+            this.changeInstrumentButton.TabIndex = 8;
+            this.changeInstrumentButton.Text = "Change instrument";
+            this.changeInstrumentButton.UseVisualStyleBackColor = true;
+            this.changeInstrumentButton.Click += new System.EventHandler(this.changeInstrumentButton_Click);
+            // 
+            // button2
+            // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button2.Location = new System.Drawing.Point(6, 340);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(220, 23);
+            this.button2.TabIndex = 7;
+            this.button2.Text = "Add percussion";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // duplicateInstrumentButton
+            // 
+            this.duplicateInstrumentButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.duplicateInstrumentButton.Location = new System.Drawing.Point(6, 311);
+            this.duplicateInstrumentButton.Name = "duplicateInstrumentButton";
+            this.duplicateInstrumentButton.Size = new System.Drawing.Size(220, 23);
+            this.duplicateInstrumentButton.TabIndex = 6;
+            this.duplicateInstrumentButton.Text = "Add instrument";
+            this.duplicateInstrumentButton.UseVisualStyleBackColor = true;
+            this.duplicateInstrumentButton.Click += new System.EventHandler(this.duplicateInstrumentButton_Click);
             // 
             // exportAllButton
             // 
@@ -414,11 +450,23 @@ namespace CTRTools.Controls
             // 
             this.instrumentList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.instrumentList.HideSelection = false;
             this.instrumentList.Location = new System.Drawing.Point(6, 6);
             this.instrumentList.Name = "instrumentList";
-            this.instrumentList.Size = new System.Drawing.Size(220, 383);
+            this.instrumentList.Size = new System.Drawing.Size(220, 299);
             this.instrumentList.TabIndex = 3;
             this.instrumentList.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            // 
+            // instrumentControl1
+            // 
+            this.instrumentControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.instrumentControl1.Instrument = null;
+            this.instrumentControl1.Location = new System.Drawing.Point(232, 6);
+            this.instrumentControl1.Name = "instrumentControl1";
+            this.instrumentControl1.Size = new System.Drawing.Size(438, 415);
+            this.instrumentControl1.TabIndex = 4;
             // 
             // tabMeta
             // 
@@ -465,16 +513,16 @@ namespace CTRTools.Controls
             // 
             this.sfd.Filter = "MIDI File (*.mid)|*.mid";
             // 
-            // instrumentControl1
+            // findBank
             // 
-            this.instrumentControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.instrumentControl1.Instrument = null;
-            this.instrumentControl1.Location = new System.Drawing.Point(232, 6);
-            this.instrumentControl1.Name = "instrumentControl1";
-            this.instrumentControl1.Size = new System.Drawing.Size(438, 415);
-            this.instrumentControl1.TabIndex = 4;
+            this.findBank.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.findBank.Location = new System.Drawing.Point(119, 369);
+            this.findBank.Name = "findBank";
+            this.findBank.Size = new System.Drawing.Size(107, 23);
+            this.findBank.TabIndex = 9;
+            this.findBank.Text = "Find bank";
+            this.findBank.UseVisualStyleBackColor = true;
+            this.findBank.Click += new System.EventHandler(this.findBank_Click);
             // 
             // CseqControl
             // 
@@ -511,7 +559,6 @@ namespace CTRTools.Controls
         private ToolStripMenuItem openToolStripMenuItem;
         private GroupBox groupBox1;
         private TextBox seqInfoBox;
-        private ToolStripMenuItem exitToolStripMenuItem;
         private ListBox trackBox;
         private ListBox sequenceBox;
         private TabControl tabControl1;
@@ -530,7 +577,6 @@ namespace CTRTools.Controls
         private ToolStripMenuItem toolStripMenuItem5;
         private ToolStripMenuItem patchMIDIInstrumentsToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem6;
-        private ToolStripSeparator toolStripSeparator1;
         private ComboBox patchBox;
         private ToolStripMenuItem ignoreOriginalVolumeToolStripMenuItem;
         private TreeView instrumentList;
@@ -547,6 +593,11 @@ namespace CTRTools.Controls
         private Button button5;
         private InstrumentControl instrumentControl1;
         private Button exportAllButton;
+        private Button button1;
+        private Button duplicateInstrumentButton;
+        private Button button2;
+        private Button changeInstrumentButton;
+        private Button findBank;
     }
 }
 

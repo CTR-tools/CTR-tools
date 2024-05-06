@@ -19,20 +19,23 @@ namespace CTRTools.Controls
 
         private void LoadLang(string filename)
         {
-            switch (Path.GetExtension(filename).ToUpper())
+            var ext = Path.GetExtension(filename).ToUpper();
+
+            switch (ext)
             {
                 case ".LNG":
                     lng = LNG.FromFile(filename); break;
                 case ".TXT":
                     lng = LNG.FromText(File.ReadAllLines(filename, System.Text.Encoding.UTF8)); break;
                 default:
-                    MessageBox.Show("Unsupported file."); break;
+                    MessageBox.Show($"Unsupported file type: {ext}"); return;
             }
 
             linesOnLoad = lng.Entries.Count;
             langBox.Lines = lng.Entries.ToArray();
             orginalFilePath = Path.ChangeExtension(filename, ".lng");
         }
+
         private void SaveLang(string filename)
         {
             if (lng is null) return;
@@ -79,7 +82,9 @@ namespace CTRTools.Controls
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ofd.ShowDialog() == DialogResult.OK)
-                LoadLang(sfd.FileName);
+            {
+                LoadLang(ofd.FileName);
+            }
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -127,6 +132,11 @@ namespace CTRTools.Controls
             {
                 lng.Export(saveDialog.FileName);
             }
+        }
+
+        private void ofd_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
         }
     }
 }

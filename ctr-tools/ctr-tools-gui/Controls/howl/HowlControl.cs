@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Shared;
-using CTRFramework.Sound;
+using CTRFramework.Audio;
+using NAudio;
 using NAudio.Midi;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Media;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CTRTools.Controls
@@ -59,8 +62,10 @@ namespace CTRTools.Controls
                     Tag = bank
                 };
 
-                foreach (var sample in bank.Entries.Values)
+                foreach (var index in bank.Entries)
                 {
+                    var sample = howl.Context.SamplePool[index];
+
                     var sampleNode = new TreeNode()
                     {
                         Text = $"{sample.Name} ({sample.ID}) [{sample.HashString}]",
@@ -77,7 +82,8 @@ namespace CTRTools.Controls
         }
 
 
-        private Dictionary<int, Instrument> SampleCache = new Dictionary<int, Instrument>();
+        // sample cache to show in a listbox
+        private List<SpuInstrument> SampleCache = new List<SpuInstrument>();
 
         private void PopulateSamplesTab(string searchTerm = null)
         {
@@ -90,21 +96,21 @@ namespace CTRTools.Controls
 
             int i = 0;
 
-            foreach (var entry in Howl.SampleTable)
+            foreach (var entry in howl.EffectsTable)
             {
                 var sample = entry.GetSample(entry.SampleID, howl.Context);
                 sample.Context = howl.Context; //duh
 
                 if (searchTerm is null || searchTerm == "")
                 {
-                    SampleCache.Add(i, entry);
+                    SampleCache.Add(entry);
                     i++;
                 }
                 else
                 {
                     if (sample.Name.ToUpper().Contains(searchTerm.ToUpper()))
                     {
-                        SampleCache.Add(i, entry);
+                        SampleCache.Add(entry);
                         i++;
                     }
                 }
@@ -112,7 +118,7 @@ namespace CTRTools.Controls
 
             foreach (var sample in SampleCache)
             {
-                sampleTableListBox.Items.Add(sample.Value.Sample.Name);
+                sampleTableListBox.Items.Add(howl.Context.SamplePool[sample.SampleID].Name);
             }
 
             sampleTableListBox.EndUpdate();
@@ -125,7 +131,7 @@ namespace CTRTools.Controls
             songListBox.Items.Clear();
 
             foreach (var entry in howl.Songs)
-                songListBox.Items.Add(entry.name);
+                songListBox.Items.Add($"{entry.Name} [{entry.Percussions.Count + entry.Instruments.Count}]");
 
             songListBox.EndUpdate();
         }
@@ -155,6 +161,14 @@ namespace CTRTools.Controls
                 switch (Path.GetExtension(files[0]).ToUpper())
                 {
                     case ".HWL": LoadHowl(files[0]); break;
+                    case ".MID":
+                        if (songListBox.SelectedIndex == -1)
+                        {
+                            MessageBox.Show("Select a song to replace first!");
+                            break;
+                        }
+                        ImportMIDI(howl.Songs[songListBox.SelectedIndex], files[0]);
+                        break;
                     default: MessageBox.Show("Unsupported file."); break;
                 }
             }
@@ -245,7 +259,7 @@ namespace CTRTools.Controls
 
             var savedialog = new SaveFileDialog();
             savedialog.Filter = "CTR CSEQ (*.cseq)|*.cseq";
-            savedialog.FileName = seq.name;
+            savedialog.FileName = seq.Name;
 
             if (savedialog.ShowDialog() == DialogResult.OK)
             {
@@ -263,21 +277,23 @@ namespace CTRTools.Controls
             ofd.Filter = "MIDI File (*.mid)|*.mid";
 
             if (ofd.ShowDialog() == DialogResult.OK)
-                ImportMIDI(seq, ofd.FileName);
+                ImportMIDI(seq, ofd.FileName, (int)numericUpDown1.Value);
         }
 
-        private void ImportMIDI(Cseq seq, string filename)
+        public static void ImportMIDI(Cseq seq, string filename, int bpm = 120, int songIndex = 0)
         {
-            var midi = new MidiFile(filename);
+            if (seq.Songs.Count <= songIndex) return;
+
+            var midi = new MidiFile(filename, false);
             var newMidi = new CseqSong();
 
             //find a way to read from midi
-            newMidi.BeatsPerMinute = (int)numericUpDown1.Value;
+            newMidi.BeatsPerMinute = bpm;
             newMidi.TicksPerQuarterNote = midi.DeltaTicksPerQuarterNote;
 
             int absoluteTime = 0;
 
-            //foreach track in midi file, why 1?
+            //foreach track in midi file
             for (int i = 0; i < midi.Tracks; i++)
             {
                 var track = new CSeqTrack();
@@ -344,6 +360,7 @@ namespace CTRTools.Controls
                 }
             }
 
+            //generate index table for percussion samples for the user
             if (percTable.Count > 0)
             {
                 var sb = new StringBuilder();
@@ -361,19 +378,26 @@ namespace CTRTools.Controls
             for (int i = 0; i < newMidi.Tracks.Count; i++)
                 newMidi.Tracks[i].Index = i;
 
+            byte instIndex = 0;
 
-            foreach (var x in newMidi.Tracks)
+            foreach (var track in newMidi.Tracks)
             {
+                //change patch is not needed if it's drum track
+                if (track.isDrumTrack)
+                {
+                    continue;
+                }
+
                 var c = new CseqEvent();
                 c.eventType = CseqEventType.ChangePatch;
-                c.pitch = (byte)x.Index;
+                c.pitch = (byte)instIndex;
                 c.wait = 0;
-                x.cseqEventCollection.Insert(0, c);
+                track.cseqEventCollection.Insert(0, c);
+
+                instIndex++;
             }
 
-
-
-            seq.Songs[0] = newMidi;
+            seq.Songs[songIndex] = newMidi;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e) => Application.Exit();
@@ -401,6 +425,79 @@ namespace CTRTools.Controls
             instrumentControl1.Clear();
             sampleTableListBox.Items.Clear();
             PopulateSamplesTab(textBox1.Text);
+        }
+
+        CancellationTokenSource songStopSource;
+        Task songPlayer = null;
+
+        private void playButton_Click(object sender, EventArgs e)
+        {
+
+            if (songListBox.SelectedIndex == -1) return;
+
+            int index = songListBox.SelectedIndex;
+
+            if (songPlayer != null)
+            {
+                songStopSource.Cancel();
+                songPlayer = null;
+            }
+
+            var song = howl.Songs[index];
+
+            songStopSource = new CancellationTokenSource();
+
+            int i = 0;
+
+            foreach (var track in song.Songs[0].Tracks)
+            {
+                HowlPlayer.PlayTrack(songStopSource.Token, song, 0, i);
+                i++;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (howl is null) return;
+
+            songStopSource.Cancel();
+            songPlayer = null;
+        }
+
+
+        private void HowlControl_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+        }
+
+        private void songListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (songListBox.SelectedIndex == -1) return;
+
+            propertyGrid1.SelectedObject = howl.Songs[songListBox.SelectedIndex];
+
+/*
+            //wont really work as intended
+
+            int i = 0;
+
+            var banks = new List<int>();
+
+            foreach (var bank in howl.Banks)
+            {
+                if (bank.MatchesCseq(howl.Songs[songListBox.SelectedIndex]))
+                {
+                    banks.Add(i);
+                }
+                i++;
+            }
+
+            string result = "found banks: ";
+
+            foreach (var b in banks) { result += b + ", "; }
+
+            MessageBox.Show(result);
+*/
         }
     }
 }

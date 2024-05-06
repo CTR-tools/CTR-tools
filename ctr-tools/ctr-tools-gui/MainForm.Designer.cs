@@ -50,9 +50,9 @@
             this.xaControl = new CTRTools.Controls.XaControl();
             this.tabHowl = new System.Windows.Forms.TabPage();
             this.howlControl1 = new CTRTools.Controls.HowlControl();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.vramLayout1 = new CTRTools.Controls.VramLayout();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tabControl.SuspendLayout();
             this.tabAbout.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appLogo)).BeginInit();
@@ -111,7 +111,7 @@
             this.warning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.warning.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.warning.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.warning.Location = new System.Drawing.Point(3, 83);
+            this.warning.Location = new System.Drawing.Point(3, 92);
             this.warning.Name = "warning";
             this.warning.Size = new System.Drawing.Size(930, 61);
             this.warning.TabIndex = 10;
@@ -317,14 +317,6 @@
             this.howlControl1.Size = new System.Drawing.Size(930, 502);
             this.howlControl1.TabIndex = 0;
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 539);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(944, 22);
-            this.statusStrip1.TabIndex = 2;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.vramLayout1);
@@ -341,6 +333,14 @@
             this.vramLayout1.Name = "vramLayout1";
             this.vramLayout1.Size = new System.Drawing.Size(920, 502);
             this.vramLayout1.TabIndex = 0;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Location = new System.Drawing.Point(0, 539);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(944, 22);
+            this.statusStrip1.TabIndex = 2;
+            this.statusStrip1.Text = "statusStrip1";
             // 
             // MainForm
             // 

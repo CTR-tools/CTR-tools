@@ -38,9 +38,9 @@ namespace CTRTools.Controls
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportStringsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportStringsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,6 +69,7 @@ namespace CTRTools.Controls
             // 
             this.ofd.Filter = "Crash Team Racing LNG file(*.lng)| *.lng";
             this.ofd.InitialDirectory = "ofd";
+            this.ofd.FileOk += new System.ComponentModel.CancelEventHandler(this.ofd_FileOk);
             // 
             // menuStrip
             // 
@@ -119,6 +120,13 @@ namespace CTRTools.Controls
             this.saveAsToolStripMenuItem.Text = "Save As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
+            // exportStringsToolStripMenuItem
+            // 
+            this.exportStringsToolStripMenuItem.Name = "exportStringsToolStripMenuItem";
+            this.exportStringsToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.exportStringsToolStripMenuItem.Text = "Export strings";
+            this.exportStringsToolStripMenuItem.Click += new System.EventHandler(this.exportStringsToolStripMenuItem_Click);
+            // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -133,13 +141,6 @@ namespace CTRTools.Controls
             this.fontToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.fontToolStripMenuItem.Text = "Font...";
             this.fontToolStripMenuItem.Click += new System.EventHandler(this.fontToolStripMenuItem_Click);
-            // 
-            // exportStringsToolStripMenuItem
-            // 
-            this.exportStringsToolStripMenuItem.Name = "exportStringsToolStripMenuItem";
-            this.exportStringsToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
-            this.exportStringsToolStripMenuItem.Text = "Export strings";
-            this.exportStringsToolStripMenuItem.Click += new System.EventHandler(this.exportStringsToolStripMenuItem_Click);
             // 
             // LangControl
             // 

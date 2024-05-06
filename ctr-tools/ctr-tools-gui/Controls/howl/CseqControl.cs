@@ -1,7 +1,6 @@
 ﻿using CTRFramework.Shared;
-using CTRFramework.Sound;
+using CTRFramework.Audio;
 using NAudio.Midi;
-using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -75,7 +74,7 @@ namespace CTRTools.Controls
             }
         }
 
-        public void FillUI(string filename = "empty")
+        public void FillUI(string filename = "empty", int selA = -1, int selB = -1)
         {
             if (seq is null) return;
 
@@ -93,13 +92,19 @@ namespace CTRTools.Controls
             foreach (var song in seq.Songs)
                 sequenceBox.Items.Add(song);//"Sequence_" + i.ToString("X2"));
 
-            PopulateInstrumentsNode(instrumentList, "Instruments", seq.samplesReverb);
-            PopulateInstrumentsNode(instrumentList, "Percussion", seq.samples);
+            PopulateInstrumentsNode(instrumentList, "Instruments", seq.Instruments);
+            PopulateInstrumentsNode(instrumentList, "Percussion", seq.Percussions);
 
             instrumentList.ExpandAll();
+
+            if (selA != -1 && selB != -1)
+            {
+                instrumentList.SelectedNode = instrumentList.Nodes[selA].Nodes[selB];
+                instrumentList.Focus();
+            }
         }
 
-        private void PopulateInstrumentsNode<T>(TreeView root, string name, List<T> samples) where T : Instrument
+        private void PopulateInstrumentsNode<T>(TreeView root, string name, List<T> samples) where T : SpuInstrument
         {
             var instruments = new TreeNode(name);
 
@@ -164,7 +169,7 @@ namespace CTRTools.Controls
             switch (Path.GetExtension(files[0]))
             {
                 case ".cseq": LoadCseq(files[0]); break;
-                case ".mid": ImportMIDI(files[0]); break;
+                // case ".mid": ImportMIDI(files[0]); break;
                 case ".bnk": LoadBank(files[0]); tabControl1.SelectedIndex = 3; break;
                 default: MessageBox.Show("Unsupported file."); break;
             }
@@ -248,11 +253,11 @@ namespace CTRTools.Controls
                 {
                     Cseq c = Cseq.FromFile(s);
 
-                    foreach (var sd in c.samples)
+                    foreach (var sd in c.Percussions)
                         if (!x.Contains(sd.Tag))
                             x.Add(sd.Tag);
 
-                    foreach (var sd in c.samplesReverb)
+                    foreach (var sd in c.Instruments)
                         if (!x.Contains(sd.Tag))
                             x.Add(sd.Tag);
                 }
@@ -304,9 +309,6 @@ namespace CTRTools.Controls
             Cseq.IgnoreVolume = ignoreOriginalVolumeToolStripMenuItem.Checked;
         }
 
-        AudioFileReader waveFile;
-        WaveOut waveOut;
-
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             string filename = "";
@@ -315,14 +317,14 @@ namespace CTRTools.Controls
             {
                 if (instrumentList.SelectedNode.Parent.Index == 1)
                 {
-                    var sd = instrumentList.SelectedNode.Tag as Instrument;
+                    var sd = instrumentList.SelectedNode.Tag as SpuInstrument;
                     instrumentControl1.Instrument = sd;
                     HowlPlayer.Play(sd);
                 }
 
                 if (instrumentList.SelectedNode.Parent.Index == 0)
                 {
-                    var sd = seq.samplesReverb[instrumentList.SelectedNode.Index];
+                    var sd = seq.Instruments[instrumentList.SelectedNode.Index];
                     instrumentControl1.Instrument = sd;
                     HowlPlayer.Play(sd);
                 }
@@ -358,6 +360,7 @@ namespace CTRTools.Controls
             Cseq.UseSampleVolumeForTracks = copyInstrumentVolumeToTracksToolStripMenuItem.Checked;
         }
 
+        // TODO: is this used?? maybe wipe it out
         private void alistAlBankSamplesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var fbd = new FolderBrowserDialog();
@@ -366,31 +369,26 @@ namespace CTRTools.Controls
             {
                 string[] files = Directory.GetFiles(fbd.SelectedPath);
 
-
                 var x = new List<string>();
 
                 foreach (string s in files)
                 {
-                    Bank b = Bank.FromFile(s);
+                    var bank = Bank.FromFile(s);
 
-                    foreach (var v in b.Entries)
+                    foreach (var v in bank.Entries)
                     {
-                        x.Add(Path.GetFileNameWithoutExtension(s) + "," + v.Key.ToString("000"));
+                        x.Add(Path.GetFileNameWithoutExtension(s) + "," + v.ToString("000"));
                     }
                 }
 
                 x.Sort();
-                StringBuilder sb = new StringBuilder();
+
+                var sb = new StringBuilder();
 
                 foreach (string s in x) sb.AppendLine(s);
 
                 trackInfoBox.Text = sb.ToString();
             }
-
-        }
-
-        private void reloadMetaFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -403,20 +401,6 @@ namespace CTRTools.Controls
             LoadMeta();
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "VAG File (*.vag)|*.vag";
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(ofd.FileName)))
-                {
-
-                }
-            }
-        }
-
         private void importMIDIToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (seq is null)
@@ -426,50 +410,7 @@ namespace CTRTools.Controls
             ofd.Filter = "MIDI File (*.mid)|*.mid";
 
             if (ofd.ShowDialog() == DialogResult.OK)
-                ImportMIDI(ofd.FileName);
-        }
-
-        private void ImportMIDI(string filename)
-        {
-            var midi = new MidiFile(filename);
-            var newMidi = new CseqSong();
-
-            //find a way to read from midi
-            newMidi.BeatsPerMinute = 120;
-            newMidi.TicksPerQuarterNote = midi.DeltaTicksPerQuarterNote;
-
-            for (int i = 1; i < midi.Tracks; i++)
-            {
-                var track = new CSeqTrack();
-                //track.name = $"track_{i.ToString("00")}";
-                track.FromMidiEventList(midi.Events.GetTrackEvents(i).ToList());
-
-                newMidi.Tracks.Add(track);
-            }
-
-            foreach (var x in newMidi.Tracks.ToList())
-            {
-                if (x.isDrumTrack)
-                    newMidi.Tracks.Remove(x);
-            }
-
-            //fix track index
-            for (int i = 0; i < newMidi.Tracks.Count; i++)
-                newMidi.Tracks[i].Index = i;
-
-
-            foreach (var x in newMidi.Tracks)
-            {
-                var c = new CseqEvent();
-                c.eventType = CseqEventType.ChangePatch;
-                c.pitch = (byte)x.Index;
-                c.wait = 0;
-                x.cseqEventCollection.Insert(0, c);
-            }
-
-            seq.Songs.Add(newMidi);
-
-            FillUI(loadedfile);
+                HowlControl.ImportMIDI(seq, ofd.FileName, 120, 0);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -523,6 +464,86 @@ namespace CTRTools.Controls
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 seq.ExportSamples(fbd.SelectedPath);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (seq is null) return;
+
+            using (var bw = new BinaryWriterEx(new MemoryStream()))
+            {
+                seq.Write(bw);
+
+                int size = (int)bw.BaseStream.Length;
+
+                MessageBox.Show($"Size {(size > 0x5800 ? "OVERFLOW" : "OK")}! {bw.BaseStream.Length.ToString("X8")} (0x5800 is the limit)");
+            }
+        }
+
+        private void duplicateInstrumentButton_Click(object sender, EventArgs e)
+        {
+            if (seq is null) return;
+
+            seq.Instruments.Add(new SpuInstrument());
+
+            FillUI();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (seq is null) return;
+
+            seq.Percussions.Add(new SpuInstrumentShort());
+
+            FillUI();
+        }
+
+        InstrumentSelectionForm instSelectForm;
+
+        private void changeInstrumentButton_Click(object sender, EventArgs e)
+        {
+            if (seq is null) return;
+
+            if (!(instrumentList.SelectedNode.Tag is SpuInstrument)) return;
+
+            if (instSelectForm == null)
+                instSelectForm = new InstrumentSelectionForm(seq.Context.howl);
+
+            if (instSelectForm.ShowDialog() == DialogResult.OK)
+            {
+                //if it's an instrument
+                if (instrumentList.SelectedNode.Parent.Index == 0)
+                {
+                    seq.Instruments[instrumentList.SelectedNode.Index] = instSelectForm.SelectedInstrument as SpuInstrument;
+                    instrumentList.SelectedNode.Text = instSelectForm.SelectedInstrument.Sample.Name;
+                    instrumentList.SelectedNode.Tag = instSelectForm.SelectedInstrument;
+                }
+                // else if it's percussion
+                else if (instrumentList.SelectedNode.Parent.Index == 1)
+                {
+                    seq.Percussions[instrumentList.SelectedNode.Index] = instSelectForm.SelectedInstrument as SpuInstrumentShort;
+                    instrumentList.SelectedNode.Text = instSelectForm.SelectedInstrument.Sample.Name;
+                    instrumentList.SelectedNode.Tag = instSelectForm.SelectedInstrument;
+                }
+            }
+
+            //instrumentList.Focus();
+        }
+
+        private void findBank_Click(object sender, EventArgs e)
+        {
+            int i = 0;
+
+            foreach (var bank in seq.Context.howl.Banks)
+            {
+                if (bank.MatchesCseq(seq))
+                {
+                   
+                    MessageBox.Show("found bank! bank index: " + i);
+                    return;
+                }
+                i++;
             }
         }
     }
