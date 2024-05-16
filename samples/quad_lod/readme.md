@@ -1,7 +1,7 @@
 ## Quad block LoD sample
 This folder contains a blender project demo, it includes 3 separate square pieces to represent 3 logical LoD levels of the game.
 
-![preview](quad_lod/preview.jpg)
+![preview](preview.jpg)
 
 ## Lowest LoD
 Just a single quad that connects outer corners of the quadblock. The entire quadblock texture is rendered for the smallest lod level to a single small texture, usually 24x24 (3 pixels per source tile).
