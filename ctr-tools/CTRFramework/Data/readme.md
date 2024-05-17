@@ -4,7 +4,8 @@ These files are compressed to zip archive, then the archive is added as an embed
 Refer to Helpers class resource helpers region - GetStreamFromZip, GetLinesFromResource, GetTextFromResource, LoadNumberedList, LoadTagList, etc.
 
 # Numbered list format
-Every entry in this such should be defined as [decimal number]=[string without spaces] (i.e 249=levels\canyon\level.dat)
+Basically, a limited subset of INI format without groups.
+Every entry in such list should be defined as [decimal number]=[string without spaces] (i.e 249=levels\canyon\level.dat). Leading zeroes allowed for padding.
 Hash symbol represents comment. You can either start with a hash or use hash after the numbered value.
 Empty lines are ignored, you can have as many as you want.
 
