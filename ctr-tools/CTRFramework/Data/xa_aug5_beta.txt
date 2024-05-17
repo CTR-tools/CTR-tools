@@ -19,7 +19,6 @@
 # jingles were not there yet
 
 # =========== EXTRA section ==============
-# names in this section are based on XA leftovers found in game data
 
 # Aku Aku hints
 
