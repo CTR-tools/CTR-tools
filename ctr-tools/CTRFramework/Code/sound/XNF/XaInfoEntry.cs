@@ -6,6 +6,7 @@ namespace CTRFramework.Audio
 {
     public class XaInfoEntry : IReadWrite
     {
+        public int ListIndex = -1;
         public byte Index;
         public byte FileIndex;
         public short Length;
@@ -55,7 +56,7 @@ namespace CTRFramework.Audio
 
         public override string ToString()
         {
-            return $"{(Name == "" ? GetName() : Name)}\t{GetName()}\t[{FileIndex}, {Index}], Len: {Length}";
+            return $"{ListIndex.ToString("000")}: {(Name == "" ? GetName() : Name)}\t{GetName()}\t[{FileIndex}, {Index}], Len: {Length}";
         }
     }
 }

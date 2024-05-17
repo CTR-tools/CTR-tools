@@ -3,12 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 
 namespace CTRFramework.Audio
 {
     public class XaInfo : IRead
     {
         public string magic = "XINF";
+
+        //0x64 = august beta
+        //0x66 = release
         public int version = 0x66;
 
         public int numGroups = 0;
@@ -55,7 +59,8 @@ namespace CTRFramework.Audio
                 xa.folders = new string[] {
                     "MUSIC",
                     $"{xa.Lang}\\EXTRA",
-                    $"{xa.Lang}\\GAME"
+                    $"{xa.Lang}\\GAME",
+                    $"{xa.Lang}\\WRAP"  //this one is used in August beta
                 };
 
                 return xa;
@@ -74,6 +79,7 @@ namespace CTRFramework.Audio
                 Helpers.Panic(this, PanicType.Error, $"No XINF found. Not a XINF file: magic = {magic}");
 
             version = br.ReadInt32();
+
             numGroups = br.ReadInt32();
             numFilesTotal = br.ReadInt32();
             int numTotalEntries = br.ReadInt32();
@@ -103,10 +109,14 @@ namespace CTRFramework.Audio
             string list = "";
 
             //move to versions xml
+            if (Entries.Count == 383) list = "xa_aug5_beta.txt";
             if (Entries.Count == 427) list = "xa_usa_beta_sep.txt";
             if (Entries.Count == 414) list = "xa_usa_release.txt";
             if (Entries.Count == 358) list = "xa_pal_release.txt";
             if (Entries.Count == 364) list = "xa_jpn_release.txt";
+
+            for (int i = 0; i < Entries.Count; i++)
+                Entries[i].ListIndex = i;
 
             if (list == "") return;
 
