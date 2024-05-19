@@ -37,6 +37,8 @@ namespace CTRTools.Controls
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.actionLoadXnf = new System.Windows.Forms.Button();
             this.ofdxnf = new System.Windows.Forms.OpenFileDialog();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.saveButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,6 +47,7 @@ namespace CTRTools.Controls
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.propertyGrid1);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.playNext);
             this.groupBox1.Controls.Add(this.listBox1);
@@ -83,7 +86,7 @@ namespace CTRTools.Controls
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(6, 46);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(622, 381);
+            this.listBox1.Size = new System.Drawing.Size(380, 381);
             this.listBox1.TabIndex = 1;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -112,11 +115,32 @@ namespace CTRTools.Controls
             // 
             this.ofdxnf.Filter = "Crash Team Racing XNF file (*.xnf)|*.xnf";
             // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertyGrid1.Location = new System.Drawing.Point(392, 46);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(236, 381);
+            this.propertyGrid1.TabIndex = 4;
+            // 
+            // saveButton
+            // 
+            this.saveButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.saveButton.Location = new System.Drawing.Point(105, 453);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(96, 24);
+            this.saveButton.TabIndex = 11;
+            this.saveButton.Text = "Save XNF";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
+            // 
             // XaControl
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.saveButton);
             this.Controls.Add(this.actionLoadXnf);
             this.Controls.Add(this.groupBox1);
             this.DoubleBuffered = true;
@@ -139,5 +163,7 @@ namespace CTRTools.Controls
         private ListBox listBox1;
         private CheckBox playNext;
         private Label label1;
+        private PropertyGrid propertyGrid1;
+        private Button saveButton;
     }
 }

@@ -10,6 +10,8 @@ namespace CTRTools.Controls
     public partial class XaControl : UserControl
     {
 
+        public string lastLoaded = String.Empty;
+
         XaInfo xnf;
 
         public XaControl()
@@ -33,6 +35,8 @@ namespace CTRTools.Controls
                 }
 
                 UpdateUI();
+
+                lastLoaded = filename;
             }
             catch (Exception ex)
             {
@@ -100,29 +104,48 @@ namespace CTRTools.Controls
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (xnf != null)
+            if (xnf == null) return;
+            if (listBox1.SelectedIndex == -1) return;
+
+            propertyGrid1.SelectedObject = xnf.Entries[xnf.entryStartIndex[comboBox1.SelectedIndex] + listBox1.SelectedIndex];
+            propertyGrid1.Update();
+
+            string name = Helpers.PathCombine(xnf.RootPath, xnf.folders[comboBox1.SelectedIndex], xnf.Entries[xnf.entryStartIndex[comboBox1.SelectedIndex] + listBox1.SelectedIndex].GetName());
+
+            if (File.Exists(name))
             {
-                if (listBox1.SelectedIndex >= 0)
+                if (outputSound != null)
                 {
-                    string name = Helpers.PathCombine(xnf.RootPath, xnf.folders[comboBox1.SelectedIndex], xnf.Entries[xnf.entryStartIndex[comboBox1.SelectedIndex] + listBox1.SelectedIndex].GetName());
-
-                    if (File.Exists(name))
-                    {
-                        if (outputSound != null)
-                        {
-                            outputSound.Stop();
-                            if (playNext.Checked)
-                                outputSound.PlaybackStopped -= GoNext;
-                        }
-
-                        wave = new NAudio.Wave.AudioFileReader(name);
-                        outputSound = new WaveOut();
-                        outputSound.Init(wave);
-                        outputSound.Play();
-                        if (playNext.Checked)
-                            outputSound.PlaybackStopped += GoNext;
-                    }
+                    outputSound.Stop();
+                    if (playNext.Checked)
+                        outputSound.PlaybackStopped -= GoNext;
                 }
+
+                wave = new NAudio.Wave.AudioFileReader(name);
+                outputSound = new WaveOut();
+                outputSound.Init(wave);
+                outputSound.Play();
+                if (playNext.Checked)
+                    outputSound.PlaybackStopped += GoNext;
+            }
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            if (xnf == null) return;
+
+            if (!String.IsNullOrEmpty(lastLoaded))
+            {
+                xnf.Save(lastLoaded);
+                return;
+            }
+
+            var sfd = new SaveFileDialog();
+            sfd.Filter = "Crash Team Racing XNF file (*.xnf)|*.xnf";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                xnf.Save(lastLoaded);
             }
         }
     }

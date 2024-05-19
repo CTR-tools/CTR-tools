@@ -6,12 +6,12 @@ namespace CTRFramework.Audio
 {
     public class XaInfoEntry : IReadWrite
     {
-        public int ListIndex = -1;
-        public byte Index;
-        public byte FileIndex;
-        public short Length;
+        public int ListIndex { get; set; } = -1;
+        public byte Index { get; set; }
+        public byte FileIndex { get; set; }
+        public short Length { get; set; }
 
-        public string Name = "";
+        public string Name { get; set; } = "";
 
         public XaInfoEntry()
         {

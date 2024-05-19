@@ -11,7 +11,8 @@ namespace CTRFramework.Audio
     {
         public string magic = "XINF";
 
-        //0x64 = august beta
+        //0x64 = aug 5 beta
+        //0x65 = aug 14 beta
         //0x66 = release
         public int version = 0x66;
 
@@ -52,7 +53,7 @@ namespace CTRFramework.Audio
         {
             using (var br = new BinaryReaderEx(File.OpenRead(filename)))
             {
-                XaInfo xa = XaInfo.FromReader(br);
+                var xa = XaInfo.FromReader(br);
                 xa.RootPath = Path.GetDirectoryName(filename);
                 xa.Lang = Path.GetFileNameWithoutExtension(filename);
 
@@ -110,6 +111,7 @@ namespace CTRFramework.Audio
 
             //move to versions xml
             if (Entries.Count == 383) list = "xa_aug5_beta.txt";
+            if (Entries.Count == 407) list = "xa_aug14_beta.txt";
             if (Entries.Count == 427) list = "xa_usa_beta_sep.txt";
             if (Entries.Count == 414) list = "xa_usa_release.txt";
             if (Entries.Count == 358) list = "xa_pal_release.txt";
@@ -133,6 +135,8 @@ namespace CTRFramework.Audio
         /// <param name="filename">Target file name.</param>
         public void Save(string filename)
         {
+            Helpers.BackupFile(filename);
+
             using (var bw = new BinaryWriterEx(File.Create(filename)))
             {
                 Write(bw);
@@ -145,12 +149,34 @@ namespace CTRFramework.Audio
         /// <param name="bw">BinaryWriterEx object.</param>
         public void Write(BinaryWriterEx bw)
         {
-            throw new NotImplementedException("Unimplemented.");
+            bw.Write("XINF".ToCharArray());
+            bw.Write(version);
+
+            bw.Write(numGroups);
+            bw.Write(numFilesTotal);
+            bw.Write(Entries.Count);
+
+            foreach (var x in numFiles)
+                bw.Write(x);
+
+            foreach (var x in fileStartIndex)
+                bw.Write(x);
+
+            foreach (var x in numEntries)
+                bw.Write(x);
+
+            foreach (var x in entryStartIndex)
+                bw.Write(x);
+
+            bw.Seek(numFilesTotal * 4);
+
+            foreach (var entry in Entries)
+                entry.Write(bw);
         }
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.AppendLine(magic);
             sb.AppendLine($"Version: {version}");

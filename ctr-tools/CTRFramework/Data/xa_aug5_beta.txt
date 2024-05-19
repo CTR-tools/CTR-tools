@@ -25,16 +25,16 @@
 # aug 5 beta uses 3 placeholder samples from Crash 2/3?
 # entire section is just 3 samples repeated all over
 
-8=hint_placeholder0
-9=hint_placeholder1
-10=hint_placeholder2
-11=hint_placeholder3
-12=hint_placeholder4
-13=hint_placeholder5
-14=hint_placeholder6
-15=hint_placeholder7
-16=hint_placeholder8
-17=hint_placeholder9
+8=hint_placeholder00
+9=hint_placeholder01
+10=hint_placeholder02
+11=hint_placeholder03
+12=hint_placeholder04
+13=hint_placeholder05
+14=hint_placeholder06
+15=hint_placeholder07
+16=hint_placeholder08
+17=hint_placeholder09
 18=hint_placeholder10
 19=hint_placeholder11
 20=hint_placeholder12

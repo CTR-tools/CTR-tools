@@ -246,6 +246,7 @@
     <EmbeddedResource Include="Data\default.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\xa_aug14_beta.txt" />
     <None Include="Data\xa_aug5_beta.txt" />
     <EmbeddedResource Include="Data\ctr_drumfill.mid" />
     <Content Include="Data\howlnames.xml" />
