@@ -107,9 +107,9 @@ namespace CTRFramework.Vram
 
         public int Height => (int)(max.Y - min.Y + 1);
 
-        public int Position => RealY * CtrVrm.region.Width + RealX; //PageY * (CtrVrm.region.Height * CtrVrm.region.Width / 2) + min.Y * CtrVrm.region.Width + PageX * 64 + min.X / stretch;
+        public int Position => RealY * CtrVrm.FullVramRegion.Width + RealX; //PageY * (CtrVrm.region.Height * CtrVrm.region.Width / 2) + min.Y * CtrVrm.region.Width + PageX * 64 + min.X / stretch;
 
-        public int PalPosition => PalY * CtrVrm.region.Width + PalX * 16;
+        public int PalPosition => PalY * CtrVrm.FullVramRegion.Width + PalX * 16;
 
         public int RealX => (int)(PageX * 64 + min.X / stretch);
         public int RealY => (int)(PageY * 256 + min.Y);
@@ -221,6 +221,11 @@ namespace CTRFramework.Vram
 
             if (bw.Position - offset != SizeOf)
                 Helpers.Panic(this, PanicType.Error, "size mismatch");
+        }
+
+        public bool PaletteEquals(TextureLayout other)
+        {
+            return PalX == other.PalX && PalY == other.PalY;
         }
     }
 }

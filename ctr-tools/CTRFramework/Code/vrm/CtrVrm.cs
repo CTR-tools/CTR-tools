@@ -7,16 +7,33 @@ namespace CTRFramework.Vram
 {
     public class CtrVrm : IRead
     {
+        #region [VRAM areas]
+        // these rectangles describe certain hardcoded regions of vram 
+
+        public static Rectangle FullVramRegion = new Rectangle(0, 0, 1024, 512);
+        
+        // level regions
+        public static Rectangle UpperLevelRegion => new Rectangle(512, 0, 384, 256);
+        public static Rectangle LowerLevelRegion => new Rectangle(512, 256, 512, 256);
+
+        // shared.vrm regions (NTSC-U!)
+        public static Rectangle MainSharedRegion => new Rectangle(896, 0, 128, 256);
+
+        // this stripe is different in PAL
+        public static Rectangle AdditionalSharedRegion => new Rectangle(0, 216, 512, 48);
+
+        #endregion
+
         public List<Tim> Tims = new List<Tim>();
 
-        public CtrVrm()
-        {
-        }
+        public CtrVrm() { }
 
         public CtrVrm(BinaryReaderEx br) => Read(br);
 
         public void Read(BinaryReaderEx br)
         {
+            Tims.Clear();
+
             // if it starts with 0x20 magic value, it's an endless stream of tims, however, actual game is hardcoded for 2 pages max
             if (br.ReadInt32() == 0x20)
             {
@@ -54,6 +71,23 @@ namespace CTRFramework.Vram
             }
         }
 
+        /// <summary>
+        /// Generate PSX VRAM canvas from a list of TIM images.
+        /// </summary>
+        /// <returns>16 bit TIM image.</returns>
+        public Tim GetVram()
+        {
+            // create a new TIM image to represent the entire VRAM
+            var buffer = new Tim(FullVramRegion, BitDepth.Bit16);
+
+            // draw all pages to the canvas
+            // CTR only uses 2 pages in general, but we can handle any amount of pages
+            foreach (var tim in Tims)
+                buffer.DrawTim(tim);
+
+            return buffer;
+        }
+
         public override string ToString()
         {
             string result = "";
@@ -62,18 +96,6 @@ namespace CTRFramework.Vram
                 result += tim.ToString() + "\r\n";
 
             return result;
-        }
-
-        public static Rectangle region = new Rectangle(0, 0, 1024, 512);
-
-        public Tim GetVram()
-        {
-            Tim buffer = new Tim(region, BitDepth.Bit16);
-
-            foreach (var tim in Tims)
-                buffer.DrawTim(tim);
-
-            return buffer;
         }
     }
 }

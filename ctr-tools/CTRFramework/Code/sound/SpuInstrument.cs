@@ -8,6 +8,8 @@ using System.Xml;
 using System.Windows.Forms;
 using System.Text;
 using System.Runtime.Remoting.Contexts;
+using System.Threading;
+using System.Runtime.Remoting.Messaging;
 
 namespace CTRFramework.Audio
 {
@@ -20,7 +22,17 @@ namespace CTRFramework.Audio
 
         public HowlContext Context;
 
-        public string Name = "default_instrument";
+        private string name = "default_instrument";
+
+        public string Name { get
+            {
+                return name;
+            } 
+            set
+            {
+                name = value;
+            }
+        }
 
         public Sample GetSample(int sampleIndex, HowlContext context) => context.SamplePool.ContainsKey(sampleIndex) ? context.SamplePool[sampleIndex] : null;
 
@@ -154,10 +166,11 @@ namespace CTRFramework.Audio
         {
             return
                 flags == other.flags &&
-                ADSR == other.ADSR &&
                 Volume == other.Volume &&
+                timeToPlay == other.timeToPlay &&
+                _freq == other._freq &&
                 SampleID == other.SampleID &&
-                timeToPlay == other.timeToPlay;
+                ADSR == other.ADSR ;
         }
     }
 

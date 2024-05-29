@@ -1,6 +1,7 @@
 ﻿using CTRFramework.Shared;
 using NAudio.Midi;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -95,6 +96,32 @@ namespace CTRFramework.Audio
             return (int)value;
         }
 
+        public string GetNoteStats()
+        {
+            var pitches = new Dictionary<int, int>();
+
+            int numEntries = 0;
+            float value = 0;
+
+            foreach (var evt in cseqEventCollection)
+            {
+                if (evt.eventType == CseqEventType.NoteOn)
+                    if (pitches.ContainsKey(evt.pitch))
+                        pitches[evt.pitch]++;
+                    else 
+                        pitches.Add(evt.pitch, 1);
+            }
+
+            var ordered = pitches.OrderBy(x => x.Key).ToDictionary(pair => pair.Key, pair => pair.Value);
+
+            string result = "";
+
+            foreach (var p in ordered)
+                result += p.Key + " " + p.Value + "\r\n";
+
+            return result;
+        }
+
         public void FromMidiEventList(List<MidiEvent> events)
         {
             cseqEventCollection.Clear();
@@ -174,6 +201,8 @@ namespace CTRFramework.Audio
 
                 sb.AppendLine($"average track note: {avg}");
                 sb.AppendLine($"recommended C sample: C{avg / 12}");
+
+                sb.AppendLine(GetNoteStats());
             }
 
             foreach (var c in cseqEventCollection)

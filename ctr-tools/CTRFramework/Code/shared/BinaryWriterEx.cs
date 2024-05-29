@@ -28,6 +28,15 @@ namespace CTRFramework.Shared
         }
 
         /// <summary>
+        /// To be used in Save methods to avoid leftovers beyond the stream end.
+        /// Happens when existing file was larger than the new one.
+        /// </summary>
+        public void Truncate()
+        {
+            BaseStream.SetLength(Position);
+        }
+
+        /// <summary>
         /// Pad to the given amount of bytes. Jumps to the closest address divisible by pad value. 
         /// For example use this when you need next value to start at an even address. pads to 4 by default.
         /// </summary>

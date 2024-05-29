@@ -56,8 +56,9 @@ namespace CTRFramework
         {
             int texOff = br.ReadInt32();
 
-            //so here's what's going on, instead of reading all pointers in a loop, we assume the 1st pointer is smallest, which is also where pointermap ends.
-            //we get number of models and just read the array. this will shamelessly fail, if pointers are not sorted or models don't come after pointer map.
+            // so here's what's going on, instead of reading all pointers in a loop, we assume the 1st pointer is smallest, which is also where pointermap ends.
+            // we get number of models and just read the array. this will shamelessly fail, if pointers are not sorted or models don't come after pointer map.
+            // doesn't seem to be a problem for any original mpk
             int firstModel = br.ReadInt32();
             int numModels = 0;
 
@@ -68,7 +69,7 @@ namespace CTRFramework
                 br.Seek(-4); //go back
             }
 
-            List<uint> modelPtrs = br.ReadListUInt32(numModels);
+           var modelPtrs = br.ReadListUInt32(numModels);
 
             br.Jump(texOff);
 
@@ -136,7 +137,7 @@ namespace CTRFramework
                 model.Save(modelsPath);
             }
 
-            Helpers.DumpTextureLayoutList(Helpers.PathCombine(path, Meta.LayoutsName), GetTexturesList().Values.ToList());
+            TextureReplacer.DumpTextureLayoutList(Helpers.PathCombine(path, Meta.LayoutsName), GetTexturesList().Values.ToList());
         }
 
         public override string ToString()

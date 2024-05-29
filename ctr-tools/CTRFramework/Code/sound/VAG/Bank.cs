@@ -83,11 +83,11 @@ namespace CTRFramework.Audio
             return _hash;
         }
 
-        public VagSample GetVag(int freq = 22100) => new VagSample(Data) { sampleFreq = freq };
+        public VagSample GetVag(int freq = 11025) => new VagSample(Data) { sampleFreq = freq };
 
-        public void SaveVag(string path, int freq = 22100) => GetVag(freq).Save(path);
+        public void SaveVag(string path, int freq = 11025) => GetVag(freq).Save(path);
 
-        public void SaveWav(string path, int freq = 22100) => GetVag(freq).ExportWav(path);
+        public void SaveWav(string path, int freq = 11025) => GetVag(freq).ExportWav(path);
     }
 
 

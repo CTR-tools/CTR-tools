@@ -23,6 +23,17 @@ namespace CTRFramework.Audio
         public List<SpuInstrument> InstrumentPool = new List<SpuInstrument>();
         public List<SpuInstrument> PercussionPool = new List<SpuInstrument>();
 
+        public SpuInstrument AddInsrumentDeduplicated(List<SpuInstrument> list, SpuInstrument newInst)
+        {
+            foreach (var inst in list)
+                if (newInst.Equals(inst))
+                    return inst;
+
+            list.Add(newInst);
+
+            return newInst;
+        }
+
         public Dictionary<int, string> SongNames = new Dictionary<int, string>();
         public Dictionary<int, string> BankNames = new Dictionary<int, string>();
         public Dictionary<string, string> HashNames = new Dictionary<string, string>();
@@ -100,6 +111,17 @@ namespace CTRFramework.Audio
             }
 
             return max + 1;
+        }
+
+        public SpuInstrument CreateNewInstrument(string name, string filename)
+        {
+            var inst = new SpuInstrument() { Name = name };
+
+            inst.Sample = new Sample(); 
+
+            InstrumentPool.Add(inst);
+
+            return inst;
         }
 
         public static HowlContext Create(Howl howl = null) => new HowlContext(howl);
@@ -625,51 +647,25 @@ namespace CTRFramework.Audio
         // maybe better add instrument export, as well as deduplication, in case it's shared between songs
         public void ExportAllSamples(string path)
         {
-            string outputwav = Helpers.PathCombine(path, "samples");
-            string outputvag = Helpers.PathCombine(outputwav, "vag");
+            string path_perc = Helpers.PathCombine(path, "samples\\percussion");
+            string path_inst = Helpers.PathCombine(path, "samples\\instruments");
+            string path_sfx  = Helpers.PathCombine(path, "samples\\effects");
 
-            Helpers.CheckFolder(outputwav);
-            Helpers.CheckFolder(outputvag);
+            Helpers.CheckFolder(path_perc);
+            Helpers.CheckFolder(path_inst);
+            Helpers.CheckFolder(path_sfx);
 
-            foreach (var sample in EffectsTable)
+            foreach (var sample in Context.SamplePool.Values)
             {
-                var vag = sample.GetVagSample(Context);
+                var export_path = path_sfx;
+                if (sample.Type == SampleType.Instrument) export_path = path_inst;
+                if (sample.Type == SampleType.Percussion) export_path = path_perc;
 
-                if (vag == null) continue;
+                var vag = sample.GetVag();
 
-                vag.Save(Helpers.PathCombine(outputvag, $"{vag.SampleName}.vag"));
-                vag.ExportWav(Helpers.PathCombine(outputwav, $"{vag.SampleName}.wav"));
+                vag.Save(Helpers.PathCombine(export_path, $"{sample.Name}.vag"));
+                vag.ExportWav(Helpers.PathCombine(export_path, $"{sample.Name}.wav"));
             }
-
-            foreach (var song in Songs)
-            {
-                foreach (var sample in song.Percussions)
-                {
-                    var vag = sample.GetVagSample(Context);
-
-                    vag.Save(Helpers.PathCombine(outputvag, $"{vag.SampleName}.vag"));
-                    vag.ExportWav(Helpers.PathCombine(outputwav, $"{vag.SampleName}.wav"));
-                }
-
-                foreach (var sample in song.Instruments)
-                {
-                    var vag = sample.GetVagSample(Context);
-
-                    vag.Save(Helpers.PathCombine(outputvag, $"{vag.SampleName}.vag"));
-                    vag.ExportWav(Helpers.PathCombine(outputwav, $"{vag.SampleName}.wav"));
-                }
-            }
-
-
-            /*
-            int i = 0;
-
-            foreach (var bank in Banks)
-            {
-                bank.ExportAll(i, output);
-                i++;
-            }
-            */
         }
 
         // replaces vag sample

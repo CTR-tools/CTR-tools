@@ -124,7 +124,7 @@ namespace CTRFramework.Audio
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    ExportMIDI(Path.Combine(Path.GetDirectoryName(fn), $"advhub_{(HubNames)i}.mid"), seq, true, i);
+                    ExportMIDI(Helpers.PathCombine(Path.GetDirectoryName(fn), $"advhub_{(HubNames)i}.mid"), seq, true, i);
 
                     Console.WriteLine($"hub_{i}");
                     //Console.ReadKey();

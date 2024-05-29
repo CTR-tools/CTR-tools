@@ -4,7 +4,7 @@ using CTRFramework;
 using CTRFramework.Big;
 using CTRFramework.Models;
 using CTRFramework.Shared;
-using CTRFramework.Sound;
+using CTRFramework.Audio;
 using CTRFramework.Vram;
 
 using Microsoft.Xna.Framework;

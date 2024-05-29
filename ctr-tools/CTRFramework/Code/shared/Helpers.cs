@@ -18,10 +18,10 @@ namespace CTRFramework.Shared
         public static readonly float GteScaleLarge = 1.0f / (1 << 12); //4096 = 1.0
         public static readonly float GteScaleSmall = 1.0f / (1 << 8);  //256 = 1.0
 
-        //Math.Clump since .NET 6
+        // Math.Clump since .NET 6
         public static float Normalize(float min, float max, float val) => (val - min) / (max - min);
 
-        //parses datetime format found in ctr lev files
+        // parses datetime format found in ctr lev files
         public static DateTime ParseDate(string input)
         {
             DateTime result = DateTime.ParseExact(input.Replace("  ", " "), "ddd MMM d HH:mm:ss yyyy", CultureInfo.InvariantCulture);
@@ -49,7 +49,13 @@ namespace CTRFramework.Shared
         #endregion
 
         #region [Filesystem helpers]
-        //avoids excessive fragmentation
+        
+        /// <summary>
+        /// Writes string to file. Avoids excessive fragmentation.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="content"></param>
+        /// <param name="encoding"></param>
         public static void WriteToFile(string fileName, string content, System.Text.Encoding encoding = null)
         {
             if (encoding is null)
@@ -61,19 +67,30 @@ namespace CTRFramework.Shared
             {
                 using (var writer = new StreamWriter(stream, encoding))
                 {
+                    // first declare the amount of data we have 
                     stream.SetLength(content.Length);
+                    
+                    // then write
                     writer.Write(content);
                 }
             }
         }
 
+        /// <summary>
+        /// Writes byte array to file. Avoids excessive fragmentation. 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="data"></param>
         public static void WriteToFile(string fileName, byte[] data)
         {
             CheckFolder(fileName);
 
             using (var stream = new FileStream(fileName, FileMode.OpenOrCreate))
             {
+                // first declare the amount of data we have 
                 stream.SetLength(data.Length);
+
+                // then write
                 stream.Write(data, 0, data.Length);
             }
         }
@@ -111,7 +128,7 @@ namespace CTRFramework.Shared
             return String.Empty;
         }
 
-        //replaces back and forward slashes with system specific path separator
+        // replaces back and forward slashes with system specific path separator
         public static string FixPathSeparator(string directory) => directory.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
 
         /// <summary>
@@ -130,12 +147,18 @@ namespace CTRFramework.Shared
 
             if (!File.Exists(fileName))
             {
-                Helpers.Panic("Helpers", PanicType.Error, "cannot backup a file that doesnt exist!");
+                Helpers.PanicError("Helpers", "Can't backup a file that doesnt exist!");
                 return;
             }
 
             if (!File.Exists(backupName))
                 File.Copy(fileName, backupName);
+        }
+
+        public static void BackupAndDeleteFile(string filename)
+        {
+            BackupFile(filename);
+            File.Delete(filename);
         }
 
         public static void RestoreFile(string fileName)
@@ -151,6 +174,9 @@ namespace CTRFramework.Shared
         #endregion
 
         #region [Resource helpers]
+
+        // extracts a file from the embedded Data.zip.
+        // we only read compressed files from zip once, so no need for extra caching here
         public static Stream GetStreamFromZip(string resource)
         {
             var thisAssembly = Assembly.GetExecutingAssembly();
@@ -165,8 +191,16 @@ namespace CTRFramework.Shared
             return null;
         }
 
+        public static Stream GetResourceAsStream(string resource)
+        {
+            var thisAssembly = Assembly.GetExecutingAssembly();
+            var stream = thisAssembly.GetManifestResourceStream($"CTRFramework.Data.{resource}");
+
+            return stream;
+        }
+
         /// <summary>
-        /// Retrieves array of lines from embedded resource.
+        /// Retrieves an array of lines from the embedded resource.
         /// </summary>
         /// <param name="resource">Filename, typically from Meta helper class.</param>
         /// <returns></returns>
@@ -193,14 +227,6 @@ namespace CTRFramework.Shared
                     return reader.ReadToEnd();
                 }
             }
-        }
-
-        public static Stream GetResourceAsStream(string resource)
-        {
-            var thisAssembly = Assembly.GetExecutingAssembly();
-            var stream = thisAssembly.GetManifestResourceStream($"CTRFramework.Data.{resource}");
-
-            return stream;
         }
 
         public static XmlDocument LoadXml(string resource)
@@ -335,19 +361,7 @@ namespace CTRFramework.Shared
         }
         #endregion
 
-        public static void DumpTextureLayoutList(string filename, List<TextureLayout> layouts)
-        {
-            using (var bw = new BinaryWriterEx(File.OpenWrite(filename)))
-            {
-                //magick!
-                bw.Write("_layouts".ToCharArray());
 
-                bw.Write((uint)layouts.Count);
-
-                foreach (var layout in layouts)
-                    layout.Write(bw);
-            }
-        }
 
         public static bool ContainsKana(string text)
         {

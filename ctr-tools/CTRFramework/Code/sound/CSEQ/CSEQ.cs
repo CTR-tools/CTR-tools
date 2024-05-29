@@ -135,14 +135,22 @@ namespace CTRFramework.Audio
             short numSongs = br.ReadInt16();
 
             for (int i = 0; i < numInstruments; i++)
-                Instruments.Add(SpuInstrument.FromReader(br));
+            {
+                var inst = SpuInstrument.FromReader(br);
+                inst = Context.AddInsrumentDeduplicated(Context.InstrumentPool, inst);
+                Instruments.Add(inst);
+            }
 
-            Context.InstrumentPool.AddRange(Instruments);
+            // Context.InstrumentPool.AddRange(Instruments);
 
             for (int i = 0; i < numPercussions; i++)
-                Percussions.Add(SpuInstrumentShort.FromReader(br));
+            {
+                SpuInstrument inst = SpuInstrumentShort.FromReader(br);
+                inst = Context.AddInsrumentDeduplicated(Context.PercussionPool, inst);
+                Percussions.Add((SpuInstrumentShort)inst);
+            }
 
-            Context.PercussionPool.AddRange(Percussions);
+            //Context.PercussionPool.AddRange(Percussions);
 
 
             //read offsets

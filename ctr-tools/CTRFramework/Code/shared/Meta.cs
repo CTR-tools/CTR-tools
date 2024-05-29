@@ -8,6 +8,7 @@ namespace CTRFramework.Shared
     public class Meta
     {
         public static int SectorSize = 0x800;
+        public static int DefaultFrequency = 11025;
 
         #region [Paths/filenames]
         public static string BasePath = AppDomain.CurrentDomain.BaseDirectory;

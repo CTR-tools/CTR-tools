@@ -7,9 +7,9 @@ namespace CTRFramework
 {
     public class Icon : IEquatable<Icon>, IRead
     {
-        public string Name = "default"; //16 bytes
-        public uint Index = 0;
-        public TextureLayout tl;
+        public string Name { get; set; } = "default"; //16 bytes
+        public int Index { get; set; } = -1;
+        public TextureLayout tl { get; set; }
 
         public Icon()
         {
@@ -37,7 +37,7 @@ namespace CTRFramework
         public void Read(BinaryReaderEx br)
         {
             Name = br.ReadStringFixed(16);
-            Index = br.ReadUInt32();
+            Index = br.ReadInt32();
             tl = TextureLayout.FromReader(br);
 
             Helpers.Panic(this, PanicType.Debug, Name);

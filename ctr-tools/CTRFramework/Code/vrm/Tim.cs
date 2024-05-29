@@ -585,7 +585,7 @@ namespace CTRFramework.Vram
             {
                 int ptr = tl.PalPosition * 2;
 
-                Helpers.Panic(this, PanicType.Debug, $"{tl.PalPosition} x {CtrVrm.region.Width} * {tl.PalY} + {tl.PalX} * 16");
+                Helpers.Panic(this, PanicType.Debug, $"{tl.PalPosition} x {CtrVrm.FullVramRegion.Width} * {tl.PalY} + {tl.PalX} * 16");
 
                 Buffer.BlockCopy(
                     this.data, ptr,

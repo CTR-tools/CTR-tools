@@ -558,7 +558,7 @@ namespace CTRFramework
             if (flags.HasFlag(ExportFlags.AnimTex)) ExportTextures(path, Detail.Anim);
 
 
-            if (flags.HasFlag(ExportFlags.DumpLayouts)) Helpers.DumpTextureLayoutList(Helpers.PathCombine(path, Meta.LayoutsName), GetTexturesList().Values.ToList());
+            if (flags.HasFlag(ExportFlags.DumpLayouts)) TextureReplacer.DumpTextureLayoutList(Helpers.PathCombine(path, Meta.LayoutsName), GetTexturesList().Values.ToList());
 
             Helpers.Panic(this, PanicType.Info, "Additional models: done.");
         }
