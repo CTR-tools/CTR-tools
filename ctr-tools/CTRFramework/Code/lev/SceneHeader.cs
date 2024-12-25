@@ -1,6 +1,7 @@
 ﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace CTRFramework
 {
@@ -16,50 +17,58 @@ namespace CTRFramework
     {
         public static readonly int SizeOf = 0x1B0;
 
-        public PsxPtr ptrMeshInfo = PsxPtr.Zero;      //0x00 - pointer to MeshInfo
-        public PsxPtr ptrSkybox = PsxPtr.Zero;        //0x04 - pointer to SkyBox
-        public PsxPtr ptrAnimTex = PsxPtr.Zero;       //0x08 - pointer to animated textures array
+        public PsxPtr ptrMeshInfo = PsxPtr.Zero;        //0x00 - pointer to MeshInfo
+        public PsxPtr ptrSkybox = PsxPtr.Zero;          //0x04 - pointer to SkyBox | a pointer to a blank SkyBox still required to be present it seems?
+        public PsxPtr ptrAnimTex = PsxPtr.Zero;         //0x08 - pointer to animated textures array
 
-        public int numInstances;        //0x0C - number of model instances in the level (i.e. every single box, fruit, etc.)
-        public PsxPtr ptrInstances = PsxPtr.Zero;     //0x10 - points to the 1st entry of the array of model instances
-        public int numModels;           //0x14 - number of actual models
-        public PsxPtr ptrModelsPtr = PsxPtr.Zero;     //0x18 - pointer to the array of pointers to models. easy in c++, messy in c# 
+        public int numInstances;                        //0x0C - number of model instances in the level (i.e. every single box, fruit, etc.)
+        public PsxPtr ptrInstances = PsxPtr.Zero;       //0x10 - points to the 1st entry of the array of model instances
+        public int numModels;                           //0x14 - number of actual models
+        public PsxPtr ptrModelsPtr = PsxPtr.Zero;       //0x18 - pointer to the array of pointers to models. easy in c++, messy in c# 
 
-        public uint unkPtr1;            //0x1C - unknown, extra visdata region
-        public uint unkPtr2;            //0x20 - unknown, extra visdata region
-        public PsxPtr ptrInstancesPtr = PsxPtr.Zero;  //0x24 - pointer to the array of pointers to model instances.
-        public uint unkPtr3;            //0x28 - unknown, extra visdata region
+        public uint unkPtr1;                            //0x1C - unknown, extra visdata region | north bowl works fine if NULL
+        public uint unkPtr2;                            //0x20 - unknown, extra visdata region | north bowl works fine if NULL
+        public PsxPtr ptrInstancesPtr = PsxPtr.Zero;    //0x24 - pointer to the array of pointers to model instances.
+        public uint unkPtr3;                            //0x28 - unknown, extra visdata region | north bowl works fine if NULL
 
-        public int null1;               //0x2C - assumed reserved
-        public int null2;               //0x30 - assumed reserved
+        public int null1;                               //0x2C - assumed reserved| doesnt matter
+        public int null2;                               //0x30 - assumed reserved| doesnt matter
 
-        public uint numWater;           //0x34 - number of vertices treated as water
-        public PsxPtr ptrWater = PsxPtr.Zero;         //0x38 - pointer to array of water entries
-        public PsxPtr ptrIcons = PsxPtr.Zero;         //0x3C - lead to the icon pack header
-        public PsxPtr ptrIconsArray = PsxPtr.Zero;    //0x40 - leads to the icon pack data
-        public PsxPtr ptrEnviroMap = PsxPtr.Zero;     //0x44 - pointer to environment map, used by water rendering
+        public uint numWater;                           //0x34 - number of vertices treated as water
+        public PsxPtr ptrWater = PsxPtr.Zero;           //0x38 - pointer to array of water entries
+
+        public PsxPtr ptrIcons = PsxPtr.Zero;           //0x3C - lead to the icon pack header
+        public PsxPtr ptrIconsArray = PsxPtr.Zero;      //0x40 - leads to the icon pack data
+
+        public PsxPtr ptrEnviroMap = PsxPtr.Zero;       //0x44 - pointer to environment map, used by water rendering
 
         public Gradient[] glowGradients = new Gradient[3];    //0x48 - used for additional skybox gradient (like papu's pyramid) (24 bytes = 3 * (2 + 2 + 4))
-        public Pose[] startGrid;        //0x6C - array of 8 starting locations (96 bytes = (6 * 2) * 8)
 
-        public uint unkPtr4;            //0xCC - unknown, extra visdata region
-        public uint unkPtr5;            //0xD0 - unknown, extra visdata region
+        [DisplayName("Starting grid")]
+        [Description("Array of 8 Poses, defines kart spawn positions.")]
+        public List<Pose> startGrid { get; set; } = new List<Pose>();        //0x6C - array of 8 starting locations (96 bytes = (6 * 2) * 8)
 
-        public PsxPtr ptrLowTexArray = PsxPtr.Zero;   //0xD4 - assumed to be a pointer to low textures array, there is no number of entries though
+        public uint unkPtr4;            //0xCC - unknown, extra visdata region| doesnt matter
+        public uint unkPtr5;            //0xD0 - unknown, extra visdata region| doesnt matter
 
-        public Vector4b backColor = new Vector4b(0, 0, 0, 0);      //0xD8 - base background color, used to clear the screen
+        public PsxPtr ptrLowTexArray = PsxPtr.Zero;   //0xD4 - assumed to be a pointer to low textures array, there is no number of entries though and seems not used anyways
+
+        public Vector4b backColor { get; set; } = new Vector4b(0, 0, 0, 0);      //0xD8 - base background color, used to clear the screen
         public SceneFlags sceneFlags;   //0xDC - this actually toggles some render stuff, bit0 - gradient sky, bit1 - ???, bit2 - toggles between water and animated vertices?
 
+        // not required
         public PsxPtr ptrBuildStart = PsxPtr.Zero;    //0xE0 - pointer to string, date, assumed visdata compilation start
         public PsxPtr ptrBuildEnd = PsxPtr.Zero;      //0xE4 - pointer to string, date, assumed visdata compilation end
         public PsxPtr ptrBuildType = PsxPtr.Zero;     //0xE8 - pointer to string, assumed build type
 
+        // all stuff here can be empty
         byte[] skip;                    //0xEC - (7*8 = 56 bytes) assumed to be related to particles, contains particle gravity value
 
         public Vector4b particleColorTop = new Vector4b(0, 0, 0, 0);       //0x124 - controls bottom color of particles (i.e. snow)
         public Vector4b particleColorBottom = new Vector4b(0, 0, 0, 0);    //0x128 - controls bottom color of particles (i.e. snow)
         public uint particleRenderMode;         //0x12C - assumed to control how particles are drawn
 
+        // optional
         public uint cntTrialData;       //0x130 - that's incorrect
         public PsxPtr ptrTrialData = PsxPtr.Zero;     //0x134 - pointer to additional data referred to as "trialdata" for now
 
@@ -79,22 +88,52 @@ namespace CTRFramework
         public Vector4b gradColorTop = new Vector4b(0, 0, 0, 0);   //0x168 - some color used in sky gradient rendering, kinda replaces top color if grad is used
         public Vector4b gradColorBottom = new Vector4b(0, 0, 0, 0);//0x16C - not sure, but maybe
 
+        // works fine?
         public uint skip2_unkPtr;       //0x170
 
         public uint numVcolAnim;        //0x174 - number of animated vertices data
         public PsxPtr ptrVcolAnim = PsxPtr.Zero;      //0x178 - pointer to animated vertices data
 
-        public ushort numStars;         //0x17C - amount of stars to generate
-        public ushort unkStarsBool;     //0x17E - some stars related bool
-        public ushort unkStarsFlags;    //0x180 - some stars flags
-        public ushort starsDepth;       //0x182 - defines OT position to draw for correct depth
+        // 0x17C
+        [DisplayName("Amount of stars")]
+        [Description("Amount of stars to generate (density)")]
+        [CategoryAttribute("Stars")]
+        public ushort numStars { get; set; } = 0;
+
+        // 0x17E
+        [DisplayName("Use both hemispheres")]
+        [Description("Generates stars in both hemispheres as opposed to only on top.")]
+        [CategoryAttribute("Stars")]
+        public ushort fullSky { get; set; } = 0;
+
+        // 0x180
+        [DisplayName("Flags")]
+        [Description("Unknown, assumed some flags")]
+        [CategoryAttribute("Stars")]
+        public ushort unkStarsFlags { get; set; } = 0;    //0x180 - some stars flags?
+
+        [DisplayName("Depth")]
+        [Description("Defines OT position to draw stars at correct depth (0x200 seems to be fine usually).")]
+        [CategoryAttribute("Stars")]
+        public ushort starsDepth { get; set; } = 0x200;       //0x182
+
 
         public ushort unkAfterStars;    //0x184 - ever not null?
-        public ushort waterLevel;       //0x186 - defines split height for reflections
+        [DisplayName("Water level")]
+        [Description("Defines model split height for reflections.")]
+        [CategoryAttribute("Water")]
+        public ushort waterLevel { get; set; } = 0;       //0x186
 
+        // pointer must be present to empty struct 
         public PsxPtr ptrNavData = PsxPtr.Zero;       //0x188 - pointer to bot path data
 
-        byte[] skip3;                   //0x18C - 36 bytes
+        public int skipZero;
+
+        // nothing is visible without it
+        public PsxPtr ptrSomeVisDataHeader; // 0x190
+
+        //this seems to be always zero?
+        byte[] skip3;                   //0x184 - 28 bytes
 
 
         public SceneHeader()
@@ -141,10 +180,10 @@ namespace CTRFramework
             for (int i = 0; i < 3; i++)
                 glowGradients[i] = Gradient.FromReader(br);
 
-            startGrid = new Pose[8];
+            Helpers.PanicIf(startGrid.Count != 8, this, PanicType.Error, $"Wrong startGrid array length - {startGrid.Count} !!!");
 
             for (int i = 0; i < 8; i++)
-                startGrid[i] = Pose.FromReader(br);
+                startGrid.Add(Pose.FromReader(br));
 
             unkPtr4 = br.ReadUInt32();
             unkPtr5 = br.ReadUInt32();
@@ -186,7 +225,7 @@ namespace CTRFramework
             ptrVcolAnim = PsxPtr.FromReader(br);
 
             numStars = br.ReadUInt16();
-            unkStarsBool = br.ReadUInt16();
+            fullSky = br.ReadUInt16();
             unkStarsFlags = br.ReadUInt16();
             starsDepth = br.ReadUInt16();
 
@@ -195,7 +234,11 @@ namespace CTRFramework
 
             ptrNavData = PsxPtr.FromReader(br);
 
-            skip3 = br.ReadBytes(0x24);
+            skipZero = br.ReadInt32();
+
+            ptrSomeVisDataHeader = PsxPtr.FromReader(br);
+
+            skip3 = br.ReadBytes(7 * 4);
 
 
             long dataEnd = br.Position;
@@ -260,7 +303,9 @@ namespace CTRFramework
             for (int i = 0; i < glowGradients.Length; i++)
                 glowGradients[i].Write(bw);
 
-            for (int i = 0; i < startGrid.Length; i++)
+
+
+            for (int i = 0; i < startGrid.Count; i++)
                 startGrid[i].Write(bw);
 
             bw.Write(unkPtr4);
@@ -305,7 +350,7 @@ namespace CTRFramework
             ptrVcolAnim.Write(bw, patchTable);
 
             bw.Write(numStars);
-            bw.Write(unkStarsBool);
+            bw.Write(fullSky);
             bw.Write(unkStarsFlags);
             bw.Write(starsDepth);
 
@@ -314,8 +359,11 @@ namespace CTRFramework
 
             ptrNavData.Write(bw, patchTable);
 
+            bw.Write(skipZero);
+            ptrSomeVisDataHeader.Write(bw, patchTable);
+
             //bw.Write(skip3);
-            bw.Seek(0x24); //this must coincide with the skip amount in read!
+            bw.Seek(7 * 4); //this must coincide with the skip amount in read!
 
             long dataEnd = bw.BaseStream.Position;
 
