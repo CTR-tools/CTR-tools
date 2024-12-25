@@ -1,6 +1,6 @@
-﻿using System;
+﻿using CTRFramework;
+using System;
 using System.Collections.Generic;
-using CTRFramework;
 using Locale = ctrviewer.Resources.Localization;
 
 namespace ctrviewer.Engine.Gui

@@ -81,6 +81,7 @@ namespace ctrviewer.Engine
         public bool GenerateMips { get; set; } = true;
         public bool ShowSky { get; set; } = true;
         public bool BackFaceCulling { get; set; } = true;
+        public bool GamepadEnabled { get; set; } = true;
         public bool ShowWater { get; set; } = true;
         public bool ShowInvisible { get; set; } = false;
         public bool ShowBotPaths { get; set; } = false;

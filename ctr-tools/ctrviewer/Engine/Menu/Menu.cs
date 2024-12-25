@@ -332,7 +332,7 @@ namespace ctrviewer.Engine.Gui
             //maybe draw helper text
             if (SelectedItem.HelperText != null)
             {
-                var helperPos = loc - new Vector2(Menu.Font.MeasureString(SelectedItem.HelperText).X / 2 * scale, - 20 * scale);
+                var helperPos = loc - new Vector2(Menu.Font.MeasureString(SelectedItem.HelperText).X / 2 * scale, -20 * scale);
 
                 batch.DrawString(fnt, SelectedItem.HelperText, helperPos, Color.Orange,
                     0, Vector2.Zero, scale, SpriteEffects.None, 0.2f);

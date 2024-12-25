@@ -26,7 +26,8 @@ namespace ctrviewer.Engine.Input
         public static NoArgsEvent onGamepadDisconnected;
 
         private static bool gamePadConnected = false;
-        public static bool GamePadConnected {
+        public static bool GamePadConnected
+        {
             get { return gamePadConnected; }
             set
             {
@@ -58,8 +59,7 @@ namespace ctrviewer.Engine.Input
 
         public static float TriggerDeadZone = 0f;
 
-        public static GamePadState State => newState;
-
+        public static GamePadState State => EngineSettings.Instance.GamepadEnabled ? newState : GamePadState.Default;
         public static Vector2 RightStick => CheckDeadZone(State.ThumbSticks.Right);
         public static Vector2 LeftStick => CheckDeadZone(State.ThumbSticks.Left);
 
@@ -74,7 +74,7 @@ namespace ctrviewer.Engine.Input
                 if (value.X < TriggerDeadZone) value.X = 0;
             }
             else if (value.X < 0)
-            { 
+            {
                 if (value.X > -TriggerDeadZone) value.X = 0;
             }
 
@@ -88,11 +88,14 @@ namespace ctrviewer.Engine.Input
                 if (value.Y > -TriggerDeadZone) value.Y = 0;
             }
 
+            //if (EngineSettings.Instance.GamepadEnabled)
+            //    return Vector2.Zero;
+
             return value;
         }
 
-        public static float LeftTrigger => State.Triggers.Left;
-        public static float RightTrigger => State.Triggers.Right;
+        public static float LeftTrigger => newState.Triggers.Left;
+        public static float RightTrigger => newState.Triggers.Right;
 
         public static void Update()
         {

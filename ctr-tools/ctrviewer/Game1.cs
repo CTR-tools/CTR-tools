@@ -1,24 +1,9 @@
-﻿using Assimp;
-
-using CTRFramework;
+﻿using CTRFramework;
+using CTRFramework.Audio;
 using CTRFramework.Big;
 using CTRFramework.Models;
 using CTRFramework.Shared;
-using CTRFramework.Audio;
 using CTRFramework.Vram;
-
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Threading.Tasks;
-
 using ctrviewer.Engine;
 using ctrviewer.Engine.Gui;
 using ctrviewer.Engine.Input;
@@ -26,8 +11,17 @@ using ctrviewer.Engine.Menu;
 using ctrviewer.Engine.Render;
 using ctrviewer.Engine.Testing;
 using ctrviewer.Loaders;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Threading.Tasks;
 using Locale = ctrviewer.Resources.Localization;
-using System.Security.Cryptography;
 
 namespace ctrviewer
 {
@@ -337,12 +331,14 @@ namespace ctrviewer
 
             GamePadHandler.Reset();
 
-            GamePadHandler.onGamepadConnected += new GamePadHandler.NoArgsEvent(delegate(){
+            GamePadHandler.onGamepadConnected += new GamePadHandler.NoArgsEvent(delegate ()
+            {
                 string text = $"Gamepad {GamePadHandler.GamePadIndex} connected!";
                 FrontendMessage.SendMessage("msg_gamepad_connect", text, graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20, 5);
             });
 
-            GamePadHandler.onGamepadDisconnected += new GamePadHandler.NoArgsEvent(delegate () {
+            GamePadHandler.onGamepadDisconnected += new GamePadHandler.NoArgsEvent(delegate ()
+            {
                 string text = $"Gamepad disconnected.";
                 FrontendMessage.SendMessage("msg_gamepad_connect", text, graphics.PreferredBackBufferWidth - font.MeasureString(text).X - 20, 20, 5);
             });
@@ -1052,10 +1048,10 @@ namespace ctrviewer
             //{
             //    var model = big.ReadEntry(i).ParseAs<CtrModel>();
 
-//                ContentVault.AddModel(model.Name, DataConverter.ToTriList(model[0], Color.White));
- //           }
+            //                ContentVault.AddModel(model.Name, DataConverter.ToTriList(model[0], Color.White));
+            //           }
 
-             //tawna credits levs
+            //tawna credits levs
             Scenes.Add(big.ReadScene(594));
             Scenes.Add(big.ReadScene(597));
             Scenes.Add(big.ReadScene(600));
@@ -1319,12 +1315,12 @@ namespace ctrviewer
 
                 ContentVault.AddVectorAnim("defaultCameraPath", DataConverter.ToSimpleAnimation(Scenes[0].respawnPts));
 
-                
+
                 eng.external.Add(new InstancedModel("tawna1", new Vector3(0, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
                 eng.external.Add(new InstancedModel("tawna2", new Vector3(0.5f, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
                 eng.external.Add(new InstancedModel("tawna3", new Vector3(1f, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
                 eng.external.Add(new InstancedModel("tawna4", new Vector3(1.5f, 0, 0), new Vector3(1, 0, 0), Vector3.One * 16));
-                
+
 
                 //update kart
                 if (Scenes.Count > 0 && karts.Count > 0)
@@ -1339,17 +1335,17 @@ namespace ctrviewer
                 //put all botpaths
                 if (s.nav is not null) //this null check is for test level, actual game got ptr to empty struct 
                 {
-                        if (s.nav.paths.Count >= 1 && s.nav.paths[0] != null)
-                            foreach (var n in s.nav.paths[0].Frames)
-                                eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 20));
+                    if (s.nav.paths.Count >= 1 && s.nav.paths[0] != null)
+                        foreach (var n in s.nav.paths[0].Frames)
+                            eng.paths.Add(new InstancedModel("greencone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 20));
 
-                        if (s.nav.paths.Count >= 2 && s.nav.paths[1] != null)
-                            foreach (var n in s.nav.paths[1].Frames)
-                                eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 20));
+                    if (s.nav.paths.Count >= 2 && s.nav.paths[1] != null)
+                        foreach (var n in s.nav.paths[1].Frames)
+                            eng.paths.Add(new InstancedModel("yellowcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 20));
 
-                        if (s.nav.paths.Count >= 3 && s.nav.paths[2] != null)
-                            foreach (var n in s.nav.paths[2].Frames)
-                                eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 20));
+                    if (s.nav.paths.Count >= 3 && s.nav.paths[2] != null)
+                        foreach (var n in s.nav.paths[2].Frames)
+                            eng.paths.Add(new InstancedModel("redcone", DataConverter.ToVector3(n.position), Vector3.Zero, Vector3.One * 20));
                 }
 
             }
@@ -1565,11 +1561,15 @@ namespace ctrviewer
                     absId[i] += (int)levelType * 2;
 
                 Scenes.Add(big.ReadScene(absId[i]));
-            }
 
+                var scn = Scenes[i];
+
+                GameConsole.Write("ptr nodes: " + scn.mesh.ptrVisData.ToString("X8"));
+                GameConsole.Write("ptr vis head: " + scn.header.ptrSomeVisDataHeader.Address.ToString("X8"));
+
+            }
             LoadAllScenes();
             ResetCamera();
-
             sw.Stop();
 
             loadingStatus = "finished.";
@@ -1678,7 +1678,7 @@ namespace ctrviewer
 
                             kart.Update(gameTime, Scenes);
 
-                            eng.Cameras[CameraType.DefaultCamera].Position = 
+                            eng.Cameras[CameraType.DefaultCamera].Position =
                                 kart.Position + new Vector3(0f, 1.2f * 0.625f, 0) +
                                 Vector3.Transform(Vector3.Forward * 2f * 0.625f, Matrix.CreateFromYawPitchRoll(kart.Rotation.X, 0, -4f * 0.625f));
 
@@ -2123,7 +2123,7 @@ namespace ctrviewer
 
             //clear the backgound
             GraphicsDevice.Clear(eng.BackgroundColor);
-            
+
 
             //if (animationPreviewMode)
             {
@@ -2140,7 +2140,7 @@ namespace ctrviewer
 
                 //animationPreview.Draw(graphics, effect, null);
             }
- 
+
 
             //if we're using stereoscopic effect, draw level twice for left and right viewport
             if (eng.Settings.StereoPair)
@@ -2193,7 +2193,7 @@ namespace ctrviewer
             }
             else
             {
-                frame += (float)( gameTime.ElapsedGameTime.TotalMilliseconds / 1000f) * 15;
+                frame += (float)(gameTime.ElapsedGameTime.TotalMilliseconds / 1000f) * 15;
 
                 if (frame > 75)
                     frame = 0;
@@ -2315,7 +2315,7 @@ namespace ctrviewer
             );
         }
 
-        protected override void OnExiting(Object sender, EventArgs args)
+        protected override void OnExiting(object sender, ExitingEventArgs args)
         {
             //make sure settings are saved before we exit
             EngineSettings.Save();

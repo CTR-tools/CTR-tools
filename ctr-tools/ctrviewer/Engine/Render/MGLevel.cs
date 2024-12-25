@@ -170,7 +170,7 @@ namespace ctrviewer.Engine.Render
             }
 
             foreach (var ql in Trilists)
-                    ql.Value.Draw(graphics, effect, alpha);
+                ql.Value.Draw(graphics, effect, alpha);
 
             //clear z buffer to make sure skybox is behind everything
             graphics.GraphicsDevice.Clear(ClearOptions.DepthBuffer, Color.Green, 1, 0);

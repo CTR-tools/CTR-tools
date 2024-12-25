@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ctrviewer.Engine.Menu;
 using Microsoft.Xna.Framework.Input;
-using System.Windows.Forms;
-using ctrviewer.Engine.Menu;
+using System.Collections.Generic;
 
 namespace ctrviewer.Engine.Input
-{ 
+{
     //TODO: match enum to actual game values
     public enum Cheat
     {
@@ -128,7 +126,7 @@ namespace ctrviewer.Engine.Input
         public void Reset()
         {
             if (Value != defaultState)
-            { 
+            {
                 Value = defaultState;
                 //GameConsole.Write("reset mnemonic input!");
             }

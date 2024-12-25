@@ -7,12 +7,12 @@ float4x4 Projection;
 
 float VertexColorEnabled = 0;
 
-float AmbientIntensity = 0.5f;
-float4 AmbientColor = float4(0.5f, 0.2f, 0.1f, 1.0f);
+float AmbientIntensity = 1.0f;
+float4 AmbientColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 float bDiffuseMapEnabled = 1;
 texture DiffuseMap;
-float DiffuseLightIntensity = 2.0f;
+float DiffuseLightIntensity = 1.0f;
 
 float bNormalMapEnabled = 1;
 texture NormalMap;
@@ -24,10 +24,11 @@ struct Vertex
     float2 TextureCoordinates : TEXCOORD0;
 };
 
+
 sampler2D TextureSampler = sampler_state {
     Texture = <DiffuseMap>;
-    MagFilter = Point;
-    MinFilter = Point;
+    MagFilter = Anisotropic;
+    MinFilter = Anisotropic;
     AddressU = Clamp;
     AddressV = Clamp;
     MaxAnisotropy = 16;
@@ -56,19 +57,13 @@ Vertex VertexShaderFunction(Vertex input)
 
 float4 PixelShaderFunction(Vertex input) : COLOR0
 {
-    float4 pixel;
-    
-    if (VertexColorEnabled)
-    {
-        pixel = input.Color;
-    }
-    else
-    {
-        pixel = float4(1, 1, 1, 1);
-    }
+    float4 pixel = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
-    if (bDiffuseMapEnabled > 0)
-        pixel *= tex2D(TextureSampler, input.TextureCoordinates) * DiffuseLightIntensity;
+    if (VertexColorEnabled)
+        pixel = input.Color;
+
+    if (bDiffuseMapEnabled)
+        pixel *= tex2D(TextureSampler, input.TextureCoordinates) * 2;
 
     //if (bNormalMapEnabled > 0)
     //    pixel = pixel * tex2D(NormalSampler, input.TextureCoordinates) * DiffuseLightIntensity;

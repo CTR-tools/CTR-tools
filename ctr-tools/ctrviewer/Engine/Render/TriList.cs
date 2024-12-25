@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System;
 
 namespace ctrviewer.Engine.Render
 {
@@ -98,7 +97,7 @@ namespace ctrviewer.Engine.Render
         public bool Sealed { get; private set; } = false;
 
         //todo: refactor to a material class, so can just swap material on the fly
-        
+
         public string textureName = "";
 
         public Texture2D Texture { get; private set; }
@@ -426,7 +425,7 @@ namespace ctrviewer.Engine.Render
             {
                 if (indexBuffers.Count == 0 || verts_sealed.Length == 0)
                 {
-                    GameConsole.Write("Empty static trilist!");
+                    //GameConsole.Write("Empty static trilist!");
                     return;
                 }
             }
@@ -502,7 +501,16 @@ namespace ctrviewer.Engine.Render
                     if (anim.verts_sealed.Length < anim.frameSize * (int)Game1.frame + 1)
                         continue;
 
-                foreach (var pass in fx.CurrentTechnique.Passes)
+                var shade = ContentVault.Shaders["tutorial"];
+                shade.Parameters["View"].SetValue(effect.View);
+                shade.Parameters["Projection"].SetValue(effect.Projection);
+                shade.Parameters["World"].SetValue(effect.World);
+                shade.Parameters["DiffuseMap"].SetValue(effect.Texture);
+                shade.Parameters["bDiffuseMapEnabled"].SetValue(1);
+                shade.Parameters["VertexColorEnabled"].SetValue(1);
+
+
+                foreach (var pass in shade.CurrentTechnique.Passes)
                 {
                     pass.Apply();
 
@@ -514,7 +522,7 @@ namespace ctrviewer.Engine.Render
                     );
                 }
             }
-        
+
 
             if (type == TriListType.Water || type == TriListType.Flag)
             {

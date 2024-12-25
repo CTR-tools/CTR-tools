@@ -80,7 +80,7 @@ namespace ctrviewer.Loaders
             Seal();
 
             GameConsole.Write($"numverts: {Trilists["test"].numVerts}");
-           // GameConsole.Write($"numfaces: {Trilists["test"].numFaces}");
+            // GameConsole.Write($"numfaces: {Trilists["test"].numFaces}");
         }
 
         public Vector3 Convert(Vector3D input) => new Vector3(input.X, input.Y, input.Z);
