@@ -1,10 +1,7 @@
 ﻿using CTRFramework;
 using CTRFramework.Shared;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Numerics;
 
 namespace CTRTools.Controls
 {

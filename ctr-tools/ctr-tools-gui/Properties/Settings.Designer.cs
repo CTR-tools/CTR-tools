@@ -22,17 +22,5 @@ namespace CTRTools.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string samplePath {
-            get {
-                return ((string)(this["samplePath"]));
-            }
-            set {
-                this["samplePath"] = value;
-            }
-        }
     }
 }

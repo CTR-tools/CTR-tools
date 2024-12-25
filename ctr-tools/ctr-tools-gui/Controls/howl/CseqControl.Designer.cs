@@ -60,8 +60,10 @@ namespace CTRTools.Controls
             this.seqInfoBox = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabTrackInfo = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.trackInfoBox = new System.Windows.Forms.TextBox();
             this.tabInstruments = new System.Windows.Forms.TabPage();
+            this.findBank = new System.Windows.Forms.Button();
             this.changeInstrumentButton = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.duplicateInstrumentButton = new System.Windows.Forms.Button();
@@ -73,7 +75,6 @@ namespace CTRTools.Controls
             this.metaInstList = new System.Windows.Forms.ListBox();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.sfd = new System.Windows.Forms.SaveFileDialog();
-            this.findBank = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -363,6 +364,7 @@ namespace CTRTools.Controls
             // 
             // tabTrackInfo
             // 
+            this.tabTrackInfo.Controls.Add(this.panel1);
             this.tabTrackInfo.Controls.Add(this.trackInfoBox);
             this.tabTrackInfo.Location = new System.Drawing.Point(4, 22);
             this.tabTrackInfo.Name = "tabTrackInfo";
@@ -372,15 +374,22 @@ namespace CTRTools.Controls
             this.tabTrackInfo.Text = "Track Info";
             this.tabTrackInfo.UseVisualStyleBackColor = true;
             // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(6, 216);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(661, 205);
+            this.panel1.TabIndex = 7;
+            // 
             // trackInfoBox
             // 
-            this.trackInfoBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.trackInfoBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.trackInfoBox.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.trackInfoBox.Location = new System.Drawing.Point(3, 3);
             this.trackInfoBox.Multiline = true;
             this.trackInfoBox.Name = "trackInfoBox";
             this.trackInfoBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.trackInfoBox.Size = new System.Drawing.Size(667, 418);
+            this.trackInfoBox.Size = new System.Drawing.Size(667, 207);
             this.trackInfoBox.TabIndex = 5;
             this.trackInfoBox.Text = "  ";
             this.trackInfoBox.TextChanged += new System.EventHandler(this.trackInfoBox_TextChanged);
@@ -401,6 +410,17 @@ namespace CTRTools.Controls
             this.tabInstruments.TabIndex = 1;
             this.tabInstruments.Text = "Instruments / Samples";
             this.tabInstruments.UseVisualStyleBackColor = true;
+            // 
+            // findBank
+            // 
+            this.findBank.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.findBank.Location = new System.Drawing.Point(119, 369);
+            this.findBank.Name = "findBank";
+            this.findBank.Size = new System.Drawing.Size(107, 23);
+            this.findBank.TabIndex = 9;
+            this.findBank.Text = "Find bank";
+            this.findBank.UseVisualStyleBackColor = true;
+            this.findBank.Click += new System.EventHandler(this.findBank_Click);
             // 
             // changeInstrumentButton
             // 
@@ -513,17 +533,6 @@ namespace CTRTools.Controls
             // 
             this.sfd.Filter = "MIDI File (*.mid)|*.mid";
             // 
-            // findBank
-            // 
-            this.findBank.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.findBank.Location = new System.Drawing.Point(119, 369);
-            this.findBank.Name = "findBank";
-            this.findBank.Size = new System.Drawing.Size(107, 23);
-            this.findBank.TabIndex = 9;
-            this.findBank.Text = "Find bank";
-            this.findBank.UseVisualStyleBackColor = true;
-            this.findBank.Click += new System.EventHandler(this.findBank_Click);
-            // 
             // CseqControl
             // 
             this.AllowDrop = true;
@@ -598,6 +607,7 @@ namespace CTRTools.Controls
         private Button button2;
         private Button changeInstrumentButton;
         private Button findBank;
+        private Panel panel1;
     }
 }
 

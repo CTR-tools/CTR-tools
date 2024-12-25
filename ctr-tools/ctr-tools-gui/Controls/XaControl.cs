@@ -1,5 +1,5 @@
-﻿using CTRFramework.Shared;
-using CTRFramework.Audio;
+﻿using CTRFramework.Audio;
+using CTRFramework.Shared;
 using NAudio.Wave;
 using System;
 using System.IO;
@@ -9,7 +9,6 @@ namespace CTRTools.Controls
 {
     public partial class XaControl : UserControl
     {
-
         public string lastLoaded = String.Empty;
 
         XaInfo xnf;
@@ -59,20 +58,19 @@ namespace CTRTools.Controls
 
         private void actionLoadXnf_Click(object sender, EventArgs e)
         {
-            if (ofdxnf.ShowDialog() == DialogResult.OK)
-                LoadAudio(ofdxnf.FileName);
+
         }
 
         private void UpdateUI()
         {
             if (xnf != null)
             {
-                comboBox1.Items.Clear();
+                xnfFolderBox.Items.Clear();
 
                 for (int i = 0; i < xnf.numGroups; i++)
-                    comboBox1.Items.Add(xnf.folders[i]);
+                    xnfFolderBox.Items.Add(xnf.folders[i]);
 
-                comboBox1.SelectedIndex = 0;
+                xnfFolderBox.SelectedIndex = 0;
             }
         }
 
@@ -80,14 +78,14 @@ namespace CTRTools.Controls
         {
             if (xnf != null)
             {
-                listBox1.Items.Clear();
+                xnfEntriesList.Items.Clear();
 
-                for (int i = 0; i < xnf.numEntries[comboBox1.SelectedIndex]; i++)
+                for (int i = 0; i < xnf.numEntries[xnfFolderBox.SelectedIndex]; i++)
                 {
-                    listBox1.Items.Add(xnf.Entries[i + xnf.entryStartIndex[comboBox1.SelectedIndex]].ToString());
+                    xnfEntriesList.Items.Add(xnf.Entries[i + xnf.entryStartIndex[xnfFolderBox.SelectedIndex]].ToString());
                 }
 
-                label1.Text = $"Sounds: {xnf.numEntries[comboBox1.SelectedIndex]}";
+                label1.Text = $"Sounds: {xnf.numEntries[xnfFolderBox.SelectedIndex]}";
             }
         }
 
@@ -96,21 +94,21 @@ namespace CTRTools.Controls
 
         private void GoNext(object sender, StoppedEventArgs args)
         {
-            if (listBox1.SelectedIndex + 1 < listBox1.Items.Count)
+            if (xnfEntriesList.SelectedIndex + 1 < xnfEntriesList.Items.Count)
             {
-                listBox1.SelectedIndex++;
+                xnfEntriesList.SelectedIndex++;
             }
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (xnf == null) return;
-            if (listBox1.SelectedIndex == -1) return;
+            if (xnfEntriesList.SelectedIndex == -1) return;
 
-            propertyGrid1.SelectedObject = xnf.Entries[xnf.entryStartIndex[comboBox1.SelectedIndex] + listBox1.SelectedIndex];
-            propertyGrid1.Update();
+            xnfEntryEditor.SelectedObject = xnf.Entries[xnf.entryStartIndex[xnfFolderBox.SelectedIndex] + xnfEntriesList.SelectedIndex];
+            xnfEntryEditor.Update();
 
-            string name = Helpers.PathCombine(xnf.RootPath, xnf.folders[comboBox1.SelectedIndex], xnf.Entries[xnf.entryStartIndex[comboBox1.SelectedIndex] + listBox1.SelectedIndex].GetName());
+            string name = Helpers.PathCombine(xnf.RootPath, xnf.folders[xnfFolderBox.SelectedIndex], xnf.Entries[xnf.entryStartIndex[xnfFolderBox.SelectedIndex] + xnfEntriesList.SelectedIndex].GetName());
 
             if (File.Exists(name))
             {
@@ -132,21 +130,48 @@ namespace CTRTools.Controls
 
         private void saveButton_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void loadXNFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (ofdxnf.ShowDialog() == DialogResult.OK)
+                LoadAudio(ofdxnf.FileName);
+        }
+
+        private void saveXNFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
             if (xnf == null) return;
 
-            if (!String.IsNullOrEmpty(lastLoaded))
-            {
+            if (String.IsNullOrEmpty(lastLoaded))
+                SaveAs();
+            else
                 xnf.Save(lastLoaded);
-                return;
-            }
+        }
+
+        private void saveXNFAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveAs();
+        }
+
+        private void SaveAs()
+        {
+            if (xnf == null) return;
 
             var sfd = new SaveFileDialog();
             sfd.Filter = "Crash Team Racing XNF file (*.xnf)|*.xnf";
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
+                lastLoaded = sfd.FileName;
                 xnf.Save(lastLoaded);
             }
         }
+
     }
 }

@@ -1,6 +1,5 @@
-﻿using CTRFramework.Shared;
-using CTRFramework.Audio;
-using NAudio;
+﻿using CTRFramework.Audio;
+using CTRFramework.Shared;
 using NAudio.Midi;
 using System;
 using System.Collections.Generic;
@@ -476,28 +475,28 @@ namespace CTRTools.Controls
 
             propertyGrid1.SelectedObject = howl.Songs[songListBox.SelectedIndex];
 
-/*
-            //wont really work as intended
+            /*
+                        //wont really work as intended
 
-            int i = 0;
+                        int i = 0;
 
-            var banks = new List<int>();
+                        var banks = new List<int>();
 
-            foreach (var bank in howl.Banks)
-            {
-                if (bank.MatchesCseq(howl.Songs[songListBox.SelectedIndex]))
-                {
-                    banks.Add(i);
-                }
-                i++;
-            }
+                        foreach (var bank in howl.Banks)
+                        {
+                            if (bank.MatchesCseq(howl.Songs[songListBox.SelectedIndex]))
+                            {
+                                banks.Add(i);
+                            }
+                            i++;
+                        }
 
-            string result = "found banks: ";
+                        string result = "found banks: ";
 
-            foreach (var b in banks) { result += b + ", "; }
+                        foreach (var b in banks) { result += b + ", "; }
 
-            MessageBox.Show(result);
-*/
+                        MessageBox.Show(result);
+            */
         }
     }
 }

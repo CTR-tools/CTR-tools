@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.warning = new System.Windows.Forms.Label();
             this.signLabel = new System.Windows.Forms.Label();
             this.labelVersion = new System.Windows.Forms.Label();
             this.appLogo = new System.Windows.Forms.PictureBox();
             this.discordLogo = new System.Windows.Forms.PictureBox();
             this.githubLogo = new System.Windows.Forms.PictureBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.discordLogo)).BeginInit();
@@ -56,6 +56,19 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(639, 423);
             this.panel1.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.ForeColor = System.Drawing.Color.Silver;
+            this.label1.Location = new System.Drawing.Point(7, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(629, 91);
+            this.label1.TabIndex = 23;
+            this.label1.Text = "Drag and drop CTR game files, if the file is supported, it should automatically s" +
+    "witch to proper tab.";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // warning
             // 
@@ -129,19 +142,6 @@
             this.githubLogo.TabIndex = 18;
             this.githubLogo.TabStop = false;
             this.githubLogo.Click += new System.EventHandler(this.githubLogo_Click);
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.ForeColor = System.Drawing.Color.Silver;
-            this.label1.Location = new System.Drawing.Point(7, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(629, 91);
-            this.label1.TabIndex = 23;
-            this.label1.Text = "Drag and drop CTR game files, if the file is supported, it should automatically s" +
-    "witch to proper tab.";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // AboutControl
             // 

@@ -13,6 +13,8 @@ namespace CTRTools.Controls
 {
     public partial class BigFileControl : UserControl
     {
+        private string loadedFile = "";
+
         private BigFileReader Reader
         {
             get => _reader;
@@ -44,6 +46,8 @@ namespace CTRTools.Controls
 
             expandAll.Text = "Expand";
             bigLoader.RunWorkerAsync(path);
+
+            loadedFile = path;
         }
 
         TreeNode root;
@@ -99,11 +103,13 @@ namespace CTRTools.Controls
             }
         }
 
-        private void UpdateListBox(TreeNode tn)
+        private void UpdateListBox(TreeNode treeNode)
         {
             fileTree.BeginUpdate();
+
             fileTree.Nodes.Clear();
-            fileTree.Nodes.Add(tn);
+            fileTree.Nodes.Add(treeNode);
+
             fileTree.EndUpdate();
         }
 
@@ -115,7 +121,7 @@ namespace CTRTools.Controls
             var child = new TreeNode(name);
             parent.Nodes.Add(child);
 
-            //temporary list, should be moved to a text file
+            // TODO: temporary list, should be moved to a text file
             switch (name)
             {
                 case "levels":
@@ -159,15 +165,15 @@ namespace CTRTools.Controls
             try
             {
                 Reader.FileCursor = (int)fileTree.SelectedNode.Tag;
-                BigEntry en = Reader.ReadEntry();
+                var entry = Reader.ReadEntry();
 
-                if (en != null)
+                if (entry != null)
                 {
-                    SaveFileDialog fd = new SaveFileDialog();
-                    fd.FileName = Path.GetFileName(en.Name);
+                    var sfd = new SaveFileDialog();
+                    sfd.FileName = Path.GetFileName(entry.Name);
 
-                    if (fd.ShowDialog() == DialogResult.OK)
-                        en.Save(fd.FileName);
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                        entry.Save(sfd.FileName);
                 }
             }
             catch (Exception ex)
@@ -301,9 +307,10 @@ namespace CTRTools.Controls
 
         private void extractToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Reader != null)
-                if (fbd.ShowDialog() == DialogResult.OK)
-                    Reader.ExtractAll(fbd.SelectedPath);
+            if (Reader is null) return;
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+                Reader.ExtractAll(fbd.SelectedPath);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -319,6 +326,8 @@ namespace CTRTools.Controls
         private void saveAsZIPToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (Reader is null) return;
+
+            zfd.FileName = Path.ChangeExtension(Path.GetFileName(loadedFile), ".zip");
 
             try
             {

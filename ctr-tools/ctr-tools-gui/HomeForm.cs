@@ -1,17 +1,8 @@
 ﻿using CTRFramework.Shared;
 using CTRTools.Controls;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Management.Instrumentation;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace CTRTools
 {
@@ -20,7 +11,8 @@ namespace CTRTools
         //main work area control
         UserControl currentControl;
 
-        //a set of specific controls, assigned to current control one at a time
+        // a set of specific controls, assigned to current control one at a time
+        // how about a dictionary here
         AboutControl aboutControl = new AboutControl();
         BigFileControl fileControl = new BigFileControl();
         VramControl vramControl = new VramControl();
@@ -29,6 +21,7 @@ namespace CTRTools
         HowlControl howlControl = new HowlControl();
         LangControl langControl = new LangControl();
         CtrControl ctrControl = new CtrControl();
+        FontControl mpkControl = new FontControl();
 
         public HomeForm()
         {
@@ -50,6 +43,7 @@ namespace CTRTools
         private void vramButton_Click(object sender, EventArgs e) => SwitchControl(vramControl);
         private void howlButton_Click(object sender, EventArgs e) => SwitchControl(howlControl);
         private void aboutButton_Click(object sender, EventArgs e) => SwitchControl(aboutControl);
+        private void mpkButton_Click(object sender, EventArgs e) => SwitchControl(mpkControl);
         #endregion
 
         /// <summary>
@@ -58,27 +52,36 @@ namespace CTRTools
         /// <param name="control"></param>
         private void SwitchControl(UserControl control)
         {
-            //early check for clicking the same button
+            // just in case
+            if (control == null) return;
+
+            // early check for clicking the same button
             if (currentControl == control) return;
 
             this.SuspendLayout();
 
+            if (currentControl != null)
+                currentControl.Visible = false;
+
+            // if there is control active
             if (workArea.Controls.Contains(currentControl))
             {
-                //hide and disable
+                // hide and disable active control
                 currentControl.Enabled = false;
                 currentControl.Visible = false;
 
                 workArea.Controls.Remove(currentControl);
             }
 
+            // update active control
             currentControl = control;
-
             workArea.Controls.Add(currentControl);
 
+            // make sure it fills the entire parent and show 
             currentControl.Dock = DockStyle.Fill;
-
             currentControl.Enabled = true;
+            currentControl.Visible = true;
+
             currentControl.Visible = true;
 
             this.ResumeLayout();

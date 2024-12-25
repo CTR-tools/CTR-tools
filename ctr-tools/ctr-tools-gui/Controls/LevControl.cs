@@ -60,6 +60,14 @@ namespace CTRTools.Controls
                 }
 
                 vertexArrayControl1.Scene = scn;
+
+                propertyGrid2.SelectedObject = scn.header;
+
+                LoadGradient();
+
+                colorTop.BackColor = VectorToColor(scn.header.bgColorTop);
+                colorBottom.BackColor = VectorToColor(scn.header.bgColorBottom);
+                colorBack.BackColor = VectorToColor(scn.header.backColor);
             }
             catch (Exception ex)
             {
@@ -259,26 +267,23 @@ namespace CTRTools.Controls
                 //update scene data with controls data
                 //scn.verts = vertexArrayControl1.VertexArray;
 
-
-                bw.Jump(4);
-
-                scn.header.Write(bw);
-
-
                 bw.Jump(scn.header.ptrRespawnPts.Address + 4);
 
                 foreach (var pose in scn.respawnPts)
                     pose.Write(bw);
 
+
                 bw.Jump(scn.header.ptrInstances.Address + 4);
 
-                foreach (CtrInstance ph in scn.Instances)
+                foreach (var ph in scn.Instances)
                     ph.Write(bw);
+
 
                 bw.Jump(scn.mesh.ptrVertices + 4);
 
                 foreach (var vert in scn.verts)
                     vert.Write(bw);
+
 
                 bw.Jump(scn.mesh.ptrQuadBlocks + 4);
 
@@ -286,7 +291,6 @@ namespace CTRTools.Controls
                     qb.Write(bw);
 
                 /*
-
                 bw.Jump(scn.header.ptrVcolAnim.Address + 4);
 
                 foreach (VertexAnim vc in scn.vertanims)
@@ -297,12 +301,18 @@ namespace CTRTools.Controls
 
                 foreach (var vis in scn.visdata)
                     vis.Write(bw);
-                
+
                 if (scn.nav != null)
-                { 
+                {
                     //bw.Jump(scn.header.ptrNavData.Address + 4);
                     //scn.nav.Write(bw);
                 }
+
+                // header should be written in the end after we have updated all pointers accordingly
+
+                bw.Jump(4);
+
+                scn.header.Write(bw);
             }
         }
 
@@ -343,8 +353,8 @@ namespace CTRTools.Controls
 
         private void button19_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd1 = new OpenFileDialog();
-            OpenFileDialog ofd2 = new OpenFileDialog();
+            var ofd1 = new OpenFileDialog();
+            var ofd2 = new OpenFileDialog();
 
             if (ofd1.ShowDialog() == DialogResult.OK)
                 if (ofd2.ShowDialog() == DialogResult.OK)
@@ -393,7 +403,7 @@ namespace CTRTools.Controls
         {
             if (scn != null)
             {
-                foreach (VisNode v in scn.visdata)
+                foreach (var v in scn.visdata)
                 {
                     if (v.IsLeaf)
                     {
@@ -436,10 +446,9 @@ namespace CTRTools.Controls
                 scn.Export(fbd.SelectedPath, ExportFlags.All);
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void LoadGradient()
         {
-            if (scn is null)
-                return;
+            if (scn is null) return;
 
             pictureBox1.Image = new Bitmap(pictureBox1.Width, pictureBox1.Height);
 
@@ -449,12 +458,20 @@ namespace CTRTools.Controls
                 g.FillRectangle(GetGradient(scn.header.glowGradients[i], 32), new Rectangle(0, 32 * i, 128, 32));
 
             pictureBox1.Invalidate();
+
+            propertyGrid2.SelectedObject = scn.header;
+        }
+
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            LoadGradient();
         }
 
         private System.Drawing.Drawing2D.LinearGradientBrush GetGradient(Gradient grad, int size)
         {
-            Vector4b from = grad.FromColor;
-            Vector4b to = grad.ToColor;
+            var from = grad.FromColor;
+            var to = grad.ToColor;
 
             Color cfrom = Color.FromArgb(255, from.X, from.Y, from.Z);
             Color cto = Color.FromArgb(255, to.X, to.Y, to.Z);
@@ -464,7 +481,7 @@ namespace CTRTools.Controls
 
         private void button8_Click(object sender, EventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
+            var sfd = new SaveFileDialog();
 
             if (sfd.ShowDialog() == DialogResult.OK)
             {
@@ -566,9 +583,47 @@ namespace CTRTools.Controls
             }
         }
 
-        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void colorTop_Click(object sender, EventArgs e)
         {
+            if (scn is null) return;
 
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                colorTop.BackColor = cd.Color;
+                scn.header.bgColorTop = ColorToVector(cd.Color);
+            }
+        }
+
+        private void colorBottom_Click(object sender, EventArgs e)
+        {
+            if (scn is null) return;
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                colorBottom.BackColor = cd.Color;
+                scn.header.bgColorBottom = ColorToVector(cd.Color);
+            }
+        }
+
+        private void colorBack_Click(object sender, EventArgs e)
+        {
+            if (scn is null) return;
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                colorBack.BackColor = cd.Color;
+                scn.header.backColor = ColorToVector(cd.Color);
+            }
+        }
+
+        private Vector4b ColorToVector(Color color)
+        {
+            return new Vector4b(color.R, color.G, color.B, 0);
+        }
+
+        private Color VectorToColor(Vector4b vec)
+        {
+            return Color.FromArgb(255, vec.X, vec.Y, vec.Z);
         }
     }
 }

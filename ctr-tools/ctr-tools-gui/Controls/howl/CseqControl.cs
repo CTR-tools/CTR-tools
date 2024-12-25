@@ -1,10 +1,8 @@
-﻿using CTRFramework.Shared;
-using CTRFramework.Audio;
-using NAudio.Midi;
+﻿using CTRFramework.Audio;
+using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -27,7 +25,7 @@ namespace CTRTools.Controls
         public CseqControl()
         {
             InitializeComponent();
-            samplePath = Properties.Settings.Default.samplePath;
+            // samplePath = Properties.Settings.Default.samplePath;
             LoadMeta();
         }
 
@@ -427,7 +425,7 @@ namespace CTRTools.Controls
 
         private void setSamplePathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            var fbd = new FolderBrowserDialog();
 
             if (seq != null)
             {
@@ -438,7 +436,7 @@ namespace CTRTools.Controls
             if (fbd.ShowDialog() == DialogResult.OK)
                 samplePath = fbd.SelectedPath;
 
-            Properties.Settings.Default.samplePath = samplePath;
+            // Properties.Settings.Default.samplePath = samplePath;
         }
 
         private void trackInfoBox_TextChanged(object sender, EventArgs e)
@@ -499,6 +497,8 @@ namespace CTRTools.Controls
             FillUI();
         }
 
+        Bank crank = null;
+
         InstrumentSelectionForm instSelectForm;
 
         private void changeInstrumentButton_Click(object sender, EventArgs e)
@@ -510,25 +510,79 @@ namespace CTRTools.Controls
             if (instSelectForm == null)
                 instSelectForm = new InstrumentSelectionForm(seq.Context.howl);
 
+            var iold = new SpuInstrument();
+            var inew = new SpuInstrument();
+
             if (instSelectForm.ShowDialog() == DialogResult.OK)
             {
+                int numBanks = 0;
+
+                // check for bank first
+                if (crank == null)
+                    foreach (var bank in seq.Context.howl.Banks)
+                    {
+                        if (bank.MatchesCseq(seq))
+                        {
+                            crank = bank;
+                            numBanks++;
+                        }
+                    }
+
+                if (numBanks == 0)
+                {
+                    MessageBox.Show("Matching bank not found for this CSEQ, can't proceed.");
+                    return;
+                }
+
+                if (numBanks > 0)
+                {
+                    MessageBox.Show("Multiple matching banks found for this CSEQ, can't proceed.");
+                    return;
+                }
+
+
+                iold = seq.Instruments[instrumentList.SelectedNode.Index];
+                inew = instSelectForm.SelectedInstrument;
+
                 //if it's an instrument
                 if (instrumentList.SelectedNode.Parent.Index == 0)
                 {
-                    seq.Instruments[instrumentList.SelectedNode.Index] = instSelectForm.SelectedInstrument as SpuInstrument;
-                    instrumentList.SelectedNode.Text = instSelectForm.SelectedInstrument.Sample.Name;
-                    instrumentList.SelectedNode.Tag = instSelectForm.SelectedInstrument;
+                    seq.Instruments[instrumentList.SelectedNode.Index] = inew as SpuInstrument;
                 }
                 // else if it's percussion
                 else if (instrumentList.SelectedNode.Parent.Index == 1)
                 {
-                    seq.Percussions[instrumentList.SelectedNode.Index] = instSelectForm.SelectedInstrument as SpuInstrumentShort;
-                    instrumentList.SelectedNode.Text = instSelectForm.SelectedInstrument.Sample.Name;
-                    instrumentList.SelectedNode.Tag = instSelectForm.SelectedInstrument;
+                    seq.Percussions[instrumentList.SelectedNode.Index] = inew as SpuInstrumentShort;
                 }
-            }
 
-            //instrumentList.Focus();
+                instrumentList.SelectedNode.Text = inew.Sample.Name;
+                instrumentList.SelectedNode.Tag = inew;
+
+
+
+
+                bool keepOld = false;
+
+                foreach (var inst in seq.Instruments)
+                    if (inst.Sample.ID == iold.Sample.ID)
+                    {
+                        keepOld = true;
+                        break;
+                    }
+
+                foreach (var inst in seq.Percussions)
+                    if (inst.Sample.ID == iold.Sample.ID)
+                    {
+                        keepOld = true;
+                        break;
+                    }
+
+                if (!keepOld)
+                    crank.Entries.Remove((short)iold.Sample.ID);
+
+                if (!crank.Entries.Contains((short)inew.Sample.ID))
+                    crank.Entries.Add((short)inew.Sample.ID);
+            }
         }
 
         private void findBank_Click(object sender, EventArgs e)
@@ -539,7 +593,7 @@ namespace CTRTools.Controls
             {
                 if (bank.MatchesCseq(seq))
                 {
-                   
+
                     MessageBox.Show("found bank! bank index: " + i);
                     return;
                 }

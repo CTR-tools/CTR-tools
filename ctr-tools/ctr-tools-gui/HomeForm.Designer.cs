@@ -30,6 +30,7 @@
         {
             this.tabArea = new System.Windows.Forms.Panel();
             this.aboutButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.howlButton = new System.Windows.Forms.Button();
             this.xaButton = new System.Windows.Forms.Button();
             this.langButton = new System.Windows.Forms.Button();
@@ -47,6 +48,7 @@
             this.tabArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabArea.Controls.Add(this.aboutButton);
+            this.tabArea.Controls.Add(this.button1);
             this.tabArea.Controls.Add(this.howlButton);
             this.tabArea.Controls.Add(this.xaButton);
             this.tabArea.Controls.Add(this.langButton);
@@ -54,23 +56,36 @@
             this.tabArea.Controls.Add(this.ctrButton);
             this.tabArea.Controls.Add(this.vramButton);
             this.tabArea.Controls.Add(this.fileButton);
-            this.tabArea.Location = new System.Drawing.Point(626, 12);
+            this.tabArea.Location = new System.Drawing.Point(547, 12);
             this.tabArea.Name = "tabArea";
-            this.tabArea.Size = new System.Drawing.Size(124, 486);
-            this.tabArea.TabIndex = 1;
+            this.tabArea.Size = new System.Drawing.Size(145, 404);
+            this.tabArea.TabIndex = 2;
             // 
             // aboutButton
             // 
             this.aboutButton.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.aboutButton.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.aboutButton.Location = new System.Drawing.Point(0, 453);
+            this.aboutButton.Location = new System.Drawing.Point(0, 371);
             this.aboutButton.Name = "aboutButton";
             this.aboutButton.Padding = new System.Windows.Forms.Padding(5);
-            this.aboutButton.Size = new System.Drawing.Size(124, 33);
-            this.aboutButton.TabIndex = 8;
+            this.aboutButton.Size = new System.Drawing.Size(145, 33);
+            this.aboutButton.TabIndex = 9;
             this.aboutButton.Text = "About";
             this.aboutButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.aboutButton.Click += new System.EventHandler(this.aboutButton_Click);
+            // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.button1.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.Location = new System.Drawing.Point(0, 231);
+            this.button1.Name = "button1";
+            this.button1.Padding = new System.Windows.Forms.Padding(5);
+            this.button1.Size = new System.Drawing.Size(145, 33);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "MPK [packs]";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button1.Click += new System.EventHandler(this.mpkButton_Click);
             // 
             // howlButton
             // 
@@ -79,9 +94,9 @@
             this.howlButton.Location = new System.Drawing.Point(0, 198);
             this.howlButton.Name = "howlButton";
             this.howlButton.Padding = new System.Windows.Forms.Padding(5);
-            this.howlButton.Size = new System.Drawing.Size(124, 33);
+            this.howlButton.Size = new System.Drawing.Size(145, 33);
             this.howlButton.TabIndex = 7;
-            this.howlButton.Text = "HOWL music/sfx";
+            this.howlButton.Text = "HOWL [music/sfx]";
             this.howlButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.howlButton.Click += new System.EventHandler(this.howlButton_Click);
             // 
@@ -92,9 +107,9 @@
             this.xaButton.Location = new System.Drawing.Point(0, 165);
             this.xaButton.Name = "xaButton";
             this.xaButton.Padding = new System.Windows.Forms.Padding(5);
-            this.xaButton.Size = new System.Drawing.Size(124, 33);
+            this.xaButton.Size = new System.Drawing.Size(145, 33);
             this.xaButton.TabIndex = 6;
-            this.xaButton.Text = "XA audio";
+            this.xaButton.Text = "XNF [xa audio]";
             this.xaButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.xaButton.Click += new System.EventHandler(this.xaButton_Click);
             // 
@@ -105,9 +120,9 @@
             this.langButton.Location = new System.Drawing.Point(0, 132);
             this.langButton.Name = "langButton";
             this.langButton.Padding = new System.Windows.Forms.Padding(5);
-            this.langButton.Size = new System.Drawing.Size(124, 33);
+            this.langButton.Size = new System.Drawing.Size(145, 33);
             this.langButton.TabIndex = 5;
-            this.langButton.Text = "LNG texts";
+            this.langButton.Text = "LNG [texts]";
             this.langButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.langButton.Click += new System.EventHandler(this.langButton_Click);
             // 
@@ -118,9 +133,9 @@
             this.levButton.Location = new System.Drawing.Point(0, 99);
             this.levButton.Name = "levButton";
             this.levButton.Padding = new System.Windows.Forms.Padding(5);
-            this.levButton.Size = new System.Drawing.Size(124, 33);
+            this.levButton.Size = new System.Drawing.Size(145, 33);
             this.levButton.TabIndex = 4;
-            this.levButton.Text = "LEV scenes";
+            this.levButton.Text = "LEV [scenes]";
             this.levButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.levButton.Click += new System.EventHandler(this.levButton_Click);
             // 
@@ -131,9 +146,9 @@
             this.ctrButton.Location = new System.Drawing.Point(0, 66);
             this.ctrButton.Name = "ctrButton";
             this.ctrButton.Padding = new System.Windows.Forms.Padding(5);
-            this.ctrButton.Size = new System.Drawing.Size(124, 33);
+            this.ctrButton.Size = new System.Drawing.Size(145, 33);
             this.ctrButton.TabIndex = 3;
-            this.ctrButton.Text = "CTR models";
+            this.ctrButton.Text = "CTR [models]";
             this.ctrButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ctrButton.Click += new System.EventHandler(this.ctrButton_Click);
             // 
@@ -144,9 +159,9 @@
             this.vramButton.Location = new System.Drawing.Point(0, 33);
             this.vramButton.Name = "vramButton";
             this.vramButton.Padding = new System.Windows.Forms.Padding(5);
-            this.vramButton.Size = new System.Drawing.Size(124, 33);
+            this.vramButton.Size = new System.Drawing.Size(145, 33);
             this.vramButton.TabIndex = 2;
-            this.vramButton.Text = "VRAM textures";
+            this.vramButton.Text = "VRM [textures]";
             this.vramButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.vramButton.Click += new System.EventHandler(this.vramButton_Click);
             // 
@@ -157,9 +172,9 @@
             this.fileButton.Location = new System.Drawing.Point(0, 0);
             this.fileButton.Name = "fileButton";
             this.fileButton.Padding = new System.Windows.Forms.Padding(5);
-            this.fileButton.Size = new System.Drawing.Size(124, 33);
+            this.fileButton.Size = new System.Drawing.Size(145, 33);
             this.fileButton.TabIndex = 1;
-            this.fileButton.Text = "BIG archive";
+            this.fileButton.Text = "BIG [archive]";
             this.fileButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.fileButton.UseVisualStyleBackColor = true;
             this.fileButton.Click += new System.EventHandler(this.fileButton_Click);
@@ -171,28 +186,30 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.workArea.Location = new System.Drawing.Point(12, 12);
             this.workArea.Name = "workArea";
-            this.workArea.Size = new System.Drawing.Size(608, 486);
-            this.workArea.TabIndex = 2;
+            this.workArea.Size = new System.Drawing.Size(529, 404);
+            this.workArea.TabIndex = 1;
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 501);
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 419);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(762, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(704, 22);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // HomeForm
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(762, 523);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(704, 441);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.workArea);
             this.Controls.Add(this.tabArea);
             this.DoubleBuffered = true;
-            this.MinimumSize = new System.Drawing.Size(640, 480);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.MinimumSize = new System.Drawing.Size(720, 480);
             this.Name = "HomeForm";
             this.Text = "HomeForm";
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.HomeForm_DragEnter);
@@ -215,5 +232,6 @@
         private System.Windows.Forms.Panel workArea;
         private System.Windows.Forms.Button aboutButton;
         private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.Button button1;
     }
 }

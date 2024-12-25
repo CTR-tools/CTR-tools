@@ -31,6 +31,14 @@ namespace CTRTools.Controls
         private void InitializeComponent()
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabHeader = new System.Windows.Forms.TabPage();
+            this.colorBack = new System.Windows.Forms.Button();
+            this.colorBottom = new System.Windows.Forms.Button();
+            this.colorTop = new System.Windows.Forms.Button();
+            this.propertyGrid2 = new System.Windows.Forms.PropertyGrid();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPickups = new System.Windows.Forms.TabPage();
             this.button2 = new System.Windows.Forms.Button();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
@@ -60,15 +68,14 @@ namespace CTRTools.Controls
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.checkedListBox2 = new System.Windows.Forms.CheckedListBox();
             this.button28 = new System.Windows.Forms.Button();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button27 = new System.Windows.Forms.Button();
             this.button26 = new System.Windows.Forms.Button();
             this.button32 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.cd = new System.Windows.Forms.ColorDialog();
             this.tabControl1.SuspendLayout();
+            this.tabHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPickups.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -76,8 +83,6 @@ namespace CTRTools.Controls
             this.tabVerts.SuspendLayout();
             this.tabQuads.SuspendLayout();
             this.tabVisData.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -85,16 +90,103 @@ namespace CTRTools.Controls
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Controls.Add(this.tabHeader);
             this.tabControl1.Controls.Add(this.tabPickups);
             this.tabControl1.Controls.Add(this.tabVerts);
             this.tabControl1.Controls.Add(this.tabQuads);
             this.tabControl1.Controls.Add(this.tabVisData);
-            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(634, 444);
+            this.tabControl1.Size = new System.Drawing.Size(648, 455);
             this.tabControl1.TabIndex = 15;
+            // 
+            // tabHeader
+            // 
+            this.tabHeader.Controls.Add(this.colorBack);
+            this.tabHeader.Controls.Add(this.colorBottom);
+            this.tabHeader.Controls.Add(this.colorTop);
+            this.tabHeader.Controls.Add(this.propertyGrid2);
+            this.tabHeader.Controls.Add(this.button8);
+            this.tabHeader.Controls.Add(this.button4);
+            this.tabHeader.Controls.Add(this.pictureBox1);
+            this.tabHeader.Location = new System.Drawing.Point(4, 22);
+            this.tabHeader.Name = "tabHeader";
+            this.tabHeader.Padding = new System.Windows.Forms.Padding(3);
+            this.tabHeader.Size = new System.Drawing.Size(640, 429);
+            this.tabHeader.TabIndex = 5;
+            this.tabHeader.Text = "Header data";
+            this.tabHeader.UseVisualStyleBackColor = true;
+            // 
+            // colorBack
+            // 
+            this.colorBack.Location = new System.Drawing.Point(179, 64);
+            this.colorBack.Name = "colorBack";
+            this.colorBack.Size = new System.Drawing.Size(101, 23);
+            this.colorBack.TabIndex = 6;
+            this.colorBack.Text = "back color";
+            this.colorBack.UseVisualStyleBackColor = true;
+            this.colorBack.Click += new System.EventHandler(this.colorBack_Click);
+            // 
+            // colorBottom
+            // 
+            this.colorBottom.Location = new System.Drawing.Point(179, 35);
+            this.colorBottom.Name = "colorBottom";
+            this.colorBottom.Size = new System.Drawing.Size(101, 23);
+            this.colorBottom.TabIndex = 5;
+            this.colorBottom.Text = "color bottom";
+            this.colorBottom.UseVisualStyleBackColor = true;
+            this.colorBottom.Click += new System.EventHandler(this.colorBottom_Click);
+            // 
+            // colorTop
+            // 
+            this.colorTop.Location = new System.Drawing.Point(179, 6);
+            this.colorTop.Name = "colorTop";
+            this.colorTop.Size = new System.Drawing.Size(101, 23);
+            this.colorTop.TabIndex = 4;
+            this.colorTop.Text = "color top";
+            this.colorTop.UseVisualStyleBackColor = true;
+            this.colorTop.Click += new System.EventHandler(this.colorTop_Click);
+            // 
+            // propertyGrid2
+            // 
+            this.propertyGrid2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.propertyGrid2.Location = new System.Drawing.Point(286, 6);
+            this.propertyGrid2.Name = "propertyGrid2";
+            this.propertyGrid2.Size = new System.Drawing.Size(348, 417);
+            this.propertyGrid2.TabIndex = 3;
+            // 
+            // button8
+            // 
+            this.button8.Location = new System.Drawing.Point(6, 167);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(118, 23);
+            this.button8.TabIndex = 2;
+            this.button8.Text = "save image";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(6, 138);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(118, 23);
+            this.button4.TabIndex = 1;
+            this.button4.Text = "refresh gradient";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox1.Location = new System.Drawing.Point(6, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(167, 126);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // tabPickups
             // 
@@ -109,7 +201,7 @@ namespace CTRTools.Controls
             this.tabPickups.Location = new System.Drawing.Point(4, 22);
             this.tabPickups.Name = "tabPickups";
             this.tabPickups.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPickups.Size = new System.Drawing.Size(626, 418);
+            this.tabPickups.Size = new System.Drawing.Size(640, 429);
             this.tabPickups.TabIndex = 0;
             this.tabPickups.Text = "Pickup headers";
             this.tabPickups.UseVisualStyleBackColor = true;
@@ -131,7 +223,7 @@ namespace CTRTools.Controls
             | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid1.Location = new System.Drawing.Point(214, 3);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(409, 412);
+            this.propertyGrid1.Size = new System.Drawing.Size(420, 403);
             this.propertyGrid1.TabIndex = 14;
             // 
             // label1
@@ -204,7 +296,7 @@ namespace CTRTools.Controls
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackBar1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.trackBar1.Size = new System.Drawing.Size(45, 412);
+            this.trackBar1.Size = new System.Drawing.Size(45, 403);
             this.trackBar1.TabIndex = 15;
             this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
@@ -215,7 +307,7 @@ namespace CTRTools.Controls
             this.tabVerts.Location = new System.Drawing.Point(4, 22);
             this.tabVerts.Name = "tabVerts";
             this.tabVerts.Padding = new System.Windows.Forms.Padding(3);
-            this.tabVerts.Size = new System.Drawing.Size(626, 418);
+            this.tabVerts.Size = new System.Drawing.Size(640, 429);
             this.tabVerts.TabIndex = 1;
             this.tabVerts.Text = "Vertex array";
             this.tabVerts.UseVisualStyleBackColor = true;
@@ -228,7 +320,7 @@ namespace CTRTools.Controls
             this.vertexArrayControl1.BackColor = System.Drawing.Color.Transparent;
             this.vertexArrayControl1.Location = new System.Drawing.Point(6, 6);
             this.vertexArrayControl1.Name = "vertexArrayControl1";
-            this.vertexArrayControl1.Size = new System.Drawing.Size(614, 409);
+            this.vertexArrayControl1.Size = new System.Drawing.Size(628, 420);
             this.vertexArrayControl1.TabIndex = 0;
             // 
             // tabQuads
@@ -247,7 +339,7 @@ namespace CTRTools.Controls
             this.tabQuads.Controls.Add(this.checkedListBox1);
             this.tabQuads.Location = new System.Drawing.Point(4, 22);
             this.tabQuads.Name = "tabQuads";
-            this.tabQuads.Size = new System.Drawing.Size(626, 418);
+            this.tabQuads.Size = new System.Drawing.Size(640, 429);
             this.tabQuads.TabIndex = 2;
             this.tabQuads.Text = "Quad Blocks";
             this.tabQuads.UseVisualStyleBackColor = true;
@@ -355,7 +447,7 @@ namespace CTRTools.Controls
             // button9
             // 
             this.button9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button9.Location = new System.Drawing.Point(3, 347);
+            this.button9.Location = new System.Drawing.Point(3, 338);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(120, 23);
             this.button9.TabIndex = 15;
@@ -370,9 +462,8 @@ namespace CTRTools.Controls
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Location = new System.Drawing.Point(3, 3);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(120, 334);
+            this.checkedListBox1.Size = new System.Drawing.Size(120, 319);
             this.checkedListBox1.TabIndex = 14;
-            this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
             // 
             // tabVisData
             // 
@@ -382,7 +473,7 @@ namespace CTRTools.Controls
             this.tabVisData.Controls.Add(this.button28);
             this.tabVisData.Location = new System.Drawing.Point(4, 22);
             this.tabVisData.Name = "tabVisData";
-            this.tabVisData.Size = new System.Drawing.Size(626, 418);
+            this.tabVisData.Size = new System.Drawing.Size(640, 429);
             this.tabVisData.TabIndex = 4;
             this.tabVisData.Text = "VisData";
             this.tabVisData.UseVisualStyleBackColor = true;
@@ -412,13 +503,13 @@ namespace CTRTools.Controls
             this.checkedListBox2.FormattingEnabled = true;
             this.checkedListBox2.Location = new System.Drawing.Point(3, 3);
             this.checkedListBox2.Name = "checkedListBox2";
-            this.checkedListBox2.Size = new System.Drawing.Size(120, 379);
+            this.checkedListBox2.Size = new System.Drawing.Size(120, 364);
             this.checkedListBox2.TabIndex = 29;
             // 
             // button28
             // 
             this.button28.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button28.Location = new System.Drawing.Point(3, 391);
+            this.button28.Location = new System.Drawing.Point(3, 382);
             this.button28.Name = "button28";
             this.button28.Size = new System.Drawing.Size(120, 24);
             this.button28.TabIndex = 28;
@@ -426,51 +517,10 @@ namespace CTRTools.Controls
             this.button28.UseVisualStyleBackColor = true;
             this.button28.Click += new System.EventHandler(this.button28_Click);
             // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.button8);
-            this.tabPage1.Controls.Add(this.button4);
-            this.tabPage1.Controls.Add(this.pictureBox1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(626, 418);
-            this.tabPage1.TabIndex = 5;
-            this.tabPage1.Text = "skyTab";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // button8
-            // 
-            this.button8.Location = new System.Drawing.Point(286, 35);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(118, 23);
-            this.button8.TabIndex = 2;
-            this.button8.Text = "save image";
-            this.button8.UseVisualStyleBackColor = true;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
-            // 
-            // button4
-            // 
-            this.button4.Location = new System.Drawing.Point(286, 6);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(118, 23);
-            this.button4.TabIndex = 1;
-            this.button4.Text = "load gradient";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(6, 6);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(274, 212);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
             // button27
             // 
             this.button27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button27.Location = new System.Drawing.Point(541, 453);
+            this.button27.Location = new System.Drawing.Point(545, 464);
             this.button27.Name = "button27";
             this.button27.Size = new System.Drawing.Size(96, 24);
             this.button27.TabIndex = 21;
@@ -481,7 +531,7 @@ namespace CTRTools.Controls
             // button26
             // 
             this.button26.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button26.Location = new System.Drawing.Point(3, 453);
+            this.button26.Location = new System.Drawing.Point(3, 464);
             this.button26.Name = "button26";
             this.button26.Size = new System.Drawing.Size(96, 24);
             this.button26.TabIndex = 20;
@@ -492,7 +542,7 @@ namespace CTRTools.Controls
             // button32
             // 
             this.button32.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button32.Location = new System.Drawing.Point(105, 453);
+            this.button32.Location = new System.Drawing.Point(105, 464);
             this.button32.Name = "button32";
             this.button32.Size = new System.Drawing.Size(96, 24);
             this.button32.TabIndex = 20;
@@ -503,7 +553,7 @@ namespace CTRTools.Controls
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(439, 453);
+            this.button1.Location = new System.Drawing.Point(443, 464);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(96, 24);
             this.button1.TabIndex = 22;
@@ -514,6 +564,8 @@ namespace CTRTools.Controls
             // LevControl
             // 
             this.AllowDrop = true;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.button1);
             this.Controls.Add(this.button32);
             this.Controls.Add(this.button26);
@@ -521,10 +573,12 @@ namespace CTRTools.Controls
             this.Controls.Add(this.tabControl1);
             this.DoubleBuffered = true;
             this.Name = "LevControl";
-            this.Size = new System.Drawing.Size(640, 480);
+            this.Size = new System.Drawing.Size(651, 491);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.LevControl_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.LevControl_DragEnter);
             this.tabControl1.ResumeLayout(false);
+            this.tabHeader.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabPickups.ResumeLayout(false);
             this.tabPickups.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
@@ -534,8 +588,6 @@ namespace CTRTools.Controls
             this.tabQuads.ResumeLayout(false);
             this.tabVisData.ResumeLayout(false);
             this.tabVisData.PerformLayout();
-            this.tabPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -571,7 +623,7 @@ namespace CTRTools.Controls
         private Button button28;
         private TextBox textBox2;
         private Button button1;
-        private TabPage tabPage1;
+        private TabPage tabHeader;
         private Button button4;
         private PictureBox pictureBox1;
         private Button button8;
@@ -581,5 +633,10 @@ namespace CTRTools.Controls
         private TrackBar trackBar2;
         private Label label1;
         private Button button2;
+        private PropertyGrid propertyGrid2;
+        private Button colorBack;
+        private Button colorBottom;
+        private Button colorTop;
+        private ColorDialog cd;
     }
 }

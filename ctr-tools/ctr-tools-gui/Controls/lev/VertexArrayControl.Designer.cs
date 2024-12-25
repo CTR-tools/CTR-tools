@@ -30,6 +30,8 @@ namespace CTRTools.Controls
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.rainbowButton = new System.Windows.Forms.Button();
             this.darkenButton = new System.Windows.Forms.Button();
@@ -44,8 +46,6 @@ namespace CTRTools.Controls
             this.applyColorsButton = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.cd = new System.Windows.Forms.ColorDialog();
-            this.label4 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.blueSlider)).BeginInit();
@@ -78,6 +78,25 @@ namespace CTRTools.Controls
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Vertex colors";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(154, 279);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 20;
+            this.button1.Text = "Load image";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(151, 263);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(76, 13);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "Load light map";
             // 
             // label3
             // 
@@ -206,25 +225,6 @@ namespace CTRTools.Controls
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(480, 355);
             this.textBox3.TabIndex = 12;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(151, 263);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(76, 13);
-            this.label4.TabIndex = 19;
-            this.label4.Text = "Load light map";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(154, 279);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 20;
-            this.button1.Text = "Load image";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // pictureBox1
             // 
