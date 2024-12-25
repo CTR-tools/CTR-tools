@@ -1,7 +1,5 @@
 ﻿using CTRFramework.Shared;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Text;
 
@@ -149,7 +147,7 @@ namespace CTRFramework.Bash
                     sb.AppendLine($"vt 1 1");
 
                     //flip normals each face, but check flag for the initial state
-                    if ( i % 2 == ( (flags & 0x08) > 0 ? 1 : 0) )
+                    if (i % 2 == ((flags & 0x08) > 0 ? 1 : 0))
                     {
                         sb.AppendLine($"f {3 * numFaces + 1}/{3 * numFaces + 1} {3 * numFaces + 3}/{3 * numFaces + 3} {3 * numFaces + 2}/{3 * numFaces + 2}");
                     }

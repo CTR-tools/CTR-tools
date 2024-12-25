@@ -101,7 +101,7 @@ namespace CTRFramework.Models
                 foreach (var mesh in this)
                 {
                     if (!mesh.IsAnimated)
-                    { 
+                    {
                         Helpers.WriteToFile(fn, entry.ToObj(name));
                     }
                     else

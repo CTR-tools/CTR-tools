@@ -1,4 +1,5 @@
-﻿using CTRFramework.Shared;
+﻿using ColourQuantization;
+using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,7 +7,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using ColourQuantization;
 
 namespace CTRFramework.Vram
 {

@@ -1,5 +1,4 @@
-﻿using CTRFramework.Code.shared;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
 using System;
 using System.Collections.Generic;
@@ -7,8 +6,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using System.Threading;
-using System.Windows.Forms;
 using ThreeDeeBear.Models.Ply;
 
 namespace CTRFramework.Models
@@ -617,7 +614,8 @@ namespace CTRFramework.Models
         /// <returns>CtrMesh object.</returns>
         public static CtrMesh FromRawData(string name, List<Vector3> vertices, List<Vector4b> colors, List<Vector3i> faces)
         {
-            var mesh = new CtrMesh() {
+            var mesh = new CtrMesh()
+            {
                 Name = name + "_hi",
                 lodDistance = -1,
                 frame = new CtrFrame()
@@ -859,7 +857,7 @@ namespace CTRFramework.Models
                     bw.Write(unk0);
                     bw.Write(lodDistance);
                     bw.Write(billboard);
-                    bw.WriteVector3s(scale, pad:VectorPadding.Yes);
+                    bw.WriteVector3s(scale, pad: VectorPadding.Yes);
                     bw.Write(ptrCmd, patchTable);
                     bw.Write(ptrFrame, patchTable);
                     bw.Write(ptrTex, patchTable);

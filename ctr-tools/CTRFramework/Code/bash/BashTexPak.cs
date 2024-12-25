@@ -81,7 +81,7 @@ namespace CTRFramework.Bash
                 int mul = 2;
 
                 if ((tex.unk21 & 1) == 1) mul = 1;
-                
+
                 bmp.Update(tex.width * 2 * mul, tex.height, 16, (ushort)((mul == 2) ? 4 : 8));
 
                 byte[] pal = new byte[16 * 4];

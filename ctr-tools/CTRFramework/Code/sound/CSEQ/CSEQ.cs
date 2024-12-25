@@ -1,6 +1,4 @@
 ﻿using CTRFramework.Shared;
-using NAudio.Midi;
-using NAudio.SoundFont;
 using System;
 using System.Collections.Generic;
 using System.IO;

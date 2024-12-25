@@ -15,7 +15,7 @@ namespace CTRFramework.Bash
         //it's like margin to cut from the slot?
         public byte unk01;
         public byte unk02;
-        
+
         //probably actual pixel data size
         //if both values above are 0, then it's width and height too
         //but data width is * 4 and this is * 2

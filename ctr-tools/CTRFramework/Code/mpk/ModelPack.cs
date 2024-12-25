@@ -69,7 +69,7 @@ namespace CTRFramework
                 br.Seek(-4); //go back
             }
 
-           var modelPtrs = br.ReadListUInt32(numModels);
+            var modelPtrs = br.ReadListUInt32(numModels);
 
             br.Jump(texOff);
 

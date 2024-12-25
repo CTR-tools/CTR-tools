@@ -8,7 +8,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace CTRFramework
@@ -149,12 +148,12 @@ namespace CTRFramework
             {
                 Console.WriteLine("failed to read scene with patch container: " + ex.Message + "\r\n" + ex.ToString());
 
-                //but maybe it's a sampler level?
-                //extra reset is needed here. it's 0 cause we don't have stacked scenes in a single lev anyways.
-                //unless does it work in bigfile? guess not, gotta test.
+                // but maybe it's a sampler level?
+                // extra reset is needed here. it's 0 cause we don't have stacked scenes in a single lev anyways.
+                // TODO: unless does it work in bigfile? guess not, gotta test. i believe im creating a substream tho, so it should work
                 br.BaseStream.Position = 0;
 
-                //try to load scene without patch table. just throw if fails too.
+                // try to load this scene without patch table. just throw if fails too.
                 ReadScene(br);
             }
 
@@ -175,7 +174,10 @@ namespace CTRFramework
             if (header is null)
                 throw new Exception("Scene header is null. Halt parsing.");
 
+
             mesh = new PtrWrap<MeshInfo>(header.ptrMeshInfo).Get(br);
+
+
 
             if (mesh != null)
             {
@@ -191,19 +193,9 @@ namespace CTRFramework
             //if (sceneDebug)
             //    SceneTests();
 
-
-
             //Console.WriteLine((mesh.numVertices * Vertex.SizeOf + mesh.ptrVertices.ToUInt32()).ToString("X8"));
             //Console.ReadKey();
 
-            respawnPts = new PtrWrap<RespawnPoint>(header.ptrRespawnPts).GetList(br, header.numRespawnPts);
-
-            foreach (var respawn in respawnPts)
-            {
-                respawn.Prev = respawnPts[respawn.prev];
-                respawn.Next = respawnPts[respawn.next];
-                respawn.Pose.Rotation = Vector3.Transform(-Vector3.UnitZ, Matrix4x4.CreateLookAt(respawn.Pose.Position, respawn.Next.Pose.Position, Vector3.UnitX)) / 180f * (float)Math.PI;
-            }
 
             vertanims = new PtrWrap<VertexAnim>(header.ptrVcolAnim).GetList(br, header.numVcolAnim);
             skybox = new PtrWrap<CtrSkyBox>(header.ptrSkybox).Get(br);
@@ -211,12 +203,6 @@ namespace CTRFramework
             iconpack = new PtrWrap<IconPack>(header.ptrIcons).Get(br);
             trial = new PtrWrap<TrialData>(header.ptrTrialData).Get(br);
             enviroMap = new PtrWrap<TextureLayout>(header.ptrEnviroMap).Get(br);
-
-
-
-
-
-
 
 
             if (header.numSpawnGroups > 0)
@@ -375,13 +361,13 @@ namespace CTRFramework
 
                     if (x > 0 && y > 0)
 
-                    Console.WriteLine(
-                        x.ToString("X4") + "\t" +
-                        y.ToString("X4") + "\t" +
-                        quad.midunk.ToString("X2") + "\t" + " shifted: \t" +
-                        ((4096 << quad.midunk) / x).ToString("X8") + "\t" +
-                        ((4096 << quad.midunk) / y).ToString("X8")
-                    );
+                        Console.WriteLine(
+                            x.ToString("X4") + "\t" +
+                            y.ToString("X4") + "\t" +
+                            quad.midunk.ToString("X2") + "\t" + " shifted: \t" +
+                            ((4096 << quad.midunk) / x).ToString("X8") + "\t" +
+                            ((4096 << quad.midunk) / y).ToString("X8")
+                        );
                 }
 
 
@@ -457,6 +443,9 @@ namespace CTRFramework
             string lodpath = Helpers.PathCombine(path, "tex" + lod.ToString());
             Helpers.CheckFolder(lodpath);
 
+            // in case stuff goes wrong, make an empty 1x1 fallback bitmap
+            var dummyBmp = new Bitmap(1, 1);
+
             foreach (var tl in tex.Values)
             {
                 if (tl.Position != 0)
@@ -470,8 +459,7 @@ namespace CTRFramework
                     {
                         Helpers.Panic(this, PanicType.Warning, "missing bitmap");
 
-                        Bitmap bmp = new Bitmap(1, 1);
-                        bmp.Save(Helpers.PathCombine(path, texname));
+                        dummyBmp.Save(Helpers.PathCombine(path, texname));
                     }
                 }
                 else
@@ -482,8 +470,10 @@ namespace CTRFramework
 
             /*
                 importers will warn about missing texture here
-                but this way it will apply default editor's placeholder texture
-                usually checkerboard pattern or magenta filler
+                but also this way it will apply default editor's placeholder texture
+                usually it's a checkerboard pattern (meshlab, unreal) or a magenta filler (blender)
+
+                TODO: actually check if i don't use it for untextured faces already
             */
 
             sb.Append("newmtl default\r\n");
@@ -571,8 +561,8 @@ namespace CTRFramework
                 return;
             }
 
-            //here's the trick, Tim class contains static textures dictionary that is reused later
-            //doing this loop we populate that array. gotta come up with better solution really.
+            // here's the trick, Tim class contains a static textures dictionary that is reused later
+            // doing this loop we populate that array. gotta come up with a better solution really.
 
             foreach (var tl in GetTexturesList().Values)
                 ctrvram.GetTexture(tl);
@@ -976,7 +966,7 @@ namespace CTRFramework
 
             foreach (var model in Models)
             {
-                sb.AppendLine(""+ model.ToString());
+                sb.AppendLine("" + model.ToString());
             }
 
             return sb.ToString();
@@ -1007,23 +997,26 @@ namespace CTRFramework
             var graph = Graphics.FromImage(bitmap);
 
 
-          //  var test = new Bitmap(bitmap.Width, bitmap.Height);
-          //  var graph2 = Graphics.FromImage(test);
+            //  var test = new Bitmap(bitmap.Width, bitmap.Height);
+            //  var graph2 = Graphics.FromImage(test);
 
 
             var min = Vector3.Zero;
             var max = Vector3.Zero;
 
-            foreach (var vertex in verts)
+
+            foreach (var v in verts)
             {
-                if (vertex.Position.X < min.X) min.X = vertex.Position.X;
-                if (vertex.Position.X > max.X) max.X = vertex.Position.X;
-                if (vertex.Position.Y < min.Y) min.Y = vertex.Position.Y;
-                if (vertex.Position.Y > max.Y) max.Y = vertex.Position.Y;
-                if (vertex.Position.Z < min.Z) min.Z = vertex.Position.Z;
-                if (vertex.Position.Z > max.Z) max.Z = vertex.Position.Z;
+                if (v.Position.X < min.X) min.X = v.Position.X;
+                if (v.Position.X > max.X) max.X = v.Position.X;
+                if (v.Position.Y < min.Y) min.Y = v.Position.Y;
+                if (v.Position.Y > max.Y) max.Y = v.Position.Y;
+                if (v.Position.Z < min.Z) min.Z = v.Position.Z;
+                if (v.Position.Z > max.Z) max.Z = v.Position.Z;
             }
 
+
+            // shift it to world origin
             min = -min;
             max += min;
 
@@ -1039,7 +1032,7 @@ namespace CTRFramework
                 vertex.Color = new Vector4b(color);
                 vertex.MorphColor = vertex.Color;
 
-               // test.SetPixel((int)mapped.X, (int)mapped.Z, Color.Red);
+                // test.SetPixel((int)mapped.X, (int)mapped.Z, Color.Red);
             }
         }
 

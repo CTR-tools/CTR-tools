@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Numerics;
 using System.Threading;
 using ThreeDeeBear.Models.Ply;
-using System.Numerics;
 
 namespace CTRFramework.Shared
 {

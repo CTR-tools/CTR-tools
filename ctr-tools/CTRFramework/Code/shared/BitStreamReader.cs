@@ -11,7 +11,7 @@ namespace CTRFramework.Shared
         private uint cache = 0;
         private int bitsTaken = 0;
 
-        public BitStreamReader(Stream stream) : base(stream) 
+        public BitStreamReader(Stream stream) : base(stream)
         {
             stream.Position = 0;
             cache = ReadReversed();

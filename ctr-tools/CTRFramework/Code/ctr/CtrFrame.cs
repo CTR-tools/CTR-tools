@@ -1,8 +1,6 @@
-﻿using CTRFramework;
-using CTRFramework.Shared;
+﻿using CTRFramework.Shared;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 
 namespace CTRFramework.Models
@@ -42,7 +40,7 @@ namespace CTRFramework.Models
             br.Seek(ptrVerts - 0x1C);
 
             if (deltas == null) //no deltas provided, assume raw vertices
-            { 
+            {
                 for (int i = 0; i < numVerts; i++)
                     Vertices.Add(new Vector3b(br));
             }
@@ -82,14 +80,14 @@ namespace CTRFramework.Models
                         }
 
 
-                        int tY = bs.ReadBits(1) == 1 ? - (1 << delta.Bits.Y) : 0;
+                        int tY = bs.ReadBits(1) == 1 ? -(1 << delta.Bits.Y) : 0;
 
                         for (int i = 0; i < delta.Bits.Y; i++)
                         {
                             byte bit = Convert.ToByte(bs.ReadBits(1));
                             tY |= bit << (delta.Bits.Y - 1 - i);
                         }
-                        
+
 
                         int tZ = bs.ReadBits(1) == 1 ? -(1 << delta.Bits.Z) : 0;
 

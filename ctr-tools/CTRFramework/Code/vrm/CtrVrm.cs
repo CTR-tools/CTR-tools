@@ -11,7 +11,7 @@ namespace CTRFramework.Vram
         // these rectangles describe certain hardcoded regions of vram 
 
         public static Rectangle FullVramRegion = new Rectangle(0, 0, 1024, 512);
-        
+
         // level regions
         public static Rectangle UpperLevelRegion => new Rectangle(512, 0, 384, 256);
         public static Rectangle LowerLevelRegion => new Rectangle(512, 256, 512, 256);

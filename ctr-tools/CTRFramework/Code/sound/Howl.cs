@@ -1,10 +1,7 @@
 ﻿using CTRFramework.Shared;
-using NAudio.Wave.SampleProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -117,7 +114,7 @@ namespace CTRFramework.Audio
         {
             var inst = new SpuInstrument() { Name = name };
 
-            inst.Sample = new Sample(); 
+            inst.Sample = new Sample();
 
             InstrumentPool.Add(inst);
 
@@ -359,7 +356,7 @@ namespace CTRFramework.Audio
             {
                 // get song name
                 Songs[i].Name = Context.SongNames.ContainsKey(i) ? Context.SongNames[i] : i.ToString("00");
-                
+
                 // get patch name
                 Songs[i].PatchName = Songs[i].Name;
 
@@ -649,7 +646,7 @@ namespace CTRFramework.Audio
         {
             string path_perc = Helpers.PathCombine(path, "samples\\percussion");
             string path_inst = Helpers.PathCombine(path, "samples\\instruments");
-            string path_sfx  = Helpers.PathCombine(path, "samples\\effects");
+            string path_sfx = Helpers.PathCombine(path, "samples\\effects");
 
             Helpers.CheckFolder(path_perc);
             Helpers.CheckFolder(path_inst);
@@ -721,12 +718,12 @@ namespace CTRFramework.Audio
         /// <returns></returns>
         public override string ToString()
         {
-            return 
-                $"Version: {version}\r\n"+ 
-                $"Spu entries: {Context.SpuPtrTable.Count}\r\n" + 
+            return
+                $"Version: {version}\r\n" +
+                $"Spu entries: {Context.SpuPtrTable.Count}\r\n" +
                 $"Samples: {EffectsTable.Count}\r\n" +
                 $"Engine samples: {EngineTable.Count}\r\n" +
-                $"Banks: {Banks.Count}\r\n" + 
+                $"Banks: {Banks.Count}\r\n" +
                 $"Sequences: {Songs.Count}";
         }
     }

@@ -63,7 +63,7 @@ namespace CTRFramework.Shared
 
         public CtrBoundingBox(BinaryReaderEx br) => Read(br);
 
-        public static CtrBoundingBox FromReader(BinaryReaderEx br) =>new CtrBoundingBox(br);
+        public static CtrBoundingBox FromReader(BinaryReaderEx br) => new CtrBoundingBox(br);
 
         public void Read(BinaryReaderEx br)
         {

@@ -3,13 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Xml.Serialization;
-using System.Xml;
-using System.Windows.Forms;
-using System.Text;
-using System.Runtime.Remoting.Contexts;
-using System.Threading;
-using System.Runtime.Remoting.Messaging;
 
 namespace CTRFramework.Audio
 {
@@ -24,10 +17,12 @@ namespace CTRFramework.Audio
 
         private string name = "default_instrument";
 
-        public string Name { get
+        public string Name
+        {
+            get
             {
                 return name;
-            } 
+            }
             set
             {
                 name = value;
@@ -170,7 +165,7 @@ namespace CTRFramework.Audio
                 timeToPlay == other.timeToPlay &&
                 _freq == other._freq &&
                 SampleID == other.SampleID &&
-                ADSR == other.ADSR ;
+                ADSR == other.ADSR;
         }
     }
 

@@ -1,5 +1,4 @@
-﻿using CTRFramework.Vram;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -49,7 +48,7 @@ namespace CTRFramework.Shared
         #endregion
 
         #region [Filesystem helpers]
-        
+
         /// <summary>
         /// Writes string to file. Avoids excessive fragmentation.
         /// </summary>
@@ -69,7 +68,7 @@ namespace CTRFramework.Shared
                 {
                     // first declare the amount of data we have 
                     stream.SetLength(content.Length);
-                    
+
                     // then write
                     writer.Write(content);
                 }

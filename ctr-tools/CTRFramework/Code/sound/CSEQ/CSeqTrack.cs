@@ -1,7 +1,6 @@
 ﻿using CTRFramework.Shared;
 using NAudio.Midi;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -108,7 +107,7 @@ namespace CTRFramework.Audio
                 if (evt.eventType == CseqEventType.NoteOn)
                     if (pitches.ContainsKey(evt.pitch))
                         pitches[evt.pitch]++;
-                    else 
+                    else
                         pitches.Add(evt.pitch, 1);
             }
 

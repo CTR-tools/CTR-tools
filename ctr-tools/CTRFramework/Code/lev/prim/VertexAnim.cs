@@ -42,7 +42,7 @@ namespace CTRFramework
         public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
         {
             bw.Write(ptrVertex);
-            bw.WriteVector3s(Position,  Helpers.GteScaleSmall, VectorPadding.Yes);
+            bw.WriteVector3s(Position, Helpers.GteScaleSmall, VectorPadding.Yes);
             color.Write(bw);
         }
 
