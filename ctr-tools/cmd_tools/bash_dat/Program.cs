@@ -1,8 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using CTRFramework.Bash;
+﻿using CTRFramework.Bash;
 using CTRFramework.Shared;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace bash_dat
 {
