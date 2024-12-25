@@ -134,7 +134,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="_moveordelete\Char.cs" />
     <Compile Include="Controls\howl\CseqControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -171,12 +170,6 @@
     <Compile Include="Controls\BigFileControl.Designer.cs">
       <DependentUpon>BigFileControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\EmuControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\EmuControl.Designer.cs">
-      <DependentUpon>EmuControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Controls\howl\HowlControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -195,10 +188,6 @@
     <Compile Include="Controls\LevControl.Designer.cs">
       <DependentUpon>LevControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="_moveordelete\CtrGameconfig.cs" />
-    <Compile Include="_moveordelete\LevelSlot.cs" />
-    <Compile Include="_moveordelete\Mcs.cs" />
-    <Compile Include="_moveordelete\Mem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controls\VramControl.cs">
@@ -241,9 +230,6 @@
     <EmbeddedResource Include="Controls\BigFileControl.resx">
       <DependentUpon>BigFileControl.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\EmuControl.resx">
-      <DependentUpon>EmuControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\howl\HowlControl.resx">
       <DependentUpon>HowlControl.cs</DependentUpon>

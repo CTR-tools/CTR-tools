@@ -351,40 +351,6 @@ namespace CTRTools.Controls
             }
         }
 
-        private void button19_Click(object sender, EventArgs e)
-        {
-            var ofd1 = new OpenFileDialog();
-            var ofd2 = new OpenFileDialog();
-
-            if (ofd1.ShowDialog() == DialogResult.OK)
-                if (ofd2.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        LNG lng = LNG.FromFile(ofd1.FileName);
-
-                        using (var br = new BinaryReaderEx(File.OpenRead(ofd2.FileName)))
-                        {
-                            br.Jump(0x74280);
-
-                            List<LevelSlot> slots = new List<LevelSlot>();
-
-                            for (int i = 0; i < 64; i++)
-                                slots.Add(new LevelSlot(br));
-
-                            foreach (LevelSlot s in slots)
-                            {
-                                textBox2.Text += s.ToString() + lng.Entries[s.title_index] + "\r\n";
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        MessageBox.Show("error");
-                    }
-                }
-        }
-
         private void actionLoadLev(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
