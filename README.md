@@ -25,7 +25,8 @@ Join the CTR-tools Discord server: https://discord.gg/WHkuh2n
 ## Building
 CTR-tools is being developed in Visual Studio Community 2019.\
 Target platform is .NET Framework 4.6.2 (ctrviewer is targeting .NET Core 3.1).\
-It should be enough to install VS and add dependencies via NuGet.
+It should be enough to install VS and add dependencies via NuGet. \
+Make sure to have Open Sans font installed on your system.
 
 Project dependencies:
 * NAudio - https://github.com/naudio/NAudio (used to export MIDI files)
