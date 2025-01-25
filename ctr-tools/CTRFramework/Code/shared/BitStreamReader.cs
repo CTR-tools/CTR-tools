@@ -15,27 +15,26 @@ namespace CTRFramework.Shared
         {
             stream.Position = 0;
             cache = ReadReversed();
-
-            //Helpers.Panic(this, PanicType.Debug, $"cache init! cache now: {cache.ToString("X16")}");
         }
         public static BitStreamReader FromByteArray(byte[] stream)
         {
             return new BitStreamReader(new MemoryStream(stream));
         }
 
-        public int ReadBits(int amount)
+        public int TakeBit() => TakeBits(1);
+
+        public int TakeBits(int amount)
         {
             if (amount == 0) return 0; //what did you expect?
 
             if (amount > 16)
                 throw new ArgumentException("Not supposed to take more than 16 bits from this bitstream.");
 
-            //amount = 2
-            //initial 1 = 0001
-            //1 << amount
-            //0100
-            //mask - 1
-            //0011
+            // here's what's going on with mask:
+            // if bits amount = 2
+            // initial 1 = 0001
+            // mask = 1 << amount = 0100
+            // mask - 1 = 0011
 
             uint mask = (uint)(1 << (amount)) - 1;
 
@@ -49,7 +48,7 @@ namespace CTRFramework.Shared
                 //increase bits taken
                 bitsTaken++;
 
-                if (bitsTaken == 32)
+                if (bitsTaken >= 32)
                 {
                     bitsTaken = 0;
                     cache |= ReadReversed();
@@ -62,6 +61,7 @@ namespace CTRFramework.Shared
 
             return result;
         }
+
 
         public uint ReadReversed()
         {
