@@ -79,7 +79,7 @@ namespace CTRFramework.Big
             if (totalFiles > 2048)
                 throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file, more than 2048 files.");
 
-            for (int i = 0, ptr, size; i < totalFiles; i++)
+            for (int i = 0, ptr = 0, size = 0; i < totalFiles; i++)
             {
                 ptr = ReadInt32();
                 size = ReadInt32();
