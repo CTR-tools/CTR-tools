@@ -70,8 +70,8 @@ namespace CTRFramework
                     //https://blenderartists.org/t/blender-3-6-2s-obj-importer-vertex-color-bug/1478553
 
                     sb.AppendLine(Vertices[tri.X].ToObj());
-                    sb.AppendLine(Vertices[tri.Y].ToObj());
                     sb.AppendLine(Vertices[tri.Z].ToObj());
+                    sb.AppendLine(Vertices[tri.Y].ToObj());
 
                     sb.AppendLine($"f\t{verts} {verts + 1} {verts + 2}\r\n");
 
