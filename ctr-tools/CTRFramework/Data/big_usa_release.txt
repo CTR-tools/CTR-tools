@@ -531,14 +531,14 @@
 
 # =========438 = ADDITIONAL MODELS SECTION===============
 
-438=models\misc\uka1.vrm
-439=models\misc\uka1.ctr
-440=models\misc\uka2.vrm
-441=models\misc\uka2.ctr
-442=models\misc\aku1.vrm
-443=models\misc\aku1.ctr
-444=models\misc\aku2.vrm
-445=models\misc\aku2.ctr
+438=models\misc\aku1.vrm
+439=models\misc\aku1.ctr
+440=models\misc\aku2.vrm
+441=models\misc\aku2.ctr
+442=models\misc\uka1.vrm
+443=models\misc\uka1.ctr
+444=models\misc\uka2.vrm
+445=models\misc\uka2.ctr
 446=models\misc\dingofire1.ctr
 447=models\misc\dingofire2.ctr
 448=models\misc\podium1.ctr
