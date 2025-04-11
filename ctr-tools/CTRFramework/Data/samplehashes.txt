@@ -164,7 +164,7 @@
 3FCA2B23=chara_dingo_refill
 3FD6B040=caves_bass
 3FE8386D=ja_kart_tiny_yes
-4062193B=whoosh_high
+4062193B=garage_crash_flip
 41398076=mines_hihat01
 4153A823=boss_bass_zap
 4182AD3E=it_kart_ngin_yes
@@ -437,7 +437,7 @@ B423C9B9=ne_kart_fake_hit
 B4F7845B=hub_door_open
 B500710A=kart_roll_snow
 B5025644=podium_fakecrash_swing
-B5AACDD1=whoosh_long_doppler
+B5AACDD1=box_intro_whoosh
 B5BBB826=de_kart_dingo_yes
 B6529B05=pluck_distorted
 B671F4C3=weapon_shield_loop
