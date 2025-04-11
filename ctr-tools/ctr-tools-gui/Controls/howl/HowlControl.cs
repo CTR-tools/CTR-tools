@@ -98,6 +98,15 @@ namespace CTRTools.Controls
             foreach (var entry in howl.EffectsTable)
             {
                 var sample = entry.GetSample(entry.SampleID, howl.Context);
+
+                // TODO figure out whats going on here, missing sampleIDs?
+                // only null in demos (spyro, opsm)
+                if (sample == null)
+                {
+                    MessageBox.Show($"missing sample? {entry.SampleID}");
+                    continue;
+                }
+
                 sample.Context = howl.Context; //duh
 
                 if (searchTerm is null || searchTerm == "")
