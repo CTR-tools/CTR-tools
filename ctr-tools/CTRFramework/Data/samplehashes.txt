@@ -65,7 +65,7 @@
 1A23ABAA=ne_kart_joe_hit
 1A94640D=papu_bass_drum
 1AAD43A1=de_kart_crash_yes
-1AD7C04A=podium_tropy_spring
+1AD7C04A=podium_tropy_fork
 1BE634CE=cutscene_cameramove
 1BF0BB77=splash_cymbal
 1C44A89B=es_kart_coco_yes
@@ -549,7 +549,7 @@ DFC96F81=warppad_loop
 DFE4B424=ja_kart_fake_hit
 E0A5A289=ne_kart_oxide_hit
 E0C2547B=alarm_dive
-E0C42F78=roll_water
+E0C42F78=liquid_flow
 E0E67AF0=bass_drum_hi
 E0FF7841=crate_smash
 E11B9FEA=skyway_synth_hihat

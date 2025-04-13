@@ -83,12 +83,11 @@ namespace CTRFramework.Vram
         }
 
         /// <summary>
-        /// A priveate replace textures method, doesnt check for errors.
+        /// A private method to replace textures, doesnt check for errors.
         /// </summary>
         /// <returns>[TextureReplacerResult] Replacement status.</returns>
         private TextureReplacerResult Replace()
         {
-
             string rootPath = Path.GetDirectoryName(Context.vramPath);
             string dumpfirstpath = Helpers.PathCombine(rootPath, "debug_vram_first.bmp");
             string dumplatestpath = Helpers.PathCombine(rootPath, "debug_vram_latest.bmp");
@@ -103,7 +102,7 @@ namespace CTRFramework.Vram
             // read PNG images from newtex folder
             var replaceCandidates = Directory.GetFiles(Context.newtexPath, "*.png");
 
-            // early exit if no tetures found
+            // early exit if no textures found
             if (replaceCandidates.Length == 0)
             {
                 Helpers.Panic(this, PanicType.Warning, "No textures to replace");

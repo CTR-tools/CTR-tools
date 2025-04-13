@@ -8,6 +8,8 @@ namespace CTRFramework
         public int cntArrays;
         public List<uint> ptrs = new List<uint>();
 
+        public CreditsText CreditsText = null;
+
         public TrialData()
         {
         }
@@ -47,8 +49,9 @@ namespace CTRFramework
 
             if (cnt > 6)
             {
-                var credits = Instance<CreditsText>.FromReader(br, ptrs[6]);
-                credits.Save(Helpers.PathCombine(Meta.BasePath, "credits.txt"));
+                CreditsText = Instance<CreditsText>.FromReader(br, ptrs[6]);
+
+                //credits.Save(Helpers.PathCombine(Meta.BasePath, "credits.txt"));
             }
 
             br.Jump(pos);
