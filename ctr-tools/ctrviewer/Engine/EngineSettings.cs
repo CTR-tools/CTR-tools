@@ -55,7 +55,8 @@ namespace ctrviewer.Engine
             get => _language;
             set
             {
-                UpdateIntValue(ref _language, value, 0, 2);
+                // TODO: here's a hardcoded limit, should get max lang enum i guess 
+                UpdateIntValue(ref _language, value, 0, 3);
                 onLanguageChanged?.Invoke();
             }
         }

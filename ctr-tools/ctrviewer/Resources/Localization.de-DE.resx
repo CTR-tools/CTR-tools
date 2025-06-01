@@ -118,171 +118,175 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Bool_No" xml:space="preserve">
-    <value>No</value>
+    <value>Nein</value>
   </data>
   <data name="Bool_Off" xml:space="preserve">
-    <value>Apagado</value>
+    <value>Ausschalten</value>
   </data>
   <data name="Bool_On" xml:space="preserve">
-    <value>Encendido</value>
+    <value>Anschalten</value>
   </data>
   <data name="Bool_Yes" xml:space="preserve">
-    <value>Si</value>
+    <value>Ja</value>
   </data>
   <data name="Errors_MissingBigfile" xml:space="preserve">
-    <value>¡BIGFILE no cargado!</value>
+    <value>Kein BIGFILE geladen!</value>
   </data>
   <data name="GreetingInfo_Bigfile" xml:space="preserve">
-    <value>o poner BIGFILE.BIG en la carpeta raíz del visor,</value>
+    <value>oder BIGFILE.BIG in den Stammordner des Viewers legen,</value>
   </data>
   <data name="GreetingInfo_CD" xml:space="preserve">
-    <value>o insertar/montar el CD de CTR y usar el menú de carga de niveles.</value>
+    <value>oder CTR-CD einlegen/einlegen und Menü der Ladeebene verwenden.</value>
   </data>
   <data name="GreetingInfo_Escape" xml:space="preserve">
-    <value>Pulsar ESC para abrir el menú.</value>
+    <value>Drücken Sie ESC, um das Menü zu öffnen.</value>
   </data>
   <data name="GreetingInfo_LevFiles" xml:space="preserve">
-    <value>Poner los archivos LEV/VRM en la carpeta levels,</value>
+    <value>LEV/VRM-Dateien in den Level-Ordner legen,</value>
   </data>
   <data name="GreetingInfo_Models" xml:space="preserve">
-    <value>Los modelos ctr personalizados van a la carpeta models</value>
+    <value>Benutzerdefinierte CTR-Modelle gehen in den Models-Ordner</value>
   </data>
   <data name="GreetingInfo_NoLevels" xml:space="preserve">
-    <value>No hay niveles cargados.</value>
+    <value>Keine Level geladen.</value>
   </data>
   <data name="GreetingInfo_Replacements" xml:space="preserve">
-    <value>Las texturas PNG de reemplazo van a la carpeta newtex.</value>
+    <value>Ersatz-PNG-Texturen gehen in den newtex-Ordner.</value>
   </data>
   <data name="GreetingInfo_Title" xml:space="preserve">
-    <value>CTR-tools: Visor de niveles de Crash Team Racing (PS1)</value>
+    <value>CTR-tools: Crash Team Racing (PS1) level viewer
+</value>
   </data>
   <data name="Language_English" xml:space="preserve">
     <value>English</value>
+    <comment>Do not localize, intended to be in the original language.</comment>
   </data>
   <data name="Language_German" xml:space="preserve">
     <value>Deutsch</value>
   </data>
   <data name="Language_Russian" xml:space="preserve">
     <value>Русский</value>
+    <comment>Do not localize, intended to be in the original language.</comment>
   </data>
   <data name="Language_Spanish" xml:space="preserve">
     <value>Español</value>
+    <comment>Do not localize, intended to be in the original language.</comment>
   </data>
   <data name="MainMenu_GeneralOptions" xml:space="preserve">
-    <value>Opciones generales</value>
+    <value>Allgemeine Optionen</value>
   </data>
   <data name="MainMenu_KartMode" xml:space="preserve">
-    <value>Modo Kart</value>
+    <value>Kart-Modus</value>
   </data>
   <data name="MainMenu_Language" xml:space="preserve">
-    <value>Idioma</value>
+    <value>Sprache</value>
   </data>
   <data name="MainMenu_LevelOptions" xml:space="preserve">
-    <value>Opciones de pista</value>
+    <value>Level-Optionen</value>
   </data>
   <data name="MainMenu_LoadLevel" xml:space="preserve">
-    <value>Nivel de carga</value>
+    <value>Level laden</value>
   </data>
   <data name="MainMenu_Quit" xml:space="preserve">
-    <value>Abandonar</value>
+    <value>Beenden</value>
   </data>
   <data name="MainMenu_Resume" xml:space="preserve">
-    <value>Reanudar</value>
+    <value>Fortsetzen</value>
   </data>
   <data name="MainMenu_TimeOfDay" xml:space="preserve">
-    <value>Hora del día</value>
+    <value>Tageszeit</value>
   </data>
   <data name="MainMenu_VideoOptions" xml:space="preserve">
-    <value>Opciones de vídeo</value>
+    <value>Video-Optionen</value>
   </data>
   <data name="MenuGeneric_Back" xml:space="preserve">
-    <value>Volver</value>
+    <value>Zurück</value>
   </data>
   <data name="TimeOfDay_Day" xml:space="preserve">
-    <value>Día</value>
+    <value>Nachmittag</value>
   </data>
   <data name="TimeOfDay_Evening" xml:space="preserve">
-    <value>Tarde</value>
+    <value>Abend</value>
   </data>
   <data name="TimeOfDay_Night" xml:space="preserve">
-    <value>Noche</value>
+    <value>Nacht</value>
   </data>
   <data name="VideoMenu_30fps" xml:space="preserve">
     <value>30 FPS</value>
   </data>
   <data name="VideoMenu_Anisotropy" xml:space="preserve">
-    <value>Nivel de anisotropía</value>
+    <value>Anisotropie-Level</value>
   </data>
   <data name="VideoMenu_Antialias" xml:space="preserve">
     <value>Antialias</value>
   </data>
   <data name="VideoMenu_BackfaceCulling" xml:space="preserve">
-    <value>Eliminación de la cara posterior</value>
+    <value>Backface Culling</value>
   </data>
   <data name="VideoMenu_BotPaths" xml:space="preserve">
-    <value>Trayectorias de los bots</value>
+    <value>Bot Paths</value>
   </data>
   <data name="VideoMenu_CameraPosition" xml:space="preserve">
-    <value>Mostrar la posición de la cámara</value>
+    <value>Kameraposition anzeigen</value>
   </data>
   <data name="VideoMenu_Console" xml:space="preserve">
-    <value>Mostrar la consola</value>
+    <value>Konsole anzeigen</value>
   </data>
   <data name="VideoMenu_Crosseyed" xml:space="preserve">
-    <value>Crosseyed</value>
+    <value>Schielend</value>
   </data>
   <data name="VideoMenu_Filtering" xml:space="preserve">
-    <value>Filtrado de texturas</value>
+    <value>Texturfilterung</value>
   </data>
   <data name="VideoMenu_GameObjects" xml:space="preserve">
-    <value>Objetos del juego</value>
+    <value>Spiel-Objekte</value>
   </data>
   <data name="VideoMenu_GenerateMipmaps" xml:space="preserve">
-    <value>Generación de mipmaps</value>
+    <value>Mipmaps generieren</value>
   </data>
   <data name="VideoMenu_InternalResolution" xml:space="preserve">
-    <value>Resolución interna de PSX (512x216)</value>
+    <value>Interne PSX-Auflösung (512x216)</value>
   </data>
   <data name="VideoMenu_InvisibleMeshes" xml:space="preserve">
-    <value>Mallas invisibles</value>
+    <value>Unsichtbare Maschen</value>
   </data>
   <data name="VideoMenu_QuadFlag" xml:space="preserve">
     <value>QuadFlag</value>
   </data>
   <data name="VideoMenu_RenderBranches" xml:space="preserve">
-    <value>Renderizado de ramas BSP</value>
+    <value>BSP-Zweige rendern</value>
   </data>
   <data name="VideoMenu_Replacements" xml:space="preserve">
-    <value>Sustitución de texturas</value>
+    <value>Ersetzen von Texturen</value>
   </data>
   <data name="VideoMenu_Skybox" xml:space="preserve">
     <value>Skybox</value>
   </data>
   <data name="VideoMenu_StereoMode" xml:space="preserve">
-    <value>Modo estereoscópico (VR)</value>
+    <value>Stereoskopischer Modus (VR)</value>
   </data>
   <data name="VideoMenu_Textures" xml:space="preserve">
-    <value>Texturas</value>
+    <value>Texturen</value>
   </data>
   <data name="VideoMenu_ToggleLod" xml:space="preserve">
-    <value>Alternar LoD</value>
+    <value>LoD umschalten</value>
   </data>
   <data name="VideoMenu_VertexLighting" xml:space="preserve">
-    <value>Iluminación de vértices</value>
+    <value>Vertex-Beleuchtung</value>
   </data>
   <data name="VideoMenu_VisibilityTree" xml:space="preserve">
-    <value>Árbol de visibilidad</value>
+    <value>Sichtbarkeitsbaum</value>
   </data>
   <data name="VideoMenu_Vsync" xml:space="preserve">
-    <value>Bloqueo VSync/FPS</value>
+    <value>VSync/FPS-Sperre</value>
   </data>
   <data name="VideoMenu_Water" xml:space="preserve">
-    <value>Agua</value>
+    <value>Wasser</value>
   </data>
   <data name="VideoMenu_Windowed" xml:space="preserve">
-    <value>Ventana</value>
+    <value>Mit Fenster</value>
   </data>
   <data name="VideoMenu_Wireframe" xml:space="preserve">
-    <value>Wireframe</value>
+    <value>Drahtgitter</value>
   </data>
 </root>

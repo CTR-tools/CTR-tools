@@ -187,6 +187,15 @@ namespace ctrviewer.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deutsch.
+        /// </summary>
+        internal static string Language_German {
+            get {
+                return ResourceManager.GetString("Language_German", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Русский.
         /// </summary>
         internal static string Language_Russian {

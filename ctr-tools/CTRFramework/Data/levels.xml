@@ -1,0 +1,21 @@
+﻿<!-- should use this kind of DB for menus and bigfile gui -->
+<Levels>
+	<Level id="proto8" name="Dingo Canyon" arcade="crystal" />
+	<Level id="proto9" name="Dragon Mines" arcade="crystal" boss="true" />
+	<Level id="desert2" name="Blizzard Bluff" arcade="wumpa"/>
+	<Level id="island1" name="Crash Cove" arcade="wumpa" />
+	<Level id="temple1" name="Tiger Temple" arcade="wumpa" />
+	<Level id="temple2" name="Papu's Pyramid" arcade="nitro" boss="true" />
+	<Level id="tube1" name="Roo's Tubes" arcade="crystal" boss="true" />
+	<Level id="blimp1" name="Hot Air Skyway" arcade="crash" boss="true" />
+	<Level id="sewer1" name="Sewer Speedway" arcade="crystal" />
+	<Level id="cave1" name="Mystery Caves" arcade="nitro" />
+	<Level id="castle1" name="Cortex Castle" arcade="nitro" />
+	<Level id="labs1" name="N.Gin Labs" arcade="crash" />
+	<Level id="ice1" name="Polar Pass" arcade="crash" />
+	<Level id="space" name="Oxide Station" boss="true" />
+	<Level id="coco1" name="Coco Park" arcade="wumpa" />
+	<Level id="arena2" name="Tiny Arena" arcade="nitro" />
+	<Level id="secret1" name="Slide Coliseum" arcade="crash" />
+	<Level id="secret2" name="Turbo Track" />
+</Levels>
