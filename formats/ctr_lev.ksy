@@ -251,9 +251,9 @@ types:
       skybox struct, contains 8 even segments
     seq:
       - id: num_vertex
-        type : u4
+        type: u4
       - id: ptr_vertex
-        type : u4 
+        type: u4 
       - id: num_faces_per_segment_array
         type: u2
         repeat: expr
@@ -263,21 +263,23 @@ types:
         repeat: expr
         repeat-expr: 8
       - id: vertex_array
-        type: skybox_vertex
-        repeat: expr
-        repeat-expr: num_vertex
+        type: ptr_to_skybox_vertex(ptr_vertex, num_vertex)
+
       - id: skybox_segments
-        type: skybox_segment(num_faces_per_segment_array[_index])
+        type: skybox_segment(ptr_segments[_index], num_faces_per_segment_array[_index])
         repeat: expr
         repeat-expr: 8
 
   skybox_segment:
     params:
+      - id: ptr
+        type: u4
       - id: num_faces
         type: u4
-    seq:
-      - id: faces_array
+    instances:
+      faces_array:
         type: skybox_face
+        pos: ptr
         repeat: expr
         repeat-expr: num_faces
 
@@ -802,8 +804,8 @@ types:
      
   skybox_face:
     seq:
-      - id: pos
-        type: s_vec4
+    - id: pos
+      type: s_vec4
     
   icongroup4:
     seq:
@@ -1106,15 +1108,25 @@ types:
         type: s4
         
       
-
-  skybox_vertex:
-    doc: |
-      skybox vertex
+  skbox_vertex:
     seq:
       - id: position
         type: svector
       - id: color
         type: color_b_g_r_cd
+  
+  ptr_to_skybox_vertex:
+    params:
+      - id: ptr
+        type: u4
+      - id: num_vertex
+        type: s4
+    instances:
+      skbox_vertex:
+        type: skbox_vertex
+        pos: ptr
+        repeat: expr
+        repeat-expr: num_vertex
         
   scvert:
     doc: |
