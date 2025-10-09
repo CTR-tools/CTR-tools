@@ -670,14 +670,6 @@ types:
       - id: num_bsp_nodes
         type: u4
 
-  ctr_tex:
-    seq:
-      - id: mid_tex
-        type: texture_layout
-        repeat: expr
-        repeat-expr: 3
-      - id: ptr_hi
-        type: u4
 
   quad_block:
     doc: |
@@ -725,16 +717,16 @@ types:
     instances:
       texture_mid0:
         pos: ptr_texture_mid[0]
-        type: ctr_tex
+        type: icongroup4
       texture_mid1:
         pos: ptr_texture_mid[1]
-        type: ctr_tex
+        type: icongroup4
       texture_mid2:
         pos: ptr_texture_mid[2]
-        type: ctr_tex
+        type: icongroup4
       texture_mid3:
         pos: ptr_texture_mid[3]
-        type: ctr_tex
+        type: icongroup4
       struct_pvs:
         pos: pvs_ptr
         type: pvs
@@ -742,8 +734,6 @@ types:
 
   pvs:
     doc: |
-      points to 4 structs, one of them assumed to store mosaic texture def
-      each pointer might include flag hidden in lsb
     seq:
       - id: vis_leaf_src_ptr
         type: u4
