@@ -8,24 +8,54 @@ meta:
 doc-ref: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_lev.ksy
 
 seq:
-  - id: header_value
+  - id: struct_level1_size
     type: u4
-  - id: scene
-    type: scene
-    size: data_size
-  - id: patch_table
-    type: t_patch_table
+  - id: lev_file
+    type: lev_file
+    size: level_data_size
+  - id: psx_patch_table
+    type: psx_patch_table
     if: ext_ptr_map == 0
 
 instances:
   ext_ptr_map:
-    value: header_value >> 31
-  data_size:
-    value: header_value & ~(1 << 31)
+    value: struct_level1_size >> 31
+  level_data_size:
+    value: struct_level1_size & ~(1 << 31)
 
 types:
+  
+  model_ptrarray:
+    doc: "this is to show model data giving it the model addres as parameter"
+    params:
+      - id: ptr
+        type: u4
+    instances:
+       model:
+         pos: ptr
+         type: ctr_model
+         if: ptr != 0
+         
+  icongroup_ptrarray:
+     params:
+       - id: ptr
+         type: u4
+     instances:
+       icongroup:
+         pos: ptr
+         type: icon_group
+         if: ptr != 0
+         
+  icongroup4_ptrarray:
+     params:
+       - id: ptr
+         type: u4
+     instances:
+       icongroup4_array:
+         type: icongroup4
+         pos: ptr
 
-  t_patch_table:
+  psx_patch_table:
     doc: | 
       an array of offsets that is used to convert relative pointers to
       absolute psx ram pointers
@@ -36,97 +66,139 @@ types:
         type: u4
         repeat: expr
         repeat-expr: size / 4
+  
+  get_pointers_array:
+    params:
+      - id: array_ptr
+        type: u4
+      - id: index
+        type: u4
+    instances:
+      curr_ptr:
+        pos: array_ptr + (index * 4)
+        type: u4
+       
 
-  scene:
+  lev_file:
     doc: |
       main scene struct
       contains all scene data
     seq:
-      - id: header
-        type: scene_header
-    
-      - id: reflection_texture
-        type: texture_layout
-        if: header.ptr_reflection_texture != 0
-    
-      - id: respawn_pts
-        type: restart_point
+      - id: struct_level
+        type: level1
+        
+      - id: model_ptrs
+        type: get_pointers_array(struct_level.ptr_models_ptr_array, _index)
         repeat: expr
-        repeat-expr: header.cnt_restart_pts
-    
-      - id: instances
-        type: instance
+        repeat-expr: struct_level.num_models
+        
+        
+      - id: model_array
+        type: model_ptrarray(model_ptrs[_index].curr_ptr)
         repeat: expr
-        repeat-expr: header.num_instances
+        repeat-expr: struct_level.num_models
+
     
-      - id: model_pointers
-        type: u4
-        repeat: expr
-        repeat-expr: header.num_models
-    
-      - id: mesh_info_header
-        type: mesh_info
-    
-      - id: quad_block_array
-        type: quad_block
-        repeat: expr
-        repeat-expr: mesh_info_header.num_quad_blocks
-    
-      - id: vertex_array
-        type: vertex
-        repeat: expr
-        repeat-expr: mesh_info_header.num_vertices
     
     instances:
-      trial:
-        pos: header.ptr_trial_data
-        type: trial_data
-        if: header.ptr_trial_data != 0
+      
+      vertex_array:
+        type: lev_vertex
+        pos: struct_mesh_info.ptr_vertex_array
+        repeat: expr
+        repeat-expr: struct_mesh_info.num_vertices
         
-      spawn_inst:
-        pos: header.ptr_spawn_arrays2
-        type: spawn_type
+      water_env_map:
+        type: texture_layout
+        pos: struct_level.ptr_tex_water_env_map
+        if: struct_level.ptr_tex_water_env_map != 0
+    
+      restart_points_array:
+        type: check_point_node
+        pos: struct_level.ptr_restart_points
         repeat: expr
-        repeat-expr: header.cnt_spawn_arrays2
-        if: header.ptr_spawn_arrays2 != 0
-
-      vcolors:
-        pos: header.ptr_vcanim
-        type: vcolor
+        repeat-expr: struct_level.cnt_restart_points
+    
+      inst_def_array:
+        type: inst_def
+        pos: struct_level.ptr_inst_defs
         repeat: expr
-        repeat-expr: header.num_vcanim
-        if: header.ptr_vcanim != 0
+        repeat-expr: struct_level.num_instances
 
-      skybox:
-        pos: header.ptr_skybox
+      quad_block_array:
+        type: quad_block
+        pos: struct_mesh_info.ptr_quad_block_array
+        repeat: expr
+        repeat-expr: struct_mesh_info.num_quad_blocks
+        
+  
+        
+    
+      struct_mesh_info:
+        type: mesh_info
+        pos: struct_level.ptr_mesh_info
+      st1:
+        pos: struct_level.ptr_spawn_type1
+        type: spawn_type1
+        if: struct_level.ptr_spawn_type1 != 0
+        
+      st2:
+        pos: struct_level.ptr_spawn_type2
+        type: spawn_type2
+        repeat: expr
+        repeat-expr: struct_level.num_spawn_type2
+        if: struct_level.ptr_spawn_type2 != 0
+
+      struct_scvert:
+        pos: struct_level.ptr_sc_vert
+        type: scvert
+        repeat: expr
+        repeat-expr: struct_level.num_sc_vert
+        if: struct_level.ptr_sc_vert != 0
+
+      struct_skybox:
+        pos: struct_level.ptr_skybox
         type: skybox
-        if: header.ptr_skybox != 0
-    
-      vis_data_array:
-        pos: mesh_info_header.ptr_vis_data
-        type: vis_data
-        repeat: expr
-        repeat-expr: mesh_info_header.num_vis_data
-        if: mesh_info_header.ptr_vis_data != 0
-    
-      icons:
-        pos: header.ptr_icons
-        type: icon_pack
-        if: header.ptr_icons != 0
-    
-      ai_nav:
-        pos: header.ptr_ai_nav
-        type: ai_paths
-        if: header.ptr_ai_nav != 0
-    
-      water_data:
-        pos: header.ptr_water
-        type: water_packet
-        repeat: expr
-        repeat-expr: header.cnt_water
-        if: header.ptr_water != 0
+        if: struct_level.ptr_skybox != 0
+        
+      struct_animtex:
+        pos: struct_level.ptr_anim_tex
+        type: anim_tex
+        if: struct_level.ptr_anim_tex != 0
+      
+        
+      
 
-  vis_data:
+            
+       
+      bsp_data_array:
+        pos: struct_mesh_info.ptr_bsp_root
+        type: bsp_root
+        repeat: expr
+        repeat-expr: struct_mesh_info.num_bsp_nodes
+        if: struct_mesh_info.ptr_bsp_root != 0
+    
+      struct_lev_tex_lookup:
+        pos: struct_level.ptr_tex_look_up
+        type: lev_tex_lookup
+        if: struct_level.ptr_tex_look_up != 0
+    
+      lev_ai_nav_table:
+        pos: struct_level.ptr_lev_ai_nav_table_array
+        type: ai_paths
+        if: struct_level.ptr_lev_ai_nav_table_array != 0
+    
+      struct_water_vert:
+        pos: struct_level.ptr_water
+        type: water_vert
+        repeat: expr
+        repeat-expr: struct_level.num_water_vertices
+        if: struct_level.ptr_water != 0
+        
+        
+
+
+  bsp_root:
     doc: | 
       bsp tree used for level drawing
       simply an array of either leaf or branch
@@ -136,9 +208,9 @@ types:
       - id: id
         type: u2
       - id: bbox_min
-        type: vector3s
+        type: s_vec3
       - id: bbox_max
-        type: vector3s 
+        type: s_vec3 
       - id: data
         type:
           switch-on: flag & 1
@@ -151,33 +223,27 @@ types:
       bsp tree branch node
       contains split axis info and children indices
     seq:
-      - id: axis_x
+      - id: axis
         type: u2
-      - id: axis_y
-        type: u2
-      - id: axis_z
-        type: u2
-      - id: unk
-        type: u2
-      - id: left_child_id
-        type: u2
-      - id: right_child_id
-        type: u2
-      - id: unk0
-        type: u4
+        repeat: expr
+        repeat-expr: 4
+      - id: child_i_d
+        type: s2
+        repeat: expr
+        repeat-expr: 4
 
   vis_data_leaf:
     doc: | 
       bsp tree branch termination node
       points to a set of quadblocks
     seq:
-      - id: unk
+      - id: unk1
         type: u4
-      - id: ptr_some_data
+      - id: ptr_bsp_hitbox_array
         type: u4
       - id: num_quads
         type: u4
-      - id: ptr_quads
+      - id: ptr_quad_block_array
         type: u4
 
   skybox:
@@ -185,37 +251,39 @@ types:
       skybox struct, contains 8 even segments
     seq:
       - id: num_vertex
-        type : u4
+        type: u4
       - id: ptr_vertex
-        type : u4 
-      - id: num_faces
+        type: u4 
+      - id: num_faces_per_segment_array
         type: u2
         repeat: expr
         repeat-expr: 8
-      - id: ptr_faces
+      - id: ptr_segments
         type: u4
         repeat: expr
         repeat-expr: 8
       - id: vertex_array
-        type: skybox_vertex
-        repeat: expr
-        repeat-expr: num_vertex
-      - id: faces
-        type: skybox_segment(num_faces[_index])
+        type: ptr_to_skybox_vertex(ptr_vertex, num_vertex)
+
+      - id: skybox_segments
+        type: skybox_segment(ptr_segments[_index], num_faces_per_segment_array[_index])
         repeat: expr
         repeat-expr: 8
 
   skybox_segment:
     params:
-      - id: num_entries
+      - id: ptr
         type: u4
-    seq:
-      - id: faces
-        type: vector4s
+      - id: num_faces
+        type: u4
+    instances:
+      faces_array:
+        type: skybox_face
+        pos: ptr
         repeat: expr
-        repeat-expr: num_entries
+        repeat-expr: num_faces
 
-  scene_header:
+  level1:
     doc: | 
       scene header, contains pointers to other data within the file and
       various global data like starting grid, background colors, etc. 
@@ -228,33 +296,33 @@ types:
         type: u4
       - id: num_instances
         type: u4
-      - id: ptr_instances
+      - id: ptr_inst_defs
         type: u4
       - id: num_models
         type: u4
-      - id: ptr_models_ptr
-        type: u4 
-      - id: unk_ptr1
+      - id: ptr_models_ptr_array
         type: u4
-      - id: unk_ptr2
+      - id: bsp_unk3
         type: u4
-      - id: ptr_instances_ptr
+      - id: bsp_unk4
         type: u4
-      - id: unk_ptr3_related_to_water_anim
+      - id: ptr_inst_def_ptr_array
+        type: u4
+      - id: water_bsp_unk5
         type: u4
       - id: null1
         type: u4
       - id: null2
         type: u4 
-      - id: cnt_water
+      - id: num_water_vertices
         type: u4
       - id: ptr_water
         type: u4 
-      - id: ptr_icons
+      - id: ptr_tex_look_up
         type: u4
-      - id: ptr_icons_array
+      - id: ptr_named_tex_array
         type: u4
-      - id: ptr_reflection_texture # probably only if water is present, maybe shared
+      - id: ptr_tex_water_env_map # probably only if water is present, maybe shared
         type: u4
 
       - id: glow_gradient
@@ -262,8 +330,8 @@ types:
         repeat: expr
         repeat-expr: 3
 
-      - id: start_grid
-        type: pose
+      - id: driver_spawn
+        type: pos_rot
         repeat: expr
         repeat-expr: 8
 
@@ -274,147 +342,170 @@ types:
       - id: ptr_low_tex_array
         type: u4
 
-      - id: back_color
-        type: color 
+      - id: clear_color_rgba
+        type: color_r_g_b_cd
 
-      - id: some_render_flags
+      - id: config_flags
         type: u4
 
       - id: build
         type: build_info
+        
+      - id: unk_ec
+        type: s1
+        repeat: expr
+        repeat-expr: 0x18
 
-      - id: skip_possibly_partice_related
-        size: 0x38
-      - id: particle_color_top
-        type: color
-      - id: particle_color_bottom
-        type: color
-      - id: particle_render_mode
-        type: u4
+      - id: struct_rain_buffer
+        type: rain_buffer
  
-      - id: cnt_trial_data
-        type: u4 
-      - id: ptr_trial_data
+      - id: ptr_spawn_type1
         type: u4 
 
-      - id: cnt_spawn_arrays2
+      - id: num_spawn_type2
         type: u4 
-      - id: ptr_spawn_arrays2
-        type: u4 
-
-      - id: cnt_spawn_groups
-        type: u4 
-      - id: ptr_spawn_groups
+      - id: ptr_spawn_type2
         type: u4 
 
-      - id: cnt_restart_pts
+      - id: num_spawn_type2_pos_rot
         type: u4 
-      - id: ptr_restart_pts
+      - id: ptr_spawn_type2_pos_rot
         type: u4 
 
-      - id: skip2
-        size: 16
-      - id: bg_color_top
-        type: color
-      - id: bg_color_bottom
-        type: color
-      - id: grad_color
-        type: color
-      - id: color4 # probably not
+      - id: cnt_restart_points
+        type: u4 
+      - id: ptr_restart_points
+        type: u4 
+
+      - id: unk_150
+        type: s1
+        repeat: expr
+        repeat-expr: 16
+        
+      - id: clear_color
+        type: clear_color
+        repeat: expr
+        repeat-expr: 3
+        
+      - id: unk16c # probably not
+        type: s4
+      - id: unk170
+        type: s4
+      - id: num_sc_vert
         type: u4
-      - id: skip2_unkptr_related_to_vcol_anim
+      - id: ptr_sc_vert
         type: u4
-      - id: num_vcanim
-        type: u4
-      - id: ptr_vcanim
-        type: u4
-      - id: num_stars
-        type: u2
-      - id: unk_stars_bool
-        type: u2
-      - id: unk_stars_flags
-        type: u2
-      - id: stars_depth # or some OT order
-        type: u2
-      - id: unk_after_stars
-        type: u2
-      - id: water_level
-        type: u2
-      - id: ptr_ai_nav
+      - id: struct_stars
+        type: stars
+      - id: split_lines
+        type: s2
+        repeat: expr
+        repeat-expr: 2
+        
+      - id: ptr_lev_ai_nav_table_array
         type: u4
 
-      - id: skip_null
+      - id: unk18c
         type: u4
         
-      - id: unk_ptr6
+      - id: vismem_ptr
         type: u4
         
-      - id: skip3
+        
+      - id: footer
         size: 0x1C
-
-  trial_data:
-    seq:
-      - id: cnt_pointers
-        type: u4
-      - id: ptr_map
-        type: u4
-        if: cnt_pointers >= 1
-      - id: ptr_null
-        type: u4
-        if: cnt_pointers >= 2
-      - id: ptr_post_cam
-        type: u4
-        if: cnt_pointers >= 3
-      - id: ptr_intro_cam
-        type: u4
-        if: cnt_pointers >= 4
-      - id: ptr_tropy_ghost
-        type: u4
-        if: cnt_pointers >= 5
-      - id: ptr_oxide_ghost
-        type: u4
-        if: cnt_pointers >= 6
-      - id: ptr_credits_text
-        type: u4
-        if: cnt_pointers >= 7
+    
     instances:
-      map:
-        type: map_coords
-        pos: ptr_map
-        if: cnt_pointers >= 1 and ptr_map != 0
-      post_cam:
+      struct_icon_named_tex_array:
+        pos: ptr_named_tex_array
+        type: icon
+        if: ptr_named_tex_array != 0
+      first_instdef:
+        pos: ptr_inst_defs
+        type: inst_def
+        if: num_instances != 0
+      low_tex_first:
+        pos: ptr_low_tex_array
+        type: texture_layout
+      vismem_struct:
+        pos: vismem_ptr
+        type: vismem_struct
+
+  spawn_type1:
+    seq:
+      - id: count
         type: u4
-        pos: ptr_post_cam
-        if: cnt_pointers >= 3 and ptr_post_cam != 0
-      intro_cam:
+      - id: ptr_minimap
         type: u4
-        pos: ptr_intro_cam
-        if: cnt_pointers >= 4 and ptr_intro_cam != 0
+        if: count >= 1
+      - id: ptr_inst_meta_data
+        type: u4
+        if: count >= 2
+      - id: ptr_camera_eor
+        type: u4
+        if: count >= 3
+      - id: ptr_camera_path
+        type: u4
+        if: count >= 4
+      - id: ptr_n_tropy
+        type: u4
+        if: count >= 5
+      - id: ptr_noxide
+        type: u4
+        if: count >= 6
+      - id: ptr_credits
+        type: u4
+        if: count >= 7
+    instances:
+      minimap:
+        type: struct_minimap
+        pos: ptr_minimap
+        if: count >= 1 and ptr_minimap != 0
+      inst_meta_data:
+        size: 104
+        pos: ptr_inst_meta_data
+        if: count >= 2 and ptr_inst_meta_data != 0
+      camera_eor:
+        size: 252
+        pos: ptr_camera_eor
+        if: count >= 3 and ptr_camera_eor != 0
+      camera_path:
+        size: 1752
+        pos: ptr_camera_path
+        if: count >= 4 and ptr_camera_path != 0
       tropy_ghost:
         type: ghost_data
-        pos: ptr_tropy_ghost
-        if: cnt_pointers >= 5 and ptr_tropy_ghost != 0
+        pos: ptr_n_tropy
+        if: count >= 5 and ptr_n_tropy != 0
       oxide_ghost:
         type: ghost_data
-        pos: ptr_oxide_ghost
-        if: cnt_pointers >= 6 and ptr_oxide_ghost != 0
-      text:
+        pos: ptr_noxide
+        if: count >= 6 and ptr_noxide != 0
+      credits:
         type: credits_text
-        pos: ptr_credits_text
-        if: cnt_pointers >= 7 and ptr_credits_text != 0
+        pos: ptr_credits
+        if: count >= 7 and ptr_credits != 0
 
-  map_coords:
+  struct_minimap:
     seq:
-      - id: v1 # ? some sort of scale
-        type: vector2s
-      - id: v2 # ? some sort of scale too, close to prev but negative
-        type: vector2s
-      - id: scale
-        type: vector2s
-      - id: position
-        type: vector2s
-      - id: mirror # 0, 1, 2, 3 - no, hor, vert, both
-        type: u2
+      - id: world_end_x # ? some sort of scale
+        type: s2
+      - id: world_end_y # ? some sort of scale too, close to prev but negative
+        type: s2
+      - id: world_start_x # ? some sort of scale
+        type: s2
+      - id: world_start_y # ? some sort of scale too, close to prev but negative
+        type: s2
+      - id: icon_size_x
+        type: s2
+      - id: icon_size_y
+        type: s2
+      - id: icon_start_x
+        type: s2
+      - id: icon_start_y
+        type: s2
+      - id: mode # 0, 1, 2, 3 - no, hor, vert, both
+        type: s2
       - id: unk # hides top half if not null, why?
         type: u2
 
@@ -422,29 +513,96 @@ types:
     doc: | 
       ghost data used in time trial mode, same data saved to memcard
     seq:
-      - id: magic
+      - id: version
         contents: [0xfc, 0xff]
       - id: data_size
         type: s2
-      - id: track_index
+      - id: level_i_d
         type: s2
         #enum: tracks
-      - id: char_index
+      - id: character_i_d
         type: s2
         #enum: chars
-      - id: unk2
+      - id: speed_approx
         type: s4
-      - id: unk3
+      - id: y_speed
         type: s4
-      - id: unk4
+      - id: time_elapsed_in_race
         type: s4
-      - id: ptrs
-        type: u4
+        #decomp says this is empty but track data says the opposite
+      - id: empty_padding
+        type: s1
         repeat: expr
-        repeat-expr: 5
-      - id: data
+        repeat-expr: 16
+      - id: record_buffer
         size: data_size
         
+  ghost_tape:
+    seq:
+      - id: ghost_header_ptr
+        type: u4
+      - id: ptr_start
+        type: u4
+      - id: ptr_end
+        type: u4
+      - id: ptr_curr
+        type: u4
+      - id: unk10
+        type: s4
+      - id: time_elapsed_in_race
+        type: s4
+      - id: time_in_packet32_backup
+        type: s4
+      - id: unk1c
+        type: s4
+      - id: unk20
+        type: s4
+      - id: unk1
+        type: s2
+        repeat: expr
+        repeat-expr: 3
+      - id: unk2
+        type: s2
+        repeat: expr
+        repeat-expr: 3
+      - id: unk3
+        type: s2
+        repeat: expr
+        repeat-expr: 3
+      - id: unk4
+        type: s2
+        repeat: expr
+        repeat-expr: 3
+      - id: time_in_packet01
+        type: s4
+      - id: time_between_packets
+        type: s4
+      - id: num_packets_in_array
+        type: s4
+      - id: packet_i_d
+        type: s4
+      - id: ghost_packets_array
+        type: ghost_packet
+        repeat: expr
+        repeat-expr: 0x21
+      - id: const_dead_c0ed
+        type: s4
+      - id: gh_ptr_again
+        type: u4
+   
+  ghost_packet:
+    seq:
+    - id: pos
+      type: s_vec3
+    - id: time
+      type: s2
+    - id: rot
+      type: s2
+      repeat: expr
+      repeat-expr: 2
+    - id: buffer_packet_ptr
+      type: u4
+      
   gradient:
     seq:
       - id: point_from
@@ -452,11 +610,11 @@ types:
       - id: point_to
         type: s2
       - id: color_from
-        type: color
+        type: color_b_g_r_cd
       - id: color_to
-        type: color
+        type: color_b_g_r_cd
 
-  instance:
+  inst_def:
     doc: |
       describes a single instance of the model on the map
       used to spawn hazards, crates, etc.
@@ -468,17 +626,29 @@ types:
       - id: model_ptr
         type: u4
       - id: scale
-        type: vector4s
-      - id: null1
+        type: s_vec3
+      - id: alpha_scale
+        type: s2
+      - id: color_rgba
+        type: color_r_g_b_cd
+      - id: flags
         type: u4
-      - id: unk1
+      - id: unk24
+        type: s4
+      - id: unk28
+        type: s4
+      - id: ptr_struct_instance
         type: u4
-      - id: skip
-        size: 12
-      - id: pose
-        type: pose
-      - id: event
+      - id: posrot
+        type: pos_rot
+      - id: model_i_d
         type: u4
+        
+    instances:
+      inst_model:
+        pos: model_ptr
+        type: ctr_model
+      
 
   mesh_info:
     doc: | 
@@ -489,43 +659,35 @@ types:
         type: u4
       - id: num_vertices
         type: u4
-      - id: num_unk
+      - id: unk1
         type: u4
-      - id: ptr_quadblocks
+      - id: ptr_quad_block_array
         type: u4
-      - id: ptr_vertices
+      - id: ptr_vertex_array
         type: u4
-      - id: ptr_unk
+      - id: unk2
+        type: s4
+      - id: ptr_bsp_root
         type: u4
-      - id: ptr_vis_data
-        type: u4
-      - id: num_vis_data
+      - id: num_bsp_nodes
         type: u4
 
-  ctr_tex:
-    seq:
-      - id: mid_tex
-        type: texture_layout
-        repeat: expr
-        repeat-expr: 3
-      - id: ptr_hi
-        type: u4
 
   quad_block:
     doc: |
       describes the atomic entity of the level
       contains 4 quads and various per quad flag based info
     seq:
-      - id: indices
+      - id: index
         type: u2
         repeat: expr
         repeat-expr: 9
       - id: quad_flags
         type: u2
-      - id: face_data
+      - id: draw_order_low
         type: u4
       - id: draw_order_high
-        size: 4
+        type : u4
       - id: ptr_texture_mid
         type: u4
         repeat: expr
@@ -536,135 +698,481 @@ types:
         type: u1
       - id: weather_intensity
         type: u1
-      - id: weather_type
+      - id: weather_vanish_rate
         type: u1
-      - id: terrain_flag_unknown
-        type: u1
+      - id: speed_impact
+        type: s1
       - id: block_id
         type: u2
-      - id: progress_tracker
+      - id: checkpoint_index
         type: u1
-      - id: midflag_unk
+      - id: tri_normal_vec_bit_shift
         type: u1
       - id: ptr_texture_low
         type: u4
-      - id: ptr_add_vis
+      - id: pvs_ptr
         type: u4
-      - id: unk_col_array
+      - id: tri_normal_vec_dividend
         type: u2
         repeat: expr
         repeat-expr: 10
     instances:
-      midtex1:
+      texture_mid0:
         pos: ptr_texture_mid[0]
-        type: ctr_tex
-      midtex2:
+        type: icongroup4
+      texture_mid1:
         pos: ptr_texture_mid[1]
-        type: ctr_tex
-      midtex3:
+        type: icongroup4
+      texture_mid2:
         pos: ptr_texture_mid[2]
-        type: ctr_tex
-      midtex4:
+        type: icongroup4
+      texture_mid3:
         pos: ptr_texture_mid[3]
-        type: ctr_tex
-      add_tex:
-        pos: ptr_add_vis
-        type: add_tex
-        if: ptr_add_vis != 0
+        type: icongroup4
+      struct_pvs:
+        pos: pvs_ptr
+        type: pvs
+        if: pvs_ptr != 0
 
-  add_tex:
+  pvs:
     doc: |
-      points to 4 structs, one of them assumed to store mosaic texture def
-      each pointer might include flag hidden in lsb
     seq:
-      - id: ptr1
+      - id: vis_leaf_src_ptr
         type: u4
-      - id: ptr2
+      - id: vis_face_src_ptr
         type: u4
-      - id: ptr3
+      - id: vis_inst_src_ptr_array_ptr
         type: u4
-      - id: ptr4
+      - id: vis_extra_src_ptr
         type: u4
-    instances:
-      ptr1data:
-        pos: ptr1 & 0xFFFFFFFC
-        size: 1
-        if: ptr1 != 0
-      ptr2data:
-        pos: ptr2 & 0xFFFFFFFC
-        size: 1
-        if: ptr2 != 0
-      ptr3data:
-        pos: ptr3 & 0xFFFFFFFC
-        size: 1
-        if: ptr3 != 0
-      ptr4data:
-        pos: ptr4 & 0xFFFFFFFC
-        type: u4
-        if: ptr4 != 0
+
         
-  vertex:
+  lev_vertex:
     doc: |
       describes a single vertex
       contains spacial coordinate, vertex color and additional color value,
       that is used when morphing between lod levels 
     seq:
-      - id: coord
-        type: vector4s
-      - id: vcolor
-        type: color
-      - id: vcolor_morph
-        type: color
+      - id: pos
+        type: s_vec3
+      - id: flags
+        type: u2
+      - id: color_hi
+        type: color_b_g_r_cd
+      - id: color_lo
+        type: color_b_g_r_cd
 
-  skybox_vertex:
-    doc: |
-      shorter vertex defintion without morph color
+        
+        
+
+
+  clear_color:
+    seq:
+      - id: r
+        type: u1
+      - id: g
+        type: u1
+      - id: b
+        type: u1
+      - id: enable
+        type: s1
+        
+  stars:
+    seq:
+    - id: num_stars
+      type: s2
+    - id: spread
+      type: s2
+    - id: seed
+      type: s2
+    - id: distance
+      type: s2
+  
+  
+  svector:
+    seq:
+      - id: vx
+        type: s2
+      - id: vy
+        type: s2
+      - id: vz
+        type: s2
+      - id: pad
+        type: s2
+        
+        
+     
+  skybox_face:
+    seq:
+    - id: pos
+      type: s_vec4
+    
+  icongroup4:
+    seq:
+      - id: far
+        type: texture_layout
+      - id: middle
+        type: texture_layout
+      - id: near
+        type: texture_layout
+      - id: mosaic
+        type: texture_layout
+        
+        
+  anim_tex:
+    seq:
+      - id: ptr_active_tex
+        type: u4
+      - id: num_frames
+        type: s2
+      - id: frame_offset
+        type: s2
+      - id: frame_skip
+        type: s2
+      - id: frame_curr
+        type: s2
+        
+      - id: ptr_to_icongroup4_ptr_array
+        type: u4
+        repeat: expr
+        repeat-expr: num_frames
+        
+      - id: icongroup4_array
+        type: icongroup4_ptrarray(ptr_to_icongroup4_ptr_array[_index])
+        repeat: expr
+        repeat-expr: num_frames
+        
+    instances:
+      active_tex:
+        pos: ptr_active_tex
+        type: icongroup4
+        if: ptr_active_tex != 0
+        
+  
+  model_struct:
+    seq:
+    - id: data_size
+      type: u4
+    - id: struct_model
+      type: ctr_model
+      size: data_size
+    - id: ptr_map_size
+      type: u4
+    - id: ptr_map
+      type: u4
+      repeat: expr
+      repeat-expr: ptr_map_size / 4
+      
+  ctr_model:
+    seq:
+      - id: name
+        type: strz
+        encoding: ascii
+        size: 16
+      - id: id # this is an internal number
+        type: s2
+      - id: num_headers
+        type: u2
+      - id: ptr_headers
+        type: u4
+    instances:
+      model_headers:
+        type: model_header
+        pos: ptr_headers
+        repeat: expr
+        repeat-expr: num_headers
+        
+  model_header:
+    seq:
+      - id: name
+        type: strz
+        encoding: ascii
+        size: 16
+      - id: unk1
+        type: u4
+      - id: max_distance_l_o_d
+        type: u2
+      - id: flags
+        type: u2
+      - id: scale
+        type: s_vec4
+
+      - id: ptr_command_list
+        type: u4
+      - id: ptr_frame_data
+        type: u4
+      - id: ptr_tex_layout
+        type: u4
+      - id: ptr_colors
+        type: u4
+      - id: unk3
+        type: u4
+      - id: num_animations
+        type: u4
+      - id: ptr_animations
+        type: u4
+      - id: ptr_anim_tex
+        type: u4
+    instances:
+      command_list:
+        type: command
+        pos: ptr_command_list
+        repeat: until
+        repeat-until: _.value == 0xFFFFFFFF
+      model_anim_array:
+        type: ctr_anim
+        pos: ptr_animations
+        repeat: expr
+        repeat-expr: num_animations
+        if: ptr_animations != 0
+      model_frame:
+        pos: ptr_frame_data
+        type: ctr_model_frame(0)
+        if: ptr_frame_data != 0
+        
+  command:
+    seq:
+      - id: value
+        type: u4be
+    instances:
+      new_face_block:
+        value: (value & (1 << 31)) >> 31
+      swap_first_vertex:
+        value: (value & (1 << 30)) >> 30
+      flip_face_normal:
+        value: (value & (1 << 29)) >> 29
+      cull_backface:
+        value: (value & (1 << 28)) >> 28
+      color_scratchpad:
+        value: (value & (1 << 27)) >> 27
+      read_vertex_stack:
+        value: (value & (1 << 26)) >> 26
+      unk1:
+        value: (value & (1 << 25)) >> 25
+      unk2:
+        value: (value & (1 << 24)) >> 24
+      stack_write_index:
+        value: (value >> 16) & 0b11111111
+      color_coord_index:
+        value: (value >> 9) & 0b1111111
+      tex_coord_index:
+        value: value & 0b111111111
+        
+  ctr_anim:
+    seq:
+      - id: ptr
+        type: u4
+    instances:
+      struct_model_anim:
+        type: ctr_anim_data
+        pos: ptr
+        
+  ctr_anim_data:
+    seq:
+      - id: name
+        type: strz
+        encoding: ascii
+        size: 16
+      - id: num_frames_pack
+        type: u2
+      - id: frame_size
+        type: u2
+      - id: ptr_delta_array
+        type: u4
+      - id: struct_model_frame
+        type: ctr_model_frame(frame_size)
+        repeat: expr
+        repeat-expr: num_frames_pack
+    instances:
+      interp:
+        value: num_frames_pack & 0x8000 > 0
+      num_frames:
+        value: "interp ? (num_frames_pack & 0x7FFF) / 2 + 1 : num_frames_pack"
+        
+  ctr_model_frame:
+    params:
+      - id: frame_size
+        type: u4
     seq:
       - id: position
-        type: vector4s
-      - id: colorz
-        type: color
+        type: s_vec4
+
+      - id: unk_16
+        type: s1
+        repeat: expr
+        repeat-expr: 16
+      - id: vertex_offset
+        type: u4
+      - id: verts
+        size: frame_size - vertex_offset
+        if: frame_size != 0
         
-  vcolor:
+       
+  
+  vismem_struct:
+    doc: "all the variables are supposed to be one per player screen"
+    seq:
+      - id: vis_leaf_list_ptr
+        type: u4
+        repeat: expr
+        repeat-expr: 4
+      - id: vis_face_list_ptr
+        type: u4
+        repeat: expr
+        repeat-expr: 4
+      - id: vis_o_vert_list_ptr
+        type: u4
+        repeat: expr
+        repeat-expr: 4
+      - id: vis_s_c_vert_list_ptr
+        type: u4
+        repeat: expr
+        repeat-expr: 4
+      - id: vis_leaf_src_ptr  
+        type: u4
+        repeat: expr
+        repeat-expr: 4
+      - id: vis_face_src_ptr
+        type: u4
+        repeat: expr
+        repeat-expr: 4
+      - id: vis_o_vert_src_ptr
+        type: u4
+        repeat: expr
+        repeat-expr: 4
+      - id: vis_s_c_vert_src_ptr
+        type: u4
+        repeat: expr
+        repeat-expr: 4
+      - id: bsp_list_ptr
+        type: u4
+        repeat: expr
+        repeat-expr: 4
+        
+        
+  rain_buffer:
+    doc: |
+      weather on all levels
+    seq:
+      - id: num_particles_curr
+        type: s4
+      - id: num_particles_max
+        type: s2
+
+      - id: vanish_rate
+        type: s2
+      - id: unk8_clock
+        type: s1
+        repeat: expr
+        repeat-expr: 4
+        
+
+      - id: unkc_bool_pos
+        type: s1
+
+      - id: unkd_particle_pos
+        type: s1
+      - id: unke_unused
+        type: s1
+        repeat: expr
+        repeat-expr: 2
+
+      - id: fall_angle_x
+        type: s1
+      - id: speed_x
+        type: s1
+      - id: falling_speed
+        type: s1
+      - id: speed_y
+        type: s1
+      - id: fall_angle_z
+        type: s1
+      - id: speed_z
+        type: s1
+      - id: unk_visibility_bools
+        type: s1
+        repeat: expr
+        repeat-expr: 2
+        
+      - id: camera_pos
+        type: s_vec3
+      - id: unk_22
+        type: s2
+      - id: color_rgbcd_top
+        type: color_r_g_b_cd
+      - id: color_rgbcd_bottom
+        type: color_r_g_b_cd
+      - id: fill_mode
+        type: u4
+      - id: offset_o_t
+        type: s4
+        
+      
+  skbox_vertex:
+    seq:
+      - id: position
+        type: svector
+      - id: color
+        type: color_b_g_r_cd
+  
+  ptr_to_skybox_vertex:
+    params:
+      - id: ptr
+        type: u4
+      - id: num_vertex
+        type: s4
+    instances:
+      skbox_vertex:
+        type: skbox_vertex
+        pos: ptr
+        repeat: expr
+        repeat-expr: num_vertex
+        
+  scvert:
     doc: |
       controls vertex animation, both color and position (roo's tubes best example).
     seq:
-      - id: ptr_vertex
+      - id: v
         type: u4
-      - id: u1
+      - id: offset_pos_xy
+        type: s4
+      - id: offset_pos_zw
+        type: s4
+      - id: offset_color_rgba
         type: u4
-      - id: u2
-        type: u4
-      - id: color
-        type: color
 
-  icon_pack:
+  lev_tex_lookup:
     doc: |
       describes a set of icons
       used either in lev scene or mpk file
     seq:
-      - id: num_icons
+      - id: num_icon
+        type: s4
+      - id: ptr_first_icon
         type: u4
-      - id: ptr_tex_array
+      - id: num_icon_group
+        type: s4
+      - id: first_icon_group_ptr_array
         type: u4
-      - id: num_groups
-        type: u4
-      - id: ptr_groups
-        type: u4
-      - id: entries
+        
+      - id: icongroup_ptrs
+        type: get_pointers_array(first_icon_group_ptr_array, _index)
+        repeat: expr
+        repeat-expr: num_icon_group
+        
+      - id: icongroup_array
+        type: icongroup_ptrarray(icongroup_ptrs[_index].curr_ptr)
+        repeat: expr
+        repeat-expr: num_icon_group
+        
+    instances:
+      icon_array:
+        pos: ptr_first_icon
         type: icon
         repeat: expr
-        repeat-expr: num_icons
-      - id: dummy
-        type: u4
-      - id: groups_ptr
-        type: u4
-        repeat: expr
-        repeat-expr: num_groups
-      - id: groups
-        type: icon_group
-        repeat: expr
-        repeat-expr: num_groups
+        repeat-expr: num_icon
+        if: ptr_first_icon != 0
+      
 
   icon:
     doc: |
@@ -674,8 +1182,8 @@ types:
         type: strz
         encoding: ascii
         size: 16
-      - id: index
-        type: u4
+      - id: global_icon_array_index
+        type: s4
       - id: layout
         type: texture_layout
 
@@ -687,62 +1195,105 @@ types:
         type: strz
         encoding: ascii
         size: 16
-      - id: unk1
-        type: u2
+      - id: group_id
+        type: s2
       - id: num_icons
-        type: u2
-      - id: entries
+        type: s2
+      - id: ptr_icons_array
         type: u4
+    instances:
+      icons_on_this_group:
+        pos: ptr_icons_array
+        type: icon
         repeat: expr
         repeat-expr: num_icons
+        if: ptr_icons_array != 0 
+        
 
-  ai_frame_header:
+  nav_header:
     doc: |
       ai path header data
     seq:
       - id: version # assumed to be, game code tests against const value 
         type: u2
-      - id: num_frames
+      - id: num_points
         type: u2
-      - id: skip
-        size: 0x48
+      - id: pos_y_first_node
+        type: s4
+      - id: nav_frame_last
+        type: u4
+      - id: ram_phys1
+        type: s2
+        repeat: expr
+        repeat-expr: 16
+      - id: ram_phys2
+        type: s2
+        repeat: expr
+        repeat-expr: 16
 
   nav_frame:
     doc: |
       describes a single navigation point for bots
     seq:
-      - id: point
-        type: pose
-      - id: data
-        size: 8
+      - id: pos
+        type: s_vec3
+      - id: rot
+        type: u1
+        repeat: expr
+        repeat-expr: 4
+      - id: unk2
+        type: s2
+        repeat: expr
+        repeat-expr: 2
+        
+      - id: flags
+        type: s2
+      - id: path_change_opcode
+        type: s2
+      - id: go_back_count
+        type: u1
+      - id: special_bits
+        type: u1
 
+  ai_data:
+    params:
+      - id: ptr
+        type: u4
+    instances:
+      bot:
+        type: ai_path
+        pos: ptr
+        if: ptr != 0
+
+        
   ai_path:
-    doc: |
-      describes a set of navigation points for bots to follow
+    doc: "describes a set of navigation points for bots to follow"
     seq:
-      - id: header
-        type: ai_frame_header
-      - id: start
+      - id: nav_header
+        type: nav_header
+      - id: start_line 
         type: nav_frame
-      - id: frames
+      - id: nav_frame_array
         type: nav_frame
         repeat: expr
-        repeat-expr: header.num_frames
-
+        repeat-expr: nav_header.num_points
+        
   ai_paths:
     doc: |
       contains 3 bots paths for each difficulty level
     seq:
-      - id: ptr
+      - id: ptr_to_ai_paths_ptr_array
         type: u4
         repeat: expr
         repeat-expr: 3
-      - id: paths
-        type: ai_path
+
+      - id: ai_paths
+        type: ai_data(ptr_to_ai_paths_ptr_array[_index])
         repeat: expr
         repeat-expr: 3
-        doc: rewrite it.
-        if: ptr[0] != 0 and ptr[1] != 0 and ptr[2] != 0
+        if: ptr_to_ai_paths_ptr_array[_index] != 0
+
+          
 
   texture_layout:
     doc: |
@@ -750,39 +1301,48 @@ types:
       contains 4 UV coords, palette coord and texture page index
       as well as bpp flag, maybe more?
     seq:
-      - id: uv1
-        type: vector2b
-      - id: pal_x
-        type: b6
-      - id: pal_y
-        type: b10
-      - id: uv2
-        type: vector2b
-      - id: page_x
-        type: b4
-      - id: page_y
-        type: b1
-      - id: blending_mode
-        type: b2
-      - id: bit_depth
-        type: b2
-      - id: rest_bits
-        type: b7
-      - id: uv3
-        type: vector2b
-      - id: uv4
-        type: vector2b
+      - id: u0
+        type: u1
+      - id: v0
+        type: u1
+      - id: clut
+        type: clut
+      - id: u1
+        type: u1
+      - id: v1
+        type: u1
+      - id: tpage
+        type: poly_tpage
+      - id: u2
+        type: u1
+      - id: v2
+        type: u1
+      - id: u3
+        type: u1
+      - id: v3
+        type: u1
 
-  water_packet:
+  water_vert:
     seq:
-      - id: ptr_vertex
+      - id: lev_vertex_v_ptr
         type: u4
-      - id: ptr_anim
+      - id: overt_w_ptr
         type: u4
     instances:
-      waterdata:
-        pos: ptr_anim
-        size: 0x38
+      struct_lev_vertex:
+        pos: lev_vertex_v_ptr
+        type: lev_vertex
+      struct_o_vert:
+        pos: overt_w_ptr
+        type: overt
+        
+  overt:
+    seq:
+    - id: data
+      type: s2
+      repeat: expr
+      repeat-expr: 2
+    
 
   build_info:
     doc: |
@@ -831,12 +1391,16 @@ types:
         repeat: expr
         repeat-expr: num_entries
 
-  spawn_type:
+  spawn_type2:
     seq:
-      - id: unk
+      - id: num_coords
+        type: s4
+      - id: pos_coords_array_ptr
         type: u4
-      - id: ptr
-        type: u4
+    instances:
+      pos_coords:
+        type: pos_rot
+        pos: pos_coords_array_ptr
 
   vector2b:
     seq:
@@ -844,35 +1408,94 @@ types:
         type: u1
       - id: y
         type: u1
+  clut:
+    seq:
+      - id: x
+        type: b6
+      - id: y
+        type: b9
+      - id: nop
+        type: b1
+        
+  poly_tpage:
+    seq:
+      - id: x
+        type: b4
+      - id: y
+        type: b1
+      - id: semi_transparency
+        type: b2
+      - id: texpage_colors
+        type: b2
+      - id: unused
+        type: b2
+      - id: y_vram_exp
+        type: b1
+      - id: unused2
+        type: b2
+      - id: nop
+        type: b2
 
-  color:
+
+        
+  color_r_g_b_cd:
     seq:
       - id: r
-        type: u1
+        type: b8
       - id: g
-        type: u1
+        type: b8
       - id: b
-        type: u1
-      - id: a
-        type: u1
-
-  vector3u:
+        type: b8
+      - id: cd
+        type: b8
+        
+  color_b_g_r_cd:
+    seq:
+      - id: b
+        type: b8
+      - id: g
+        type: b8
+      - id: r
+        type: b8
+      - id: cd
+        type: b8
+        
+        
+  vec2:
     seq:
       - id: x
-        type: u2
+        type: s4
       - id: y
-        type: u2
+        type: s4
+
+  vec3:
+    seq:
+      - id: x
+        type: s4
+      - id: y
+        type: s4
       - id: z
-        type: u2
+        type: s4
+        
+  vec4:
+    seq:
+      - id: x
+        type: s4
+      - id: y
+        type: s4
+      - id: z
+        type: s4
+      - id: w
+        type: s4
 
-  vector2s:
+  s_vec2:
     seq:
       - id: x
         type: s2
       - id: y
         type: s2
 
-  vector3s:
+  s_vec3:
     seq:
       - id: x
         type: s2
@@ -881,7 +1504,7 @@ types:
       - id: z
         type: s2
 
-  vector4s:
+  s_vec4:
     seq:
       - id: x
         type: s2
@@ -892,32 +1515,32 @@ types:
       - id: w
         type: s2
 
-  pose:
+  pos_rot:
   
     seq:
       - id: position
-        type: vector3s
+        type: s_vec3
       - id: rotation
-        type: vector3s
+        type: s_vec3
 
-  restart_point:
+  check_point_node:
     seq:
       - id: position
-        type: vector3s
-      - id: distance
+        type: s_vec3
+      - id: dist_to_finish
         type: u2
-      - id: next
+      - id: next_index_forward
         type: u1
-      - id: unk_ff1
+      - id: next_index_left
         type: u1
-      - id: prev
+      - id: next_index_backward
         type: u1
-      - id: unk_ff2
+      - id: next_index_right
         type: u1
         
   bounding_box:
     seq:
       - id: min
-        type: vector3s
+        type: s_vec3
       - id: max
-        type: vector3s
+        type: s_vec3
