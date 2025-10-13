@@ -98,8 +98,9 @@ basically defines texture page, quad UV coords and palette.
 short - posX
 short - posY
 short - posZ
+short - padding (maybe some flag?)
 16 bytes - unknown, nothing changes visually
-int - unknown, values other than the original often ruin the model. maybe some drawing mode.
+uint - offset to verts (from the beginning of this struct, often 0x1C)
 vector3b[] - array of vertices, a byte per coord.
 
 the original model is normalized to a byte vector, which results in 256 possible values per axis, scaled back to the orignal size using scale vector and moved around using the position offset. offset is applied to the compressed data values.
