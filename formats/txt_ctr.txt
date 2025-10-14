@@ -59,6 +59,9 @@ array of uint - pointers to texture data
 array of texturelayout - struct from lev file
 
 basically defines texture page, quad UV coords and palette.
+please note, these are not "textures" per se, but rather individual face texture mappings.
+a CLUT grouping technique can be used to recover the original texture rects.
+- take all entries with the same CLUT and calculate the largest bounding box to include all of them.
 
 
 // vertex frame
