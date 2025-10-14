@@ -1,91 +1,58 @@
 # Crash Team Racing dynamic model format
-Historically we refer to this format as .ctr. CTR-tools implements .ctr parsing via classes prefixed with Ctr in Code\ctr folder.
-
+Historically we refer to this format as .ctr. CTR-tools implements .ctr parsing via classes prefixed with Ctr in Code\ctr folder. ctr data can be found either in standalone files (kart models, podium chars) or included within the level file (crates, hazards, etc).
 
 #common structures
 
+// ctr file header, we refer to as "model", as it contains a single logical object
+
 model {
-  char[16] - name
-  short - event id, assumed to be
-  short - number of model headers
-  uint - pointer to model headers
+	char[16] - name
+	short - event/thread id (refer to decomp for more info)
+	short - number of meshes
+	uint - pointer to model headers
 
-  model header[number of models] - array of model headers
+	mesh[number of meshes] - array of model headers
 
-  //some models contain extra data here, about 0x20 bytes
-  //however, no pointers to this data exists, it doesn't change the model visually and it works fine without it
-  //it is unclear whether this is a part of the format, or just some garbage
+	//some models contain extra data here, about 0x20 bytes
+	//however, no pointers to this data exists, it doesn't change the model visually and it works fine without it
+	//it is unclear whether this is a part of the format, or just some garbage
 
-  byte[] - model data, multiple arrays described in this doc after structures
+	byte[] - model data, multiple arrays described in this doc after structures
 }
 
 
-model header {
-  char[16] - name
-  int? - unknown (always 0?)
-  short - lod distance
-  short - assumed billboarding (check other bits)
-  Vector4s - model scale (actually padded vector3s)
-  uint - pointer to command list
-  uint - pointer to vertex data - this is 0 if model is animated
-  uint - pointer to texture layout data (same as in lev) - if there are no textures, this is still a pointer, same as clut.
-  uint - pointer to colors (clut)
-  int? - unk3 - ruins model if changed
-  int? - number of animations
-  uint - pointer to animations pointer map
-  int? - unk4 - anything other than 0 freezes the game
+// a single mesh entry, multiple meshes are used for LoD implementation
+
+mesh {
+	char[16] - name
+	int? - unknown (always 0?) // probably some runtime pointer?
+	short - lod distance
+	short - mesh flags - we only know about a billboard flag (used for player position numbers)
+	Vector3s - model scale // note this is PSX GTE large fixed point value (int value / (1 << 12))
+	short - padding
+
+	uint - pointer to command list
+	uint - pointer to mesh frame // this is NULL if model is animated
+	uint - pointer to texture layout data (same as in lev) // if there are no textures, this is still a valid pointer, same as clut.
+	uint - pointer to colors (clut)
+	int? - unk3 - ruins model if changed
+	int? - number of animations
+	uint - pointer to animations pointer map
+	int? - unk4 - anything other than 0 freezes the game
 }
 
+
+// animation entry header
 
 animation {
-  char[16] - anim name
-  short - num frames - negative value defines amount of render frames in 60fps (duplicated anim frames)
-  short - frame size
-  uint - points to some base anim data that affects every frame
-  vertex data[num frames] - additional data per frame
-  byte[unknown length] - base anim data
+	char[16] - anim name
+	short - num frames, but highest bit = frame interpolation flag.
+	// if set, it means that only half of the frames are stored in the file
+	short - frame size // all frames are of the same size
+	uint - time deltas array, a shared array of differences, used to recover every frame vertex data
+	frame[num frames] - additional data per frame
+	byte[unknown length] - base anim data
 }
-
-
-# trivia
-while technically the order of data is predefined, it's probably related to the original order in CTR export plugin. it's probably possible to swap data around if needed, since it's all pointer based.
-what also makes it difficult is the fact that the format doesn't store any sizes of its arrays. it can be obtained by parsing the command list once.
-
-
-# command list
-there are no face indices values per se, instead there is an array of drawing commands, it uses scratchpad to optimize model drawing on the original hardware.  
-
-command is a big endian dword (4 bytes)
-command list is an array of dwords.
-value of -1 (0xFFFFFFFF) is the list terminator
-
-original command bitmask was partially found by russian romhacker HoRRoR
-
-slndkv?? iiiiiiii ccccccct tttttttt //8-8-7-9 bits
-
-flags:
-s - new face block (reset flag)
-l - swap 1st vertex of the new face with the 1st from the last one
-n - defines whether the face normal should be flipped
-d - if set, cull backface, else double sided
-k - tells whether it should take color from scratchpad or ram (only affects real psx).
-v - don't read next vertex from array, but read from stack index 
-? - unknown
-
-indices:
-i - index of write location in stack (multiplied by 8 makes it a pointer), max = 255
-c - color coord index, max = 127
-t - tex coord index (0 = no texture), max = 511
-
-rendering process:
-to render a model, game parses through all commands.
-every command either copies vertex to stack at a given address or reads existing vertex from stack (copied previously).
-3 initial commands form a face. next vertex will use 2 vertices from previous face and so on.
-basically it starts drawing a tristrip where every additional vertex forms a new face.
-if the command contains the reset flag, it stops drawing current tristip and starts over.
-flags d and n define culling and normal flipping.
-flag l tells that another vertex should be used (0 instead of 1)
-
 
 # texture data
 array of uint - pointers to texture data
@@ -94,30 +61,60 @@ array of texturelayout - struct from lev file
 basically defines texture page, quad UV coords and palette.
 
 
-# vertex data
-short - posX
-short - posY
-short - posZ
-short - padding (maybe some flag?)
-16 bytes - unknown, nothing changes visually
-uint - offset to verts (from the beginning of this struct, often 0x1C)
-vector3b[] - array of vertices, a byte per coord.
+// vertex frame
+
+if the model is not animated there is only one vertex frame.
+if it is animated, there are multiple frames.
+frame data can be either raw or compressed.
+
+frame {
+	short - posX
+	short - posY
+	short - posZ
+	short - padding (maybe some flag?)
+	16 bytes - unknown, nothing changes visually
+	uint - offset to verts (from the beginning of this struct, often 0x1C)
+	
+	// depending on pointer to deltas in the animation header
+	// if NULL - it's a raw byte array, vec3b - a byte per coord
+	// if not NULL, it's a compressed bitstream. refer to compressed animation data below
+
+	vector3b[] or byte[] - vertex array or a bitstream
+}
 
 the original model is normalized to a byte vector, which results in 256 possible values per axis, scaled back to the orignal size using scale vector and moved around using the position offset. offset is applied to the compressed data values.
 
-the final coord = ((vertex coord + offset) / 255) * scale coord / 1000
+the final coord = ((vertex coord + offset) / 255) * scale coord
 
 
 # color data (clut)
 just usual 4 bytes RGBX
-where X is bitwise flag value - defines rendering mode
+where X is a bitwise flag value - defines psx rendering mode
 
 
-# animation data
-currently unknown.
+# compressed animation data
+if animation is compressed, Crash Bandicoot 2 delta compression is used.
+https://github.com/warenhuis/Crash-Bandicoot-2-Modelexport
 
-there is some base data for each animation and an array for each frame.
-this data is somehow combined to retrieve final vertex positions.
-it is speculated that complex animated models store relative coords instead of absolute
+delta compression works kind of like ADPCM sound compression, when you have a base value and every next stream value somehow modified the base value, restoring the original data.
 
-same command list is used for every frame, only vertices change their positions.
+there is a shared "delta command" array used for all frames, and a frame specific bitstream array.
+there is one delta command entry per vertex.
+
+delta command {
+	3 bits - Z bits (0-7)
+	3 bits - Y bits (0-7)
+	3 bits - X bits (0-7)
+
+	8 bits - delta pos Z
+	8 bits - delta pos Y
+	7 bits - delta pos X // important, there is one bit less for X coord, so you need to left shift the value by 1
+}
+
+decompression algorithm:
+- initialize base XYZ pos values with a zero.
+- loop over the delta command array.
+- for every coord 3bits value - if it's 7, reset base values to zero.
+- take specified amount of bits from frame stream for each coord.
+- calculate coord value using this formula:
+  final coord = (base pos + delta command pos + extra stream bits) % 256
