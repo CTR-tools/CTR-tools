@@ -41,6 +41,10 @@ mesh {
 	int? - unk4 - anything other than 0 freezes the game
 }
 
+while technically the order of data in teh file is predefined, it's probably related to the original order in the original CTR export plugin. it's probably possible to swap data around if needed, since it's all pointer based.
+
+what also makes it difficult is the fact that the format doesn't store any sizes of its arrays. it can be obtained by parsing the command list beforehand to retrieve the biggest indices of each array.
+
 
 // animation entry header
 
@@ -53,15 +57,6 @@ animation {
 	frame[num frames] - additional data per frame
 	byte[unknown length] - base anim data
 }
-
-# texture data
-array of uint - pointers to texture data
-array of texturelayout - struct from lev file
-
-basically defines texture page, quad UV coords and palette.
-please note, these are not "textures" per se, but rather individual face texture mappings.
-a CLUT grouping technique can be used to recover the original texture rects.
-- take all entries with the same CLUT and calculate the largest bounding box to include all of them.
 
 
 // vertex frame
@@ -88,6 +83,55 @@ frame {
 the original model is normalized to a byte vector, which results in 256 possible values per axis, scaled back to the orignal size using scale vector and moved around using the position offset. offset is applied to the compressed data values.
 
 the final coord = ((vertex coord + offset) / 255) * scale coord
+
+
+# commands list
+
+there are no face indices values per se, instead there is an array of face drawing commands, it uses scratchpad to optimize model drawing on the original hardware.  
+
+* command - is a big endian dword (4 bytes)
+* command list - is an array of dwords.
+* value of -1 (0xFFFFFFFF) is the list terminator
+
+original command bitmask was partially found by russian romhacker HoRRoR (emuland, 2010):
+https://www.emu-land.net/forum/index.php?topic=36640.0
+
+slndkv?? iiiiiiii ccccccct tttttttt // not a typo: 8-8-7-9 bits
+
+flags:
+s - new face block (reset flag)
+l - swap 1st vertex of the new face with the 1st from the last one
+n - defines whether the face normal should be flipped
+d - if set, cull backface, else double sided
+k - tells whether it should take color from scratchpad or ram (only affects real psx).
+v - don't read next vertex from array, but read from stack index 
+? - unknown
+
+indices:
+i - index of write location in stack (multiplied by 8 makes it a pointer), max = 255
+c - color coord index, max = 127
+t - tex coord index (0 = no texture), max = 511
+
+rendering process:
+* to render a model, game parses through all commands.
+* every command either copies vertex to stack at a given address or reads existing vertex from stack (copied previously).
+* 3 initial commands form a face. next vertex will use 2 vertices from previous face and so on.
+* basically it starts drawing a tristrip where every additional vertex forms a new face.
+* if the command contains the reset flag, it stops drawing current tristip and starts over.
+* flags d and n define culling and normal flipping.
+* flag l tells that another vertex should be used (0 instead of 1)
+
+
+# texture data
+tex_data {
+	array of uint - pointers to texture data
+	array of texturelayout - struct from lev file
+}
+
+basically defines texture page, quad UV coords and palette.
+please note, these are not "textures" per se, but rather individual face texture mappings in vram.
+a CLUT grouping technique can be used to recover the original texture rectangles sizes.
+- take all entries with the same CLUT and calculate the largest bounding box to include all of them.
 
 
 # color data (clut)
