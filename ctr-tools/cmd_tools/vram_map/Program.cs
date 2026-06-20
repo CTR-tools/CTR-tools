@@ -74,7 +74,7 @@ namespace vrmtool
                 case TextureReplacerResult.OK: Helpers.Panic("TextureReplacer", PanicType.Info, "Replace succesful."); break;
                 case TextureReplacerResult.MissingContent: Helpers.Panic("TextureReplacer", PanicType.Warning, "Not enough content provided to replacer."); break;
                 case TextureReplacerResult.GeneralError: Helpers.Panic("TextureReplacer", PanicType.Error, "Replacement failed."); break;
-                default: Console.Write("impossibru"); break;
+                default: Console.Write("Unexpected result."); break;
             }
 
 

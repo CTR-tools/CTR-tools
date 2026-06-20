@@ -39,12 +39,13 @@ namespace CTRFramework.Vram
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    int pos = (int)br.BaseStream.Position;
                     int size = br.ReadInt32(); //data size
+                    // read pos after size, dummy
+                    int pos = (int)br.BaseStream.Position;
                     Tims.Add(Tim.FromReader(br));
 
                     if (br.BaseStream.Position - pos != size)
-                        Helpers.Panic(this, PanicType.Error, "VRAM: tim size mismatch.");
+                        Helpers.Panic(this, PanicType.Error, $"VRAM: tim size mismatch. Expected: {size}, actual: {br.BaseStream.Position - pos}");
                 }
             }
             else //it's supposed to be just a single tim file

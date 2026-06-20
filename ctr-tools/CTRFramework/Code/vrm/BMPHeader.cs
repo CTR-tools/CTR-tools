@@ -80,6 +80,7 @@ namespace CTRFramework.Vram
             palette = pal;
             data = d;
         }
+
         /*
         public void UpdateData(byte[] pal, ushort[] d)
         {
@@ -92,6 +93,7 @@ namespace CTRFramework.Vram
             }
          }
          */
+
         public Color? GetColor(int x)
         {
             if (x < palette.Length / 4)

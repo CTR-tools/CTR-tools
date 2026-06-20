@@ -77,14 +77,14 @@ namespace CTRFramework
     [Flags]
     public enum CtrDrawFlags
     {
-        NewTriStrip = 1 << 7,   //starts a new tristrip
-        SwapVertex = 1 << 6,    //swap 1st vertex of the new face with the 1st from the last one
-        FlipNormal = 1 << 5,    //defines whether the face normal should be flipped
-        CulledFace = 1 << 4,    //face culling (single sided if set)
-        StackColor = 1 << 3,    //tells whether it should take color from scratchpad or ram. original models all use this, but custom result in random colors.
-        StackVertex = 1 << 2,   //takes vertex from stack instead of vertex array if set (if no flag, load next vertex from the array)
-        Unused1 = 1 << 1,       //assumed never used
-        Unused2 = 1 << 0        //assumed never used
+        NewTriStrip = 1 << 7,   // starts a new tristrip
+        SwapVertex = 1 << 6,    // swap 1st vertex of the new face with the 1st from the last one
+        FlipNormal = 1 << 5,    // defines whether the face normal should be flipped
+        CulledFace = 1 << 4,    // face culling (single sided if set)
+        StackColor = 1 << 3,    // tells whether it should take color from scratchpad or ram. original models all use this, but custom result in random colors.
+        StackVertex = 1 << 2,   // takes vertex from stack instead of vertex array if set (if no flag, load next vertex from the array)
+        Unused1 = 1 << 1,       // assumed never used
+        Unused2 = 1 << 0        // assumed never used
     }
 
     [Flags]
@@ -133,27 +133,27 @@ namespace CTRFramework
     }
 
 
-    //quadblock flags
+    // quadblock flags
     [Flags]
     public enum QuadFlags
     {
         None = 0,
-        Invisible = 1 << 0,     //check
-        MoonGravity = 1 << 1,   //triggers MG in Oxide Station
-        Reflection = 1 << 2,    //used in snow levels
-        Kickers = 1 << 3,       //?? maybe denotes that you should be awarded extra turbo for landing?
-        OutOfBounds = 1 << 4,   //check
-        NeverUsed = 1 << 5,     //??
-        TriggerScript = 1 << 6, //turbo pads, but not only. maybe quad has a linked script?
-        Reverb = 1 << 7,        //reverberation (echo), used in various indoor areas or tunnels
-        KickersToo = 1 << 8,    //??
-        KillRacer = 1 << 9,     //these quads trigger mask
-        TikiMouth = 1 << 10,    //only spotted on tiger temple
-        Unknown = 1 << 11,      //mostly same as ground, but more.
-        Ground = 1 << 12,       //ground, makes it collidable
-        Wall = 1 << 13,         //walls, if it's flat, char will keep bouncing
-        NoCollision = 1 << 14,  //visible stuff like water and outside areas
-        InvisibleTriggers = 1 << 15, //invisible stuff like triggers
+        Invisible = 1 << 0,     // check
+        MoonGravity = 1 << 1,   // triggers MG in Oxide Station
+        Reflection = 1 << 2,    // used in snow levels
+        Kickers = 1 << 3,       // ?? maybe denotes that you should be awarded extra turbo for landing?
+        OutOfBounds = 1 << 4,   // check
+        NeverUsed = 1 << 5,     // ??
+        TriggerScript = 1 << 6, // turbo pads, but not only. maybe quad has a linked script?
+        Reverb = 1 << 7,        // reverberation (echo), used in various indoor areas or tunnels
+        KickersToo = 1 << 8,    // ??
+        KillRacer = 1 << 9,     // these quads trigger mask respawn
+        TikiMouth = 1 << 10,    // only spotted in tiger temple
+        Unknown = 1 << 11,      // mostly same as ground, but more.
+        Ground = 1 << 12,       // ground, makes it collidable
+        Wall = 1 << 13,         // walls, if it's flat, kart will keep bouncing
+        NoCollision = 1 << 14,  // visible stuff without collision like water and outside areas
+        InvisibleTriggers = 1 << 15, // invisible stuff like triggers
         All = -1
     }
 

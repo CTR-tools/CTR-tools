@@ -14,8 +14,8 @@ namespace CTRFramework.Shared
         public static Random Random = new Random();
 
         // so these are hardcoded fixed point math fractional bits to restore the float value
-        public static readonly float GteScaleLarge = 1.0f / (1 << 12); //4096 = 1.0
-        public static readonly float GteScaleSmall = 1.0f / (1 << 8);  //256 = 1.0
+        public static readonly float GteScaleLarge = 1.0f / (1 << 12); //4096 = 1.0, used for 4 byte values - 20.12 format
+        public static readonly float GteScaleSmall = 1.0f / (1 << 8);  //256 = 1.0, used for 2 bytes values - 8.8 format
 
         // Math.Clump since .NET 6
         public static float Normalize(float min, float max, float val) => (val - min) / (max - min);
@@ -119,7 +119,7 @@ namespace CTRFramework.Shared
         {
             filename = filename.ToUpper();
 
-            //btw how filter works then on linux, lol
+            // btw how filter works then on linux, lol
             foreach (var file in Directory.GetFiles(directory, filter))
                 if (Path.GetFileName(file).ToUpper() == filename)
                     return file;
@@ -237,7 +237,7 @@ namespace CTRFramework.Shared
         }
 
 
-        //This is used for filenames mostly, loads list of "123=filename" as dictionary
+        // This is used mostly for filenames, loads list of "123=filename" as dictionary
         public static Dictionary<int, string> LoadNumberedList(string resource)
         {
             string[] lines = Helpers.GetLinesFromResource(resource);
@@ -274,7 +274,7 @@ namespace CTRFramework.Shared
             return names;
         }
 
-        //This is used for samples, loads list of "XXXXXXXX=sample_name" as dictionary
+        // This is used for samples, loads list of "XXXXXXXX=sample_name" as dictionary
         public static Dictionary<string, string> LoadTagList(string resource)
         {
             string[] lines = Helpers.GetLinesFromResource(resource);
@@ -361,7 +361,11 @@ namespace CTRFramework.Shared
         #endregion
 
 
-
+        /// <summary>
+        /// Checks if any symbol is contained within the japanese kana range.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         public static bool ContainsKana(string text)
         {
             foreach (char c in text.ToCharArray())

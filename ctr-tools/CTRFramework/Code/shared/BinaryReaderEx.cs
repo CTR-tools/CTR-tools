@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Windows.Forms;
 
 namespace CTRFramework.Shared
 {
@@ -418,6 +419,11 @@ namespace CTRFramework.Shared
         public string HexPos()
         {
             return "0x" + this.BaseStream.Position.ToString("x8");
+        }
+
+        public PsxPtr PositionAsPointer()
+        {
+            return new PsxPtr((uint)BaseStream.Position);
         }
     }
 }

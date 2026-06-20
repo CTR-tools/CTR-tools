@@ -18,74 +18,93 @@ namespace CTRFramework.Big
 
         public int FileCursor = -1;
 
-        private int totalFiles = 0;
-        public int TotalFiles => totalFiles;
 
+        public int TotalFiles => totalFiles;
+        private int totalFiles = 0;
+
+        // retrieves current file size from a pos/offset pair
         public int FileSize
         {
             get
             {
-                Jump(FileCursor * 8 + 12);
+                Jump(12 + 8 * FileCursor);
                 return ReadInt32();
             }
         }
 
         Dictionary<int, string> names = new Dictionary<int, string>();
 
+        // retrieves a proper name based on the loaded list.
+        // important, it relies on the current cursor position.
         public string Filename
         {
             get
             {
-                if (FileCursor > -1)
-                    if (names.ContainsKey(FileCursor))
-                        return names[FileCursor];
+                if (FileCursor > -1) // if cursor is positive
+                    if (names.ContainsKey(FileCursor)) // if name exists
+                        return names[FileCursor]; // return name
 
+                // fallback to a generic file_XXXX.bin name
                 return $"file_{FileCursor.ToString("0000")}.bin";
             }
         }
 
+        /// <summary>
+        /// Holds a pointer to the pos/offset pair for the current file entry
+        /// </summary>
         private int fileDefPtr => 8 + FileCursor * 8;
 
         public BigFileReader(Stream stream) : base(stream)
         {
-            SanityCheck();
+            Validate();
             KnownFileCheck();
         }
+
 
         public static BigFileReader FromFile(string filename, LoadingMode mode = LoadingMode.FromDisk)
         {
             switch (mode)
             {
+                // create a reader using a file stream
                 case LoadingMode.FromDisk: return new BigFileReader(File.OpenRead(filename));
+
+                // load data to ram in a single pass, then create a reader
                 case LoadingMode.ToRam: return new BigFileReader(new MemoryStream(File.ReadAllBytes(filename)));
             }
 
-            Helpers.Panic("BigFileReader", PanicType.Error, "Can't create stream!!!");
+            Helpers.Panic("BigFileReader", PanicType.Error, "Couldn't create a stream!!!");
             return null;
         }
 
         /// <summary>
-        /// Sanity check for CTR BIG format.
+        /// Validates CTR BIG format. Throws an exception if something goes wrong.
         /// </summary>
-        private void SanityCheck()
+        private void Validate()
         {
+            // make sure we're in the beginning of the stream
             Jump(0);
 
+            // it always starts with a zero
             if (ReadInt32() != 0)
                 throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file.");
 
+            // amount of files
             totalFiles = ReadInt32();
 
+            // an arbitrary file count, original game only holds about 700 files
             if (totalFiles > 2048)
                 throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file, more than 2048 files.");
 
+            // scan every entry
             for (int i = 0, ptr = 0, size = 0; i < totalFiles; i++)
             {
+                // read pos/offset pair
                 ptr = ReadInt32();
                 size = ReadInt32();
 
+                // check out of bounds cases
                 if (ptr > BaseStream.Length || ptr + size > BaseStream.Length)
-                    throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file.");
+                    throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file, entry out of bounds.");
             }
         }
 
@@ -94,12 +113,13 @@ namespace CTRFramework.Big
         /// </summary>
         private void KnownFileCheck()
         {
+            // ju
             Jump(0);
 
             var doc = new XmlDocument();
             doc.LoadXml(Helpers.GetTextFromResource(Meta.XmlPath));
 
-            //calc hash and look for matching entry
+            // calculate hash and look for matching entry
 
             var md5 = Helpers.CalculateMD5(BaseStream);
             string xpath = $"/data/big/entry[@md5='{md5}']";
@@ -143,7 +163,7 @@ namespace CTRFramework.Big
         }
 
         /// <summary>
-        /// Reads file entry.
+        /// Reads the file entry at the current cursor.
         /// </summary>
         /// <returns>BigEntry instance.</returns>
         public BigEntry ReadEntry()
@@ -154,16 +174,21 @@ namespace CTRFramework.Big
             if (fileDefPtr > BaseStream.Length)
                 throw new IndexOutOfRangeException($"{this.GetType().Name}: out of bounds.");
 
+            // jump to pos/offset
             Jump(fileDefPtr);
 
+            // read pos/offset
             int _ptr = ReadInt32() * Meta.SectorSize;
             int _size = ReadInt32();
 
+            // validate out of bounds
             if (_ptr + _size > BaseStream.Length)
                 throw new IndexOutOfRangeException($"{this.GetType().Name}: out of bounds.");
 
+            // jump to file data
             Jump(_ptr);
 
+            // create a new bigfile entry
             return new BigEntry()
             {
                 Index = FileCursor,
@@ -195,10 +220,10 @@ namespace CTRFramework.Big
                 ReadEntry().Save(Helpers.PathCombine(path));
         }
 
-        public BigFile GetBig() => BigFile.FromBigReader(this);
+        public BigFile GetBigFile() => BigFile.FromBigReader(this);
 
         /// <summary>
-        /// Moves file cursor in the beginning.
+        /// Moves file cursor to the beginning.
         /// </summary>
         public void Reset()
         {
@@ -206,13 +231,16 @@ namespace CTRFramework.Big
         }
 
         /// <summary>
-        /// Loads scene and vram by index. Please note that vram file comes first, then goes scene file.
-        /// This function blindly assumes you know what you're doing.
+        /// Loads scene and vram by the absolute index. Please note that vram file comes first, then goes scene file.
+        /// Be careful, this function blindly assumes that *you know what you're doing*.
         /// </summary>
         /// <param name="index">File index in the BIG file.</param>
         /// <returns>CtrScene instance.</returns>
         public CtrScene ReadScene(int index)
         {
+            if (index < 0 || index >= TotalFiles)
+                throw new ArgumentException($"{this.GetType().Name}: Index was out of bounds");
+
             var vram = ReadEntry(index).ParseAs<CtrVrm>();
             var scene = ReadEntry(index + 1).ParseAs<CtrScene>();
             scene.SetVram(vram);
