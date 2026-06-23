@@ -15,8 +15,8 @@ rem - !!! variables !!! change, if needed !!!
 	set rebuild=ctr_rebuild
 	set big_name=bigfile
 
-	set makeiso=%~dp0\tools\mkpsxiso\mkpsxiso.exe
-	set bigtool=%~dp0\tools\ctrtools\bigtool.exe
+	set makeiso="%~dp0\tools\mkpsxiso\mkpsxiso.exe"
+	set bigtool="%~dp0\tools\ctrtools\bigtool.exe"
 
 
 echo current directory: %~dp0
@@ -42,11 +42,6 @@ echo OK!
 echo rebuilding bigfile
 
 	%bigtool% "%big_name%.txt"
-
-
-rem - get back to root
-
-	cd /d "%~dp0"
 
 
 echo rebuilding ISO

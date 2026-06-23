@@ -11,8 +11,8 @@ rem - !!! variables !!! change, if needed !!!
 	set rebuild=ctr_rebuild
 	set big_name=bigfile
 
-	set dumpiso=%~dp0\tools\mkpsxiso\dumpsxiso.exe
-	set bigtool=%~dp0\tools\ctrtools\bigtool.exe
+	set dumpiso="%~dp0\tools\mkpsxiso\dumpsxiso.exe"
+	set bigtool="%~dp0\tools\ctrtools\bigtool.exe"
 
 echo current directory: %~dp0
 
