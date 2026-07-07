@@ -15,13 +15,13 @@ rem - !!! variables !!! change, if needed !!!
 	set rebuild=ctr_rebuild
 	set big_name=bigfile
 
-	set makeiso="%~dp0\tools\mkpsxiso\mkpsxiso.exe"
-	set bigtool="%~dp0\tools\ctrtools\bigtool.exe"
+	set makeiso="%~dp0tools\mkpsxiso\mkpsxiso.exe"
+	set bigtool="%~dp0tools\ctrtools\bigtool.exe"
 
 
 echo current directory: %~dp0
 
-	cd /d "%~dp0\%rebuild%\"
+	cd /d "%~dp0%rebuild%\"
 
 
 echo checking tools...
@@ -46,20 +46,20 @@ echo rebuilding bigfile
 
 echo rebuilding ISO
 
-	%makeiso% "%~dp0\%rebuild%.xml" -y -q -o "%~dp0\%rebuild%.bin"
+	%makeiso% "%~dp0%rebuild%.xml" -y -q -o "%~dp0%rebuild%.bin"
 
 
 rem - maybe we've got an emulator?
 
 	if exist %duck_path% (
 		echo launching Duckstation
-		start "duckstation" %duck_path% "%~dp0\%rebuild%.bin"
+		start "duckstation" %duck_path% "%~dp0%rebuild%.bin"
 		goto :end
 	)
 
 	if exist %epsxe_path% (
 		echo launching ePSXe
-		start "epsxe" %epsxe_path% -nogui -loadbin "%~dp0\%rebuild%.bin"
+		start "epsxe" %epsxe_path% -nogui -loadbin "%~dp0%rebuild%.bin"
 		goto :end
 	)
 

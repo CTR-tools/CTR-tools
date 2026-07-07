@@ -11,8 +11,8 @@ rem - !!! variables !!! change, if needed !!!
 	set rebuild=ctr_rebuild
 	set big_name=bigfile
 
-	set dumpiso="%~dp0\tools\mkpsxiso\dumpsxiso.exe"
-	set bigtool="%~dp0\tools\ctrtools\bigtool.exe"
+	set dumpiso="%~dp0tools\mkpsxiso\dumpsxiso.exe"
+	set bigtool="%~dp0tools\ctrtools\bigtool.exe"
 
 echo current directory: %~dp0
 
@@ -49,12 +49,12 @@ rem - checking param
 
 echo dumping iso files
 
-	%dumpiso% %1 -x "%~dp0\%rebuild%" -s "%~dp0\%rebuild%.xml"
+	%dumpiso% %1 -x "%~dp0%rebuild%" -s "%~dp0%rebuild%.xml"
 
 
 echo dumping bigfile contents
 
-	%bigtool% "%~dp0\%rebuild%\%big_name%.big"
+	%bigtool% "%~dp0%rebuild%\%big_name%.big"
 
 
 echo Work complete!
