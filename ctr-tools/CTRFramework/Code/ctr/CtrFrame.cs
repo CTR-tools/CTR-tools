@@ -77,21 +77,21 @@ namespace CTRFramework.Models
         }
 
         // converts delta and temporal bits to actual coord
+        // !! note ref int usage !!
         private Vector3b DeltaToVertex(ref int X, ref int Y, ref int Z, BitStreamReader bs, CtrDelta delta)
         {
-            // reset command (111 -> all 3 bits are set)
+            // reset command (0b111 -> all 3 bits are set)
             if (delta.Bits.X == 7) X = 0;
             if (delta.Bits.Y == 7) Y = 0;
             if (delta.Bits.Z == 7) Z = 0;
 
-            // recover temporal value
+            // recover temporal value from bitstream
             int tX = GetTemporalValue(bs, delta.Bits.X);
             int tY = GetTemporalValue(bs, delta.Bits.Y);
             int tZ = GetTemporalValue(bs, delta.Bits.Z);
 
-            // add temporal value to retrieve actual coords
-            // X is shifted since there is one less bit stores in delta for X axis
-            X = (X + (delta.Position.X << 1) + tX) % 256;
+            // retrieve actual coords
+            X = (X + delta.Position.X + tX) % 256;
             Y = (Y + delta.Position.Y + tY) % 256;
             Z = (Z + delta.Position.Z + tZ) % 256;
 
@@ -104,14 +104,14 @@ namespace CTRFramework.Models
         {
             int result = bs.TakeBit() == 1 ? -(1 << deltaBits) : 0;
 
-            // TODO: maybe this can be simplified...
+            // TODO -- maybe this can be simplified...
             for (int i = 0; i < deltaBits; i++)
                 result |= bs.TakeBit() << (deltaBits - 1 - i);
 
             return result;
         }
 
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             int pos = (int)bw.Position;
 

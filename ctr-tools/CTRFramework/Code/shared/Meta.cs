@@ -9,6 +9,7 @@ namespace CTRFramework.Shared
     {
         public static int SectorSize = 0x800;
         public static int DefaultFrequency = 11025;
+        public static string HowlMagic = "HOWL";
 
         #region [Paths/filenames]
         public static string BasePath = AppDomain.CurrentDomain.BaseDirectory;
