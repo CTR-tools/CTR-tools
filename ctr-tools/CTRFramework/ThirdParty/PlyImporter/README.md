@@ -1,13 +1,3 @@
-# Changes for CTR-tools
-- converted unity types to ctrframework types
-- converted debug calls to helper-panic
-- converted color from floats to bytes
-- renamed GetVerticesAndTriangles to FromFile
-
-Source repo: https://github.com/3DBear/PlyImporter
-
-# Original readme
-
 # PlyImporter
 PLY (Polygon File Format) importer for Unity.
 Feel free to open an issue if you found a .ply that does not work with this script, I'll happily make it work.
