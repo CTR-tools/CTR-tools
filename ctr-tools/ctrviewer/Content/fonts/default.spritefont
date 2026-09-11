@@ -12,7 +12,7 @@ with.
     Modify this string to change the font that will be imported.
 	https://fonts.google.com/specimen/Open+Sans
     -->
-    <FontName>Open Sans Regular</FontName>
+    <FontName>Verdana</FontName>
 
     <!--
     Size is a float value, measured in points. Modify this value to change

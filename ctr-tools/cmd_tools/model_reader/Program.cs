@@ -31,6 +31,7 @@ namespace model_reader
                     );
                 Console.Write("Press any key...");
                 Console.ReadKey();
+
                 return;
             }
 
@@ -60,91 +61,93 @@ namespace model_reader
         }
 
 
+        static string FindVramPath(string filename)
+        {
+            string basepath = Path.GetDirectoryName(filename);
+            string vrampath = Path.ChangeExtension(filename, "vrm");
+
+            // in case we have not found vrm file that is called like LEVm try hardcoded paths
+            if (!Helpers.IsValidPath(vrampath)) {
+                // try shared
+                vrampath = Helpers.FindFirstFile(basepath, "shared.vrm");
+            }
+
+            if (!Helpers.IsValidPath(vrampath)) {
+                // try custcenes1
+                vrampath = Helpers.FindFirstFile(basepath, "cutscenes1.vrm");
+                if (!Helpers.IsValidPath(vrampath)) vrampath = String.Empty;
+            }
+
+            if (!Helpers.IsValidPath(vrampath)) {
+                // try custcenes2
+                vrampath = Helpers.FindFirstFile(basepath, "cutscenes2.vrm");
+                if (!Helpers.IsValidPath(vrampath)) vrampath = String.Empty;
+            }
+
+            if (!Helpers.IsValidPath(vrampath)) {
+                Console.WriteLine("Warning! No vram file found.\r\nPlease put shared.vrm file with mpk you want to extract.");
+                vrampath = String.Empty;
+            }
+
+            return vrampath;
+        }
+
         static void ConvertFile(string filename)
         {
             string basepath = Path.GetDirectoryName(filename);
             string name = Path.GetFileNameWithoutExtension(filename);
             string ext = Path.GetExtension(filename).ToUpper();
+            string vrampath = FindVramPath(filename);
 
-            string vrampath = Path.ChangeExtension(filename, "vrm");
-
-            if (!File.Exists(vrampath))
-            {
-                vrampath = Helpers.FindFirstFile(Path.GetDirectoryName(filename), "shared.vrm");
-
-                if (!File.Exists(vrampath))
-                {
-                    Console.WriteLine("Warning! No vram file found.\r\nPlease put shared.vrm file with mpk you want to extract.");
-                    vrampath = "";
-                }
-            }
-
-            if (!File.Exists(vrampath))
-            {
-                vrampath = Helpers.FindFirstFile(Path.GetDirectoryName(filename), "cutscenes1.vrm");
-
-                if (!File.Exists(vrampath))
-                {
-                    vrampath = "";
-                }
-            }
-
-            if (!File.Exists(vrampath))
-            {
-                vrampath = Helpers.FindFirstFile(Path.GetDirectoryName(filename), "cutscenes2.vrm");
-
-                if (!File.Exists(vrampath))
-                {
-                    vrampath = "";
-                }
-            }
-
-
-
+            // process extension
             switch (ext)
             {
-                case ".LEV":
-                    {
-                        var scene = CtrScene.FromFile(filename);
-                        //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
-                        scene.Export(Helpers.PathCombine(basepath, name), ExportFlags.All);
-                        //scene.Save(filename + "_test.lev");
-                        break;
-                    }
-                case ".CTR":
-                    {
-                        var model = CtrModel.FromFile(filename);
-                        model.Export(basepath, vrampath == "" ? null : CtrVrm.FromFile(vrampath).GetVram());
+                // level file
+                case ".LEV": {
+                    var scene = CtrScene.FromFile(filename);
+                    //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
+                    scene.Export(Helpers.PathCombine(basepath, name), ExportFlags.All);
+                    //scene.Save(filename + "_test.lev");
+                    break;
+                }
 
-                        break;
-                    }
-                case ".OBJ":
-                    {
-                        var obj = OBJ.FromFile(filename);
-                        var ctr = CtrModel.FromObj(obj);
-                        ctr.Save(basepath);
+                // instanced model file
+                case ".CTR":{
+                    var model = CtrModel.FromFile(filename);
+                    model.Export(basepath, String.IsNullOrWhiteSpace(vrampath) ? null : CtrVrm.FromFile(vrampath).GetVram());
 
-                        break;
-                    }
-                case ".PLY":
-                    {
-                        var ctr = CtrModel.FromPly(filename);
-                        ctr.Save(basepath);
+                    break;
+                }
 
-                        break;
-                    }
-                case ".MPK":
-                    {
-                        var mpk = ModelPack.FromFile(filename);
-                        mpk.Extract(Helpers.PathCombine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
+                // OBJ 3D model file
+                case ".OBJ": {
+                    var obj = OBJ.FromFile(filename);
+                    var ctr = CtrModel.FromObj(obj);
+                    ctr.Save(basepath);
 
-                        break;
-                    }
+                    break;
+                }
+
+                // PLY 3D model file
+                case ".PLY": {
+                    var ctr = CtrModel.FromPly(filename);
+                    ctr.Save(basepath);
+
+                    break;
+                }
+
+                // model container file
+                case ".MPK": {
+                    var mpk = ModelPack.FromFile(filename);
+                    mpk.Extract(Helpers.PathCombine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
+
+                    break;
+                }
+
+                // unknown fle
                 default:
-                    {
-                        Console.WriteLine($"Unsupported file: {filename}");
-                        return;
-                    }
+                    Console.WriteLine($"Unsupported file: {filename}");
+                    return;
 
             }
 

@@ -1,0 +1,37 @@
+﻿<!-- should use this kind of DB for menus and bigfile gui -->
+<StringDb>
+
+	<Levels>
+		<Level id="proto8" name="Dingo Canyon" arcade="crystal" />
+		<Level id="proto9" name="Dragon Mines" arcade="crystal" boss="true" />
+		<Level id="desert2" name="Blizzard Bluff" arcade="wumpa"/>
+		<Level id="island1" name="Crash Cove" arcade="wumpa" />
+		<Level id="temple1" name="Tiger Temple" arcade="wumpa" />
+		<Level id="temple2" name="Papu's Pyramid" arcade="nitro" boss="true" />
+		<Level id="tube1" name="Roo's Tubes" arcade="crystal" boss="true" />
+		<Level id="blimp1" name="Hot Air Skyway" arcade="crash" boss="true" />
+		<Level id="sewer1" name="Sewer Speedway" arcade="crystal" />
+		<Level id="cave1" name="Mystery Caves" arcade="nitro" />
+		<Level id="castle1" name="Cortex Castle" arcade="nitro" />
+		<Level id="labs1" name="N.Gin Labs" arcade="crash" />
+		<Level id="ice1" name="Polar Pass" arcade="crash" />
+		<Level id="space" name="Oxide Station" boss="true" />
+		<Level id="coco1" name="Coco Park" arcade="wumpa" />
+		<Level id="arena2" name="Tiny Arena" arcade="nitro" />
+		<Level id="secret1" name="Slide Coliseum" arcade="crash" />
+		<Level id="secret2" name="Turbo Track" />
+	</Levels>
+
+	<ToolTips>
+		<Entry id="levels" text="Contains most levels in the game, including race\r\ntracks, battle arenas, adventure hubs, main menu\r\nand adventure selection screens."/>
+		<Entry id="packs" text="Various game data combined into separate packages,\r\nto be loaded at once in the specific game mode.\r\nWeapons, crates, kart models, fonts, rewards, etc."/>
+		<Entry id="overlays" text="Additional game code that can be loaded and unloaded\r\ndynamically at runtime."/>
+		<Entry id="lang" text="Localization files to translate the game on the fly."/>
+		<Entry id="models" text="Various instanced models, including karts models,\r\npodium scenes and boss hub custscenes."/>
+		<Entry id="screen" text="Copyright loading screens used during the initial game loading."/>
+		<Entry id="cutscenes" text="Intro and outro cutscenes, including Oxide monologues."/>
+		<Entry id="credits" text="All the credits scenes, a scene per character."/>
+		<Entry id="thumbs" text="Level preview movies on the level selection screen."/>
+	</ToolTips>
+
+</StringDb>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
-using resources = CTRFramework.Properties.Resources;
+using Resources = CTRFramework.Properties.Resources;
 
 namespace CTRFramework.Shared
 {
@@ -37,13 +37,13 @@ namespace CTRFramework.Shared
             get
             {
                 if (version == null)
-                    version = $"CTRFramework {resources.Version} ({resources.BuildDate.Split(',')[0]})";
+                    version = $"CTRFramework {Resources.Version} ({Resources.BuildDate.Split(',')[0]})";
 
                 return version;
             }
         }
 
-        public static string GetSignature() => resources.signature;
+        public static string GetSignature() => Resources.signature;
 
         static XmlDocument midixml;
 
@@ -162,7 +162,8 @@ namespace CTRFramework.Shared
             */
         }
     }
-    public struct MetaInst
+
+    public class MetaInst
     {
         public int Midi { get; set; }
         public int Pitch { get; set; }

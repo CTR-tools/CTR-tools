@@ -202,7 +202,7 @@ namespace ctrviewer.Loaders
                     }
             }
 
-            //move double sided to the end
+            // move double sided to the end
             foreach (var trilist in Trilists.ToList())
             {
                 if (!trilist.Value.CullingEnabled)

@@ -30,7 +30,7 @@ namespace ctrviewer.Engine.Menu
 
         public static CustomLevelInfo FromFile(string filename = "")
         {
-            if (filename == "") return null;
+            if (String.IsNullOrWhiteSpace(filename)) return null;
             if (!File.Exists(filename)) return null;
 
             var info = new CustomLevelInfo();

@@ -107,7 +107,7 @@ namespace CTRFramework.Audio
 
             string list = "";
 
-            //move to versions xml
+            // TODO -- move to versions xml
             if (Entries.Count == 383) list = "xa_aug5_beta.txt";
             if (Entries.Count == 407) list = "xa_aug14_beta.txt";
             if (Entries.Count == 427) list = "xa_usa_beta_sep.txt";

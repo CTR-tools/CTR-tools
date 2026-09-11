@@ -82,8 +82,6 @@ namespace CTRTools
             currentControl.Enabled = true;
             currentControl.Visible = true;
 
-            currentControl.Visible = true;
-
             this.ResumeLayout();
         }
 

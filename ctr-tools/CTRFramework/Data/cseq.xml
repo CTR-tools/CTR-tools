@@ -114,18 +114,18 @@
 	
 	<song title="tubes">
 		<long midi="8" pitch="12" title="Celesta"/>
-		<long midi="18" pitch="-12" title="Rock Organ"/>
-		<long midi="25" pitch="-12" title="Steel Acoustic Guitar"/>
-		<long midi="11" title="Vibraphone"/>
+		<long midi="35" pitch="-24" title="Bass"/>
+		<long midi="28" pitch="-12" title="Muted guirar"/>
+		<long midi="12" title="Marimba"/>
 		
-		<short key="35" title="Accoustic Bass Drum"/>
+		<short key="36" title="Accoustic Bass Drum"/>
 		<short key="35" title="Bass Drum"/>
 		<short key="38" title="Accoustic Snare"/>
 		<short key="39" title="Hand Clap"/>
 		<short key="44" title="Pedal Hi-Hat"/>
 		<short key="42" title="Closed Hi-Hat"/>
-		<short key="29" title="Scratch"/>
-		<short key="32" title="Square Click"/>
+		<short key="87" title="Scratch"/>
+		<short key="41" title="Square Click"/>
 		<short key="49" title="Crash Cymbal"/>
 	</song>
 	

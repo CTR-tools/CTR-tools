@@ -36,13 +36,13 @@ namespace CTRFramework.Vram
                 return false;
             }
 
-            if (String.IsNullOrEmpty(vramPath) || !File.Exists(vramPath))
+            if (!Helpers.IsValidPath(vramPath))
             {
                 Helpers.Panic(this, PanicType.Warning, "No VRAM file provided!");
                 return false;
             }
 
-            if (String.IsNullOrEmpty(newtexPath) || !Directory.Exists(newtexPath))
+            if (!Helpers.IsValidPath(newtexPath))
             {
                 Helpers.Panic(this, PanicType.Warning, "No newtex folder provided!");
                 return false;

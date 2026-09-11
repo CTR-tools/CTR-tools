@@ -61,28 +61,38 @@ namespace ctrviewer.Engine
             }
             else
             {
+                // for every animation in the model
                 foreach (var anim in mesh.anims)
                 {
+                    // create animated buffer
                     var buf = new AnimatedVertexBuffer();
 
+                    // initialize limits
                     buf.totalFrames = anim.numFrames;
                     buf.frameSize = mesh.verts.Count;
 
+                    // foreach frame of the animation
                     foreach (var frame in anim.Frames)
                     {
+                        // copy frame to mesh
                         mesh.frame = frame;
+
+                        // get the buffer
                         mesh.GetVertexBuffer();
 
-                        for (int i = 0; i < mesh.verts.Count / 3; i++)
-                        {
+                        // for each vertex entry in the buffer
+                        for (int i = 0; i < mesh.verts.Count / 3; i++) {
+
+                            // create a list of MG vertices
                             var li = new List<VertexPositionColorTexture>();
 
-                            for (int j = i * 3; j < i * 3 + 3; j++)
-                            {
+                            // convert all vertices
+                            for (int j = i * 3; j < i * 3 + 3; j++) {
                                 var vert = mesh.verts[j];
                                 li.Add(DataConverter.ToVptc(vert, vert.uv, color, lerp, scale * Helpers.GteScaleSmall)); //todo: what, why, shouldnt use gte scale here
                             }
 
+                            // push the list
                             buf.PushTri(li);
                         }
                     }
@@ -90,10 +100,11 @@ namespace ctrviewer.Engine
                     trilist.animsList.Add(buf);
                 }
 
+                // set initial anim as the default
                 trilist.anim = trilist.animsList[0];
             }
 
-            //next create index buffers for all textures
+            // next create index buffers for all textures
             for (int i = 0; i < mesh.verts.Count / 3; i++)
             {
                 //load textures

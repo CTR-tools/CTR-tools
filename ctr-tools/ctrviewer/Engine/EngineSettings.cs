@@ -219,7 +219,7 @@ namespace ctrviewer.Engine
 
         public static void Save(string filename = "")
         {
-            if (filename == "")
+            if (String.IsNullOrWhiteSpace(filename))
             {
                 Helpers.CheckFolder(Meta.UserPath);
                 filename = Meta.SettingsFile;
@@ -241,7 +241,7 @@ namespace ctrviewer.Engine
 
         public static EngineSettings Load(string filename = "")
         {
-            if (filename == "")
+            if (String.IsNullOrWhiteSpace(filename))
             {
                 Helpers.CheckFolder(Meta.UserPath);
                 filename = Meta.SettingsFile;
