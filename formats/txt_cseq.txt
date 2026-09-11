@@ -77,7 +77,7 @@ opcodes:
 0x06 - assumed velocity (volume) not actually used in most tracks
 0x07 - assumed pan
 0x08 - unknown. used in japanese tracks
-0x09 - patch change
+0x09 - instrument change (MIDI calls it "patch")
 0x0A - assumed bend (pitch shift)
 
 data length:
@@ -90,3 +90,10 @@ It's a simple number storage format that compresses data to 7 bits and uses 8th 
 1 <7 bits data> 1 <7 bits data> 0 <7 bits data> (since 0, no next byte is given)
 it means that for values less than 128 it only uses 1 byte, 2 bytes for values less than 16384, etc.
 considering most midi events are close enough, most of the time it wont exceed 2 bytes.
+
+MIDI vs CSEQ discrepancies
+- MIDI is limited to 16 different channels, CSEQ is virtually not limited, practically there are only 24 SPU channels on PSX hardware and some of them are constantly used by in-game SFX.
+- most MIDI command values are limited to 128 values (like volume)
+- MIDI has only 1 percussion track, meaning it doesnt support individual percussion sample panning.
+- 1 MIDI file contains 1 song (CSEQ contains multiple songs, sharing the instruments)
+- CSEQ doesnt support mid-track looping points (only start to end), meaning one can't have "intro" to a looping segment. it also means that a looped segment must be duplicated, and it may hit the internal allocation limit. Neither does MIDI officially though. Most workarounds are editor built-in solutions or custom commands.
