@@ -1,12 +1,13 @@
 CTR uses native PSX TIM format to store a combined atlas of all textures in a single file.
 This allows to spend just a few calls to populate vram entirely instead of reading textures one by one.
-This approach creates a certain hurdle for decompilation as we only can extract actual polygon mappings, not the orginal texture sizes. while most of the time it matches, sometimes it divides a larger texture in smaller ones.
+This approach creates a certain hurdle for decompilation as we only can extract actual polygon mappings, not the orginal texture sizes. while most of the time it matches, sometimes it divides a larger texture in smaller ones (this issue was addressed by palette grouping. the assumption is that if several regions use the same palette, we can combine them. works surprisingly well.)
 
-ksy: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_vrm.ksy
+VRM format described here: https://github.com/CTR-tools/CTR-tools/blob/master/formats/ctr_vrm.ksy
 
 
-PSX VRAM 101
+# PSX VRAM 101
 
+PSX console uses exactly 1MB of VRAM.
 1MB of VRAM is basically a 2048x512 byte array.
 
 Depending on pixel format, it can be treated as:
@@ -15,6 +16,8 @@ Depending on pixel format, it can be treated as:
 4 bits - 1 byte per 2 pixels - 4096x512 image
 
 CTR typically uses 4 bit mode, to enable more textures. However some textures use other modes too.
+
+## VRAM Pages
 
 Whole VRAM is split in 32 subareas, referred to as texture pages.
 there are 16x2 texture pages in vram, each texture page is 256x256 in 4 bit mode.

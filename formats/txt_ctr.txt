@@ -1,4 +1,5 @@
 # Crash Team Racing dynamic model format
+
 Historically we refer to this format as .ctr. CTR-tools implements .ctr parsing via classes prefixed with Ctr in Code\ctr folder. ctr data can be found either in standalone files (kart models, podium chars) or included within the level file (crates, hazards, etc).
 
 #common structures
@@ -41,9 +42,9 @@ mesh {
 	int? - unk4 - anything other than 0 freezes the game
 }
 
-while technically the order of data in teh file is predefined, it's probably related to the original order in the original CTR export plugin. it's probably possible to swap data around if needed, since it's all pointer based.
+while technically the order of data in the file is predefined, it's probably related to the original order in the original CTR export plugin. it's probably possible to swap data around if needed, since it's all pointer based.
 
-what also makes it difficult is the fact that the format doesn't store any sizes of its arrays. it can be obtained by parsing the command list beforehand to retrieve the biggest indices of each array.
+what also makes it difficult is the fact that the format doesn't store any sizes of its arrays. it can be assumed by parsing the command list beforehand to retrieve the biggest indices of each array. This however does not guarantee that the data size does not exceed this number, but it never fails for the original data.
 
 
 // animation entry header
@@ -87,7 +88,7 @@ the final coord = ((vertex coord + offset) / 255) * scale coord
 
 # commands list
 
-there are no face indices values per se, instead there is an array of face drawing commands, it uses scratchpad to optimize model drawing on the original hardware.  
+there are no face indices values per se, instead there is an array of face drawing commands, it uses scratchpad to optimize model drawing on the original hardware. 
 
 * command - is a big endian dword (4 bytes)
 * command list - is an array of dwords.
@@ -110,11 +111,11 @@ v - don't read next vertex from array, but read from stack index
 indices:
 i - index of write location in stack (multiplied by 8 makes it a pointer), max = 255
 c - color coord index, max = 127
-t - tex coord index (0 = no texture), max = 511
+t - tex coord index (0 = reserved for no texture), max = 511
 
 rendering process:
 * to render a model, game parses through all commands.
-* every command either copies vertex to stack at a given address or reads existing vertex from stack (copied previously).
+* every command either copies new vertex value to stack at a given address or reads existing vertex from stack (copied previously).
 * 3 initial commands form a face. next vertex will use 2 vertices from previous face and so on.
 * basically it starts drawing a tristrip where every additional vertex forms a new face.
 * if the command contains the reset flag, it stops drawing current tristip and starts over.
@@ -143,7 +144,7 @@ where X is a bitwise flag value - defines psx rendering mode
 if animation is compressed, Crash Bandicoot 2 delta compression is used.
 https://github.com/warenhuis/Crash-Bandicoot-2-Modelexport
 
-delta compression works kind of like ADPCM sound compression, when you have a base value and every next stream value somehow modified the base value, restoring the original data.
+delta compression works kind of like ADPCM sound compression, when you have a base value and every next stream value somehow modifies the base value, restoring the original data.
 
 there is a shared "delta command" array used for all frames, and a frame specific bitstream array.
 there is one delta command entry per vertex.
