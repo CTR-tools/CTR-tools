@@ -137,6 +137,20 @@ namespace CTRFramework.Shared
         /// <returns>Fixed path</returns>
         public static string PathCombine(params string[] path) => FixPathSeparator(Path.Combine(path));
 
+        /// <summary>
+        /// Checks whether a file or a directory exist within this path string.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static bool IsValidPath(string path)
+        {
+            if (String.IsNullOrWhiteSpace(path)) return false;
+
+            path = FixPathSeparator(path);
+
+            return File.Exists(path) || Directory.Exists(path);
+        }
+
         #endregion
 
         #region [Backup helpers]
@@ -281,11 +295,11 @@ namespace CTRFramework.Shared
 
             var names = new Dictionary<string, string>();
 
-            foreach (string l in lines)
+            foreach (var l in lines)
             {
-                string line = l.Split('#')[0];
+                var line = l.Split('#')[0];
 
-                if (line.Trim() == "") continue;
+                if (String.IsNullOrWhiteSpace(line)) continue;
 
                 string[] bb = line.Trim().Replace(" ", "").Split('=');
 
@@ -385,6 +399,7 @@ namespace CTRFramework.Shared
             return result;
         }
 
+        #region [Vector extensions]
         public static Vector3 CloneVector(Vector3 vec) => new Vector3(vec.X, vec.Y, vec.Z);
 
         public static void Maximize(ref Vector3 src, Vector3 dst)
@@ -400,5 +415,7 @@ namespace CTRFramework.Shared
             src.Y = Math.Min(src.Y, dst.Y);
             src.Z = Math.Min(src.Z, dst.Z);
         }
+
+        #endregion
     }
 }

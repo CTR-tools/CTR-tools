@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 
 namespace CTRFramework.Shared
@@ -68,7 +69,10 @@ namespace CTRFramework.Shared
 
         public static void PanicDebug(object sender, string message)
         {
+            // this dumps a ton of debug data, only use in debug builds
+            #if DEBUG
             Panic(sender.GetType().Name, PanicType.Debug, message);
+            #endif
         }
 
 
@@ -85,9 +89,19 @@ namespace CTRFramework.Shared
         /// <param name="sender">the object that wants to panic</param>
         /// <param name="panicType">type of panic</param>
         /// <param name="message">the message it wants to send</param>
-        //[Conditional("DEBUG")]
         public static void Panic(string sender, PanicType pType, string message)
         {
+            switch (pType)
+            {
+                case PanicType.Debug: Console.ForegroundColor = ConsoleColor.DarkGray; break;
+                case PanicType.Error: Console.ForegroundColor = ConsoleColor.Red; break;
+                case PanicType.Warning: Console.ForegroundColor = ConsoleColor.DarkRed; break;
+                case PanicType.Measure: Console.ForegroundColor = ConsoleColor.Blue; break;
+                case PanicType.Info: Console.ForegroundColor = ConsoleColor.Gray; break;
+                case PanicType.Assume: Console.ForegroundColor = ConsoleColor.Magenta; break;
+                default: Console.ForegroundColor = ConsoleColor.White; break;
+            }
+
             if (panicLevel.HasFlag(PanicLevel.Silent))
                 return;
 
