@@ -1,7 +1,5 @@
 ﻿using CTRFramework.Audio;
 using CTRFramework.Shared;
-using System;
-using System.IO;
 
 namespace howl
 {
@@ -46,7 +44,7 @@ namespace howl
                     {
                         var hwl = Howl.FromReader(br);
 
-                        hwl.Export(path, br);
+                        hwl.ExportRaw(path, br);
                         hwl.ExportAllSamples(path);
 
                         Console.WriteLine("Done!");

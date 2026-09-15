@@ -2,8 +2,6 @@
 using CTRFramework.Models;
 using CTRFramework.Shared;
 using CTRFramework.Vram;
-using System;
-using System.IO;
 
 namespace model_reader
 {
@@ -67,24 +65,28 @@ namespace model_reader
             string vrampath = Path.ChangeExtension(filename, "vrm");
 
             // in case we have not found vrm file that is called like LEVm try hardcoded paths
-            if (!Helpers.IsValidPath(vrampath)) {
+            if (!Helpers.IsValidPath(vrampath))
+            {
                 // try shared
                 vrampath = Helpers.FindFirstFile(basepath, "shared.vrm");
             }
 
-            if (!Helpers.IsValidPath(vrampath)) {
+            if (!Helpers.IsValidPath(vrampath))
+            {
                 // try custcenes1
                 vrampath = Helpers.FindFirstFile(basepath, "cutscenes1.vrm");
                 if (!Helpers.IsValidPath(vrampath)) vrampath = String.Empty;
             }
 
-            if (!Helpers.IsValidPath(vrampath)) {
+            if (!Helpers.IsValidPath(vrampath))
+            {
                 // try custcenes2
                 vrampath = Helpers.FindFirstFile(basepath, "cutscenes2.vrm");
                 if (!Helpers.IsValidPath(vrampath)) vrampath = String.Empty;
             }
 
-            if (!Helpers.IsValidPath(vrampath)) {
+            if (!Helpers.IsValidPath(vrampath))
+            {
                 Console.WriteLine("Warning! No vram file found.\r\nPlease put shared.vrm file with mpk you want to extract.");
                 vrampath = String.Empty;
             }
@@ -103,46 +105,51 @@ namespace model_reader
             switch (ext)
             {
                 // level file
-                case ".LEV": {
-                    var scene = CtrScene.FromFile(filename);
-                    //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
-                    scene.Export(Helpers.PathCombine(basepath, name), ExportFlags.All);
-                    //scene.Save(filename + "_test.lev");
-                    break;
-                }
+                case ".LEV":
+                    {
+                        var scene = CtrScene.FromFile(filename);
+                        //scn.quads = scn.quads.OrderBy(o => o.id).ToList();
+                        scene.Export(Helpers.PathCombine(basepath, name), ExportFlags.All);
+                        //scene.Save(filename + "_test.lev");
+                        break;
+                    }
 
                 // instanced model file
-                case ".CTR":{
-                    var model = CtrModel.FromFile(filename);
-                    model.Export(basepath, String.IsNullOrWhiteSpace(vrampath) ? null : CtrVrm.FromFile(vrampath).GetVram());
+                case ".CTR":
+                    {
+                        var model = CtrModel.FromFile(filename);
+                        model.Export(basepath, String.IsNullOrWhiteSpace(vrampath) ? null : CtrVrm.FromFile(vrampath).GetVram());
 
-                    break;
-                }
+                        break;
+                    }
 
                 // OBJ 3D model file
-                case ".OBJ": {
-                    var obj = OBJ.FromFile(filename);
-                    var ctr = CtrModel.FromObj(obj);
-                    ctr.Save(basepath);
+                case ".OBJ":
+                    {
+                        var obj = OBJ.FromFile(filename);
+                        var ctr = CtrModel.FromObj(obj);
+                        ctr.Save(basepath);
 
-                    break;
-                }
+                        break;
+                    }
 
                 // PLY 3D model file
-                case ".PLY": {
-                    var ctr = CtrModel.FromPly(filename);
-                    ctr.Save(basepath);
+                case ".PLY":
+                    {
+                        var ctr = CtrModel.FromPly(filename);
+                        ctr.Save(basepath);
 
-                    break;
-                }
+                        break;
+                    }
 
                 // model container file
-                case ".MPK": {
-                    var mpk = ModelPack.FromFile(filename);
-                    mpk.Extract(Helpers.PathCombine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
+                case ".MPK":
+                    {
+                        var mpk = ModelPack.FromFile(filename);
+                        mpk.Extract(Helpers.PathCombine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
 
-                    break;
-                }
+                        break;
+                    }
 
                 // unknown fle
                 default:
