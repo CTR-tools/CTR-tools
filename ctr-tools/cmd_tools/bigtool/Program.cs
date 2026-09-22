@@ -7,7 +7,7 @@ namespace bigtool
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             Console.WriteLine(
                 "{0}\r\n{1}\r\n\r\n{2}\r\n",
@@ -25,7 +25,8 @@ namespace bigtool
                     );
                 Console.Write("Press any key...");
                 Console.ReadKey();
-                return;
+
+                return 0;
             }
 
             string filename = Path.GetFullPath(args[0]);
@@ -37,24 +38,24 @@ namespace bigtool
             string ext = Path.GetExtension(filename);
             string bigPath = Path.GetDirectoryName(filename);
 
-            //gotta revisit this stuff
-            //it tries to be smart for the end user when we just call it as "bigtool bigfile.big"
+            // gotta revisit this stuff
+            // it tries to be smart for the end user when we just call it as "bigtool bigfile.big"
 
-            //if no root provided (as i get it, it happens when there is no .\ or disk C:\, right?)
+            // if no root provided (as i get it, it happens when there is no .\ or disk C:\, right?)
             if (!Path.IsPathRooted(filename))
             {
-                //maybe bigfile is in current terminal directory?
+                // maybe bigfile is in current terminal directory?
                 bigPath = Environment.CurrentDirectory;
 
                 if (!File.Exists(Helpers.PathCombine(bigPath, filename)))
                 {
-                    //maybe bigfile in tool's root?
+                    // maybe bigfile in tool's root?
                     bigPath = Meta.BasePath;
 
                     if (!File.Exists(Helpers.PathCombine(bigPath, filename)))
                     {
                         Console.WriteLine("Check filename.");
-                        return;
+                        return 1;
                     }
                 }
             }
@@ -67,10 +68,10 @@ namespace bigtool
                 if (bigfile.Count == 0)
                 {
                     Console.WriteLine("No files to process.");
-                    return;
+                    return 1;
                 }
 
-                switch (ext.ToUpper())
+                switch (ext.ToUpperInvariant())
                 {
                     case ".BIG": bigfile.Extract(Helpers.PathCombine(bigPath, bigName)); break;
                     case ".TXT": bigfile.Save(Helpers.PathCombine(bigPath, $"{bigName}.big")); break;
@@ -80,7 +81,10 @@ namespace bigtool
             catch (Exception ex)
             {
                 Console.WriteLine("Error: " + ex.Message);
+                return 1;
             }
+
+            return 0;
         }
     }
 }

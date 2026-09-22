@@ -1,4 +1,5 @@
 ﻿using CTRFramework.Shared;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -109,6 +110,7 @@ namespace CTRFramework.Big
             Helpers.Panic(this, PanicType.Info, $"Exporting BIG to: {path}");
             Helpers.Panic(this, PanicType.Info, $"{Count} files:");
 
+            // holds a list of filenames, used for rebuilding
             var biglist = new StringBuilder();
 
             foreach (var entry in this)
@@ -131,6 +133,27 @@ namespace CTRFramework.Big
         }
 
         /// <summary>
+        /// Builds a list of extends for current bigfile state.
+        /// </summary>
+        /// <returns></returns>
+        private List<BigExtent> BuildExtents()
+        {
+            var list = new List<BigExtent>();
+
+            int start = 3 * Meta.SectorSize;
+
+            foreach (var file in this)
+            {
+                var extent = new BigExtent((uint)start, (uint)file.Size);
+                extent.Entry = file;
+                start += file.SizePadded;
+                list.Add(extent);
+            }
+
+            return list;
+        }
+
+        /// <summary>
         /// Saves BigFile to a given location.
         /// </summary>
         /// <param name="filename">Filename.</param>
@@ -143,34 +166,27 @@ namespace CTRFramework.Big
 
             byte[] final_big = new byte[TotalSize];
 
+            var extents = BuildExtents();
+
             using (var bw = new BinaryWriterEx(new MemoryStream(final_big, 0, TotalSize)))
             {
                 bw.Write((int)0);
                 bw.Write(Count);
 
-                bw.Jump(3 * Meta.SectorSize);
+                foreach (var ext in extents)
+                    ext.Write(bw);
 
-                foreach (var entry in this)
+                bw.JumpNextSector();
+
+                foreach (var ext in extents)
                 {
+                    bw.Write(ext.Entry.Data);
+                    bw.JumpNextSector();
+
                     Console.Write(".");
-
-                    int pos = (int)bw.BaseStream.Position;
-                    entry.Offset = pos;
-
-                    bw.Write(entry.Data);
-
-                    bw.Jump(pos + entry.SizePadded);
                 }
 
                 Console.WriteLine();
-
-                bw.Jump(8);
-
-                foreach (var entry in this)
-                {
-                    bw.Write(entry.Offset / Meta.SectorSize);
-                    bw.Write(entry.Size);
-                }
 
                 Helpers.Panic(this, PanicType.Info, "Dumping to disk...");
 

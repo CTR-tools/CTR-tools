@@ -18,19 +18,15 @@ namespace CTRFramework.Big
 
         public int FileCursor = -1;
 
+        private List<BigExtent> FileExtents = new List<BigExtent>();
+
 
         public uint TotalFiles => totalFiles;
         private uint totalFiles = 0;
 
         // retrieves current file size from a pos/offset pair
-        public uint FileSize
-        {
-            get
-            {
-                Jump(12 + 8 * FileCursor);
-                return ReadUInt32();
-            }
-        }
+        public uint FileSize => FileExtents[FileCursor].Size;
+
 
         Dictionary<int, string> names = new Dictionary<int, string>();
 
@@ -48,11 +44,6 @@ namespace CTRFramework.Big
                 return $"file_{FileCursor.ToString("0000")}.bin";
             }
         }
-
-        /// <summary>
-        /// Holds a pointer to the pos/offset pair for the current file entry
-        /// </summary>
-        private int fileDefPtr => 8 + FileCursor * 8;
 
         public BigFileReader(Stream stream) : base(stream)
         {
@@ -81,6 +72,8 @@ namespace CTRFramework.Big
         /// </summary>
         private void Validate()
         {
+            FileExtents.Clear();
+
             // make sure we're in the beginning of the stream
             Jump(0);
 
@@ -96,15 +89,11 @@ namespace CTRFramework.Big
                 throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file, more than 2048 files.");
 
             // scan every entry
-            for (int i = 0, ptr = 0, size = 0; i < totalFiles; i++)
+            for (int i = 0; i < totalFiles; i++)
             {
-                // read pos/offset pair
-                ptr = ReadInt32() * Meta.SectorSize;
-                size = ReadInt32();
-
-                // check out of bounds cases
-                if (ptr + size > BaseStream.Length)
-                    throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file, entry out of bounds.");
+                var extent = new BigExtent(this);
+                extent.Validate(this);
+                FileExtents.Add(extent);
             }
         }
 
@@ -113,7 +102,7 @@ namespace CTRFramework.Big
         /// </summary>
         private void KnownFileCheck()
         {
-            // ju
+            // jump to the beginning
             Jump(0);
 
             var doc = new XmlDocument();
@@ -158,6 +147,9 @@ namespace CTRFramework.Big
         /// <returns>BigEntry instance.</returns>
         public BigEntry ReadEntry(int index)
         {
+            if (index < 0 || index > TotalFiles)
+                throw new IndexOutOfRangeException($"{this.GetType().Name}: index out of bounds.");
+
             FileCursor = index;
             return ReadEntry();
         }
@@ -171,30 +163,17 @@ namespace CTRFramework.Big
             if (FileCursor == -1)
                 throw new ArgumentOutOfRangeException($"{this.GetType().Name}: Must use NextFile() first!");
 
-            if (fileDefPtr > BaseStream.Length)
-                throw new IndexOutOfRangeException($"{this.GetType().Name}: out of bounds.");
-
-            // jump to pos/offset
-            Jump(fileDefPtr);
-
-            // read pos/offset
-            int _ptr = ReadInt32() * Meta.SectorSize;
-            int _size = ReadInt32();
-
-            // validate out of bounds
-            if (_ptr + _size > BaseStream.Length)
-                throw new IndexOutOfRangeException($"{this.GetType().Name}: out of bounds.");
+            // get extent
+            var ext = FileExtents[FileCursor];
 
             // jump to file data
-            Jump(_ptr);
+            Jump(ext.Offset);
 
             // create a new bigfile entry
             return new BigEntry()
             {
-                Index = FileCursor,
                 Name = Filename,
-                Offset = _ptr,
-                Data = ReadBytes(_size)
+                Data = ReadBytes((int)ext.Size)
             };
         }
 

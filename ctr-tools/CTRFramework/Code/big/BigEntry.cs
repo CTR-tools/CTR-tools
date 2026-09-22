@@ -1,17 +1,18 @@
 ﻿using CTRFramework.Shared;
 using System.IO;
+using System;
 
 namespace CTRFramework.Big
 {
     public class BigEntry
     {
-        public int Index;
-        public string Name;
-        public int Offset;
+        public string Name { get; set; } = String.Empty;
         public int Size => Data != null ? Data.Length : 0;
+
+        // pads size to Meta.SectorSize (2048)
         public int SizePadded => (Size + 2047) >> 11 << 11;
 
-        public byte[] Data;
+        public byte[] Data { get; set; }
 
         public BigEntry()
         {
@@ -46,13 +47,14 @@ namespace CTRFramework.Big
         }
 
         /// <summary>
-        /// Saves entry data as a separate file. Does not create empty files.
+        /// Saves entry data as a separate file. By default does not create empty files.
         /// </summary>
         /// <param name="path"></param>
-        public void Save(string path)
+        public void Save(string path, bool includeEmpty = false)
         {
-            if (Size > 0)
-                Helpers.WriteToFile(Helpers.PathCombine(path, Name), Data);
+            if (Size == 0 && !includeEmpty) return;
+            
+            Helpers.WriteToFile(Helpers.PathCombine(path, Name), Data);
         }
 
         /// <summary>
