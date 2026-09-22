@@ -19,16 +19,16 @@ namespace CTRFramework.Big
         public int FileCursor = -1;
 
 
-        public int TotalFiles => totalFiles;
-        private int totalFiles = 0;
+        public uint TotalFiles => totalFiles;
+        private uint totalFiles = 0;
 
         // retrieves current file size from a pos/offset pair
-        public int FileSize
+        public uint FileSize
         {
             get
             {
                 Jump(12 + 8 * FileCursor);
-                return ReadInt32();
+                return ReadUInt32();
             }
         }
 
@@ -89,7 +89,7 @@ namespace CTRFramework.Big
                 throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file.");
 
             // amount of files
-            totalFiles = ReadInt32();
+            totalFiles = ReadUInt32();
 
             // an arbitrary file count, original game only holds about 700 files
             if (totalFiles > 2048)
@@ -99,11 +99,11 @@ namespace CTRFramework.Big
             for (int i = 0, ptr = 0, size = 0; i < totalFiles; i++)
             {
                 // read pos/offset pair
-                ptr = ReadInt32();
+                ptr = ReadInt32() * Meta.SectorSize;
                 size = ReadInt32();
 
                 // check out of bounds cases
-                if (ptr > BaseStream.Length || ptr + size > BaseStream.Length)
+                if (ptr + size > BaseStream.Length)
                     throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file, entry out of bounds.");
             }
         }

@@ -14,8 +14,8 @@ namespace CTRFramework.Big
         {
             get
             {
-                //let's hardcode it as you can't add files anyway.
-                //ideally you should calculate the amount of sectors used for size/offset array
+                // let's hardcode it as you can't add files anyway.
+                // ideally you should calculate the amount of sectors used for size/offset array
                 int size = Meta.SectorSize * 3;
 
                 foreach (var entry in this)
@@ -155,7 +155,7 @@ namespace CTRFramework.Big
                     Console.Write(".");
 
                     int pos = (int)bw.BaseStream.Position;
-                    entry.Offset = pos / Meta.SectorSize;
+                    entry.Offset = pos;
 
                     bw.Write(entry.Data);
 
@@ -168,7 +168,7 @@ namespace CTRFramework.Big
 
                 foreach (var entry in this)
                 {
-                    bw.Write(entry.Offset);
+                    bw.Write(entry.Offset / Meta.SectorSize);
                     bw.Write(entry.Size);
                 }
 
@@ -182,6 +182,10 @@ namespace CTRFramework.Big
             Helpers.Panic(this, PanicType.Info, $"BIG file created in {sw.Elapsed.TotalSeconds}");
         }
 
+        /// <summary>
+        /// Creates a ZIP archive, containing all the Bigfile data.
+        /// </summary>
+        /// <param name="filename"></param>
         public void ToZip(string filename)
         {
             Console.Write("zip compress...");

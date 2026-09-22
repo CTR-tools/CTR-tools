@@ -51,7 +51,7 @@ namespace CTRFramework.Big
         /// <param name="path"></param>
         public void Save(string path)
         {
-            if (Data.Length > 0)
+            if (Size > 0)
                 Helpers.WriteToFile(Helpers.PathCombine(path, Name), Data);
         }
 

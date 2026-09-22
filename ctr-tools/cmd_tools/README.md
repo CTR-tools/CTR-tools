@@ -1,4 +1,4 @@
-# CTR-tool command line suite
+# CTR-tools command line suite
 
 This folder contains various command line tools, focused on a specific task:
 * bigtool - extract/build BIGFILE.BIG
