@@ -20,9 +20,7 @@ namespace CTRFramework.Big
 
         private List<BigExtent> FileExtents = new List<BigExtent>();
 
-
-        public uint TotalFiles => totalFiles;
-        private uint totalFiles = 0;
+        public int TotalFiles => FileExtents.Count;
 
         // retrieves current file size from a pos/offset pair
         public uint FileSize => FileExtents[FileCursor].Size;
@@ -82,7 +80,7 @@ namespace CTRFramework.Big
                 throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file.");
 
             // amount of files
-            totalFiles = ReadUInt32();
+            uint totalFiles = ReadUInt32();
 
             // an arbitrary file count, original game only holds about 700 files
             if (totalFiles > 2048)
@@ -147,7 +145,7 @@ namespace CTRFramework.Big
         /// <returns>BigEntry instance.</returns>
         public BigEntry ReadEntry(int index)
         {
-            if (index < 0 || index > TotalFiles)
+            if (index < 0 || index >= TotalFiles)
                 throw new IndexOutOfRangeException($"{this.GetType().Name}: index out of bounds.");
 
             FileCursor = index;
@@ -217,9 +215,6 @@ namespace CTRFramework.Big
         /// <returns>CtrScene instance.</returns>
         public CtrScene ReadScene(int index)
         {
-            if (index < 0 || index >= TotalFiles)
-                throw new ArgumentException($"{this.GetType().Name}: Index was out of bounds");
-
             var vram = ReadEntry(index).ParseAs<CtrVrm>();
             var scene = ReadEntry(index + 1).ParseAs<CtrScene>();
             scene.SetVram(vram);
