@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace CTRFramework.Shared
 {
@@ -42,54 +44,80 @@ namespace CTRFramework.Shared
         /// <summary>
         /// Filters the messages to output. Can combine flags.
         /// </summary>
-        public static PanicType panicType = PanicType.All ^ PanicType.Debug; //PanicType.All;
+        public static PanicType panicType = PanicType.All; //^ PanicType.Debug;
 
         /// <summary>
-        /// Call this if something unexpected happened. Takes "this" and converts to class name string.
+        /// This overload wraps any object and retrieves it's to report who caused the panic..
         /// </summary>
         /// <param name="sender">the object that wants to panic</param>
         /// <param name="panicType">type of panic</param>
         /// <param name="message">the message it wants to send</param>
-        //[Conditional("DEBUG")]
         public static void Panic(object sender, PanicType panicType, string message)
         {
             Panic(sender.GetType().Name, panicType, message);
         }
 
+        /// <summary>
+        /// Used to log Error events. Whenever something goes deliberately wrong and we know it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="message"></param>
         public static void PanicError(object sender, string message)
         {
             Panic(sender.GetType().Name, PanicType.Error, message);
         }
 
+        /// <summary>
+        /// Used to log Assume events.
+        /// Usually something we are not sure about or just want to visualize the unknown data.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="message"></param>
         public static void PanicAssume(object sender, string message)
         {
             Panic(sender.GetType().Name, PanicType.Assume, message);
         }
 
+        /// <summary>
+        /// Used to log debug events. Any info goes.
+        /// Only included in a debug build.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="message"></param>
+        [Conditional("DEBUG")]
         public static void PanicDebug(object sender, string message)
         {
             // this dumps a ton of debug data, only use in debug builds
-            #if DEBUG
             Panic(sender.GetType().Name, PanicType.Debug, message);
-            #endif
         }
 
-
-        //[Conditional("DEBUG")]
+        /// <summary>
+        /// A generic conditional panic.
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <param name="sender"></param>
+        /// <param name="panicType"></param>
+        /// <param name="message"></param>
         public static void PanicIf(bool condition, object sender, PanicType panicType, string message)
         {
             if (condition)
                 Panic(sender, panicType, message);
         }
 
+        public static StringBuilder Log = new StringBuilder();
+
         /// <summary>
-        /// Call this if something unexpected happened.
+        /// Root panic method. Call this to print anything.
         /// </summary>
         /// <param name="sender">the object that wants to panic</param>
         /// <param name="panicType">type of panic</param>
         /// <param name="message">the message it wants to send</param>
         public static void Panic(string sender, PanicType pType, string message)
         {
+            // if silent mode, do nothing at all
+            if (panicLevel.HasFlag(PanicLevel.Silent)) return;
+
+            // set console text color, depending on the panic type
             switch (pType)
             {
                 case PanicType.Debug: Console.ForegroundColor = ConsoleColor.DarkGray; break;
@@ -101,17 +129,17 @@ namespace CTRFramework.Shared
                 default: Console.ForegroundColor = ConsoleColor.White; break;
             }
 
-            if (panicLevel.HasFlag(PanicLevel.Silent))
-                return;
-
             if (pType != PanicType.Info)
                 message = $"{pType}\t{sender}:\t{message}";
 
+            // maybe write it to file
             if (panicLevel.HasFlag(PanicLevel.File))
-                File.AppendAllText(logpath, $"{DateTime.Now}\t{message}\r\n");
+                Log.Append($"{DateTime.Now}\t{message}\r\n");
 
+            // if we can print to console
             if (panicLevel.HasFlag(PanicLevel.Console))
             {
+                // if this panic level is allowed to print
                 if (panicType.HasFlag(pType))
                 {
                     Console.WriteLine(message);
@@ -124,6 +152,15 @@ namespace CTRFramework.Shared
             if (panicLevel.HasFlag(PanicLevel.Exception))
                 if (panicType.HasFlag(PanicType.Error))
                     throw new Exception(message);
+        }
+
+        /// <summary>
+        /// Dumps log contents to disk and clears current log window.
+        /// </summary>
+        public static void DumpLog()
+        {
+            File.AppendAllText(logpath, Log.ToString());
+            Log.Clear();
         }
     }
 }

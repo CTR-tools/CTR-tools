@@ -17,15 +17,27 @@ namespace CTRFramework.Shared
         public static readonly float GteScaleLarge = 1.0f / (1 << 12); //4096 = 1.0, used for 4 byte values - 20.12 format
         public static readonly float GteScaleSmall = 1.0f / (1 << 8);  //256 = 1.0, used for 2 bytes values - 8.8 format
 
-        // Math.Clump since .NET 6
         public static float Normalize(float min, float max, float val) => (val - min) / (max - min);
 
         // parses datetime format found in ctr lev files
         public static DateTime ParseDate(string input)
         {
-            DateTime result = DateTime.ParseExact(input.Replace("  ", " "), "ddd MMM d HH:mm:ss yyyy", CultureInfo.InvariantCulture);
-            Helpers.Panic("Helpers.ParseDate", PanicType.Debug, result.ToString());
-            return result;
+            DateTime date = DateTime.MinValue;
+
+            // exception catch because we are not guaranteed to have a valid date format here.
+            // and we dont want to crash either, right?
+            // this has a tiny side effect of falling back to the default value.
+            try
+            {
+                date = DateTime.ParseExact(input.Replace("  ", " "), "ddd MMM d HH:mm:ss yyyy", CultureInfo.InvariantCulture);
+                Helpers.PanicDebug("Helpers.ParseDate", date.ToString());
+            }
+            catch
+            {
+                Helpers.PanicError("Helpers.ParseDate", "Failed to parse ND date! Possibly a modded level.");
+            }
+
+            return date;
         }
 
         #region [MD5 helpers]
@@ -103,6 +115,10 @@ namespace CTRFramework.Shared
             if (Path.HasExtension(path))
                 path = Path.GetDirectoryName(path);
 
+            // make sure to return base path if it's empty (just a filename)
+            if (String.IsNullOrEmpty(path))
+                path = Meta.BasePath;
+
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
         }
@@ -117,11 +133,11 @@ namespace CTRFramework.Shared
         /// <returns></returns>
         public static string FindFirstFile(string directory, string filename, string filter = "*")
         {
-            filename = filename.ToUpper();
+            filename = filename.ToUpperInvariant();
 
             // btw how filter works then on linux, lol
             foreach (var file in Directory.GetFiles(directory, filter))
-                if (Path.GetFileName(file).ToUpper() == filename)
+                if (Path.GetFileName(file).ToUpperInvariant() == filename)
                     return file;
 
             return String.Empty;
@@ -277,7 +293,7 @@ namespace CTRFramework.Shared
 
                     if (names.ContainsKey(x))
                     {
-                        Helpers.Panic("Meta", PanicType.Error, $"duplicate entry {x}");
+                        Helpers.PanicError("Meta", $"duplicate entry {x}");
                         continue;
                     }
 
@@ -305,7 +321,7 @@ namespace CTRFramework.Shared
 
                 if (names.ContainsKey(bb[0]))
                 {
-                    Helpers.Panic("Meta", PanicType.Error, $"duplicate entry {bb[0]}");
+                    Helpers.PanicError("Meta", $"duplicate entry {bb[0]}");
                     continue;
                 }
 
