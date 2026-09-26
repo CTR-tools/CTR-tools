@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Numerics;
 using System.IO;
+using System.Numerics;
 
 namespace CTRFramework.Vram
 {
@@ -29,7 +29,7 @@ namespace CTRFramework.Vram
 
         #region properties
 
-        public static readonly int SizeOf = 0x0C;
+        public const int SizeOf = 0x0C;
         public uint offset;
 
         public Vector2[] uv = new Vector2[4] { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
@@ -60,7 +60,7 @@ namespace CTRFramework.Vram
                 {
                     case BitDepth.Bit4: return 4;
                     case BitDepth.Bit8: return 2;
-                    case BitDepth.Bit24: Helpers.Panic(this, PanicType.Error, "24 bits not supported"); return 1;
+                    case BitDepth.Bit24: Helpers.PanicError(this, "24 bits not supported"); return 1;
                     case BitDepth.Bit16:
                     default: return 1;
                 }
@@ -108,9 +108,9 @@ namespace CTRFramework.Vram
 
         public int Height => (int)(max.Y - min.Y + 1);
 
-        public int Position => RealY * CtrVrm.FullVramRegion.Width + RealX; //PageY * (CtrVrm.region.Height * CtrVrm.region.Width / 2) + min.Y * CtrVrm.region.Width + PageX * 64 + min.X / stretch;
+        public int Position => RealY * CtrVrm.RegionsList[VramRect.Full].Width + RealX; //PageY * (CtrVrm.region.Height * CtrVrm.region.Width / 2) + min.Y * CtrVrm.region.Width + PageX * 64 + min.X / stretch;
 
-        public int PalPosition => PalY * CtrVrm.FullVramRegion.Width + PalX * 16;
+        public int PalPosition => PalY * CtrVrm.RegionsList[VramRect.Full].Width + PalX * 16;
 
         public int RealX => (int)(PageX * 64 + min.X / stretch);
         public int RealY => (int)(PageY * 256 + min.Y);

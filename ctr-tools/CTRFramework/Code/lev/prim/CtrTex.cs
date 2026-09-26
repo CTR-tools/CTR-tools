@@ -1,5 +1,6 @@
 ﻿using CTRFramework.Shared;
 using CTRFramework.Vram;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,8 +9,16 @@ using System.Drawing.Imaging;
 
 namespace CTRFramework
 {
+    public enum MidLodLevel
+    {
+        Low = 0,
+        Medium = 1,
+        High = 2
+    }
+
     public class CtrTex
     {
+        // TODO -- convert to list?
         public TextureLayout lod0 = new TextureLayout();
         public TextureLayout lod1 = new TextureLayout();
         public TextureLayout lod2 = new TextureLayout();
@@ -50,12 +59,17 @@ namespace CTRFramework
             int width = 0;
             int height = 0;
 
-            //detect the subdiv mode, 4x4, 4x2 or 4x1 based on quadblock vistree flags
+            // detect the subdiv mode, 4x4, 4x2 or 4x1 based on quadblock vistree flags
             int numhtex = 4;
             int numvtex = 4;
 
             if (qb.visNodeFlags.HasFlag(VisNodeFlags.Subdiv4x1)) numvtex = 1;
             if (qb.visNodeFlags.HasFlag(VisNodeFlags.Subdiv4x2)) numvtex = 2;
+
+            Helpers.PanicDebug(this, $"subdiv mode: {numhtex}x{numhtex}");
+
+            Helpers.PanicDebug(this, $"got 2? {qb.visNodeFlags.HasFlag(VisNodeFlags.Unk2)}");
+            Helpers.PanicDebug(this, $"got 5? {qb.visNodeFlags.HasFlag(VisNodeFlags.Unk5)}");
 
             //detect the max width and height of a single tile
             //rest will be upscaled to this value, creating blurry image, thats the drawback
@@ -123,11 +137,18 @@ namespace CTRFramework
             if (cache != null)
                 cache.Add(lod2.Tag, bmp);
             else
-                Helpers.Panic(this, PanicType.Assume, "WTF cache null");
+                // is this a valid scenario?
+                Helpers.PanicError(this, "Tile cache is NULL.");
 
             return bmp;
         }
 
+        /// <summary>
+        /// Reads CtrTexture abstraction. Pulls from different places of the level database. 
+        /// </summary>
+        /// <param name="br"></param>
+        /// <param name="ptr"></param>
+        /// <param name="flags"></param>
         public void Read(BinaryReaderEx br, PsxPtr ptr, VisNodeFlags flags)
         {
             int pos = (int)br.Position;
@@ -136,7 +157,7 @@ namespace CTRFramework
 
             int currentFrame = 0;
 
-            //this hidden bit defines whether it's animated or not
+            // this hidden bit defines whether it's animated or not
             if (ptr.ExtraBits == HiddenBits.Bit0)
             {
                 isAnimated = true;
@@ -174,29 +195,35 @@ namespace CTRFramework
                 br.Jump(texpos);
             }
 
-            //Read group3
+            // Read group3
             lod0 = TextureLayout.FromReader(br);
             lod1 = TextureLayout.FromReader(br);
             lod2 = TextureLayout.FromReader(br);
 
+            Console.WriteLine(lod0);
+            Console.WriteLine(lod1);
+            Console.WriteLine(lod2);
+
+            // this does what?
             if (isAnimated)
                 //duh
-                lod2 = animframes[currentFrame * 4 + 7];
+                if (currentFrame * 4 + 3 < animframes.Count)
+                    lod2 = animframes[currentFrame * 4 + 3];
 
             //Console.WriteLine(br.Position.ToString("X8"));
             //Console.ReadKey();
 
-            Helpers.Panic(this, PanicType.Debug, lod0.Tag);
-            Helpers.Panic(this, PanicType.Debug, lod1.Tag);
-            Helpers.Panic(this, PanicType.Debug, lod2.Tag);
+            Helpers.PanicDebug(this, lod0.Tag);
+            Helpers.PanicDebug(this, lod1.Tag);
+            Helpers.PanicDebug(this, lod2.Tag);
 
             if (CtrScene.ReadHiTex)
             {
                 ptrHi = br.ReadUInt32();
 
-                Helpers.Panic(this, PanicType.Debug, "hiptr: " + ptrHi.ToString("X8"));
+                Helpers.PanicDebug(this, "hiptr: " + ptrHi.ToString("X8"));
 
-                //loosely assume we got a valid pointer
+                // loosely assume we got a valid pointer
                 if (ptrHi > 0x30000 && ptrHi < 0xB0000)
                 {
                     br.Jump(ptrHi);
@@ -208,6 +235,10 @@ namespace CTRFramework
 
                     for (int i = 0; i < toread; i++)
                         hi.Add(TextureLayout.FromReader(br));
+                }
+                else
+                {
+                    Helpers.PanicAssume(this, "ptrHi assumption fails: " + ptrHi.ToString("X8"));
                 }
             }
         }

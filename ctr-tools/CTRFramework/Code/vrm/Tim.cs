@@ -108,7 +108,7 @@ namespace CTRFramework.Vram
                 clutdata = br.ReadArrayUInt16(clutregion.Width * clutregion.Height);
 
                 if (_clutsize != clutsize)
-                    Helpers.Panic(this, PanicType.Error, "Houston! clutsize mismatch.");
+                    Helpers.PanicError(this, "Houston! clutsize mismatch.");
             }
 
             uint _datasize = br.ReadUInt32();
@@ -119,7 +119,7 @@ namespace CTRFramework.Vram
             data = br.ReadArrayUInt16(region.Width * region.Height);
 
             if (_datasize != datasize)
-                Helpers.Panic(this, PanicType.Error, $"Houston! datasize mismatch. {_datasize} {datasize}");
+                Helpers.PanicError(this, $"Houston! datasize mismatch. {_datasize} {datasize}");
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace CTRFramework.Vram
             }
         }
 
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             bw.Write(magic);
             bw.Write(packedFlags);
@@ -192,13 +192,13 @@ namespace CTRFramework.Vram
             {
                 if (dstptr > this.data.Length * 2)
                 {
-                    Helpers.Panic(this, PanicType.Error, "Destination tim data overflow...");
+                    Helpers.PanicError(this, "Destination tim data overflow...");
                     return;
                 }
 
                 if (srcptr > src.data.Length * 2)
                 {
-                    Helpers.Panic(this, PanicType.Error, "Source tim data overflow...");
+                    Helpers.PanicError(this, "Source tim data overflow...");
                     return;
                 }
 
@@ -296,7 +296,7 @@ namespace CTRFramework.Vram
         /// <returns>Tim object.</returns>
         public Tim GetTimTexture(TextureLayout tl)
         {
-            Helpers.Panic(this, PanicType.Debug, tl.Width + "x" + tl.Height);
+            Helpers.PanicDebug(this, tl.Width + "x" + tl.Height);
 
             Tim tim = new Tim(tl.Frame, tl.bpp);
             tim.data = new ushort[tl.Width * tl.Height];
@@ -313,7 +313,7 @@ namespace CTRFramework.Vram
                 ptr += this.region.Width * 2;
 
                 if (ptr > this.data.Length * 2)
-                    Helpers.Panic(this, PanicType.Error, $"tim read overflow\r\n{tl}");
+                    Helpers.PanicError(this, $"tim read overflow\r\n{tl}");
             }
 
             if (tim.hasClut)
@@ -358,11 +358,11 @@ namespace CTRFramework.Vram
         {
             if (bpp == BitDepth.Bit16)
             {
-                Helpers.Panic(this, PanicType.Debug, "No need to convert this TIM.");
+                Helpers.PanicDebug(this, "No need to convert this TIM.");
                 return;
             }
 
-            Helpers.Panic(this, PanicType.Debug, "Converting TIM to 16 bits.");
+            Helpers.PanicDebug(this, "Converting TIM to 16 bits.");
 
             ushort[] buffer = new ushort[0];
 
@@ -426,7 +426,7 @@ namespace CTRFramework.Vram
         /// <returns>Bitmap</returns>
         public Bitmap GetTexture(TextureLayout tl, string path = "", string name = "")
         {
-            Helpers.Panic(this, PanicType.Debug, $"GetTexture()\r\n{tl.ToString()}");
+            Helpers.PanicDebug(this, $"GetTexture()\r\n{tl.ToString()}");
 
             try
             {
@@ -434,7 +434,7 @@ namespace CTRFramework.Vram
 
                 if (x.region.Width <= 0 || x.region.Height <= 0)
                 {
-                    Helpers.Panic(this, PanicType.Error, "negative or null size");
+                    Helpers.PanicError(this, "negative or null size");
                     return new Bitmap(1, 1);
                 }
 
@@ -468,7 +468,7 @@ namespace CTRFramework.Vram
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, PanicType.Error, tl.Frame + "\r\n" + "GetTexture fails: " + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
+                Helpers.PanicError(this, tl.Frame + "\r\n" + "GetTexture fails: " + " " + ex.Message + "\r\n" + ex.ToString() + "\r\n");
                 //Console.ReadKey();
                 return null;
             }
@@ -484,7 +484,7 @@ namespace CTRFramework.Vram
 
             if (bitmap.Width / 4 != region.Width || bitmap.Height != region.Height)
             {
-                Helpers.Panic(this, PanicType.Error, $"Bitmap size mismatch {filename}.");
+                Helpers.PanicError(this, $"Bitmap size mismatch {filename}.");
                 return;
             }
 
@@ -520,7 +520,7 @@ namespace CTRFramework.Vram
                     palette.Add(col);
                     if (palette.Count > 16)
                     {
-                        Helpers.Panic(this, PanicType.Error, $"Too many colors. Halt loading texture {filename}.");
+                        Helpers.PanicError(this, $"Too many colors. Halt loading texture {filename}.");
                         return;
                     }
                 }
@@ -585,7 +585,7 @@ namespace CTRFramework.Vram
             {
                 int ptr = tl.PalPosition * 2;
 
-                Helpers.Panic(this, PanicType.Debug, $"{tl.PalPosition} x {CtrVrm.FullVramRegion.Width} * {tl.PalY} + {tl.PalX} * 16");
+                Helpers.PanicDebug(this, $"{tl.PalPosition} x {CtrVrm.RegionsList[VramRect.Full].Width} * {tl.PalY} + {tl.PalX} * 16");
 
                 Buffer.BlockCopy(
                     this.data, ptr,
@@ -604,21 +604,15 @@ namespace CTRFramework.Vram
         {
             byte[] pal = new byte[16 * 4];
 
-            // pals++;
-
-
             for (int i = 0; i < 16; i++)
             {
                 Color c = Convert16(clut[i]);
 
-                // palbmp.SetPixel(i, pals, c);
-
-                pal[i * 4] = c.B;
+                pal[i * 4 + 0] = c.B;
                 pal[i * 4 + 1] = c.G;
                 pal[i * 4 + 2] = c.R;
                 pal[i * 4 + 3] = c.A;
             }
-
 
             return pal;
         }
@@ -636,7 +630,7 @@ namespace CTRFramework.Vram
         /// Converts 5-5-5-1 16 bit color to 8-8-8-8 32 bit color.
         /// </summary>
         /// <param name="col">16 bit ushort color value.</param>
-        /// <param name="useAlpha">Defines whether alpha value should be preserved.</param>
+        /// <param name="blend">Blending mode.</param>
         /// <returns></returns>
         public static Color Convert16(ushort col, BlendingMode blend = BlendingMode.Standard)
         {
@@ -688,9 +682,24 @@ namespace CTRFramework.Vram
                 a = 0;
             */
 
+            // TODO -- revisit this.
+            // maybe drop interpretation and resort back to simple 0.5 = stp.
+            // it's supposed to encode tim data anyways.
+            // maybe texture exporter should interpret it based on texturelayout rendering mode instead
+
             if (stp == 0)
             {
-                a = (byte)((col == 0) ? 0 : 255);
+                if (col == 0) // color is black
+                {
+                    a = 0;
+                    r = 255;
+                    g = 0;
+                    b = 255;
+                }
+                else
+                {
+                    a = 255;
+                }
             }
             else
             {

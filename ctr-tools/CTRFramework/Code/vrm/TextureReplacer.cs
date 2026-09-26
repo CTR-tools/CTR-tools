@@ -50,7 +50,7 @@ namespace CTRFramework.Vram
 
             // only proceed to vram parsing if all paths are fine
             if (vrm is null)
-                vrm = CtrVrm.FromFile(vramPath).GetVram();
+                vrm = CtrVrm.FromFile(vramPath).GetFullVram();
 
             return true;
         }
@@ -77,7 +77,7 @@ namespace CTRFramework.Vram
             }
             catch (Exception ex)
             {
-                Helpers.Panic(this, PanicType.Error, $"Failed to replace textures: {ex.Message}\r\n{ex.ToString()}");
+                Helpers.PanicError(this, $"Failed to replace textures: {ex.Message}\r\n{ex.ToString()}");
                 return TextureReplacerResult.GeneralError;
             }
         }
@@ -139,49 +139,30 @@ namespace CTRFramework.Vram
             if (Context.dumpVram)
                 Context.vrm.SaveBMP(dumplatestpath, BMPHeader.GrayScalePalette(16));
 
+            // create resulting CTR VRAM file
+            var ctr = new CtrVrm();
 
-            // now onto the saving the updated vram...
-
-            // !!! ok so warning here, this part is hardcoded for level files that split vram in 2 parts !!!
-            // !!! proper implementation must keep ctrvrm frames and reuse that to properly rebuild correct layout !!!
-
-            // get 2 frames from new vram
-            var tims = new List<Tim>() {
-                // upper half
-                Context.vrm.GetTrueColorTexture(CtrVrm.UpperLevelRegion),
-                // lower half
-                Context.vrm.GetTrueColorTexture(CtrVrm.LowerLevelRegion)
-            };
-
-            // !!! special case for shared.vrm, a hack cause of the warning above !!!
-            // !!! hardcoded ntsc-u regions, pal has different layout !!!
-
+            // build proper pages
             if (Context.IsSharedVramFile)
             {
-                tims = new List<Tim>() {
-                    Context.vrm.GetTrueColorTexture(CtrVrm.MainSharedRegion),
-                    Context.vrm.GetTrueColorTexture(CtrVrm.AdditionalSharedRegion),
-                };
+                // !!! special case for shared.vrm, a hack cause of the warning above !!!
+                // !!! hardcoded ntsc-u regions, pal has different layout !!!
+
+                ctr = CtrVrm.FromFullVram(Context.vrm, VramRect.MainShared | VramRect.ExtraShared);
+            }
+            else
+            {
+                // !!! ok so warning here, this part is hardcoded for level files that split vram in 2 parts !!!
+                // !!! proper implementation must keep ctrvrm frames and reuse that to properly rebuild correct layout !!!
+
+                ctr = CtrVrm.FromFullVram(Context.vrm, VramRect.UpperLevel | VramRect.LowerLevel);
             }
 
             // backup existing file
             Helpers.BackupFile(Context.vramPath);
 
-            // should move this to ctrvram i guess
-            using (var bw = new BinaryWriterEx(File.Create(Context.vramPath)))
-            {
-                bw.Write((int)0x20);
-
-                foreach (var tim in tims)
-                {
-                    bw.Write(tim.Filesize);
-                    tim.Write(bw);
-                }
-
-                bw.Write((int)0);
-
-                bw.Truncate();
-            }
+            // write VRM file
+            ctr.Write(Context.vramPath);
 
             //ctr.GetTrueColorTexture(512, 0, 384, 256).Write(Helpers.PathCombine(Path.GetDirectoryName(pathFolder.Text), "x01.tim"));
             //ctr.GetTrueColorTexture(512, 256, 512, 256).Write(Helpers.PathCombine(Path.GetDirectoryName(pathFolder.Text), "x02.tim"));
