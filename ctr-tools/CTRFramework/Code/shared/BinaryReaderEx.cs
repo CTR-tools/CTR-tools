@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Windows.Forms;
 
 namespace CTRFramework.Shared
 {
@@ -241,8 +240,36 @@ namespace CTRFramework.Shared
             return new string(ReadChars(num)).Split('\0')[0];
         }
 
+        // Custom CTR specific charset, encoded in standard gojuon order.
+        // it starts in the upper ASCII page region at 128.
 
-        public static string japaneseCharset = "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをんぁぃぅぇぉゃゅょっ〜「」。、\u3099\u309A・?アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンァィゥェォャュョッ?????????";
+        public const string japaneseCharset = "" +
+            // hiragana
+            "あいうえお" + // aiueo vowels
+            "かきくけこ" + // k
+            "さしすせそ" + // s
+            "たちつてと" + // t
+            "なにぬねの" + // n
+            "はひふへほ" + // h
+            "まみむめも" + // m
+            "やゆよ" + // ya/yu/yo
+            "らりるれろ" + // r
+            "わをん" + // wa/wo/n
+            "ぁぃぅぇぉゃゅょっ" + // modifiers
+            "〜「」。、\u3099\u309A・?" + // punctuation
+            // katakana
+            "アイウエオ" + // aiueo vowels
+            "カキクケコ" + // k
+            "サシスセソ" + // s
+            "タチツテト" + // t
+            "ナニヌネノ" + // n
+            "ハヒフヘホ" + // h
+            "マミムメモ" + // m
+            "ヤユヨ" + // ya/yu/yo
+            "ラリルレロ" + // r
+            "ワヲン" + // wa/wo/n
+            "ァィゥェォャュョッ" + // modifiers
+            "?????????" // assumed unused
 
         /// <summary>
         /// Reads chars 1 by 1 until 0 is met.
@@ -309,7 +336,7 @@ namespace CTRFramework.Shared
 
             result = result.Normalize(System.Text.NormalizationForm.FormC);
 
-            Helpers.Panic(this, PanicType.Debug, result);
+            Helpers.PanicDebug(this, result);
 
             //if (limit == 0)
             //Console.ReadKey();
@@ -317,6 +344,12 @@ namespace CTRFramework.Shared
             return result;
         }
 
+        /// <summary>
+        /// Reads C-styled char* string. It reads the pointer value, jumps there, reads fixed string, then returns back.
+        /// </summary>
+        /// <param name="ptr"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public string ReadFixedStringPtr(UIntPtr ptr, int length)
         {
             int x = (int)BaseStream.Position;
