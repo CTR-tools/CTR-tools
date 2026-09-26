@@ -1,6 +1,6 @@
 ﻿using CTRFramework.Shared;
-using System.IO;
 using System;
+using System.IO;
 
 namespace CTRFramework.Big
 {
@@ -53,7 +53,7 @@ namespace CTRFramework.Big
         public void Save(string path, bool includeEmpty = false)
         {
             if (Size == 0 && !includeEmpty) return;
-            
+
             Helpers.WriteToFile(Helpers.PathCombine(path, Name), Data);
         }
 

@@ -1,6 +1,4 @@
-﻿using CTRFramework.Big;
-using CTRFramework.Shared;
-using System;
+﻿using CTRFramework.Shared;
 using System.IO;
 
 namespace CTRFramework.Big

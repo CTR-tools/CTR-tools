@@ -1,5 +1,4 @@
 ﻿using CTRFramework.Shared;
-using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +8,7 @@ using System.Text;
 
 namespace CTRFramework.Big
 {
-    public class BigFile : List<BigEntry>, IDisposable
+    public class BigFile : List<BigEntry>
     {
         public int TotalSize
         {
@@ -46,7 +45,7 @@ namespace CTRFramework.Big
             if (!File.Exists(filename))
                 throw new FileNotFoundException($"File doesn't exist: {filename}");
 
-            switch (Path.GetExtension(filename).ToUpper())
+            switch (Path.GetExtension(filename).ToUpperInvariant())
             {
                 case ".BIG": LoadFromBig(filename); break;
                 case ".TXT": LoadFromTxt(filename); break;
@@ -222,11 +221,6 @@ namespace CTRFramework.Big
             }
 
             Console.Write("done!");
-        }
-
-        public void Dispose()
-        {
-            this.Clear();
         }
     }
 }

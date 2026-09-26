@@ -50,7 +50,7 @@ namespace CTRFramework.Big
         }
 
 
-        public static BigFileReader FromFile(string filename, LoadingMode mode = LoadingMode.FromDisk)
+        public static BigFileReader? FromFile(string filename, LoadingMode mode = LoadingMode.FromDisk)
         {
             switch (mode)
             {
