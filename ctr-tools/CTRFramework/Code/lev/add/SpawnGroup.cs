@@ -17,7 +17,7 @@ namespace CTRFramework
                 numEntries += c;
                 br.Seek(4);
 
-                Helpers.Panic(this, PanicType.Debug, $"{br.HexPos()} {c}");
+                Helpers.PanicDebug(this, $"{br.HexPos()} {c}");
             }
 
             for (int i = 0; i < numEntries; i++)

@@ -8,7 +8,7 @@ namespace CTRFramework.Bash
     //Bash mesh header struct
     public class BashMesh
     {
-        public static readonly int SizeOf = 0x34;
+        public const int SizeOf = 0x34;
 
         //0x0 - null?
         public int zerostart0;
@@ -68,7 +68,7 @@ namespace CTRFramework.Bash
             zeroend1 = br.ReadInt32();
             zeroend2 = br.ReadInt32();
 
-
+            // make assumptions
             Helpers.PanicIf(zerostart0 != 0, this, PanicType.Assume, $"zerostart0 = {zerostart0}");
             Helpers.PanicIf(zerostart1 != 0, this, PanicType.Assume, $"zerostart1 = {zerostart1}");
             Helpers.PanicIf(anotherZero != 0, this, PanicType.Assume, $"anotherZero = {zerostart0}");

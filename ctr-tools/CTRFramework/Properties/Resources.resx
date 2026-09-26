@@ -129,13 +129,13 @@ Converted to MIDI using CTR-Tools by DCxDemo*.</value>
   <data name="PressAnyKey" xml:space="preserve">
     <value>Press any key...</value>
   </data>
-  <data name="signature" xml:space="preserve">
+  <data name="Signature" xml:space="preserve">
     <value>2016-2024, DCxDemo*.</value>
   </data>
   <data name="Version" xml:space="preserve">
     <value>r15prev</value>
   </data>
   <data name="_default" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\data\default.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Data\default.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

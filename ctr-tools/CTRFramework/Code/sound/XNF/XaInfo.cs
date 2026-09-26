@@ -75,7 +75,7 @@ namespace CTRFramework.Audio
             magic = new string(br.ReadChars(4));
 
             if (magic != "XINF")
-                Helpers.Panic(this, PanicType.Error, $"No XINF found. Not a XINF file: magic = {magic}");
+                Helpers.PanicError(this, $"No XINF found. Not a XINF file: magic = {magic}");
 
             version = br.ReadInt32();
 

@@ -1,272 +1,47 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0326F8B5-F788-4529-9F87-C725A5D13BC0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CTRFramework</RootNamespace>
-    <AssemblyName>CTRFramework</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<UseWindowsForms>true</UseWindowsForms>
+	<TargetFramework>net8.0-windows7.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>none</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>
-    </DocumentationFile>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
-    <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Debug\CTRFramework.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\Rules</CodeAnalysisRuleDirectories>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Release\CTRFramework.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\Rules</CodeAnalysisRuleDirectories>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RunPostBuildEvent>Always</RunPostBuildEvent>
-  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
+
   <ItemGroup>
-    <Compile Include="Code\bash\BashMesh.cs" />
-    <Compile Include="Code\bash\BashSfx.cs" />
-    <Compile Include="Code\bash\BashTex.cs" />
-    <Compile Include="Code\bash\BashTexPak.cs" />
-    <Compile Include="Code\big\BigFile.cs" />
-    <Compile Include="Code\big\BigEntry.cs" />
-    <Compile Include="Code\big\BigFileReader.cs" />
-    <Compile Include="Code\ctr\CtrAnim.cs" />
-    <Compile Include="Code\ctr\CtrDelta.cs" />
-    <Compile Include="Code\ctr\CtrFrame.cs" />
-    <Compile Include="Code\ctr\CtrMesh.cs" />
-    <Compile Include="Code\ctr\CtrModel.cs" />
-    <Compile Include="Code\ctr\CtrDraw.cs" />
-    <Compile Include="Code\Enums.cs" />
-    <Compile Include="Code\lang\CharSwap.cs" />
-    <Compile Include="Code\lev\add\CreditsText.cs" />
-    <Compile Include="Code\lev\prim\CtrFace.cs" />
-    <Compile Include="Code\lev\prim\CtrTex.cs" />
-    <Compile Include="Code\lev\prim\RespawnPoint.cs" />
-    <Compile Include="Code\lev\add\TrialGhost.cs" />
-    <Compile Include="Code\lev\nav\NavData.cs" />
-    <Compile Include="Code\lev\nav\NavPath.cs" />
-    <Compile Include="Code\lev\add\TrialData.cs" />
-    <Compile Include="Code\lev\add\SpawnGroup.cs" />
-    <Compile Include="Code\lev\prim\VertexAnim.cs" />
-    <Compile Include="Code\lang\LNG.cs" />
-    <Compile Include="Code\lev\prim\WaterAnim.cs" />
-    <Compile Include="Code\lev\vis\PvsStruct.cs" />
-    <Compile Include="Code\PatchedContainer.cs" />
-    <Compile Include="Code\shared\BitStreamReader.cs" />
-    <Compile Include="Code\shared\HelpersPanic.cs" />
-    <Compile Include="Code\shared\HelpersTimer.cs" />
-    <Compile Include="Code\shared\HexHelper.cs" />
-    <Compile Include="Code\shared\PsxPtr.cs" />
-    <Compile Include="Code\shared\RotationDetector.cs" />
-    <Compile Include="Code\shared\Vectors\Vector3b.cs" />
-    <Compile Include="Code\shared\Vectors\Vector3f.cs" />
-    <Compile Include="Code\shared\Vectors\Vector3i.cs" />
-    <Compile Include="Code\sound\CSEQ\Events\CseqEvent.cs" />
-    <Compile Include="Code\sound\SpuInstrument.cs" />
-    <Compile Include="Code\sound\VAG\Bank.cs" />
-    <Compile Include="Code\shared\BinaryReaderEx.cs" />
-    <Compile Include="Code\shared\BinaryWriterEx.cs" />
-    <Compile Include="Code\shared\Helpers.cs" />
-    <Compile Include="Code\Interfaces.cs" />
-    <Compile Include="Code\shared\Meta.cs" />
-    <Compile Include="Code\lev\nav\NavFrame.cs" />
-    <Compile Include="Code\mpk\IconPack.cs" />
-    <Compile Include="Code\mpk\ModelPack.cs" />
-    <Compile Include="Code\mpk\Icon.cs" />
-    <Compile Include="Code\shared\InstanceList.cs" />
-    <Compile Include="Code\lev\CtrScene.cs" />
-    <Compile Include="Code\lev\SceneHeader.cs" />
-    <Compile Include="Code\lev\MeshInfo.cs" />
-    <Compile Include="Code\lev\prim\CtrInstance.cs" />
-    <Compile Include="Code\lev\prim\QuadBlock.cs" />
-    <Compile Include="Code\lev\prim\CtrSkyBox.cs" />
-    <Compile Include="Code\sound\XA\XaFrame.cs" />
-    <Compile Include="Code\sound\XA\XaStackedFrame.cs" />
-    <Compile Include="Code\sound\XA\XaStackedFrameCollection.cs" />
-    <Compile Include="Code\sound\XNF\XaInfoEntry.cs" />
-    <Compile Include="Code\sound\XNF\XaInfo.cs" />
-    <Compile Include="Code\vrm\CtrVrm.cs" />
-    <Compile Include="Code\vrm\TextureLayout.cs" />
-    <Compile Include="Code\lev\prim\Vertex.cs" />
-    <Compile Include="Code\lev\vis\VisData.cs" />
-    <Compile Include="Code\shared\BoundingBox.cs" />
-    <Compile Include="Code\shared\OBJ.cs" />
-    <Compile Include="Code\shared\Pose.cs" />
-    <Compile Include="Code\lev\Gradient.cs" />
-    <Compile Include="Code\shared\Vectors\Vector3s.cs" />
-    <Compile Include="Code\shared\Vectors\Vector4b.cs" />
-    <Compile Include="Code\shared\Vectors\Vector4s.cs" />
-    <Compile Include="Code\sound\CSEQ\CSEQ.cs" />
-    <Compile Include="Code\sound\CSEQ\CseqEvent.cs" />
-    <Compile Include="Code\sound\CSEQ\CSeqTrack.cs" />
-    <Compile Include="Code\sound\CSEQ\CseqSong.cs" />
-    <Compile Include="Code\sound\Howl.cs" />
-    <Compile Include="Code\sound\VAG\VagFrame.cs" />
-    <Compile Include="Code\sound\VAG\VagSample.cs" />
-    <Compile Include="Code\vrm\BMPHeader.cs" />
-    <Compile Include="Code\vrm\TextureReplacer.cs" />
-    <Compile Include="Code\vrm\Tim.cs" />
-    <Compile Include="ThirdParty\ColourQuantization\MedianCut.cs" />
-    <Compile Include="ThirdParty\ColourQuantization\Octree.cs" />
-    <Compile Include="ThirdParty\Kaitai\KaitaiStream.cs" />
-    <Compile Include="ThirdParty\Kaitai\KaitaiStruct.cs" />
-    <Compile Include="ThirdParty\PlyImporter\Extensions\ArrayExtensions.cs" />
-    <Compile Include="ThirdParty\PlyImporter\Extensions\EnumerableExtensions.cs" />
-    <Compile Include="ThirdParty\PlyImporter\PlyHandler.cs" />
-    <Compile Include="ThirdParty\PlyImporter\PlyHeader.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <None Remove="Data\ctr_drumfill.mid" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\ctr_drumfill.mid" />
+    <EmbeddedResource Include="Data\Data.zip" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Crc32.NET" Version="1.2.0" />
+    <PackageReference Include="NAudio" Version="2.4.0" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
+
   <ItemGroup>
-    <Reference Include="Crc32.NET, Version=1.0.0.0, Culture=neutral, PublicKeyToken=dc0b95cf99bf4e99, processorArchitecture=MSIL">
-      <HintPath>..\packages\Crc32.NET.1.2.0\lib\net20\Crc32.NET.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.10.0\lib\net35\NAudio.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.XML" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <EmbeddedResource Include="Data\Data.zip" />
-    <None Include="Data\readme.md" />
-    <None Include="Data\versions.json" />
-    <None Include="packages.config" />
-    <None Include="ThirdParty\ColourQuantization\LICENSE" />
-    <None Include="ThirdParty\Kaitai\README.md" />
-    <None Include="ThirdParty\PlyImporter\LICENSE" />
-    <None Include="ThirdParty\PlyImporter\README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ThirdParty\Kaitai\LICENSE" />
-    <None Include="Data\big_usa_beta_aug.txt" />
-    <None Include="Data\big_usa_demo.txt" />
-    <None Include="Data\big_pal_release.txt" />
-    <None Include="Data\big_usa_beta_sep.txt" />
-    <None Include="Data\big_usa_release.txt" />
-    <None Include="Data\howlnames.txt" />
-    <None Include="Data\versions.xml" />
-    <None Include="Data\banknames.txt" />
-    <None Include="Data\big_usa_beta_14th.txt" />
-    <None Include="Data\xa_usa_release.txt" />
-    <None Include="Data\xa_usa_beta_sep.txt" />
-    <None Include="Data\xa_jpn_release.txt" />
-    <None Include="Data\xa_pal_release.txt" />
-    <None Include="Data\bash_filelist.txt" />
-    <None Include="Data\samplehashes.txt" />
-    <None Include="Data\banknames_jpn.txt" />
-    <None Include="Data\banknames_pal.txt" />
-    <None Include="Data\cseq.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Properties\Resources.resx">
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Data\texturenames.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\default.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Data\xa_aug14_beta.txt" />
-    <None Include="Data\xa_aug5_beta.txt" />
-    <EmbeddedResource Include="Data\ctr_drumfill.mid" />
-    <Content Include="Data\howlnames.xml" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>echo %25date%25 %25time%25 &gt; "$(ProjectDir)\Properties\BuildDate.txt"
-"$(ProjectDir)\Data\smallzip.exe" -w -i  "$(ProjectDir)\Data" -o "$(ProjectDir)\Data\data.zip" -f *.txt
-"$(ProjectDir)\Data\smallzip.exe" -w -i "$(ProjectDir)\Data" -o "$(ProjectDir)\Data\data.zip" -f *.xml
-"$(ProjectDir)\Data\smallzip.exe" -w -i "$(ProjectDir)\Data" -o "$(ProjectDir)\Data\data.zip" -f *.json</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="echo %25date%25 %25time%25 &gt; &quot;$(ProjectDir)\Properties\BuildDate.txt&quot;&#xD;&#xA;&quot;$(ProjectDir)\Data\smallzip.exe&quot; -w -i  &quot;$(ProjectDir)\Data&quot; -o &quot;$(ProjectDir)\Data\data.zip&quot; -f *.txt&#xD;&#xA;&quot;$(ProjectDir)\Data\smallzip.exe&quot; -w -i &quot;$(ProjectDir)\Data&quot; -o &quot;$(ProjectDir)\Data\data.zip&quot; -f *.xml&#xD;&#xA;&quot;$(ProjectDir)\Data\smallzip.exe&quot; -w -i &quot;$(ProjectDir)\Data&quot; -o &quot;$(ProjectDir)\Data\data.zip&quot; -f *.json" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

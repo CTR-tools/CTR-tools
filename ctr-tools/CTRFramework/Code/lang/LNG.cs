@@ -7,9 +7,9 @@ using System.Text;
 
 namespace CTRFramework.Lang
 {
-    public class LNG : IReadWrite, IDisposable
+    public class LNG : IReadWrite
     {
-        private readonly string missing = "MISSING MSG\0";
+        private const string missing = "MISSING MSG\0";
 
         public List<string> Entries = new List<string>();
 
@@ -161,7 +161,7 @@ namespace CTRFramework.Lang
         /// Writes all entries to stream using binary writer.
         /// </summary>
         /// <param name="filename">BinaryWriterEx object.</param>
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             var dEntries = new List<string>();
 
@@ -177,7 +177,7 @@ namespace CTRFramework.Lang
 
             foreach (string entry in dEntries)
             {
-                Helpers.Panic(this, PanicType.Debug, entry);
+                Helpers.PanicDebug(this, entry);
                 list.Add(entry, (int)bw.BaseStream.Position);
 
                 string result = entry;
@@ -249,14 +249,6 @@ namespace CTRFramework.Lang
 
             bw.Jump(4);
             bw.Write(lastoff);
-        }
-
-        /// <summary>
-        /// Implements IDisposable interface.
-        /// </summary>
-        public void Dispose()
-        {
-            Entries.Clear();
         }
     }
 }

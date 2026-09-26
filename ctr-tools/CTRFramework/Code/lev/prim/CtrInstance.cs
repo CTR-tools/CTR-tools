@@ -1,5 +1,4 @@
 ﻿using CTRFramework.Shared;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -67,11 +66,8 @@ namespace CTRFramework
 
             null1 = br.ReadUInt32();
 
-            if (null1 != 0)
-                Helpers.Panic(this, PanicType.Assume, $"!! null1 != 0 --> {null1}");
-
-            if (ptrModel.ExtraBits > 0)
-                Helpers.Panic(this, PanicType.Assume, $"{name}: ptrModel extrabits = {ptrModel.ExtraBits}");
+            Helpers.PanicIf(null1 != 0, this, PanicType.Assume, $"!! null1 != 0 --> {null1}");
+            Helpers.PanicIf(ptrModel.ExtraBits > 0, this, PanicType.Assume, $"{name}: ptrModel extrabits = {ptrModel.ExtraBits}");
 
             unk1 = br.ReadUInt32();
 
@@ -84,7 +80,7 @@ namespace CTRFramework
             ModelName = br.ReadFixedStringPtr(ptrModel, 16);
         }
 
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             //duh
             if (name.Contains("plant") || name.Contains("seal") || name.Contains("spider")) scale /= 2;

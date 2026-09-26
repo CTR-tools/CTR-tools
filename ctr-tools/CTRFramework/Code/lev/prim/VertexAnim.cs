@@ -1,5 +1,4 @@
 ﻿using CTRFramework.Shared;
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -39,7 +38,7 @@ namespace CTRFramework
             color = new Vector4b(br);
         }
 
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             bw.Write(ptrVertex);
             bw.WriteVector3s(Position, Helpers.GteScaleSmall, VectorPadding.Yes);

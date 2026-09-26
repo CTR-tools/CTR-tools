@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
 
 namespace CTRFramework.Shared
 {
-
     public class Pose : IReadWrite
     {
         public static Pose Zero => new Pose(Vector3.Zero, Vector3.Zero);
@@ -93,7 +91,7 @@ namespace CTRFramework.Shared
             Rotation = br.ReadVector3s(Helpers.GteScaleLarge);
         }
 
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             bw.WriteVector3s(Position, Helpers.GteScaleSmall);
             bw.WriteVector3s(Rotation, Helpers.GteScaleLarge);

@@ -22,9 +22,9 @@ namespace CTRFramework.Models
             var packed = packValue();
 
             if (value != packed)
-                Helpers.Panic(this, PanicType.Error, $"cmd value pack fails: {value.ToString("X8")} <-!!!-> {packed.ToString("X8")}");
+                Helpers.PanicError(this, $"cmd value pack fails: {value.ToString("X8")} <-!!!-> {packed.ToString("X8")}");
 
-            Helpers.Panic(this, PanicType.Debug, ToString());
+            Helpers.PanicDebug(this, ToString());
         }
 
         private void unpackValue(uint value)

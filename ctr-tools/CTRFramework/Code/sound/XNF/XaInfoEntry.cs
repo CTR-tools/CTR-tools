@@ -1,5 +1,4 @@
 ﻿using CTRFramework.Shared;
-using System;
 using System.Collections.Generic;
 
 namespace CTRFramework.Audio
@@ -42,7 +41,7 @@ namespace CTRFramework.Audio
         /// Writes XaInfoEntry data to stream using binary writer.
         /// </summary>
         /// <param name="bw">BinaryWriterEx object.</param>
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             bw.Write(Index);
             bw.Write(FileIndex);

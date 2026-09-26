@@ -108,7 +108,7 @@ namespace CTRFramework.Audio
         /// Writes VAG frame data to stream using binary writer.
         /// </summary>
         /// <param name="bw">Binary writer object.</param>
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             if (data.Length != 14)
                 throw new Exception("Wrong VAG frame data length.");

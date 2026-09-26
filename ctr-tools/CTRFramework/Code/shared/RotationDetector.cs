@@ -92,7 +92,7 @@ namespace CTRFramework.Shared
         /// <returns></returns>
         public static RotateFlipType Test(Vector2[,] a, Vector2[,] b)
         {
-            // maybe we already have a matching matrices
+            // maybe we have a match already
             if (Equals(a, b)) return RotateFlipType.None;
 
             // otherwise keep rotating

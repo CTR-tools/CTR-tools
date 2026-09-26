@@ -12,7 +12,7 @@ namespace CTRFramework.Shared
         Both = 3
     }
 
-    public class PsxPtr : IEquatable<object>, IReadWrite
+    public class PsxPtr : IEquatable<object>, IComparable, IReadWrite
     {
         public static PsxPtr Zero => new PsxPtr(0);
 
@@ -54,7 +54,7 @@ namespace CTRFramework.Shared
         /// </summary>
         /// <param name="bw">BinaryWriterEx instance.</param>
         /// <param name="patchTable">Patch table to update.</param>
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             bw.Write((UIntPtr)value, patchTable);
         }
@@ -79,6 +79,14 @@ namespace CTRFramework.Shared
             return !a.Equals(b);
         }
 
+        public int CompareTo(object other)
+        {
+            if (!(other is PsxPtr))
+                throw new ArgumentException("can't compare ");
+
+            return (int)this.Address - (int)(other as PsxPtr).Address;
+        }
+
         public override string ToString()
         {
             return $"0x{Address.ToUInt32().ToString("X8")} [{ExtraBits}] <= ({value})";
@@ -90,7 +98,7 @@ namespace CTRFramework.Shared
             return me.Address;
         }
 
-        public long GetDifference(PsxPtr other)
+        public long GetDistance(PsxPtr other)
         {
             return Math.Abs(this.Address.ToUInt32() - other.Address.ToUInt32());
         }

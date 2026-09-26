@@ -1,5 +1,4 @@
 ﻿using CTRFramework.Shared;
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
@@ -8,7 +7,7 @@ namespace CTRFramework
 {
     public class NavFrame : IReadWrite
     {
-        public static readonly int SizeOf = 0x20;
+        public const int SizeOf = 0x20;
 
         public Vector3 position;
         public Vector3s angle;
@@ -29,7 +28,7 @@ namespace CTRFramework
 
         public void Read(BinaryReaderEx br)
         {
-            Helpers.Panic(this, PanicType.Debug, $"frame starts at {br.HexPos()}... [total stream length: {br.BaseStream.Length.ToString("X8")}]...");
+            Helpers.PanicDebug(this, $"frame starts at {br.HexPos()}... [total stream length: {br.BaseStream.Length.ToString("X8")}]...");
 
             position = br.ReadVector3s(Helpers.GteScaleSmall);
             angle = new Vector3s(br);
@@ -40,10 +39,10 @@ namespace CTRFramework
             pos = br.ReadByte();
             unk5 = br.ReadByte();
 
-            Helpers.Panic(this, PanicType.Debug, $"frame done, now at {br.HexPos()}");
+            Helpers.PanicDebug(this, $"frame done, now at {br.HexPos()}");
         }
 
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             bw.WriteVector3s(position, Helpers.GteScaleSmall);
             angle.Write(bw);

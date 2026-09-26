@@ -1,5 +1,4 @@
 ﻿using CTRFramework.Shared;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -8,7 +7,8 @@ namespace CTRFramework
     public class PatchedContainer : IReadWrite
     {
         public byte[] Data;
-        public List<UIntPtr> PatchTable = new List<UIntPtr>();
+
+        public List<PsxPtr> PatchTable = new List<PsxPtr>();
 
         public PatchedContainer()
         {
@@ -31,22 +31,22 @@ namespace CTRFramework
 
             if (hasTable)
             {
-                PatchTable = new List<UIntPtr>();
+                PatchTable = new List<PsxPtr>();
 
                 int numEntries = br.ReadInt32() / 4;
                 for (int i = 0; i < numEntries; i++)
-                    PatchTable.Add(br.ReadUIntPtr());
+                    PatchTable.Add(PsxPtr.FromReader(br));
             }
         }
 
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             bw.Write(Data.Length);
             bw.Write(Data);
             bw.Write(PatchTable.Count * 4);
 
             foreach (var ptr in PatchTable)
-                bw.Write(ptr.ToUInt32());
+                bw.Write((uint)ptr.Address);
         }
 
         public void Save(string filename)

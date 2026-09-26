@@ -1,5 +1,4 @@
 ﻿using CTRFramework.Shared;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
@@ -36,7 +35,7 @@ namespace CTRFramework
             magic = br.ReadUInt16();
 
             if (magic != 0xFFFC)
-                Helpers.Panic(this, PanicType.Error, $"Ghost magic value mismatch: {magic}.");
+                Helpers.PanicError(this, $"Ghost magic value mismatch: {magic}.");
 
             ushort size = br.ReadUInt16();
             trackIndex = (Level)br.ReadUInt16();
@@ -56,7 +55,7 @@ namespace CTRFramework
             return new TrialGhost(br);
         }
 
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             bw.Write((ushort)0xFFFC);
             bw.Write(datasize);

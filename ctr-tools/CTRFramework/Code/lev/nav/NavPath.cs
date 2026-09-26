@@ -1,5 +1,4 @@
 ﻿using CTRFramework.Shared;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -49,7 +48,7 @@ namespace CTRFramework
                 Frames.Add(NavFrame.FromReader(br));
         }
 
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             bw.Write(version);
             bw.Write(NumFrames);

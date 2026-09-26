@@ -32,19 +32,19 @@ namespace CTRFramework.Shared
         public const string LinkGithub = "https://github.com/CTR-tools/CTR-tools";
         #endregion
 
-        private static string version;
+        private static string? _version;
         public static string Version
         {
             get
             {
-                if (version == null)
-                    version = $"CTRFramework {Resources.Version} ({Resources.BuildDate.Split(',')[0]})";
+                if (_version == null)
+                    _version = $"CTRFramework {Resources.Version} ({Resources.BuildDate.Split(',')[0]})";
 
-                return version;
+                return _version;
             }
         }
 
-        public static string GetSignature() => Resources.signature;
+        public static string GetSignature() => Resources.Signature;
 
         static XmlDocument midixml;
 
@@ -57,7 +57,7 @@ namespace CTRFramework.Shared
             }
             catch (Exception ex)
             {
-                Helpers.Panic("Meta", PanicType.Error, $"Failed to load meta instruments: {ex.Message}");
+                Helpers.PanicError("Meta", $"Failed to load meta instruments: {ex.Message}");
                 return false;
             }
         }
@@ -112,7 +112,7 @@ namespace CTRFramework.Shared
             }
             catch (Exception ex)
             {
-                Helpers.Panic("Meta", PanicType.Error, $"Failed to load meta instrument: {song} {inst} {index}\r\n{ex.Message}");
+                Helpers.PanicError("Meta", $"Failed to load meta instrument: {song} {inst} {index}\r\n{ex.Message}");
             }
 
             return new MetaInst();

@@ -95,8 +95,7 @@ namespace CTRFramework.Bash
                     palindex = 0;
                     bad = true;
 
-                    Console.WriteLine($"bad palette: {palindex}");
-                    Console.ReadKey();
+                    Helpers.PanicError(this, $"bad palette: {palindex}");
                 }
 
                 for (int i = 0; i < 16; i++)

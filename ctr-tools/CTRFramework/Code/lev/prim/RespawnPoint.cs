@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace CTRFramework.Shared
 {
     public class RespawnPoint : IReadWrite
     {
-        public static readonly int SizeOf = 0x0C;
+        public const int SizeOf = 0x0C;
 
         public Pose Pose { get; set; } = Pose.Zero;
         public short DistanceToFinish;
@@ -38,7 +37,7 @@ namespace CTRFramework.Shared
             right = br.ReadByte();
         }
 
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             bw.WriteVector3s(Pose.Position, Helpers.GteScaleSmall);
             bw.Write(DistanceToFinish);

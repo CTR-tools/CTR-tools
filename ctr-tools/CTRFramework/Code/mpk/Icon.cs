@@ -40,14 +40,14 @@ namespace CTRFramework
             Index = br.ReadInt32();
             tl = TextureLayout.FromReader(br);
 
-            Helpers.Panic(this, PanicType.Debug, Name);
+            Helpers.PanicDebug(this, Name);
         }
 
         public void Save(string path, Tim tim)
         {
             if (tim is null)
             {
-                Helpers.Panic(this, PanicType.Error, "Passed null vram.");
+                Helpers.PanicError(this, "Passed null vram.");
                 return;
             }
 

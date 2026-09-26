@@ -71,7 +71,7 @@ namespace CTRFramework.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 11.09.2026 10:45:59,20 
+        ///   Looks up a localized string similar to 19.09.2026 15:10:03,12 
         ///.
         /// </summary>
         public static string BuildDate {
@@ -103,9 +103,9 @@ namespace CTRFramework.Properties {
         /// <summary>
         ///   Looks up a localized string similar to 2016-2024, DCxDemo*..
         /// </summary>
-        public static string signature {
+        public static string Signature {
             get {
-                return ResourceManager.GetString("signature", resourceCulture);
+                return ResourceManager.GetString("Signature", resourceCulture);
             }
         }
         
