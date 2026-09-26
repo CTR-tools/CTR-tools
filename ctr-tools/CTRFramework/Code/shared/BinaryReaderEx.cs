@@ -269,7 +269,7 @@ namespace CTRFramework.Shared
             "ラリルレロ" + // r
             "ワヲン" + // wa/wo/n
             "ァィゥェォャュョッ" + // modifiers
-            "?????????" // assumed unused
+            "?????????"; // assumed unused
 
         /// <summary>
         /// Reads chars 1 by 1 until 0 is met.
