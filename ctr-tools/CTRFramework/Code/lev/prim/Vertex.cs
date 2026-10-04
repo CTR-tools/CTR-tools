@@ -1,5 +1,4 @@
 ﻿using CTRFramework.Shared;
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -7,11 +6,13 @@ namespace CTRFramework
 {
     public class Vertex : IReadWrite
     {
-        public static readonly int SizeOf = 16;
+        public const int SizeOf = 16;
 
         public Vector3 Position;
         public ushort pad;
         public Vector4b Color;
+
+        // this second color is only used during the lod morphing phase
         public Vector4b MorphColor;
 
         public Vector4b color_target;
@@ -25,7 +26,8 @@ namespace CTRFramework
                 Color = Color,
                 MorphColor = MorphColor,
                 color_target = color_target,
-                uv = uv
+                uv = uv,
+                pad = pad
             };
         }
 
@@ -47,13 +49,16 @@ namespace CTRFramework
         public virtual void Read(BinaryReaderEx br)
         {
             Position = br.ReadVector3s(Helpers.GteScaleSmall);
-            //here's the deal, this value is always 0 in release files, but it was figured out it's some mode ranging from 0 to 4.
             pad = br.ReadUInt16();
             Color = new Vector4b(br);
             MorphColor = new Vector4b(br);
+
+            // here's the deal, this value is always 0 in release files
+            // but it was figured out it's some mode ranging from 0 to 4.
+            Helpers.PanicIf(pad != 0, this, PanicType.Assume, $"vertex pos pad value is not 0! {pad}");
         }
 
-        public void Write(BinaryWriterEx bw, List<UIntPtr> patchTable = null)
+        public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
             bw.WriteVector3s(Position, Helpers.GteScaleSmall);
             bw.Write(pad);
@@ -75,17 +80,29 @@ namespace CTRFramework
         }
     }
 
-    //this vertex is used in SkyBox
+    // this vertex is used in SkyBox
     public class VertexShort : Vertex
     {
+        public new const int SizeOf = 12;
+
         public VertexShort(BinaryReaderEx br) : base(br)
         {
         }
 
         public override void Read(BinaryReaderEx br)
         {
-            Position = br.ReadVector3sPadded(Helpers.GteScaleSmall);
+            Position = br.ReadVector3s(Helpers.GteScaleSmall);
+            pad = br.ReadUInt16();
             Color = new Vector4b(br);
+
+            Helpers.PanicIf(pad != 0, this, PanicType.Assume, $"short vertex pos pad value is not 0! {pad}");
+        }
+
+        public void Write(BinaryWriterEx bw)
+        {
+            bw.WriteVector3s(Position, Helpers.GteScaleSmall);
+            bw.Write(pad);
+            Color.Write(bw);
         }
     }
 }
