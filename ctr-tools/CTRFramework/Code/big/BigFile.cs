@@ -10,6 +10,7 @@ namespace CTRFramework.Big
 {
     public class BigFile : List<BigEntry>
     {
+        public const int MaxFilesAllowed = 2047;
         public int TotalSize
         {
             get

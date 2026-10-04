@@ -83,8 +83,8 @@ namespace CTRFramework.Big
             uint totalFiles = ReadUInt32();
 
             // an arbitrary file count, original game only holds about 700 files
-            if (totalFiles > 2048)
-                throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file, more than 2048 files.");
+            if (totalFiles > BigFile.MaxFilesAllowed)
+                throw new NotSupportedException($"{this.GetType().Name}: unlikely a CTR BIG file, more than {BigFile.MaxFilesAllowed} files.");
 
             // scan every entry
             for (int i = 0; i < totalFiles; i++)

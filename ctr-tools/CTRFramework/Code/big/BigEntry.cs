@@ -12,7 +12,7 @@ namespace CTRFramework.Big
         // pads size to Meta.SectorSize (2048)
         public int SizePadded => (Size + 2047) >> 11 << 11;
 
-        public byte[] Data { get; set; }
+        public byte[] Data { get; set; } = new byte[0];
 
         public BigEntry()
         {
@@ -31,7 +31,6 @@ namespace CTRFramework.Big
         public BigEntry(string path, string name = null)
         {
             Name = name != null ? name : path;
-            Data = new byte[0];
 
             //the logic is that if file doesnt exist, it still creates a valid dummy entry for bigfile.
             if (!File.Exists(path)) return;
@@ -64,6 +63,10 @@ namespace CTRFramework.Big
         /// <returns></returns>
         public T ParseAs<T>() where T : IRead, new()
         {
+            // if it's a dummy file, we have nothing to parse
+            if (Size == 0)
+                return new T();
+
             using (var br = new BinaryReaderEx(new MemoryStream(Data)))
             {
                 return Instance<T>.FromReader(br, 0);
