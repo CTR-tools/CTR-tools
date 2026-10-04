@@ -11,15 +11,19 @@ namespace ThreeDeeBear.Models.Ply
 {
     public class PlyResult
     {
+        public int NumVertices => Vertices.Count;
+
         public List<Vector3> Vertices;
         public List<int> Triangles;
         public List<Vector4b> Colors;
+        public List<Vector2> UV;
 
-        public PlyResult(List<Vector3> vertices, List<int> triangles, List<Vector4b> colors)
+        public PlyResult(List<Vector3> vertices, List<int> triangles, List<Vector4b> colors, List<Vector2> uv)
         {
             Vertices = vertices;
             Triangles = triangles;
             Colors = colors;
+            UV = uv;
         }
 
         public void Export(string filename)
@@ -36,7 +40,6 @@ namespace ThreeDeeBear.Models.Ply
             sb.AppendLine("property uchar red");
             sb.AppendLine("property uchar green");
             sb.AppendLine("property uchar blue");
-
             sb.AppendLine($"element face {Triangles.Count / 3}");
             sb.AppendLine("property list uchar uint vertex_indices");
             sb.AppendLine("end_header");
@@ -60,6 +63,7 @@ namespace ThreeDeeBear.Models.Ply
             var vertices = new List<Vector3>();
             var triangles = new List<int>();
             var colors = new List<Vector4b>();
+            var uv = new List<Vector2>();
             var headerEndIndex = plyFile.IndexOf("end_header");
             var vertexStartIndex = headerEndIndex + 1;
             var faceStartIndex = vertexStartIndex + header.VertexCount + 1;
@@ -69,6 +73,7 @@ namespace ThreeDeeBear.Models.Ply
                 var xyzrgb = vertex.Split(' ');
                 vertices.Add(ParseVertex(xyzrgb, header));
                 colors.Add(ParseColor(xyzrgb, header));
+                uv.Add(ParseUV(xyzrgb, header));
             });
 
             List<string> lines = plyFile.GetRange(faceStartIndex - 1, header.FaceCount); //???
@@ -78,8 +83,9 @@ namespace ThreeDeeBear.Models.Ply
                 triangles.AddRange(GetTriangles(face, header));
             });
 
-            return new PlyResult(vertices, triangles, colors);
+            return new PlyResult(vertices, triangles, colors, uv);
         }
+
         private static Vector3 ParseVertex(string[] xyzrgb, PlyHeader header)
         {
             decimal dx, dy, dz;
@@ -87,6 +93,19 @@ namespace ThreeDeeBear.Models.Ply
             decimal.TryParse(xyzrgb[header.YIndex], NumberStyles.Float, CultureInfo.InvariantCulture, out dy);
             decimal.TryParse(xyzrgb[header.ZIndex], NumberStyles.Float, CultureInfo.InvariantCulture, out dz);
             return new Vector3((float)dx, (float)dy, (float)dz);
+        }
+
+        private static Vector2 ParseUV(string[] xyzrgb, PlyHeader header)
+        {
+            decimal s = 0;
+            decimal t = 0;
+
+            if (header.SIndex.HasValue)
+                decimal.TryParse(xyzrgb[header.SIndex.Value], NumberStyles.Float, CultureInfo.InvariantCulture, out s);
+            if (header.TIndex.HasValue)
+                decimal.TryParse(xyzrgb[header.TIndex.Value], NumberStyles.Float, CultureInfo.InvariantCulture, out t);
+
+            return new Vector2((float)s, (float)t);
         }
 
         private static Vector4b ParseColor(string[] xyzrgb, PlyHeader header)
@@ -144,7 +163,8 @@ namespace ThreeDeeBear.Models.Ply
             var colors = new List<Vector4b>();
             var vertices = GetVertices(withoutHeader, header, out colors);
             var triangles = GetTriangles(withoutHeader, header);
-            return new PlyResult(vertices, triangles, colors);
+
+            return new PlyResult(vertices, triangles, colors, new List<Vector2>());
         }
 
         private static List<Vector3> GetVertices(byte[] bytes, PlyHeader header, out List<Vector4b> colors)
