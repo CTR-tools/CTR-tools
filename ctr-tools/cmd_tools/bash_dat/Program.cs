@@ -216,10 +216,11 @@ namespace bash_dat
                 int numModels = br.ReadInt32();
 
                 for (int i = 0; i < numModels; i++)
-                    models.Add(new BashMesh(br));
-
-                foreach (var m in models)
-                    Helpers.Panic("LoadModelFile", PanicType.Debug, m.ToString());
+                {
+                    var model = new BashMesh(br);
+                    models.Add(model);
+                    Helpers.PanicDebug("LoadModelFile", model.ToString());
+                }
 
                 string path;
 

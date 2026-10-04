@@ -22,7 +22,7 @@ namespace ctrviewer.Loaders
             }
         }
 
-        //todo: fix assimp import to use texturedindexbuffers (check commented lines)
+        // TODO -- fix assimp import to use texturedindexbuffers (check commented lines)
         public void ImportAssimpData(Scene scene)
         {
             var monolist = new List<VertexPositionColorTexture>();

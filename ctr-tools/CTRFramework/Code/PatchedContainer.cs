@@ -41,6 +41,8 @@ namespace CTRFramework
 
         public void Write(BinaryWriterEx bw, List<PsxPtr> patchTable = null)
         {
+            PatchTable.Sort();
+
             bw.Write(Data.Length);
             bw.Write(Data);
             bw.Write(PatchTable.Count * 4);

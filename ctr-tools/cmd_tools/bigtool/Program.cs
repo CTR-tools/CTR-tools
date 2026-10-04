@@ -1,7 +1,7 @@
-﻿using System;
-using System.IO;
-using CTRFramework.Big;
+﻿using CTRFramework.Big;
 using CTRFramework.Shared;
+using System;
+using System.IO;
 
 namespace bigtool
 {

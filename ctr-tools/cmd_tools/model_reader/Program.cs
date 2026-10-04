@@ -118,7 +118,7 @@ namespace model_reader
                 case ".CTR":
                     {
                         var model = CtrModel.FromFile(filename);
-                        model.Export(basepath, String.IsNullOrWhiteSpace(vrampath) ? null : CtrVrm.FromFile(vrampath).GetVram());
+                        model.Export(basepath, String.IsNullOrWhiteSpace(vrampath) ? null : CtrVrm.FromFile(vrampath).GetFullVram());
 
                         break;
                     }
@@ -146,7 +146,7 @@ namespace model_reader
                 case ".MPK":
                     {
                         var mpk = ModelPack.FromFile(filename);
-                        mpk.Extract(Helpers.PathCombine(basepath, name), CtrVrm.FromFile(vrampath).GetVram());
+                        mpk.Extract(Helpers.PathCombine(basepath, name), CtrVrm.FromFile(vrampath).GetFullVram());
 
                         break;
                     }
@@ -158,6 +158,7 @@ namespace model_reader
 
             }
 
+            Helpers.DumpLog();
             Console.WriteLine("Done!");
         }
     }
